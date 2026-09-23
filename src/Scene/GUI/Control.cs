@@ -69,8 +69,8 @@ public class Control : CanvasItem
     /// <summary>Gets or sets the local rotation in degrees.</summary>
     public float RotationDegrees
     {
-        get => Rotation * (180f / MathF.PI);
-        set => Rotation = value * (MathF.PI / 180f);
+        get => Rotation * (180f / MathF.Pi);
+        set => Rotation = value * (MathF.Pi / 180f);
     }
 
     /// <summary>Gets or sets the local scale around PivotOffset.</summary>
@@ -286,8 +286,8 @@ public class Control : CanvasItem
     }
 
     private static int SideIndex(Side side) => side is >= Side.Left and <= Side.Bottom ? (int)side : throw new ArgumentOutOfRangeException(nameof(side));
-    private static void EnsureFinite(float value, string name) { if (!Mathf.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
-    private static void EnsureFinite(Vector2 value, string name) { if (!Mathf.IsFinite(value.X) || !Mathf.IsFinite(value.Y)) throw new ArgumentOutOfRangeException(name); }
+    private static void EnsureFinite(float value, string name) { if (!MathF.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
+    private static void EnsureFinite(Vector2 value, string name) { if (!MathF.IsFinite(value.X) || !MathF.IsFinite(value.Y)) throw new ArgumentOutOfRangeException(name); }
 
     private static readonly PropertyDescriptor[] ControlProperties =
     [

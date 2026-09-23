@@ -244,12 +244,12 @@ public class Timer : Node
     }
 
     /// <inheritdoc />
-    /// <remarks>Appends a warning when WaitTime is less than 0.05 minus Mathf.Epsilon seconds, since frame
+    /// <remarks>Appends a warning when WaitTime is less than 0.05 minus MathF.Epsilon seconds, since frame
     /// cadence controls delivered timeouts. The warning is available even when detached or stopped.</remarks>
     public override string[] GetConfigurationWarnings()
     {
         var warnings = base.GetConfigurationWarnings();
-        return _waitTime < 0.05 - Mathf.Epsilon
+        return _waitTime < 0.05 - MathF.Epsilon
             ? [.. warnings, "Timer intervals below 0.05 seconds depend strongly on frame cadence. Consider using the process callback for very short intervals."] : warnings;
     }
 

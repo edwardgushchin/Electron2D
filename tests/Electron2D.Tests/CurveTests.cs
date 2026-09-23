@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 
 internal static class CurveTests
@@ -28,7 +29,7 @@ internal static class CurveTests
         Expect(() => c.SetPointRightTangent(0, 6), "changed"); Check(c.GetPointRightMode(0) == Curve.TangentMode.Free, "Tangent setter switches its side to Free.");
         c.SetPointLeftTangent(1, -6); Check(c.Sample(.5f) > c.MaxValue, "Tangent overshoot is preserved.");
         Expect(() => c.CleanDupes(), ""); Check(c.PointCount == 2, "CleanDupes preserves separated points.");
-        c.AddPoint(new(.5f, .5f)); c.AddPoint(new(.5f + Mathf.Epsilon * .25f, .8f));
+        c.AddPoint(new(.5f, .5f)); c.AddPoint(new(.5f + MathF.Epsilon * .25f, .8f));
         Expect(c.CleanDupes, "changed"); Check(c.PointCount == 3, "Only adjacent near-duplicates are removed.");
         c.ClearPoints(); c.AddPoint(new(0, 0), rightMode: Curve.TangentMode.Linear);
         c.AddPoint(new(.5f, 1), leftMode: Curve.TangentMode.Linear, rightMode: Curve.TangentMode.Linear);

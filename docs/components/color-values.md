@@ -1,6 +1,6 @@
 # Color values component
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ## Scope
 
@@ -28,7 +28,7 @@ The API preserves uppercase acronyms under [ADR 0045](../decisions/product.md#ad
 
 ## Dependencies
 
-- Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET span, immutable/frozen collection, globalization, and interop-layout primitives.
+- Canonical scalar [`MathF`](../classes/MathF.md), plus .NET span, immutable/frozen collection, globalization, and interop-layout primitives.
 - Internal managed OKHSL formulas with retained MIT license.
 - No external package, native library, Scene, renderer, SDL, asset, input, audio, physics, scripting, or editor dependency.
 

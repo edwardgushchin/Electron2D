@@ -6,10 +6,11 @@ namespace Electron2D;
 /// primary engine-scalar API; double-precision overloads are provided for calculations that need a
 /// wider range or tighter tolerance. All members are stateless and thread-safe; normal nonthrowing
 /// calls are allocation-free after JIT warmup.
+/// Callers importing both Electron2D and System can use an alias to distinguish this type from System.MathF.
 /// Floating-point members preserve normal IEEE 754 NaN, infinity, and signed-zero behavior unless
 /// their individual contract states otherwise.
 /// </remarks>
-public static class Mathf
+public static class MathF
 {
     private const float FloatEpsilon = 0.000001f;
     private const double DoubleEpsilon = 0.00000000000001d;
@@ -49,7 +50,7 @@ public static class Mathf
     /// <summary>Returns the absolute value of a single-precision number.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The nonnegative magnitude, or NaN when the input is NaN.</returns>
-    public static float Abs(float value) => MathF.Abs(value);
+    public static float Abs(float value) => System.MathF.Abs(value);
 
     /// <summary>Returns the absolute value of a double-precision number.</summary>
     /// <param name="value">The input value.</param>
@@ -59,7 +60,7 @@ public static class Mathf
     /// <summary>Returns the arc cosine in radians.</summary>
     /// <param name="value">A cosine value in the inclusive range negative one through one.</param>
     /// <returns>An angle from zero through <see cref="Pi"/>, or NaN for an out-of-range input.</returns>
-    public static float Acos(float value) => MathF.Acos(value);
+    public static float Acos(float value) => System.MathF.Acos(value);
 
     /// <summary>Returns the double-precision arc cosine in radians.</summary>
     /// <param name="value">A cosine value in the inclusive range negative one through one.</param>
@@ -69,7 +70,7 @@ public static class Mathf
     /// <summary>Returns the inverse hyperbolic cosine.</summary>
     /// <param name="value">A value greater than or equal to one.</param>
     /// <returns>The inverse hyperbolic cosine, or NaN for an input below one.</returns>
-    public static float Acosh(float value) => MathF.Acosh(value);
+    public static float Acosh(float value) => System.MathF.Acosh(value);
 
     /// <summary>Returns the double-precision inverse hyperbolic cosine.</summary>
     /// <param name="value">A value greater than or equal to one.</param>
@@ -83,8 +84,8 @@ public static class Mathf
     /// <remarks>For opposite angles, the result is negative pi when <paramref name="from"/> is smaller than <paramref name="to"/> and positive pi otherwise.</remarks>
     public static float AngleDifference(float from, float to)
     {
-        var difference = (to - from) % MathF.Tau;
-        return ((2f * difference) % MathF.Tau) - difference;
+        var difference = (to - from) % System.MathF.Tau;
+        return ((2f * difference) % System.MathF.Tau) - difference;
     }
 
     /// <summary>Returns the shortest double-precision signed angular difference.</summary>
@@ -100,7 +101,7 @@ public static class Mathf
     /// <summary>Returns the arc sine in radians.</summary>
     /// <param name="value">A sine value in the inclusive range negative one through one.</param>
     /// <returns>An angle from negative pi over two through positive pi over two, or NaN for an out-of-range input.</returns>
-    public static float Asin(float value) => MathF.Asin(value);
+    public static float Asin(float value) => System.MathF.Asin(value);
 
     /// <summary>Returns the double-precision arc sine in radians.</summary>
     /// <param name="value">A sine value in the inclusive range negative one through one.</param>
@@ -110,7 +111,7 @@ public static class Mathf
     /// <summary>Returns the inverse hyperbolic sine.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The inverse hyperbolic sine.</returns>
-    public static float Asinh(float value) => MathF.Asinh(value);
+    public static float Asinh(float value) => System.MathF.Asinh(value);
 
     /// <summary>Returns the double-precision inverse hyperbolic sine.</summary>
     /// <param name="value">The input value.</param>
@@ -120,7 +121,7 @@ public static class Mathf
     /// <summary>Returns the arc tangent in radians.</summary>
     /// <param name="value">The tangent value.</param>
     /// <returns>An angle from negative pi over two through positive pi over two.</returns>
-    public static float Atan(float value) => MathF.Atan(value);
+    public static float Atan(float value) => System.MathF.Atan(value);
 
     /// <summary>Returns the double-precision arc tangent in radians.</summary>
     /// <param name="value">The tangent value.</param>
@@ -131,7 +132,7 @@ public static class Mathf
     /// <param name="y">The vertical component.</param>
     /// <param name="x">The horizontal component.</param>
     /// <returns>The quadrant-aware angle from negative pi through positive pi.</returns>
-    public static float Atan2(float y, float x) => MathF.Atan2(y, x);
+    public static float Atan2(float y, float x) => System.MathF.Atan2(y, x);
 
     /// <summary>Returns the double-precision angle of a Cartesian direction in radians.</summary>
     /// <param name="y">The vertical component.</param>
@@ -142,7 +143,7 @@ public static class Mathf
     /// <summary>Returns the inverse hyperbolic tangent.</summary>
     /// <param name="value">A value in the inclusive range negative one through one.</param>
     /// <returns>The inverse hyperbolic tangent; the endpoints produce infinities and out-of-range inputs produce NaN.</returns>
-    public static float Atanh(float value) => MathF.Atanh(value);
+    public static float Atanh(float value) => System.MathF.Atanh(value);
 
     /// <summary>Returns the double-precision inverse hyperbolic tangent.</summary>
     /// <param name="value">A value in the inclusive range negative one through one.</param>
@@ -152,7 +153,7 @@ public static class Mathf
     /// <summary>Rounds upward toward positive infinity.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The smallest integral floating-point value not less than the input.</returns>
-    public static float Ceil(float value) => MathF.Ceiling(value);
+    public static float Ceil(float value) => System.MathF.Ceiling(value);
 
     /// <summary>Rounds a double-precision value upward toward positive infinity.</summary>
     /// <param name="value">The input value.</param>
@@ -163,7 +164,7 @@ public static class Mathf
     /// <param name="value">The input value.</param>
     /// <returns>The ceiling converted using unchecked managed numeric conversion semantics.</returns>
     /// <remarks>NaN, infinity, and an out-of-range result convert to the runtime-defined unchecked integer sentinel.</remarks>
-    public static int CeilToInt(float value) => unchecked((int)MathF.Ceiling(value));
+    public static int CeilToInt(float value) => unchecked((int)System.MathF.Ceiling(value));
 
     /// <summary>Rounds a double-precision value upward and converts to a 32-bit integer.</summary>
     /// <param name="value">The input value.</param>
@@ -198,7 +199,7 @@ public static class Mathf
     /// <summary>Returns the cosine of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>The cosine.</returns>
-    public static float Cos(float angle) => MathF.Cos(angle);
+    public static float Cos(float angle) => System.MathF.Cos(angle);
 
     /// <summary>Returns the double-precision cosine of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
@@ -208,7 +209,7 @@ public static class Mathf
     /// <summary>Returns the hyperbolic cosine.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The hyperbolic cosine.</returns>
-    public static float Cosh(float value) => MathF.Cosh(value);
+    public static float Cosh(float value) => System.MathF.Cosh(value);
 
     /// <summary>Returns the double-precision hyperbolic cosine.</summary>
     /// <param name="value">The input value.</param>
@@ -254,13 +255,13 @@ public static class Mathf
     /// <returns>The interpolated angle in radians.</returns>
     public static float CubicInterpolateAngle(float from, float to, float pre, float post, float weight)
     {
-        var fromRotation = from % MathF.Tau;
-        var preDifference = (pre - fromRotation) % MathF.Tau;
-        var preRotation = fromRotation + ((2f * preDifference) % MathF.Tau) - preDifference;
-        var toDifference = (to - fromRotation) % MathF.Tau;
-        var toRotation = fromRotation + ((2f * toDifference) % MathF.Tau) - toDifference;
-        var postDifference = (post - toRotation) % MathF.Tau;
-        var postRotation = toRotation + ((2f * postDifference) % MathF.Tau) - postDifference;
+        var fromRotation = from % System.MathF.Tau;
+        var preDifference = (pre - fromRotation) % System.MathF.Tau;
+        var preRotation = fromRotation + ((2f * preDifference) % System.MathF.Tau) - preDifference;
+        var toDifference = (to - fromRotation) % System.MathF.Tau;
+        var toRotation = fromRotation + ((2f * toDifference) % System.MathF.Tau) - toDifference;
+        var postDifference = (post - toRotation) % System.MathF.Tau;
+        var postRotation = toRotation + ((2f * postDifference) % System.MathF.Tau) - postDifference;
         return CubicInterpolate(fromRotation, toRotation, preRotation, postRotation, weight);
     }
 
@@ -340,13 +341,13 @@ public static class Mathf
     public static float CubicInterpolateAngleInTime(
         float from, float to, float pre, float post, float weight, float toTime, float preTime, float postTime)
     {
-        var fromRotation = from % MathF.Tau;
-        var preDifference = (pre - fromRotation) % MathF.Tau;
-        var preRotation = fromRotation + ((2f * preDifference) % MathF.Tau) - preDifference;
-        var toDifference = (to - fromRotation) % MathF.Tau;
-        var toRotation = fromRotation + ((2f * toDifference) % MathF.Tau) - toDifference;
-        var postDifference = (post - toRotation) % MathF.Tau;
-        var postRotation = toRotation + ((2f * postDifference) % MathF.Tau) - postDifference;
+        var fromRotation = from % System.MathF.Tau;
+        var preDifference = (pre - fromRotation) % System.MathF.Tau;
+        var preRotation = fromRotation + ((2f * preDifference) % System.MathF.Tau) - preDifference;
+        var toDifference = (to - fromRotation) % System.MathF.Tau;
+        var toRotation = fromRotation + ((2f * toDifference) % System.MathF.Tau) - toDifference;
+        var postDifference = (post - toRotation) % System.MathF.Tau;
+        var postRotation = toRotation + ((2f * postDifference) % System.MathF.Tau) - postDifference;
         return CubicInterpolateInTime(
             fromRotation, toRotation, preRotation, postRotation, weight, toTime, preTime, postTime);
     }
@@ -440,7 +441,7 @@ public static class Mathf
     /// <summary>Converts decibels to linear energy.</summary>
     /// <param name="decibels">The decibel value.</param>
     /// <returns>The corresponding linear energy.</returns>
-    public static float DBToLinear(float decibels) => MathF.Exp(decibels * 0.11512925464970228420089957273422f);
+    public static float DBToLinear(float decibels) => System.MathF.Exp(decibels * 0.11512925464970228420089957273422f);
 
     /// <summary>Converts double-precision decibels to linear energy.</summary>
     /// <param name="decibels">The decibel value.</param>
@@ -481,11 +482,11 @@ public static class Mathf
     {
         value = Clamp(value, 0f, 1f);
         if (curve > 0f)
-            return curve < 1f ? 1f - MathF.Pow(1f - value, 1f / curve) : MathF.Pow(value, curve);
+            return curve < 1f ? 1f - System.MathF.Pow(1f - value, 1f / curve) : System.MathF.Pow(value, curve);
         if (curve < 0f)
             return value < 0.5f
-                ? MathF.Pow(value * 2f, -curve) * 0.5f
-                : ((1f - MathF.Pow(1f - ((value - 0.5f) * 2f), -curve)) * 0.5f) + 0.5f;
+                ? System.MathF.Pow(value * 2f, -curve) * 0.5f
+                : ((1f - System.MathF.Pow(1f - ((value - 0.5f) * 2f), -curve)) * 0.5f) + 0.5f;
         return 0f;
     }
 
@@ -508,7 +509,7 @@ public static class Mathf
     /// <summary>Raises the natural-logarithm base to a power.</summary>
     /// <param name="value">The exponent.</param>
     /// <returns>The natural exponential.</returns>
-    public static float Exp(float value) => MathF.Exp(value);
+    public static float Exp(float value) => System.MathF.Exp(value);
 
     /// <summary>Raises the natural-logarithm base to a double-precision power.</summary>
     /// <param name="value">The exponent.</param>
@@ -518,7 +519,7 @@ public static class Mathf
     /// <summary>Rounds downward toward negative infinity.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The greatest integral floating-point value not greater than the input.</returns>
-    public static float Floor(float value) => MathF.Floor(value);
+    public static float Floor(float value) => System.MathF.Floor(value);
 
     /// <summary>Rounds a double-precision value downward toward negative infinity.</summary>
     /// <param name="value">The input value.</param>
@@ -529,7 +530,7 @@ public static class Mathf
     /// <param name="value">The input value.</param>
     /// <returns>The floor converted using unchecked managed numeric conversion semantics.</returns>
     /// <remarks>NaN, infinity, and an out-of-range result convert to the runtime-defined unchecked integer sentinel.</remarks>
-    public static int FloorToInt(float value) => unchecked((int)MathF.Floor(value));
+    public static int FloorToInt(float value) => unchecked((int)System.MathF.Floor(value));
 
     /// <summary>Rounds a double-precision value downward and converts to a 32-bit integer.</summary>
     /// <param name="value">The input value.</param>
@@ -559,8 +560,8 @@ public static class Mathf
     {
         if (left == right)
             return true;
-        var tolerance = MathF.Max(FloatEpsilon * MathF.Abs(left), FloatEpsilon);
-        return MathF.Abs(left - right) < tolerance;
+        var tolerance = System.MathF.Max(FloatEpsilon * System.MathF.Abs(left), FloatEpsilon);
+        return System.MathF.Abs(left - right) < tolerance;
     }
 
     /// <summary>Tests two double-precision values for scale-aware approximate equality.</summary>
@@ -582,7 +583,7 @@ public static class Mathf
     /// <returns><see langword="true"/> for exact equality or a difference strictly below <paramref name="tolerance"/>.</returns>
     /// <remarks>A negative or NaN tolerance only permits exact equality.</remarks>
     public static bool IsEqualApprox(float left, float right, float tolerance) =>
-        left == right || MathF.Abs(left - right) < tolerance;
+        left == right || System.MathF.Abs(left - right) < tolerance;
 
     /// <summary>Tests two double-precision values using a caller-supplied absolute tolerance.</summary>
     /// <param name="left">The first value.</param>
@@ -626,7 +627,7 @@ public static class Mathf
     /// <summary>Tests whether a single-precision value's magnitude is strictly below <see cref="Epsilon"/>.</summary>
     /// <param name="value">The value to test.</param>
     /// <returns><see langword="true"/> when the value is approximately zero.</returns>
-    public static bool IsZeroApprox(float value) => MathF.Abs(value) < FloatEpsilon;
+    public static bool IsZeroApprox(float value) => System.MathF.Abs(value) < FloatEpsilon;
 
     /// <summary>Tests whether a double-precision value's magnitude is strictly below the double-precision epsilon.</summary>
     /// <param name="value">The value to test.</param>
@@ -664,7 +665,7 @@ public static class Mathf
     /// <summary>Converts linear energy to decibels.</summary>
     /// <param name="linear">The linear energy.</param>
     /// <returns>The decibel value; zero produces negative infinity and negative input produces NaN.</returns>
-    public static float LinearToDB(float linear) => MathF.Log(linear) * 8.6858896380650365530225783783321f;
+    public static float LinearToDB(float linear) => System.MathF.Log(linear) * 8.6858896380650365530225783783321f;
 
     /// <summary>Converts double-precision linear energy to decibels.</summary>
     /// <param name="linear">The linear energy.</param>
@@ -674,7 +675,7 @@ public static class Mathf
     /// <summary>Returns the natural logarithm.</summary>
     /// <param name="value">The input; zero produces negative infinity and negative input produces NaN.</param>
     /// <returns>The natural logarithm.</returns>
-    public static float Log(float value) => MathF.Log(value);
+    public static float Log(float value) => System.MathF.Log(value);
 
     /// <summary>Returns the double-precision natural logarithm.</summary>
     /// <param name="value">The input; zero produces negative infinity and negative input produces NaN.</param>
@@ -691,7 +692,7 @@ public static class Mathf
     /// <param name="left">The first value.</param>
     /// <param name="right">The second value.</param>
     /// <returns>The larger value, or NaN if either value is NaN.</returns>
-    public static float Max(float left, float right) => MathF.Max(left, right);
+    public static float Max(float left, float right) => System.MathF.Max(left, right);
 
     /// <summary>Returns the larger double-precision value.</summary>
     /// <param name="left">The first value.</param>
@@ -709,7 +710,7 @@ public static class Mathf
     /// <param name="left">The first value.</param>
     /// <param name="right">The second value.</param>
     /// <returns>The smaller value, or NaN if either value is NaN.</returns>
-    public static float Min(float left, float right) => MathF.Min(left, right);
+    public static float Min(float left, float right) => System.MathF.Min(left, right);
 
     /// <summary>Returns the smaller double-precision value.</summary>
     /// <param name="left">The first value.</param>
@@ -724,7 +725,7 @@ public static class Mathf
     /// <returns>The destination when within the step, otherwise the stepped value.</returns>
     /// <exception cref="ArithmeticException"><paramref name="from"/> or <paramref name="to"/> makes the signed difference NaN.</exception>
     public static float MoveToward(float from, float to, float delta) =>
-        MathF.Abs(to - from) <= delta ? to : from + (MathF.Sign(to - from) * delta);
+        System.MathF.Abs(to - from) <= delta ? to : from + (System.MathF.Sign(to - from) * delta);
 
     /// <summary>Moves a double-precision value toward a destination by a maximum delta.</summary>
     /// <param name="from">The starting value.</param>
@@ -794,7 +795,7 @@ public static class Mathf
     /// <param name="value">The base.</param>
     /// <param name="power">The exponent.</param>
     /// <returns>The power result under IEEE 754 rules.</returns>
-    public static float Pow(float value, float power) => MathF.Pow(value, power);
+    public static float Pow(float value, float power) => System.MathF.Pow(value, power);
 
     /// <summary>Raises a double-precision value to a power.</summary>
     /// <param name="value">The base.</param>
@@ -840,8 +841,8 @@ public static class Mathf
     public static float RotateToward(float from, float to, float delta)
     {
         var difference = AngleDifference(from, to);
-        var magnitude = MathF.Abs(difference);
-        return from + (Math.Clamp(delta, magnitude - MathF.PI, magnitude) * (difference >= 0f ? 1f : -1f));
+        var magnitude = System.MathF.Abs(difference);
+        return from + (Math.Clamp(delta, magnitude - System.MathF.PI, magnitude) * (difference >= 0f ? 1f : -1f));
     }
 
     /// <summary>Rotates a double-precision angle toward another angle without overshooting.</summary>
@@ -859,7 +860,7 @@ public static class Mathf
     /// <summary>Rounds to the nearest integral floating-point value, with midpoint ties to even.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The rounded value.</returns>
-    public static float Round(float value) => MathF.Round(value);
+    public static float Round(float value) => System.MathF.Round(value);
 
     /// <summary>Rounds a double-precision value to the nearest integral value, with midpoint ties to even.</summary>
     /// <param name="value">The input value.</param>
@@ -870,7 +871,7 @@ public static class Mathf
     /// <param name="value">The input value.</param>
     /// <returns>The rounded value converted using unchecked managed numeric conversion semantics.</returns>
     /// <remarks>NaN, infinity, and an out-of-range result convert to the runtime-defined unchecked integer sentinel.</remarks>
-    public static int RoundToInt(float value) => unchecked((int)MathF.Round(value));
+    public static int RoundToInt(float value) => unchecked((int)System.MathF.Round(value));
 
     /// <summary>Rounds a double-precision value to the nearest integer, with midpoint ties to even.</summary>
     /// <param name="value">The input value.</param>
@@ -887,7 +888,7 @@ public static class Mathf
     /// <param name="value">The input value.</param>
     /// <returns>The sign.</returns>
     /// <exception cref="ArithmeticException"><paramref name="value"/> is NaN.</exception>
-    public static int Sign(float value) => MathF.Sign(value);
+    public static int Sign(float value) => System.MathF.Sign(value);
 
     /// <summary>Returns negative one, zero, or positive one according to a double-precision value's sign.</summary>
     /// <param name="value">The input value.</param>
@@ -898,7 +899,7 @@ public static class Mathf
     /// <summary>Returns the sine of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>The sine.</returns>
-    public static float Sin(float angle) => MathF.Sin(angle);
+    public static float Sin(float angle) => System.MathF.Sin(angle);
 
     /// <summary>Returns the double-precision sine of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
@@ -908,7 +909,7 @@ public static class Mathf
     /// <summary>Returns the sine and cosine of an angle in one operation.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>A tuple containing sine followed by cosine.</returns>
-    public static (float Sin, float Cos) SinCos(float angle) => MathF.SinCos(angle);
+    public static (float Sin, float Cos) SinCos(float angle) => System.MathF.SinCos(angle);
 
     /// <summary>Returns the double-precision sine and cosine of an angle in one operation.</summary>
     /// <param name="angle">The angle in radians.</param>
@@ -918,7 +919,7 @@ public static class Mathf
     /// <summary>Returns the hyperbolic sine.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The hyperbolic sine.</returns>
-    public static float Sinh(float value) => MathF.Sinh(value);
+    public static float Sinh(float value) => System.MathF.Sinh(value);
 
     /// <summary>Returns the double-precision hyperbolic sine.</summary>
     /// <param name="value">The input value.</param>
@@ -954,7 +955,7 @@ public static class Mathf
     /// <summary>Returns the principal square root.</summary>
     /// <param name="value">A nonnegative value.</param>
     /// <returns>The square root, or NaN for a negative input.</returns>
-    public static float Sqrt(float value) => MathF.Sqrt(value);
+    public static float Sqrt(float value) => System.MathF.Sqrt(value);
 
     /// <summary>Returns the double-precision principal square root.</summary>
     /// <param name="value">A nonnegative value.</param>
@@ -984,7 +985,7 @@ public static class Mathf
     /// <param name="step">The grid step; zero returns <paramref name="value"/> unchanged.</param>
     /// <returns><c>floor(value / step + 0.5) * step</c>.</returns>
     public static float Snapped(float value, float step) =>
-        step == 0f ? value : MathF.Floor((value / step) + 0.5f) * step;
+        step == 0f ? value : System.MathF.Floor((value / step) + 0.5f) * step;
 
     /// <summary>Snaps a double-precision value to the nearest multiple of a step.</summary>
     /// <param name="value">The value to snap.</param>
@@ -996,7 +997,7 @@ public static class Mathf
     /// <summary>Returns the tangent of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
     /// <returns>The tangent.</returns>
-    public static float Tan(float angle) => MathF.Tan(angle);
+    public static float Tan(float angle) => System.MathF.Tan(angle);
 
     /// <summary>Returns the double-precision tangent of an angle in radians.</summary>
     /// <param name="angle">The angle in radians.</param>
@@ -1006,7 +1007,7 @@ public static class Mathf
     /// <summary>Returns the hyperbolic tangent.</summary>
     /// <param name="value">The input value.</param>
     /// <returns>The hyperbolic tangent.</returns>
-    public static float Tanh(float value) => MathF.Tanh(value);
+    public static float Tanh(float value) => System.MathF.Tanh(value);
 
     /// <summary>Returns the double-precision hyperbolic tangent.</summary>
     /// <param name="value">The input value.</param>
@@ -1060,8 +1061,8 @@ public static class Mathf
         if (length == 0f)
             return 0f;
         var normalized = (value - length) / (length * 2f);
-        var fraction = normalized - MathF.Floor(normalized);
-        return MathF.Abs((fraction * length * 2f) - length);
+        var fraction = normalized - System.MathF.Floor(normalized);
+        return System.MathF.Abs((fraction * length * 2f) - length);
     }
 
     /// <summary>Generates a double-precision triangle wave between zero and a length.</summary>

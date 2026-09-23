@@ -97,7 +97,7 @@ internal static class DisplayServerScreenNativeTests
 
             var nativeScale = SDL.GetDisplayContentScale(displayId);
             Console.WriteLine($"Wayland display {index}: {bounds.W}x{bounds.H} logical / {physicalSize.X}x{physicalSize.Y} physical at ({bounds.X}, {bounds.Y}), SDL scale {nativeScale}, pixel density {pixelDensity}.");
-            var expectedScale = MathF.Ceiling(pixelDensity);
+            var expectedScale = System.MathF.Ceiling(pixelDensity);
             Check(display.ScreenGetScale(index) == expectedScale,
                 "An indexed Wayland screen rounds its fractional pixel density up to the integer output scale.");
             Console.WriteLine($"Wayland display {index}: indexed scale {display.ScreenGetScale(index)}, refresh {display.ScreenGetRefreshRate(index)} Hz (SDL precise {nativeMode?.RefreshRateNumerator}/{nativeMode?.RefreshRateDenominator}).");

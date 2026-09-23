@@ -238,7 +238,7 @@ public class Sprite : Entity
         ThrowIfDisposed();
         if (_texture is null) return new(0, 0, 1, 1);
         var size = BaseRegion(_texture).Size;
-        size = new(MathF.Truncate(MathF.Truncate(size.X) / _hframes), MathF.Truncate(MathF.Truncate(size.Y) / _vframes));
+        size = new(System.MathF.Truncate(System.MathF.Truncate(size.X) / _hframes), System.MathF.Truncate(System.MathF.Truncate(size.Y) / _vframes));
         var position = DrawingOffset(size);
         if (!position.IsFinite()) throw new InvalidOperationException("Sprite geometry overflowed finite coordinates.");
         return new(position, size == Vector2.Zero ? Vector2.One : size);

@@ -73,7 +73,7 @@ public sealed class InputEventAction : InputEvent
             ThrowIfDisposed();
             if (!float.IsFinite(value))
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Action strength must be finite.");
-            _strength = Mathf.Clamp(value, 0f, 1f);
+            _strength = MathF.Clamp(value, 0f, 1f);
             EmitInputChanged();
         }
     }

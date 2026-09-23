@@ -177,7 +177,7 @@ internal static partial class RenderingRuntimeTests
             {
                 using var frame = RenderingServer.Instance.Readback();
                 var contrast = 0f;
-                for (var x = 8; x < 60; x++) contrast += MathF.Abs(frame.GetPixel(x, 5).R - frame.GetPixel(x, 5).B);
+                for (var x = 8; x < 60; x++) contrast += System.MathF.Abs(frame.GetPixel(x, 5).R - frame.GetPixel(x, 5).B);
                 if (frames == 0) initial = contrast;
                 if (++frames == 5) { final = contrast; n.Tree!.Quit(); }
                 else window.AnisotropicFilteringLevel = (Viewport.AnisotropicFiltering)frames;

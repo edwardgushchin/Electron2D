@@ -378,7 +378,7 @@ public sealed partial class DisplayServer : ElectronObject
             : SDL.GetDisplayContentScale(displayId);
         if (!float.IsFinite(scale) || scale <= 0f)
             return 1f;
-        return driver == "wayland" && screen != ScreenOfMainWindow ? MathF.Ceiling(scale) : scale;
+        return driver == "wayland" && screen != ScreenOfMainWindow ? MathF.Ceil(scale) : scale;
     }
 
     /// <summary>Gets the title of the main window.</summary>

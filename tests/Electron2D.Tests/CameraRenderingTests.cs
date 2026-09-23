@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 using SDL = SDL3.SDL;
 
@@ -35,7 +36,7 @@ internal static partial class RenderingRuntimeTests
                 try
                 {
                     var center = window.GetVisibleRect().Size * 0.5f;
-                    var cx = (int)MathF.Floor(center.X); var cy = (int)MathF.Floor(center.Y);
+                    var cx = (int)System.MathF.Floor(center.X); var cy = (int)System.MathF.Floor(center.Y);
                     switch (frames)
                     {
                         case 1:
@@ -43,7 +44,7 @@ internal static partial class RenderingRuntimeTests
                             first.Zoom = new(2, 2); first.Position = new(12, 20); break;
                         case 2:
                             Pixel(pixels, cx - 4, cy, Colors.Red); Pixel(pixels, cx + 10, cy, Colors.Black);
-                            first.IgnoreRotation = false; first.Rotation = Mathf.Pi / 2; break;
+                            first.IgnoreRotation = false; first.Rotation = MathF.Pi / 2; break;
                         case 3:
                             Pixel(pixels, cx, cy + 4, Colors.Red); second.Enabled = true; second.MakeCurrent(); break;
                         case 4:

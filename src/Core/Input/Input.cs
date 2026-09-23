@@ -343,7 +343,7 @@ public sealed class Input : ElectronObject
         if (length > 1f)
             vector /= length;
         else if (deadzone > 0f)
-            vector *= Mathf.InverseLerp(deadzone, 1f, length) / length;
+            vector *= MathF.InverseLerp(deadzone, 1f, length) / length;
 
         return vector;
     }
@@ -363,7 +363,7 @@ public sealed class Input : ElectronObject
             throw new ArgumentOutOfRangeException(nameof(strength), strength, "Action strength must be finite.");
 
         lock (_gate)
-            UpdateContribution(action, SyntheticSource, new InputActionMatch(true, Mathf.Clamp(strength, 0f, 1f), Mathf.Clamp(strength, 0f, 1f)), exact: true, eventId: 0);
+            UpdateContribution(action, SyntheticSource, new InputActionMatch(true, MathF.Clamp(strength, 0f, 1f), MathF.Clamp(strength, 0f, 1f)), exact: true, eventId: 0);
     }
 
     /// <summary>Releases the synthetic source of a registered action without producing an input event.</summary>

@@ -59,8 +59,8 @@ internal static class CanvasPixelSnapTests
             vertices.Any(v => v.Position.IsEqualApprox(new(2.75f, 1.75f))), "UV clipping interpolates inside snapped triangles instead of snapping artificial cuts.");
         var area = 0f;
         for (var i = 0; i < vertices.Count; i += 3)
-            area += MathF.Abs((vertices[i + 1].Position - vertices[i].Position).Cross(vertices[i + 2].Position - vertices[i].Position)) / 2;
-        Check(MathF.Abs(area - 15.5f) < 0.0001f && vertices.All(v => v.UV.X is >= 0.25f and <= 0.75f && v.UV.Y is >= 0.25f and <= 0.75f), "Clipped triangles cover the snapped primitive exactly and preserve source borders.");
+            area += System.MathF.Abs((vertices[i + 1].Position - vertices[i].Position).Cross(vertices[i + 2].Position - vertices[i].Position)) / 2;
+        Check(System.MathF.Abs(area - 15.5f) < 0.0001f && vertices.All(v => v.UV.X is >= 0.25f and <= 0.75f && v.UV.Y is >= 0.25f and <= 0.75f), "Clipped triangles cover the snapped primitive exactly and preserve source borders.");
         var fill = new CanvasStroke(); fill.SetRect(new(0, 0, 2, 2), Colors.White, true, -1, true);
         var outline = new CanvasStroke(); outline.SetRect(new(0, 0, 2, 2), Colors.White, false, 1.2f, true);
         var shapes = new[]

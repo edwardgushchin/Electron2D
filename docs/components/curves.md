@@ -9,7 +9,7 @@ Resources domain curve data and generated textures: [Curve](../classes/Curve.md)
 ## Runtime flow and dependencies
 
 1. Typed point edits commit under the resource lock, invalidate caches and emit the applicable synchronous events outside that lock.
-2. Direct scalar/segment sampling uses existing Mathf/Vector2 Bézier operations. Scalar cached sampling uses evenly spaced domain samples; spatial baking uses a bounded polyline, cumulative distance and analytic tangent frames.
+2. Direct scalar/segment sampling uses existing MathF/Vector2 Bézier operations. Scalar cached sampling uses evenly spaced domain samples; spatial baking uses a bounded polyline, cumulative distance and analytic tangent frames.
 3. Spatial distance queries binary-search that cache; closest queries scan its segments. Array-returning methods copy storage.
 4. Resource duplication copies exact points/settings independently; PackedScene uses the same hooks and owns local resource copies. ResetState drops only caches. CPU curve operations and texture baking need no active renderer, import or editor. Texture sampling uses the existing renderer.
 5. Generated textures subscribe once to each distinct borrowed curve, sample each curve under its own lock, and publish a complete immutable float payload. Sampling uses i/Width in the unit domain, not i/(Width-1) or a remapped curve domain. Source changes rebuild compatible storage; width/mode changes replace allocation identity. Synchronous texture events run after publication outside the texture lock.

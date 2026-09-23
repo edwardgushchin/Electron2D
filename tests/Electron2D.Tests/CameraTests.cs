@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 
 internal static class CameraTests
@@ -16,7 +17,7 @@ internal static class CameraTests
         foreach (var side in Enum.GetValues<Side>()) Check(camera.GetDragMargin(side) == .2f && camera.GetLimit(side) == (side <= Side.Top ? -10_000_000 : 10_000_000), "Default indexed properties.");
         Check(camera.GetTargetPosition() == Vector2.Zero && camera.GetScreenCenterPosition() == Vector2.Zero && camera.GetScreenRotation() == 0 && !camera.IsCurrent(), "Detached queries.");
         camera.ForceUpdateScroll(); camera.ResetSmoothing(); Reject<InvalidOperationException>(camera.Align); Reject<InvalidOperationException>(camera.MakeCurrent);
-        Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(0, 1)); Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(Mathf.Epsilon / 2, 1));
+        Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(0, 1)); Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(MathF.Epsilon / 2, 1));
         Reject<ArgumentOutOfRangeException>(() => camera.Offset = new(float.NaN, 0)); Reject<ArgumentOutOfRangeException>(() => camera.PositionSmoothingSpeed = float.PositiveInfinity);
         Reject<ArgumentOutOfRangeException>(() => camera.AnchorMode = (Camera.AnchorModeEnum)4); Reject<ArgumentOutOfRangeException>(() => camera.ProcessCallback = (Camera.CameraProcessCallback)4);
         Reject<ArgumentOutOfRangeException>(() => camera.SetLimit((Side)4, 0)); Reject<ArgumentOutOfRangeException>(() => camera.GetDragMargin((Side)(-1)));
@@ -38,7 +39,7 @@ internal static class CameraTests
         Check(root.GetCamera() == camera, "First enabled camera owns the viewport."); Near(root.CanvasTransform * camera.GlobalPosition, new(50, 40)); Near(camera.GetScreenCenterPosition(), new(10, 20));
         camera.Position = new(20, 30); camera.ForceUpdateTransform(); Near(root.CanvasTransform * Vector2.Zero, new(30, 10)); Near(camera.GetTargetPosition(), new(20, 30));
         camera.Zoom = new(2, 4); Near(root.CanvasTransform * new Vector2(21, 31), new(52, 44));
-        camera.IgnoreRotation = false; camera.Rotation = Mathf.Pi / 2; camera.ForceUpdateTransform(); Near(root.CanvasTransform * new Vector2(20, 31), new(52, 40)); Near(camera.GetScreenCenterPosition(), new(20, 30)); Near(camera.GetScreenRotation(), Mathf.Pi / 2);
+        camera.IgnoreRotation = false; camera.Rotation = MathF.Pi / 2; camera.ForceUpdateTransform(); Near(root.CanvasTransform * new Vector2(20, 31), new(52, 40)); Near(camera.GetScreenCenterPosition(), new(20, 30)); Near(camera.GetScreenRotation(), MathF.Pi / 2);
         camera.IgnoreRotation = true; Check(camera.GetScreenRotation() == 0, "Ignored rotation resets the cached angle.");
         camera.Zoom = new(-2, 4); Near(root.CanvasTransform * new Vector2(21, 31), new(48, 44));
         camera.Rotation = 0; camera.ForceUpdateTransform(); camera.IgnoreRotation = false; Near(camera.GetScreenCenterPosition(), new(70, 10)); camera.IgnoreRotation = true;
@@ -63,10 +64,10 @@ internal static class CameraTests
 
     private static void ParentTracking()
     {
-        var root = new TestViewport(); var parent = new Entity { Position = new(7, 9), Rotation = Mathf.Pi / 2, Scale = new(2, 2) };
+        var root = new TestViewport(); var parent = new Entity { Position = new(7, 9), Rotation = MathF.Pi / 2, Scale = new(2, 2) };
         var camera = new Camera { Position = new(3, 4), LimitEnabled = false }; root.AddChild(parent); parent.AddChild(camera);
         using var tree = new SceneTree(root); Near(camera.GetScreenCenterPosition(), new(-1, 15));
-        camera.IgnoreRotation = false; Near(camera.GetScreenRotation(), Mathf.Pi / 2);
+        camera.IgnoreRotation = false; Near(camera.GetScreenRotation(), MathF.Pi / 2);
         parent.Position = new(10, 20); camera.ForceUpdateTransform(); Near(camera.GetScreenCenterPosition(), new(2, 26));
         camera.TopLevel = true; camera.ForceUpdateTransform(); Near(camera.GetScreenCenterPosition(), new(3, 4)); Near(camera.GetScreenRotation(), 0);
         camera.Visible = false; camera.Position = new(4, 5); camera.ForceUpdateTransform(); Near(camera.GetScreenCenterPosition(), new(4, 5));
@@ -90,8 +91,8 @@ internal static class CameraTests
         camera.ProcessCallback = Camera.CameraProcessCallback.Physics; tree.Process(.1); Near(camera.GetScreenCenterPosition(), new(75, 0)); tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(87.5f, 0));
         camera.ResetSmoothing(); Near(camera.GetScreenCenterPosition(), new(93.75f, 0)); camera.ForceUpdateScroll(); Near(camera.GetScreenCenterPosition(), new(100, 0));
         tree.Paused = true; camera.Position = new(200, 0); tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(100, 0)); tree.Paused = false; tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(150, 0));
-        camera.IgnoreRotation = false; camera.RotationSmoothingEnabled = true; camera.Rotation = Mathf.Pi / 2; camera.ForceUpdateTransform(); tree.PhysicsProcess(.1); Near(camera.GetScreenRotation(), Mathf.Pi / 4);
-        camera.Rotation = -Mathf.Pi * .9f; tree.PhysicsProcess(.1); Near(camera.GetScreenRotation(), Mathf.Pi * .675f);
+        camera.IgnoreRotation = false; camera.RotationSmoothingEnabled = true; camera.Rotation = MathF.Pi / 2; camera.ForceUpdateTransform(); tree.PhysicsProcess(.1); Near(camera.GetScreenRotation(), MathF.Pi / 4);
+        camera.Rotation = -MathF.Pi * .9f; tree.PhysicsProcess(.1); Near(camera.GetScreenRotation(), MathF.Pi * .675f);
         camera.PositionSmoothingEnabled = false; camera.RotationSmoothingEnabled = false; camera.IgnoreRotation = true; camera.Position = Vector2.Zero;
         camera.LimitLeft = 0; camera.LimitRight = 100; camera.LimitTop = 0; camera.LimitBottom = 80; camera.LimitSmoothed = true; camera.PositionSmoothingEnabled = true; camera.LimitEnabled = true;
         camera.ResetSmoothing(); camera.ForceUpdateScroll(); Near(camera.GetTargetPosition(), new(50, 40)); Near(camera.GetScreenCenterPosition(), new(50, 40));
@@ -127,7 +128,7 @@ internal static class CameraTests
     private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 80); }
     private sealed class FaultCamera : Camera { internal bool FailExit; protected override void OnExitTree() { base.OnExitTree(); if (FailExit) throw new ApplicationException("camera exit"); } }
     private static void Near(Vector2 a, Vector2 b) => Check(a.IsEqualApprox(b), $"Expected {b}, got {a}.");
-    private static void Near(float a, float b) => Check(Mathf.IsEqualApprox(a, b), $"Expected {b}, got {a}.");
+    private static void Near(float a, float b) => Check(MathF.IsEqualApprox(a, b), $"Expected {b}, got {a}.");
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 ## Runtime flow and dependencies
 
 1. Gradient owns copied color points and lazily sorts them for indexed operations or sampling. Bulk arrays and RemovePoint use current storage order.
-2. Sampling applies Linear, Constant or Cubic interpolation in SRGB, LinearSRGB or OKLAB; alpha remains independent. Existing Color/Mathf/internal OKLAB math supplies the conversions and interpolation.
+2. Sampling applies Linear, Constant or Cubic interpolation in SRGB, LinearSRGB or OKLAB; alpha remains independent. Existing Color/MathF/internal OKLAB math supplies the conversions and interpolation.
 3. Textures borrow the gradient and invalidate on its synchronous Changed event without forwarding the event. Texture-setting notifications follow their documented equality policy.
 4. Image access or renderer use coalesces pending work into one coherent copied RGBA8/RGBAF snapshot. Ramp samples include both endpoints; planar fills implement Linear/Radial/Square/Conic and None/Repeat/Mirror. Null source keeps prior pixels. Baking emits no texture event.
 5. Existing Texture drawing and material bindings upload snapshots lazily. Resource hooks provide exact-state copies, graph policy and PackedScene local ownership. No editor/importer/backend is needed for CPU use.

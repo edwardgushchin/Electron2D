@@ -1039,7 +1039,7 @@ public sealed partial class Image
             return 1f;
         if (value >= 3f)
             return 0f;
-        var radians = MathF.PI * value;
+        var radians = MathF.Pi * value;
         return (MathF.Sin(radians) / radians) * (MathF.Sin(radians / 3f) / (radians / 3f));
     }
 

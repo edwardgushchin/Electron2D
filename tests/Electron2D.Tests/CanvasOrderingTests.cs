@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 
 internal static partial class RenderingRuntimeTests
@@ -29,8 +30,8 @@ internal static partial class RenderingRuntimeTests
             ("nested Y flattens", () => Branch(Box(Colors.Red, sort: true), Branch(Box(Colors.Blue, y: 20, sort: true), Box(Colors.Yellow, y: -30)), Box(Colors.Green, y: 5)), Colors.Blue),
             ("unsorted child groups subtree", () => Branch(Box(Colors.Red, sort: true), Branch(Box(Colors.Blue, y: 20), Box(Colors.Yellow, y: -30)), Box(Colors.Green, y: 5)), Colors.Yellow),
             ("nested independent group", () => Branch(Box(Colors.Red, sort: true), Branch(Box(Colors.Blue, y: 20), Branch(Box(Colors.Yellow, y: -30, sort: true), Box(Colors.Cyan, y: 10))), Box(Colors.Green, y: 5)), Colors.Cyan),
-            ("Y uses local coordinates", () => Branch(new OrderingBox(Colors.Red) { YSortEnabled = true, Rotation = Mathf.Pi, Scale = new(2, 3) }, Box(Colors.Green, y: 20), Box(Colors.Blue, y: -20)), Colors.Green),
-            ("nested basis composition", () => Branch(Box(Colors.Red, sort: true), Branch(new OrderingBox(Colors.Blue) { Position = new(0, 20), Rotation = Mathf.Pi / 2, YSortEnabled = true }, new OrderingBox(Colors.Yellow) { Position = new(10, 0) }), Box(Colors.Green, y: 25)), Colors.Yellow),
+            ("Y uses local coordinates", () => Branch(new OrderingBox(Colors.Red) { YSortEnabled = true, Rotation = MathF.Pi, Scale = new(2, 3) }, Box(Colors.Green, y: 20), Box(Colors.Blue, y: -20)), Colors.Green),
+            ("nested basis composition", () => Branch(Box(Colors.Red, sort: true), Branch(new OrderingBox(Colors.Blue) { Position = new(0, 20), Rotation = MathF.Pi / 2, YSortEnabled = true }, new OrderingBox(Colors.Yellow) { Position = new(10, 0) }), Box(Colors.Green, y: 25)), Colors.Yellow),
             ("singular Y root", () => Branch(new Entity { YSortEnabled = true, Scale = new(1, 0) }, new OrderingBox(Colors.Green) { TopLevel = true }), Colors.Green),
             ("neutral root escapes Y group", () => Branch(Box(Colors.Red, sort: true), Branch(new Node(), Box(Colors.Blue, y: -20)), Box(Colors.Green, y: 20)), Colors.Blue),
             ("top-level escapes Y group", () => Branch(Box(Colors.Red, sort: true), Box(Colors.Blue, y: -20, top: true), Box(Colors.Green, y: 20)), Colors.Blue),

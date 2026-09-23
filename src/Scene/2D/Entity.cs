@@ -55,7 +55,7 @@ public class Entity : CanvasItem
             node => node.RotationDegrees,
             (node, value) => node.RotationDegrees = value,
             _ => 0f,
-            (_, value) => Mathf.IsFinite(value),
+            (_, value) => MathF.IsFinite(value),
             stored: true),
         new PropertyDescriptor<Entity, Vector2>(
             nameof(Scale),
@@ -69,7 +69,7 @@ public class Entity : CanvasItem
             node => node.Skew,
             (node, value) => node.Skew = value,
             _ => 0f,
-            (_, value) => Mathf.IsFinite(value),
+            (_, value) => MathF.IsFinite(value),
             stored: true)
     ];
 
@@ -187,11 +187,11 @@ public class Entity : CanvasItem
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float RotationDegrees
     {
-        get => Mathf.RadToDeg(Rotation);
+        get => MathF.RadToDeg(Rotation);
         set
         {
             EnsureFinite(value, "degrees");
-            Rotation = Mathf.DegToRad(value);
+            Rotation = MathF.DegToRad(value);
         }
     }
 
@@ -221,11 +221,11 @@ public class Entity : CanvasItem
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the rotation changes.</exception>
     public float GlobalRotationDegrees
     {
-        get => Mathf.RadToDeg(GlobalRotation);
+        get => MathF.RadToDeg(GlobalRotation);
         set
         {
             EnsureFinite(value, "degrees");
-            GlobalRotation = Mathf.DegToRad(value);
+            GlobalRotation = MathF.DegToRad(value);
         }
     }
 
@@ -443,11 +443,11 @@ public class Entity : CanvasItem
             : spatialParent.GetRelativeTransformToParent(parent) * Transform;
     }
 
-    private static bool IsFinite(Vector2 value) => Mathf.IsFinite(value.X) && Mathf.IsFinite(value.Y);
+    private static bool IsFinite(Vector2 value) => MathF.IsFinite(value.X) && MathF.IsFinite(value.Y);
 
     private static void EnsureFinite(float value, string parameterName)
     {
-        if (!Mathf.IsFinite(value))
+        if (!MathF.IsFinite(value))
             throw new ArgumentOutOfRangeException(parameterName, value, "The value must be finite.");
     }
 

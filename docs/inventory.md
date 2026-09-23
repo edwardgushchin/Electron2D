@@ -58,7 +58,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Input](domains/input.md) | [Input runtime](components/input-runtime.md) | [`MouseButtonMask`](classes/MouseButtonMask.md) | [`InputEnums.cs`](../src/Core/Input/InputEnums.cs) | Current | Implemented and verified |
 | [Input](domains/input.md) | [Input runtime](components/input-runtime.md) | [`JoyAxis`](classes/JoyAxis.md) | [`InputEnums.cs`](../src/Core/Input/InputEnums.cs) | Current | Implemented and verified |
 | [Input](domains/input.md) | [Input runtime](components/input-runtime.md) | [`JoyButton`](classes/JoyButton.md) | [`InputEnums.cs`](../src/Core/Input/InputEnums.cs) | Current | Implemented and verified |
-| [Core](domains/core.md) | [Scalar math](components/scalar-math.md) | [`Mathf`](classes/Mathf.md) | [`Mathf.cs`](../src/Core/Math/Mathf.cs) | Current | Implemented and verified |
+| [Core](domains/core.md) | [Scalar math](components/scalar-math.md) | [`MathF`](classes/MathF.md) | [`MathF.cs`](../src/Core/Math/MathF.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Color values](components/color-values.md) | [`Color`](classes/Color.md) | [`Color.cs`](../src/Core/Math/Color.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Color values](components/color-values.md) | [`Colors`](classes/Colors.md) | [`Colors.cs`](../src/Core/Math/Colors.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Geometry values](components/geometry-values.md) | [`Vector2`](classes/Vector2.md) | [`Vector2.cs`](../src/Core/Math/Vector2.cs) | Current | Implemented and verified |

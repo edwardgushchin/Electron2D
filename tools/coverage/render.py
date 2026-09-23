@@ -527,7 +527,7 @@ def render():
             candidates = []
             if name == "@GlobalScope":
                 if member["kind"] in {"method", "constant"}:
-                    candidates.extend(engine_by_owner["Electron2D.Mathf"])
+                    candidates.extend(engine_by_owner["Electron2D.MathF"])
                 if member["kind"] in {"enum", "enum_value"}:
                     enum = member["name"] if member["kind"] == "enum" else member["attributes"].get("enum", "")
                     owner = engine_name(aliases.get("enums", {}).get(f"@GlobalScope.{enum}", enum))

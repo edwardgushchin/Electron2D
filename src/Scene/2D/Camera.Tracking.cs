@@ -84,7 +84,7 @@ public partial class Camera
         var screenOffset = _anchorMode == AnchorModeEnum.DragCenter ? halfSize * scale : Vector2.Zero;
         if (!_ignoreRotation)
         {
-            angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
+            angle = _rotationSmoothingEnabled ? MathF.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
             screenOffset = screenOffset.Rotated(angle);
         }
         var origin = smoothed - screenOffset;

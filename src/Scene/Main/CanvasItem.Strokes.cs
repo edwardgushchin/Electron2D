@@ -137,7 +137,7 @@ public abstract partial class CanvasItem
             throw new ArgumentException("Arc coordinates must be finite.");
         if (pointCount < 2) throw new ArgumentOutOfRangeException(nameof(pointCount));
         ValidateStroke([center, center], [color], width, true);
-        var points = StrokePoints(pointCount); var sweep = (float)Math.Clamp((double)endAngle - startAngle, -Mathf.Tau, Mathf.Tau);
+        var points = StrokePoints(pointCount); var sweep = (float)Math.Clamp((double)endAngle - startAngle, -MathF.Tau, MathF.Tau);
         for (var i = 0; i < pointCount; i++)
         {
             var angle = i / (pointCount - 1f) * sweep + startAngle;
@@ -186,7 +186,7 @@ public abstract partial class CanvasItem
         else
         {
             Span<Vector2> points = stackalloc Vector2[65];
-            for (var i = 0; i < 64; i++) { var angle = i * (Mathf.Tau / 64); points[i] = position + new Vector2(major * MathF.Cos(angle), minor * MathF.Sin(angle)); }
+            for (var i = 0; i < 64; i++) { var angle = i * (MathF.Tau / 64); points[i] = position + new Vector2(major * MathF.Cos(angle), minor * MathF.Sin(angle)); }
             points[64] = points[0]; RecordStroke(points, [color], width, antialiased, true);
         }
     }

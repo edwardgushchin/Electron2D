@@ -46,8 +46,8 @@ public class PathFollow : Entity
                 var length = curve.GetBakedLength();
                 if (_loop && length != 0)
                 {
-                    progress = Mathf.PosMod(value, length);
-                    if (!Mathf.IsZeroApprox(value) && Mathf.IsZeroApprox(progress)) progress = length;
+                    progress = MathF.PosMod(value, length);
+                    if (!MathF.IsZeroApprox(value) && MathF.IsZeroApprox(progress)) progress = length;
                 }
                 else progress = Math.Clamp(value, 0, length);
             }

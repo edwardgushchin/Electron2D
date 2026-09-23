@@ -10,7 +10,7 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 | Type | Role | Source |
 | --- | --- | --- |
-| [`Mathf`](../classes/Mathf.md) | Stateless canonical scalar-math API | [`Mathf.cs`](../../src/Core/Math/Mathf.cs) |
+| [`MathF`](../classes/MathF.md) | Stateless canonical scalar-math API | [`MathF.cs`](../../src/Core/Math/MathF.cs) |
 
 ## Runtime flow
 
@@ -36,12 +36,12 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 ## Current implementation status
 
-Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
+Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `MathF`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
 
 ## Exclusions and limitations
 
 - No random-number generator, noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract exists.
-- Cube root remains a direct internal BCL operation where required because it is not part of the audited public surface.
+- Cube root and truncation remain direct internal `System.MathF` operations because they are not part of the audited public surface.
 - Transcendental bit-for-bit equivalence across every supported OS/architecture is not claimed; only contract-level behavior is fixed.
 - Verification currently executes on Linux/.NET 8. Windows, macOS, Android, iOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
 

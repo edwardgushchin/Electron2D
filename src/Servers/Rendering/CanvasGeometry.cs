@@ -13,7 +13,7 @@ internal readonly record struct CanvasAnimationSlice(double Length, double Begin
 {
     internal bool Includes(double time)
     {
-        var local = Mathf.PosMod(time - Offset, Length);
+        var local = MathF.PosMod(time - Offset, Length);
         return local >= Begin && local < End;
     }
 }

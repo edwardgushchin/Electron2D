@@ -143,7 +143,7 @@ public struct Vector4I : IEquatable<Vector4I>
     /// <summary>Returns the componentwise absolute value.</summary>
     /// <returns>A vector with nonnegative components.</returns>
     /// <exception cref="OverflowException">A component is <see cref="int.MinValue"/>.</exception>
-    public readonly Vector4I Abs() => new(Mathf.Abs(X), Mathf.Abs(Y), Mathf.Abs(Z), Mathf.Abs(W));
+    public readonly Vector4I Abs() => new(MathF.Abs(X), MathF.Abs(Y), MathF.Abs(Z), MathF.Abs(W));
 
     /// <summary>Clamps each component between corresponding vector bounds.</summary>
     /// <param name="min">The componentwise lower bounds.</param>
@@ -151,10 +151,10 @@ public struct Vector4I : IEquatable<Vector4I>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException">A lower bound is greater than its corresponding upper bound.</exception>
     public readonly Vector4I Clamp(Vector4I min, Vector4I max) => new(
-        Mathf.Clamp(X, min.X, max.X),
-        Mathf.Clamp(Y, min.Y, max.Y),
-        Mathf.Clamp(Z, min.Z, max.Z),
-        Mathf.Clamp(W, min.W, max.W));
+        MathF.Clamp(X, min.X, max.X),
+        MathF.Clamp(Y, min.Y, max.Y),
+        MathF.Clamp(Z, min.Z, max.Z),
+        MathF.Clamp(W, min.W, max.W));
 
     /// <summary>Clamps every component between scalar bounds.</summary>
     /// <param name="min">The lower bound.</param>
@@ -162,7 +162,7 @@ public struct Vector4I : IEquatable<Vector4I>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException"><paramref name="min"/> is greater than <paramref name="max"/>.</exception>
     public readonly Vector4I Clamp(int min, int max) => new(
-        Mathf.Clamp(X, min, max), Mathf.Clamp(Y, min, max), Mathf.Clamp(Z, min, max), Mathf.Clamp(W, min, max));
+        MathF.Clamp(X, min, max), MathF.Clamp(Y, min, max), MathF.Clamp(Z, min, max), MathF.Clamp(W, min, max));
 
     /// <summary>Returns the squared Euclidean distance to another point.</summary>
     /// <param name="to">The destination point.</param>
@@ -188,13 +188,13 @@ public struct Vector4I : IEquatable<Vector4I>
         var dy = (long)to.Y - Y;
         var dz = (long)to.Z - Z;
         var dw = (long)to.W - W;
-        return (float)Mathf.Sqrt(((double)dx * dx) + ((double)dy * dy) + ((double)dz * dz) + ((double)dw * dw));
+        return (float)MathF.Sqrt(((double)dx * dx) + ((double)dy * dy) + ((double)dz * dz) + ((double)dw * dw));
     }
 
     /// <summary>Returns the Euclidean length.</summary>
     /// <returns>The nonnegative length, rounded to single precision.</returns>
     /// <remarks>Squared terms use widened arithmetic, so this remains finite even when <see cref="LengthSquared"/> exceeds the signed 64-bit range.</remarks>
-    public readonly float Length() => (float)Mathf.Sqrt(((double)X * X) + ((double)Y * Y) + ((double)Z * Z) + ((double)W * W));
+    public readonly float Length() => (float)MathF.Sqrt(((double)X * X) + ((double)Y * Y) + ((double)Z * Z) + ((double)W * W));
 
     /// <summary>Returns the squared Euclidean length.</summary>
     /// <returns>The exact squared length when it fits in a signed 64-bit integer.</returns>
@@ -205,12 +205,12 @@ public struct Vector4I : IEquatable<Vector4I>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise maximum.</returns>
     public readonly Vector4I Max(Vector4I with) => new(
-        Mathf.Max(X, with.X), Mathf.Max(Y, with.Y), Mathf.Max(Z, with.Z), Mathf.Max(W, with.W));
+        MathF.Max(X, with.X), MathF.Max(Y, with.Y), MathF.Max(Z, with.Z), MathF.Max(W, with.W));
 
     /// <summary>Returns the componentwise maximum with a scalar.</summary>
     /// <param name="with">The scalar compared with every component.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector4I Max(int with) => new(Mathf.Max(X, with), Mathf.Max(Y, with), Mathf.Max(Z, with), Mathf.Max(W, with));
+    public readonly Vector4I Max(int with) => new(MathF.Max(X, with), MathF.Max(Y, with), MathF.Max(Z, with), MathF.Max(W, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
     /// <returns><see cref="Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
@@ -234,12 +234,12 @@ public struct Vector4I : IEquatable<Vector4I>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise minimum.</returns>
     public readonly Vector4I Min(Vector4I with) => new(
-        Mathf.Min(X, with.X), Mathf.Min(Y, with.Y), Mathf.Min(Z, with.Z), Mathf.Min(W, with.W));
+        MathF.Min(X, with.X), MathF.Min(Y, with.Y), MathF.Min(Z, with.Z), MathF.Min(W, with.W));
 
     /// <summary>Returns the componentwise minimum with a scalar.</summary>
     /// <param name="with">The scalar compared with every component.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector4I Min(int with) => new(Mathf.Min(X, with), Mathf.Min(Y, with), Mathf.Min(Z, with), Mathf.Min(W, with));
+    public readonly Vector4I Min(int with) => new(MathF.Min(X, with), MathF.Min(Y, with), MathF.Min(Z, with), MathF.Min(W, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
     /// <returns><see cref="Axis.W"/> when all components are equal; otherwise the last least axis.</returns>
@@ -261,7 +261,7 @@ public struct Vector4I : IEquatable<Vector4I>
 
     /// <summary>Returns the sign of every component.</summary>
     /// <returns>Components containing negative one, zero, or positive one.</returns>
-    public readonly Vector4I Sign() => new(Mathf.Sign(X), Mathf.Sign(Y), Mathf.Sign(Z), Mathf.Sign(W));
+    public readonly Vector4I Sign() => new(MathF.Sign(X), MathF.Sign(Y), MathF.Sign(Z), MathF.Sign(W));
 
     /// <summary>Snaps each component to the nearest multiple of the corresponding step.</summary>
     /// <param name="step">The componentwise step. A zero component leaves the corresponding value unchanged.</param>
@@ -469,13 +469,13 @@ public struct Vector4I : IEquatable<Vector4I>
     {
         if (step == 0)
             return value;
-        var snapped = Mathf.Snapped((double)value, step);
+        var snapped = MathF.Snapped((double)value, step);
         return checked((int)snapped);
     }
 
     private static void ValidateConvertible(float component, string parameterName)
     {
-        if (!Mathf.IsFinite(component) || (double)component < int.MinValue || (double)component > int.MaxValue)
+        if (!MathF.IsFinite(component) || (double)component < int.MinValue || (double)component > int.MaxValue)
             throw new ArgumentOutOfRangeException(parameterName, "Vector components must be finite 32-bit signed integer values.");
     }
 }

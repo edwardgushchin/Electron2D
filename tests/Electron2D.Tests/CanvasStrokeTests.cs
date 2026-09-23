@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 
 internal static class CanvasStrokeTests
@@ -37,8 +38,8 @@ internal static class CanvasStrokeTests
         Check(vertices.Count == 18 && vertices.Min(v => v.Position.X) == 0 && vertices.Max(v => v.Position.X) == 11, "Aligned dash sequence includes both endpoints.");
         Record(n => n.DrawDashedLine(new(0, 0), new(11, 0), Colors.White, 2, 2, false));
         Check(vertices.Max(v => v.Position.X) == 10, "Unaligned dash leaves the tail.");
-        Record(n => n.DrawArc(Vector2.Zero, 10, 0, Mathf.Tau * 4, 9, Colors.Red, 2));
-        var once = vertices.ToArray(); Record(n => n.DrawArc(Vector2.Zero, 10, 0, Mathf.Tau, 9, Colors.Red, 2));
+        Record(n => n.DrawArc(Vector2.Zero, 10, 0, MathF.Tau * 4, 9, Colors.Red, 2));
+        var once = vertices.ToArray(); Record(n => n.DrawArc(Vector2.Zero, 10, 0, MathF.Tau, 9, Colors.Red, 2));
         Check(vertices.SequenceEqual(once), "Arc sweep clamps at one turn.");
         Record(n => n.DrawEllipse(Vector2.Zero, 10, 4, Colors.Red));
         Check(vertices.Count == 192 && vertices.Max(v => v.Position.X) == 10 && vertices.Max(v => v.Position.Y) == 4, "Ellipse uses 64 fan segments and separate radii.");

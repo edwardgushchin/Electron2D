@@ -92,7 +92,7 @@ public sealed class InputEventJoypadMotion : InputEvent
         var raw = MathF.Abs(motion._axisValue);
         var sameDirection = (_axisValue < 0f) == (motion._axisValue < 0f) || motion._axisValue == 0f;
         var pressed = sameDirection && raw >= deadzone;
-        var strength = !pressed ? 0f : deadzone >= 1f ? 1f : Mathf.Clamp(Mathf.InverseLerp(deadzone, 1f, raw), 0f, 1f);
+        var strength = !pressed ? 0f : deadzone >= 1f ? 1f : MathF.Clamp(MathF.InverseLerp(deadzone, 1f, raw), 0f, 1f);
         match = new InputActionMatch(pressed, strength, sameDirection ? raw : 0f);
         return true;
     }

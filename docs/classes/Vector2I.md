@@ -1,6 +1,6 @@
 # Vector2I
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -814,7 +814,7 @@ Converts a finite in-range floating-point vector by truncating each component to
 
 Copies are independent. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies can be used concurrently; shared mutation is unsynchronized.
 
-The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`RectI`](RectI.md) uses it for position, size, and integer geometry. [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
+The type depends on canonical scalar [`MathF`](MathF.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`RectI`](RectI.md) uses it for position, size, and integer geometry. [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
 
 ## Coverage, verification, and limitations
 

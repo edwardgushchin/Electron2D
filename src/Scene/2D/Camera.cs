@@ -73,7 +73,7 @@ public partial class Camera : Entity
     public Vector2 Zoom
     {
         get { CheckQuery(); return _zoom; }
-        set { EnsureMutable(); Finite(value); if (Mathf.IsZeroApprox(value.X) || Mathf.IsZeroApprox(value.Y)) throw new ArgumentOutOfRangeException(nameof(value), "Zoom axes must be nonzero."); if (_zoom == value) return; _zoom = value; UpdateScrollPreservingPosition(); }
+        set { EnsureMutable(); Finite(value); if (MathF.IsZeroApprox(value.X) || MathF.IsZeroApprox(value.Y)) throw new ArgumentOutOfRangeException(nameof(value), "Zoom axes must be nonzero."); if (_zoom == value) return; _zoom = value; UpdateScrollPreservingPosition(); }
     }
 
     /// <summary>Gets or sets the camera anchor mode.</summary>

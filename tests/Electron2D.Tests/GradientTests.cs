@@ -73,7 +73,7 @@ internal static class GradientTests
         foreach (var fill in Enum.GetValues<GradientTexture.FillEnum>())
         {
             t.Fill = fill; using var image = t.GetImage()!;
-            var expected = fill switch { GradientTexture.FillEnum.Linear => .5f, GradientTexture.FillEnum.Radial => MathF.Sqrt(.5f), GradientTexture.FillEnum.Square => .5f, _ => .125f };
+            var expected = fill switch { GradientTexture.FillEnum.Linear => .5f, GradientTexture.FillEnum.Radial => System.MathF.Sqrt(.5f), GradientTexture.FillEnum.Square => .5f, _ => .125f };
             Near(image.GetPixel(1, 1), new(expected, expected, expected, 1));
         }
         t.Fill = GradientTexture.FillEnum.Conic; t.FillFrom = new(.5f, .5f); t.FillTo = new(1, .5f);

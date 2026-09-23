@@ -22,7 +22,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - 2D physics backend: `Box2D.NET` is selected for source vendoring in the first physics slice; neither its source nor a physics domain is integrated yet.
 - Rendering architecture: Engine.Run owns an SDL GPU primary renderer with a startup SDL_Renderer fallback. Retained CanvasItem rectangles, lines and textures use transforms, visibility, stable Z order and modulation. Typed shader materials require the GPU path; fallback rejects them explicitly. HLSL/GLSL compile at import/build into the common SPIR-V path. The [rendering domain](domains/rendering.md) records the verified baseline and remaining capabilities.
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
-- Canonical scalar mathematics with seven constants, 127 typed overloads, strict `1e-6f`/`1e-14` approximation, angle/interpolation/wrapping helpers, documented managed failures, and allocation-free warmed execution: implemented in `Mathf`. Geometry and Entity transform math use this shared contract.
+- Canonical scalar mathematics with seven constants, 127 typed overloads, strict `1e-6f`/`1e-14` approximation, angle/interpolation/wrapping helpers, documented managed failures, and allocation-free warmed execution: implemented in `MathF`. Geometry and Entity transform math use this shared contract.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
 - Engine-owned `Vector2`/`Vector2I` and `Vector4`/`Vector4I` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
 - Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
@@ -75,7 +75,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [EventConnection](classes/EventConnection.md)
 - Class: [PropertyDescriptor](classes/PropertyDescriptor.md)
 - Class: [PropertyDescriptor&lt;TOwner, TValue&gt;](classes/PropertyDescriptor.Generic.md)
-- Static class: [Mathf](classes/Mathf.md)
+- Static class: [MathF](classes/MathF.md)
 - Struct: [Color](classes/Color.md)
 - Static class: [Colors](classes/Colors.md)
 - Struct: [Vector2](classes/Vector2.md)

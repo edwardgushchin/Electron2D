@@ -2495,7 +2495,7 @@
     },
     {
       "electron2d": "method:Electron2D.Timer.GetConfigurationWarnings()",
-      "reason": "Existing Node diagnostic override for the reference native sibling condition. Warns below 0.05 minus canonical Mathf.Epsilon, including stopped/detached timers; duration assignments and Start(duration) request refresh. Threshold, errors and reentrant removal are exercised. SceneDiagnosticsTests provides executable evidence.",
+      "reason": "Existing Node diagnostic override for the reference native sibling condition. Warns below 0.05 minus canonical MathF.Epsilon, including stopped/detached timers; duration assignments and Start(duration) request refresh. Threshold, errors and reentrant removal are exercised. SceneDiagnosticsTests provides executable evidence.",
       "adr": "ADRs 0008/0011/0012/0027 / 0034"
     },
     {
@@ -2980,7 +2980,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Local ascending Y includes the parent at zero, flattens nested enabled children and keeps disabled child subtrees grouped; effective Z takes precedence. Composed local transforms, visibility/root boundaries and approximate scene-order ties follow the shared Mathf tolerance (ADR 0034). Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
+      "reason": "Local ascending Y includes the parent at zero, flattens nested enabled children and keeps disabled child subtrees grouped; effective Z takes precedence. Composed local transforms, visibility/root boundaries and approximate scene-order ties follow the shared MathF tolerance (ADR 0034). Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
       "godot": [
         "CanvasItem::property:y_sort_enabled"
       ]

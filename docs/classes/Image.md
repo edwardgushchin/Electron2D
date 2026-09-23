@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -529,7 +529,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 ## Dependencies and interactions
 
-`Image` depends on `Resource`, `Color`, `Vector2I`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
+`Image` depends on `Resource`, `Color`, `Vector2I`, `RectI`, `ClockDirection`, `MathF`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
 
 ## Verification
 

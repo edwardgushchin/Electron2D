@@ -1407,11 +1407,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Mathf",
+    "id": "T:Electron2D.MathF",
     "kind": "type",
-    "declaringType": "Electron2D.Mathf",
-    "name": "Mathf",
-    "signature": "public static class Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
+    "name": "MathF",
+    "signature": "public static class Electron2D.MathF",
     "visibility": "public",
     "baseType": "System.Object",
     "interfaces": [],
@@ -2867,9 +2867,9 @@
     "value": "2011"
   },
   {
-    "id": "constant:Electron2D.Mathf.E()",
+    "id": "constant:Electron2D.MathF.E()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "E",
     "signature": "public const System.Single E = 2.7182817f",
     "visibility": "public",
@@ -2880,9 +2880,9 @@
     "value": "2.7182817f"
   },
   {
-    "id": "constant:Electron2D.Mathf.Epsilon()",
+    "id": "constant:Electron2D.MathF.Epsilon()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Epsilon",
     "signature": "public const System.Single Epsilon = 1E-06f",
     "visibility": "public",
@@ -2893,9 +2893,9 @@
     "value": "1E-06f"
   },
   {
-    "id": "constant:Electron2D.Mathf.Inf()",
+    "id": "constant:Electron2D.MathF.Inf()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Inf",
     "signature": "public const System.Single Inf = Infinityf",
     "visibility": "public",
@@ -2906,9 +2906,9 @@
     "value": "Infinityf"
   },
   {
-    "id": "constant:Electron2D.Mathf.NaN()",
+    "id": "constant:Electron2D.MathF.NaN()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "NaN",
     "signature": "public const System.Single NaN = NaNf",
     "visibility": "public",
@@ -2919,9 +2919,9 @@
     "value": "NaNf"
   },
   {
-    "id": "constant:Electron2D.Mathf.Pi()",
+    "id": "constant:Electron2D.MathF.Pi()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Pi",
     "signature": "public const System.Single Pi = 3.1415927f",
     "visibility": "public",
@@ -2932,9 +2932,9 @@
     "value": "3.1415927f"
   },
   {
-    "id": "constant:Electron2D.Mathf.Sqrt2()",
+    "id": "constant:Electron2D.MathF.Sqrt2()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sqrt2",
     "signature": "public const System.Single Sqrt2 = 1.4142135f",
     "visibility": "public",
@@ -2945,9 +2945,9 @@
     "value": "1.4142135f"
   },
   {
-    "id": "constant:Electron2D.Mathf.Tau()",
+    "id": "constant:Electron2D.MathF.Tau()",
     "kind": "constant",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Tau",
     "signature": "public const System.Single Tau = 6.2831855f",
     "visibility": "public",
@@ -27194,9 +27194,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Abs(System.Double)",
+    "id": "method:Electron2D.MathF.Abs(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Abs",
     "signature": "public static System.Double Abs(System.Double value)",
     "visibility": "public",
@@ -27213,9 +27213,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Abs(System.Int32)",
+    "id": "method:Electron2D.MathF.Abs(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Abs",
     "signature": "public static System.Int32 Abs(System.Int32 value)",
     "visibility": "public",
@@ -27232,9 +27232,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Abs(System.Single)",
+    "id": "method:Electron2D.MathF.Abs(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Abs",
     "signature": "public static System.Single Abs(System.Single value)",
     "visibility": "public",
@@ -27251,9 +27251,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Acos(System.Double)",
+    "id": "method:Electron2D.MathF.Acos(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Acos",
     "signature": "public static System.Double Acos(System.Double value)",
     "visibility": "public",
@@ -27270,9 +27270,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Acos(System.Single)",
+    "id": "method:Electron2D.MathF.Acos(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Acos",
     "signature": "public static System.Single Acos(System.Single value)",
     "visibility": "public",
@@ -27289,9 +27289,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Acosh(System.Double)",
+    "id": "method:Electron2D.MathF.Acosh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Acosh",
     "signature": "public static System.Double Acosh(System.Double value)",
     "visibility": "public",
@@ -27308,9 +27308,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Acosh(System.Single)",
+    "id": "method:Electron2D.MathF.Acosh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Acosh",
     "signature": "public static System.Single Acosh(System.Single value)",
     "visibility": "public",
@@ -27327,9 +27327,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.AngleDifference(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.AngleDifference(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "AngleDifference",
     "signature": "public static System.Double AngleDifference(System.Double from, System.Double to)",
     "visibility": "public",
@@ -27351,9 +27351,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.AngleDifference(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.AngleDifference(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "AngleDifference",
     "signature": "public static System.Single AngleDifference(System.Single from, System.Single to)",
     "visibility": "public",
@@ -27375,9 +27375,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Asin(System.Double)",
+    "id": "method:Electron2D.MathF.Asin(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Asin",
     "signature": "public static System.Double Asin(System.Double value)",
     "visibility": "public",
@@ -27394,9 +27394,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Asin(System.Single)",
+    "id": "method:Electron2D.MathF.Asin(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Asin",
     "signature": "public static System.Single Asin(System.Single value)",
     "visibility": "public",
@@ -27413,9 +27413,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Asinh(System.Double)",
+    "id": "method:Electron2D.MathF.Asinh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Asinh",
     "signature": "public static System.Double Asinh(System.Double value)",
     "visibility": "public",
@@ -27432,9 +27432,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Asinh(System.Single)",
+    "id": "method:Electron2D.MathF.Asinh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Asinh",
     "signature": "public static System.Single Asinh(System.Single value)",
     "visibility": "public",
@@ -27451,9 +27451,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atan(System.Double)",
+    "id": "method:Electron2D.MathF.Atan(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atan",
     "signature": "public static System.Double Atan(System.Double value)",
     "visibility": "public",
@@ -27470,9 +27470,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atan(System.Single)",
+    "id": "method:Electron2D.MathF.Atan(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atan",
     "signature": "public static System.Single Atan(System.Single value)",
     "visibility": "public",
@@ -27489,9 +27489,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atan2(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Atan2(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atan2",
     "signature": "public static System.Double Atan2(System.Double y, System.Double x)",
     "visibility": "public",
@@ -27513,9 +27513,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atan2(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Atan2(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atan2",
     "signature": "public static System.Single Atan2(System.Single y, System.Single x)",
     "visibility": "public",
@@ -27537,9 +27537,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atanh(System.Double)",
+    "id": "method:Electron2D.MathF.Atanh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atanh",
     "signature": "public static System.Double Atanh(System.Double value)",
     "visibility": "public",
@@ -27556,9 +27556,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Atanh(System.Single)",
+    "id": "method:Electron2D.MathF.Atanh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Atanh",
     "signature": "public static System.Single Atanh(System.Single value)",
     "visibility": "public",
@@ -27575,9 +27575,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "BezierDerivative",
     "signature": "public static System.Double BezierDerivative(System.Double start, System.Double control1, System.Double control2, System.Double end, System.Double weight)",
     "visibility": "public",
@@ -27614,9 +27614,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "BezierDerivative",
     "signature": "public static System.Single BezierDerivative(System.Single start, System.Single control1, System.Single control2, System.Single end, System.Single weight)",
     "visibility": "public",
@@ -27653,9 +27653,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "BezierInterpolate",
     "signature": "public static System.Double BezierInterpolate(System.Double start, System.Double control1, System.Double control2, System.Double end, System.Double weight)",
     "visibility": "public",
@@ -27692,9 +27692,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "BezierInterpolate",
     "signature": "public static System.Single BezierInterpolate(System.Single start, System.Single control1, System.Single control2, System.Single end, System.Single weight)",
     "visibility": "public",
@@ -27731,9 +27731,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Ceil(System.Double)",
+    "id": "method:Electron2D.MathF.Ceil(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Ceil",
     "signature": "public static System.Double Ceil(System.Double value)",
     "visibility": "public",
@@ -27750,9 +27750,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Ceil(System.Single)",
+    "id": "method:Electron2D.MathF.Ceil(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Ceil",
     "signature": "public static System.Single Ceil(System.Single value)",
     "visibility": "public",
@@ -27769,9 +27769,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CeilToInt(System.Double)",
+    "id": "method:Electron2D.MathF.CeilToInt(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CeilToInt",
     "signature": "public static System.Int32 CeilToInt(System.Double value)",
     "visibility": "public",
@@ -27788,9 +27788,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CeilToInt(System.Single)",
+    "id": "method:Electron2D.MathF.CeilToInt(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CeilToInt",
     "signature": "public static System.Int32 CeilToInt(System.Single value)",
     "visibility": "public",
@@ -27807,9 +27807,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Clamp(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Clamp(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Clamp",
     "signature": "public static System.Double Clamp(System.Double value, System.Double min, System.Double max)",
     "visibility": "public",
@@ -27836,9 +27836,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Clamp(System.Int32,System.Int32,System.Int32)",
+    "id": "method:Electron2D.MathF.Clamp(System.Int32,System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Clamp",
     "signature": "public static System.Int32 Clamp(System.Int32 value, System.Int32 min, System.Int32 max)",
     "visibility": "public",
@@ -27865,9 +27865,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Clamp(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Clamp(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Clamp",
     "signature": "public static System.Single Clamp(System.Single value, System.Single min, System.Single max)",
     "visibility": "public",
@@ -27894,9 +27894,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Cos(System.Double)",
+    "id": "method:Electron2D.MathF.Cos(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Cos",
     "signature": "public static System.Double Cos(System.Double angle)",
     "visibility": "public",
@@ -27913,9 +27913,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Cos(System.Single)",
+    "id": "method:Electron2D.MathF.Cos(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Cos",
     "signature": "public static System.Single Cos(System.Single angle)",
     "visibility": "public",
@@ -27932,9 +27932,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Cosh(System.Double)",
+    "id": "method:Electron2D.MathF.Cosh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Cosh",
     "signature": "public static System.Double Cosh(System.Double value)",
     "visibility": "public",
@@ -27951,9 +27951,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Cosh(System.Single)",
+    "id": "method:Electron2D.MathF.Cosh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Cosh",
     "signature": "public static System.Single Cosh(System.Single value)",
     "visibility": "public",
@@ -27970,9 +27970,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolate",
     "signature": "public static System.Double CubicInterpolate(System.Double from, System.Double to, System.Double pre, System.Double post, System.Double weight)",
     "visibility": "public",
@@ -28009,9 +28009,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolate",
     "signature": "public static System.Single CubicInterpolate(System.Single from, System.Single to, System.Single pre, System.Single post, System.Single weight)",
     "visibility": "public",
@@ -28048,9 +28048,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateAngle",
     "signature": "public static System.Double CubicInterpolateAngle(System.Double from, System.Double to, System.Double pre, System.Double post, System.Double weight)",
     "visibility": "public",
@@ -28087,9 +28087,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateAngle",
     "signature": "public static System.Single CubicInterpolateAngle(System.Single from, System.Single to, System.Single pre, System.Single post, System.Single weight)",
     "visibility": "public",
@@ -28126,9 +28126,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateAngleInTime",
     "signature": "public static System.Double CubicInterpolateAngleInTime(System.Double from, System.Double to, System.Double pre, System.Double post, System.Double weight, System.Double toTime, System.Double preTime, System.Double postTime)",
     "visibility": "public",
@@ -28180,9 +28180,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateAngleInTime",
     "signature": "public static System.Single CubicInterpolateAngleInTime(System.Single from, System.Single to, System.Single pre, System.Single post, System.Single weight, System.Single toTime, System.Single preTime, System.Single postTime)",
     "visibility": "public",
@@ -28234,9 +28234,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateInTime",
     "signature": "public static System.Double CubicInterpolateInTime(System.Double from, System.Double to, System.Double pre, System.Double post, System.Double weight, System.Double toTime, System.Double preTime, System.Double postTime)",
     "visibility": "public",
@@ -28288,9 +28288,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "CubicInterpolateInTime",
     "signature": "public static System.Single CubicInterpolateInTime(System.Single from, System.Single to, System.Single pre, System.Single post, System.Single weight, System.Single toTime, System.Single preTime, System.Single postTime)",
     "visibility": "public",
@@ -28342,9 +28342,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DBToLinear(System.Double)",
+    "id": "method:Electron2D.MathF.DBToLinear(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DBToLinear",
     "signature": "public static System.Double DBToLinear(System.Double decibels)",
     "visibility": "public",
@@ -28361,9 +28361,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DBToLinear(System.Single)",
+    "id": "method:Electron2D.MathF.DBToLinear(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DBToLinear",
     "signature": "public static System.Single DBToLinear(System.Single decibels)",
     "visibility": "public",
@@ -28380,9 +28380,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
+    "id": "method:Electron2D.MathF.DecimalCount(System.Decimal)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DecimalCount",
     "signature": "public static System.Int32 DecimalCount(System.Decimal value)",
     "visibility": "public",
@@ -28399,9 +28399,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DecimalCount(System.Double)",
+    "id": "method:Electron2D.MathF.DecimalCount(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DecimalCount",
     "signature": "public static System.Int32 DecimalCount(System.Double value)",
     "visibility": "public",
@@ -28418,9 +28418,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DegToRad(System.Double)",
+    "id": "method:Electron2D.MathF.DegToRad(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DegToRad",
     "signature": "public static System.Double DegToRad(System.Double degrees)",
     "visibility": "public",
@@ -28437,9 +28437,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.DegToRad(System.Single)",
+    "id": "method:Electron2D.MathF.DegToRad(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "DegToRad",
     "signature": "public static System.Single DegToRad(System.Single degrees)",
     "visibility": "public",
@@ -28456,9 +28456,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Ease(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Ease(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Ease",
     "signature": "public static System.Double Ease(System.Double value, System.Double curve)",
     "visibility": "public",
@@ -28480,9 +28480,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Ease(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Ease(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Ease",
     "signature": "public static System.Single Ease(System.Single value, System.Single curve)",
     "visibility": "public",
@@ -28504,9 +28504,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Exp(System.Double)",
+    "id": "method:Electron2D.MathF.Exp(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Exp",
     "signature": "public static System.Double Exp(System.Double value)",
     "visibility": "public",
@@ -28523,9 +28523,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Exp(System.Single)",
+    "id": "method:Electron2D.MathF.Exp(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Exp",
     "signature": "public static System.Single Exp(System.Single value)",
     "visibility": "public",
@@ -28542,9 +28542,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Floor(System.Double)",
+    "id": "method:Electron2D.MathF.Floor(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Floor",
     "signature": "public static System.Double Floor(System.Double value)",
     "visibility": "public",
@@ -28561,9 +28561,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Floor(System.Single)",
+    "id": "method:Electron2D.MathF.Floor(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Floor",
     "signature": "public static System.Single Floor(System.Single value)",
     "visibility": "public",
@@ -28580,9 +28580,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.FloorToInt(System.Double)",
+    "id": "method:Electron2D.MathF.FloorToInt(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "FloorToInt",
     "signature": "public static System.Int32 FloorToInt(System.Double value)",
     "visibility": "public",
@@ -28599,9 +28599,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.FloorToInt(System.Single)",
+    "id": "method:Electron2D.MathF.FloorToInt(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "FloorToInt",
     "signature": "public static System.Int32 FloorToInt(System.Single value)",
     "visibility": "public",
@@ -28618,9 +28618,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.InverseLerp(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.InverseLerp(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "InverseLerp",
     "signature": "public static System.Double InverseLerp(System.Double from, System.Double to, System.Double value)",
     "visibility": "public",
@@ -28647,9 +28647,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.InverseLerp(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.InverseLerp(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "InverseLerp",
     "signature": "public static System.Single InverseLerp(System.Single from, System.Single to, System.Single value)",
     "visibility": "public",
@@ -28676,9 +28676,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.IsEqualApprox(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsEqualApprox",
     "signature": "public static System.Boolean IsEqualApprox(System.Double left, System.Double right)",
     "visibility": "public",
@@ -28700,9 +28700,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.IsEqualApprox(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsEqualApprox",
     "signature": "public static System.Boolean IsEqualApprox(System.Double left, System.Double right, System.Double tolerance)",
     "visibility": "public",
@@ -28729,9 +28729,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.IsEqualApprox(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsEqualApprox",
     "signature": "public static System.Boolean IsEqualApprox(System.Single left, System.Single right)",
     "visibility": "public",
@@ -28753,9 +28753,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.IsEqualApprox(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsEqualApprox",
     "signature": "public static System.Boolean IsEqualApprox(System.Single left, System.Single right, System.Single tolerance)",
     "visibility": "public",
@@ -28782,9 +28782,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsFinite(System.Double)",
+    "id": "method:Electron2D.MathF.IsFinite(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsFinite",
     "signature": "public static System.Boolean IsFinite(System.Double value)",
     "visibility": "public",
@@ -28801,9 +28801,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsFinite(System.Single)",
+    "id": "method:Electron2D.MathF.IsFinite(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsFinite",
     "signature": "public static System.Boolean IsFinite(System.Single value)",
     "visibility": "public",
@@ -28820,9 +28820,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsInf(System.Double)",
+    "id": "method:Electron2D.MathF.IsInf(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsInf",
     "signature": "public static System.Boolean IsInf(System.Double value)",
     "visibility": "public",
@@ -28839,9 +28839,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsInf(System.Single)",
+    "id": "method:Electron2D.MathF.IsInf(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsInf",
     "signature": "public static System.Boolean IsInf(System.Single value)",
     "visibility": "public",
@@ -28858,9 +28858,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsNaN(System.Double)",
+    "id": "method:Electron2D.MathF.IsNaN(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsNaN",
     "signature": "public static System.Boolean IsNaN(System.Double value)",
     "visibility": "public",
@@ -28877,9 +28877,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsNaN(System.Single)",
+    "id": "method:Electron2D.MathF.IsNaN(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsNaN",
     "signature": "public static System.Boolean IsNaN(System.Single value)",
     "visibility": "public",
@@ -28896,9 +28896,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsZeroApprox(System.Double)",
+    "id": "method:Electron2D.MathF.IsZeroApprox(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsZeroApprox",
     "signature": "public static System.Boolean IsZeroApprox(System.Double value)",
     "visibility": "public",
@@ -28915,9 +28915,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.IsZeroApprox(System.Single)",
+    "id": "method:Electron2D.MathF.IsZeroApprox(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "IsZeroApprox",
     "signature": "public static System.Boolean IsZeroApprox(System.Single value)",
     "visibility": "public",
@@ -28934,9 +28934,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Lerp(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Lerp(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Lerp",
     "signature": "public static System.Double Lerp(System.Double from, System.Double to, System.Double weight)",
     "visibility": "public",
@@ -28963,9 +28963,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Lerp(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Lerp(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Lerp",
     "signature": "public static System.Single Lerp(System.Single from, System.Single to, System.Single weight)",
     "visibility": "public",
@@ -28992,9 +28992,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LerpAngle(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.LerpAngle(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "LerpAngle",
     "signature": "public static System.Double LerpAngle(System.Double from, System.Double to, System.Double weight)",
     "visibility": "public",
@@ -29021,9 +29021,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LerpAngle(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.LerpAngle(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "LerpAngle",
     "signature": "public static System.Single LerpAngle(System.Single from, System.Single to, System.Single weight)",
     "visibility": "public",
@@ -29050,9 +29050,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LinearToDB(System.Double)",
+    "id": "method:Electron2D.MathF.LinearToDB(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "LinearToDB",
     "signature": "public static System.Double LinearToDB(System.Double linear)",
     "visibility": "public",
@@ -29069,9 +29069,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.LinearToDB(System.Single)",
+    "id": "method:Electron2D.MathF.LinearToDB(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "LinearToDB",
     "signature": "public static System.Single LinearToDB(System.Single linear)",
     "visibility": "public",
@@ -29088,9 +29088,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Log(System.Double)",
+    "id": "method:Electron2D.MathF.Log(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Log",
     "signature": "public static System.Double Log(System.Double value)",
     "visibility": "public",
@@ -29107,9 +29107,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Log(System.Single)",
+    "id": "method:Electron2D.MathF.Log(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Log",
     "signature": "public static System.Single Log(System.Single value)",
     "visibility": "public",
@@ -29126,9 +29126,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Max(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Max(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Max",
     "signature": "public static System.Double Max(System.Double left, System.Double right)",
     "visibility": "public",
@@ -29150,9 +29150,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Max(System.Int32,System.Int32)",
+    "id": "method:Electron2D.MathF.Max(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Max",
     "signature": "public static System.Int32 Max(System.Int32 left, System.Int32 right)",
     "visibility": "public",
@@ -29174,9 +29174,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Max(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Max(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Max",
     "signature": "public static System.Single Max(System.Single left, System.Single right)",
     "visibility": "public",
@@ -29198,9 +29198,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Min(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Min(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Min",
     "signature": "public static System.Double Min(System.Double left, System.Double right)",
     "visibility": "public",
@@ -29222,9 +29222,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Min(System.Int32,System.Int32)",
+    "id": "method:Electron2D.MathF.Min(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Min",
     "signature": "public static System.Int32 Min(System.Int32 left, System.Int32 right)",
     "visibility": "public",
@@ -29246,9 +29246,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Min(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Min(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Min",
     "signature": "public static System.Single Min(System.Single left, System.Single right)",
     "visibility": "public",
@@ -29270,9 +29270,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.MoveToward(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.MoveToward(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "MoveToward",
     "signature": "public static System.Double MoveToward(System.Double from, System.Double to, System.Double delta)",
     "visibility": "public",
@@ -29299,9 +29299,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.MoveToward(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.MoveToward(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "MoveToward",
     "signature": "public static System.Single MoveToward(System.Single from, System.Single to, System.Single delta)",
     "visibility": "public",
@@ -29328,9 +29328,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.NearestPo2(System.Int32)",
+    "id": "method:Electron2D.MathF.NearestPo2(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "NearestPo2",
     "signature": "public static System.Int32 NearestPo2(System.Int32 value)",
     "visibility": "public",
@@ -29347,9 +29347,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.PingPong(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.PingPong(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "PingPong",
     "signature": "public static System.Double PingPong(System.Double value, System.Double length)",
     "visibility": "public",
@@ -29371,9 +29371,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.PingPong(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.PingPong(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "PingPong",
     "signature": "public static System.Single PingPong(System.Single value, System.Single length)",
     "visibility": "public",
@@ -29395,9 +29395,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.PosMod(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.PosMod(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "PosMod",
     "signature": "public static System.Double PosMod(System.Double value, System.Double divisor)",
     "visibility": "public",
@@ -29419,9 +29419,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.PosMod(System.Int32,System.Int32)",
+    "id": "method:Electron2D.MathF.PosMod(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "PosMod",
     "signature": "public static System.Int32 PosMod(System.Int32 value, System.Int32 divisor)",
     "visibility": "public",
@@ -29443,9 +29443,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.PosMod(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.PosMod(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "PosMod",
     "signature": "public static System.Single PosMod(System.Single value, System.Single divisor)",
     "visibility": "public",
@@ -29467,9 +29467,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Pow(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Pow(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Pow",
     "signature": "public static System.Double Pow(System.Double value, System.Double power)",
     "visibility": "public",
@@ -29491,9 +29491,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Pow(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Pow(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Pow",
     "signature": "public static System.Single Pow(System.Single value, System.Single power)",
     "visibility": "public",
@@ -29515,9 +29515,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RadToDeg(System.Double)",
+    "id": "method:Electron2D.MathF.RadToDeg(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RadToDeg",
     "signature": "public static System.Double RadToDeg(System.Double radians)",
     "visibility": "public",
@@ -29534,9 +29534,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RadToDeg(System.Single)",
+    "id": "method:Electron2D.MathF.RadToDeg(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RadToDeg",
     "signature": "public static System.Single RadToDeg(System.Single radians)",
     "visibility": "public",
@@ -29553,9 +29553,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Remap",
     "signature": "public static System.Double Remap(System.Double value, System.Double inputFrom, System.Double inputTo, System.Double outputFrom, System.Double outputTo)",
     "visibility": "public",
@@ -29592,9 +29592,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Remap",
     "signature": "public static System.Single Remap(System.Single value, System.Single inputFrom, System.Single inputTo, System.Single outputFrom, System.Single outputTo)",
     "visibility": "public",
@@ -29631,9 +29631,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RotateToward(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.RotateToward(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RotateToward",
     "signature": "public static System.Double RotateToward(System.Double from, System.Double to, System.Double delta)",
     "visibility": "public",
@@ -29660,9 +29660,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RotateToward(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.RotateToward(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RotateToward",
     "signature": "public static System.Single RotateToward(System.Single from, System.Single to, System.Single delta)",
     "visibility": "public",
@@ -29689,9 +29689,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Round(System.Double)",
+    "id": "method:Electron2D.MathF.Round(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Round",
     "signature": "public static System.Double Round(System.Double value)",
     "visibility": "public",
@@ -29708,9 +29708,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Round(System.Single)",
+    "id": "method:Electron2D.MathF.Round(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Round",
     "signature": "public static System.Single Round(System.Single value)",
     "visibility": "public",
@@ -29727,9 +29727,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RoundToInt(System.Double)",
+    "id": "method:Electron2D.MathF.RoundToInt(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RoundToInt",
     "signature": "public static System.Int32 RoundToInt(System.Double value)",
     "visibility": "public",
@@ -29746,9 +29746,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.RoundToInt(System.Single)",
+    "id": "method:Electron2D.MathF.RoundToInt(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "RoundToInt",
     "signature": "public static System.Int32 RoundToInt(System.Single value)",
     "visibility": "public",
@@ -29765,9 +29765,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sign(System.Double)",
+    "id": "method:Electron2D.MathF.Sign(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sign",
     "signature": "public static System.Int32 Sign(System.Double value)",
     "visibility": "public",
@@ -29784,9 +29784,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sign(System.Int32)",
+    "id": "method:Electron2D.MathF.Sign(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sign",
     "signature": "public static System.Int32 Sign(System.Int32 value)",
     "visibility": "public",
@@ -29803,9 +29803,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sign(System.Single)",
+    "id": "method:Electron2D.MathF.Sign(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sign",
     "signature": "public static System.Int32 Sign(System.Single value)",
     "visibility": "public",
@@ -29822,9 +29822,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sin(System.Double)",
+    "id": "method:Electron2D.MathF.Sin(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sin",
     "signature": "public static System.Double Sin(System.Double angle)",
     "visibility": "public",
@@ -29841,9 +29841,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sin(System.Single)",
+    "id": "method:Electron2D.MathF.Sin(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sin",
     "signature": "public static System.Single Sin(System.Single angle)",
     "visibility": "public",
@@ -29860,9 +29860,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.SinCos(System.Double)",
+    "id": "method:Electron2D.MathF.SinCos(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "SinCos",
     "signature": "public static System.ValueTuple\u003CSystem.Double, System.Double\u003E SinCos(System.Double angle)",
     "visibility": "public",
@@ -29879,9 +29879,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.SinCos(System.Single)",
+    "id": "method:Electron2D.MathF.SinCos(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "SinCos",
     "signature": "public static System.ValueTuple\u003CSystem.Single, System.Single\u003E SinCos(System.Single angle)",
     "visibility": "public",
@@ -29898,9 +29898,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sinh(System.Double)",
+    "id": "method:Electron2D.MathF.Sinh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sinh",
     "signature": "public static System.Double Sinh(System.Double value)",
     "visibility": "public",
@@ -29917,9 +29917,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sinh(System.Single)",
+    "id": "method:Electron2D.MathF.Sinh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sinh",
     "signature": "public static System.Single Sinh(System.Single value)",
     "visibility": "public",
@@ -29936,9 +29936,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.SmoothStep(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.SmoothStep(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "SmoothStep",
     "signature": "public static System.Double SmoothStep(System.Double from, System.Double to, System.Double value)",
     "visibility": "public",
@@ -29965,9 +29965,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.SmoothStep(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.SmoothStep(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "SmoothStep",
     "signature": "public static System.Single SmoothStep(System.Single from, System.Single to, System.Single value)",
     "visibility": "public",
@@ -29994,9 +29994,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Snapped(System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Snapped(System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Snapped",
     "signature": "public static System.Double Snapped(System.Double value, System.Double step)",
     "visibility": "public",
@@ -30018,9 +30018,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Snapped(System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Snapped(System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Snapped",
     "signature": "public static System.Single Snapped(System.Single value, System.Single step)",
     "visibility": "public",
@@ -30042,9 +30042,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sqrt(System.Double)",
+    "id": "method:Electron2D.MathF.Sqrt(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sqrt",
     "signature": "public static System.Double Sqrt(System.Double value)",
     "visibility": "public",
@@ -30061,9 +30061,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Sqrt(System.Single)",
+    "id": "method:Electron2D.MathF.Sqrt(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Sqrt",
     "signature": "public static System.Single Sqrt(System.Single value)",
     "visibility": "public",
@@ -30080,9 +30080,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.StepDecimals(System.Double)",
+    "id": "method:Electron2D.MathF.StepDecimals(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "StepDecimals",
     "signature": "public static System.Int32 StepDecimals(System.Double step)",
     "visibility": "public",
@@ -30099,9 +30099,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Tan(System.Double)",
+    "id": "method:Electron2D.MathF.Tan(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Tan",
     "signature": "public static System.Double Tan(System.Double angle)",
     "visibility": "public",
@@ -30118,9 +30118,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Tan(System.Single)",
+    "id": "method:Electron2D.MathF.Tan(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Tan",
     "signature": "public static System.Single Tan(System.Single angle)",
     "visibility": "public",
@@ -30137,9 +30137,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Tanh(System.Double)",
+    "id": "method:Electron2D.MathF.Tanh(System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Tanh",
     "signature": "public static System.Double Tanh(System.Double value)",
     "visibility": "public",
@@ -30156,9 +30156,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Tanh(System.Single)",
+    "id": "method:Electron2D.MathF.Tanh(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Tanh",
     "signature": "public static System.Single Tanh(System.Single value)",
     "visibility": "public",
@@ -30175,9 +30175,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Wrap(System.Double,System.Double,System.Double)",
+    "id": "method:Electron2D.MathF.Wrap(System.Double,System.Double,System.Double)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Wrap",
     "signature": "public static System.Double Wrap(System.Double value, System.Double min, System.Double max)",
     "visibility": "public",
@@ -30204,9 +30204,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Wrap(System.Int32,System.Int32,System.Int32)",
+    "id": "method:Electron2D.MathF.Wrap(System.Int32,System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Wrap",
     "signature": "public static System.Int32 Wrap(System.Int32 value, System.Int32 min, System.Int32 max)",
     "visibility": "public",
@@ -30233,9 +30233,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Mathf.Wrap(System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.MathF.Wrap(System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Mathf",
+    "declaringType": "Electron2D.MathF",
     "name": "Wrap",
     "signature": "public static System.Single Wrap(System.Single value, System.Single min, System.Single max)",
     "visibility": "public",

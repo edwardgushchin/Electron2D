@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 
 internal static partial class RenderingRuntimeTests
@@ -20,8 +21,8 @@ internal static partial class RenderingRuntimeTests
             n.DrawSetTransform(Vector2.Zero);
             n.DrawDashedLine(new(8, 52), new(61, 52), Colors.White, 3, 6, true);
             n.DrawDashedLine(new(8, 64), new(61, 64), Colors.White, 3, 6, false);
-            n.DrawArc(new(90, 54), 14, 0, Mathf.Pi, 33, Colors.Green, 3);
-            n.DrawEllipseArc(new(132, 54), 18, 8, 0, -Mathf.Tau * 2, 65, Colors.Blue, 2);
+            n.DrawArc(new(90, 54), 14, 0, MathF.Pi, 33, Colors.Green, 3);
+            n.DrawEllipseArc(new(132, 54), 18, 8, 0, -MathF.Tau * 2, 65, Colors.Blue, 2);
             n.DrawCircle(new(24, 100), 12, Colors.Red);
             n.DrawCircle(new(60, 100), 10, Colors.Green, false, 3);
             n.DrawCircle(new(93, 100), 4, Colors.Blue, false, 8);

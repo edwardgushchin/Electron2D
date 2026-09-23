@@ -1,6 +1,6 @@
 # Vector4
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -851,7 +851,7 @@ Compares vectors lexicographically by X, Y, Z, then W.
 
 Copies are independent, with no state transition. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies are thread-safe to read or mutate independently; shared writes are unsynchronized.
 
-The type depends on canonical scalar [`Mathf`](Mathf.md), formatting/layout primitives, and [`Vector4I`](Vector4I.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
+The type depends on canonical scalar [`MathF`](MathF.md), formatting/layout primitives, and [`Vector4I`](Vector4I.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
 
 ## Coverage, verification, and limitations
 

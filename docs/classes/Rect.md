@@ -1,6 +1,6 @@
 # Rect
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 **Inherits:** —
 
@@ -435,7 +435,7 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`RectI`](RectI.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
+The public type depends on canonical scalar [`MathF`](MathF.md), [`Vector2`](Vector2.md), [`RectI`](RectI.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
 
 There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. The complete integer sibling and typed conversions are implemented without depending on their future pixel, atlas, image-region, or grid consumers. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 

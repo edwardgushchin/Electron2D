@@ -154,9 +154,9 @@ internal static class TweenValue<TValue>
     private static Func<TValue, TValue, double, TValue>? CreateInterpolator()
     {
         if (typeof(TValue) == typeof(float))
-            return Cast((float from, float to, double weight) => Mathf.Lerp(from, to, (float)weight));
+            return Cast((float from, float to, double weight) => MathF.Lerp(from, to, (float)weight));
         if (typeof(TValue) == typeof(double))
-            return Cast((double from, double to, double weight) => Mathf.Lerp(from, to, weight));
+            return Cast((double from, double to, double weight) => MathF.Lerp(from, to, weight));
         if (typeof(TValue) == typeof(bool))
             return Cast((bool from, bool to, double weight) =>
                 ((from ? 1d : 0d) + (((to ? 1d : 0d) - (from ? 1d : 0d)) * weight)) >= 0.5d);

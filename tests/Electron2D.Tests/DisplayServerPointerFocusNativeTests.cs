@@ -41,7 +41,7 @@ internal static class DisplayServerPointerFocusNativeTests
                 minY = Math.Min(minY, position.Y);
                 maxY = Math.Max(maxY, position.Y);
             }
-            var edge = Math.Max(24, (int)MathF.Ceiling(SDL.GetWindowPixelDensity(window) * 12));
+            var edge = Math.Max(24, (int)System.MathF.Ceiling(SDL.GetWindowPixelDensity(window) * 12));
             Console.WriteLine($"Confined range: x=[{minX},{maxX}], y=[{minY},{maxY}], client size={size}, lost focus={lostFocus}.");
             Check(!lostFocus, "Pointer focus escaped while Confined was active.");
             Check(minX <= edge && maxX >= size.X - edge && minY <= edge && maxY >= size.Y - edge,

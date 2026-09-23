@@ -1,3 +1,4 @@
+using MathF = Electron2D.MathF;
 using Electron2D;
 using SDL = SDL3.SDL;
 
@@ -93,7 +94,7 @@ internal static partial class RenderingRuntimeTests
                         case 3: Pixel(pixels, 122, 92, Colors.Red); layer.FollowViewportScale = .5f; break;
                         case 4: Pixel(pixels, 127, 71, Colors.Red); layer.FollowViewportScale = 0; break;
                         case 5: Pixel(pixels, 128, 64, Colors.Black); layer.FollowViewportScale = -1; break;
-                        case 6: Pixel(pixels, 130, 49, Colors.Red); red.Position = new(1, 1); layer.FollowViewportEnabled = false; layer.Transform = new(Mathf.Pi / 2, new(2, 1), 0, new(70, 10)); break;
+                        case 6: Pixel(pixels, 130, 49, Colors.Red); red.Position = new(1, 1); layer.FollowViewportEnabled = false; layer.Transform = new(MathF.Pi / 2, new(2, 1), 0, new(70, 10)); break;
                         case 7:
                             Pixel(pixels, 71, 16, Colors.Red); camera.Enabled = false; window.GlobalCanvasTransform = Transform.Identity;
                             window.CanvasTransform = new(0, new(.5f, -.5f)); layer.Transform = new(0, new(.5f, -.5f));

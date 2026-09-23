@@ -111,7 +111,7 @@ internal sealed class CanvasStroke
             var previous = new Vector2(major, 0); var previousOuter = new Vector2(major + border, 0);
             for (var i = 1; i <= 64; i++)
             {
-                var angle = i * (Mathf.Tau / 64); var unit = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+                var angle = i * (MathF.Tau / 64); var unit = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 var next = unit * new Vector2(major, minor); var nextOuter = unit * new Vector2(major + border, minor + border);
                 if (layer == 0) Triangle(_triangles, new(center, color), new(center + previous, color), new(center + next, color));
                 else
@@ -173,7 +173,7 @@ internal sealed class CanvasStroke
 
     private static Color ColorAt(ReadOnlySpan<Color> colors, int i) => colors.IsEmpty ? Colors.White : colors[Math.Min(i, colors.Length - 1)];
     private static float CompensatedWidth(float width) => width <= 0 ? width : width <= 2.5f + 0.00001f ? width * 0.5f :
-        width <= 5 + 0.00001f ? Mathf.Lerp(width * 0.5f, width - 0.625f, (width - 2.5f) / 2.5f) : width - 0.625f;
+        width <= 5 + 0.00001f ? MathF.Lerp(width * 0.5f, width - 0.625f, (width - 2.5f) / 2.5f) : width - 0.625f;
     private static Vector2 Direction(Vector2 from, Vector2 to)
     {
         var x = (double)to.X - from.X; var y = (double)to.Y - from.Y; var length = Math.Sqrt(x * x + y * y);
@@ -184,7 +184,7 @@ internal sealed class CanvasStroke
         var bisector = (previous * direction.Length() - direction * previous.Length()).Normalized();
         var sine = MathF.Sin(MathF.Atan2(bisector.Cross(previous), bisector.Dot(previous)));
         var length = 1f;
-        if (!Mathf.IsZeroApprox(sine) && !direction.IsEqualApprox(previous)) length = Math.Clamp(1 / sine, -3, 3);
+        if (!MathF.IsZeroApprox(sine) && !direction.IsEqualApprox(previous)) length = Math.Clamp(1 / sine, -3, 3);
         else bisector = direction.Orthogonal();
         if (bisector.IsZeroApprox()) bisector = direction.Orthogonal();
         return bisector * length;
