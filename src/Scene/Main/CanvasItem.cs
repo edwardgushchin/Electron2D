@@ -39,7 +39,9 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Delivers enabled transform notifications after a derived placement model changes.</summary>
     /// <remarks>The local transform must be committed first. Descendant delivery stops at neutral nodes and
-    /// top-level canvas items. All affected items are attempted before callback failures are aggregated.</remarks>
+    /// top-level canvas items. All affected items are attempted before callback failures are aggregated.
+    /// Child snapshots use the shared array pool and clear references on return; warmed propagation allocates
+    /// no snapshot arrays and remains isolated across callback reentry.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="AggregateException">A notification or event handler fails.</exception>
@@ -425,12 +427,19 @@ public abstract partial class CanvasItem : Node
         catch (Exception error) { CollectException(ref errors, error); }
         try { TransformChanged?.Invoke(this); }
         catch (Exception error) { CollectException(ref errors, error); }
-        foreach (var child in Children.ToArray())
+        var count = Children.Count;
+        var snapshot = count == 0 ? null : System.Buffers.ArrayPool<Node>.Shared.Rent(count);
+        try
         {
-            if (child is not CanvasItem { TopLevel: false } item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
-            try { item.PropagateGlobalTransformChanged(); }
-            catch (Exception error) { CollectException(ref errors, error); }
+            for (var i = 0; i < count; i++) snapshot![i] = Children[i];
+            for (var i = 0; i < count; i++)
+            {
+                if (snapshot![i] is not CanvasItem { TopLevel: false } item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
+                try { item.PropagateGlobalTransformChanged(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
         }
+        finally { if (snapshot is not null) System.Buffers.ArrayPool<Node>.Shared.Return(snapshot, clearArray: true); }
         ThrowCollected("Canvas transform callbacks failed.", errors);
     }
 

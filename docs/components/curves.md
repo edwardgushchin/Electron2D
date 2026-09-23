@@ -25,7 +25,7 @@ Warm cached sampling and closest queries allocate no managed memory. Editing/bak
 
 | Consumer | State and exact trigger |
 | --- | --- |
-| Scene Path and PathFollow concepts | Unimplemented. Curve geometry and Entity are now available; the first path scene slice must add curve ownership/subscriptions, progress/distance/ratio updates, tangent rotation, offsets, looping, reparenting and PackedScene semantics. Navigation is not a prerequisite. |
+| [Scene Path and PathFollow](scene-paths.md) | Runtime implemented: borrowed curves/subscriptions, progress/ratio, tangent rotation, offsets, looping, reparenting and PackedScene. Shared debug/editor contracts remain in the scene component backlog. |
 | CurveTexture and CurveXYZTexture | Unimplemented. Scalar Curve and Texture exist; the first curve-texture slice must implement curve-change rebaking, width/channel/storage policy, native float-format sampling and both renderer capability/error paths. GUI is not a prerequisite. XYZ names three scalar channels, not a spatial 3D resource. |
 | Curve3D | Excluded under strict 2D scope, ADR 0004. |
 | Editor curve widgets and disk serialization | Deferred to the first editor and typed asset-format slices. No inert public declarations are added. |

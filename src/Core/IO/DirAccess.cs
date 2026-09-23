@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
@@ -341,16 +342,16 @@ public sealed class DirAccess : ElectronObject
             if (_scope is AccessScope.Resources or AccessScope.UserData)
             {
                 var prefix = _scope == AccessScope.Resources ? "res://" : "user://";
-                var relative = Path.GetRelativePath(_scopeRoot!, _currentDirectory);
+                var relative = IOPath.GetRelativePath(_scopeRoot!, _currentDirectory);
                 return relative == "." ? prefix : prefix + relative.Replace('\\', '/');
             }
 
             if (includeDrive)
                 return _currentDirectory;
-            var root = Path.GetPathRoot(_currentDirectory);
-            return string.IsNullOrEmpty(root) || root == Path.DirectorySeparatorChar.ToString()
+            var root = IOPath.GetPathRoot(_currentDirectory);
+            return string.IsNullOrEmpty(root) || root == IOPath.DirectorySeparatorChar.ToString()
                 ? _currentDirectory
-                : Path.DirectorySeparatorChar + _currentDirectory[root.Length..];
+                : IOPath.DirectorySeparatorChar + _currentDirectory[root.Length..];
         }
     }
 
@@ -675,7 +676,7 @@ public sealed class DirAccess : ElectronObject
             ThrowIfDisposed();
             var resolvedSource = ResolveLocked(source);
             var resolvedTarget = ResolveLocked(target);
-            var storedSource = Path.IsPathFullyQualified(source) || source.Contains("://", StringComparison.Ordinal)
+            var storedSource = IOPath.IsPathFullyQualified(source) || source.Contains("://", StringComparison.Ordinal)
                 ? resolvedSource
                 : source;
             if (TryGetAttributes(resolvedSource, out var attributes) &&
@@ -839,7 +840,7 @@ public sealed class DirAccess : ElectronObject
         if (path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
 
-        var resolved = Path.GetFullPath(path, _currentDirectory);
+        var resolved = IOPath.GetFullPath(path, _currentDirectory);
         if (_scopeRoot is not null && !IsWithin(_scopeRoot, resolved))
             throw new UnauthorizedAccessException("The path escapes this directory access scope.");
         return resolved;
@@ -868,7 +869,7 @@ public sealed class DirAccess : ElectronObject
         }
         if (path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
-        return (Path.GetFullPath(path), AccessScope.FileSystem, null);
+        return (IOPath.GetFullPath(path), AccessScope.FileSystem, null);
     }
 
     private static DirAccess OpenAbsolute(string path)
@@ -896,7 +897,7 @@ public sealed class DirAccess : ElectronObject
             return ResolveWithinRoot(roots.UserDataRoot, path[7..]);
         if (path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
-        return Path.GetFullPath(path);
+        return IOPath.GetFullPath(path);
     }
 
     private static void ValidateAbsolutePath(string path)
@@ -905,7 +906,7 @@ public sealed class DirAccess : ElectronObject
         if (!path.StartsWith("res://", StringComparison.Ordinal) &&
             !path.StartsWith("user://", StringComparison.Ordinal) &&
             !path.Contains("://", StringComparison.Ordinal) &&
-            !Path.IsPathFullyQualified(path))
+            !IOPath.IsPathFullyQualified(path))
         {
             throw new ArgumentException("A static directory operation requires an absolute or virtual path.", nameof(path));
         }
@@ -913,11 +914,11 @@ public sealed class DirAccess : ElectronObject
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {
-        var nativeRelative = relativePath.Replace('/', Path.DirectorySeparatorChar)
-            .Replace('\\', Path.DirectorySeparatorChar);
-        if (Path.IsPathRooted(nativeRelative))
+        var nativeRelative = relativePath.Replace('/', IOPath.DirectorySeparatorChar)
+            .Replace('\\', IOPath.DirectorySeparatorChar);
+        if (IOPath.IsPathRooted(nativeRelative))
             throw new UnauthorizedAccessException("A virtual path cannot contain an absolute suffix.");
-        var resolved = Path.GetFullPath(Path.Combine(root, nativeRelative));
+        var resolved = IOPath.GetFullPath(IOPath.Combine(root, nativeRelative));
         if (!IsWithin(root, resolved))
             throw new UnauthorizedAccessException("A virtual path cannot escape its configured root.");
         return resolved;
@@ -925,10 +926,10 @@ public sealed class DirAccess : ElectronObject
 
     private static bool IsWithin(string root, string path)
     {
-        var relative = Path.GetRelativePath(root, path);
-        return !Path.IsPathRooted(relative) && relative != ".." &&
-               !relative.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
-               !relative.StartsWith($"..{Path.AltDirectorySeparatorChar}", StringComparison.Ordinal);
+        var relative = IOPath.GetRelativePath(root, path);
+        return !IOPath.IsPathRooted(relative) && relative != ".." &&
+               !relative.StartsWith($"..{IOPath.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+               !relative.StartsWith($"..{IOPath.AltDirectorySeparatorChar}", StringComparison.Ordinal);
     }
 
     private static void ValidatePath(string path)
@@ -958,7 +959,7 @@ public sealed class DirAccess : ElectronObject
 
         foreach (var path in Directory.EnumerateFileSystemEntries(directory))
         {
-            var name = Path.GetFileName(path);
+            var name = IOPath.GetFileName(path);
             var attributes = File.GetAttributes(path);
             entries.Add(new DirectoryEntry(
                 name,
@@ -974,7 +975,7 @@ public sealed class DirAccess : ElectronObject
     {
         if (TryGetAttributes(path, out _))
             throw new IOException($"An entry already exists at '{path}'.");
-        var parent = Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(path));
+        var parent = IOPath.GetDirectoryName(IOPath.TrimEndingDirectorySeparator(path));
         if (string.IsNullOrEmpty(parent) || !IsExistingDirectory(parent))
             throw new DirectoryNotFoundException($"Parent directory '{parent}' does not exist.");
         Directory.CreateDirectory(path);
@@ -1088,8 +1089,8 @@ public sealed class DirAccess : ElectronObject
     private static void EnsureDistinct(string source, string destination)
     {
         if (StringComparer.Ordinal.Equals(
-                Path.TrimEndingDirectorySeparator(source),
-                Path.TrimEndingDirectorySeparator(destination)))
+                IOPath.TrimEndingDirectorySeparator(source),
+                IOPath.TrimEndingDirectorySeparator(destination)))
         {
             throw new ArgumentException("Source and destination paths must be different.", nameof(destination));
         }
@@ -1275,7 +1276,7 @@ public sealed class DirAccess : ElectronObject
         {
             return DriveInfo.GetDrives()
                 .Select(drive => new DriveEntry(
-                    Path.TrimEndingDirectorySeparator(drive.Name),
+                    IOPath.TrimEndingDirectorySeparator(drive.Name),
                     drive.DriveType == DriveType.Network ? "<network>" : drive.IsReady ? drive.VolumeLabel : string.Empty,
                     drive.RootDirectory.FullName))
                 .ToArray();
@@ -1295,7 +1296,7 @@ public sealed class DirAccess : ElectronObject
 
     private static DriveEntry[] GetLinuxDriveEntries()
     {
-        var paths = new HashSet<string>(StringComparer.Ordinal) { Path.DirectorySeparatorChar.ToString() };
+        var paths = new HashSet<string>(StringComparer.Ordinal) { IOPath.DirectorySeparatorChar.ToString() };
         var mountTable = System.IO.File.Exists("/proc/self/mounts") ? "/proc/self/mounts" : "/etc/mtab";
         if (System.IO.File.Exists(mountTable))
         {
@@ -1317,23 +1318,23 @@ public sealed class DirAccess : ElectronObject
 
         var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         if (home.Length > 0)
-            paths.Add(Path.GetFullPath(home));
+            paths.Add(IOPath.GetFullPath(home));
 
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         if (desktop.Length > 0)
-            paths.Add(Path.GetFullPath(desktop));
+            paths.Add(IOPath.GetFullPath(desktop));
 
         var config = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         if (config.Length == 0 && home.Length > 0)
-            config = Path.Combine(home, ".config");
-        var bookmarks = Path.Combine(config, "gtk-3.0", "bookmarks");
+            config = IOPath.Combine(home, ".config");
+        var bookmarks = IOPath.Combine(config, "gtk-3.0", "bookmarks");
         if (System.IO.File.Exists(bookmarks))
         {
             foreach (var line in System.IO.File.ReadLines(bookmarks))
             {
                 var uriText = line.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                 if (uriText is not null && Uri.TryCreate(uriText, UriKind.Absolute, out var uri) && uri.IsFile)
-                    paths.Add(Path.GetFullPath(uri.LocalPath));
+                    paths.Add(IOPath.GetFullPath(uri.LocalPath));
             }
         }
 
@@ -1408,7 +1409,7 @@ public sealed class DirAccess : ElectronObject
 
     private static long GetWindowsAvailableSpace(string path)
     {
-        var queryPath = IsWindowsNetworkShare(path) && !Path.EndsInDirectorySeparator(path)
+        var queryPath = IsWindowsNetworkShare(path) && !IOPath.EndsInDirectorySeparator(path)
             ? path + '\\'
             : path;
         if (!GetDiskFreeSpaceEx(queryPath, out var available, out _, out _))

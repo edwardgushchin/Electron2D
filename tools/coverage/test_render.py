@@ -53,7 +53,7 @@ def main():
 
     pages, summary = render()
     check_texture_pages(pages, upstream)
-    for name in ("Path2D", "PathFollow2D", "CurveTexture", "CurveXYZTexture"):
+    for name in ("CurveTexture", "CurveXYZTexture"):
         rows = [line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines() if line.startswith("| [`")]
         assert rows and all(" | Unimplemented | " in line for line in rows), f"Independent curve consumer classified as blocked: {name}"
     rendering_rows = pages[CLASS_PAGES / "RenderingServer.md"].splitlines()

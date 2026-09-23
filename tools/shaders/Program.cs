@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Diagnostics;
 using Electron2D;
 using SDL3;
@@ -8,20 +9,20 @@ if (args.Length != 3 || args[1] is not ("vertex" or "fragment"))
     Console.Error.WriteLine("Usage: ShaderImport <source.hlsl|source.glsl|source.spv> <vertex|fragment> <output.spv>");
     return 2;
 }
-var input = Path.GetFullPath(args[0]);
-var output = Path.GetFullPath(args[2]);
-var temporary = Path.Combine(Path.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
+var input = IOPath.GetFullPath(args[0]);
+var output = IOPath.GetFullPath(args[2]);
+var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
 try
 {
     await RequireVersion("spirv-val", "SPIRV-Tools v2026.3");
-    switch (Path.GetExtension(input).ToLowerInvariant())
+    switch (IOPath.GetExtension(input).ToLowerInvariant())
     {
         case ".hlsl":
             var source = File.ReadAllText(input);
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
             var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
-                fragment: args[1] == "fragment", includeDirectory: Path.GetDirectoryName(input));
+                fragment: args[1] == "fragment", includeDirectory: IOPath.GetDirectoryName(input));
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
@@ -43,7 +44,7 @@ try
         Console.WriteLine($"Unchanged {input} ({args[1]}) -> {output}: {result.Length} bytes");
         return 0;
     }
-    Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+    Directory.CreateDirectory(IOPath.GetDirectoryName(output)!);
     var adjacent = output + "." + Guid.NewGuid().ToString("N") + ".tmp";
     try
     {
@@ -63,7 +64,7 @@ finally { File.Delete(temporary); }
 
 static async Task<string> Execute(string executable, params string[] arguments)
 {
-    var tool = Path.Combine(AppContext.BaseDirectory, "toolchain", "bin", executable);
+    var tool = IOPath.Combine(AppContext.BaseDirectory, "toolchain", "bin", executable);
     if (!File.Exists(tool))
         throw new FileNotFoundException($"The pinned shader import tool '{executable}' is missing. Run python3 tools/shaders/build_toolchain.py before building or publishing ShaderImport.", tool);
     var start = new ProcessStartInfo(tool) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };

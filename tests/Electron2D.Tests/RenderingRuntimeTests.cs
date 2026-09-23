@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using Electron2D;
 
 internal static partial class RenderingRuntimeTests
@@ -12,6 +13,14 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PATHS") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyScenePaths(backend);
+                }
+                return;
+            }
             VerifyImageDependency();
             VerifyResources();
             VerifyParameters("MaterialHlsl");
@@ -35,6 +44,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
                 VerifyAnimatedSprite(backend);
+                VerifyScenePaths(backend);
                 VerifyAnimatedSpriteFailure();
                 VerifyAtlasFrame(backend);
                 VerifyCanvasTextureFailures();
@@ -189,8 +199,8 @@ internal static partial class RenderingRuntimeTests
             if (output is not null && first is not null)
             {
                 Directory.CreateDirectory(output);
-                File.WriteAllBytes(Path.Combine(output, expectedBackend + ".rgba"), first.GetData());
-                File.WriteAllText(Path.Combine(output, expectedBackend + ".size"), $"{first.Width} {first.Height}");
+                File.WriteAllBytes(IOPath.Combine(output, expectedBackend + ".rgba"), first.GetData());
+                File.WriteAllText(IOPath.Combine(output, expectedBackend + ".size"), $"{first.Width} {first.Height}");
             }
         }
         finally { first?.Dispose(); }

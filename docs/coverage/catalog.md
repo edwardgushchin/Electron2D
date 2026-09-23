@@ -599,9 +599,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Blocked | 7 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Blocked | 4 |
 | [ParticleProcessMaterial](classes/ParticleProcessMaterial.md) | Material | Blocked | 166 |
-| [Path2D](classes/Path2D.md) | Node2D | Unimplemented | 1 |
+| [Path2D](classes/Path2D.md) | Node2D | Implemented | 1 |
 | [Path3D](classes/Path3D.md) | Node3D | Excluded | 4 |
-| [PathFollow2D](classes/PathFollow2D.md) | Node2D | Unimplemented | 7 |
+| [PathFollow2D](classes/PathFollow2D.md) | Node2D | Implemented | 7 |
 | [PathFollow3D](classes/PathFollow3D.md) | Node3D | Excluded | 16 |
 | [Performance](classes/Performance.md) | Object | Blocked | 74 |
 | [PhysicalBone2D](classes/PhysicalBone2D.md) | RigidBody2D | Blocked | 7 |

@@ -1243,6 +1243,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Path",
+    "kind": "type",
+    "declaringType": "Electron2D.Path",
+    "name": "Path",
+    "signature": "public class Electron2D.Path",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PathCurve",
     "kind": "type",
     "declaringType": "Electron2D.PathCurve",
@@ -1250,6 +1265,21 @@
     "signature": "public sealed class Electron2D.PathCurve",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PathFollow",
+    "kind": "type",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "PathFollow",
+    "signature": "public class Electron2D.PathFollow",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -3511,11 +3541,37 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Path..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Path",
+    "name": ".ctor",
+    "signature": "public Path()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.PathCurve..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.PathCurve",
     "name": ".ctor",
     "signature": "public PathCurve()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PathFollow..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PathFollow",
+    "name": ".ctor",
+    "signature": "public PathFollow()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27501,6 +27557,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Path.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Path",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Path.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Path",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Path.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Path",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PathCurve.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PathCurve",
@@ -27993,6 +28094,32 @@
       }
     ],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathFollow.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PathFollow.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -43582,6 +43709,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Path.Curve()",
+    "kind": "property",
+    "declaringType": "Electron2D.Path",
+    "name": "Curve",
+    "signature": "public Electron2D.PathCurve Curve { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PathCurve",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.PathCurve.BakeInterval()",
     "kind": "property",
     "declaringType": "Electron2D.PathCurve",
@@ -43605,6 +43745,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.CubicInterp()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "CubicInterp",
+    "signature": "public System.Boolean CubicInterp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.HOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "HOffset",
+    "signature": "public System.Single HOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.Loop()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "Loop",
+    "signature": "public System.Boolean Loop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.Progress()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "Progress",
+    "signature": "public System.Single Progress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.ProgressRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "ProgressRatio",
+    "signature": "public System.Single ProgressRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.Rotates()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "Rotates",
+    "signature": "public System.Boolean Rotates { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PathFollow.VOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.PathFollow",
+    "name": "VOffset",
+    "signature": "public System.Single VOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

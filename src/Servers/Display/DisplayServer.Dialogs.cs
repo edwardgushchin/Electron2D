@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using SDL3;
@@ -142,7 +143,7 @@ public sealed partial class DisplayServer
             var location = filename.Length == 0 || nativeMode == SDL.FileDialogType.OpenFolder ||
                 (OperatingSystem.IsLinux() && nativeMode != SDL.FileDialogType.SaveFile)
                 ? currentDirectory
-                : currentDirectory.Length == 0 ? filename : Path.Combine(currentDirectory, filename);
+                : currentDirectory.Length == 0 ? filename : IOPath.Combine(currentDirectory, filename);
             if (!SDL.SetPointerProperty(properties, SDL.Props.FileDialogWindowPointer, window) ||
                 !SDL.SetStringProperty(properties, SDL.Props.FileDialogTitleString, title) ||
                 !SDL.SetStringProperty(properties, SDL.Props.FileDialogLocationString, location) ||

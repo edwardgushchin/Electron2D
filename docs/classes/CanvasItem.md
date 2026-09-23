@@ -649,3 +649,5 @@ The hierarchy is implemented; complete reference API parity is not claimed. Miss
 ## Viewport pixel snapping
 
 [Viewport](Viewport.md#pixel-snapping-properties) controls render-only transform and vertex rounding. GetTransform/GetGlobalTransform remain logical queries. Transform snapping participates in Y sorting; vertex snapping applies after DrawSetTransform and framebuffer scaling. Retained recording is not invalidated merely by changing these flags. See [the canvas contract](../components/canvas-rendering.md#pixel-snapping) for Sprite offsets and texture clipping.
+
+Transform propagation uses pooled child snapshots, clears retained references on return, and revalidates each child after callback mutations. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) verifies zero allocation for warmed follower movement with a child. Pool growth, exceptions and user callbacks can still allocate.

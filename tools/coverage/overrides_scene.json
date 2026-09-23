@@ -2268,6 +2268,41 @@
     {
       "electron2d": "method:Electron2D.Viewport.GetPropertyDescriptors()",
       "reason": "Protected typed discovery for stored viewport sampling and pixel-snapping properties; projects existing properties into the descriptor and PackedScene contracts (ADRs 0005/0023), verified by CanvasSamplingTests and CanvasPixelSnapTests."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Path..ctor()",
+      "reason": "Explicit C# construction of the existing spatial path/follower concept with reference defaults.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Path.CreateSceneInstanceFactory()",
+      "reason": "Existing typed Node factory projects exact-type reconstruction of stored path/follower instances without reflection.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Path.Dispose(System.Boolean)",
+      "reason": "Existing deterministic Node lifetime hook disconnects the borrowed curve and invalidates deferred resource notifications before inherited subtree cleanup.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.Path.GetPropertyDescriptors()",
+      "reason": "Existing typed Node metadata hook stores the borrowed Curve reference and delegates local-scene resource copying to PackedScene.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PathFollow..ctor()",
+      "reason": "Explicit C# construction of the existing spatial path/follower concept with reference defaults.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.PathFollow.CreateSceneInstanceFactory()",
+      "reason": "Existing typed Node factory projects exact-type reconstruction of stored path/follower instances without reflection.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.PathFollow.GetPropertyDescriptors()",
+      "reason": "Existing typed Node metadata hook stores curve/progress/policies, retaining derived ProgressRatio as nonstored tooling state.",
+      "adr": "ADRs 0003/0004/0008/0011/0023"
     }
   ],
   "statusGroups": [
@@ -2862,6 +2897,44 @@
         "RenderingServer::method:viewport_set_snap_2d_vertices_to_pixel(RID:,bool:)",
         "Viewport::property:snap_2d_transforms_to_pixel",
         "Viewport::property:snap_2d_vertices_to_pixel"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Shared Node warnings, SceneTree debug paths and editor curve authoring remain separate documented gaps; see docs/components/scene-paths.md.",
+      "godot": [
+        "class:Path2D",
+        "Path2D::property:curve"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Path/PathFollow are direct Entity subclasses under ADR 0008, mapping the runtime curve/follower API with the same defaults and policy timing. PathTests verifies loop/clamp endpoints, ratio semantics, offsets, rotation/scale/skew, lifecycle/direct-parent binding, both reparent policies, typed PackedScene ownership, curve replacement, worker deferred delivery, reentrant/callback failure handling and warm movement allocation. PathRenderingTests verifies seven pixel-readback stages on Linux Wayland compatibility/GPU and dummy/software. Typed exceptions, owner-thread dispatch and sibling failure aggregation follow ADRs 0001/0006/0011/0013/0023. Shared Node warnings, SceneTree debug paths and editor curve authoring remain separate documented gaps; see docs/components/scene-paths.md.",
+      "godot": [
+        "class:PathFollow2D",
+        "PathFollow2D::property:cubic_interp",
+        "PathFollow2D::property:h_offset",
+        "PathFollow2D::property:loop",
+        "PathFollow2D::property:progress",
+        "PathFollow2D::property:progress_ratio",
+        "PathFollow2D::property:rotates",
+        "PathFollow2D::property:v_offset"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "First typed Node configuration-diagnostic slice must add warning overrides and SceneTree change delivery, including visible attached PathFollow nodes lacking a direct Path parent. Runtime path sampling does not implement this shared diagnostic contract; no editor or navigation prerequisite is needed.",
+      "godot": [
+        "Node::method:_get_configuration_warnings()",
+        "Node::method:update_configuration_warnings()",
+        "SceneTree::signal:node_configuration_warning_changed(Node:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "First scene debug-path visualization slice must propagate the hint, render path/tangent markers using existing canvas primitives and react to resource, visibility and tree changes. Runtime Path/PathFollow now exist; no navigation or new native dependency is required.",
+      "godot": [
+        "SceneTree::property:debug_paths_hint"
       ]
     }
   ]

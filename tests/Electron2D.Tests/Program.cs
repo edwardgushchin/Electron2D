@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using Electron2D;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -103,6 +104,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
     return;
 }
 
+PathTests.Run();
 CurveTests.Run();
 AnimatedSpriteTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
@@ -3012,11 +3014,11 @@ static void VerifyConfigFiles()
     config.SetValue(secretKey, "classified-value");
     config.SetValue(answerKey, 42);
 
-    var directory = Path.Combine(Path.GetTempPath(), $"electron2d-config-{Guid.NewGuid():N}");
+    var directory = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-config-{Guid.NewGuid():N}");
     Directory.CreateDirectory(directory);
     try
     {
-        var plainPath = Path.Combine(directory, "settings.cfg");
+        var plainPath = IOPath.Combine(directory, "settings.cfg");
         config.Save(plainPath);
         config.SetValue(answerKey, 43);
         config.Save(plainPath);
@@ -3037,7 +3039,7 @@ static void VerifyConfigFiles()
                 Encoding.UTF8.GetString(savedBytes) == config.EncodeToText(),
             "Plain saves must use UTF-8 without a BOM and replace the destination with the encoded snapshot.");
 
-        var invalidUtf8Path = Path.Combine(directory, "invalid-utf8.cfg");
+        var invalidUtf8Path = IOPath.Combine(directory, "invalid-utf8.cfg");
         File.WriteAllBytes(invalidUtf8Path, [0xff]);
         var beforeInvalidLoad = config.EncodeToText();
         Expect<DecoderFallbackException>(() => config.Load(invalidUtf8Path),
@@ -3045,9 +3047,9 @@ static void VerifyConfigFiles()
         Require(config.EncodeToText() == beforeInvalidLoad,
             "A failed plain load must preserve existing state.");
 
-        Expect<DirectoryNotFoundException>(() => config.Save(Path.Combine(directory, "missing", "settings.cfg")),
+        Expect<DirectoryNotFoundException>(() => config.Save(IOPath.Combine(directory, "missing", "settings.cfg")),
             "Saving must not create an absent destination directory implicitly.");
-        var directoryTarget = Path.Combine(directory, "directory-target");
+        var directoryTarget = IOPath.Combine(directory, "directory-target");
         Directory.CreateDirectory(directoryTarget);
         Expect<IOException>(() => config.Save(directoryTarget),
             "Atomic saving must surface a destination that cannot be replaced by a file.");
@@ -3055,7 +3057,7 @@ static void VerifyConfigFiles()
             "A failed atomic replacement must clean up its temporary file.");
 
         var rawKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
-        var rawEncryptedPath = Path.Combine(directory, "settings-key.bin");
+        var rawEncryptedPath = IOPath.Combine(directory, "settings-key.bin");
         config.SaveEncrypted(rawEncryptedPath, rawKey);
         var encryptedBytes = File.ReadAllBytes(rawEncryptedPath);
         Require(encryptedBytes.AsSpan().IndexOf(Encoding.UTF8.GetBytes("classified-value")) < 0,
@@ -3077,7 +3079,7 @@ static void VerifyConfigFiles()
                 "Authentication failure must not mutate the destination configuration.");
         }
 
-        var tamperedPath = Path.Combine(directory, "settings-tampered.bin");
+        var tamperedPath = IOPath.Combine(directory, "settings-tampered.bin");
         encryptedBytes[^1] ^= 0x01;
         File.WriteAllBytes(tamperedPath, encryptedBytes);
         using (var tampered = new ConfigFile())
@@ -3089,8 +3091,8 @@ static void VerifyConfigFiles()
         Expect<ArgumentException>(() => config.SaveEncrypted(rawEncryptedPath, new byte[31]),
             "Raw-key encryption must require exactly 256 key bits.");
 
-        var passwordPath = Path.Combine(directory, "settings-password.bin");
-        var secondPasswordPath = Path.Combine(directory, "settings-password-2.bin");
+        var passwordPath = IOPath.Combine(directory, "settings-password.bin");
+        var secondPasswordPath = IOPath.Combine(directory, "settings-password-2.bin");
         config.SaveEncryptedPass(passwordPath, "correct horse battery staple");
         config.SaveEncryptedPass(secondPasswordPath, "correct horse battery staple");
         Require(!File.ReadAllBytes(passwordPath).SequenceEqual(File.ReadAllBytes(secondPasswordPath)),
@@ -3116,7 +3118,7 @@ static void VerifyConfigFiles()
         Expect<ArgumentException>(() => config.SaveEncryptedPass(passwordPath, string.Empty),
             "Password encryption must reject an empty password.");
 
-        var malformedEnvelopePath = Path.Combine(directory, "malformed.bin");
+        var malformedEnvelopePath = IOPath.Combine(directory, "malformed.bin");
         File.WriteAllBytes(malformedEnvelopePath, [1, 2, 3]);
         using (var malformed = new ConfigFile())
         {
@@ -3194,11 +3196,11 @@ static void VerifyFileAccess()
     Expect<ArgumentException>(() => EngineFileAccess.CreateTemp(extension: "bad/name"),
         "Temporary-file extensions must reject directory separators.");
 
-    var directory = Path.Combine(Path.GetTempPath(), $"electron2d-file-access-{Guid.NewGuid():N}");
+    var directory = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-file-access-{Guid.NewGuid():N}");
     Directory.CreateDirectory(directory);
     try
     {
-        var path = Path.Combine(directory, "data.bin");
+        var path = IOPath.Combine(directory, "data.bin");
         Expect<FileNotFoundException>(() => EngineFileAccess.Open(path, FileAccessMode.Read),
             "Read mode must require an existing file.");
         Expect<FileNotFoundException>(() => EngineFileAccess.GetSize(path),
@@ -3208,12 +3210,12 @@ static void VerifyFileAccess()
         Expect<FileNotFoundException>(() => EngineFileAccess.GetModifiedTime(path),
             "Static modification-time lookup must reject a missing file.");
         Expect<DirectoryNotFoundException>(() => EngineFileAccess.Open(
-                Path.Combine(directory, "missing", "data.bin"), FileAccessMode.Write),
+                IOPath.Combine(directory, "missing", "data.bin"), FileAccessMode.Write),
             "Write mode must not create missing directories.");
 
         using (var file = EngineFileAccess.Open(path, FileAccessMode.WriteRead))
         {
-            Require(file.IsOpen && file.Path == path && file.AbsolutePath == Path.GetFullPath(path) &&
+            Require(file.IsOpen && file.Path == path && file.AbsolutePath == IOPath.GetFullPath(path) &&
                     file.Position == 0 && file.Length == 0 && !file.EOFReached && !file.BigEndian,
                 "A newly truncated file must expose its identity, cursor, length, and byte order.");
 
@@ -3310,7 +3312,7 @@ static void VerifyFileAccess()
                 EngineFileAccess.GetSHA256(path) == Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes("XYcdef"))).ToLowerInvariant(),
             "Static digest helpers must return lowercase MD5 and SHA-256 values.");
 
-        var linePath = Path.Combine(directory, "lines.txt");
+        var linePath = IOPath.Combine(directory, "lines.txt");
         File.WriteAllBytes(linePath, Encoding.UTF8.GetBytes("first\rsecond\0third\n"));
         using (var lines = EngineFileAccess.Open(linePath, FileAccessMode.Read))
         {
@@ -3405,7 +3407,7 @@ static void VerifyFileAccess()
                      FileCompressionMode.Brotli
                  })
         {
-            var compressedPath = Path.Combine(directory, $"compressed-{compression}.bin");
+            var compressedPath = IOPath.Combine(directory, $"compressed-{compression}.bin");
             using (var compressed = EngineFileAccess.OpenCompressed(compressedPath, FileAccessMode.WriteRead, compression))
             {
                 compressed.WriteLine("compressible compressible compressible");
@@ -3422,22 +3424,22 @@ static void VerifyFileAccess()
                 $"{compression} containers must round-trip across instances.");
         }
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(
-                Path.Combine(directory, "compressed-Deflate.bin"), FileAccessMode.Read, FileCompressionMode.Gzip),
+                IOPath.Combine(directory, "compressed-Deflate.bin"), FileAccessMode.Read, FileCompressionMode.Gzip),
             "Compressed access must reject a container opened with the wrong codec.");
         Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                Path.Combine(directory, "fastlz.bin"), FileAccessMode.Write, FileCompressionMode.FastLz),
+                IOPath.Combine(directory, "fastlz.bin"), FileAccessMode.Write, FileCompressionMode.FastLz),
             "Unavailable FastLZ support must fail explicitly.");
         Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                Path.Combine(directory, "zstd.bin"), FileAccessMode.Write, FileCompressionMode.Zstandard),
+                IOPath.Combine(directory, "zstd.bin"), FileAccessMode.Write, FileCompressionMode.Zstandard),
             "Unavailable Zstandard support must fail explicitly.");
-        var corruptCompressedPath = Path.Combine(directory, "corrupt-compressed.bin");
+        var corruptCompressedPath = IOPath.Combine(directory, "corrupt-compressed.bin");
         File.WriteAllBytes(corruptCompressedPath, [1, 2, 3]);
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(
                 corruptCompressedPath, FileAccessMode.Read, FileCompressionMode.Deflate),
             "Malformed compressed envelopes must be rejected before exposure.");
 
         var encryptionKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
-        var encryptedPath = Path.Combine(directory, "encrypted.bin");
+        var encryptedPath = IOPath.Combine(directory, "encrypted.bin");
         using (var encrypted = EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessMode.WriteRead, encryptionKey))
         {
             encrypted.WriteLine("secret text");
@@ -3457,7 +3459,7 @@ static void VerifyFileAccess()
         Expect<CryptographicException>(() => EngineFileAccess.OpenEncrypted(
                 encryptedPath, FileAccessMode.Read, Enumerable.Repeat((byte)0xff, 32).ToArray()),
             "Encrypted files must reject a wrong raw key.");
-        var tamperedEncryptedPath = Path.Combine(directory, "tampered-encrypted.bin");
+        var tamperedEncryptedPath = IOPath.Combine(directory, "tampered-encrypted.bin");
         var tampered = File.ReadAllBytes(encryptedPath);
         tampered[^1] ^= 1;
         File.WriteAllBytes(tamperedEncryptedPath, tampered);
@@ -3465,7 +3467,7 @@ static void VerifyFileAccess()
                 tamperedEncryptedPath, FileAccessMode.Read, encryptionKey),
             "Encrypted files must reject modified ciphertext.");
 
-        var passwordPath = Path.Combine(directory, "password.bin");
+        var passwordPath = IOPath.Combine(directory, "password.bin");
         using (var encrypted = EngineFileAccess.OpenEncryptedWithPassword(
                    passwordPath, FileAccessMode.Write, "correct horse battery staple"))
             encrypted.WriteString("password secret");
@@ -3484,7 +3486,7 @@ static void VerifyFileAccess()
 
         var virtualName = $"electron2d-file-access-{Guid.NewGuid():N}.tmp";
         var virtualPath = $"res://{virtualName}";
-        var physicalVirtualPath = Path.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        var physicalVirtualPath = IOPath.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
         try
         {
             using (var virtualFile = EngineFileAccess.Open(virtualPath, FileAccessMode.Write))
@@ -3503,7 +3505,7 @@ static void VerifyFileAccess()
                 "Independent static hash operations must be safe concurrently.");
         });
 
-        var concurrentPath = Path.Combine(directory, "concurrent.bin");
+        var concurrentPath = IOPath.Combine(directory, "concurrent.bin");
         using (var concurrent = EngineFileAccess.Open(concurrentPath, FileAccessMode.WriteRead))
         {
             Parallel.For(0, 128, index => concurrent.WritePascalString(index.ToString("D3", CultureInfo.InvariantCulture)));
@@ -3517,7 +3519,7 @@ static void VerifyFileAccess()
                 "Concurrent compound writes must remain independently readable without interleaving.");
         }
 
-        var failedPath = Path.Combine(directory, "absent", "compressed.bin");
+        var failedPath = IOPath.Combine(directory, "absent", "compressed.bin");
         var failedCommit = EngineFileAccess.OpenCompressed(failedPath, FileAccessMode.Write, FileCompressionMode.Deflate);
         failedCommit.WriteString("pending");
         Expect<DirectoryNotFoundException>(failedCommit.Close,
@@ -3543,7 +3545,7 @@ static void VerifyDirAccess()
         "Directory opening must reject null paths.");
     Expect<ArgumentException>(() => DirAccess.Open(string.Empty),
         "Directory opening must reject empty paths.");
-    Expect<DirectoryNotFoundException>(() => DirAccess.Open(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))),
+    Expect<DirectoryNotFoundException>(() => DirAccess.Open(IOPath.Combine(IOPath.GetTempPath(), Guid.NewGuid().ToString("N"))),
         "Directory opening must reject missing directories.");
     Expect<NotSupportedException>(() => DirAccess.Open("uid://missing"),
         "Directory opening must reject unknown virtual schemes.");
@@ -3552,23 +3554,23 @@ static void VerifyDirAccess()
     Expect<ArgumentException>(() => DirAccess.CreateTemp("../invalid"),
         "Temporary directory prefixes must reject separators.");
 
-    var root = Path.Combine(Path.GetTempPath(), $"electron2d-dir-{Guid.NewGuid():N}");
+    var root = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-dir-{Guid.NewGuid():N}");
     Directory.CreateDirectory(root);
     try
     {
-        var alphaPath = Path.Combine(root, "alpha.txt");
-        var zetaPath = Path.Combine(root, "zeta.txt");
-        var hiddenPath = Path.Combine(root, ".hidden.txt");
+        var alphaPath = IOPath.Combine(root, "alpha.txt");
+        var zetaPath = IOPath.Combine(root, "zeta.txt");
+        var hiddenPath = IOPath.Combine(root, ".hidden.txt");
         File.WriteAllText(zetaPath, "zeta");
         File.WriteAllText(alphaPath, "alpha");
         File.WriteAllText(hiddenPath, "hidden");
-        Directory.CreateDirectory(Path.Combine(root, "visible-dir"));
-        Directory.CreateDirectory(Path.Combine(root, ".hidden-dir"));
+        Directory.CreateDirectory(IOPath.Combine(root, "visible-dir"));
+        Directory.CreateDirectory(IOPath.Combine(root, ".hidden-dir"));
 
         using (var directory = DirAccess.Open(root))
         {
             Require(!directory.IncludeHidden && !directory.IncludeNavigational &&
-                    directory.GetCurrentDir() == Path.GetFullPath(root) &&
+                    directory.GetCurrentDir() == IOPath.GetFullPath(root) &&
                     !directory.CurrentIsDir() && directory.GetNext().Length == 0,
                 "An opened directory must expose default filters, its normalized path, and an inactive listing.");
             Require(directory.FileExists("alpha.txt") && directory.DirExists("visible-dir") &&
@@ -3628,18 +3630,18 @@ static void VerifyDirAccess()
                 "Recursive directory creation must create missing parents and be idempotent.");
 
             directory.ChangeDir("nested/child");
-            Require(directory.GetCurrentDir() == Path.Combine(root, "nested", "child"),
+            Require(directory.GetCurrentDir() == IOPath.Combine(root, "nested", "child"),
                 "Relative directory changes must update the current native path.");
             directory.ChangeDir("../..");
             Expect<InvalidOperationException>(() => directory.ChangeDir("res://"),
                 "A physical accessor must reject a virtual scope switch.");
 
             directory.Copy("alpha.txt", "copy.txt");
-            Require(File.ReadAllText(Path.Combine(root, "copy.txt")) == "alpha",
+            Require(File.ReadAllText(IOPath.Combine(root, "copy.txt")) == "alpha",
                 "File copying must preserve contents.");
-            File.WriteAllText(Path.Combine(root, "copy.txt"), "old");
+            File.WriteAllText(IOPath.Combine(root, "copy.txt"), "old");
             directory.Copy("zeta.txt", "copy.txt");
-            Require(File.ReadAllText(Path.Combine(root, "copy.txt")) == "zeta",
+            Require(File.ReadAllText(IOPath.Combine(root, "copy.txt")) == "zeta",
                 "File copying must overwrite an existing destination.");
             if (OperatingSystem.IsWindows())
             {
@@ -3653,29 +3655,29 @@ static void VerifyDirAccess()
                         directory.Copy("alpha.txt", "copy.txt", (UnixPermissionFlags)(1 << 20)),
                     "Copy permissions must reject unknown bits before filesystem mutation.");
             }
-            Require(File.ReadAllText(Path.Combine(root, "copy.txt")) == "zeta",
+            Require(File.ReadAllText(IOPath.Combine(root, "copy.txt")) == "zeta",
                 "Invalid copy permissions must not replace the destination.");
             Expect<ArgumentException>(() => directory.Copy("copy.txt", "./copy.txt"),
                 "File copying must reject an equivalent source and destination path.");
 
-            File.WriteAllText(Path.Combine(root, "rename-source.txt"), "new");
-            File.WriteAllText(Path.Combine(root, "rename-target.txt"), "old");
+            File.WriteAllText(IOPath.Combine(root, "rename-source.txt"), "new");
+            File.WriteAllText(IOPath.Combine(root, "rename-target.txt"), "old");
             directory.Rename("rename-source.txt", "rename-target.txt");
-            Require(!File.Exists(Path.Combine(root, "rename-source.txt")) &&
-                    File.ReadAllText(Path.Combine(root, "rename-target.txt")) == "new",
+            Require(!File.Exists(IOPath.Combine(root, "rename-source.txt")) &&
+                    File.ReadAllText(IOPath.Combine(root, "rename-target.txt")) == "new",
                 "File rename must move and overwrite atomically where the filesystem supports it.");
-            Directory.CreateDirectory(Path.Combine(root, "rename-dir-source"));
-            Directory.CreateDirectory(Path.Combine(root, "rename-dir-target"));
+            Directory.CreateDirectory(IOPath.Combine(root, "rename-dir-source"));
+            Directory.CreateDirectory(IOPath.Combine(root, "rename-dir-target"));
             directory.Rename("rename-dir-source", "rename-dir-target");
-            Require(Directory.Exists(Path.Combine(root, "rename-dir-target")),
+            Require(Directory.Exists(IOPath.Combine(root, "rename-dir-target")),
                 "Directory rename must replace an empty destination directory.");
-            Directory.CreateDirectory(Path.Combine(root, "rollback-source", "child"));
+            Directory.CreateDirectory(IOPath.Combine(root, "rollback-source", "child"));
             Expect<IOException>(() => directory.Rename("rollback-source", "rollback-source/child"),
                 "A directory cannot be moved into itself.");
-            Require(Directory.Exists(Path.Combine(root, "rollback-source", "child")),
+            Require(Directory.Exists(IOPath.Combine(root, "rollback-source", "child")),
                 "A failed directory move must restore an empty destination removed for overwrite.");
 
-            File.WriteAllText(Path.Combine(root, "single", "child.txt"), "child");
+            File.WriteAllText(IOPath.Combine(root, "single", "child.txt"), "child");
             Expect<IOException>(() => directory.Remove("single"),
                 "Directory removal must reject a nonempty directory.");
             directory.Remove("single/child.txt");
@@ -3696,12 +3698,12 @@ static void VerifyDirAccess()
                 Require(directory.GetDirectories().Contains("directory-link", StringComparer.Ordinal),
                     "A link to a directory must be classified as a directory during enumeration.");
                 directory.Remove("directory-link");
-                Require(Directory.Exists(Path.Combine(root, "visible-dir")),
+                Require(Directory.Exists(IOPath.Combine(root, "visible-dir")),
                     "Removing a directory link must not traverse or delete its target.");
 
-                File.WriteAllText(Path.Combine(root, "dangling-source.txt"), "source");
+                File.WriteAllText(IOPath.Combine(root, "dangling-source.txt"), "source");
                 directory.CreateLink("dangling-source.txt", "dangling-link");
-                File.Delete(Path.Combine(root, "dangling-source.txt"));
+                File.Delete(IOPath.Combine(root, "dangling-source.txt"));
                 Require(directory.IsLink("dangling-link"),
                     "Link detection must recognize a dangling symbolic link.");
                 directory.Remove("dangling-link");
@@ -3717,14 +3719,14 @@ static void VerifyDirAccess()
 
             if (OperatingSystem.IsLinux())
             {
-                var hardLink = Path.Combine(root, "alpha-hard-link");
+                var hardLink = IOPath.Combine(root, "alpha-hard-link");
                 Require(TestNativeLinks.CreateHardLink(alphaPath, hardLink) == 0 &&
                         directory.IsEquivalent("alpha.txt", "alpha-hard-link"),
                     "Filesystem identity must recognize distinct hard-link names.");
                 File.Delete(hardLink);
             }
 
-            var alternateAlpha = Path.Combine(root, "ALPHA.TXT");
+            var alternateAlpha = IOPath.Combine(root, "ALPHA.TXT");
             var expectedCaseSensitivity = !File.Exists(alternateAlpha);
             Require(directory.IsCaseSensitive("alpha.txt") == expectedCaseSensitivity,
                 "Case-sensitivity detection must follow the current directory policy.");
@@ -3732,7 +3734,7 @@ static void VerifyDirAccess()
                 "Filesystem queries must expose byte capacity and a filesystem identifier.");
             if (OperatingSystem.IsWindows())
             {
-                using var extendedPath = DirAccess.Open(@"\\?\" + Path.GetFullPath(root));
+                using var extendedPath = DirAccess.Open(@"\\?\" + IOPath.GetFullPath(root));
                 Require(extendedPath.GetFilesystemType() != "Network Share",
                     "An extended-length local path must not be classified as a network share.");
             }
@@ -3753,16 +3755,16 @@ static void VerifyDirAccess()
                     "Drive lookup must reject an invalid index.");
             }
 
-            var absoluteSingle = Path.Combine(root, "absolute-single");
-            var absoluteRecursive = Path.Combine(root, "absolute", "recursive");
+            var absoluteSingle = IOPath.Combine(root, "absolute-single");
+            var absoluteRecursive = IOPath.Combine(root, "absolute", "recursive");
             DirAccess.MakeDirAbsolute(absoluteSingle);
             DirAccess.MakeDirRecursiveAbsolute(absoluteRecursive);
             Require(DirAccess.DirExistsAbsolute(absoluteSingle) && DirAccess.DirExistsAbsolute(absoluteRecursive) &&
                     DirAccess.GetFilesAt(root).Contains("alpha.txt", StringComparer.Ordinal) &&
                     DirAccess.GetDirectoriesAt(root).Contains("absolute", StringComparer.Ordinal),
                 "Absolute helpers must create, inspect, and list native paths.");
-            var absoluteRenameSource = Path.Combine(root, "absolute-rename-source.txt");
-            var absoluteRenameTarget = Path.Combine(root, "absolute-rename-target.txt");
+            var absoluteRenameSource = IOPath.Combine(root, "absolute-rename-source.txt");
+            var absoluteRenameTarget = IOPath.Combine(root, "absolute-rename-target.txt");
             File.WriteAllText(absoluteRenameSource, "renamed");
             DirAccess.RenameAbsolute(absoluteRenameSource, absoluteRenameTarget);
             Require(!File.Exists(absoluteRenameSource) && File.ReadAllText(absoluteRenameTarget) == "renamed",
@@ -3772,11 +3774,11 @@ static void VerifyDirAccess()
         }
 
         var virtualName = $"electron2d-dir-access-{Guid.NewGuid():N}";
-        var virtualRoot = Path.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        var virtualRoot = IOPath.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
         Directory.CreateDirectory(virtualRoot);
         try
         {
-            File.WriteAllText(Path.Combine(virtualRoot, "source.txt"), "virtual");
+            File.WriteAllText(IOPath.Combine(virtualRoot, "source.txt"), "virtual");
             using var virtualDirectory = DirAccess.Open($"res://{virtualName}");
             Require(virtualDirectory.GetCurrentDir() == $"res://{virtualName}" &&
                     virtualDirectory.FileExists("source.txt"),
@@ -3786,7 +3788,7 @@ static void VerifyDirAccess()
             Expect<UnauthorizedAccessException>(() => virtualDirectory.ChangeDir("res://../outside"),
                 "Virtual directory changes must reject lexical root traversal.");
             DirAccess.CopyAbsolute($"res://{virtualName}/source.txt", $"res://{virtualName}/copy.txt");
-            Require(File.ReadAllText(Path.Combine(virtualRoot, "copy.txt")) == "virtual",
+            Require(File.ReadAllText(IOPath.Combine(virtualRoot, "copy.txt")) == "virtual",
                 "Absolute virtual copying must resolve both paths through one project-root snapshot.");
         }
         finally
@@ -3798,12 +3800,12 @@ static void VerifyDirAccess()
         var disposableTemp = DirAccess.CreateTemp("electron2d");
         disposableTempPath = disposableTemp.GetCurrentDir();
         disposableTemp.MakeDirRecursive("nested/child");
-        File.WriteAllText(Path.Combine(disposableTempPath, "nested", "child", "data.txt"), "temporary");
+        File.WriteAllText(IOPath.Combine(disposableTempPath, "nested", "child", "data.txt"), "temporary");
         if (OperatingSystem.IsLinux() || OperatingSystem.IsWindows() || OperatingSystem.IsMacOS())
-            disposableTemp.CreateLink(Path.Combine(root, "visible-dir"), "nested/external-link");
-        disposableTemp.ChangeDir(Path.GetTempPath());
+            disposableTemp.CreateLink(IOPath.Combine(root, "visible-dir"), "nested/external-link");
+        disposableTemp.ChangeDir(IOPath.GetTempPath());
         disposableTemp.Dispose();
-        Require(!Directory.Exists(disposableTempPath) && Directory.Exists(Path.Combine(root, "visible-dir")),
+        Require(!Directory.Exists(disposableTempPath) && Directory.Exists(IOPath.Combine(root, "visible-dir")),
             "Temporary disposal must delete the captured owned root after directory changes without traversing links.");
 
         string keptTempPath;
@@ -3839,10 +3841,10 @@ static void VerifyProjectSettings()
     Expect<ArgumentOutOfRangeException>(() => new ProjectSetting<int>("invalid/default", 0, value => value > 0),
         "Project setting validators must accept their default.");
 
-    var root = Path.Combine(Path.GetTempPath(), $"electron2d-project-{Guid.NewGuid():N}");
-    var user = Path.Combine(Path.GetTempPath(), $"electron2d-user-{Guid.NewGuid():N}");
-    var secondRoot = Path.Combine(Path.GetTempPath(), $"electron2d-project-{Guid.NewGuid():N}");
-    var secondUser = Path.Combine(Path.GetTempPath(), $"electron2d-user-{Guid.NewGuid():N}");
+    var root = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-project-{Guid.NewGuid():N}");
+    var user = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-user-{Guid.NewGuid():N}");
+    var secondRoot = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-project-{Guid.NewGuid():N}");
+    var secondUser = IOPath.Combine(IOPath.GetTempPath(), $"electron2d-user-{Guid.NewGuid():N}");
     Directory.CreateDirectory(root);
     Directory.CreateDirectory(user);
     Directory.CreateDirectory(secondRoot);
@@ -3850,16 +3852,16 @@ static void VerifyProjectSettings()
 
     try
     {
-        Expect<DirectoryNotFoundException>(() => new ProjectSettings(Path.Combine(root, "missing"), user),
+        Expect<DirectoryNotFoundException>(() => new ProjectSettings(IOPath.Combine(root, "missing"), user),
             "ProjectSettings must reject an absent project root.");
         Expect<ArgumentException>(() => new ProjectSettings(root, root),
             "ProjectSettings must reject identical resource and user roots.");
 
         using var settings = new ProjectSettings(root, user);
-        Require(settings.ProjectRoot == Path.GetFullPath(root) && settings.UserDataRoot == Path.GetFullPath(user) &&
-                settings.ProjectFilePath == Path.Combine(root, ProjectSettings.ProjectFileName) &&
-                settings.OverrideFilePath == Path.Combine(root, ProjectSettings.OverrideFileName) &&
-                settings.ProjectDataPath == Path.Combine(root, ProjectSettings.ProjectDataDirectoryName),
+        Require(settings.ProjectRoot == IOPath.GetFullPath(root) && settings.UserDataRoot == IOPath.GetFullPath(user) &&
+                settings.ProjectFilePath == IOPath.Combine(root, ProjectSettings.ProjectFileName) &&
+                settings.OverrideFilePath == IOPath.Combine(root, ProjectSettings.OverrideFileName) &&
+                settings.ProjectDataPath == IOPath.Combine(root, ProjectSettings.ProjectDataDirectoryName),
             "ProjectSettings must expose normalized project paths without creating hidden state.");
         Require(settings.HasSetting(ProjectSettings.ApplicationName) &&
                 settings.HasSetting(ProjectSettings.ApplicationVersion) &&
@@ -4012,10 +4014,10 @@ static void VerifyProjectSettings()
             "A SettingsChanged handler failure must propagate after consuming that pending invocation.");
         settings.SettingsChanged -= ThrowingSettingsHandler;
 
-        Require(settings.GlobalizePath("res://assets/player.png") == Path.Combine(root, "assets", "player.png") &&
-                settings.GlobalizePath("user://save/game.json") == Path.Combine(user, "save", "game.json") &&
-                settings.LocalizePath(Path.Combine(root, "assets", "player.png")) == "res://assets/player.png" &&
-                settings.LocalizePath(Path.Combine(user, "save", "game.json")) == "user://save/game.json",
+        Require(settings.GlobalizePath("res://assets/player.png") == IOPath.Combine(root, "assets", "player.png") &&
+                settings.GlobalizePath("user://save/game.json") == IOPath.Combine(user, "save", "game.json") &&
+                settings.LocalizePath(IOPath.Combine(root, "assets", "player.png")) == "res://assets/player.png" &&
+                settings.LocalizePath(IOPath.Combine(user, "save", "game.json")) == "user://save/game.json",
             "Virtual paths must round-trip against their configured project and user roots.");
         Expect<UnauthorizedAccessException>(() => settings.GlobalizePath("res://../escape.txt"),
             "Project virtual paths must reject parent traversal.");
@@ -4046,15 +4048,15 @@ static void VerifyProjectSettings()
         }
 
         settings.SaveCustom("user://custom.cfg");
-        Require(File.Exists(Path.Combine(user, "custom.cfg")),
+        Require(File.Exists(IOPath.Combine(user, "custom.cfg")),
             "Custom persistence must accept a confined user virtual path.");
-        var nested = Path.Combine(root, "nested", "deeper");
+        var nested = IOPath.Combine(root, "nested", "deeper");
         Directory.CreateDirectory(nested);
         Require(ProjectSettings.FindProjectRoot(nested) == root,
             "Project root discovery must search parent directories for the nearest project file.");
 
         settings.Set(score, 11);
-        Expect<DirectoryNotFoundException>(() => settings.SaveCustom(Path.Combine(root, "missing", "custom.cfg")),
+        Expect<DirectoryNotFoundException>(() => settings.SaveCustom(IOPath.Combine(root, "missing", "custom.cfg")),
             "A failed custom save must surface an absent destination directory.");
         Require(settings.GetChangedSettings().Contains(score.Name),
             "A failed save must preserve the pending change batch.");
@@ -4091,14 +4093,14 @@ static void VerifyProjectSettings()
                 "Unknown loaded values must remain available for later typed registration.");
 
             loaded.Set(late, 78);
-            var validCustomPath = Path.Combine(root, "valid-custom.cfg");
+            var validCustomPath = IOPath.Combine(root, "valid-custom.cfg");
             File.WriteAllText(validCustomPath, "[gameplay]\n\nscore=88\n", new UTF8Encoding(false));
             loaded.LoadCustom(validCustomPath);
             Require(loaded.Get(score) == 88 && loaded.Get(late) == 78 &&
                     loaded.GetChangedSettings().SequenceEqual([late.Name]),
                 "A custom merge must retain pre-existing unsaved values and their unsaved tracking.");
 
-            var invalidPath = Path.Combine(root, "invalid.cfg");
+            var invalidPath = IOPath.Combine(root, "invalid.cfg");
             File.WriteAllText(invalidPath, "[gameplay]\n\nscore=0\n", new UTF8Encoding(false));
             Expect<ArgumentOutOfRangeException>(() => loaded.LoadCustom(invalidPath),
                 "Custom loading must reject values that fail a registered validator.");
@@ -4113,7 +4115,7 @@ static void VerifyProjectSettings()
                 return value > 0;
             });
             loaded.Register(reentrant);
-            var reentrantPath = Path.Combine(root, "reentrant.cfg");
+            var reentrantPath = IOPath.Combine(root, "reentrant.cfg");
             File.WriteAllText(reentrantPath, "[test]\n\nreentrant=2\n", new UTF8Encoding(false));
             reentrantValidation = true;
             Expect<InvalidOperationException>(() => loaded.LoadCustom(reentrantPath),
@@ -4126,7 +4128,7 @@ static void VerifyProjectSettings()
                 "Path reconfiguration must reject unsaved changes.");
             loaded.Save();
             loaded.ConfigurePaths(secondRoot, secondUser);
-            Require(loaded.ProjectRoot == Path.GetFullPath(secondRoot) && loaded.Get(score) == 10,
+            Require(loaded.ProjectRoot == IOPath.GetFullPath(secondRoot) && loaded.Get(score) == 10,
                 "Clean path reconfiguration must retain definitions while clearing loaded values.");
         }
 

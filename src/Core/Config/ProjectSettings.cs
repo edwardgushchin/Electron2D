@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -274,15 +275,15 @@ public sealed class ProjectSettings : ElectronObject
 
     /// <summary>Gets the absolute path of the current project settings file.</summary>
     /// <value><see cref="ProjectFileName"/> inside <see cref="ProjectRoot"/>.</value>
-    public string ProjectFilePath => Path.Combine(ProjectRoot, ProjectFileName);
+    public string ProjectFilePath => IOPath.Combine(ProjectRoot, ProjectFileName);
 
     /// <summary>Gets the absolute path of the optional runtime override file.</summary>
     /// <value><see cref="OverrideFileName"/> inside <see cref="ProjectRoot"/>.</value>
-    public string OverrideFilePath => Path.Combine(ProjectRoot, OverrideFileName);
+    public string OverrideFilePath => IOPath.Combine(ProjectRoot, OverrideFileName);
 
     /// <summary>Gets the absolute path reserved for generated project-local engine data.</summary>
     /// <value><see cref="ProjectDataDirectoryName"/> inside <see cref="ProjectRoot"/>.</value>
-    public string ProjectDataPath => Path.Combine(ProjectRoot, ProjectDataDirectoryName);
+    public string ProjectDataPath => IOPath.Combine(ProjectRoot, ProjectDataDirectoryName);
 
     /// <summary>Gets a monotonically increasing in-process registry version.</summary>
     /// <value>A value starting at one and incremented after registry, value, or active-feature changes.</value>
@@ -868,8 +869,8 @@ public sealed class ProjectSettings : ElectronObject
             _loading = true;
             try
             {
-                var projectFile = Path.Combine(_projectRoot, ProjectFileName);
-                var overrideFile = Path.Combine(_projectRoot, OverrideFileName);
+                var projectFile = IOPath.Combine(_projectRoot, ProjectFileName);
+                var overrideFile = IOPath.Combine(_projectRoot, OverrideFileName);
                 if (!File.Exists(projectFile))
                     throw new FileNotFoundException("The project settings file does not exist.", projectFile);
 
@@ -1028,7 +1029,7 @@ public sealed class ProjectSettings : ElectronObject
         if (path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
 
-        return Path.GetFullPath(path);
+        return IOPath.GetFullPath(path);
     }
 
     /// <summary>Converts an ordinary path inside a configured root to a virtual project or user path.</summary>
@@ -1051,7 +1052,7 @@ public sealed class ProjectSettings : ElectronObject
         if (!isKnownVirtualPath && path.Contains("://", StringComparison.Ordinal))
             throw new NotSupportedException($"Virtual path scheme in '{path}' is not supported.");
 
-        var fullPath = isKnownVirtualPath ? GlobalizePath(path) : Path.GetFullPath(path);
+        var fullPath = isKnownVirtualPath ? GlobalizePath(path) : IOPath.GetFullPath(path);
         string projectRoot;
         string userDataRoot;
         lock (_gate)
@@ -1093,14 +1094,14 @@ public sealed class ProjectSettings : ElectronObject
         if (startPath.Length == 0)
             throw new ArgumentException("A project search path cannot be empty.", nameof(startPath));
 
-        var fullPath = Path.GetFullPath(startPath);
-        var directoryPath = File.Exists(fullPath) ? Path.GetDirectoryName(fullPath)! : fullPath;
+        var fullPath = IOPath.GetFullPath(startPath);
+        var directoryPath = File.Exists(fullPath) ? IOPath.GetDirectoryName(fullPath)! : fullPath;
         if (!Directory.Exists(directoryPath))
             throw new DirectoryNotFoundException($"Project search directory '{directoryPath}' does not exist.");
 
         for (var current = new DirectoryInfo(directoryPath); current is not null; current = current.Parent)
         {
-            if (File.Exists(Path.Combine(current.FullName, ProjectFileName)))
+            if (File.Exists(IOPath.Combine(current.FullName, ProjectFileName)))
                 return current.FullName;
         }
 
@@ -1303,21 +1304,21 @@ public sealed class ProjectSettings : ElectronObject
         if (projectRoot.Length == 0)
             throw new ArgumentException("A project root cannot be empty.", nameof(projectRoot));
 
-        var fullRoot = Path.GetFullPath(projectRoot);
-        var projectName = Path.GetFileName(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var fullRoot = IOPath.GetFullPath(projectRoot);
+        var projectName = IOPath.GetFileName(fullRoot.TrimEnd(IOPath.DirectorySeparatorChar, IOPath.AltDirectorySeparatorChar));
         if (projectName.Length == 0)
             projectName = "project";
 
-        foreach (var invalid in Path.GetInvalidFileNameChars())
+        foreach (var invalid in IOPath.GetInvalidFileNameChars())
             projectName = projectName.Replace(invalid, '_');
 
         var localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         if (localData.Length == 0)
-            localData = Path.GetTempPath();
+            localData = IOPath.GetTempPath();
 
-        var userDataRoot = Path.Combine(localData, "Electron2D", projectName);
-        return PathComparer.Equals(fullRoot, Path.TrimEndingDirectorySeparator(Path.GetFullPath(userDataRoot)))
-            ? Path.Combine(userDataRoot, "user")
+        var userDataRoot = IOPath.Combine(localData, "Electron2D", projectName);
+        return PathComparer.Equals(fullRoot, IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(userDataRoot)))
+            ? IOPath.Combine(userDataRoot, "user")
             : userDataRoot;
     }
 
@@ -1358,8 +1359,8 @@ public sealed class ProjectSettings : ElectronObject
         if (userDataRoot.Length == 0)
             throw new ArgumentException("A user-data root cannot be empty.", nameof(userDataRoot));
 
-        var normalizedProject = Path.TrimEndingDirectorySeparator(Path.GetFullPath(projectRoot));
-        var normalizedUser = Path.TrimEndingDirectorySeparator(Path.GetFullPath(userDataRoot));
+        var normalizedProject = IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(projectRoot));
+        var normalizedUser = IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(userDataRoot));
         if (!Directory.Exists(normalizedProject))
             throw new DirectoryNotFoundException($"Project root '{normalizedProject}' does not exist.");
         if (PathComparer.Equals(normalizedProject, normalizedUser))
@@ -1430,7 +1431,7 @@ public sealed class ProjectSettings : ElectronObject
         {
             ThrowIfDisposed();
             EnsureNotLoading();
-            var destination = path is null ? Path.Combine(_projectRoot, ProjectFileName) : GlobalizePath(path);
+            var destination = path is null ? IOPath.Combine(_projectRoot, ProjectFileName) : GlobalizePath(path);
             var preferredOrder = new List<(string Section, string Name)>();
             foreach (var entry in _settings.Values
                          .OrderBy(entry => entry.Order)
@@ -1531,12 +1532,12 @@ public sealed class ProjectSettings : ElectronObject
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {
-        var nativeRelative = relativePath.Replace('/', Path.DirectorySeparatorChar)
-            .Replace('\\', Path.DirectorySeparatorChar);
-        if (Path.IsPathRooted(nativeRelative))
+        var nativeRelative = relativePath.Replace('/', IOPath.DirectorySeparatorChar)
+            .Replace('\\', IOPath.DirectorySeparatorChar);
+        if (IOPath.IsPathRooted(nativeRelative))
             throw new UnauthorizedAccessException("A virtual path cannot contain an absolute suffix.");
 
-        var resolved = Path.GetFullPath(Path.Combine(root, nativeRelative));
+        var resolved = IOPath.GetFullPath(IOPath.Combine(root, nativeRelative));
         if (TryGetRelative(root, resolved) is null)
             throw new UnauthorizedAccessException("A virtual path cannot escape its configured root.");
         return resolved;
@@ -1544,12 +1545,12 @@ public sealed class ProjectSettings : ElectronObject
 
     private static string? TryGetRelative(string root, string fullPath)
     {
-        var relative = Path.GetRelativePath(root, fullPath);
+        var relative = IOPath.GetRelativePath(root, fullPath);
         if (relative == ".")
             return string.Empty;
-        if (Path.IsPathRooted(relative) || relative == ".." ||
-            relative.StartsWith($"..{Path.DirectorySeparatorChar}", StringComparison.Ordinal) ||
-            relative.StartsWith($"..{Path.AltDirectorySeparatorChar}", StringComparison.Ordinal))
+        if (IOPath.IsPathRooted(relative) || relative == ".." ||
+            relative.StartsWith($"..{IOPath.DirectorySeparatorChar}", StringComparison.Ordinal) ||
+            relative.StartsWith($"..{IOPath.AltDirectorySeparatorChar}", StringComparison.Ordinal))
         {
             return null;
         }

@@ -64,6 +64,8 @@ Last updated: 2026-09-23
 | `CanvasItem : Node` | `abstract CanvasItem : Node` | Canvas drawing, visibility, modulation, materials, draw order and the common transform-query/notification contract. Being a CanvasItem does not require emitting visible geometry. |
 | `Node2D : CanvasItem` | `Entity : CanvasItem` | Concrete spatial transform model: local/global position, rotation, scale, skew and spatial helpers. It can serve as an empty spatial parent. |
 | `Sprite2D : Node2D` | `Sprite : Entity` | Texture drawing and sprite-specific state. |
+| `Path2D : Node2D` | `Path : Entity` | Borrowed spatial curve and updates to attached direct followers. |
+| `PathFollow2D : Node2D` | `PathFollow : Entity` | Distance/ratio sampling, offsets and tangent rotation for descendant nodes. |
 | `Camera2D : Node2D` | `Camera : Entity` | Camera-specific spatial behavior; future implementation. |
 | `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Collision-shape placement; future implementation. |
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
@@ -103,11 +105,13 @@ Outside these renames, the entire in-scope engine API must correspond to Godot u
 
 ### Implementation and verification boundary
 
-The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. Camera, CollisionShape, Control, BaseButton and Button remain absent. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
+The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Path : Entity`, `PathFollow : Entity`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. Camera, CollisionShape, Control, BaseButton and Button remain absent. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
 
 The hierarchy migration updates consumers, XML/class/component/domain documents, inventory and bidirectional coverage together. SceneHierarchyTests and native mixed-tree pixel checks preserve executable lifecycle, rendering, input, packing and failure cleanup through neutral and canvas bases. Control's absence remains an implementation dependency, not permission to move UI layout into Entity or collapse its branch.
 
 Coverage retains the pinned Godot identities `Node` and `Node2D`, maps them to the actual production types, and records remaining behavioral gaps. Do not mark members implemented merely because this decision has been accepted or a renamed declaration compiles. The existing runtime checks establish only the behavior they exercise; native and platform acceptance still follows ADR 0021.
+
+Path/PathFollow preserve runtime sampling and policy timing through the existing resource and tree APIs. Worker resource changes use SceneTree.Defer; callback errors retain committed state and sibling updates are attempted under ADR 0011. A newer reentrant follower update is not overwritten by an older position assignment. These mappings add no navigation system, editor debounce timer or separate scheduling surface. Current diagnostics/editor gaps remain documented on the [scene paths component](../components/scene-paths.md).
 
 ### Rejected alternatives
 
@@ -178,7 +182,7 @@ Accepted.
 
 Electron2D needs reusable 2D scene templates before it has an asset loader/saver or editor. The accepted architecture excludes dynamic values, reflection-driven string calls, public manual reference counting, hidden scene activation, and fictional APIs for absent domains. Existing `Node`, `PropertyDescriptor`, `Resource`, and deterministic disposal contracts already provide most required runtime mechanisms, but they did not yet define scene ownership, stored-property selection, derived node construction, local resource setup, or failure rollback.
 
-ADR 0013 deliberately deferred automatic local-to-scene behavior and avoided a Resources-to-Scene dependency until a real consumer existed. This component is that consumer. The history in ADR 0013 remains intact; this decision narrows its deferred boundary instead of rewriting the earlier decision as if scene instancing had always existed.
+ADR 0013 deliberately deferred automatic local-to-scene behavior and avoided a Resources-to-Scene dependency until a real consumer existed. This component is that consumer. ADR 0013 now records the implemented scene association and root ownership; both active decisions describe the current contract.
 
 ### Decision
 

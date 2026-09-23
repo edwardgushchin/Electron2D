@@ -12,6 +12,7 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 
 | Component | Responsibility | State |
 | --- | --- | --- |
+| [Scene paths](../components/scene-paths.md) | Path curves and descendant movement by distance, offsets and tangent rotation | Runtime implemented; shared diagnostics/editor capabilities remain pending |
 | [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes, AnimatedSprite playback and retained CanvasItem drawing | Executable; inherited canvas policies incomplete |
 | [Window runtime](../components/window-runtime.md) | Native root window, presentation policies, platform events and client/input boundary | Implemented root slice; rendering and multiwindow incomplete |
 | [Scene hierarchy](../components/scene-hierarchy.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
@@ -19,14 +20,15 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`AnimatedSprite`](../classes/AnimatedSprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types include [`Path`](../classes/Path.md), [`PathFollow`](../classes/PathFollow.md), [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`AnimatedSprite`](../classes/AnimatedSprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
 - `Node`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged.
-- `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite and AnimatedSprite derive directly from it.
+- `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Path and PathFollow derive directly from it.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
+- `Path` / `PathFollow`: borrowed PathCurve containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
@@ -69,12 +71,12 @@ Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes
 - Packed-scene instances are reconstructed detached. Node factories and unfinished instances cannot activate a `SceneTree`; scene-local resource graphs preserve aliases/cycles, know their new root before setup, and are disposed with that root.
 - Capture blocks source hierarchy mutation. Failed reconstruction attempts cleanup of every returned node and resource duplicate it acquired, reports cleanup failures, and never returns a partial result.
 - `SceneTree` is initialized when construction succeeds, returns no quit request from its two inherited frame lanes, and releases all owned scene state from explicit finalization or disposal.
-- System notifications are propagated depth-first to live attached nodes; native generation and platform-specific input effects belong to the absent SDL host/backend covered by ADR 0038.
+- System notifications are propagated depth-first to live attached nodes; native generation and platform-specific input effects belong to the SDL host/backend covered by ADR 0038.
 - The warmed idle process and physics frame paths reuse scheduler/timer storage and do not allocate managed memory.
 
 ## Current limitations
 
-- A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. There is still no automatic SDL pump/clock, frame-wait policy, or background scene thread.
+- A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. Engine.Run(Window) owns the implemented SDL pump, monotonic clock and frame-wait policy; no background scene thread is created.
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
 - Root-window drawing and its input/client Viewport are integrated. There is no independent offscreen viewport, GUI input routing, collision/rigid-body physics, automatic scene switching, scene file loader/saver, RPC/multiplayer, accessibility backend, or scripting. Typed root-tree input propagation is implemented; Tweening is runtime-only and has no editor/serialization surface.
@@ -116,3 +118,5 @@ Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes
 The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. Window.ModeEnum and Window.Flags describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, textures and GPU shader materials after scene processing. Offscreen viewports, nested windows, GUI and content scaling are still absent.
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.
+
+[PathTests](../../tests/Electron2D.Tests/PathTests.cs) verifies scene path sampling, lifecycle, copying, failures, worker delivery and warm movement allocation. [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies descendant pixel movement on Linux Wayland GPU/compatibility and dummy/software; see the [component](../components/scene-paths.md) for remaining shared diagnostics and verification limits.

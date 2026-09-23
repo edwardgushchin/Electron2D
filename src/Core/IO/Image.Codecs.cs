@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 using SDL3;
@@ -132,7 +133,7 @@ public sealed partial class Image
     private static string CodecFromPath(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
-        return Path.GetExtension(path).ToLowerInvariant() switch
+        return IOPath.GetExtension(path).ToLowerInvariant() switch
         {
             ".png" => "PNG",
             ".jpg" or ".jpeg" => "JPG",

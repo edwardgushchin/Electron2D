@@ -14,7 +14,9 @@
     "Sprite2D": "Sprite",
     "Node": "Node",
     "AnimatedSprite2D": "AnimatedSprite",
-    "Curve2D": "PathCurve"
+    "Curve2D": "PathCurve",
+    "Path2D": "Path",
+    "PathFollow2D": "PathFollow"
   },
   "enums": {
     "@GlobalScope.ClockDirection": "ClockDirection",

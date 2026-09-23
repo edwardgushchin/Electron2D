@@ -1,3 +1,4 @@
+using IOPath = System.IO.Path;
 using System.Buffers.Binary;
 using Electron2D;
 
@@ -97,16 +98,16 @@ internal static class ImageCodecTests
     {
         var settings = ProjectSettings.Instance;
         var roots = (settings.ProjectRoot, settings.UserDataRoot);
-        var root = Path.Combine(Path.GetTempPath(), "Electron2D-codecs-" + Guid.NewGuid().ToString("N"));
+        var root = IOPath.Combine(IOPath.GetTempPath(), "Electron2D-codecs-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
-        Directory.CreateDirectory(Path.Combine(root, "user"));
+        Directory.CreateDirectory(IOPath.Combine(root, "user"));
         try
         {
-            settings.ConfigurePaths(root, Path.Combine(root, "user"));
+            settings.ConfigurePaths(root, IOPath.Combine(root, "user"));
             source.SavePNG("res://texture.PNG");
             source.SavePNG("user://texture.png");
             source.SaveJPG("user://texture.jpeg");
-            foreach (var path in new[] { "res://texture.PNG", "user://texture.png", Path.Combine(root, "texture.PNG") })
+            foreach (var path in new[] { "res://texture.PNG", "user://texture.png", IOPath.Combine(root, "texture.PNG") })
             {
                 using var decoded = Image.LoadFromFile(path);
                 CheckPixels(decoded, Pixels);
@@ -118,24 +119,24 @@ internal static class ImageCodecTests
             var inputs = new[] { (".png", png), (".jpg", jpg), (".webp", Convert.FromBase64String(WEBP)), (".bmp", BMP(false)), (".tga", TGA(false)) };
             foreach (var (extension, bytes) in inputs)
             {
-                var path = Path.Combine(root, "input" + extension);
+                var path = IOPath.Combine(root, "input" + extension);
                 File.WriteAllBytes(path, bytes);
                 using var decoded = Image.LoadFromFile(path);
                 Check(decoded.Width > 0 && decoded.Height > 0, "Every integrated file extension reaches its decoder.");
             }
-            var destination = Path.Combine(root, "texture.PNG");
+            var destination = IOPath.Combine(root, "texture.PNG");
             var old = File.ReadAllBytes(destination);
             using var empty = new Image();
             Reject<InvalidOperationException>(() => empty.SavePNG(destination));
             Reject<ArgumentOutOfRangeException>(() => source.SaveJPG(destination, float.NaN));
             Check(File.ReadAllBytes(destination).SequenceEqual(old), "Failed encoding preserves an existing destination.");
             Reject<IOException>(() => source.SavePNG(root));
-            Reject<DirectoryNotFoundException>(() => source.SavePNG(Path.Combine(root, "absent", "out.png")));
+            Reject<DirectoryNotFoundException>(() => source.SavePNG(IOPath.Combine(root, "absent", "out.png")));
             Reject<FileNotFoundException>(() => Image.LoadFromFile("res://missing.png"));
             Reject<NotSupportedException>(() => Image.LoadFromFile("res://texture.unknown"));
             Reject<UnauthorizedAccessException>(() => source.SavePNG("res://../escape.png"));
             Reject<UnauthorizedAccessException>(() => Image.LoadFromFile("res://../escape.png"));
-            var large = Path.Combine(root, "large.png");
+            var large = IOPath.Combine(root, "large.png");
             using (var file = File.Create(large)) file.SetLength(64 * 1024 * 1024 + 1);
             Reject<InvalidDataException>(() => Image.LoadFromFile(large));
             Check(!Directory.EnumerateFiles(root).Any(path => path.EndsWith(".tmp", StringComparison.Ordinal)), "Failed atomic writes clean their temporary files.");
