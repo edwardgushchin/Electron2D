@@ -55,8 +55,8 @@ internal static partial class RenderingRuntimeTests
 
     private static void VerifyLayerCoordinates(string backend, Material? material)
     {
-        var window = new Window { Size = new(100, 80), CanvasTransform = new(0, new(20, 10)), GlobalCanvasTransform = new(0, new(4, 2)) };
-        var camera = new Camera { Enabled = false, Position = new(30, 30), LimitEnabled = false }; window.AddChild(camera);
+        var window = new Window { Size = new(256, 128), CanvasTransform = new(0, new(20, 10)), GlobalCanvasTransform = new(0, new(4, 2)) };
+        var camera = new Camera { Enabled = false, LimitEnabled = false }; window.AddChild(camera);
         var snappedDefault = LayerBox("SnappedDefault", new(10, 10), Colors.Cyan, material); snappedDefault.Visible = false; window.AddChild(snappedDefault);
         var layer = new CanvasLayer { Offset = new(10, 5) }; window.AddChild(layer);
         var red = LayerBox("Red", new(1, 1), Colors.Red, material); layer.AddChild(red);
@@ -69,6 +69,8 @@ internal static partial class RenderingRuntimeTests
         };
         window.Ready += _ =>
         {
+            var center = window.GetVisibleRect().Size * 0.5f;
+            camera.Position = center + new Vector2(-20, -10);
             var native = SDL.GetWindows(out var count); Check(count == 1, "One layer window.");
             var density = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland" ? SDL.GetWindowPixelDensity(native![0]) : 1;
             var motion = new SDL.Event { Motion = new SDL.MouseMotionEvent { Type = SDL.EventType.MouseMotion, WindowID = SDL.GetWindowID(native![0]), Which = 987, X = 16 / density, Y = 9 / density } };
@@ -85,12 +87,13 @@ internal static partial class RenderingRuntimeTests
                             Check(inputs == 1, "Layer native input delivered."); Pixel(pixels, 16, 9, Colors.Red); Pixel(pixels, 36, 19, Colors.Black);
                             camera.Enabled = true; layer.FollowViewportEnabled = true; break;
                         case 2:
-                            Pixel(pixels, 36, 19, Colors.Red); camera.Position = new(40, 20); camera.ForceUpdateTransform(); layer.FollowViewportScale = 2;
-                            Check(red.GetGlobalTransformWithCanvas().Origin.IsEqualApprox(new(32, 32)), "Logical follow matrix retains its separate query contract."); break;
-                        case 3: Pixel(pixels, 2, 18, Colors.Red); layer.FollowViewportScale = .5f; break;
-                        case 4: Pixel(pixels, 38, 35, Colors.Red); layer.FollowViewportScale = 0; break;
-                        case 5: Pixel(pixels, 50, 40, Colors.Black); layer.FollowViewportScale = -1; break;
-                        case 6: Pixel(pixels, 73, 50, Colors.Red); layer.FollowViewportEnabled = false; layer.Transform = new(Mathf.Pi / 2, new(2, 1), 0, new(70, 10)); break;
+                            Pixel(pixels, 36, 19, Colors.Red); camera.Position = center + new Vector2(-10, -20); camera.ForceUpdateTransform(); layer.FollowViewportScale = 2;
+                            Check(red.GetGlobalTransformWithCanvas().Origin.IsEqualApprox(new(32, 32)), "Logical follow matrix retains its separate query contract.");
+                            red.Position = new(100, 50); break;
+                        case 3: Pixel(pixels, 122, 92, Colors.Red); layer.FollowViewportScale = .5f; break;
+                        case 4: Pixel(pixels, 127, 71, Colors.Red); layer.FollowViewportScale = 0; break;
+                        case 5: Pixel(pixels, 128, 64, Colors.Black); layer.FollowViewportScale = -1; break;
+                        case 6: Pixel(pixels, 130, 49, Colors.Red); red.Position = new(1, 1); layer.FollowViewportEnabled = false; layer.Transform = new(Mathf.Pi / 2, new(2, 1), 0, new(70, 10)); break;
                         case 7:
                             Pixel(pixels, 71, 16, Colors.Red); camera.Enabled = false; window.GlobalCanvasTransform = Transform.Identity;
                             window.CanvasTransform = new(0, new(.5f, -.5f)); layer.Transform = new(0, new(.5f, -.5f));
