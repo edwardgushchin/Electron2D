@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Provides a reusable scene-node countdown timer.</summary>
 /// <remarks>
 /// The timer advances at most once in its selected frame lane, emits <see cref="Timeout"/> when its remaining time
-/// reaches zero, and either stops or reloads according to <see cref="OneShot"/>. It has no clock or background thread.
+/// becomes negative, and either stops or reloads according to <see cref="OneShot"/>. It has no clock or background thread.
 /// </remarks>
 public class Timer : Node
 {
@@ -183,8 +183,8 @@ public class Timer : Node
     /// <summary>Gets or sets whether the countdown ignores <see cref="Engine.TimeScale"/>.</summary>
     /// <value><see langword="false"/> by default.</value>
     /// <remarks>
-    /// Engine-driven frames use their original finite elapsed delta when enabled. Direct <see cref="SceneTree"/> frame
-    /// calls have no separate scale and therefore use their supplied delta in either mode.
+    /// Engine-driven frames use the original process-frame step in both frame lanes when enabled. Direct
+    /// <see cref="SceneTree"/> frame calls have no separate process step and use their supplied delta.
     /// </remarks>
     /// <exception cref="InvalidOperationException">An attached timer is mutated off its tree's owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
@@ -215,7 +215,7 @@ public class Timer : Node
         }
     }
 
-    /// <summary>Occurs when the countdown reaches zero.</summary>
+    /// <summary>Occurs when the countdown passes below zero.</summary>
     /// <remarks>
     /// Delivery is synchronous on the scene-tree owner thread. One-shot timers stop before delivery; repeating timers
     /// reload first. At most one timeout is emitted per matching frame. Handler exceptions propagate through the frame
@@ -225,6 +225,7 @@ public class Timer : Node
 
     /// <summary>Gets whether the timer is stopped or has not started.</summary>
     /// <returns><see langword="true"/> when no positive remaining time is observable; otherwise <see langword="false"/>.</returns>
+    /// <remarks>At exact zero this returns <see langword="true"/>, although the internal lane continues until the countdown becomes negative and emits <see cref="Timeout"/>.</remarks>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
     public bool IsStopped()
     {
@@ -371,9 +372,11 @@ public class Timer : Node
         if (!_processing || _paused || (_processCallback == TimerProcessCallback.Physics) != physics)
             return;
 
-        var delta = _ignoreTimeScale ? GetUnscaledProcessDelta(physics) : physics ? PhysicsProcessDeltaTime : ProcessDeltaTime;
+        var delta = _ignoreTimeScale
+            ? Tree?.CurrentUnscaledProcessStep ?? GetUnscaledProcessDelta(physics)
+            : physics ? PhysicsProcessDeltaTime : ProcessDeltaTime;
         _timeLeft -= delta;
-        if (_timeLeft > 0d)
+        if (_timeLeft >= 0d)
             return;
 
         if (_oneShot)

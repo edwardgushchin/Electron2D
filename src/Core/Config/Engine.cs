@@ -283,6 +283,7 @@ public sealed partial class Engine : ElectronObject
 
             var schedulingElapsed = LimitCatchUp(elapsedSeconds, physicsStep, maxPhysicsSteps);
             var timing = _frameSynchronizer.Advance(physicsStep, physicsTicksPerSecond, schedulingElapsed, jitterFix);
+            var unscaledProcessStep = timing.ProcessStep;
 
             if (timing.PhysicsSteps > maxPhysicsSteps)
             {
@@ -310,7 +311,7 @@ public sealed partial class Engine : ElectronObject
 
                 try
                 {
-                    if (mainLoop.PhysicsProcessForEngine(scaledPhysicsStep, physicsStep))
+                    if (mainLoop.PhysicsProcessForEngine(scaledPhysicsStep, physicsStep, unscaledProcessStep))
                     {
                         stopRequested = true;
                         break;
@@ -322,7 +323,7 @@ public sealed partial class Engine : ElectronObject
                 }
             }
 
-            if (mainLoop.ProcessForEngine(scaledProcessStep, timing.ProcessStep))
+            if (mainLoop.ProcessForEngine(scaledProcessStep, timing.ProcessStep, unscaledProcessStep))
                 stopRequested = true;
 
             Interlocked.Increment(ref _processFrames);

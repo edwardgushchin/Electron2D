@@ -6563,7 +6563,7 @@ static void VerifyTimers()
         timer.Timeout += source =>
         {
             timeoutCount++;
-            timeoutObservedReload = !source.IsStopped() && DoubleNearlyEqual(source.TimeLeft, source.WaitTime);
+            timeoutObservedReload = !source.IsStopped() && source.TimeLeft <= source.WaitTime;
         };
 
         timer.Start();
@@ -6574,15 +6574,21 @@ static void VerifyTimers()
         Require(DoubleNearlyEqual(timer.TimeLeft, 0.3d),
             "Changing WaitTime must not reset the active countdown.");
         tree.ProcessFrame(0.3d);
-        Require(timeoutCount == 1 && timeoutObservedReload && DoubleNearlyEqual(timer.TimeLeft, 0.25d),
-            "A repeating Timer must reload before synchronous timeout delivery.");
+        Require(timeoutCount == 0 && timer.IsStopped() && timer.TimeLeft == 0d,
+            "An exact-zero countdown is observably stopped but waits for a negative internal remainder before timeout.");
+        tree.ProcessFrame(0.01d);
+        Require(timeoutCount == 1 && timeoutObservedReload && DoubleNearlyEqual(timer.TimeLeft, 0.24d),
+            "A repeating Timer must reload the negative remainder before synchronous timeout delivery.");
 
         timer.OneShot = true;
         timer.Start(0.1d);
         timeoutObservedReload = false;
         tree.ProcessFrame(0.1d);
+        Require(timeoutCount == 1 && timer.TimeLeft == 0d,
+            "A one-shot Timer must not emit at the exact-zero boundary.");
+        tree.ProcessFrame(0.01d);
         Require(timeoutCount == 2 && timer.IsStopped() && timer.TimeLeft == 0d && !timeoutObservedReload,
-            "A one-shot Timer must stop before timeout delivery when the countdown reaches zero exactly.");
+            "A one-shot Timer must stop before timeout delivery after the countdown becomes negative.");
 
         timer.OneShot = false;
         timer.Start(0.25d);
@@ -6596,6 +6602,9 @@ static void VerifyTimers()
             "Starting a paused Timer must reset without resuming it.");
         timer.Paused = false;
         tree.ProcessFrame(0.2d);
+        Require(timeoutCount == 2 && timer.TimeLeft == 0d,
+            "Resumed timers retain strict-negative expiry at an exact-zero step.");
+        tree.ProcessFrame(0.01d);
         Require(timeoutCount == 3,
             "Unpausing a running Timer must resume its preserved countdown.");
 
@@ -6617,6 +6626,9 @@ static void VerifyTimers()
         tree.ProcessFrame(0.35d);
         Require(timeoutCount == 5 && timer.TimeLeft == 0d,
             "A repeating Timer must emit at most once per frame even when one delta spans several periods.");
+        tree.ProcessFrame(0d);
+        Require(timeoutCount == 6 && timer.TimeLeft == 0d,
+            "An overshooting repeat frame must retain its negative remainder and catch up once on the next frame.");
 
         timer.OneShot = true;
         timer.Start(0.1d);
@@ -6629,15 +6641,15 @@ static void VerifyTimers()
         Require(!timer.IsStopped() && DoubleNearlyEqual(timer.TimeLeft, 0.1d),
             "A Timer must honor inherited scene-tree pause policy.");
         timer.ProcessMode = NodeProcessMode.Always;
-        tree.ProcessFrame(0.1d);
-        Require(timer.IsStopped() && timeoutCount == 6,
+        tree.ProcessFrame(0.11d);
+        Require(timer.IsStopped() && timeoutCount == 7,
             "Always-processing mode must allow a Timer to advance while the tree is paused.");
         tree.Paused = false;
 
         timer.Start(0.5d);
         timer.Stop();
         tree.ProcessFrame(1d);
-        Require(timer.IsStopped() && timeoutCount == 6,
+        Require(timer.IsStopped() && timeoutCount == 7,
             "Stop must disable internal processing and must not emit Timeout.");
 
         var wrongThreadWait = Task.Run(() => Capture(() => timer.WaitTime = 1d)).GetAwaiter().GetResult();
@@ -6665,6 +6677,9 @@ static void VerifyTimers()
                 DoubleNearlyEqual(autostartTimer.TimeLeft, 0.2d),
             "Autostart must start during ready delivery and clear itself.");
         autostartTree.ProcessFrame(0.2d);
+        Require(autostartTimeouts == 0 && autostartTimer.TimeLeft == 0d,
+            "Autostart timers also wait for a negative remainder.");
+        autostartTree.ProcessFrame(0.01d);
         Require(autostartTimeouts == 1 && autostartTimer.IsStopped(),
             "An automatically started one-shot Timer must expire normally.");
     }
@@ -6690,8 +6705,8 @@ static void VerifyTimers()
     using (var orderTree = new SceneTree(orderRoot))
     {
         orderingTimer.Start();
-        Require(Capture(() => orderTree.ProcessFrame(0.1d)) is AggregateException &&
-                order.SequenceEqual(["timeout", "process:timer:0.1", "process:later:0.1"]),
+        Require(Capture(() => orderTree.ProcessFrame(0.11d)) is AggregateException &&
+                order.SequenceEqual(["timeout", "process:timer:0.11", "process:later:0.11"]),
             "Internal timeout failures must not suppress the node's public callback or later scheduled nodes.");
     }
 
@@ -6708,7 +6723,7 @@ static void VerifyTimers()
     {
         disablingTimer.Timeout += source => source.ProcessEnabled = false;
         disablingTimer.Start();
-        disableTree.ProcessFrame(0.1d);
+        disableTree.ProcessFrame(0.11d);
         Require(disableLog.Count == 0,
             "A Timer that disables its public callback during timeout must not receive that callback later in the frame.");
     }
@@ -6726,7 +6741,7 @@ static void VerifyTimers()
     {
         removedTimer.Timeout += _ => removalRoot.RemoveChild(removedTimer);
         removedTimer.Start();
-        removalTree.ProcessFrame(0.1d);
+        removalTree.ProcessFrame(0.11d);
         Require(removedTimer.Tree is null && removalLog.Count == 0,
             "A Timer removed by its internal timeout callback must not receive its public callback later in the frame.");
         removedTimer.Dispose();
@@ -6770,7 +6785,7 @@ static void VerifyTimers()
         Name = "unscaled-physics",
         Autostart = true,
         OneShot = true,
-        WaitTime = 0.05d,
+        WaitTime = 0.5d,
         IgnoreTimeScale = true,
         ProcessCallback = TimerProcessCallback.Physics,
     };
@@ -6780,6 +6795,13 @@ static void VerifyTimers()
     using (var scaledTree = new SceneTree(scaledRoot))
     {
         var unscaledTimeouts = 0;
+        var physicsFrames = 0;
+        var physicsProcessStep = 0d;
+        scaledTree.PhysicsFrameStarted += source =>
+        {
+            physicsFrames++;
+            physicsProcessStep = source.CurrentUnscaledProcessStep ?? 0d;
+        };
         unscaledTimer.Timeout += _ => unscaledTimeouts++;
         unscaledPhysicsTimer.Timeout += _ => unscaledTimeouts++;
         try
@@ -6788,8 +6810,9 @@ static void VerifyTimers()
             engine.Start(scaledTree);
             _ = engine.AdvanceFrame(1d);
             Require(!scaledTimer.IsStopped() && DoubleNearlyEqual(scaledTimer.TimeLeft, 0.1d) &&
-                    unscaledTimer.IsStopped() && unscaledPhysicsTimer.IsStopped() && unscaledTimeouts == 2,
-                "IgnoreTimeScale must use Engine's original process and physics deltas even when scaled time is frozen.");
+                    unscaledTimer.IsStopped() && unscaledPhysicsTimer.IsStopped() && unscaledTimeouts == 2 &&
+                    physicsFrames > 1 && physicsProcessStep > 0.05d && physicsFrames / 60d < 0.5d,
+                "IgnoreTimeScale must subtract Engine's process step in both lanes, even when scaled time is frozen.");
             engine.Stop();
         }
         finally

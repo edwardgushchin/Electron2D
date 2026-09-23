@@ -802,20 +802,20 @@
     {
       "electron2d": "method:Electron2D.Timer.Start()",
       "godot": "Timer::method:start(float:)",
-      "state": "Partial",
-      "reason": "Timer lifecycle; Start() replaces negative sentinel with typed overload under ADR 0036."
+      "state": "Implemented",
+      "reason": "Uses the stored WaitTime, resets the countdown while attached, and retains local pause; the negative sentinel is replaced by this typed overload under ADR 0036."
     },
     {
       "electron2d": "method:Electron2D.Timer.Start(System.Double)",
       "godot": "Timer::method:start(float:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "Validates and commits a positive finite WaitTime before restarting the attached countdown; typed exception and overload semantics follow ADR 0036."
     },
     {
       "electron2d": "method:Electron2D.Timer.Stop()",
       "godot": "Timer::method:stop()",
-      "state": "Partial",
-      "reason": "Timer lifecycle; Start() replaces negative sentinel with typed overload under ADR 0036."
+      "state": "Implemented",
+      "reason": "Disables internal processing, clears observable remaining time and autostart, and emits no timeout; valid while detached as audited in VerifyTimers."
     },
     {
       "electron2d": "method:Electron2D.Tween.GetLoopsLeft()",
@@ -2589,6 +2589,31 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "The complete runtime countdown contract is executable and audited against pinned timer.cpp/timer.h under ADR 0036. Edited-scene autostart suppression requires the absent editor runtime; inherited Node gaps remain on Node coverage.",
+      "godot": ["class:Timer", "Timer::property:autostart"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Physics=0 and Idle=1 match pinned timer.h and select the corresponding private internal Node frame lanes; VerifyTimers covers lane changes while running.",
+      "godot": ["Timer::enum:TimerProcessCallback", "Timer::property:process_callback"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pinned timer.cpp query and decrement/reload/stop behavior is executable. VerifyTimers covers defaults, strict-negative expiry after exact zero, overshoot carry, one event per frame, local/tree pause, stop and synchronous handler delivery.",
+      "godot": ["Timer::method:is_stopped()", "Timer::property:one_shot", "Timer::property:paused", "Timer::property:time_left", "Timer::signal:timeout()"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pinned timer.cpp setter and frame timing are executable. Finite positive duration uses typed rejection, warning refresh occurs after commitment, and ignore-time-scale uses the original process step in both lanes under ADR 0036; VerifyTimers covers scale zero and packed settings.",
+      "godot": ["Timer::property:wait_time", "Timer::property:ignore_time_scale"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Both typed Start overloads and Stop reproduce the pinned attached countdown lifecycle under ADR 0036; VerifyTimers covers detached rejection, active reset, pause, autostart clearing, repeat and callback failure ordering.",
+      "godot": ["Timer::method:start(float:)", "Timer::method:stop()"]
+    },
     {
       "state": "Partial",
       "reason": "All 17 cursor identities and the typed local-position override are executable. Root viewport hover selects the native cursor on Linux Wayland; clipping, overlapping canvas ordering and nested viewport behavior remain to audit.",

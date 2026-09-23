@@ -17,7 +17,7 @@ This Core component coordinates one process-wide engine runtime: project-backed 
 
 ## Runtime flow
 
-The host calls `Engine.Start(loop)`. The loop is published before initialization, initialized only if still created, and the successful caller becomes the runtime owner. Each `AdvanceFrame(elapsed)` samples active project-setting overrides, bounds catch-up, synchronizes fixed-step distribution, publishes interpolation, invokes fixed callbacks before process, updates process-lifetime counters/current-run FPS, and flushes one pending project-settings event. Every callback receives its scaled delta publicly while MainLoop carries the original synchronized delta internally for built-in consumers such as [`Timer.IgnoreTimeScale`](../classes/Timer.md). A stop request is returned to the host. The host calls `Stop()`, which finalizes and detaches the loop without disposing it.
+The host calls `Engine.Start(loop)`. The loop is published before initialization, initialized only if still created, and the successful caller becomes the runtime owner. Each `AdvanceFrame(elapsed)` samples active project-setting overrides, bounds catch-up, synchronizes fixed-step distribution, publishes interpolation, invokes fixed callbacks before process, updates process-lifetime counters/current-run FPS, and flushes one pending project-settings event. Every callback receives its scaled delta publicly while MainLoop carries the original lane delta and the original process step internally. [`Timer.IgnoreTimeScale`](../classes/Timer.md) subtracts the process step in either lane; the value is captured before the physics catch-up cap adjusts the process callback delta. A stop request is returned to the host. The host calls `Stop()`, which finalizes and detaches the loop without disposing it.
 
 Callback exceptions restore Engine's running state. Initialization/finalization failures return Engine to idle while preserving the loop's terminal lifecycle decision. Re-entry and concurrent lifecycle/frame transitions are rejected atomically.
 
@@ -33,7 +33,7 @@ The component depends on Core object lifecycle, MainLoop, ProjectSettings, and t
 - Fixed callbacks precede process; stop and exception paths always clear the in-physics flag.
 - Catch-up work is bounded by a positive configured maximum.
 - Timing settings and effective callback deltas are finite; callback deltas are non-negative.
-- Original frame deltas remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
+- Original frame deltas and the original process step remain finite/non-negative, are scoped to one callback, and are never reconstructed by dividing through `TimeScale`.
 - Process/physics counters are process-lifetime totals; the synchronizer, interpolation, and FPS window reset only after successful loop preparation.
 - Registry names are unique ordinal strings; built-in `Engine`, `ProjectSettings`, `Input`, and `InputMap` entries are permanent, and user registry ownership never implies object disposal.
 - Warmed empty frame scheduling has no steady-state managed allocation.
@@ -44,7 +44,7 @@ Managed scheduling, lifecycle integration, timing properties, metrics, architect
 
 ## Verification
 
-Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original-delta Timer behavior at zero scale, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. The separate SDL host checks verify loop ordering, bounded waiting, and cleanup under the dummy driver; they do not prove hard real-time cadence or rendering.
+Executable checks cover success, invalid values/order, wrong threads, lifecycle and frame re-entry, stop requests, long stalls, callback and lifecycle failures, `SceneTree` attachment, original process-step Timer behavior at zero scale in both lanes, permanent Input service registration, registry concurrency, metadata, counters/FPS/interpolation, and warmed idle allocation. The separate SDL host checks verify loop ordering, bounded waiting, and cleanup under the dummy driver; they do not prove hard real-time cadence or rendering.
 
 ## Decisions
 

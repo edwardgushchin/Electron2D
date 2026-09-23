@@ -66,7 +66,7 @@ internal static class SceneHierarchyTests
         var timer = new EngineTimer { Name = "timer", OneShot = true };
         neutral.AddChild(timer);
         var timeouts = 0; timer.Timeout += _ => timeouts++;
-        timer.Start(0.1); tree.ProcessFrame(0.1);
+        timer.Start(0.1); tree.ProcessFrame(0.11);
         Check(timeouts == 1 && timer.GetViewport() is null, "Neutral timer retains lifecycle and scheduling.");
         timer.CreateTween().TweenCallback(() => timeouts++);
         tree.ProcessFrame(0.1);

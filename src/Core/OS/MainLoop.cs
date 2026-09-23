@@ -95,7 +95,7 @@ public abstract class MainLoop : ElectronObject
     /// <exception cref="InvalidOperationException">The caller is not the owner thread, the loop is not running, or frame execution is re-entered.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started or finished.</exception>
     /// <exception cref="Exception"><see cref="OnProcess"/> throws.</exception>
-    public bool Process(double delta) => RunFrame(delta, delta, physics: false);
+    public bool Process(double delta) => RunFrame(delta, delta, delta, physics: false);
 
     /// <summary>Runs one fixed-step physics frame.</summary>
     /// <param name="delta">Elapsed fixed-step time in seconds. The value must be finite and non-negative.</param>
@@ -105,15 +105,16 @@ public abstract class MainLoop : ElectronObject
     /// <exception cref="InvalidOperationException">The caller is not the owner thread, the loop is not running, or frame execution is re-entered.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started or finished.</exception>
     /// <exception cref="Exception"><see cref="OnPhysicsProcess"/> throws.</exception>
-    public bool PhysicsProcess(double delta) => RunFrame(delta, delta, physics: true);
+    public bool PhysicsProcess(double delta) => RunFrame(delta, delta, delta, physics: true);
 
     internal double CurrentUnscaledFrameDelta { get; private set; }
+    internal double? CurrentUnscaledProcessStep { get; private set; }
 
-    internal bool ProcessForEngine(double delta, double unscaledDelta) =>
-        RunFrame(delta, unscaledDelta, physics: false);
+    internal bool ProcessForEngine(double delta, double unscaledDelta, double unscaledProcessStep) =>
+        RunFrame(delta, unscaledDelta, unscaledProcessStep, physics: false);
 
-    internal bool PhysicsProcessForEngine(double delta, double unscaledDelta) =>
-        RunFrame(delta, unscaledDelta, physics: true);
+    internal bool PhysicsProcessForEngine(double delta, double unscaledDelta, double unscaledProcessStep) =>
+        RunFrame(delta, unscaledDelta, unscaledProcessStep, physics: true);
 
     internal virtual void ValidateInputEventDispatch()
     {
@@ -281,7 +282,7 @@ public abstract class MainLoop : ElectronObject
             ExceptionDispatchInfo.Capture(baseError).Throw();
     }
 
-    private bool RunFrame(double delta, double unscaledDelta, bool physics)
+    private bool RunFrame(double delta, double unscaledDelta, double unscaledProcessStep, bool physics)
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
@@ -290,12 +291,15 @@ public abstract class MainLoop : ElectronObject
             throw new ArgumentOutOfRangeException(nameof(delta), delta, "Frame delta must be finite and non-negative.");
         if (!double.IsFinite(unscaledDelta) || unscaledDelta < 0d)
             throw new ArgumentOutOfRangeException(nameof(unscaledDelta), unscaledDelta, "Unscaled frame delta must be finite and non-negative.");
+        if (!double.IsFinite(unscaledProcessStep) || unscaledProcessStep < 0d)
+            throw new ArgumentOutOfRangeException(nameof(unscaledProcessStep), unscaledProcessStep, "Unscaled process step must be finite and non-negative.");
 
         if (_state != LoopState.Running)
             throw new InvalidOperationException("A MainLoop frame can only run after initialization and before finalization.");
 
         _state = LoopState.Processing;
         CurrentUnscaledFrameDelta = unscaledDelta;
+        CurrentUnscaledProcessStep = unscaledProcessStep;
         Input.Instance.BeginFrame(physics);
 
         try
@@ -306,6 +310,7 @@ public abstract class MainLoop : ElectronObject
         {
             Input.Instance.CompleteFrame(physics);
             CurrentUnscaledFrameDelta = 0d;
+            CurrentUnscaledProcessStep = null;
             _state = LoopState.Running;
         }
     }

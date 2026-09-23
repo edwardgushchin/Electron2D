@@ -16,20 +16,21 @@ Last updated: 2026-09-23
 
 Provides a reusable scene-node countdown timer.
 
-`Timer` is a reusable Node-based countdown. It advances in one selected `SceneTree` frame lane, emits a typed timeout event when its remaining time reaches zero, and either stops or reloads. The parent Node or active tree owns it through ordinary hierarchy lifetime; the timer owns no thread, clock, task, or native handle.
+`Timer` is a reusable Node-based countdown. It advances in one selected `SceneTree` frame lane, emits a typed timeout event when its internal remaining time becomes negative, and either stops or reloads. The parent Node or active tree owns it through ordinary hierarchy lifetime; the timer owns no thread, clock, task, or native handle.
 
 Use [`SceneTreeTimer`](SceneTreeTimer.md) instead for a lightweight tree-owned one-shot delay that is not part of the Node hierarchy.
 
 The timer advances at most once in its selected frame lane, emits [`Timer.Timeout`](Timer.md#e-electron2d-timer-timeout) when its remaining time
-reaches zero, and either stops or reloads according to [`Timer.OneShot`](Timer.md#p-electron2d-timer-oneshot). It has no clock or background thread.
+passes below zero, and either stops or reloads according to [`Timer.OneShot`](Timer.md#p-electron2d-timer-oneshot). It has no clock or background thread.
 
 ## Examples
 
-The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
+The following snippet assumes `root` is already attached to an active `SceneTree`.
 
 ```csharp
-using var timer = new Timer { WaitTime = 1.0, OneShot = true };
+var timer = new Timer { WaitTime = 1.0, OneShot = true };
 timer.Timeout += _ => Console.WriteLine("Finished");
+root.AddChild(timer);
 timer.Start();
 ```
 
@@ -69,7 +70,7 @@ timer.Start();
 
 | Member | Description |
 | --- | --- |
-| [`public event Action<Timer> Timeout`](#e-electron2d-timer-timeout) | Occurs when the countdown reaches zero. |
+| [`public event Action<Timer> Timeout`](#e-electron2d-timer-timeout) | Occurs when the countdown passes below zero. |
 
 ## Constructor Descriptions
 
@@ -164,8 +165,8 @@ Gets or sets whether the countdown ignores [`Engine.TimeScale`](Engine.md#p-elec
 - `InvalidOperationException`: An attached timer is mutated off its tree's owner thread.
 - `ObjectDisposedException`: The timer is disposing on another thread or has finished disposing.
 
-**Remarks:** Engine-driven frames use their original finite elapsed delta when enabled. Direct [`SceneTree`](SceneTree.md) frame
-calls have no separate scale and therefore use their supplied delta in either mode.
+**Remarks:** Engine-driven frames use the original process-frame step in both frame lanes when enabled. Direct
+[`SceneTree`](SceneTree.md) frame calls have no separate process step and use their supplied delta.
 
 <a id="p-electron2d-timer-timeleft"></a>
 ### `public double TimeLeft { get; }`
@@ -196,6 +197,8 @@ Contract: Appends a warning when WaitTime is less than 0.05 minus Mathf.Epsilon 
 Gets whether the timer is stopped or has not started.
 
 **Returns:** `true` when no positive remaining time is observable; otherwise `false`.
+
+**Remarks:** At exact zero this returns `true`, although the internal lane continues until the countdown becomes negative and emits `Timeout`.
 
 **Exceptions**
 
@@ -303,7 +306,7 @@ Clears timeout subscribers before releasing inherited node state.
 <a id="e-electron2d-timer-timeout"></a>
 ### `public event Action<Timer> Timeout`
 
-Occurs when the countdown reaches zero.
+Occurs when the countdown passes below zero.
 
 **Remarks:** Delivery is synchronous on the scene-tree owner thread. One-shot timers stop before delivery; repeating timers
 reload first. At most one timeout is emitted per matching frame. Handler exceptions propagate through the frame
@@ -328,7 +331,7 @@ The timer begins stopped. `Start` requires membership in an active `SceneTree`, 
 
 Ready delivery starts an autostart timer after inherited ready handling and clears `Autostart`. Setting `Autostart` after ready has no immediate effect. `RequestReady()` followed by a later attachment can provide another ready cycle.
 
-On a matching eligible frame, the timer subtracts either the scaled Node delta or Engine's original delta. A direct `SceneTree.Process`/`PhysicsProcess` call has no separate time-scale source, so both values equal the supplied delta. At zero or below, a one-shot timer stops before `Timeout`; a repeating timer adds the current `WaitTime` before `Timeout`. At most one event is emitted per frame, even when one delta spans several periods. Overshoot is retained internally, so later frames catch up one event at a time and public `TimeLeft` remains clamped to zero while the internal residual is non-positive.
+On a matching eligible frame, the timer subtracts either the scaled Node delta or Engine's original process step, including in the physics lane. A direct `SceneTree.Process`/`PhysicsProcess` call has no separate time-scale source, so both values equal the supplied delta. Only when internal time becomes negative does a one-shot timer stop before `Timeout` or a repeating timer add the current `WaitTime` before `Timeout`. At exact zero, `IsStopped()` reports true and `TimeLeft` returns zero even though the internal lane remains enabled. At most one event is emitted per frame, even when one delta spans several periods. Overshoot is retained internally, so later frames catch up one event at a time and public `TimeLeft` remains clamped to zero while the internal residual is non-positive.
 
 Internal timer processing precedes the same node's public `OnProcess`/`OnPhysicsProcess`. A timeout exception is retained while the public callback and later scheduled nodes are attempted. If the timeout handler disables that public lane, disposes, or detaches the timer, its public callback is skipped; enabling a previously disabled public lane does not inject a callback into the already captured turn. Frame-level failures are reported by `SceneTree` as an aggregate.
 
@@ -348,13 +351,13 @@ Attached mutation, start/stop, ready handling, countdown advance, timeout delive
 
 ## Dependencies and interactions
 
-`Timer` depends on `Node` internal frame lanes, `SceneTree` scheduling and pause eligibility, `MainLoop`'s current original delta, and `Engine` dual scaled/original delivery. `PackedScene` consumes its storage-enabled typed descriptors. It does not depend on SDL3-CS, rendering, input, audio, collision physics, scripting, file scene serialization, or editor code.
+`Timer` depends on `Node` internal frame lanes, `SceneTree` scheduling and pause eligibility, `MainLoop`'s current process step, and `Engine` scaled/original timing delivery. `PackedScene` consumes its storage-enabled typed descriptors. It does not depend on SDL3-CS, rendering, input, audio, collision physics, scripting, file scene serialization, or editor code.
 
 ## Verification and known limitations
 
-Executable checks cover identities/defaults, descriptor storage, detached behavior, invalid and non-mutating configuration, process and physics lanes, live lane migration, exact-zero and overshooting countdowns, repeating and one-shot event state, pause combinations, autostart, stop, owner-thread rejection, throwing callbacks, callback detachment, packed-scene restoration, Engine time scale zero in both lanes, and zero warmed managed allocation while stopped or running.
+The runtime contract was audited against the pinned [timer.h](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/timer.h) and [timer.cpp](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/timer.cpp). [VerifyTimers](../../tests/Electron2D.Tests/Program.cs) covers identities/defaults, descriptor storage, detached behavior, invalid and non-mutating configuration, process and physics lanes, live lane migration, exact-zero and retained overshooting countdowns, repeating and one-shot event state, pause combinations, autostart, stop, owner-thread rejection, throwing callbacks, callback detachment, packed-scene restoration, Engine time scale zero in both lanes, and zero warmed managed allocation while stopped or running.
 
-Verification uses deterministic supplied deltas on Linux. It does not establish host cadence, wall-clock accuracy, mobile/native scheduling, editor behavior, or loaded-scene performance.
+ADR 0036 keeps typed positive-duration overloads while matching the pinned runtime's strict-negative expiry and process-step decrement in both lanes. The reference's edited-scene autostart suppression awaits an actual editor runtime, so the class and `Autostart` remain Partial in [coverage](../coverage/classes/Timer.md). Verification uses deterministic supplied deltas on Linux; it does not establish host cadence, wall-clock accuracy, mobile/native scheduling, or loaded-scene performance.
 
 ## Relevant decisions
 

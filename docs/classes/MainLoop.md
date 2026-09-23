@@ -373,7 +373,7 @@ The constructing thread is the owner. Initialization, both frame lanes, permissi
 
 ## Dependencies and interactions
 
-`MainLoop` depends on `ElectronObject`, the process-wide `Input` transition service, and the .NET Base Class Library. [`Engine`](Engine.md) attaches it through the internal state-validated boundary. `SceneTree` derives from it, maps its frame hooks and original delta context to scene processing including built-in [`Timer`](Timer.md) behavior, consumes the internal typed input dispatch hook, propagates system notifications through the hierarchy, and tears down its owned scene state from `OnFinalize()`.
+`MainLoop` depends on `ElectronObject`, the process-wide `Input` transition service, and the .NET Base Class Library. [`Engine`](Engine.md) attaches it through the internal state-validated boundary. `SceneTree` derives from it, maps its frame hooks and original lane/process-step context to scene processing including built-in [`Timer`](Timer.md) behavior, consumes the internal typed input dispatch hook, propagates system notifications through the hierarchy, and tears down its owned scene state from `OnFinalize()`.
 
 ## Verification and known limitations
 
