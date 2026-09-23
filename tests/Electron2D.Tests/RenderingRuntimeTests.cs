@@ -133,7 +133,7 @@ internal static partial class RenderingRuntimeTests
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
                 {
-                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyParallax(backend);
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyParallax(backend); VerifyLegacyParallax(backend);
                 }
                 return;
             }
@@ -250,7 +250,7 @@ internal static partial class RenderingRuntimeTests
                 VerifySamplingCapabilities(backend, software);
                 VerifyCanvasPixelSnap(backend);
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
-                VerifyCamera(backend); VerifyParallax(backend); VerifyTransformNotifications(backend);
+                VerifyCamera(backend); VerifyParallax(backend); VerifyLegacyParallax(backend); VerifyTransformNotifications(backend);
                 VerifyCanvasLayer(backend);
                 VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyPolygonNode(backend); VerifyLine(backend); VerifyCanvasStrokes(backend); VerifyCanvasTiming(backend);
                 if (backend == "compatibility") VerifyCulledShader();

@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"electron2d": "property:Electron2D.CanvasLayer.Layer()", "godot": "ParallaxBackground::property:layer", "state": "Partial", "reason": "The inherited CanvasLayer.Layer property defaults to -100 on ParallaxBackground and orders its canvas behind the default layer. Managed construction and native pixels verify the root Window path; independent viewport and editor canvas behavior remain unaudited."},
     {"electron2d": "property:Electron2D.InputEventScreenTouch.Index()", "godot": "InputEventScreenTouch::property:index", "reason": "Signed touch-contact identifier maps to the typed C# property."},
     {"electron2d": "property:Electron2D.InputEventScreenDrag.Index()", "godot": "InputEventScreenDrag::property:index", "reason": "Signed drag-contact identifier maps to the typed C# property."},
     {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing, hover updates and focused keyboard delivery. Clipping, full draw order and nested viewports remain to audit."},
@@ -1791,6 +1792,13 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.ParallaxBackground..ctor()", "state": "Implemented", "reason": "Typed construction initializes the inherited canvas layer to -100 and all scroll settings to their pinned defaults."},
+    {"electron2d": "method:Electron2D.ParallaxBackground.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type constructor for PackedScene reconstruction."},
+    {"electron2d": "method:Electron2D.ParallaxBackground.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors store six scroll settings and the background-specific inherited layer default."},
+    {"electron2d": "constructor:Electron2D.ParallaxLayer..ctor()", "state": "Implemented", "reason": "Typed detached construction defaults motion to unit scale, zero offset and no mirroring."},
+    {"electron2d": "method:Electron2D.ParallaxLayer.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type constructor for PackedScene reconstruction."},
+    {"electron2d": "method:Electron2D.ParallaxLayer.GetConfigurationWarnings()", "state": "Implemented", "reason": "Reports the direct ParallaxBackground parent requirement through the existing typed Node diagnostics API."},
+    {"electron2d": "method:Electron2D.ParallaxLayer.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors store original position and scale instead of camera-calculated values, plus three motion settings."},
     {"electron2d": "constructor:Electron2D.Parallax..ctor()", "state": "Implemented", "reason": "C# construction of the detached camera-relative canvas node with audited source defaults (ADR 0004)."},
     {"electron2d": "method:Electron2D.Parallax.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Parallax."},
     {"electron2d": "method:Electron2D.Parallax.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors store all ten parallax settings and omit calculated Position from packed state."},
@@ -2589,6 +2597,11 @@
     }
   ],
   "statusGroups": [
+    {"state": "Blocked", "reason": "The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet.", "godot": ["class:Marker2D", "Marker2D::property:gizmo_extents"]},
+    {"state": "Partial", "reason": "Legacy canvas layer and direct spatial children follow pinned parallax_background.cpp/parallax_layer.cpp camera scrolling, zoom policy, mirroring and scene storage. Managed and native root Window checks pass. Editor behavior, independent/offscreen viewports and full canvas interpolation are missing or unaudited; no complete type parity is claimed.", "godot": ["class:ParallaxBackground", "class:ParallaxLayer"]},
+    {"state": "Partial", "reason": "Pinned camera movement and setter timing are implemented with typed finite validation; LegacyParallaxTests checks defaults, manual changes, zoom policy and packed state. Independent viewport and editor behavior remain unaudited.", "godot": ["ParallaxBackground::property:scroll_base_offset", "ParallaxBackground::property:scroll_base_scale", "ParallaxBackground::property:scroll_ignore_camera_zoom", "ParallaxBackground::property:scroll_limit_begin", "ParallaxBackground::property:scroll_limit_end", "ParallaxBackground::property:scroll_offset"]},
+    {"state": "Partial", "reason": "Pinned motion setters and one-extra-copy mirrored canvas submission execute through retained drawing; managed state and Linux dummy/Wayland pixels cover camera motion, original scale and packing. Editor and independent viewport behavior remain unaudited.", "godot": ["ParallaxLayer::property:motion_mirroring", "ParallaxLayer::property:motion_offset", "ParallaxLayer::property:motion_scale"]},
+    {"state": "Blocked", "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation in the scene and canvas backends; ParallaxLayer must default the inherited policy to Off. No inert per-type property is exposed (ADR 0008).", "godot": ["ParallaxLayer::property:physics_interpolation_mode"]},
     {
       "state": "Partial",
       "reason": "The complete runtime countdown contract is executable and audited against pinned timer.cpp/timer.h under ADR 0036. Edited-scene autostart suppression requires the absent editor runtime; inherited Node gaps remain on Node coverage.",

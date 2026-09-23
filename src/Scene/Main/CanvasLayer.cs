@@ -132,7 +132,10 @@ public class CanvasLayer : Node
             EnsureMutable(); if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
             var custom = value as Viewport;
             var target = Tree is null ? null : ResolveViewport(custom);
+            var previous = _viewport;
             _customViewport = custom; _viewport = target;
+            if (this is ParallaxBackground background && !ReferenceEquals(previous, target))
+                background.CanvasViewportChanged(previous, target);
         }
     }
 

@@ -4,6 +4,7 @@ public abstract partial class Viewport
 {
     private Camera? _camera;
     private readonly HashSet<Parallax> _parallaxes = [];
+    private readonly HashSet<ParallaxBackground> _parallaxBackgrounds = [];
 
     /// <summary>Returns the active camera for this viewport's default canvas.</summary>
     /// <returns>A borrowed Camera, or null when no enabled camera is selected.</returns>
@@ -18,14 +19,20 @@ public abstract partial class Viewport
 
     internal void RegisterParallax(Parallax parallax) => _parallaxes.Add(parallax);
     internal void UnregisterParallax(Parallax parallax) => _parallaxes.Remove(parallax);
+    internal void RegisterParallaxBackground(ParallaxBackground background) => _parallaxBackgrounds.Add(background);
+    internal void UnregisterParallaxBackground(ParallaxBackground background) => _parallaxBackgrounds.Remove(background);
 
-    internal void NotifyParallaxCameraMoved(Vector2 adjustedScreenPosition)
+    internal void NotifyParallaxCameraMoved(Vector2 adjustedScreenPosition, Transform canvas, Vector2 screenOffset)
     {
-        if (_parallaxes.Count == 0) return;
+        if (_parallaxes.Count == 0 && _parallaxBackgrounds.Count == 0) return;
         List<Exception>? errors = null;
         foreach (var parallax in _parallaxes.ToArray())
             if (!parallax.IsDisposed && ReferenceEquals(parallax.GetViewport(), this))
                 try { parallax.CameraMoved(adjustedScreenPosition, SnapTransformsToPixel); }
+                catch (Exception error) { CollectException(ref errors, error); }
+        foreach (var background in _parallaxBackgrounds.ToArray())
+            if (!background.IsDisposed && ReferenceEquals(background.CanvasViewport, this))
+                try { background.CameraMoved(canvas, screenOffset); }
                 catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("One or more parallax camera updates failed.", errors);
     }

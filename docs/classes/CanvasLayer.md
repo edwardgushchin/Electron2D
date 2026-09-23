@@ -5,6 +5,7 @@ Last updated: 2026-09-23
 - Declaration: `public class CanvasLayer : Node`
 - Source: [CanvasLayer.cs](../../src/Scene/Main/CanvasLayer.cs)
 - Inherits: [Node](Node.md)
+- Inherited By: [ParallaxBackground](ParallaxBackground.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md#canvas-layers)
 
 ## Description

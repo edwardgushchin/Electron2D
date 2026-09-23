@@ -24,6 +24,7 @@
     "GradientTexture2D": "GradientTexture",
     "Camera2D": "Camera",
     "Line2D": "Line",
+    "Marker2D": "Marker",
     "Polygon2D": "Polygon",
     "Parallax2D": "Parallax",
     "NoiseTexture2D": "NoiseTexture"

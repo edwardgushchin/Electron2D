@@ -438,7 +438,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |
 | [MarginContainer](classes/MarginContainer.md) | Container | Blocked | 4 |
-| [Marker2D](classes/Marker2D.md) | Node2D | Unimplemented | 1 |
+| [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |
 | [Material](classes/Material.md) | Resource | Partial | 10 |
@@ -596,8 +596,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PanelContainer](classes/PanelContainer.md) | Container | Blocked | 2 |
 | [PanoramaSkyMaterial](classes/PanoramaSkyMaterial.md) | Material | Excluded | 3 |
 | [Parallax2D](classes/Parallax2D.md) | Node2D | Partial | 11 |
-| [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Unimplemented | 7 |
-| [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Unimplemented | 4 |
+| [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Partial | 7 |
+| [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Partial | 4 |
 | [ParticleProcessMaterial](classes/ParticleProcessMaterial.md) | Material | Blocked | 166 |
 | [Path2D](classes/Path2D.md) | Node2D | Implemented | 1 |
 | [Path3D](classes/Path3D.md) | Node3D | Excluded | 4 |

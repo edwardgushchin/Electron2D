@@ -23,7 +23,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasVertex> _vertices = [];
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
-    private readonly Dictionary<Parallax, Transform> _repeatTransforms = [];
+    private readonly Dictionary<CanvasItem, Transform> _repeatTransforms = [];
     private readonly List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
@@ -166,11 +166,12 @@ public sealed class RenderingServer : ElectronObject
             });
             foreach (var item in _order)
             {
-                Parallax? repeatSource = null;
+                CanvasItem? repeatSource = null;
                 for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
-                    if (ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero)
+                    if ((ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero) ||
+                        (ancestor is ParallaxLayer layer && layer.RepeatPeriod != Vector2.Zero))
                     {
-                        repeatSource = parallax;
+                        repeatSource = ancestor;
                         break;
                     }
                 if (repeatSource is null)
@@ -178,8 +179,8 @@ public sealed class RenderingServer : ElectronObject
                     item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime);
                     continue;
                 }
-                var size = repeatSource.RepeatSize;
-                var times = repeatSource.RepeatTimes;
+                var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
+                var times = repeatSource is Parallax repeated ? repeated.RepeatTimes : 1;
                 var sourceTransform = _repeatTransforms[repeatSource];
                 var start = size * -(times / 2);
                 var countX = size.X == 0 ? 0 : times;
@@ -188,7 +189,10 @@ public sealed class RenderingServer : ElectronObject
                     for (long x = 0; x <= countX; x++)
                     {
                         var transform = item.Transform;
-                        transform.Origin += sourceTransform.BasisXform(start + new Vector2(x * size.X, y * size.Y));
+                        var displacement = repeatSource is Parallax
+                            ? start + new Vector2(x * size.X, y * size.Y)
+                            : new Vector2(x * size.X, y * size.Y);
+                        transform.Origin += sourceTransform.BasisXform(displacement);
                         if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
                         item.Node.AppendCanvas(_vertices, _batches, transform, CanvasTime);
                     }
@@ -211,6 +215,7 @@ public sealed class RenderingServer : ElectronObject
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
         if (!item.IsVisibleInTree || (item.VisibilityLayer & _window.CanvasCullMask) == 0) return;
+        if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
             var local = item.GetTransform();

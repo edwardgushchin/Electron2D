@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
-**Inherited By:** [Camera](Camera.md), [Parallax](Parallax.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md)
+**Inherited By:** [Camera](Camera.md), [Parallax](Parallax.md), [ParallaxLayer](ParallaxLayer.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md), [Line](Line.md), [Polygon](Polygon.md), [RemoteTransform](RemoteTransform.md)
 
 - **Source:** [Entity.cs](../../src/Scene/2D/Entity.cs)
 - **Namespace:** `Electron2D`

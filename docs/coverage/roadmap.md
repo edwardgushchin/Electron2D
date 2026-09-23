@@ -4,8 +4,8 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1690 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1031 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [Marker2D](classes/Marker2D.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md) class slices.
+1. Review 1702 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1016 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [OptimizedTranslation](classes/OptimizedTranslation.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -58,6 +58,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 8 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 7 |
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 7 |
+| [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [PropertyTweener](classes/PropertyTweener.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
 | [RegExMatch](classes/RegExMatch.md) | 0 | 6 |
@@ -71,6 +72,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [Noise](classes/Noise.md) | 0 | 4 |
 | [InputEventJoypadButton](classes/InputEventJoypadButton.md) | 0 | 3 |
 | [MethodTweener](classes/MethodTweener.md) | 0 | 3 |
+| [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | 0 | 2 |
@@ -127,6 +129,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
+| The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013). | 1 |
 | Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
