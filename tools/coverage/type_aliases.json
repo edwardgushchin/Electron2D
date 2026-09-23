@@ -12,7 +12,8 @@
     "MethodTweener": "MethodTweener<TValue>",
     "PropertyTweener": "PropertyTweener<TValue>",
     "Sprite2D": "Sprite",
-    "Node": "Node"
+    "Node": "Node",
+    "AnimatedSprite2D": "AnimatedSprite"
   },
   "enums": {
     "@GlobalScope.ClockDirection": "ClockDirection",
@@ -53,6 +54,7 @@
     "CanvasItem.TextureRepeat": "CanvasItem.TextureRepeatEnum",
     "Viewport.DefaultCanvasItemTextureFilter": "Viewport.DefaultCanvasItemTextureFilter",
     "Viewport.DefaultCanvasItemTextureRepeat": "Viewport.DefaultCanvasItemTextureRepeat",
-    "Viewport.AnisotropicFiltering": "Viewport.AnisotropicFiltering"
+    "Viewport.AnisotropicFiltering": "Viewport.AnisotropicFiltering",
+    "SpriteFrames.LoopMode": "SpriteFrames.LoopMode"
   }
 }

@@ -931,9 +931,11 @@ public sealed class SceneTree : MainLoop
         }
     }
 
+    internal bool IsOwnerThread => Environment.CurrentManagedThreadId == _ownerThreadId;
+
     internal void EnsureOwnerThread()
     {
-        if (Environment.CurrentManagedThreadId != _ownerThreadId)
+        if (!IsOwnerThread)
             throw new InvalidOperationException("SceneTree mutation and execution must run on its owner thread.");
     }
 

@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope and owned types
 
-The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [CanvasItem](../classes/CanvasItem.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
+The component owns [RenderingServer](../classes/RenderingServer.md) and its internal GPU and compatibility backends. [CanvasItem](../classes/CanvasItem.md) records rectangle, line and texture commands; [Sprite](../classes/Sprite.md) supplies the ready-to-use texture/frame/region node; [AnimatedSprite](../classes/AnimatedSprite.md) supplies timed playback and consumes [SpriteFrames](../classes/SpriteFrames.md) and [SpriteFrames.LoopMode](../classes/SpriteFrames.LoopMode.md) from Resources; [Texture](../classes/Texture.md) and [shader materials](shader-materials.md) provide borrowed resources. Engine.Run owns the root Window and the renderer lifetime. This is an executable part of the rendering vertical slice, with broader API coverage still incomplete.
 
 ## Runtime flow
 
@@ -110,3 +110,11 @@ The self-contained linux-x64 publish also passed the Sprite managed checks and t
 [AtlasTexture](../classes/AtlasTexture.md) maps a borrowed source region and margins before recording the underlying texture command. Nested views compose those mappings. Sprite listens to view changes and records fresh geometry; custom CanvasItem commands require QueueRedraw after region/margin changes. Source pixel updates remain visible through retained commands. AtlasTexture intentionally ignores DrawRect tiling and controls sampling clipping through FilterClip. AtlasTextureTests verifies both backends and HLSL/GLSL canvas shaders.
 
 The pinned SDL software triangle input truncates source UVs to integer texels as well as destination vertices. Half-texel clipping boundaries can therefore shift the boundary between adjacent atlas colors: AtlasTextureTests explicitly checks the software/hardware difference and the shared edge sample. This is a fallback precision limit under ADR 0028; it does not promise identical nearest-sampling pixels across drivers. See [SDL software geometry input](https://github.com/libsdl-org/SDL/blob/release-3.4.16/src/render/software/SDL_render_sw.c).
+
+## Animated frame playback
+
+AnimatedSprite is a direct Entity subclass and a Sprite sibling. SpriteFrames serializes named frame/rate/loop data and owns independent frame containers while borrowing textures. Existing Resource duplication supplies shallow/deep copies and packed-scene local ownership. It does not forward contained texture events. Frame edits emit Changed; name/rate/loop edits and ClearAll remain silent.
+
+Internal idle notifications advance playback under normal tree pause/process mode. Worker library edits request atomic reconciliation on the owner thread, keeping scene notifications off workers. Retained frame drawing uses virtual Texture.DrawRectRegion, including AtlasTexture, and the existing canvas material/sampling/visibility path. Event ordering, boundary timing, endpoint retention and iteration limits are documented in [AnimatedSprite](../classes/AnimatedSprite.md#timing-contract-and-source-audit); no alternative clock or rendering path is introduced.
+
+AnimatedSpriteTests verifies resource/state/scene/callback contracts. AnimatedSpriteRenderingTests verifies native texture, atlas and blank-frame readback, timed host completion, worker edits and callback-failure cleanup with Wayland compatibility/GPU, HLSL/GLSL, and dummy/software. Other platform and owner visual/performance acceptance remain outside this evidence.

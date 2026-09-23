@@ -12,21 +12,22 @@ Its production sources live under `src/Scene/Main/`, `src/Scene/2D/`, `src/Scene
 
 | Component | Responsibility | State |
 | --- | --- | --- |
-| [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes and retained CanvasItem drawing | Executable; inherited canvas policies incomplete |
+| [Canvas rendering](../components/canvas-rendering.md) | Sprite texture/frame/region nodes, AnimatedSprite playback and retained CanvasItem drawing | Executable; inherited canvas policies incomplete |
 | [Window runtime](../components/window-runtime.md) | Native root window, presentation policies, platform events and client/input boundary | Implemented root slice; rendering and multiwindow incomplete |
 | [Scene hierarchy](../components/scene-hierarchy.md) | Hierarchy, 2D transforms, paths, groups, visibility/Z state, process/input policy, lifecycle endpoints, and deletion requests | Implemented and verified |
 | [Scene tree](../components/scene-tree.md) | Active-root ownership, exception-safe lifecycle, pause state, frame/input dispatch, events/counts, reusable scene timers, lightweight one-shot timers, typed group operations, deferred work, and deletion execution | Implemented and verified |
 | [Tweening](../components/tweening.md) | Typed property/method interpolation, sequencing, callbacks, waits, nested timelines, loops, and frame policies | Implemented and verified |
 | [Packed scenes](../components/packed-scenes.md) | Typed in-memory owned-hierarchy capture, live metadata, detached reconstruction, and per-instance local resources | Implemented and verified |
 
-Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
+Production types include [`Node`](../classes/Node.md), [`CanvasItem`](../classes/CanvasItem.md), [`Sprite`](../classes/Sprite.md), [`AnimatedSprite`](../classes/AnimatedSprite.md), [`Window`](../classes/Window.md), [`Viewport`](../classes/Viewport.md), [`Entity`](../classes/Entity.md), [`NodeProcessMode`](../classes/NodeProcessMode.md), [`SceneTree`](../classes/SceneTree.md), [`Timer`](../classes/Timer.md), [`TimerProcessCallback`](../classes/TimerProcessCallback.md), [`SceneTreeTimer`](../classes/SceneTreeTimer.md), [`GroupCallFlags`](../classes/GroupCallFlags.md), [`Tween`](../classes/Tween.md), its four nested enum types, [`Tweener`](../classes/Tweener.md), its six concrete task types, [`PackedScene`](../classes/PackedScene.md), [`SceneState`](../classes/SceneState.md), and [`PackedSceneEditState`](../classes/PackedSceneEditState.md).
 
 ## Public surface
 
 - `Node`: neutral ordered hierarchy, lifecycle, paths/groups, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged.
-- `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite derives from it.
+- `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite and AnimatedSprite derive directly from it.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
+- `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.

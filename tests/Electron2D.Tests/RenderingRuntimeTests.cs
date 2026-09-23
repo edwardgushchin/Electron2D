@@ -34,6 +34,8 @@ internal static partial class RenderingRuntimeTests
                 VerifyFrameAllocations(backend, snapPixels: true);
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
+                VerifyAnimatedSprite(backend);
+                VerifyAnimatedSpriteFailure();
                 VerifyAtlasFrame(backend);
                 VerifyCanvasTextureFailures();
                 VerifyCanvasHDR(backend);
@@ -53,6 +55,8 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasTexture(backend, "CanvasGLSL");
                     VerifyCanvasUV();
                     VerifySprite(backend, "CanvasGLSL");
+                    VerifyAnimatedSprite(backend, "CanvasHLSL");
+                    VerifyAnimatedSprite(backend, "CanvasGLSL");
                     VerifyAtlasFrame(backend, "CanvasHLSL");
                     VerifyAtlasFrame(backend, "CanvasGLSL");
                     VerifyAtlasMaterial("TextureHlsl");

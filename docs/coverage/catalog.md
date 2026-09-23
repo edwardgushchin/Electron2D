@@ -18,7 +18,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AimModifier3D](classes/AimModifier3D.md) | BoneConstraint3D | Excluded | 11 |
 | [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Blocked | 1 |
 | [AnimatableBody3D](classes/AnimatableBody3D.md) | StaticBody3D | Excluded | 1 |
-| [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Blocked | 22 |
+| [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Implemented | 22 |
 | [AnimatedSprite3D](classes/AnimatedSprite3D.md) | SpriteBase3D | Excluded | 18 |
 | [AnimatedTexture](classes/AnimatedTexture.md) | Texture2D | Blocked | 11 |
 | [Animation](classes/Animation.md) | Resource | Blocked | 114 |
@@ -814,7 +814,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Sprite2D](classes/Sprite2D.md) | Node2D | Partial | 16 |
 | [Sprite3D](classes/Sprite3D.md) | SpriteBase3D | Excluded | 9 |
 | [SpriteBase3D](classes/SpriteBase3D.md) | GeometryInstance3D | Excluded | 36 |
-| [SpriteFrames](classes/SpriteFrames.md) | Resource | Unimplemented | 24 |
+| [SpriteFrames](classes/SpriteFrames.md) | Resource | Implemented | 24 |
 | [StandardMaterial3D](classes/StandardMaterial3D.md) | BaseMaterial3D | Excluded | 0 |
 | [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Blocked | 3 |
 | [StaticBody3D](classes/StaticBody3D.md) | PhysicsBody3D | Excluded | 3 |

@@ -6,12 +6,13 @@ Last updated: 2026-09-23
 
 The Resources domain defines reusable typed data and portable CPU image buffers used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
 
-Resource base and image sources live under `src/Core/IO/`; shader/material/texture resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
+Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
 ## Component inventory
 
 | Component | Types | State |
 | --- | --- | --- |
+| [Canvas rendering](../components/canvas-rendering.md) | [`SpriteFrames`](../classes/SpriteFrames.md), [`SpriteFrames.LoopMode`](../classes/SpriteFrames.LoopMode.md) | Named animation data, duration/loop policies and resource graph copying consumed by AnimatedSprite |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), its seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed buffer and processing contract implemented and verified; five native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
 | [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md), [`AtlasTexture`](../classes/AtlasTexture.md) | SPIR-V fragment programs, typed uniform buffers and sampled textures execute on Linux Wayland/Vulkan; ordinary texture drawing and canvas sampling policies are integrated; further mappings remain pending |

@@ -1,5 +1,20 @@
 [
   {
+    "id": "T:Electron2D.AnimatedSprite",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "AnimatedSprite",
+    "signature": "public class Electron2D.AnimatedSprite",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AtlasTexture",
     "kind": "type",
     "declaringType": "Electron2D.AtlasTexture",
@@ -1450,6 +1465,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SpriteFrames",
+    "kind": "type",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "SpriteFrames",
+    "signature": "public sealed class Electron2D.SpriteFrames",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SpriteFrames.LoopMode",
+    "kind": "type",
+    "declaringType": "Electron2D.SpriteFrames.LoopMode",
+    "name": "LoopMode",
+    "signature": "public enum Electron2D.SpriteFrames.LoopMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SubtweenTweener",
     "kind": "type",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -2862,6 +2910,19 @@
     "value": "\u0022project.e2d\u0022"
   },
   {
+    "id": "constructor:Electron2D.AnimatedSprite..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": ".ctor",
+    "signature": "public AnimatedSprite()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AtlasTexture..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AtlasTexture",
@@ -3839,6 +3900,19 @@
     "declaringType": "Electron2D.Sprite",
     "name": ".ctor",
     "signature": "public Sprite()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SpriteFrames..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": ".ctor",
+    "signature": "public SpriteFrames()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -10345,6 +10419,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.SpriteFrames.LoopMode.Linear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SpriteFrames.LoopMode",
+    "name": "Linear",
+    "signature": "public const Electron2D.SpriteFrames.LoopMode Linear = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpriteFrames.LoopMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.SpriteFrames.LoopMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SpriteFrames.LoopMode",
+    "name": "None",
+    "signature": "public const Electron2D.SpriteFrames.LoopMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpriteFrames.LoopMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.SpriteFrames.LoopMode.PingPong()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SpriteFrames.LoopMode",
+    "name": "PingPong",
+    "signature": "public const Electron2D.SpriteFrames.LoopMode PingPong = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpriteFrames.LoopMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.TimerProcessCallback.Idle()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TimerProcessCallback",
@@ -11435,6 +11548,71 @@
     "parameters": [],
     "returnType": "Electron2D.Window.ModeEnum",
     "value": "0"
+  },
+  {
+    "id": "event:Electron2D.AnimatedSprite.AnimationChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "AnimationChanged",
+    "signature": "public event System.Action AnimationChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimatedSprite.AnimationFinished()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "AnimationFinished",
+    "signature": "public event System.Action AnimationFinished",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimatedSprite.AnimationLooped()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "AnimationLooped",
+    "signature": "public event System.Action AnimationLooped",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimatedSprite.FrameChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "FrameChanged",
+    "signature": "public event System.Action FrameChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.AnimatedSprite.SpriteFramesChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "SpriteFramesChanged",
+    "signature": "public event System.Action SpriteFramesChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
   },
   {
     "id": "event:Electron2D.CanvasItem.Draw()",
@@ -12599,6 +12777,226 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.GetPlayingSpeed()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "GetPlayingSpeed",
+    "signature": "public System.Single GetPlayingSpeed()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.IsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "IsPlaying",
+    "signature": "public System.Boolean IsPlaying()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.Pause()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Pause",
+    "signature": "public System.Void Pause()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.Play(System.String,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Play",
+    "signature": "public System.Void Play(System.String name = \u0022\u0022, System.Single customSpeed = 1f, System.Boolean fromEnd = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "customSpeed",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "fromEnd",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.PlayBackwards(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "PlayBackwards",
+    "signature": "public System.Void PlayBackwards(System.String name = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.SetFrameAndProgress(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "SetFrameAndProgress",
+    "signature": "public System.Void SetFrameAndProgress(System.Int32 frame, System.Single progress)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "progress",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedSprite.ValidateProperty(Electron2D.PropertyDescriptor)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "ValidateProperty",
+    "signature": "protected override Electron2D.PropertyDescriptor ValidateProperty(Electron2D.PropertyDescriptor property)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "property",
+        "type": "Electron2D.PropertyDescriptor",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PropertyDescriptor",
     "value": null
   },
   {
@@ -29912,6 +30310,515 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SpriteFrames.AddAnimation(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "AddAnimation",
+    "signature": "public System.Void AddAnimation(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.AddFrame(System.String,Electron2D.Texture,System.Single,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "AddFrame",
+    "signature": "public System.Void AddFrame(System.String animation, Electron2D.Texture texture, System.Single duration = 1f, System.Int32 atPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "atPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.Clear(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "Clear",
+    "signature": "public System.Void Clear(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.ClearAll()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "ClearAll",
+    "signature": "public System.Void ClearAll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.DuplicateAnimation(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "DuplicateAnimation",
+    "signature": "public System.Void DuplicateAnimation(System.String from, System.String to)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetAnimationLoop(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetAnimationLoop",
+    "signature": "public System.Boolean GetAnimationLoop(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetAnimationLoopMode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetAnimationLoopMode",
+    "signature": "public Electron2D.SpriteFrames.LoopMode GetAnimationLoopMode(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.SpriteFrames.LoopMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetAnimationNames()",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetAnimationNames",
+    "signature": "public System.String[] GetAnimationNames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetAnimationSpeed(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetAnimationSpeed",
+    "signature": "public System.Double GetAnimationSpeed(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetFrameCount(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetFrameCount",
+    "signature": "public System.Int32 GetFrameCount(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetFrameDuration(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetFrameDuration",
+    "signature": "public System.Single GetFrameDuration(System.String animation, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.GetFrameTexture(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "GetFrameTexture",
+    "signature": "public Electron2D.Texture GetFrameTexture(System.String animation, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.HasAnimation(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "HasAnimation",
+    "signature": "public System.Boolean HasAnimation(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.RemoveAnimation(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "RemoveAnimation",
+    "signature": "public System.Void RemoveAnimation(System.String animation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.RemoveFrame(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "RemoveFrame",
+    "signature": "public System.Void RemoveFrame(System.String animation, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.RenameAnimation(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "RenameAnimation",
+    "signature": "public System.Void RenameAnimation(System.String animation, System.String newName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "newName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.SetAnimationLoop(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "SetAnimationLoop",
+    "signature": "public System.Void SetAnimationLoop(System.String animation, System.Boolean loop)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "loop",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.SetAnimationLoopMode(System.String,Electron2D.SpriteFrames.LoopMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "SetAnimationLoopMode",
+    "signature": "public System.Void SetAnimationLoopMode(System.String animation, Electron2D.SpriteFrames.LoopMode loopMode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "loopMode",
+        "type": "Electron2D.SpriteFrames.LoopMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.SetAnimationSpeed(System.String,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "SetAnimationSpeed",
+    "signature": "public System.Void SetAnimationSpeed(System.String animation, System.Double FPS)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "FPS",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SpriteFrames.SetFrame(System.String,System.Int32,Electron2D.Texture,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SpriteFrames",
+    "name": "SetFrame",
+    "signature": "public System.Void SetFrame(System.String animation, System.Int32 index, Electron2D.Texture texture, System.Single duration = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SubtweenTweener.SetDelay(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -36978,6 +37885,136 @@
       }
     ],
     "returnType": "Electron2D.Vector4I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.Animation()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Animation",
+    "signature": "public System.String Animation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.Autoplay()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Autoplay",
+    "signature": "public System.String Autoplay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.Centered()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Centered",
+    "signature": "public System.Boolean Centered { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.FlipH()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "FlipH",
+    "signature": "public System.Boolean FlipH { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.FlipV()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "FlipV",
+    "signature": "public System.Boolean FlipV { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.Frame()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Frame",
+    "signature": "public System.Int32 Frame { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.FrameProgress()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "FrameProgress",
+    "signature": "public System.Single FrameProgress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.SpeedScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "SpeedScale",
+    "signature": "public System.Single SpeedScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedSprite.SpriteFrames()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedSprite",
+    "name": "SpriteFrames",
+    "signature": "public Electron2D.SpriteFrames SpriteFrames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SpriteFrames",
     "value": null
   },
   {

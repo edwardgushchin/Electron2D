@@ -384,6 +384,16 @@
       "godot": "Texture2D::method:_has_mipmaps()",
       "electron2d": "property:Electron2D.AtlasTexture.HasMipmaps()",
       "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "AnimatedSprite2D::method:get_playing_speed()",
+      "electron2d": "method:Electron2D.AnimatedSprite.GetPlayingSpeed()",
+      "reason": "AnimatedSprite directly inherits Entity under ADR 0008 and implements the pinned animated-sprite source behavior: idle playback, reverse/custom speed, autoplay, frame/progress, nonloop/linear/ping-pong transitions, events, typed packing and virtual texture drawing. AnimatedSpriteTests and AnimatedSpriteRenderingTests cover managed state and native Wayland compatibility/GPU HLSL/GLSL plus dummy readback, actual host timing and callback-failure cleanup. The pinned C++ timing differs from its XML: transitions consume at the previous frame rate and ping-pong retains endpoints; exact boundaries transition on the next positive tick and processing is capped at frame-count plus one iterations. Source behavior is retained rather than silently changed; see docs/classes/AnimatedSprite.md. C# exception/thread/lifetime safety follows existing ADRs; other platforms remain unverified under ADR 0021."
+    },
+    {
+      "godot": "SpriteFrames::method:get_animation_names()",
+      "electron2d": "method:Electron2D.SpriteFrames.GetAnimationNames()",
+      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, deprecated bool-loop aliases, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed. See docs/classes/SpriteFrames.md."
     }
   ],
   "statusGroups": [
@@ -701,8 +711,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Texture resources and scene processing now exist. Next SpriteFrames/animated-sprite slice must supply named animations, frame durations, loop modes, events and duplicate/scene-local resource behavior before timed playback (ADRs 0008/0013/0028).",
+      "state": "Implemented",
+      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, deprecated bool-loop aliases, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed. See docs/classes/SpriteFrames.md.",
       "godot": [
         "class:SpriteFrames",
         "SpriteFrames::enum:LoopMode",
@@ -732,8 +742,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: the first SpriteFrames and animated-sprite vertical slice must implement the absent animation resource plus timed playback, frame progress, loop/ping-pong transitions and events using existing SceneTree processing and canvas. Static Sprite rendering is available but does not supply animation playback (ADRs 0008/0028).",
+      "state": "Implemented",
+      "reason": "AnimatedSprite directly inherits Entity under ADR 0008 and implements the pinned animated-sprite source behavior: idle playback, reverse/custom speed, autoplay, frame/progress, nonloop/linear/ping-pong transitions, events, typed packing and virtual texture drawing. AnimatedSpriteTests and AnimatedSpriteRenderingTests cover managed state and native Wayland compatibility/GPU HLSL/GLSL plus dummy readback, actual host timing and callback-failure cleanup. The pinned C++ timing differs from its XML: transitions consume at the previous frame rate and ping-pong retains endpoints; exact boundaries transition on the next positive tick and processing is capped at frame-count plus one iterations. Source behavior is retained rather than silently changed; see docs/classes/AnimatedSprite.md. C# exception/thread/lifetime safety follows existing ADRs; other platforms remain unverified under ADR 0021.",
       "godot": [
         "class:AnimatedSprite2D",
         "AnimatedSprite2D::method:get_playing_speed()",
@@ -906,6 +916,61 @@
       "electron2d": "method:Electron2D.AtlasTexture.GetPropertyDescriptors()",
       "reason": "Typed stored-property metadata for the four existing atlas-view properties, consumed by resource inspection and scene-local copying.",
       "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimatedSprite..ctor()",
+      "reason": "Default detached construction of the existing animated canvas node, with borrowed resources and stopped playback.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SpriteFrames..ctor()",
+      "reason": "Default construction of the existing animation-frame resource with one empty default animation.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.CreateSceneInstanceFactory()",
+      "reason": "Exact-type static factory for existing PackedScene reconstruction without retaining the source node.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.Dispose(System.Boolean)",
+      "reason": "Managed cleanup disconnects frame-library changes and typed animation events without disposing borrowed resources.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.GetPropertyDescriptors()",
+      "reason": "Typed metadata and storage for existing animation/visual properties; restore the resource before selection and frame state.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.OnDraw()",
+      "reason": "Existing canvas draw callback records the selected texture through virtual Texture region drawing; it adds no separate rendering API.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.OnNotification(System.Int32)",
+      "reason": "Existing notification hook implements ready autoplay, owner-thread resource reconciliation and internal idle playback.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedSprite.ValidateProperty(Electron2D.PropertyDescriptor)",
+      "reason": "Typed equivalent of property validation: the playing frame is read-only and transient in tooling.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.SpriteFrames.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource hook copies animation containers and passes texture references through the existing graph duplication session.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.SpriteFrames.CreateDuplicateInstance()",
+      "reason": "Exact-type construction hook for duplicating the existing frame-library resource.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.SpriteFrames.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook releases frame lists without disposing borrowed textures.",
+      "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
     }
   ]
 }

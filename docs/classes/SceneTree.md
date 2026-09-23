@@ -12,6 +12,8 @@ Last updated: 2026-09-23
 
 > Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
+AnimatedSprite uses the existing internal idle lane and tree pause/process policy. Worker SpriteFrames changes remain pending until owner-thread reconciliation; they do not dispatch scene callbacks from a worker. No new public scheduling API is introduced.
+
 ## Description
 
 Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
