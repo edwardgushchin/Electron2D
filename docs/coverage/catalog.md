@@ -700,7 +700,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ReflectionProbe](classes/ReflectionProbe.md) | VisualInstance3D | Excluded | 22 |
 | [RegEx](classes/RegEx.md) | RefCounted | Unimplemented | 10 |
 | [RegExMatch](classes/RegExMatch.md) | RefCounted | Unimplemented | 7 |
-| [RemoteTransform2D](classes/RemoteTransform2D.md) | Node2D | Unimplemented | 6 |
+| [RemoteTransform2D](classes/RemoteTransform2D.md) | Node2D | Implemented | 6 |
 | [RemoteTransform3D](classes/RemoteTransform3D.md) | Node3D | Excluded | 6 |
 | [RenderData](classes/RenderData.md) | Object | Excluded | 4 |
 | [RenderDataExtension](classes/RenderDataExtension.md) | RenderData | Excluded | 4 |

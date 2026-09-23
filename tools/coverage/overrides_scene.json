@@ -1743,6 +1743,42 @@
       "godot": "CanvasItem::method:force_update_transform()",
       "state": "Implemented",
       "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.RemoteTransform.ForceUpdateCache()",
+      "godot": "RemoteTransform2D::method:force_update_cache()",
+      "state": "Implemented",
+      "reason": "Re-resolves the borrowed same-tree target without a transform write; late-target and detach tests cover cache lifetime."
+    },
+    {
+      "electron2d": "property:Electron2D.RemoteTransform.RemotePath()",
+      "godot": "RemoteTransform2D::property:remote_path",
+      "state": "Implemented",
+      "reason": "Relative Node path is a typed C# string under ADR 0004; tree entry and attached path changes resolve the target, rejecting self and ancestor/descendant feedback. Path changes immediately transfer enabled components."
+    },
+    {
+      "electron2d": "property:Electron2D.RemoteTransform.UpdatePosition()",
+      "godot": "RemoteTransform2D::property:update_position",
+      "state": "Implemented",
+      "reason": "Default true; independently selects transform origin, preserves destination origin when disabled and pushes on change. RemoteTransformTests covers both coordinate modes and partial transfer."
+    },
+    {
+      "electron2d": "property:Electron2D.RemoteTransform.UpdateRotation()",
+      "godot": "RemoteTransform2D::property:update_rotation",
+      "state": "Implemented",
+      "reason": "Default true; independently selects rotation/skew basis, preserves destination basis when disabled and pushes on change. RemoteTransformTests covers partial transfer."
+    },
+    {
+      "electron2d": "property:Electron2D.RemoteTransform.UpdateScale()",
+      "godot": "RemoteTransform2D::property:update_scale",
+      "state": "Implemented",
+      "reason": "Default true; independently selects scale, preserves destination scale when disabled and pushes on change. All-disabled mode makes no target write."
+    },
+    {
+      "electron2d": "property:Electron2D.RemoteTransform.UseGlobalCoordinates()",
+      "godot": "RemoteTransform2D::property:use_global_coordinates",
+      "state": "Implemented",
+      "reason": "Default true; switches between queued global and synchronous attached local transform notifications, transferring immediately on mode change. RemoteTransformTests covers distinct source/target parents."
     }
   ],
   "extras": [
@@ -2502,9 +2538,47 @@
       "electron2d": "method:Electron2D.AnimatedSprite.GetConfigurationWarnings()",
       "reason": "Existing Node diagnostic override for the reference native sibling condition. Warns whenever the frame library is null; visibility/tree membership do not suppress it. Library replacement refresh precedes SpriteFramesChanged; ordering and failure commitment are exercised. SceneDiagnosticsTests provides executable evidence.",
       "adr": "ADRs 0008/0011/0012/0027"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RemoteTransform..ctor()",
+      "reason": "C# construction of the reference spatial remote-transform type with matching global/all-enabled defaults.",
+      "adr": "ADRs 0004/0008"
+    },
+    {
+      "electron2d": "method:Electron2D.RemoteTransform.CreateSceneInstanceFactory()",
+      "reason": "Inherited typed PackedScene factory hook reconstructs the exact remote-transform node type.",
+      "adr": "ADRs 0008/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.RemoteTransform.GetConfigurationWarnings()",
+      "reason": "Inherited Node diagnostic hook projects the reference remote target-path warning without a new editor surface.",
+      "adr": "ADRs 0008/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.RemoteTransform.GetPropertyDescriptors()",
+      "reason": "Inherited typed scene-property hook stores the target path and four transfer policies for PackedScene.",
+      "adr": "ADRs 0008/0023"
+    },
+    {
+      "electron2d": "method:Electron2D.RemoteTransform.OnNotification(System.Int32)",
+      "reason": "Inherited typed notification hook projects reference local/global transform-change delivery through the existing SceneTree lanes.",
+      "adr": "ADRs 0008/0011"
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "RemoteTransform maps the spatial remote-transform type under ADR 0008. Pinned remote_transform_2d.cpp and RemoteTransformTests verify path caching, independent local/global transfer switches, lifecycle, PackedScene, callback reentry/failure and owner-thread checks. Typed string paths and cycle suppression follow the accepted scene boundary; inherited physics interpolation remains separately unimplemented. See docs/classes/RemoteTransform.md.",
+      "godot": [
+        "class:RemoteTransform2D",
+        "RemoteTransform2D::method:force_update_cache()",
+        "RemoteTransform2D::property:remote_path",
+        "RemoteTransform2D::property:update_position",
+        "RemoteTransform2D::property:update_rotation",
+        "RemoteTransform2D::property:update_scale",
+        "RemoteTransform2D::property:use_global_coordinates"
+      ]
+    },
     {
       "state": "Partial",
       "reason": "Executable root native window, scene input and canvas rendering boundary; offscreen targets, embedded/multiple windows, GUI, theme and content scaling remain incomplete. ADRs 0004, 0008, 0028.",

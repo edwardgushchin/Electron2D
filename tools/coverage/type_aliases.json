@@ -18,6 +18,7 @@
     "Curve2D": "PathCurve",
     "Path2D": "Path",
     "PathFollow2D": "PathFollow",
+    "RemoteTransform2D": "RemoteTransform",
     "GradientTexture1D": "GradientRampTexture",
     "GradientTexture2D": "GradientTexture",
     "Camera2D": "Camera"

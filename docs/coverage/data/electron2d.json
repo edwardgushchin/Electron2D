@@ -1711,6 +1711,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RemoteTransform",
+    "kind": "type",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "RemoteTransform",
+    "signature": "public class Electron2D.RemoteTransform",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingServer",
     "kind": "type",
     "declaringType": "Electron2D.RenderingServer",
@@ -4561,6 +4576,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RemoteTransform..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": ".ctor",
+    "signature": "public RemoteTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -34087,6 +34115,77 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RemoteTransform.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RemoteTransform.ForceUpdateCache()",
+    "kind": "method",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "ForceUpdateCache",
+    "signature": "public System.Void ForceUpdateCache()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RemoteTransform.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RemoteTransform.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RemoteTransform.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -52113,6 +52212,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RemoteTransform.RemotePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "RemotePath",
+    "signature": "public System.String RemotePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RemoteTransform.UpdatePosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "UpdatePosition",
+    "signature": "public System.Boolean UpdatePosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RemoteTransform.UpdateRotation()",
+    "kind": "property",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "UpdateRotation",
+    "signature": "public System.Boolean UpdateRotation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RemoteTransform.UpdateScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "UpdateScale",
+    "signature": "public System.Boolean UpdateScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RemoteTransform.UseGlobalCoordinates()",
+    "kind": "property",
+    "declaringType": "Electron2D.RemoteTransform",
+    "name": "UseGlobalCoordinates",
+    "signature": "public System.Boolean UseGlobalCoordinates { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
