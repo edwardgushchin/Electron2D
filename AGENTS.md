@@ -8,6 +8,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 - For current behavior, read the affected `docs/domains/`, `docs/components/`, and `docs/classes/` pages. `docs/inventory.md` maps implemented production types; it is not a compatibility register.
 - For API comparison and its roadmap, use `docs/coverage/index.md` and its linked tables. Read [the maintenance contract](docs/maintaining.md) for implementation, documentation, XML, and audit requirements when changing code or those documents.
 - Runtime source is under `src/` and built by `Electron2D.csproj`; executable checks are under `tests/Electron2D.Tests/`. `editor/` and `examples/` contain separate consumers when implemented. Consumer code and projects use only the public Electron2D API; backend dependencies and probes stay in the runtime project and tests. Verify the current project layout before adding files.
+- Keep tool output focused: locate relevant declarations with `rg`, read the ranges needed for the audit, and inspect every result of a batch while returning a compact summary. Read full files when necessary. For broad API work, finish one connected vertical slice and update coverage before moving on.
 
 ## Make a change
 
