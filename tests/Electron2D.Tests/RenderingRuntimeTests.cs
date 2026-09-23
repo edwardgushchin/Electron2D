@@ -13,6 +13,16 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_MATRICES") == "1")
+            {
+                VerifyShaderMatrices("MatricesHLSL"); VerifyShaderMatrices("MatricesGLSL");
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyShaderMatrixFrame(backend, "MatricesHLSL"); VerifyShaderMatrixFrame(backend, "MatricesGLSL");
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_VECTORS") == "1")
             {
                 VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
@@ -137,6 +147,7 @@ internal static partial class RenderingRuntimeTests
             VerifyImageDependency();
             VerifyResources();
             VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
+            VerifyShaderMatrices("MatricesHLSL"); VerifyShaderMatrices("MatricesGLSL");
             VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
             VerifyParameters("MaterialHlsl");
             VerifyParameters("MaterialGlsl");
@@ -209,6 +220,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyAtlasMaterial("TextureGlsl");
                 }
                 VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
+                VerifyShaderMatrixFrame(backend, "MatricesHLSL"); VerifyShaderMatrixFrame(backend, "MatricesGLSL");
                 VerifyTextureFailure(backend);
             }
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")

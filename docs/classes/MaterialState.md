@@ -38,7 +38,7 @@ state?.PushUniforms(commandBuffer, (float)renderTime);
 
 `internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)`
 
-Allocates zeroed buffers and texture slots. Reserved TIME starts at zero and is never copied as a user parameter. Migrates prior uniforms by name plus shader element type (including integer signedness) and array length, copying stored components to new offsets/strides. RGB copies exactly twelve bytes without touching the following scalar; migrates texture overrides by name. The caller holds the old state gate while copying it.
+Allocates zeroed buffers and texture slots, then initializes each float2x2 value/array element to identity. Reserved TIME starts at zero and is never copied as a user parameter. Migrates prior uniforms by name plus shader element type (including integer signedness) and array length, copying stored components to new offsets/strides. Float2x2 values pass through Transform basis components so changed matrix stride and row/column order do not change the represented value. RGB copies exactly twelve bytes without touching the following scalar; migrates texture overrides by name. The caller holds the old state gate while copying it.
 
 ### Program
 

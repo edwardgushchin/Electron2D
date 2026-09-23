@@ -76,6 +76,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     assert (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes() == (root / 'src/Servers/Rendering/Shaders/Canvas.frag.spv').read_bytes()
     for language, stem, artifact in [('hlsl', 'Material', 'MaterialHlsl'), ('glsl', 'Material', 'MaterialGlsl'), ('glsl', 'MaterialReordered', 'MaterialReordered'),
                                      ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered'),
+                                     ('hlsl', 'Matrices', 'MatricesHLSL'), ('glsl', 'Matrices', 'MatricesGLSL'), ('glsl', 'MatricesReordered', 'MatricesReordered'),
                                      ('hlsl', 'Values', 'ValuesHLSL'), ('glsl', 'Values', 'ValuesGLSL'), ('glsl', 'ValuesReordered', 'ValuesReordered'), ('glsl', 'ValuesSigned', 'ValuesSigned'),
                                      ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly')]:
         source = root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.{language}'
@@ -167,6 +168,47 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         external.write_bytes(struct.pack('<' + 'I' * len(words), *words))
         invoke(external, output, success=False)
         assert output.read_bytes() == vectors, 'Invalid vector layout replaced the last usable artifact'
+    # Matrix storage is part of the common external-bytecode contract too.
+    matrix = (root / 'tests/Electron2D.Tests/Shaders/MatricesGLSL.spv').read_bytes()
+    matrix_words = list(struct.unpack('<' + 'I' * (len(matrix) // 4), matrix))
+    words, at = matrix_words.copy(), 5
+    while at < len(words):
+        count, opcode = words[at] >> 16, words[at] & 0xffff
+        if opcode == 72 and count == 5 and words[at + 3] in (7, 35):
+            words[at + 4] *= 2
+        if opcode == 71 and count == 4 and words[at + 2] == 6:
+            words[at + 3] *= 2
+        at += count
+    external.write_bytes(struct.pack('<' + 'I' * len(words), *words))
+    invoke(external, output)
+    previous = output.read_bytes()
+    assert previous == external.read_bytes(), 'Valid widened matrix layout changed during import'
+    for fault in ('missing-order', 'missing-stride', 'short-stride', 'unaligned-stride', 'offset'):
+        words, at = matrix_words.copy(), 5
+        while at < len(words):
+            count, opcode = words[at] >> 16, words[at] & 0xffff
+            if opcode == 72:
+                if fault == 'missing-stride' and words[at + 3] == 7:
+                    del words[at:at + count]
+                    break
+                if fault == 'missing-order' and words[at + 3] in (4, 5):
+                    words[at + 3] = 0
+                if fault in ('short-stride', 'unaligned-stride') and words[at + 3] == 7:
+                    words[at + 4] = 8 if fault == 'short-stride' else 20
+                if fault == 'offset' and words[at + 3] == 35 and words[at + 4] == 0:
+                    words[at + 4] = 4
+            at += count
+        external.write_bytes(struct.pack('<' + 'I' * len(words), *words))
+        invoke(external, output, success=False)
+        assert output.read_bytes() == previous, 'Invalid matrix layout replaced the last usable artifact'
+    for language, source in [
+        ('hlsl', 'cbuffer Values : register(b0, space3) { float3x3 invalid; }; float4 main() : SV_Target0 { return float4(invalid[0], 1); }'),
+        ('glsl', '#version 450\nlayout(location = 0) out vec4 outputColor; layout(set = 3, binding = 0, std140) uniform Values { mat3 invalid; }; void main() { outputColor = vec4(invalid[0], 1); }'),
+    ]:
+        invalid = directory / f'unsupported-matrix.{language}'
+        invalid.write_text(source)
+        assert 'float2x2' in invoke(invalid, output, success=False)
+        assert output.read_bytes() == previous
     if args.tool:
         sandbox = directory / 'package'
         shutil.copytree(args.tool.resolve().parent, sandbox)
@@ -182,4 +224,4 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                                  capture_output=True, text=True)
             assert run.returncode == 1 and diagnostic in run.stderr, run.stderr
             assert output.read_bytes() == previous, 'A broken toolchain replaced the last usable artifact'
-print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector mappings, reserved TIME and unused resources.')
+print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector/mat2 mappings, reserved TIME and unused resources.')

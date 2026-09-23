@@ -45,13 +45,14 @@ public sealed class ShaderMaterial : Material
         }
     }
 
-    /// <summary>Sets a typed scalar or vector material uniform.</summary>
-    /// <typeparam name="T">Float, int, uint, Vector2, Vector4, Color, Rect, Vector2I or Vector4I as required by the shader.</typeparam>
+    /// <summary>Sets a typed scalar, vector or matrix material uniform.</summary>
+    /// <typeparam name="T">Float, int, uint, Vector2, Vector4, Color, Rect, Transform, Vector2I or Vector4I as required by the shader.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <param name="value">The new value. Color maps RGB to float3 or RGBA to float4 without color-space conversion.
-    /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.</param>
-    /// <remarks>Values start at zero. Updates affect every node sharing the material, without QueueRedraw or
-    /// a managed allocation after initialization. Floating-point values, including unused Color alpha, must be finite. Changed is emitted after
+    /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.
+    /// Transform supplies its X/Y basis to float2x2; Origin is not stored.</param>
+    /// <remarks>Matrices start at identity; other stored components start at zero. Updates affect every node sharing the material, without QueueRedraw or
+    /// a managed allocation after initialization. Floating-point values, including unused Color alpha and Transform Origin, must be finite. Changed is emitted after
     /// mutation. Shader replacement retains values whose names, element types and array lengths still match.</remarks>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match, or a value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
@@ -69,7 +70,7 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Replaces every element of a fixed-size array uniform.</summary>
-    /// <typeparam name="T">The supported scalar or vector type matching the reflected element type.</typeparam>
+    /// <typeparam name="T">The supported scalar, vector or matrix type matching the reflected element type.</typeparam>
     /// <param name="name">The exact, case-sensitive array member name.</param>
     /// <param name="values">Values copied into the material, with exactly the reflected array length.</param>
     /// <remarks>Validation completes before mutation; a failure preserves all prior elements. The renderer handles
@@ -91,10 +92,11 @@ public sealed class ShaderMaterial : Material
         EmitChanged();
     }
 
-    /// <summary>Reads a typed scalar or vector material uniform.</summary>
+    /// <summary>Reads a typed scalar, vector or matrix material uniform.</summary>
     /// <typeparam name="T">The supported type matching the reflected value; Color also accepts float4 and Rect aliases float4.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
-    /// <returns>The current value, or zero before assignment. Color mapped from float3 always has alpha one.</returns>
+    /// <returns>The current value; initially identity for matrices and zero for other stored components.
+    /// Color mapped from float3 always has alpha one. Transform mapped from float2x2 always has zero Origin.</returns>
     /// <exception cref="ArgumentException">The name, type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -111,7 +113,8 @@ public sealed class ShaderMaterial : Material
     /// <summary>Returns a copy of a fixed-size array uniform.</summary>
     /// <typeparam name="T">The supported type matching the reflected array element type.</typeparam>
     /// <param name="name">The exact, case-sensitive array member name.</param>
-    /// <returns>An independent array with the reflected length, initially zero; float3 Color elements always have alpha one.</returns>
+    /// <returns>An independent array with the reflected length; initially identity matrices or zero components.
+    /// Float3 Color elements always have alpha one; float2x2 Transform elements always have zero Origin.</returns>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -169,7 +172,7 @@ public sealed class ShaderMaterial : Material
 
     private static void ValidateValue<T>(in T value) where T : unmanaged
     {
-        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect)) return;
+        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect) && typeof(T) != typeof(Transform)) return;
         foreach (var component in MemoryMarshal.Cast<T, float>(MemoryMarshal.CreateReadOnlySpan(in value, 1)))
             if (!float.IsFinite(component)) throw new ArgumentException("Material floating-point values must be finite.", nameof(value));
     }
@@ -242,12 +245,20 @@ internal sealed class MaterialState
         Shader = shader;
         Buffers = program.BufferSizes.Select(size => new byte[size]).ToArray();
         Textures = new Texture?[program.Textures.Length];
+        foreach (var uniform in program.Uniforms.Values)
+            if (uniform.Type == typeof(Transform))
+                for (var i = 0; i < uniform.Count; i++)
+                    uniform.Write(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), Transform.Identity);
         if (previous is null) return;
         foreach (var uniform in program.Uniforms.Values)
             if (previous.Program.Uniforms.TryGetValue(uniform.Name, out var old) && uniform.SameType(old))
                 for (var i = 0; i < uniform.Count; i++)
-                    previous.Buffers[old.Buffer].AsSpan(old.Offset + i * old.Stride, old.ElementSize)
-                        .CopyTo(Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize));
+                {
+                    var source = previous.Buffers[old.Buffer].AsSpan(old.Offset + i * old.Stride, old.ElementSize);
+                    var target = Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize);
+                    if (uniform.Type == typeof(Transform)) uniform.Write(target, old.Read<Transform>(source));
+                    else source.CopyTo(target);
+                }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
                 if (program.Textures[i].Name == previous.Program.Textures[j].Name) Textures[i] = previous.Textures[j];

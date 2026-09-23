@@ -15,7 +15,7 @@ One validated std140 uniform member. Reflection determines its numeric element t
 
 | Declaration | Contract |
 | --- | --- |
-| `ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned)` | [Construction and values](#construction-and-values) |
+| `ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor)` | [Construction and values](#construction-and-values) |
 | `internal int Count { get; }` | [Element count](#element-count) |
 | `internal bool Accepts<T>() where T : unmanaged` | [Type acceptance](#type-acceptance) |
 | `internal bool SameType(ShaderUniform other)` | [Migration compatibility](#migration-compatibility) |
@@ -27,9 +27,9 @@ One validated std140 uniform member. Reflection determines its numeric element t
 
 ### Construction and values
 
-`ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned)`
+`ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor)`
 
-Arguments become record properties. ArrayLength zero denotes a scalar/vector; a positive length denotes a fixed array. Offsets/strides are bytes. Unsigned distinguishes signed and unsigned shader integers even when both use Vector2I/Vector4I. Float3 has Type Color and ElementSize 12; its alignment and array stride remain 16 bytes. Creation follows reflection validation, not arbitrary user input.
+Arguments become record properties. ArrayLength zero denotes a scalar/vector/matrix; a positive length denotes a fixed array. Offsets/strides are bytes. Unsigned distinguishes signed and unsigned shader integers even when both use Vector2I/Vector4I. Float3 has Type Color and ElementSize 12; its alignment and array stride remain 16 bytes. Float2x2 has Type Transform; MatrixStride is the byte step between its two stored vectors and RowMajor chooses rows instead of columns. ElementSize spans the first component through the second vector (MatrixStride + 8); matrices require 16-byte alignment. Non-matrix MatrixStride is zero. Creation follows reflection validation, not arbitrary user input.
 
 ### Element count
 
@@ -41,29 +41,29 @@ Returns max(1, ArrayLength).
 
 `internal bool Accepts<T>() where T : unmanaged`
 
-Accepts the reflected C# type, plus Color and Rect as aliases for Vector4. Float3 accepts Color only. Integer vectors carry signed/unsigned component bits without conversion. Does not imply arbitrary unmanaged types are supported.
+Accepts the reflected C# type, plus Color and Rect as aliases for Vector4. Float3 accepts Color only. Integer vectors carry signed/unsigned component bits without conversion. Float2x2 accepts Transform, storing only X/Y. Does not imply arbitrary unmanaged types are supported.
 
 ### Migration compatibility
 
 `internal bool SameType(ShaderUniform other)`
 
-Compares element Type, Unsigned and ArrayLength. Matching values can migrate to changed buffer offsets/bindings.
+Compares element Type, Unsigned and ArrayLength. Matching values can migrate to changed buffer offsets/bindings. Matrix stride and storage order are intentionally omitted: migration decodes the old basis and encodes it in the new layout.
 
 ### Component access
 
 `internal void Write<T>(Span<byte> target, in T value) where T : unmanaged`
 
-Copies exactly ElementSize bytes from a validated value into its member slice. Float3 writes RGB only; following scalars and array padding are preserved.
+Copies represented components from a validated value into its member slice. For float2x2, scatters the four Transform basis components according to MatrixStride/RowMajor, omitting Origin and preserving padding. Float3 writes RGB only; following scalars and array padding are preserved.
 
 `internal T Read<T>(ReadOnlySpan<byte> source) where T : unmanaged`
 
-Copies stored components into a zero-initialized typed value, reconstructing alpha one for float3 Color. Callers validate T and provide exactly the reflected component slice. Both helpers use stack-backed spans with no managed allocation.
+Copies stored components into a zero-initialized typed value, reconstructing alpha one for float3 Color. Float2x2 gathers its four basis components and leaves Origin zero. Callers validate T and provide exactly the reflected component slice. Both helpers use stack-backed spans with no managed allocation.
 
 ### Descriptor
 
 `internal PropertyDescriptor Describe(string propertyName)`
 
-Builds a typed ShaderMaterial descriptor for a scalar/vector or whole array. Reads/setters use the material API; zero components are revert defaults, with alpha one for float3 Color, including each array element. Array setters reject null and copy values through the span overload.
+Builds a typed ShaderMaterial descriptor for a scalar/vector/matrix or whole array. Reads/setters use the material API; identity is the float2x2 revert default; other values use zero components, with alpha one for float3 Color, including each array element. Array setters reject null and copy values through the span overload.
 
 ## Verification and limits
 

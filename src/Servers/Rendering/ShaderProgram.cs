@@ -30,7 +30,7 @@ internal sealed record ShaderTexture(string Name, int Binding)
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 
-internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned)
+internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor)
 {
     internal int Count => Math.Max(1, ArrayLength);
     internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect));
@@ -39,23 +39,40 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
     internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
-        Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Color) ? Describe<Color>(propertyName) : Describe<Vector4I>(propertyName);
+        Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Color) ? Describe<Color>(propertyName) : Describe<Vector4I>(propertyName);
 
-    internal void Write<T>(Span<byte> target, in T value) where T : unmanaged =>
-        MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(in value, 1))[..ElementSize].CopyTo(target);
+    internal void Write<T>(Span<byte> target, in T value) where T : unmanaged
+    {
+        var bytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(in value, 1));
+        if (Type == typeof(Transform))
+        {
+            var basis = MemoryMarshal.Cast<byte, float>(bytes); var stored = MemoryMarshal.Cast<byte, float>(target);
+            stored[0] = basis[0]; stored[RowMajor ? MatrixStride / 4 : 1] = basis[1];
+            stored[RowMajor ? 1 : MatrixStride / 4] = basis[2]; stored[MatrixStride / 4 + 1] = basis[3];
+        }
+        else bytes[..ElementSize].CopyTo(target);
+    }
 
     internal T Read<T>(ReadOnlySpan<byte> source) where T : unmanaged
     {
         T value = default;
         var bytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref value, 1));
-        source.CopyTo(bytes);
+        if (Type == typeof(Transform))
+        {
+            var basis = MemoryMarshal.Cast<byte, float>(bytes); var stored = MemoryMarshal.Cast<byte, float>(source);
+            basis[0] = stored[0]; basis[1] = stored[RowMajor ? MatrixStride / 4 : 1];
+            basis[2] = stored[RowMajor ? 1 : MatrixStride / 4]; basis[3] = stored[MatrixStride / 4 + 1];
+        }
+        else source.CopyTo(bytes);
         if (Type == typeof(Color)) MemoryMarshal.Cast<byte, float>(bytes)[3] = 1;
         return value;
     }
 
     private PropertyDescriptor Describe<T>(string propertyName) where T : unmanaged
     {
-        var initial = Read<T>(new byte[ElementSize]);
+        var defaults = new byte[ElementSize];
+        if (Type == typeof(Transform)) Write(defaults, Transform.Identity);
+        var initial = Read<T>(defaults);
         return ArrayLength == 0
             ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true)
             : new PropertyDescriptor<ShaderMaterial, T[]>(propertyName, m => m.GetShaderParameterArray<T>(Name),

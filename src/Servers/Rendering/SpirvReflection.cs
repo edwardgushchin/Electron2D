@@ -57,11 +57,12 @@ internal static unsafe partial class SpirvReflection
                 var field = GetType(compiler, GetMemberType(type, member));
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
+                var matrix = GetBaseType(field) == 13 && width == 2 && GetColumns(field) == 2;
                 if (name == "TIME" && (!fragment || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a fragment uniform buffer.");
-                if (GetBitWidth(field) != 32 || GetColumns(field) != 1 || dimensions > 1)
-                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector or a fixed one-dimensional array; matrices and nested structs are not integrated yet.");
-                var valueType = (GetBaseType(field), width) switch
+                if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
+                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float2x2 matrix or a fixed one-dimensional array; other matrices and nested structs are not integrated yet.");
+                var valueType = matrix ? typeof(Transform) : (GetBaseType(field), width) switch
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
@@ -76,7 +77,20 @@ internal static unsafe partial class SpirvReflection
                     _ => throw new NotSupportedException($"Uniform '{name}' has no integrated typed material mapping.")
                 };
                 Check(GetMemberOffset(compiler, type, member, out var offset));
-                var elementSize = (int)width * 4;
+                var matrixStride = 0;
+                var rowMajor = false;
+                if (matrix)
+                {
+                    rowMajor = HasMemberDecoration(compiler, resource.BaseTypeId, member, 4) != 0;
+                    if (rowMajor == (HasMemberDecoration(compiler, resource.BaseTypeId, member, 5) != 0) ||
+                        HasMemberDecoration(compiler, resource.BaseTypeId, member, 7) == 0)
+                        throw new NotSupportedException($"Matrix '{name}' requires one explicit storage order and MatrixStride.");
+                    var reflectedStride = GetMemberDecoration(compiler, resource.BaseTypeId, member, 7);
+                    if (reflectedStride < 16 || reflectedStride > 16368 || reflectedStride % 16 != 0)
+                        throw new NotSupportedException($"Matrix '{name}' must use std140 matrix stride within the buffer limit.");
+                    matrixStride = (int)reflectedStride;
+                }
+                var elementSize = matrix ? matrixStride + 8 : (int)width * 4;
                 var length = 0;
                 uint stride = (uint)elementSize;
                 if (dimensions == 1)
@@ -88,7 +102,7 @@ internal static unsafe partial class SpirvReflection
                     if (stride < elementSize || stride % 16 != 0)
                         throw new NotSupportedException($"Uniform '{name}' must use std140 array stride.");
                 }
-                var alignment = dimensions == 1 || width == 3 ? 16 : elementSize;
+                var alignment = dimensions == 1 || matrix || width == 3 ? 16 : elementSize;
                 var extent = (ulong)offset + (ulong)(Math.Max(1, length) - 1) * stride + (uint)elementSize;
                 if (offset % alignment != 0 || extent > size)
                     throw new NotSupportedException($"Uniform '{name}' must fit inside its buffer with std140 alignment.");
@@ -100,7 +114,7 @@ internal static unsafe partial class SpirvReflection
                     if (occupied[i]) throw new ArgumentException($"Uniform '{name}' overlaps another member.", nameof(code));
                     occupied[i] = true;
                 }
-                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8));
+                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor));
             }
         }
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));
@@ -187,6 +201,10 @@ internal static unsafe partial class SpirvReflection
     private static partial byte HasDecoration(nint compiler, uint id, int decoration);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_get_decoration"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint GetDecoration(nint compiler, uint id, int decoration);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_has_member_decoration"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial byte HasMemberDecoration(nint compiler, uint type, uint member, int decoration);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_get_member_decoration"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial uint GetMemberDecoration(nint compiler, uint type, uint member, int decoration);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_get_type_handle"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial nint GetType(nint compiler, uint id);
     [LibraryImport(Library, EntryPoint = "spvc_type_get_num_array_dimensions"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

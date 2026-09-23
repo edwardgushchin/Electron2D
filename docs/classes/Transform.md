@@ -24,6 +24,8 @@ Zero initialization produces six zero components and is intentionally different 
 The value can represent translation, clockwise rotation in screen coordinates, non-uniform scale, reflection,
 and skew. The zero-initialized value is a zero matrix, not [`Transform.Identity`](Transform.md#p-electron2d-transform-identity).
 
+ShaderMaterial accepts this value for float2x2 parameters and arrays, storing only the X/Y basis. Parameter readers return zero Origin; unassigned matrix parameters start at Identity. See [matrix parameter mapping](../components/shader-materials.md#matrix-parameters) for source-language multiplication and layout rules. This does not change the struct's ordinary zero-initialization behavior.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
