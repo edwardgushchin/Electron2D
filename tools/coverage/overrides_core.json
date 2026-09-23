@@ -1,5 +1,9 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.TranslationDomain.GetTranslations()", "godot": "TranslationDomain::method:get_translations()", "reason": "Returns a snapshot of borrowed catalogs in registration order."},
+    {"electron2d": "property:Electron2D.TranslationDomain.LocaleOverride()", "godot": "TranslationDomain::method:set_locale_override(String:)", "reason": "A normalized CultureInfo name replaces the locale string setter under ADR 0007."},
+    {"electron2d": "method:Electron2D.TranslationServer.GetLoadedLocales()", "godot": "TranslationServer::method:get_loaded_locales()", "reason": "Lists distinct live locales registered in the main domain; culture and editor locale lists remain a separate audit."},
+    {"electron2d": "method:Electron2D.TranslationServer.GetTranslations()", "godot": "TranslationServer::method:get_translations()", "reason": "Returns a snapshot of borrowed main-domain catalogs."},
     {"electron2d": "method:Electron2D.XMLParser.GetAttributeCount()", "godot": "XMLParser::method:get_attribute_count()", "reason": "Count of the current opening element's ordered attributes."},
     {"electron2d": "method:Electron2D.XMLParser.GetCurrentLine()", "godot": "XMLParser::method:get_current_line()", "reason": "Zero-based count of newline bytes consumed by the token cursor."},
     {"electron2d": "method:Electron2D.XMLParser.GetNodeData()", "godot": "XMLParser::method:get_node_data()", "reason": "Returns decoded text only for a text token."},
@@ -496,6 +500,8 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.TranslationDomain..ctor()", "state": "Implemented", "reason": "Creates an independent managed domain; the reference class has no explicit constructor row.", "adr": "adr-0003"},
+    {"electron2d": "method:Electron2D.TranslationDomain.Dispose(System.Boolean)", "state": "Implemented", "reason": "Unregisters borrowed catalogs during deterministic managed lifetime cleanup.", "adr": "adr-0003"},
     {"electron2d": "constructor:Electron2D.XMLParser..ctor()", "state": "Implemented", "reason": "Managed construction of an unopened token reader; no constructor row exists upstream.", "adr": "adr-0003"},
     {"electron2d": "method:Electron2D.XMLParser.Dispose(System.Boolean)", "state": "Implemented", "reason": "Releases the owned input buffer on deterministic managed disposal.", "adr": "adr-0003"},
     {"electron2d": "constructor:Electron2D.Translation..ctor()", "state": "Implemented", "reason": "Managed default construction of an empty en translation resource; the reference class has no constructor row.", "adr": "adr-0007"},
@@ -950,6 +956,10 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["TranslationDomain::method:add_translation(Translation:)", "TranslationDomain::method:clear()", "TranslationDomain::method:remove_translation(Translation:)", "TranslationDomain::method:has_translation(Translation:)", "TranslationDomain::method:get_translations()"], "state": "Implemented", "reason": "Borrowed catalog registration, identity deduplication, snapshot query, removal and disposal were checked in TranslationDomainTests; returned arrays are independent."},
+    {"godot": ["TranslationDomain::property:enabled", "TranslationDomain::property:pseudolocalization_accents_enabled", "TranslationDomain::property:pseudolocalization_double_vowels_enabled", "TranslationDomain::property:pseudolocalization_enabled", "TranslationDomain::property:pseudolocalization_fake_bidi_enabled", "TranslationDomain::property:pseudolocalization_override_enabled", "TranslationDomain::property:pseudolocalization_skip_placeholders_enabled", "TranslationDomain::property:pseudolocalization_prefix", "TranslationDomain::property:pseudolocalization_suffix"], "state": "Implemented", "reason": "The domain stores the pinned defaults and typed setter values; TranslationDomainTests checks configuration and lookup effects. BIDI and Unicode transform fidelity is classified on pseudolocalize itself."},
+    {"godot": ["TranslationDomain::method:find_translations(String:,bool:)", "TranslationDomain::method:has_translation_for_locale(String:,bool:)", "TranslationDomain::method:get_translation_object(String:)", "TranslationDomain::method:get_locale_override()", "TranslationDomain::method:set_locale_override(String:)", "TranslationDomain::method:translate(StringName:,StringName:)", "TranslationDomain::method:translate_plural(StringName:,StringName:,int:,StringName:)"], "state": "Partial", "reason": "Executable domain lookup, override and parent-culture fallback are tested; exact upstream locale scoring, normalization and plural-rule parity remain unaudited."},
+    {"godot": ["TranslationDomain::method:pseudolocalize(StringName:)", "TranslationDomain::property:pseudolocalization_expansion_ratio"], "state": "Partial", "reason": "Singular transforms and expansion are executable and tested, but exact code-point, placeholder, BIDI and expansion rounding parity remains unaudited."},
     {"godot": ["Translation::method:get_message_count()", "Translation::method:get_message_list()", "Translation::method:get_translated_message_list()"], "state": "Implemented", "reason": "Counts contextual entries, returns EOT-prefixed context keys and flattens every translated plural form into independent arrays; VerifyTranslations checks each operation. Enumeration order is unspecified in both hash-backed catalogs."},
     {
       "godot": ["RegEx::method:clear()", "RegEx::method:get_pattern()", "RegEx::method:is_valid()"],

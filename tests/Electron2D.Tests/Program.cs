@@ -140,6 +140,7 @@ VerifyLifetime();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
 VerifyTranslations();
+TranslationDomainTests.Run();
 VerifyMathF();
 VerifyColors();
 SpriteTests.Run();

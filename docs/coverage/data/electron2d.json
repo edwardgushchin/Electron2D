@@ -2225,6 +2225,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TranslationDomain",
+    "kind": "type",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "TranslationDomain",
+    "signature": "public sealed class Electron2D.TranslationDomain",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TranslationServer",
     "kind": "type",
     "declaringType": "Electron2D.TranslationServer",
@@ -5175,6 +5190,19 @@
     "declaringType": "Electron2D.Translation",
     "name": ".ctor",
     "signature": "public Translation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TranslationDomain..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": ".ctor",
+    "signature": "public TranslationDomain()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39624,6 +39652,252 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TranslationDomain.AddTranslation(Electron2D.Translation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "AddTranslation",
+    "signature": "public System.Void AddTranslation(Electron2D.Translation translation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.FindTranslations(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "FindTranslations",
+    "signature": "public Electron2D.Translation[] FindTranslations(System.String locale, System.Boolean exact)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "exact",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Translation[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.GetTranslationObject(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "GetTranslationObject",
+    "signature": "public Electron2D.Translation GetTranslationObject(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Translation",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.GetTranslations()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "GetTranslations",
+    "signature": "public Electron2D.Translation[] GetTranslations()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Translation[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.HasTranslation(Electron2D.Translation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "HasTranslation",
+    "signature": "public System.Boolean HasTranslation(Electron2D.Translation translation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.HasTranslationForLocale(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "HasTranslationForLocale",
+    "signature": "public System.Boolean HasTranslationForLocale(System.String locale, System.Boolean exact)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "exact",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.Pseudolocalize(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "Pseudolocalize",
+    "signature": "public System.String Pseudolocalize(System.String message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.RemoveTranslation(Electron2D.Translation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "RemoveTranslation",
+    "signature": "public System.Void RemoveTranslation(Electron2D.Translation translation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.Translate(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "Translate",
+    "signature": "public System.String Translate(System.String message, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationDomain.TranslatePlural(System.String,System.String,System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "TranslatePlural",
+    "signature": "public System.String TranslatePlural(System.String singular, System.String plural, System.Int64 count, System.String context = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "singular",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "plural",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TranslationServer.AddPluralTranslation(System.Globalization.CultureInfo,System.String,System.String,System.String,System.Func\u003CSystem.Int64, System.String\u003E,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.TranslationServer",
@@ -39740,6 +40014,194 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.FindTranslations(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "FindTranslations",
+    "signature": "public static Electron2D.Translation[] FindTranslations(System.String locale, System.Boolean exact)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "exact",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Translation[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetLoadedLocales()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetLoadedLocales",
+    "signature": "public static System.String[] GetLoadedLocales()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetOrAddDomain(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetOrAddDomain",
+    "signature": "public static Electron2D.TranslationDomain GetOrAddDomain(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TranslationDomain",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetTranslationObject(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetTranslationObject",
+    "signature": "public static Electron2D.Translation GetTranslationObject(System.String locale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Translation",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.GetTranslations()",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "GetTranslations",
+    "signature": "public static Electron2D.Translation[] GetTranslations()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Translation[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.HasDomain(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "HasDomain",
+    "signature": "public static System.Boolean HasDomain(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.HasTranslation(Electron2D.Translation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "HasTranslation",
+    "signature": "public static System.Boolean HasTranslation(Electron2D.Translation translation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "translation",
+        "type": "Electron2D.Translation",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.HasTranslationForLocale(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "HasTranslationForLocale",
+    "signature": "public static System.Boolean HasTranslationForLocale(System.String locale, System.Boolean exact)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "exact",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.Pseudolocalize(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "Pseudolocalize",
+    "signature": "public static System.String Pseudolocalize(System.String message)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TranslationServer.RemoveDomain(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "RemoveDomain",
+    "signature": "public static System.Void RemoveDomain(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -56125,6 +56587,149 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.TranslationDomain.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.LocaleOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "LocaleOverride",
+    "signature": "public System.String LocaleOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationAccentsEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationAccentsEnabled",
+    "signature": "public System.Boolean PseudolocalizationAccentsEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationDoubleVowelsEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationDoubleVowelsEnabled",
+    "signature": "public System.Boolean PseudolocalizationDoubleVowelsEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationEnabled",
+    "signature": "public System.Boolean PseudolocalizationEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationExpansionRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationExpansionRatio",
+    "signature": "public System.Single PseudolocalizationExpansionRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationFakeBIDIEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationFakeBIDIEnabled",
+    "signature": "public System.Boolean PseudolocalizationFakeBIDIEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationOverrideEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationOverrideEnabled",
+    "signature": "public System.Boolean PseudolocalizationOverrideEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationPrefix()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationPrefix",
+    "signature": "public System.String PseudolocalizationPrefix { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationSkipPlaceholdersEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationSkipPlaceholdersEnabled",
+    "signature": "public System.Boolean PseudolocalizationSkipPlaceholdersEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationDomain.PseudolocalizationSuffix()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationDomain",
+    "name": "PseudolocalizationSuffix",
+    "signature": "public System.String PseudolocalizationSuffix { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TranslationServer.Culture()",
     "kind": "property",
     "declaringType": "Electron2D.TranslationServer",
@@ -56135,6 +56740,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Globalization.CultureInfo",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TranslationServer.PseudolocalizationEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TranslationServer",
+    "name": "PseudolocalizationEnabled",
+    "signature": "public static System.Boolean PseudolocalizationEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -20,11 +20,13 @@ Godot `Object` provides per-object translation enablement, a domain, and `tr`/`t
 
 ### Decision
 
-- `TranslationServer` is a process-wide in-memory catalog selected by one `CultureInfo`. It also registers borrowed `Translation : Resource` catalogs by domain without owning their disposal. Resource edits become visible immediately; removal, clearing, or disposal stops their lookup.
+- `TranslationServer` is a process-wide in-memory catalog selected by one `CultureInfo`. It owns a registry of `TranslationDomain` objects, including the main domain named `""`. Domains register borrowed `Translation : Resource` catalogs without owning their disposal. Resource edits become visible immediately; removal, clearing, or disposal stops their lookup. A removed domain remains usable independently; a disposed registered domain leaves the registry.
+- Registered domain lookups and server lookups share direct entries, resource priority, locale override, and enablement. Standalone domains resolve their own resource catalogs. A domain override replaces the selected culture for that domain.
 - Keys are culture, domain, context, and source text; lookup falls back through parent cultures to invariant culture.
 - Existing direct registrations take priority within a locale. Resource catalogs follow in reverse registration order; every locale is checked before moving to its parent.
 - `ElectronObject` stores a translation-enabled flag and domain and exposes typed `Tr`/`TrN` methods.
 - Missing messages return the source text.
+- Each domain offers configurable singular-message pseudolocalization: accents, doubled vowels, fake bidirectional controls, placeholder preservation, override, expansion, prefix, and suffix. The main domain is exposed through server convenience members. Plural results are not pseudolocalized, matching the pinned reference behavior. Locale matching and Unicode transformations are tracked as Partial where exact reference parity is not yet established.
 - Direct plural registrations receive `Func<long, string>`. Resource catalogs use copied plural-form lists and a typed `Func<long, int>` selector; English catalogs use the source English fallback when no selector is assigned. Non-English catalogs with multiple forms require a selector and fail explicitly without one. This projects the plural-rule capability without exposing a string-expression evaluator; built-in rules for other locales and the reference textual override remain coverage gaps.
 - Catalog state is lock-protected; resource lookup and its overridable callbacks run outside the server lock. Direct plural selectors retain their existing locked-lookup contract. The global enabled flag is internal and uses volatile access. Applications control translation per object through `ElectronObject`.
 

@@ -886,7 +886,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Transform2D](classes/Transform2D.md) | — | Implemented | 43 |
 | [Transform3D](classes/Transform3D.md) | — | Excluded | 35 |
 | [Translation](classes/Translation.md) | Resource | Partial | 12 |
-| [TranslationDomain](classes/TranslationDomain.md) | RefCounted | Unimplemented | 23 |
+| [TranslationDomain](classes/TranslationDomain.md) | RefCounted | Partial | 23 |
 | [TranslationServer](classes/TranslationServer.md) | Object | Partial | 33 |
 | [Tree](classes/Tree.md) | Control | Blocked | 163 |
 | [TreeItem](classes/TreeItem.md) | Object | Blocked | 127 |

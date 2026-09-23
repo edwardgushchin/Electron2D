@@ -14,7 +14,7 @@ public static class TranslationServer
     private static readonly object Gate = new();
     private static readonly Dictionary<(string Culture, string Domain, string Context, string Message), string> Messages = new();
     private static readonly Dictionary<(string Culture, string Domain, string Context, string Singular, string Plural), Func<long, string>> Plurals = new();
-    private static readonly List<(string Domain, Translation Catalog)> Catalogs = [];
+    private static readonly Dictionary<string, TranslationDomain> Domains = new(StringComparer.Ordinal);
 
     private static CultureInfo _culture = CultureInfo.CurrentUICulture;
     private static int _enabled = 1;
@@ -69,7 +69,10 @@ public static class TranslationServer
         ArgumentNullException.ThrowIfNull(translation);
 
         lock (Gate)
+        {
+            EnsureDomainUnderLock(domain);
             Messages[(culture.Name, domain, context ?? string.Empty, message)] = translation;
+        }
     }
 
     /// <summary>Adds or replaces one plural translation selector.</summary>
@@ -98,7 +101,10 @@ public static class TranslationServer
         ArgumentNullException.ThrowIfNull(selector);
 
         lock (Gate)
+        {
+            EnsureDomainUnderLock(domain);
             Plurals[(culture.Name, domain, context ?? string.Empty, singular, plural)] = selector;
+        }
     }
 
     /// <summary>Registers a live translation resource for a domain.</summary>
@@ -111,19 +117,8 @@ public static class TranslationServer
     {
         ArgumentNullException.ThrowIfNull(translation);
         ArgumentNullException.ThrowIfNull(domain);
-        lock (Gate)
-        {
-            if (translation.IsDisposed) throw new ObjectDisposedException(nameof(translation));
-            if (Catalogs.Any(entry => entry.Domain == domain && ReferenceEquals(entry.Catalog, translation))) return;
-            if (!Catalogs.Any(entry => ReferenceEquals(entry.Catalog, translation)))
-                translation.Disposed += OnCatalogDisposed;
-            Catalogs.Add((domain, translation));
-            if (translation.IsDisposed)
-            {
-                RemoveCatalogUnderLock(translation, domain);
-                throw new ObjectDisposedException(nameof(translation));
-            }
-        }
+        if (translation.IsDisposed) throw new ObjectDisposedException(nameof(translation));
+        GetOrAddDomain(domain).AddTranslation(translation);
     }
 
     /// <summary>Unregisters a translation resource from a domain without disposing it.</summary>
@@ -134,8 +129,103 @@ public static class TranslationServer
     {
         ArgumentNullException.ThrowIfNull(translation);
         ArgumentNullException.ThrowIfNull(domain);
-        lock (Gate) RemoveCatalogUnderLock(translation, domain);
+        TranslationDomain? registered;
+        lock (Gate) Domains.TryGetValue(domain, out registered);
+        if (registered is not null)
+        {
+            try { registered.RemoveTranslation(translation); }
+            catch (ObjectDisposedException) when (registered.IsDisposed) { }
+        }
     }
+
+    /// <summary>Returns a registered translation domain, creating it if necessary.</summary>
+    /// <param name="name">The exact case-sensitive domain name; empty selects the main domain.</param>
+    /// <returns>A caller-visible borrowed domain; disposing it removes its registration.</returns>
+    public static TranslationDomain GetOrAddDomain(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        lock (Gate) return EnsureDomainUnderLock(name);
+    }
+
+    /// <summary>Reports whether a named domain is registered.</summary>
+    /// <param name="name">The exact domain name.</param>
+    /// <returns>True for the main domain or a live custom domain.</returns>
+    public static bool HasDomain(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        lock (Gate) return name.Length == 0 || Domains.TryGetValue(name, out var domain) && !domain.IsDisposed;
+    }
+
+    /// <summary>Removes a custom domain and its direct entries without disposing the domain or its catalogs.</summary>
+    /// <param name="name">A nonempty exact domain name.</param>
+    public static void RemoveDomain(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        if (name.Length == 0) throw new ArgumentException("The main translation domain cannot be removed.", nameof(name));
+        lock (Gate)
+        {
+            if (Domains.Remove(name, out var removed))
+            {
+                removed.Disposed -= OnDomainDisposed;
+                if (!removed.IsDisposed) removed.SetRegisteredName(null);
+            }
+            RemoveDirectEntriesUnderLock(name);
+        }
+    }
+
+    /// <summary>Gets a snapshot of resources in the main domain.</summary>
+    /// <returns>Registered resources in registration order.</returns>
+    public static Translation[] GetTranslations() => GetOrAddDomain(string.Empty).GetTranslations();
+
+    /// <summary>Gets matching resources from the main domain.</summary>
+    /// <param name="locale">The requested culture name.</param>
+    /// <param name="exact">Whether to require an exact normalized match.</param>
+    /// <returns>An independent array of borrowed resources.</returns>
+    public static Translation[] FindTranslations(string locale, bool exact) =>
+        GetOrAddDomain(string.Empty).FindTranslations(locale, exact);
+
+    /// <summary>Gets the closest matching resource in the main domain.</summary>
+    /// <param name="locale">The requested culture name.</param>
+    /// <returns>A borrowed resource, or null.</returns>
+    public static Translation? GetTranslationObject(string locale) =>
+        GetOrAddDomain(string.Empty).GetTranslationObject(locale);
+
+    /// <summary>Reports whether the main domain contains a resource by identity.</summary>
+    /// <param name="translation">The resource to inspect.</param>
+    /// <returns>True when registered.</returns>
+    public static bool HasTranslation(Translation translation) => GetOrAddDomain(string.Empty).HasTranslation(translation);
+
+    /// <summary>Reports whether the main domain has a catalog matching a locale.</summary>
+    /// <param name="locale">The requested culture name.</param>
+    /// <param name="exact">Whether to require an exact normalized match.</param>
+    /// <returns>True when a matching resource exists.</returns>
+    public static bool HasTranslationForLocale(string locale, bool exact) =>
+        GetOrAddDomain(string.Empty).HasTranslationForLocale(locale, exact);
+
+    /// <summary>Gets distinct locale names of live resources in the main domain.</summary>
+    /// <returns>An independent array of locale names.</returns>
+    public static string[] GetLoadedLocales()
+    {
+        var locales = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var translation in GetTranslations())
+        {
+            try { locales.Add(translation.Locale); }
+            catch (ObjectDisposedException) when (translation.IsDisposed) { }
+        }
+        return [.. locales];
+    }
+
+    /// <summary>Gets or sets pseudolocalization for the main domain.</summary>
+    public static bool PseudolocalizationEnabled
+    {
+        get => GetOrAddDomain(string.Empty).PseudolocalizationEnabled;
+        set => GetOrAddDomain(string.Empty).PseudolocalizationEnabled = value;
+    }
+
+    /// <summary>Pseudolocalizes text using the main domain's options.</summary>
+    /// <param name="message">The source text.</param>
+    /// <returns>The transformed text.</returns>
+    public static string Pseudolocalize(string message) => GetOrAddDomain(string.Empty).Pseudolocalize(message);
 
     /// <summary>Resolves a singular message for the current culture and its parent cultures.</summary>
     /// <param name="domain">The case-sensitive translation domain.</param>
@@ -152,33 +242,44 @@ public static class TranslationServer
             return message;
 
         CultureInfo culture;
-        Translation[] catalogs;
+        TranslationDomain? catalogDomain;
         lock (Gate)
         {
             culture = _culture;
-            catalogs = Catalogs.Where(entry => entry.Domain == domain).Select(entry => entry.Catalog).ToArray();
+            Domains.TryGetValue(domain, out catalogDomain);
         }
-        foreach (var cultureName in GetCultureChain(culture))
+        if (catalogDomain is not null)
         {
-            lock (Gate)
+            try
             {
-                if (Messages.TryGetValue((cultureName, domain, context ?? string.Empty, message), out var translation))
-                    return translation;
+                if (!catalogDomain.Enabled) return message;
+                culture = catalogDomain.EffectiveCulture;
             }
-            for (var i = catalogs.Length - 1; i >= 0; i--)
+            catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
+        }
+        foreach (var cultureName in TranslationDomain.CultureChain(culture))
+        {
+            string? direct;
+            lock (Gate)
+                Messages.TryGetValue((cultureName, domain, context ?? string.Empty, message), out direct);
+            if (direct is not null)
+            {
+                try { return catalogDomain is null ? direct : catalogDomain.ApplyPseudo(direct); }
+                catch (ObjectDisposedException) when (catalogDomain?.IsDisposed == true) { return direct; }
+            }
+            if (catalogDomain is not null)
             {
                 try
                 {
-                    var catalog = catalogs[i];
-                    if (catalog.Locale != cultureName) continue;
-                    var translation = catalog.GetMessage(message, context ?? string.Empty);
-                    if (translation.Length != 0) return translation;
+                    var translation = catalogDomain.FindMessage(cultureName, message, context ?? string.Empty);
+                    if (translation.Length != 0) return catalogDomain.ApplyPseudo(translation);
                 }
-                catch (ObjectDisposedException) when (catalogs[i].IsDisposed) { }
+                catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
             }
         }
 
-        return message;
+        try { return catalogDomain is null ? message : catalogDomain.ApplyPseudo(message); }
+        catch (ObjectDisposedException) when (catalogDomain?.IsDisposed == true) { return message; }
     }
 
     /// <summary>Resolves a plural message for the current culture and its parent cultures.</summary>
@@ -212,29 +313,36 @@ public static class TranslationServer
             return count == 1 ? singular : plural;
 
         CultureInfo culture;
-        Translation[] catalogs;
+        TranslationDomain? catalogDomain;
         lock (Gate)
         {
             culture = _culture;
-            catalogs = Catalogs.Where(entry => entry.Domain == domain).Select(entry => entry.Catalog).ToArray();
+            Domains.TryGetValue(domain, out catalogDomain);
         }
-        foreach (var cultureName in GetCultureChain(culture))
+        if (catalogDomain is not null)
+        {
+            try
+            {
+                if (!catalogDomain.Enabled) return count == 1 ? singular : plural;
+                culture = catalogDomain.EffectiveCulture;
+            }
+            catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
+        }
+        foreach (var cultureName in TranslationDomain.CultureChain(culture))
         {
             lock (Gate)
             {
                 if (Plurals.TryGetValue((cultureName, domain, context ?? string.Empty, singular, plural), out var selector))
                     return selector(count) ?? throw new InvalidOperationException("A plural translation selector returned null.");
             }
-            for (var i = catalogs.Length - 1; i >= 0; i--)
+            if (catalogDomain is not null)
             {
                 try
                 {
-                    var catalog = catalogs[i];
-                    if (catalog.Locale != cultureName) continue;
-                    var translation = catalog.GetPluralMessage(singular, plural, count, context ?? string.Empty);
+                    var translation = catalogDomain.FindPluralMessage(cultureName, singular, plural, count, context ?? string.Empty);
                     if (translation.Length != 0) return translation;
                 }
-                catch (ObjectDisposedException) when (catalogs[i].IsDisposed) { }
+                catch (ObjectDisposedException) when (catalogDomain.IsDisposed) { catalogDomain = null; }
             }
         }
 
@@ -249,34 +357,39 @@ public static class TranslationServer
         {
             Messages.Clear();
             Plurals.Clear();
-            foreach (var catalog in Catalogs.Select(entry => entry.Catalog).Distinct())
-                catalog.Disposed -= OnCatalogDisposed;
-            Catalogs.Clear();
+            foreach (var domain in Domains.Values)
+            {
+                try { domain.Clear(); }
+                catch (ObjectDisposedException) when (domain.IsDisposed) { }
+            }
         }
     }
 
-    private static void OnCatalogDisposed(ElectronObject resource)
+    private static TranslationDomain EnsureDomainUnderLock(string name)
     {
-        lock (Gate) Catalogs.RemoveAll(entry => ReferenceEquals(entry.Catalog, resource));
+        if (Domains.TryGetValue(name, out var domain) && !domain.IsDisposed) return domain;
+        domain = new TranslationDomain();
+        domain.SetRegisteredName(name);
+        domain.Disposed += OnDomainDisposed;
+        Domains[name] = domain;
+        return domain;
     }
 
-    private static void RemoveCatalogUnderLock(Translation translation, string domain)
+    private static void OnDomainDisposed(ElectronObject resource)
     {
-        Catalogs.RemoveAll(entry => entry.Domain == domain && ReferenceEquals(entry.Catalog, translation));
-        if (!Catalogs.Any(entry => ReferenceEquals(entry.Catalog, translation)))
-            translation.Disposed -= OnCatalogDisposed;
-    }
-
-    private static IEnumerable<string> GetCultureChain(CultureInfo culture)
-    {
-        while (true)
+        lock (Gate)
         {
-            yield return culture.Name;
-
-            if (culture.Equals(CultureInfo.InvariantCulture))
-                yield break;
-
-            culture = culture.Parent;
+            foreach (var name in Domains.Where(pair => ReferenceEquals(pair.Value, resource)).Select(pair => pair.Key).ToArray())
+            {
+                Domains.Remove(name);
+                RemoveDirectEntriesUnderLock(name);
+            }
         }
+    }
+
+    private static void RemoveDirectEntriesUnderLock(string name)
+    {
+        foreach (var key in Messages.Keys.Where(key => key.Domain == name).ToArray()) Messages.Remove(key);
+        foreach (var key in Plurals.Keys.Where(key => key.Domain == name).ToArray()) Plurals.Remove(key);
     }
 }

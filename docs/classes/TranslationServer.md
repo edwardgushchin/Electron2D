@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 Stores and resolves process-wide in-memory translations for the selected UI culture.
 
-`TranslationServer` is the process-wide in-memory translation registry. It resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and its parent cultures.
+`TranslationServer` is the process-wide in-memory translation registry. It owns named [`TranslationDomain`](TranslationDomain.md) instances and resolves direct entries and borrowed [`Translation`](Translation.md) resources by ordinal domain/context keys for the selected UI culture and its parent cultures. The empty name selects the main domain.
 
 Lookups use exact, case-sensitive domain, context, and source-message keys, then walk from the selected culture
 through its parents to the invariant culture. Within one locale, direct registrations precede resource catalogs, and the most recently registered resource is queried first. This typed service does not load catalog files or implement CLDR plural rules.
@@ -35,6 +35,7 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | Member | Description |
 | --- | --- |
 | [`public static CultureInfo Culture { get; set; }`](#p-electron2d-translationserver-culture) | Gets or sets the culture used for subsequent translation lookups. |
+| `public static bool PseudolocalizationEnabled { get; set; }` | Proxies the main domain's singular pseudolocalization switch. |
 
 ## Methods
 
@@ -47,6 +48,16 @@ string text = TranslationServer.Translate("ui", "menu.play");
 | [`public static string Translate(string domain, string message, string context = null)`](#m-electron2d-translationserver-translate-system-string-system-string-system-string) | Resolves a singular message for the current culture and its parent cultures. |
 | [`public static string TranslatePlural(string domain, string singular, string plural, long count, string context = null)`](#m-electron2d-translationserver-translateplural-system-string-system-string-system-string-system-int64-system-string) | Resolves a plural message for the current culture and its parent cultures. |
 | [`public static void Clear()`](#m-electron2d-translationserver-clear) | Removes all singular and plural translation registrations. |
+| `public static TranslationDomain GetOrAddDomain(string name)` | Returns or creates a registered domain by exact name. |
+| `public static bool HasDomain(string name)` | Tests a named domain; the main domain always exists logically. |
+| `public static void RemoveDomain(string name)` | Detaches a custom domain and removes its direct entries; the main domain cannot be removed. |
+| `public static Translation[] GetTranslations()` | Snapshots borrowed main-domain catalogs. |
+| `public static Translation[] FindTranslations(string locale, bool exact)` | Finds main-domain catalogs by locale. |
+| `public static Translation? GetTranslationObject(string locale)` | Gets the closest main-domain catalog. |
+| `public static bool HasTranslation(Translation translation)` | Tests main-domain registration by identity. |
+| `public static bool HasTranslationForLocale(string locale, bool exact)` | Tests main-domain locale availability. |
+| `public static string[] GetLoadedLocales()` | Gets distinct live main-domain locale names. |
+| `public static string Pseudolocalize(string message)` | Applies main-domain pseudolocalization options. |
 
 ## Property Descriptions
 
@@ -159,7 +170,15 @@ Resolves a plural message for the current culture and its parent cultures.
 
 Removes all direct singular/plural registrations and resource registrations without disposing resources.
 
-**Remarks:** The selected [`TranslationServer.Culture`](TranslationServer.md#p-electron2d-translationserver-culture) is not changed.
+**Remarks:** The selected [`TranslationServer.Culture`](TranslationServer.md#p-electron2d-translationserver-culture), registered domain objects and their configuration are not changed.
+
+### Domain registry and main-domain queries
+
+`GetOrAddDomain` returns the same live domain for an exact case-sensitive name; callers may register resources and set locale override, enablement and pseudolocalization options on it. `HasDomain("")` is true even before the main domain is materialized. `RemoveDomain` rejects the empty name, removes direct entries for a custom name and leaves the detached domain alive with its borrowed catalogs. Disposing a registered domain removes it and its direct entries. Null names throw `ArgumentNullException`.
+
+`GetTranslations`, `FindTranslations`, `GetTranslationObject`, `HasTranslation`, `HasTranslationForLocale`, and `GetLoadedLocales` are convenience operations on the main domain. Arrays are independent snapshots of borrowed resources. `FindTranslations` accepts normalized exact locale or same-language matches, according to `exact`. A concurrently disposed catalog is omitted from locale queries.
+
+`PseudolocalizationEnabled` and `Pseudolocalize` use the main domain's options. `Pseudolocalize` applies those options even if the switch is false. Singular lookup transforms both translated text and missing-message fallback when the switch is true. Plural lookup does not transform its result. See [`TranslationDomain`](TranslationDomain.md) for the options and limits.
 
 ## State and key rules
 
@@ -176,7 +195,7 @@ The culture chain includes the exact culture, each parent, and invariant culture
 
 ## Threading
 
-One process-wide lock protects direct catalogs, resource registrations, and `Culture`. Resource state has its own lock. The internal `Enabled` flag uses volatile reads/writes. Direct plural selectors execute while the server lock is held and should therefore be short. Resource hooks and selectors run after a snapshot outside the server lock.
+One process-wide lock protects direct catalogs, the domain registry, and `Culture`. Domain and resource state have their own locks. The internal `Enabled` flag uses volatile reads/writes. Direct plural selectors execute while the server lock is held and should therefore be short. Resource hooks and selectors run after a snapshot outside the server lock.
 
 ## Dependencies and interactions
 
@@ -184,6 +203,6 @@ One process-wide lock protects direct catalogs, resource registrations, and `Cul
 
 ## Verification and limitations
 
-Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, and per-object disabling.
+Tests verify parent-culture fallback, missing-message fallback, domain selection, caller-defined plural behavior, resource edits, duplication, removal, disposal, per-object disabling, domain lifecycle and pseudolocalization.
 
-No catalog file loader, CLDR plural rules, message formatting, locale negotiation, pseudo-localization, bidirectional text support, or per-thread culture override is implemented.
+No catalog file loader, CLDR plural rules, message formatting, full Unicode bidirectional text support, or per-thread culture override is implemented. Exact locale-score and Unicode pseudolocalization parity remain partial.
