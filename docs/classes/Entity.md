@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
-**Inherited By:** [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md)
+**Inherited By:** [Camera](Camera.md), [Path](Path.md), [PathFollow](PathFollow.md), [Sprite](Sprite.md), [AnimatedSprite](AnimatedSprite.md)
 
 - **Source:** [Entity.cs](../../src/Scene/2D/Entity.cs)
 - **Namespace:** `Electron2D`

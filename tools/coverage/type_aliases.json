@@ -18,7 +18,8 @@
     "Path2D": "Path",
     "PathFollow2D": "PathFollow",
     "GradientTexture1D": "GradientRampTexture",
-    "GradientTexture2D": "GradientTexture"
+    "GradientTexture2D": "GradientTexture",
+    "Camera2D": "Camera"
   },
   "enums": {
     "@GlobalScope.ClockDirection": "ClockDirection",
@@ -65,6 +66,8 @@
     "Gradient.InterpolationMode": "Gradient.InterpolationModeEnum",
     "Gradient.ColorSpace": "Gradient.ColorSpace",
     "GradientTexture2D.Fill": "GradientTexture.FillEnum",
-    "GradientTexture2D.Repeat": "GradientTexture.RepeatEnum"
+    "GradientTexture2D.Repeat": "GradientTexture.RepeatEnum",
+    "Camera2D.AnchorMode": "Camera.AnchorModeEnum",
+    "Camera2D.Camera2DProcessCallback": "Camera.CameraProcessCallback"
   }
 }

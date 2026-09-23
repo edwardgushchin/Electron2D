@@ -146,7 +146,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CSharpScript](classes/CSharpScript.md) | Script | Blocked | 1 |
 | [Callable](classes/Callable.md) | — | Excluded | 26 |
 | [CallbackTweener](classes/CallbackTweener.md) | Tweener | Partial | 1 |
-| [Camera2D](classes/Camera2D.md) | Node2D | Blocked | 46 |
+| [Camera2D](classes/Camera2D.md) | Node2D | Partial | 46 |
 | [Camera3D](classes/Camera3D.md) | Node3D | Excluded | 45 |
 | [CameraAttributes](classes/CameraAttributes.md) | Resource | Excluded | 5 |
 | [CameraAttributesPhysical](classes/CameraAttributesPhysical.md) | CameraAttributes | Excluded | 9 |

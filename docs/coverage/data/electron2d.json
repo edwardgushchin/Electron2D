@@ -60,6 +60,57 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Camera",
+    "kind": "type",
+    "declaringType": "Electron2D.Camera",
+    "name": "Camera",
+    "signature": "public class Electron2D.Camera",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Camera.AnchorModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.Camera.AnchorModeEnum",
+    "name": "AnchorModeEnum",
+    "signature": "public enum Electron2D.Camera.AnchorModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Camera.CameraProcessCallback",
+    "kind": "type",
+    "declaringType": "Electron2D.Camera.CameraProcessCallback",
+    "name": "CameraProcessCallback",
+    "signature": "public enum Electron2D.Camera.CameraProcessCallback",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasItem",
     "kind": "type",
     "declaringType": "Electron2D.CanvasItem",
@@ -3179,6 +3230,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Camera..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Camera",
+    "name": ".ctor",
+    "signature": "public Camera()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CanvasItem..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CanvasItem",
@@ -4641,6 +4705,58 @@
     "parameters": [],
     "returnType": null,
     "value": null
+  },
+  {
+    "id": "enumValue:Electron2D.Camera.AnchorModeEnum.DragCenter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Camera.AnchorModeEnum",
+    "name": "DragCenter",
+    "signature": "public const Electron2D.Camera.AnchorModeEnum DragCenter = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.AnchorModeEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Camera.AnchorModeEnum.FixedTopLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Camera.AnchorModeEnum",
+    "name": "FixedTopLeft",
+    "signature": "public const Electron2D.Camera.AnchorModeEnum FixedTopLeft = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.AnchorModeEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Camera.CameraProcessCallback.Idle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Camera.CameraProcessCallback",
+    "name": "Idle",
+    "signature": "public const Electron2D.Camera.CameraProcessCallback Idle = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.CameraProcessCallback",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Camera.CameraProcessCallback.Physics()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Camera.CameraProcessCallback",
+    "name": "Physics",
+    "signature": "public const Electron2D.Camera.CameraProcessCallback Physics = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.CameraProcessCallback",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.Linear()",
@@ -13958,6 +14074,260 @@
       }
     ],
     "returnType": "Electron2D.CallbackTweener",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.Align()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "Align",
+    "signature": "public System.Void Align()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.ForceUpdateScroll()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "ForceUpdateScroll",
+    "signature": "public System.Void ForceUpdateScroll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetDragMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetDragMargin",
+    "signature": "public System.Single GetDragMargin(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetLimit(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetLimit",
+    "signature": "public System.Int32 GetLimit(Electron2D.Side side)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetScreenCenterPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetScreenCenterPosition",
+    "signature": "public Electron2D.Vector2 GetScreenCenterPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetScreenRotation()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetScreenRotation",
+    "signature": "public System.Single GetScreenRotation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.GetTargetPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "GetTargetPosition",
+    "signature": "public Electron2D.Vector2 GetTargetPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.IsCurrent()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "IsCurrent",
+    "signature": "public System.Boolean IsCurrent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.MakeCurrent()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "MakeCurrent",
+    "signature": "public System.Void MakeCurrent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.ResetSmoothing()",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "ResetSmoothing",
+    "signature": "public System.Void ResetSmoothing()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.SetDragMargin(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "SetDragMargin",
+    "signature": "public System.Void SetDragMargin(Electron2D.Side side, System.Single dragMargin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "dragMargin",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Camera.SetLimit(Electron2D.Side,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Camera",
+    "name": "SetLimit",
+    "signature": "public System.Void SetLimit(Electron2D.Side side, System.Int32 limit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "limit",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -37698,6 +38068,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetCamera()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetCamera",
+    "signature": "public Electron2D.Camera GetCamera()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetFinalTransform()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -40978,6 +41361,331 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.AnchorMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "AnchorMode",
+    "signature": "public Electron2D.Camera.AnchorModeEnum AnchorMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.AnchorModeEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.CustomViewport()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "CustomViewport",
+    "signature": "public Electron2D.Node CustomViewport { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragBottomMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragBottomMargin",
+    "signature": "public System.Single DragBottomMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragHorizontalEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragHorizontalEnabled",
+    "signature": "public System.Boolean DragHorizontalEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragHorizontalOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragHorizontalOffset",
+    "signature": "public System.Single DragHorizontalOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragLeftMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragLeftMargin",
+    "signature": "public System.Single DragLeftMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragRightMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragRightMargin",
+    "signature": "public System.Single DragRightMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragTopMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragTopMargin",
+    "signature": "public System.Single DragTopMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragVerticalEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragVerticalEnabled",
+    "signature": "public System.Boolean DragVerticalEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.DragVerticalOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "DragVerticalOffset",
+    "signature": "public System.Single DragVerticalOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.IgnoreRotation()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "IgnoreRotation",
+    "signature": "public System.Boolean IgnoreRotation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitBottom",
+    "signature": "public System.Int32 LimitBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitEnabled",
+    "signature": "public System.Boolean LimitEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitLeft",
+    "signature": "public System.Int32 LimitLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitRight",
+    "signature": "public System.Int32 LimitRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitSmoothed()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitSmoothed",
+    "signature": "public System.Boolean LimitSmoothed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.LimitTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "LimitTop",
+    "signature": "public System.Int32 LimitTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.PositionSmoothingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "PositionSmoothingEnabled",
+    "signature": "public System.Boolean PositionSmoothingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.PositionSmoothingSpeed()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "PositionSmoothingSpeed",
+    "signature": "public System.Single PositionSmoothingSpeed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.ProcessCallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "ProcessCallback",
+    "signature": "public Electron2D.Camera.CameraProcessCallback ProcessCallback { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Camera.CameraProcessCallback",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.RotationSmoothingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "RotationSmoothingEnabled",
+    "signature": "public System.Boolean RotationSmoothingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.RotationSmoothingSpeed()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "RotationSmoothingSpeed",
+    "signature": "public System.Single RotationSmoothingSpeed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Camera.Zoom()",
+    "kind": "property",
+    "declaringType": "Electron2D.Camera",
+    "name": "Zoom",
+    "signature": "public Electron2D.Vector2 Zoom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

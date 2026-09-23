@@ -799,6 +799,276 @@
       "godot": "Texture2D::method:_has_alpha()",
       "electron2d": "property:Electron2D.GradientTexture.HasAlpha()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
+    },
+    {
+      "electron2d": "T:Electron2D.Camera",
+      "godot": "class:Camera2D",
+      "state": "Partial",
+      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028)."
+    },
+    {
+      "electron2d": "T:Electron2D.Camera.AnchorModeEnum",
+      "godot": "Camera2D::enum:AnchorMode",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "T:Electron2D.Camera.CameraProcessCallback",
+      "godot": "Camera2D::enum:Camera2DProcessCallback",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Camera.AnchorModeEnum.DragCenter()",
+      "godot": "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_DRAG_CENTER",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Camera.AnchorModeEnum.FixedTopLeft()",
+      "godot": "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_FIXED_TOP_LEFT",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Camera.CameraProcessCallback.Idle()",
+      "godot": "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_IDLE",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Camera.CameraProcessCallback.Physics()",
+      "godot": "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_PHYSICS",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.Align()",
+      "godot": "Camera2D::method:align()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.ForceUpdateScroll()",
+      "godot": "Camera2D::method:force_update_scroll()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetDragMargin(Electron2D.Side)",
+      "godot": "Camera2D::method:get_drag_margin(int:Side)",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetLimit(Electron2D.Side)",
+      "godot": "Camera2D::method:get_limit(int:Side)",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetScreenCenterPosition()",
+      "godot": "Camera2D::method:get_screen_center_position()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetScreenRotation()",
+      "godot": "Camera2D::method:get_screen_rotation()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetTargetPosition()",
+      "godot": "Camera2D::method:get_target_position()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.IsCurrent()",
+      "godot": "Camera2D::method:is_current()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.MakeCurrent()",
+      "godot": "Camera2D::method:make_current()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.ResetSmoothing()",
+      "godot": "Camera2D::method:reset_smoothing()",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.SetDragMargin(Electron2D.Side,System.Single)",
+      "godot": "Camera2D::method:set_drag_margin(int:Side,float:)",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.SetLimit(Electron2D.Side,System.Int32)",
+      "godot": "Camera2D::method:set_limit(int:Side,int:)",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.AnchorMode()",
+      "godot": "Camera2D::property:anchor_mode",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.CustomViewport()",
+      "godot": "Camera2D::property:custom_viewport",
+      "state": "Partial",
+      "reason": "Runtime-only borrowed Node property: null or non-Viewport chooses the default target, and unsupported inactive/foreign-tree targets reject before rebinding. Same-tree root target is executable and packed scenes omit the reference. Independent viewport/multiwindow routing awaits those first integrations; nullable reset follows the documented default-target contract rather than the pinned native null guard."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragBottomMargin()",
+      "godot": "Camera2D::property:drag_bottom_margin",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragHorizontalEnabled()",
+      "godot": "Camera2D::property:drag_horizontal_enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragHorizontalOffset()",
+      "godot": "Camera2D::property:drag_horizontal_offset",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragLeftMargin()",
+      "godot": "Camera2D::property:drag_left_margin",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragRightMargin()",
+      "godot": "Camera2D::property:drag_right_margin",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragTopMargin()",
+      "godot": "Camera2D::property:drag_top_margin",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragVerticalEnabled()",
+      "godot": "Camera2D::property:drag_vertical_enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.DragVerticalOffset()",
+      "godot": "Camera2D::property:drag_vertical_offset",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.Enabled()",
+      "godot": "Camera2D::property:enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.IgnoreRotation()",
+      "godot": "Camera2D::property:ignore_rotation",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitBottom()",
+      "godot": "Camera2D::property:limit_bottom",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitEnabled()",
+      "godot": "Camera2D::property:limit_enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitLeft()",
+      "godot": "Camera2D::property:limit_left",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitRight()",
+      "godot": "Camera2D::property:limit_right",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitSmoothed()",
+      "godot": "Camera2D::property:limit_smoothed",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.LimitTop()",
+      "godot": "Camera2D::property:limit_top",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.Offset()",
+      "godot": "Camera2D::property:offset",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.PositionSmoothingEnabled()",
+      "godot": "Camera2D::property:position_smoothing_enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.PositionSmoothingSpeed()",
+      "godot": "Camera2D::property:position_smoothing_speed",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.ProcessCallback()",
+      "godot": "Camera2D::property:process_callback",
+      "state": "Partial",
+      "reason": "Idle/physics internal processing, pause and last-lane delta behavior are audited and tested. Unsmoothed transform notifications also update immediately. Automatic physics-interpolated override remains blocked on the inherited node interpolation policy/reset path and render-time interpolation integration; implement it in that first slice."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.RotationSmoothingEnabled()",
+      "godot": "Camera2D::property:rotation_smoothing_enabled",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.RotationSmoothingSpeed()",
+      "godot": "Camera2D::property:rotation_smoothing_speed",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "property:Electron2D.Camera.Zoom()",
+      "godot": "Camera2D::property:zoom",
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.GetCamera()",
+      "godot": "Viewport::method:get_camera_2d()",
+      "state": "Partial",
+      "reason": "Borrowed current-camera query and deterministic scene-order replacement are implemented for the native root viewport. CameraTests and native pixel/input tests cover explicit switch, disabled/removed cameras, no-camera identity and failed exit cleanup. Independent offscreen/nested/multiwindow viewport behavior remains absent."
     }
   ],
   "statusGroups": [
@@ -1264,6 +1534,72 @@
         "GradientTexture2D::property:use_hdr",
         "GradientTexture2D::property:width"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Typed safety rejects nonfinite settings and overflowing tracking/alignment before publishing the result. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028).",
+      "godot": [
+        "Camera2D::enum:AnchorMode",
+        "Camera2D::enum:Camera2DProcessCallback",
+        "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_DRAG_CENTER",
+        "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_FIXED_TOP_LEFT",
+        "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_IDLE",
+        "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_PHYSICS",
+        "Camera2D::method:align()",
+        "Camera2D::method:force_update_scroll()",
+        "Camera2D::method:get_drag_margin(int:Side)",
+        "Camera2D::method:get_limit(int:Side)",
+        "Camera2D::method:get_screen_center_position()",
+        "Camera2D::method:get_screen_rotation()",
+        "Camera2D::method:get_target_position()",
+        "Camera2D::method:is_current()",
+        "Camera2D::method:make_current()",
+        "Camera2D::method:reset_smoothing()",
+        "Camera2D::method:set_drag_margin(int:Side,float:)",
+        "Camera2D::method:set_limit(int:Side,int:)",
+        "Camera2D::property:anchor_mode",
+        "Camera2D::property:drag_bottom_margin",
+        "Camera2D::property:drag_horizontal_enabled",
+        "Camera2D::property:drag_horizontal_offset",
+        "Camera2D::property:drag_left_margin",
+        "Camera2D::property:drag_right_margin",
+        "Camera2D::property:drag_top_margin",
+        "Camera2D::property:drag_vertical_enabled",
+        "Camera2D::property:drag_vertical_offset",
+        "Camera2D::property:enabled",
+        "Camera2D::property:ignore_rotation",
+        "Camera2D::property:limit_bottom",
+        "Camera2D::property:limit_enabled",
+        "Camera2D::property:limit_left",
+        "Camera2D::property:limit_right",
+        "Camera2D::property:limit_smoothed",
+        "Camera2D::property:limit_top",
+        "Camera2D::property:offset",
+        "Camera2D::property:position_smoothing_enabled",
+        "Camera2D::property:position_smoothing_speed",
+        "Camera2D::property:rotation_smoothing_enabled",
+        "Camera2D::property:rotation_smoothing_speed",
+        "Camera2D::property:zoom"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028).",
+      "godot": [
+        "class:Camera2D",
+        "Camera2D::property:custom_viewport",
+        "Camera2D::property:process_callback",
+        "Viewport::method:get_camera_2d()"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "First edited-scene preview slice: requires an actual editor-mode/preview viewport, node edited-scene eligibility and redraw/project-size integration. EditedSceneRoot currently scopes warning events only and expressly does not enable editor processing. Implement all three camera overlays together with that preview; no inert flags are exposed. ADRs 0008 and 0027.",
+      "godot": [
+        "Camera2D::property:editor_draw_drag_margin",
+        "Camera2D::property:editor_draw_limits",
+        "Camera2D::property:editor_draw_screen"
+      ]
     }
   ],
   "extras": [
@@ -1591,6 +1927,31 @@
       "electron2d": "method:Electron2D.GradientTexture.GetPropertyDescriptors()",
       "reason": "Typed metadata projection of existing gradient or generated-texture settings.",
       "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Camera..ctor()",
+      "reason": "Default detached construction of the existing Camera spatial node with enabled tracking, unit zoom and transform notifications.",
+      "adr": "ADRs 0003, 0004, 0005, 0008, 0011, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.CreateSceneInstanceFactory()",
+      "reason": "Exact-type factory for existing PackedScene reconstruction; runtime viewport bindings and camera state are not stored.",
+      "adr": "ADRs 0003, 0004, 0005, 0008, 0011, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.GetPropertyDescriptors()",
+      "reason": "Typed C# metadata for existing camera configuration; CustomViewport is non-stored runtime state.",
+      "adr": "ADRs 0003, 0004, 0005, 0008, 0011, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.OnNotification(System.Int32)",
+      "reason": "Existing Node notification override integrates camera tracking with internal frame lanes and inherited transform notifications.",
+      "adr": "ADRs 0003, 0004, 0005, 0008, 0011, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.Camera.Dispose(System.Boolean)",
+      "reason": "Existing managed Node lifetime releases viewport selection before dropping borrowed custom/active viewport references in finally; it does not dispose borrowed targets.",
+      "adr": "ADRs 0003, 0004, 0005, 0008"
     }
   ]
 }

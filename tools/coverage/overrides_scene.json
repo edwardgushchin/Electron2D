@@ -2554,7 +2554,6 @@
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_MAX",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_ONCE",
         "Viewport::method:find_world_2d()",
-        "Viewport::method:get_camera_2d()",
         "Viewport::method:get_canvas_cull_mask_bit(int:)",
         "Viewport::method:get_oversampling()",
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",

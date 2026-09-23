@@ -66,7 +66,7 @@ Last updated: 2026-09-23
 | `Sprite2D : Node2D` | `Sprite : Entity` | Texture drawing and sprite-specific state. |
 | `Path2D : Node2D` | `Path : Entity` | Borrowed spatial curve and updates to attached direct followers. |
 | `PathFollow2D : Node2D` | `PathFollow : Entity` | Distance/ratio sampling, offsets and tangent rotation for descendant nodes. |
-| `Camera2D : Node2D` | `Camera : Entity` | Camera-specific spatial behavior; future implementation. |
+| `Camera2D : Node2D` | `Camera : Entity` | Viewport camera selection and spatial tracking, including zoom, limits, drag margins and smoothing. |
 | `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Collision-shape placement; future implementation. |
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
 | `BaseButton : Control` | `BaseButton : Control` | Shared button behavior; future UI implementation. |
@@ -105,7 +105,7 @@ Outside these renames, the entire in-scope engine API must correspond to Godot u
 
 ### Implementation and verification boundary
 
-The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Path : Entity`, `PathFollow : Entity`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. Camera, CollisionShape, Control, BaseButton and Button remain absent. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
+The runtime implements `Sprite : Entity : CanvasItem : Node : ElectronObject`, `Path : Entity`, `PathFollow : Entity`, `Camera : Entity`, `Timer : Node` and `Window : Viewport : Node`. Node, CanvasItem and Entity are production types. CollisionShape, Control, BaseButton and Button remain absent. Camera editor overlays, inherited physics interpolation and independent viewport integration remain gaps. Class pages and compiled coverage describe the actual implemented surface and its remaining gaps.
 
 The hierarchy migration updates consumers, XML/class/component/domain documents, inventory and bidirectional coverage together. SceneHierarchyTests and native mixed-tree pixel checks preserve executable lifecycle, rendering, input, packing and failure cleanup through neutral and canvas bases. Control's absence remains an implementation dependency, not permission to move UI layout into Entity or collapse its branch.
 

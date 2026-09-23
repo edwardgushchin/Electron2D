@@ -119,7 +119,7 @@ Applies inverse `G` to GetGlobalMousePosition. A singular logical global transfo
 
 All coordinate queries require a live item and enforce its attached owner thread. Except the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 
-Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera, CanvasLayer, GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
+Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera tracking is implemented; CanvasLayer, GUI, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
 
 ## Constructors
 

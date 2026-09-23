@@ -85,7 +85,7 @@ Polls the native client pointer and applies the inverse GetScreenTransform; a si
 
 Transforms finite viewport coordinates with GetScreenTransform, then truncates to native integer client units. CanvasTransform is not applied. Requires an active native Window and owner thread; capture mutation is rejected. Nonfinite or out-of-Int32 transformed coordinates throw ArgumentException before the native request. Unsupported warping throws NotSupportedException; platform policy can prevent actual movement even when a request is supported. Disposed access throws ObjectDisposedException.
 
-Verification: [managed contracts](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) and [native pixels, injected input and pointer queries](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Linux Wayland GPU/compatibility and SDL dummy compatibility passed. Native pointer warp success and other platforms have not been verified; unsupported policies are checked explicitly. Camera, CanvasLayer, content stretch and nested viewport integration remain coverage gaps.
+Verification: [managed contracts](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) and [native pixels, injected input and pointer queries](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Linux Wayland GPU/compatibility and SDL dummy compatibility passed. Native pointer warp success and other platforms have not been verified; unsupported policies are checked explicitly. Camera tracking is integrated; CanvasLayer, content stretch and nested viewport integration remain coverage gaps.
 
 ## Pixel snapping properties
 
@@ -160,6 +160,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | --- | --- |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling/pixel-snapping properties and runtime canvas transforms to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
+| [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
 | [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
 | [`public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
@@ -235,6 +236,12 @@ Stops later scene input callbacks without changing the global polling state.
 **InvalidOperationException:** The viewport is detached, no input is being dispatched, or the caller is not the owner.
 
 **ObjectDisposedException:** The viewport or scene tree is disposed.
+
+### GetCamera
+
+`public Camera? GetCamera()`
+
+Returns the borrowed active Camera for the default canvas, or null when none is selected. First enabled entry claims an empty viewport. Explicit MakeCurrent switches immediately; disabling/removing the current camera chooses the first enabled camera in current tree order, which updates at its next tracking call. When none remains, CanvasTransform resets to identity. GlobalCanvasTransform is unchanged. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException. See [Camera](Camera.md).
 
 ## Event Descriptions
 

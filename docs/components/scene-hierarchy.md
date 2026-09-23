@@ -13,7 +13,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 
-[Sprite](../classes/Sprite.md) derives from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. Camera and CollisionShape belong to the future Entity branch. Control is the future CanvasItem UI branch, with Button reached through BaseButton. These future types are not implemented yet.
+[Sprite](../classes/Sprite.md) derives from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control is the future CanvasItem UI branch, with Button reached through BaseButton. CollisionShape and the UI branch are not implemented yet.
 
 ## Runtime flow
 
