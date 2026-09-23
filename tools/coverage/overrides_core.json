@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)", "godot": "Noise::method:get_image(int:,int:,bool:,bool:,bool:)", "reason": "The 3D-space flag is omitted under the 2D product boundary; two-dimensional sampling, normalization and inversion remain."},
+    {"electron2d": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)", "godot": "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "reason": "The 3D-space flag is omitted under the 2D product boundary; the default two-dimensional overlap blend remains."},
     {"electron2d": "T:Electron2D.Input.MouseModeEnum", "godot": "Input::enum:MouseMode", "reason": "C# Enum suffix avoids colliding with Input.MouseMode property; numeric identities match."},
     {"electron2d": "enumValue:Electron2D.Input.MouseModeEnum.Visible()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE", "reason": "Native pointer mode zero."},
     {"electron2d": "enumValue:Electron2D.Input.MouseModeEnum.Hidden()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN", "reason": "Native pointer mode one."},
@@ -508,6 +510,7 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.Noise..ctor()", "state": "Implemented", "reason": "Protected managed construction permits concrete noise resource subclasses; the reference abstract class has no constructor declaration.", "adr": "adr-0004"},
     {"electron2d": "constructor:Electron2D.TranslationDomain..ctor()", "state": "Implemented", "reason": "Creates an independent managed domain; the reference class has no explicit constructor row.", "adr": "adr-0003"},
     {"electron2d": "method:Electron2D.TranslationDomain.Dispose(System.Boolean)", "state": "Implemented", "reason": "Unregisters borrowed catalogs during deterministic managed lifetime cleanup.", "adr": "adr-0003"},
     {"electron2d": "constructor:Electron2D.XMLParser..ctor()", "state": "Implemented", "reason": "Managed construction of an unopened token reader; no constructor row exists upstream.", "adr": "adr-0003"},
@@ -964,6 +967,10 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Noise::method:get_image_3d(int:,int:,int:,bool:,bool:)", "Noise::method:get_noise_3d(float:,float:,float:)", "Noise::method:get_noise_3dv(Vector3:)", "Noise::method:get_seamless_image_3d(int:,int:,int:,bool:,float:,bool:)"], "state": "Excluded", "reason": "Three-dimensional noise samples and image volumes are outside the strict 2D product boundary (ADR 0004)."},
+    {"godot": ["Noise::method:get_noise_2dv(Vector2:)"], "state": "Implemented", "reason": "The vector overload delegates coordinates to the concrete 2D sampler; NoiseTests checks dispatch and disposed access."},
+    {"godot": ["Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Partial", "reason": "The 2D path samples a concrete subclass into L8, supports normalization, inversion and finite-value rejection in NoiseTests. The 3D-space option is excluded; exact large-value pixel parity and a concrete built-in sampler remain to verify."},
+    {"godot": ["Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)"], "state": "Partial", "reason": "The 2D overlap/quadrant blend executes for L8 and RGBA8 and is checked in NoiseTests. Pixel-for-pixel parity for arbitrary skirts and derived source formats remains unverified; the 3D-space option is excluded."},
     {"godot": ["Input::enum:MouseMode", "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE", "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN", "Input::enum_value:MouseMode.MOUSE_MODE_CAPTURED", "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED", "Input::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN", "Input::enum_value:MouseMode.MOUSE_MODE_MAX"], "state": "Implemented", "reason": "Input.MouseModeEnum has exact pinned values; the Enum suffix is required by the C# MouseMode property. Native Wayland tests verify the five selectable modes."},
     {"godot": ["Input::enum:CursorShape", "Input::method:get_current_cursor_shape()"], "state": "Implemented", "reason": "All 17 cursor identities match the pinned values. Native Wayland tests select every shape and verify Input observes direct DisplayServer changes."},
     {"godot": ["Input::property:mouse_mode"], "state": "Implemented", "reason": "Input delegates read/write to the active DisplayServer. Native Wayland tests verify all five selectable modes, SDL relative/grab/visibility state, repeated setting and no-host failure."},

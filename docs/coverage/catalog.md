@@ -495,7 +495,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Node3D](classes/Node3D.md) | Node | Excluded | 64 |
 | [Node3DGizmo](classes/Node3DGizmo.md) | RefCounted | Excluded | 0 |
 | [NodePath](classes/NodePath.md) | — | Excluded | 16 |
-| [Noise](classes/Noise.md) | Resource | Unimplemented | 9 |
+| [Noise](classes/Noise.md) | Resource | Partial | 9 |
 | [NoiseTexture2D](classes/NoiseTexture2D.md) | Texture2D | Blocked | 13 |
 | [NoiseTexture3D](classes/NoiseTexture3D.md) | Texture3D | Excluded | 9 |
 | [ORMMaterial3D](classes/ORMMaterial3D.md) | BaseMaterial3D | Excluded | 0 |

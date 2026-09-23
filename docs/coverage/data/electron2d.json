@@ -1745,6 +1745,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Noise",
+    "kind": "type",
+    "declaringType": "Electron2D.Noise",
+    "name": "Noise",
+    "signature": "public abstract class Electron2D.Noise",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PackedScene",
     "kind": "type",
     "declaringType": "Electron2D.PackedScene",
@@ -4546,6 +4561,19 @@
     "name": ".ctor",
     "signature": "public Node()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Noise..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Noise",
+    "name": ".ctor",
+    "signature": "protected Noise()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -34243,6 +34271,141 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Noise",
+    "name": "GetImage",
+    "signature": "public virtual Electron2D.Image GetImage(System.Int32 width, System.Int32 height, System.Boolean invert = false, System.Boolean normalize = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "invert",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "normalize",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Noise.GetNoise1D(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Noise",
+    "name": "GetNoise1D",
+    "signature": "public abstract System.Single GetNoise1D(System.Single x)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Noise.GetNoise2D(System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Noise",
+    "name": "GetNoise2D",
+    "signature": "public abstract System.Single GetNoise2D(System.Single x, System.Single y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Noise.GetNoise2DV(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Noise",
+    "name": "GetNoise2DV",
+    "signature": "public virtual System.Single GetNoise2DV(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Noise",
+    "name": "GetSeamlessImage",
+    "signature": "public virtual Electron2D.Image GetSeamlessImage(System.Int32 width, System.Int32 height, System.Boolean invert = false, System.Single skirt = 0.1f, System.Boolean normalize = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "invert",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "skirt",
+        "type": "System.Single",
+        "default": "0.1f"
+      },
+      {
+        "name": "normalize",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.Image",
     "value": null
   },
   {

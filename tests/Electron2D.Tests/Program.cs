@@ -127,6 +127,7 @@ RandomNumberGeneratorTests.Run();
 RegExTests.Run();
 XMLParserTests.Run();
 BitMapTests.Run();
+NoiseTests.Run();
 AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();

@@ -66,6 +66,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Component: [Translation](components/localization.md)
 - Component: [Resource base](components/resources.md)
 - Component: [Managed images](components/images.md)
+- Component: [Noise](components/noise.md)
 - Component: [Display server](components/display-server.md)
 - Component: [Window runtime](components/window-runtime.md)
 - Component: [Canvas rendering](components/canvas-rendering.md)
