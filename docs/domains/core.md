@@ -51,7 +51,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
-- `Geometry`: twelve stateless grid-line, nearest-point, polygon, hull and intersection operations; the remaining reference geometry API is still absent.
+- `Geometry`: thirteen stateless grid-line, nearest-point, polygon, hull, triangulation and intersection operations; the remaining reference geometry API is still absent.
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
 - `Vector4` and `Vector4I`: complete four-component floating-point/integer numeric tuples without 3D scene semantics.
 - `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators.

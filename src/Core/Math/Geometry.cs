@@ -263,4 +263,80 @@ public static class Geometry
         if (second >= 0f && second <= 1f) return second;
         return -1f;
     }
+
+    /// <summary>Triangulates a simple polygon into counterclockwise triples of input vertex indices.</summary>
+    /// <param name="polygon">The polygon vertices in perimeter order, in either winding direction.</param>
+    /// <returns>Three indices per triangle, or an empty array when the contour cannot be triangulated.</returns>
+    /// <remarks>The contour is not modified. Double-precision area and orientation intermediates avoid overflow for finite float coordinates. Collinear vertices may produce flat triangles as a last resort. Nonfinite coordinates have no defined result.</remarks>
+    public static int[] TriangulatePolygon(ReadOnlySpan<Vector2> polygon)
+    {
+        if (polygon.Length < 3) return [];
+        var triangles = new int[checked((polygon.Length - 2) * 3)];
+        return TryTriangulatePolygon(polygon, new int[polygon.Length], triangles) ? triangles : [];
+    }
+
+    // The caller supplies reusable buffers so retained canvas redraws allocate nothing.
+    internal static bool TryTriangulatePolygon(ReadOnlySpan<Vector2> polygon, Span<int> remaining, Span<int> triangles)
+    {
+        if (polygon.Length < 3) return false;
+        double area = 0d;
+        for (var i = 0; i < polygon.Length; i++)
+        {
+            var a = polygon[i];
+            var b = polygon[(i + 1) % polygon.Length];
+            area += (double)a.X * b.Y - (double)a.Y * b.X;
+        }
+        for (var i = 0; i < polygon.Length; i++) remaining[i] = area > 0d ? i : polygon.Length - 1 - i;
+
+        var count = polygon.Length;
+        var cursor = count - 1;
+        var attempts = 2L * count;
+        var relaxed = false;
+        var output = 0;
+        // ponytail: ear clipping is cubic in the worst case; use a spatial index if large contours become a measured bottleneck.
+        while (count > 2)
+        {
+            if (attempts-- == 0)
+            {
+                if (relaxed) return false;
+                relaxed = true;
+                attempts = 2L * count;
+            }
+
+            var previous = cursor % count;
+            cursor = (previous + 1) % count;
+            var next = (cursor + 1) % count;
+            var a = polygon[remaining[previous]];
+            var b = polygon[remaining[cursor]];
+            var c = polygon[remaining[next]];
+            if (TriangleCross(a, b, c) < (relaxed ? -ReferenceEpsilon : ReferenceEpsilon)) continue;
+
+            var contains = false;
+            for (var i = 0; i < count; i++)
+            {
+                if (i == previous || i == cursor || i == next) continue;
+                var point = polygon[remaining[i]];
+                var ab = TriangleCross(a, b, point);
+                var bc = TriangleCross(b, c, point);
+                var ca = TriangleCross(c, a, point);
+                if (relaxed ? ab > 0d && bc > 0d && ca > 0d : ab >= 0d && bc >= 0d && ca >= 0d)
+                {
+                    contains = true;
+                    break;
+                }
+            }
+            if (contains) continue;
+
+            triangles[output++] = remaining[previous];
+            triangles[output++] = remaining[cursor];
+            triangles[output++] = remaining[next];
+            remaining[(cursor + 1)..count].CopyTo(remaining[cursor..]);
+            count--;
+            attempts = 2L * count;
+        }
+        return true;
+    }
+
+    private static double TriangleCross(Vector2 a, Vector2 b, Vector2 c) =>
+        ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
 }

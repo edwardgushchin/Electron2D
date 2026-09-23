@@ -66,6 +66,24 @@ internal static class GeometryTests
             Geometry.SegmentIntersectsCircle(new(-1, 2), new(1, 2), a, 1f) == -1f &&
             Geometry.SegmentIntersectsCircle(a, a, a, 1f) == -1f,
             "Circle entry, exit, tangent, miss and degenerate segment");
+        Check(Geometry.TriangulatePolygon(square).SequenceEqual([3, 0, 1, 1, 2, 3]) &&
+            Geometry.TriangulatePolygon([new(0, 0), new(0, 4), new(4, 0)]).SequenceEqual([0, 2, 1]),
+            "Polygon triangulation preserves input indices and counterclockwise output for either winding");
+        Check(Geometry.TriangulatePolygon([new(0, 0), new(1e30f, 0), new(1e30f, 1e30f), new(0, 1e30f)])
+            .SequenceEqual([3, 0, 1, 1, 2, 3]), "Finite large-coordinate contours avoid float-area overflow");
+        var triangles = Geometry.TriangulatePolygon(concave);
+        float triangleArea = 0f;
+        for (var i = 0; i < triangles.Length; i += 3)
+        {
+            var signedTwiceArea = (concave[triangles[i + 1]] - concave[triangles[i]]).Cross(concave[triangles[i + 2]] - concave[triangles[i]]);
+            Check(signedTwiceArea > 0f, "Triangulation emits counterclockwise triangles");
+            triangleArea += signedTwiceArea * 0.5f;
+        }
+        Check(triangles.Length == 9 && triangleArea == 12f, "Concave polygon triangulation covers its area exactly");
+        Check(Geometry.TriangulatePolygon([]).Length == 0 &&
+            Geometry.TriangulatePolygon([Vector2.Zero, Vector2.One]).Length == 0 &&
+            Geometry.TriangulatePolygon([new(0, 0), new(4, 4), new(0, 4), new(4, 0)]).Length == 0,
+            "Insufficient and crossing contours return an empty triangulation");
         Console.WriteLine("Geometry primitive geometry checks passed.");
     }
 

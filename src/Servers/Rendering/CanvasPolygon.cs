@@ -28,43 +28,10 @@ internal sealed class CanvasPolygon
 
     private void Triangulate(ReadOnlySpan<Vector2> points)
     {
-        // ponytail: ear clipping is cubic in the worst case; replace with indexed spatial search if large redraws need it.
         if (_remaining.Length < points.Length) Array.Resize(ref _remaining, points.Length);
-        double area = 0;
-        for (var i = 0; i < points.Length; i++)
-        {
-            var a = points[i]; var b = points[(i + 1) % points.Length];
-            area += (double)a.X * b.Y - (double)a.Y * b.X;
-        }
-        for (var i = 0; i < points.Length; i++) _remaining[i] = area > 0 ? i : points.Length - 1 - i;
-        var count = points.Length; var cursor = count - 1; var attempts = 2L * count; var relaxed = false; var output = 0;
-        while (count > 2)
-        {
-            if (attempts-- == 0)
-            {
-                if (relaxed) throw new ArgumentException("The polygon cannot be triangulated.", nameof(points));
-                relaxed = true; attempts = 2L * count;
-            }
-            var previous = cursor % count; cursor = (previous + 1) % count; var next = (cursor + 1) % count;
-            var a = points[_remaining[previous]]; var b = points[_remaining[cursor]]; var c = points[_remaining[next]];
-            if (Cross(a, b, c) < (relaxed ? -0.00001 : 0.00001)) continue;
-            var contains = false;
-            for (var i = 0; i < count; i++)
-            {
-                if (i == previous || i == cursor || i == next) continue;
-                var point = points[_remaining[i]];
-                var ab = Cross(a, b, point); var bc = Cross(b, c, point); var ca = Cross(c, a, point);
-                if (relaxed ? ab > 0 && bc > 0 && ca > 0 : ab >= 0 && bc >= 0 && ca >= 0) { contains = true; break; }
-            }
-            if (contains) continue;
-            Indices[output++] = _remaining[previous]; Indices[output++] = _remaining[cursor]; Indices[output++] = _remaining[next];
-            _remaining.AsSpan(cursor + 1, count - cursor - 1).CopyTo(_remaining.AsSpan(cursor));
-            count--; attempts = 2L * count;
-        }
+        if (!Geometry.TryTriangulatePolygon(points, _remaining, Indices))
+            throw new ArgumentException("The polygon cannot be triangulated.", nameof(points));
     }
-
-    private static double Cross(Vector2 a, Vector2 b, Vector2 c) =>
-        ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
 
     internal void RemapUV(Rect mapping)
     {

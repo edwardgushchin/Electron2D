@@ -66,6 +66,11 @@
       "reason": "Vector2? represents the reference Vector2-or-null result without Variant; collinear segments have no unique intersection."
     },
     {
+      "godot": "Geometry2D::method:triangulate_polygon(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.TriangulatePolygon(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Typed read-only contour input and caller-owned int[] preserve counterclockwise index triples; double intermediates retain the renderer's finite-float overflow protection."
+    },
+    {
       "electron2d": "field:Electron2D.Transform.Origin()",
       "godot": "Transform2D::property:origin",
       "reason": "The mutable third-column field exposes the same origin property; zero-initialized C# values follow ADR 0029."
@@ -2359,7 +2364,7 @@
         "class:Geometry2D"
       ],
       "state": "Partial",
-      "reason": "The C# static projection implements twelve pure raster, nearest-point, polygon and intersection methods. Polygon boolean/offset, triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
+      "reason": "The C# static projection implements thirteen pure raster, nearest-point, polygon and intersection methods. Polygon boolean/offset, Delaunay triangulation, atlas packing and other reference methods remain absent; see docs/classes/Geometry.md."
     },
     {
       "godot": [
@@ -2374,10 +2379,11 @@
         "Geometry2D::method:line_intersects_line(Vector2:,Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:point_is_inside_triangle(Vector2:,Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:segment_intersects_circle(Vector2:,Vector2:,Vector2:,float:)",
-        "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)"
+        "Geometry2D::method:segment_intersects_segment(Vector2:,Vector2:,Vector2:,Vector2:)",
+        "Geometry2D::method:triangulate_polygon(PackedVector2Array:)"
       ],
       "state": "Implemented",
-      "reason": "Twelve stateless query methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, winding, hull, crossing and null cases on Linux/.NET 8. Native and exhaustive numeric parity remain unverified."
+      "reason": "Thirteen stateless methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundary, degenerate, winding, hull, polygon triangulation, crossing and null cases on Linux/.NET 8. CanvasPolygonTests covers renderer reuse and zero-allocation redraw. Native and exhaustive numeric parity remain unverified."
     },
     {
       "godot": [
