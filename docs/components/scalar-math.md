@@ -10,7 +10,7 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 | Type | Role | Source |
 | --- | --- | --- |
-| [`MathF`](../classes/MathF.md) | Stateless canonical scalar-math API | [`MathF.cs`](../../src/Core/Math/MathF.cs) |
+| [`Mathf`](../classes/Mathf.md) | Stateless canonical scalar-math API | [`Mathf.cs`](../../src/Core/Math/Mathf.cs) |
 
 ## Runtime flow
 
@@ -36,7 +36,7 @@ This Core component owns backend-independent scalar mathematics shared by engine
 
 ## Current implementation status
 
-Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `MathF`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
+Implemented and verified. The complete audited 4.7.2 stable typed scalar surface is present as seven constants and 127 method overloads. Matching scalar formulas formerly duplicated by vectors and transforms now route through `Mathf`; color, rectangle, transform, vector, integer-vector snapping, and Entity degree conversion use the shared contract. The former `1e-5f` component approximation was corrected to `1e-6f`.
 
 ## Exclusions and limitations
 

@@ -67,10 +67,10 @@ public partial class Camera
             {
                 var bias = DragOffset(halfSize);
                 target.X = _dragHorizontalEnabled && !horizontalChanged
-                    ? MathF.Max(MathF.Min(target.X, position.X + halfSize.X * scale.X * _dragMargins[0]), position.X - halfSize.X * scale.X * _dragMargins[2])
+                    ? Mathf.Max(Mathf.Min(target.X, position.X + halfSize.X * scale.X * _dragMargins[0]), position.X - halfSize.X * scale.X * _dragMargins[2])
                     : position.X + bias.X;
                 target.Y = _dragVerticalEnabled && !verticalChanged
-                    ? MathF.Max(MathF.Min(target.Y, position.Y + halfSize.Y * scale.Y * _dragMargins[1]), position.Y - halfSize.Y * scale.Y * _dragMargins[3])
+                    ? Mathf.Max(Mathf.Min(target.Y, position.Y + halfSize.Y * scale.Y * _dragMargins[1]), position.Y - halfSize.Y * scale.Y * _dragMargins[3])
                     : position.Y + bias.Y;
                 horizontalChanged = verticalChanged = false;
             }
@@ -84,7 +84,7 @@ public partial class Camera
         var screenOffset = _anchorMode == AnchorModeEnum.DragCenter ? halfSize * scale : Vector2.Zero;
         if (!_ignoreRotation)
         {
-            angle = _rotationSmoothingEnabled ? MathF.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
+            angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
             screenOffset = screenOffset.Rotated(angle);
         }
         var origin = smoothed - screenOffset;

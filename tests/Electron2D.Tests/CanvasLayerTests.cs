@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using Electron2D;
 
 internal static class CanvasLayerTests
@@ -19,7 +19,7 @@ internal static class CanvasLayerTests
         layer.Rotation = 7; Check(layer.Rotation == 7, "Explicit rotation is retained without normalization.");
         layer.Transform = new(new(2, 0), new(1, 3), new(4, 5)); Near(layer.Scale, new(2, System.MathF.Sqrt(10))); layer.Offset = layer.Offset;
         Near(layer.Transform.Y, new(0, System.MathF.Sqrt(10))); Check(layer.Transform.Origin == new Vector2(4, 5), "Even an equal component assignment discards skew.");
-        layer.Transform = new(new(-2, 0), new(0, 3), Vector2.Zero); Near(layer.Scale, new(2, -3)); Near(layer.Rotation, MathF.Pi);
+        layer.Transform = new(new(-2, 0), new(0, 3), Vector2.Zero); Near(layer.Scale, new(2, -3)); Near(layer.Rotation, Mathf.Pi);
         layer.Scale = Vector2.Zero; Check(layer.Transform.Determinant() == 0, "Singular layer transforms are allowed.");
         Reject<ArgumentException>(() => layer.Rotation = float.NaN); Reject<ArgumentException>(() => layer.FollowViewportScale = float.PositiveInfinity);
         Reject<ArgumentException>(() => layer.Offset = new(float.NaN, 0)); Reject<ArgumentException>(() => layer.Scale = new(1, float.NegativeInfinity));
@@ -90,7 +90,7 @@ internal static class CanvasLayerTests
     private sealed class TestViewport : Viewport { internal Vector2 Size = new(100, 80); public override Rect GetVisibleRect() => new(Vector2.Zero, Size); }
     private sealed class FaultItem : Entity { protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationExitCanvas) throw new ApplicationException("layer exit"); } }
     private static void Near(Vector2 actual, Vector2 expected) => Check(actual.IsEqualApprox(expected), $"Expected {expected}, got {actual}.");
-    private static void Near(float actual, float expected) => Check(MathF.IsEqualApprox(actual, expected), $"Expected {expected}, got {actual}.");
+    private static void Near(float actual, float expected) => Check(Mathf.IsEqualApprox(actual, expected), $"Expected {expected}, got {actual}.");
     private static void Check(bool ok, string message) { if (!ok) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

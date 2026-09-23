@@ -69,8 +69,8 @@ public class Control : CanvasItem
     /// <summary>Gets or sets the local rotation in degrees.</summary>
     public float RotationDegrees
     {
-        get => Rotation * (180f / MathF.Pi);
-        set => Rotation = value * (MathF.Pi / 180f);
+        get => Rotation * (180f / Mathf.Pi);
+        set => Rotation = value * (Mathf.Pi / 180f);
     }
 
     /// <summary>Gets or sets the local scale around PivotOffset.</summary>
@@ -276,7 +276,7 @@ public class Control : CanvasItem
         var position = new Vector2(_offsets[0] + _anchors[0] * area.X, _offsets[1] + _anchors[1] * area.Y);
         var end = new Vector2(_offsets[2] + _anchors[2] * area.X, _offsets[3] + _anchors[3] * area.Y);
         var size = end - position;
-        size = new(MathF.Max(0, size.X), MathF.Max(0, size.Y));
+        size = new(Mathf.Max(0, size.X), Mathf.Max(0, size.Y));
         if (position == _position && size == _size) return;
         var sizeChanged = size != _size;
         _position = position; _size = size;
@@ -286,8 +286,8 @@ public class Control : CanvasItem
     }
 
     private static int SideIndex(Side side) => side is >= Side.Left and <= Side.Bottom ? (int)side : throw new ArgumentOutOfRangeException(nameof(side));
-    private static void EnsureFinite(float value, string name) { if (!MathF.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
-    private static void EnsureFinite(Vector2 value, string name) { if (!MathF.IsFinite(value.X) || !MathF.IsFinite(value.Y)) throw new ArgumentOutOfRangeException(name); }
+    private static void EnsureFinite(float value, string name) { if (!Mathf.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
+    private static void EnsureFinite(Vector2 value, string name) { if (!Mathf.IsFinite(value.X) || !Mathf.IsFinite(value.Y)) throw new ArgumentOutOfRangeException(name); }
 
     private static readonly PropertyDescriptor[] ControlProperties =
     [

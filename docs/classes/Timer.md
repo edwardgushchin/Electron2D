@@ -187,7 +187,7 @@ Gets the remaining countdown time in seconds.
 
 Returns current configuration warnings; includes inherited warnings.
 
-Contract: Appends a warning when WaitTime is less than 0.05 minus MathF.Epsilon seconds, since frame cadence controls delivered timeouts. The warning is available even when detached or stopped.
+Contract: Appends a warning when WaitTime is less than 0.05 minus Mathf.Epsilon seconds, since frame cadence controls delivered timeouts. The warning is available even when detached or stopped.
 
 
 <a id="m-electron2d-timer-isstopped"></a>
@@ -364,4 +364,4 @@ Verification uses deterministic supplied deltas on Linux. It does not establish 
 - [0016: Engine scheduling](../decisions/core-object-runtime.md#adr-0016)
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 
-GetConfigurationWarnings appends a cadence warning below 0.05 - MathF.Epsilon seconds, including detached/stopped timers. Every valid WaitTime assignment requests refresh after commit; Start(duration) uses that setter before starting. A refresh handler that throws leaves the new duration and previous countdown; disposal/detachment during refresh prevents starting. SceneDiagnosticsTests verifies the threshold, repetition, reentry and failures.
+GetConfigurationWarnings appends a cadence warning below 0.05 - Mathf.Epsilon seconds, including detached/stopped timers. Every valid WaitTime assignment requests refresh after commit; Start(duration) uses that setter before starting. A refresh handler that throws leaves the new duration and previous countdown; disposal/detachment during refresh prevents starting. SceneDiagnosticsTests verifies the threshold, repetition, reentry and failures.

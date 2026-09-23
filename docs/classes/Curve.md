@@ -72,7 +72,7 @@ float value = curve.Sample(.25f); // 0.25
 | [`public void SetPointRightMode(int index, TangentMode mode)`](#setpointrightmode) | Sets the right mode, recalculates its slope when Linear has a neighbor, and emits Changed. |
 | [`public void RemovePoint(int index)`](#removepoint) | Removes a point, refreshes surviving automatic tangents and emits Changed then PropertyListChanged. |
 | [`public void ClearPoints()`](#clearpoints) | Removes all points and emits Changed then PropertyListChanged; an empty curve is a no-op. |
-| [`public void CleanDupes()`](#cleandupes) | Removes later neighbors within MathF.Epsilon in horizontal offset and refreshes automatic tangents. |
+| [`public void CleanDupes()`](#cleandupes) | Removes later neighbors within Mathf.Epsilon in horizontal offset and refreshes automatic tangents. |
 | [`public float Sample(float offset)`](#sample) | Samples the cubic curve at a horizontal coordinate. |
 | [`public void Bake()`](#bake) | Recomputes the evenly spaced sample cache without emitting an event. |
 | [`public float SampleBaked(float offset)`](#samplebaked) | Samples the cached curve, baking lazily when dirty. |
@@ -416,7 +416,7 @@ Removes all points and emits Changed then PropertyListChanged; an empty curve is
 
 `public void CleanDupes()`
 
-Removes later neighbors within MathF.Epsilon in horizontal offset and refreshes automatic tangents.
+Removes later neighbors within Mathf.Epsilon in horizontal offset and refreshes automatic tangents.
 
 Contract: Preserves the first of each near-duplicate run. Emits Changed only when points were removed; does not emit PropertyListChanged. Distinct ordered points are never removed just because their difference is signed.
 
@@ -510,7 +510,7 @@ When disposing is true, clears owned containers and declared event handlers, the
 
 ## Audit, dependencies and verification
 
-Uses the existing Resource, Vector2, MathF and Transform contracts and standard managed collections; there is no renderer, native library, importer or editor dependency. [CurveTests](../../tests/Electron2D.Tests/CurveTests.cs) verifies analytic samples, defaults, event timing, clamping, ordering, automatic tangents, degenerate curves, cache invalidation, array/copy isolation, typed descriptors, PackedScene ownership and an executing Entity consumer, callback failures/disposal, concurrent edits and reads, and allocation-free warm scalar/spatial queries. These are Linux managed checks; no native, owner visual or cross-platform acceptance is claimed for this slice.
+Uses the existing Resource, Vector2, Mathf and Transform contracts and standard managed collections; there is no renderer, native library, importer or editor dependency. [CurveTests](../../tests/Electron2D.Tests/CurveTests.cs) verifies analytic samples, defaults, event timing, clamping, ordering, automatic tangents, degenerate curves, cache invalidation, array/copy isolation, typed descriptors, PackedScene ownership and an executing Entity consumer, callback failures/disposal, concurrent edits and reads, and allocation-free warm scalar/spatial queries. These are Linux managed checks; no native, owner visual or cross-platform acceptance is claimed for this slice.
 
 The pinned Godot 4.7.2 [implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/curve.cpp) is audited alongside its XML. [ADR 0013](../decisions/resources.md#adr-0013) records the typed mappings and proven correctness fixes under ADR 0034: duplicate cleanup and surviving linear tangents, finite-domain cache arithmetic, nonconstant closed segments, degenerate nearest-point queries and identity orientation. The inherited Resource API is documented on its own class page. [Path/PathFollow](../components/scene-paths.md) now consume spatial curves. Curve textures, editor widgets and disk serialization remain separate unimplemented consumers with explicit [dependency triggers](../components/curves.md#dependent-slices).
 

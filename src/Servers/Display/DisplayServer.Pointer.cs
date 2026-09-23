@@ -127,7 +127,7 @@ public sealed partial class DisplayServer
             return new Vector2I((int)(windowX * scale), (int)(windowY * scale));
         }
         SDL.GetGlobalMouseState(out var x, out var y);
-        return new Vector2I((int)MathF.Round(x), (int)MathF.Round(y));
+        return new Vector2I((int)Mathf.Round(x), (int)Mathf.Round(y));
     }
 
     /// <summary>Gets the mouse buttons currently reported as held by SDL.</summary>

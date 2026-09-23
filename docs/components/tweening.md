@@ -33,7 +33,7 @@ Typed event waits reuse Core `EventConnection`. They subscribe on append, accept
 
 ## Dependencies and invariants
 
-- Depends on `SceneTree`, `Node`, `ElectronObject`, `EventConnection`, `MathF`, and current Core math values.
+- Depends on `SceneTree`, `Node`, `ElectronObject`, `EventConnection`, `Mathf`, and current Core math values.
 - Creation, configuration, stepping, killing, and disposal use the creating SceneTree's owner thread. Event receipt alone may occur on another thread.
 - A valid tween belongs to exactly one tree processing list or one parent subtween. Captured top-level entries revalidate lane and nested ownership, so a transfer during an earlier tween callback cannot process twice. Completion, killing, bound-node disposal, tree finalization, or processing failure invalidates it. Binding to a node already owned by another tree and nesting a currently processing tween are rejected.
 - Appending is allowed only before first processing or after `Stop()` resets the sequence. Tweeners cannot be constructed independently.

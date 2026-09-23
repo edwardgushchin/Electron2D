@@ -30,7 +30,7 @@ internal sealed class CanvasStroke
         var first = Vector2.Zero; var last = Vector2.Zero;
         for (var i = 1; i < points.Length && first.IsZeroApprox(); i++) first = Direction(points[i - 1], points[i]);
         for (var i = points.Length - 1; i > 0 && last.IsZeroApprox(); i--) last = Direction(points[i - 1], points[i]);
-        var border = antialiased ? Feather * MathF.Min(width, 1) : 0;
+        var border = antialiased ? Feather * Mathf.Min(width, 1) : 0;
         // Body, left feather, right feather: preserve strip order at intersections and translucent joins.
         for (var layer = 0; layer < (antialiased ? 3 : 1); layer++)
         {
@@ -81,7 +81,7 @@ internal sealed class CanvasStroke
         var c = rect.End; var d = new Vector2(rect.Position.X, rect.End.Y);
         Quad(a, b, c, d, color, color, color, color);
         if (!antialiased) return;
-        var size = MathF.Min(rect.Size.X, rect.Size.Y);
+        var size = Mathf.Min(rect.Size.X, rect.Size.Y);
         var border = Feather * (size >= 0 && size < 1 ? size : 1);
         var x = new Vector2(border, 0); var y = new Vector2(0, border); var clear = color with { A = 0 };
         Quad(a, a - y, b - y, b, color, clear, clear, color);
@@ -103,15 +103,15 @@ internal sealed class CanvasStroke
     internal void SetEllipse(Vector2 center, float major, float minor, Color color, bool antialiased)
     {
         _triangles.Clear(); _thin.Clear();
-        if (antialiased) { major = MathF.Max(0, major - Feather * 0.25f); minor = MathF.Max(0, minor - Feather * 0.25f); }
-        var border = Feather; var diameter = MathF.Max(major, minor) * 2;
+        if (antialiased) { major = Mathf.Max(0, major - Feather * 0.25f); minor = Mathf.Max(0, minor - Feather * 0.25f); }
+        var border = Feather; var diameter = Mathf.Max(major, minor) * 2;
         if (diameter >= 0 && diameter < 1) border *= diameter * 0.5f;
         for (var layer = 0; layer < (antialiased ? 2 : 1); layer++)
         {
             var previous = new Vector2(major, 0); var previousOuter = new Vector2(major + border, 0);
             for (var i = 1; i <= 64; i++)
             {
-                var angle = i * (MathF.Tau / 64); var unit = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+                var angle = i * (Mathf.Tau / 64); var unit = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 var next = unit * new Vector2(major, minor); var nextOuter = unit * new Vector2(major + border, minor + border);
                 if (layer == 0) Triangle(_triangles, new(center, color), new(center + previous, color), new(center + next, color));
                 else
@@ -173,7 +173,7 @@ internal sealed class CanvasStroke
 
     private static Color ColorAt(ReadOnlySpan<Color> colors, int i) => colors.IsEmpty ? Colors.White : colors[Math.Min(i, colors.Length - 1)];
     private static float CompensatedWidth(float width) => width <= 0 ? width : width <= 2.5f + 0.00001f ? width * 0.5f :
-        width <= 5 + 0.00001f ? MathF.Lerp(width * 0.5f, width - 0.625f, (width - 2.5f) / 2.5f) : width - 0.625f;
+        width <= 5 + 0.00001f ? Mathf.Lerp(width * 0.5f, width - 0.625f, (width - 2.5f) / 2.5f) : width - 0.625f;
     private static Vector2 Direction(Vector2 from, Vector2 to)
     {
         var x = (double)to.X - from.X; var y = (double)to.Y - from.Y; var length = Math.Sqrt(x * x + y * y);
@@ -182,9 +182,9 @@ internal sealed class CanvasStroke
     private static Vector2 Edge(Vector2 direction, Vector2 previous)
     {
         var bisector = (previous * direction.Length() - direction * previous.Length()).Normalized();
-        var sine = MathF.Sin(MathF.Atan2(bisector.Cross(previous), bisector.Dot(previous)));
+        var sine = Mathf.Sin(Mathf.Atan2(bisector.Cross(previous), bisector.Dot(previous)));
         var length = 1f;
-        if (!MathF.IsZeroApprox(sine) && !direction.IsEqualApprox(previous)) length = Math.Clamp(1 / sine, -3, 3);
+        if (!Mathf.IsZeroApprox(sine) && !direction.IsEqualApprox(previous)) length = Math.Clamp(1 / sine, -3, 3);
         else bisector = direction.Orthogonal();
         if (bisector.IsZeroApprox()) bisector = direction.Orthogonal();
         return bisector * length;

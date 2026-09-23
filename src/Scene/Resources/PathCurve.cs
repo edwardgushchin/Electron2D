@@ -204,7 +204,7 @@ public sealed class PathCurve : Resource
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public Vector2[] Tessellate(int maxStages = 5, float toleranceDegrees = 4)
     {
-        lock (_gate) { ThrowIfDisposed(); Stages(maxStages); Finite(toleranceDegrees, nameof(toleranceDegrees)); ArgumentOutOfRangeException.ThrowIfNegative(toleranceDegrees); return TessellateCore(maxStages, MathF.Cos(MathF.DegToRad(toleranceDegrees)), false).ToArray(); }
+        lock (_gate) { ThrowIfDisposed(); Stages(maxStages); Finite(toleranceDegrees, nameof(toleranceDegrees)); ArgumentOutOfRangeException.ThrowIfNegative(toleranceDegrees); return TessellateCore(maxStages, Mathf.Cos(Mathf.DegToRad(toleranceDegrees)), false).ToArray(); }
     }
     /// <summary>Returns a polyline subdivided by chord length, preserving nonconstant closed segments.</summary>
     /// <param name="maxStages">Subdivision depth, zero through twenty; default five.</param>
@@ -235,8 +235,8 @@ public sealed class PathCurve : Resource
     {
         var a = _points[index]; var b = _points[index + 1]; var begin = a.Position; var end = b.Position;
         var first = Geometry(begin + a.Out); var second = Geometry(end + b.In);
-        if (MathF.IsZeroApprox(t) && first.IsEqualApprox(begin)) return Geometry((first.IsEqualApprox(second) ? end : second) - begin).Normalized();
-        if (MathF.IsZeroApprox(t - 1) && second.IsEqualApprox(end)) return Geometry(end - (second.IsEqualApprox(first) ? begin : first)).Normalized();
+        if (Mathf.IsZeroApprox(t) && first.IsEqualApprox(begin)) return Geometry((first.IsEqualApprox(second) ? end : second) - begin).Normalized();
+        if (Mathf.IsZeroApprox(t - 1) && second.IsEqualApprox(end)) return Geometry(end - (second.IsEqualApprox(first) ? begin : first)).Normalized();
         if (first.IsEqualApprox(end) && second.IsEqualApprox(begin)) return Geometry(end - begin).Normalized();
         return Geometry(begin.BezierDerivative(first, second, end, t)).Normalized();
     }

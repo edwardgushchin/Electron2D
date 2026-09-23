@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using Electron2D;
 
 internal static class CanvasTimingTests
@@ -60,7 +60,7 @@ internal static class CanvasTimingTests
         Replay(transform: new Transform(0, new(2, 3), 0, Vector2.Zero));
         Check(vertices.Min(v => v.Position.Y) == -2.8125f, "Filled feather scales with geometry.");
         Record(n => n.DrawRect(new(0, 0, 0.8f, 1), Colors.White, antialiased: true)); Replay();
-        Check(MathF.IsEqualApprox(vertices.Min(v => v.Position.X), 0.093749985f), "Small adjusted cores scale down their feather.");
+        Check(Mathf.IsEqualApprox(vertices.Min(v => v.Position.X), 0.093749985f), "Small adjusted cores scale down their feather.");
         Record(n => n.DrawRect(new(0, 0, 0, 10), Colors.White, false, 4)); Replay();
         Check(vertices.Count == 6 && vertices.Min(v => v.Position.X) == -2 && vertices.Max(v => v.Position.Y) == 12, "A wide outline fills even a degenerate original rectangle.");
         Record(n => n.DrawRect(new(0, 0, 12, 8), Colors.White, false, 2, true)); Replay(); var rectangle = vertices.ToArray();

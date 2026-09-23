@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using IOPath = System.IO.Path;
 using Electron2D;
 using System.Globalization;
@@ -860,68 +860,68 @@ static void VerifyMathF()
 {
     var expectedOverloads = new Dictionary<string, int>(StringComparer.Ordinal)
     {
-        [nameof(MathF.Abs)] = 3,
-        [nameof(MathF.Acos)] = 2,
-        [nameof(MathF.Acosh)] = 2,
-        [nameof(MathF.AngleDifference)] = 2,
-        [nameof(MathF.Asin)] = 2,
-        [nameof(MathF.Asinh)] = 2,
-        [nameof(MathF.Atan)] = 2,
-        [nameof(MathF.Atan2)] = 2,
-        [nameof(MathF.Atanh)] = 2,
-        [nameof(MathF.BezierDerivative)] = 2,
-        [nameof(MathF.BezierInterpolate)] = 2,
-        [nameof(MathF.Ceil)] = 2,
-        [nameof(MathF.CeilToInt)] = 2,
-        [nameof(MathF.Clamp)] = 3,
-        [nameof(MathF.Cos)] = 2,
-        [nameof(MathF.Cosh)] = 2,
-        [nameof(MathF.CubicInterpolate)] = 2,
-        [nameof(MathF.CubicInterpolateAngle)] = 2,
-        [nameof(MathF.CubicInterpolateAngleInTime)] = 2,
-        [nameof(MathF.CubicInterpolateInTime)] = 2,
-        [nameof(MathF.DBToLinear)] = 2,
-        [nameof(MathF.DecimalCount)] = 2,
-        [nameof(MathF.DegToRad)] = 2,
-        [nameof(MathF.Ease)] = 2,
-        [nameof(MathF.Exp)] = 2,
-        [nameof(MathF.Floor)] = 2,
-        [nameof(MathF.FloorToInt)] = 2,
-        [nameof(MathF.InverseLerp)] = 2,
-        [nameof(MathF.IsEqualApprox)] = 4,
-        [nameof(MathF.IsFinite)] = 2,
-        [nameof(MathF.IsInf)] = 2,
-        [nameof(MathF.IsNaN)] = 2,
-        [nameof(MathF.IsZeroApprox)] = 2,
-        [nameof(MathF.Lerp)] = 2,
-        [nameof(MathF.LerpAngle)] = 2,
-        [nameof(MathF.LinearToDB)] = 2,
-        [nameof(MathF.Log)] = 2,
-        [nameof(MathF.Max)] = 3,
-        [nameof(MathF.Min)] = 3,
-        [nameof(MathF.MoveToward)] = 2,
-        [nameof(MathF.NearestPo2)] = 1,
-        [nameof(MathF.PingPong)] = 2,
-        [nameof(MathF.PosMod)] = 3,
-        [nameof(MathF.Pow)] = 2,
-        [nameof(MathF.RadToDeg)] = 2,
-        [nameof(MathF.Remap)] = 2,
-        [nameof(MathF.RotateToward)] = 2,
-        [nameof(MathF.Round)] = 2,
-        [nameof(MathF.RoundToInt)] = 2,
-        [nameof(MathF.Sign)] = 3,
-        [nameof(MathF.Sin)] = 2,
-        [nameof(MathF.SinCos)] = 2,
-        [nameof(MathF.Sinh)] = 2,
-        [nameof(MathF.SmoothStep)] = 2,
-        [nameof(MathF.Snapped)] = 2,
-        [nameof(MathF.Sqrt)] = 2,
-        [nameof(MathF.StepDecimals)] = 1,
-        [nameof(MathF.Tan)] = 2,
-        [nameof(MathF.Tanh)] = 2,
-        [nameof(MathF.Wrap)] = 3,
+        [nameof(Mathf.Abs)] = 3,
+        [nameof(Mathf.Acos)] = 2,
+        [nameof(Mathf.Acosh)] = 2,
+        [nameof(Mathf.AngleDifference)] = 2,
+        [nameof(Mathf.Asin)] = 2,
+        [nameof(Mathf.Asinh)] = 2,
+        [nameof(Mathf.Atan)] = 2,
+        [nameof(Mathf.Atan2)] = 2,
+        [nameof(Mathf.Atanh)] = 2,
+        [nameof(Mathf.BezierDerivative)] = 2,
+        [nameof(Mathf.BezierInterpolate)] = 2,
+        [nameof(Mathf.Ceil)] = 2,
+        [nameof(Mathf.CeilToInt)] = 2,
+        [nameof(Mathf.Clamp)] = 3,
+        [nameof(Mathf.Cos)] = 2,
+        [nameof(Mathf.Cosh)] = 2,
+        [nameof(Mathf.CubicInterpolate)] = 2,
+        [nameof(Mathf.CubicInterpolateAngle)] = 2,
+        [nameof(Mathf.CubicInterpolateAngleInTime)] = 2,
+        [nameof(Mathf.CubicInterpolateInTime)] = 2,
+        [nameof(Mathf.DBToLinear)] = 2,
+        [nameof(Mathf.DecimalCount)] = 2,
+        [nameof(Mathf.DegToRad)] = 2,
+        [nameof(Mathf.Ease)] = 2,
+        [nameof(Mathf.Exp)] = 2,
+        [nameof(Mathf.Floor)] = 2,
+        [nameof(Mathf.FloorToInt)] = 2,
+        [nameof(Mathf.InverseLerp)] = 2,
+        [nameof(Mathf.IsEqualApprox)] = 4,
+        [nameof(Mathf.IsFinite)] = 2,
+        [nameof(Mathf.IsInf)] = 2,
+        [nameof(Mathf.IsNaN)] = 2,
+        [nameof(Mathf.IsZeroApprox)] = 2,
+        [nameof(Mathf.Lerp)] = 2,
+        [nameof(Mathf.LerpAngle)] = 2,
+        [nameof(Mathf.LinearToDB)] = 2,
+        [nameof(Mathf.Log)] = 2,
+        [nameof(Mathf.Max)] = 3,
+        [nameof(Mathf.Min)] = 3,
+        [nameof(Mathf.MoveToward)] = 2,
+        [nameof(Mathf.NearestPo2)] = 1,
+        [nameof(Mathf.PingPong)] = 2,
+        [nameof(Mathf.PosMod)] = 3,
+        [nameof(Mathf.Pow)] = 2,
+        [nameof(Mathf.RadToDeg)] = 2,
+        [nameof(Mathf.Remap)] = 2,
+        [nameof(Mathf.RotateToward)] = 2,
+        [nameof(Mathf.Round)] = 2,
+        [nameof(Mathf.RoundToInt)] = 2,
+        [nameof(Mathf.Sign)] = 3,
+        [nameof(Mathf.Sin)] = 2,
+        [nameof(Mathf.SinCos)] = 2,
+        [nameof(Mathf.Sinh)] = 2,
+        [nameof(Mathf.SmoothStep)] = 2,
+        [nameof(Mathf.Snapped)] = 2,
+        [nameof(Mathf.Sqrt)] = 2,
+        [nameof(Mathf.StepDecimals)] = 1,
+        [nameof(Mathf.Tan)] = 2,
+        [nameof(Mathf.Tanh)] = 2,
+        [nameof(Mathf.Wrap)] = 3,
     };
-    var actualOverloads = typeof(MathF)
+    var actualOverloads = typeof(Mathf)
         .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static |
                     System.Reflection.BindingFlags.DeclaredOnly)
         .GroupBy(method => method.Name, StringComparer.Ordinal)
@@ -929,8 +929,8 @@ static void VerifyMathF()
     Require(actualOverloads.Count == expectedOverloads.Count && expectedOverloads.All(pair =>
             actualOverloads.TryGetValue(pair.Key, out var count) && count == pair.Value) &&
             actualOverloads.Values.Sum() == 127,
-        "MathF must expose the complete audited method family without missing or extra overloads.");
-    var constants = typeof(MathF)
+        "Mathf must expose the complete audited method family without missing or extra overloads.");
+    var constants = typeof(Mathf)
         .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static |
                    System.Reflection.BindingFlags.DeclaredOnly)
         .Where(field => field.IsLiteral)
@@ -938,166 +938,166 @@ static void VerifyMathF()
         .OrderBy(name => name, StringComparer.Ordinal)
         .ToArray();
     Require(constants.SequenceEqual(new[] { "E", "Epsilon", "Inf", "NaN", "Pi", "Sqrt2", "Tau" }),
-        "MathF must expose exactly the audited constant surface.");
+        "Mathf must expose exactly the audited constant surface.");
 
-    Require(MathF.Pi == System.MathF.PI && MathF.Tau == System.MathF.Tau && MathF.E == System.MathF.E &&
-            MathF.Sqrt2 == System.MathF.Sqrt(2f) && MathF.Epsilon == 0.000001f &&
-            MathF.IsInf(MathF.Inf) && MathF.IsNaN(MathF.NaN),
-        "MathF constants must retain their documented single-precision values.");
-    Require(MathF.Abs(-7) == 7 && MathF.Abs(-2.5f) == 2.5f && MathF.Abs(-2.5d) == 2.5d,
+    Require(Mathf.Pi == System.MathF.PI && Mathf.Tau == System.MathF.Tau && Mathf.E == System.MathF.E &&
+            Mathf.Sqrt2 == System.MathF.Sqrt(2f) && Mathf.Epsilon == 0.000001f &&
+            Mathf.IsInf(Mathf.Inf) && Mathf.IsNaN(Mathf.NaN),
+        "Mathf constants must retain their documented single-precision values.");
+    Require(Mathf.Abs(-7) == 7 && Mathf.Abs(-2.5f) == 2.5f && Mathf.Abs(-2.5d) == 2.5d,
         "Absolute-value overloads must cover integer and floating-point inputs.");
-    Expect<OverflowException>(() => _ = MathF.Abs(int.MinValue),
+    Expect<OverflowException>(() => _ = Mathf.Abs(int.MinValue),
         "Integer absolute value must expose two's-complement overflow.");
 
-    Require(NearlyEqual(MathF.Acos(0f), MathF.Pi / 2f) && NearlyEqual(MathF.Asin(1f), MathF.Pi / 2f) &&
-            NearlyEqual(MathF.Atan(1f), MathF.Pi / 4f) && NearlyEqual(MathF.Atan2(1f, -1f), 3f * MathF.Pi / 4f) &&
-            NearlyEqual((float)MathF.Acos(0d), MathF.Pi / 2f) && NearlyEqual((float)MathF.Asin(1d), MathF.Pi / 2f) &&
-            NearlyEqual((float)MathF.Atan(1d), MathF.Pi / 4f) && NearlyEqual((float)MathF.Atan2(1d, -1d), 3f * MathF.Pi / 4f) &&
-            MathF.IsNaN(MathF.Acos(2f)) && MathF.IsNaN(MathF.Asin(2d)),
+    Require(NearlyEqual(Mathf.Acos(0f), Mathf.Pi / 2f) && NearlyEqual(Mathf.Asin(1f), Mathf.Pi / 2f) &&
+            NearlyEqual(Mathf.Atan(1f), Mathf.Pi / 4f) && NearlyEqual(Mathf.Atan2(1f, -1f), 3f * Mathf.Pi / 4f) &&
+            NearlyEqual((float)Mathf.Acos(0d), Mathf.Pi / 2f) && NearlyEqual((float)Mathf.Asin(1d), Mathf.Pi / 2f) &&
+            NearlyEqual((float)Mathf.Atan(1d), Mathf.Pi / 4f) && NearlyEqual((float)Mathf.Atan2(1d, -1d), 3f * Mathf.Pi / 4f) &&
+            Mathf.IsNaN(Mathf.Acos(2f)) && Mathf.IsNaN(Mathf.Asin(2d)),
         "Inverse trigonometric overloads must preserve radians, quadrants, and invalid-domain NaN values.");
-    Require(NearlyEqual(MathF.Acosh(MathF.Cosh(2f)), 2f) && NearlyEqual(MathF.Asinh(MathF.Sinh(2f)), 2f) &&
-            NearlyEqual(MathF.Atanh(MathF.Tanh(0.5f)), 0.5f) &&
-            NearlyEqual((float)MathF.Acosh(MathF.Cosh(2d)), 2f) && NearlyEqual((float)MathF.Asinh(MathF.Sinh(2d)), 2f) &&
-            NearlyEqual((float)MathF.Atanh(MathF.Tanh(0.5d)), 0.5f),
+    Require(NearlyEqual(Mathf.Acosh(Mathf.Cosh(2f)), 2f) && NearlyEqual(Mathf.Asinh(Mathf.Sinh(2f)), 2f) &&
+            NearlyEqual(Mathf.Atanh(Mathf.Tanh(0.5f)), 0.5f) &&
+            NearlyEqual((float)Mathf.Acosh(Mathf.Cosh(2d)), 2f) && NearlyEqual((float)Mathf.Asinh(Mathf.Sinh(2d)), 2f) &&
+            NearlyEqual((float)Mathf.Atanh(Mathf.Tanh(0.5d)), 0.5f),
         "Hyperbolic and inverse-hyperbolic overloads must round-trip ordinary values.");
 
-    Require(MathF.Ceil(1.1f) == 2f && MathF.Ceil(1.1d) == 2d && MathF.CeilToInt(-1.1f) == -1 &&
-            MathF.CeilToInt(-1.1d) == -1 && MathF.Floor(-1.1f) == -2f && MathF.Floor(-1.1d) == -2d &&
-            MathF.FloorToInt(-1.1f) == -2 && MathF.FloorToInt(-1.1d) == -2 &&
-            MathF.Round(2.5f) == 2f && MathF.Round(3.5d) == 4d &&
-            MathF.RoundToInt(2.5f) == 2 && MathF.RoundToInt(3.5d) == 4,
+    Require(Mathf.Ceil(1.1f) == 2f && Mathf.Ceil(1.1d) == 2d && Mathf.CeilToInt(-1.1f) == -1 &&
+            Mathf.CeilToInt(-1.1d) == -1 && Mathf.Floor(-1.1f) == -2f && Mathf.Floor(-1.1d) == -2d &&
+            Mathf.FloorToInt(-1.1f) == -2 && Mathf.FloorToInt(-1.1d) == -2 &&
+            Mathf.Round(2.5f) == 2f && Mathf.Round(3.5d) == 4d &&
+            Mathf.RoundToInt(2.5f) == 2 && Mathf.RoundToInt(3.5d) == 4,
         "Rounding families must distinguish direction and use midpoint-to-even rounding.");
-    _ = MathF.CeilToInt(float.NaN);
-    _ = MathF.FloorToInt(double.PositiveInfinity);
-    _ = MathF.RoundToInt(float.MaxValue);
-    Require(MathF.Clamp(5, 0, 4) == 4 && MathF.Clamp(-1f, 0f, 1f) == 0f && MathF.Clamp(2d, 0d, 1d) == 1d,
+    _ = Mathf.CeilToInt(float.NaN);
+    _ = Mathf.FloorToInt(double.PositiveInfinity);
+    _ = Mathf.RoundToInt(float.MaxValue);
+    Require(Mathf.Clamp(5, 0, 4) == 4 && Mathf.Clamp(-1f, 0f, 1f) == 0f && Mathf.Clamp(2d, 0d, 1d) == 1d,
         "Clamp overloads must apply inclusive bounds.");
-    Expect<ArgumentException>(() => _ = MathF.Clamp(1, 2, 0), "Integer clamp must reject reversed bounds.");
-    Expect<ArgumentException>(() => _ = MathF.Clamp(1f, 2f, 0f), "Float clamp must reject reversed bounds.");
-    Expect<ArgumentException>(() => _ = MathF.Clamp(1d, 2d, 0d), "Double clamp must reject reversed bounds.");
+    Expect<ArgumentException>(() => _ = Mathf.Clamp(1, 2, 0), "Integer clamp must reject reversed bounds.");
+    Expect<ArgumentException>(() => _ = Mathf.Clamp(1f, 2f, 0f), "Float clamp must reject reversed bounds.");
+    Expect<ArgumentException>(() => _ = Mathf.Clamp(1d, 2d, 0d), "Double clamp must reject reversed bounds.");
 
-    var (sinFloat, cosFloat) = MathF.SinCos(MathF.Pi / 6f);
-    var (sinDouble, cosDouble) = MathF.SinCos(Math.PI / 6d);
-    Require(NearlyEqual(MathF.Sin(MathF.Pi / 6f), 0.5f) && NearlyEqual(MathF.Cos(MathF.Pi / 3f), 0.5f) &&
-            NearlyEqual(MathF.Tan(MathF.Pi / 4f), 1f) && NearlyEqual(sinFloat, 0.5f) &&
-            NearlyEqual(cosFloat, MathF.Sqrt(3f) / 2f) &&
-            NearlyEqual((float)MathF.Sin(Math.PI / 6d), 0.5f) && NearlyEqual((float)MathF.Cos(Math.PI / 3d), 0.5f) &&
-            NearlyEqual((float)MathF.Tan(Math.PI / 4d), 1f) && NearlyEqual((float)sinDouble, 0.5f) &&
-            NearlyEqual((float)cosDouble, MathF.Sqrt(3f) / 2f),
+    var (sinFloat, cosFloat) = Mathf.SinCos(Mathf.Pi / 6f);
+    var (sinDouble, cosDouble) = Mathf.SinCos(Math.PI / 6d);
+    Require(NearlyEqual(Mathf.Sin(Mathf.Pi / 6f), 0.5f) && NearlyEqual(Mathf.Cos(Mathf.Pi / 3f), 0.5f) &&
+            NearlyEqual(Mathf.Tan(Mathf.Pi / 4f), 1f) && NearlyEqual(sinFloat, 0.5f) &&
+            NearlyEqual(cosFloat, Mathf.Sqrt(3f) / 2f) &&
+            NearlyEqual((float)Mathf.Sin(Math.PI / 6d), 0.5f) && NearlyEqual((float)Mathf.Cos(Math.PI / 3d), 0.5f) &&
+            NearlyEqual((float)Mathf.Tan(Math.PI / 4d), 1f) && NearlyEqual((float)sinDouble, 0.5f) &&
+            NearlyEqual((float)cosDouble, Mathf.Sqrt(3f) / 2f),
         "Trigonometric and combined sine/cosine overloads must agree.");
 
-    Require(NearlyEqual(MathF.CubicInterpolate(0f, 2f, -2f, 4f, 0.5f), 1f) &&
-            MathF.CubicInterpolate(0d, 2d, -2d, 4d, 0.5d) == 1d &&
-            NearlyEqual(MathF.CubicInterpolateInTime(0f, 2f, -2f, 4f, 0.5f, 1f, -1f, 2f), 1f) &&
-            MathF.CubicInterpolateInTime(0d, 2d, -2d, 4d, 0.5d, 1d, -1d, 2d) == 1d &&
-            MathF.CubicInterpolateAngle(0f, MathF.Tau - 0.2f, -0.2f, MathF.Tau - 0.4f, 0f) == 0f &&
-            MathF.CubicInterpolateAngle(0d, Math.Tau - 0.2d, -0.2d, Math.Tau - 0.4d, 0d) == 0d &&
-            MathF.CubicInterpolateAngleInTime(0f, MathF.Tau - 0.2f, -0.2f, MathF.Tau - 0.4f, 0f, 1f, -1f, 2f) == 0f &&
-            MathF.CubicInterpolateAngleInTime(0d, Math.Tau - 0.2d, -0.2d, Math.Tau - 0.4d, 0d, 1d, -1d, 2d) == 0d,
+    Require(NearlyEqual(Mathf.CubicInterpolate(0f, 2f, -2f, 4f, 0.5f), 1f) &&
+            Mathf.CubicInterpolate(0d, 2d, -2d, 4d, 0.5d) == 1d &&
+            NearlyEqual(Mathf.CubicInterpolateInTime(0f, 2f, -2f, 4f, 0.5f, 1f, -1f, 2f), 1f) &&
+            Mathf.CubicInterpolateInTime(0d, 2d, -2d, 4d, 0.5d, 1d, -1d, 2d) == 1d &&
+            Mathf.CubicInterpolateAngle(0f, Mathf.Tau - 0.2f, -0.2f, Mathf.Tau - 0.4f, 0f) == 0f &&
+            Mathf.CubicInterpolateAngle(0d, Math.Tau - 0.2d, -0.2d, Math.Tau - 0.4d, 0d) == 0d &&
+            Mathf.CubicInterpolateAngleInTime(0f, Mathf.Tau - 0.2f, -0.2f, Mathf.Tau - 0.4f, 0f, 1f, -1f, 2f) == 0f &&
+            Mathf.CubicInterpolateAngleInTime(0d, Math.Tau - 0.2d, -0.2d, Math.Tau - 0.4d, 0d, 1d, -1d, 2d) == 0d,
         "Cubic interpolation must cover scalar, timed, and shortest-path angular forms.");
-    Require(NearlyEqual(MathF.BezierInterpolate(0f, 1f, 1f, 0f, 0.5f), 0.75f) &&
-            MathF.BezierInterpolate(0d, 1d, 1d, 0d, 0.5d) == 0.75d &&
-            NearlyEqual(MathF.BezierDerivative(0f, 1f, 1f, 0f, 0.5f), 0f) &&
-            MathF.BezierDerivative(0d, 1d, 1d, 0d, 0.5d) == 0d,
+    Require(NearlyEqual(Mathf.BezierInterpolate(0f, 1f, 1f, 0f, 0.5f), 0.75f) &&
+            Mathf.BezierInterpolate(0d, 1d, 1d, 0d, 0.5d) == 0.75d &&
+            NearlyEqual(Mathf.BezierDerivative(0f, 1f, 1f, 0f, 0.5f), 0f) &&
+            Mathf.BezierDerivative(0d, 1d, 1d, 0d, 0.5d) == 0d,
         "Bezier value and derivative overloads must preserve the cubic curve contract.");
 
-    Require(NearlyEqual(MathF.DBToLinear(0f), 1f) && NearlyEqual((float)MathF.DBToLinear(0d), 1f) &&
-            NearlyEqual(MathF.LinearToDB(1f), 0f) && NearlyEqual((float)MathF.LinearToDB(1d), 0f) &&
-            NearlyEqual(MathF.RadToDeg(MathF.Pi), 180f) && NearlyEqual(MathF.DegToRad(180f), MathF.Pi) &&
-            NearlyEqual((float)MathF.RadToDeg(Math.PI), 180f) && NearlyEqual((float)MathF.DegToRad(180d), MathF.Pi),
+    Require(NearlyEqual(Mathf.DBToLinear(0f), 1f) && NearlyEqual((float)Mathf.DBToLinear(0d), 1f) &&
+            NearlyEqual(Mathf.LinearToDB(1f), 0f) && NearlyEqual((float)Mathf.LinearToDB(1d), 0f) &&
+            NearlyEqual(Mathf.RadToDeg(Mathf.Pi), 180f) && NearlyEqual(Mathf.DegToRad(180f), Mathf.Pi) &&
+            NearlyEqual((float)Mathf.RadToDeg(Math.PI), 180f) && NearlyEqual((float)Mathf.DegToRad(180d), Mathf.Pi),
         "Audio-scale and angle-unit conversions must round-trip their neutral anchors.");
-    Require(MathF.DecimalCount(1.25d) == 2 && MathF.DecimalCount(1.2300m) == 4,
+    Require(Mathf.DecimalCount(1.25d) == 2 && Mathf.DecimalCount(1.2300m) == 4,
         "DecimalCount must report converted double scale and retained decimal trailing zeros.");
-    Expect<OverflowException>(() => _ = MathF.DecimalCount(double.NaN),
+    Expect<OverflowException>(() => _ = Mathf.DecimalCount(double.NaN),
         "DecimalCount must reject non-finite double values.");
 
-    Require(MathF.Ease(-1f, 1f) == 0f && MathF.Ease(2d, 1d) == 1d &&
-            NearlyEqual(MathF.Ease(0.5f, 2f), 0.25f) && MathF.Ease(0.5d, 0d) == 0d &&
-            NearlyEqual(MathF.Exp(1f), MathF.E) && NearlyEqual((float)MathF.Exp(1d), MathF.E) &&
-            NearlyEqual(MathF.Log(MathF.E), 1f) && NearlyEqual((float)MathF.Log(Math.E), 1f) &&
-            MathF.Pow(2f, 3f) == 8f && MathF.Pow(2d, 3d) == 8d &&
-            MathF.Sqrt(9f) == 3f && MathF.Sqrt(9d) == 3d,
+    Require(Mathf.Ease(-1f, 1f) == 0f && Mathf.Ease(2d, 1d) == 1d &&
+            NearlyEqual(Mathf.Ease(0.5f, 2f), 0.25f) && Mathf.Ease(0.5d, 0d) == 0d &&
+            NearlyEqual(Mathf.Exp(1f), Mathf.E) && NearlyEqual((float)Mathf.Exp(1d), Mathf.E) &&
+            NearlyEqual(Mathf.Log(Mathf.E), 1f) && NearlyEqual((float)Mathf.Log(Math.E), 1f) &&
+            Mathf.Pow(2f, 3f) == 8f && Mathf.Pow(2d, 3d) == 8d &&
+            Mathf.Sqrt(9f) == 3f && Mathf.Sqrt(9d) == 3d,
         "Ease, exponential, logarithm, power, and root families must cover float and double paths.");
 
-    Require(MathF.InverseLerp(10f, 20f, 15f) == 0.5f && MathF.InverseLerp(10d, 20d, 15d) == 0.5d &&
-            MathF.Lerp(10f, 20f, 1.5f) == 25f && MathF.Lerp(10d, 20d, -0.5d) == 5d &&
-            MathF.Remap(5f, 0f, 10f, 10f, 20f) == 15f && MathF.Remap(5d, 0d, 10d, 10d, 20d) == 15d &&
-            MathF.IsNaN(MathF.InverseLerp(1f, 1f, 1f)),
+    Require(Mathf.InverseLerp(10f, 20f, 15f) == 0.5f && Mathf.InverseLerp(10d, 20d, 15d) == 0.5d &&
+            Mathf.Lerp(10f, 20f, 1.5f) == 25f && Mathf.Lerp(10d, 20d, -0.5d) == 5d &&
+            Mathf.Remap(5f, 0f, 10f, 10f, 20f) == 15f && Mathf.Remap(5d, 0d, 10d, 10d, 20d) == 15d &&
+            Mathf.IsNaN(Mathf.InverseLerp(1f, 1f, 1f)),
         "Linear interpolation and remapping must remain unbounded and expose equal-bound IEEE behavior.");
-    Require(MathF.IsEqualApprox(1f, 1f + (MathF.Epsilon * 0.5f)) &&
-            !MathF.IsEqualApprox(0f, MathF.Epsilon) && MathF.IsEqualApprox(float.PositiveInfinity, float.PositiveInfinity) &&
-            !MathF.IsEqualApprox(float.NaN, float.NaN) && MathF.IsEqualApprox(1f, 1.1f, 0.2f) &&
-            !MathF.IsEqualApprox(1f, 1.1f, -1f) &&
-            MathF.IsEqualApprox(1d, 1d + 5e-15d) && !MathF.IsEqualApprox(0d, 1e-14d) &&
-            MathF.IsEqualApprox(1d, 1.1d, 0.2d) && !MathF.IsEqualApprox(1d, 1.1d, double.NaN),
+    Require(Mathf.IsEqualApprox(1f, 1f + (Mathf.Epsilon * 0.5f)) &&
+            !Mathf.IsEqualApprox(0f, Mathf.Epsilon) && Mathf.IsEqualApprox(float.PositiveInfinity, float.PositiveInfinity) &&
+            !Mathf.IsEqualApprox(float.NaN, float.NaN) && Mathf.IsEqualApprox(1f, 1.1f, 0.2f) &&
+            !Mathf.IsEqualApprox(1f, 1.1f, -1f) &&
+            Mathf.IsEqualApprox(1d, 1d + 5e-15d) && !Mathf.IsEqualApprox(0d, 1e-14d) &&
+            Mathf.IsEqualApprox(1d, 1.1d, 0.2d) && !Mathf.IsEqualApprox(1d, 1.1d, double.NaN),
         "Approximate equality must use strict scale-aware or explicit tolerances and exact infinity handling.");
-    Require(MathF.IsFinite(1f) && MathF.IsFinite(1d) && !MathF.IsFinite(float.NaN) &&
-            MathF.IsInf(float.NegativeInfinity) && MathF.IsInf(double.PositiveInfinity) &&
-            MathF.IsNaN(float.NaN) && MathF.IsNaN(double.NaN) &&
-            MathF.IsZeroApprox(MathF.Epsilon * 0.5f) && !MathF.IsZeroApprox(MathF.Epsilon) &&
-            MathF.IsZeroApprox(5e-15d) && !MathF.IsZeroApprox(1e-14d),
+    Require(Mathf.IsFinite(1f) && Mathf.IsFinite(1d) && !Mathf.IsFinite(float.NaN) &&
+            Mathf.IsInf(float.NegativeInfinity) && Mathf.IsInf(double.PositiveInfinity) &&
+            Mathf.IsNaN(float.NaN) && Mathf.IsNaN(double.NaN) &&
+            Mathf.IsZeroApprox(Mathf.Epsilon * 0.5f) && !Mathf.IsZeroApprox(Mathf.Epsilon) &&
+            Mathf.IsZeroApprox(5e-15d) && !Mathf.IsZeroApprox(1e-14d),
         "Classification and zero-approximation predicates must enforce strict documented boundaries.");
 
-    Require(MathF.Max(2, 1) == 2 && MathF.Max(2f, 1f) == 2f && MathF.Max(2d, 1d) == 2d &&
-            MathF.Min(2, 1) == 1 && MathF.Min(2f, 1f) == 1f && MathF.Min(2d, 1d) == 1d &&
-            MathF.MoveToward(0f, 10f, 3f) == 3f && MathF.MoveToward(0d, 2d, 3d) == 2d &&
-            MathF.MoveToward(0f, 10f, -3f) == -3f,
+    Require(Mathf.Max(2, 1) == 2 && Mathf.Max(2f, 1f) == 2f && Mathf.Max(2d, 1d) == 2d &&
+            Mathf.Min(2, 1) == 1 && Mathf.Min(2f, 1f) == 1f && Mathf.Min(2d, 1d) == 1d &&
+            Mathf.MoveToward(0f, 10f, 3f) == 3f && Mathf.MoveToward(0d, 2d, 3d) == 2d &&
+            Mathf.MoveToward(0f, 10f, -3f) == -3f,
         "Min/max and move-toward overloads must preserve scalar ordering and signed deltas.");
-    Expect<ArithmeticException>(() => _ = MathF.MoveToward(float.NaN, 1f, 1f),
+    Expect<ArithmeticException>(() => _ = Mathf.MoveToward(float.NaN, 1f, 1f),
         "MoveToward must expose unordered input through its sign operation.");
-    Require(MathF.NearestPo2(-1) == 0 && MathF.NearestPo2(0) == 0 && MathF.NearestPo2(1) == 1 &&
-            MathF.NearestPo2(5) == 8 && MathF.NearestPo2(int.MaxValue) == int.MinValue,
+    Require(Mathf.NearestPo2(-1) == 0 && Mathf.NearestPo2(0) == 0 && Mathf.NearestPo2(1) == 1 &&
+            Mathf.NearestPo2(5) == 8 && Mathf.NearestPo2(int.MaxValue) == int.MinValue,
         "NearestPo2 must retain its exact 32-bit zero and overflow behavior.");
-    Require(MathF.PosMod(-5, 3) == 1 && MathF.PosMod(5, -3) == -1 &&
-            MathF.PosMod(-5f, 3f) == 1f && MathF.PosMod(5d, -3d) == -1d &&
-            MathF.IsNaN(MathF.PosMod(1f, 0f)) && MathF.IsNaN(MathF.PosMod(1d, 0d)),
+    Require(Mathf.PosMod(-5, 3) == 1 && Mathf.PosMod(5, -3) == -1 &&
+            Mathf.PosMod(-5f, 3f) == 1f && Mathf.PosMod(5d, -3d) == -1d &&
+            Mathf.IsNaN(Mathf.PosMod(1f, 0f)) && Mathf.IsNaN(Mathf.PosMod(1d, 0d)),
         "Positive modulus must use the divisor's sign and preserve floating-point zero-divisor behavior.");
-    Expect<DivideByZeroException>(() => _ = MathF.PosMod(1, 0), "Integer positive modulus must reject a zero divisor.");
-    Expect<OverflowException>(() => _ = MathF.PosMod(int.MinValue, -1),
+    Expect<DivideByZeroException>(() => _ = Mathf.PosMod(1, 0), "Integer positive modulus must reject a zero divisor.");
+    Expect<OverflowException>(() => _ = Mathf.PosMod(int.MinValue, -1),
         "Integer positive modulus must expose signed division overflow.");
 
-    Require(NearlyEqual(MathF.AngleDifference(0f, 3f * MathF.Pi / 2f), -MathF.Pi / 2f) &&
-            NearlyEqual((float)MathF.AngleDifference(0d, 3d * Math.PI / 2d), -MathF.Pi / 2f) &&
-            MathF.AngleDifference(0f, MathF.Pi) == -MathF.Pi &&
-            MathF.AngleDifference(MathF.Pi, 0f) == MathF.Pi &&
-            NearlyEqual(MathF.LerpAngle(0f, 3f * MathF.Pi / 2f, 0.5f), -MathF.Pi / 4f) &&
-            NearlyEqual((float)MathF.LerpAngle(0d, 3d * Math.PI / 2d, 0.5d), -MathF.Pi / 4f) &&
-            MathF.RotateToward(0f, MathF.Pi, 0.25f) == -0.25f &&
-            MathF.RotateToward(0d, Math.PI, 0.25d) == -0.25d,
+    Require(NearlyEqual(Mathf.AngleDifference(0f, 3f * Mathf.Pi / 2f), -Mathf.Pi / 2f) &&
+            NearlyEqual((float)Mathf.AngleDifference(0d, 3d * Math.PI / 2d), -Mathf.Pi / 2f) &&
+            Mathf.AngleDifference(0f, Mathf.Pi) == -Mathf.Pi &&
+            Mathf.AngleDifference(Mathf.Pi, 0f) == Mathf.Pi &&
+            NearlyEqual(Mathf.LerpAngle(0f, 3f * Mathf.Pi / 2f, 0.5f), -Mathf.Pi / 4f) &&
+            NearlyEqual((float)Mathf.LerpAngle(0d, 3d * Math.PI / 2d, 0.5d), -Mathf.Pi / 4f) &&
+            Mathf.RotateToward(0f, Mathf.Pi, 0.25f) == -0.25f &&
+            Mathf.RotateToward(0d, Math.PI, 0.25d) == -0.25d,
         "Angular difference, interpolation, and movement must follow the shortest-path tie rule.");
-    Require(MathF.Sign(-2) == -1 && MathF.Sign(0f) == 0 && MathF.Sign(2d) == 1,
+    Require(Mathf.Sign(-2) == -1 && Mathf.Sign(0f) == 0 && Mathf.Sign(2d) == 1,
         "Sign overloads must return negative one, zero, or positive one.");
-    Expect<ArithmeticException>(() => _ = MathF.Sign(float.NaN), "Float sign must reject NaN.");
-    Expect<ArithmeticException>(() => _ = MathF.Sign(double.NaN), "Double sign must reject NaN.");
+    Expect<ArithmeticException>(() => _ = Mathf.Sign(float.NaN), "Float sign must reject NaN.");
+    Expect<ArithmeticException>(() => _ = Mathf.Sign(double.NaN), "Double sign must reject NaN.");
 
-    Require(MathF.SmoothStep(0f, 1f, -1f) == 0f && MathF.SmoothStep(0d, 1d, 2d) == 1d &&
-            MathF.SmoothStep(2f, 2f, 10f) == 2f && MathF.StepDecimals(0.1d) == 1 &&
-            MathF.StepDecimals(0.01d) == 2 && MathF.StepDecimals(1d) == 0 &&
-            MathF.Snapped(5.1f, 2f) == 6f && MathF.Snapped(-5.1d, 2d) == -6d &&
-            MathF.Snapped(1.25f, 0f) == 1.25f,
+    Require(Mathf.SmoothStep(0f, 1f, -1f) == 0f && Mathf.SmoothStep(0d, 1d, 2d) == 1d &&
+            Mathf.SmoothStep(2f, 2f, 10f) == 2f && Mathf.StepDecimals(0.1d) == 1 &&
+            Mathf.StepDecimals(0.01d) == 2 && Mathf.StepDecimals(1d) == 0 &&
+            Mathf.Snapped(5.1f, 2f) == 6f && Mathf.Snapped(-5.1d, 2d) == -6d &&
+            Mathf.Snapped(1.25f, 0f) == 1.25f,
         "Smooth-step, decimal-step, and snapping helpers must preserve boundary behavior.");
-    Require(MathF.Wrap(6, 0, 5) == 1 && MathF.Wrap(-1f, 0f, 5f) == 4f &&
-            MathF.Wrap(6d, 0d, 5d) == 1d && MathF.Wrap(7, 3, 3) == 3 &&
-            MathF.Wrap(7f, 3f, 3f + (MathF.Epsilon * 0.5f)) == 3f &&
-            MathF.PingPong(7f, 5f) == 3f && MathF.PingPong(7d, 5d) == 3d &&
-            MathF.PingPong(7f, 0f) == 0f && MathF.PingPong(7d, -5d) == 3d,
+    Require(Mathf.Wrap(6, 0, 5) == 1 && Mathf.Wrap(-1f, 0f, 5f) == 4f &&
+            Mathf.Wrap(6d, 0d, 5d) == 1d && Mathf.Wrap(7, 3, 3) == 3 &&
+            Mathf.Wrap(7f, 3f, 3f + (Mathf.Epsilon * 0.5f)) == 3f &&
+            Mathf.PingPong(7f, 5f) == 3f && Mathf.PingPong(7d, 5d) == 3d &&
+            Mathf.PingPong(7f, 0f) == 0f && Mathf.PingPong(7d, -5d) == 3d,
         "Wrapping and triangle-wave helpers must cover negative, degenerate, and reflected intervals.");
-    Expect<OverflowException>(() => _ = MathF.Wrap(int.MinValue, 0, -1),
+    Expect<OverflowException>(() => _ = Mathf.Wrap(int.MinValue, 0, -1),
         "Integer wrapping must expose the extreme managed remainder overflow.");
 
-    Require(!new Vector2(MathF.Epsilon, 0f).IsZeroApprox() &&
-            new Vector2(MathF.Epsilon * 0.5f, 0f).IsZeroApprox() &&
-            !new Vector4(MathF.Epsilon, 0f, 0f, 0f).IsZeroApprox() &&
-            !default(Color).IsEqualApprox(new Color(MathF.Epsilon, 0f, 0f, 0f)) &&
-            !default(Rect).IsEqualApprox(new Rect(MathF.Epsilon, 0f, 0f, 0f)) &&
-            !default(Transform).IsEqualApprox(new Transform(MathF.Epsilon, 0f, 0f, 0f, 0f, 0f)),
-        "Migrated geometry must use the authoritative MathF epsilon boundary.");
+    Require(!new Vector2(Mathf.Epsilon, 0f).IsZeroApprox() &&
+            new Vector2(Mathf.Epsilon * 0.5f, 0f).IsZeroApprox() &&
+            !new Vector4(Mathf.Epsilon, 0f, 0f, 0f).IsZeroApprox() &&
+            !default(Color).IsEqualApprox(new Color(Mathf.Epsilon, 0f, 0f, 0f)) &&
+            !default(Rect).IsEqualApprox(new Rect(Mathf.Epsilon, 0f, 0f, 0f)) &&
+            !default(Transform).IsEqualApprox(new Transform(Mathf.Epsilon, 0f, 0f, 0f, 0f, 0f)),
+        "Migrated geometry must use the authoritative Mathf epsilon boundary.");
 
     _ = ExerciseMathfHotPath(32);
     var allocationStart = GC.GetAllocatedBytesForCurrentThread();
     var accumulator = ExerciseMathfHotPath(10_000);
-    Require(GC.GetAllocatedBytesForCurrentThread() == allocationStart && MathF.IsFinite(accumulator),
-        "MathF hot-path scalar operations must not allocate managed memory.");
+    Require(GC.GetAllocatedBytesForCurrentThread() == allocationStart && Mathf.IsFinite(accumulator),
+        "Mathf hot-path scalar operations must not allocate managed memory.");
 }
 
 static float ExerciseMathfHotPath(int iterations)
@@ -1105,9 +1105,9 @@ static float ExerciseMathfHotPath(int iterations)
     var accumulator = 0f;
     for (var index = 0; index < iterations; index++)
     {
-        accumulator += MathF.CubicInterpolate(0f, 1f, -1f, 2f, index / (float)iterations);
-        accumulator += MathF.SinCos(index).Sin;
-        accumulator += MathF.DecimalCount(1.25m) + MathF.StepDecimals(0.01d);
+        accumulator += Mathf.CubicInterpolate(0f, 1f, -1f, 2f, index / (float)iterations);
+        accumulator += Mathf.SinCos(index).Sin;
+        accumulator += Mathf.DecimalCount(1.25m) + Mathf.StepDecimals(0.01d);
     }
 
     return accumulator;
@@ -1949,7 +1949,7 @@ static void VerifyVector2Values()
                 .IsEqualApprox(new Vector2(1f, 1f)),
         "Vector2 cubic and Bezier interpolation must preserve symmetric fixtures.");
     Require(new Vector2(2f, 4f).Inverse() == new Vector2(0.5f, 0.25f) &&
-            new Vector2(MathF.Epsilon * 0.5f, -MathF.Epsilon * 0.5f).IsZeroApprox() &&
+            new Vector2(Mathf.Epsilon * 0.5f, -Mathf.Epsilon * 0.5f).IsZeroApprox() &&
             new Vector2(1f, 2f).IsFinite() && !new Vector2(float.PositiveInfinity, 0f).IsFinite() &&
             new Vector2(1f, 2f).IsEqualApprox(new Vector2(1.000001f, 2f)),
         "Vector2 reciprocal, finite, zero, and approximate predicates must be stable.");
@@ -2097,9 +2097,9 @@ static void VerifyVector3Values()
     Require((x, y, z) == (3f, 4f, 12f) && value[2] == 12 && value.Length() == 13 &&
             value.LengthSquared() == 169 && value.Dot(Vector3.Up) == 4 &&
             Vector3.Right.Cross(Vector3.Up) == Vector3.Back &&
-            Vector3.Right.Rotated(Vector3.Back, MathF.Pi / 2).IsEqualApprox(Vector3.Up) &&
-            Vector3.Right.AngleTo(Vector3.Up) == MathF.Pi / 2 &&
-            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Back) == MathF.Pi / 2 &&
+            Vector3.Right.Rotated(Vector3.Back, Mathf.Pi / 2).IsEqualApprox(Vector3.Up) &&
+            Vector3.Right.AngleTo(Vector3.Up) == Mathf.Pi / 2 &&
+            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Back) == Mathf.Pi / 2 &&
             Vector3.Right.Slide(Vector3.Up) == Vector3.Right &&
             Vector3.Right.Project(Vector3.Up) == Vector3.Zero &&
             Vector3.Back.OctahedronEncode().IsEqualApprox(new Vector2(.5f, .5f)) &&
@@ -2172,7 +2172,7 @@ static void VerifyVector4Values()
         "Vector4 positive modulus and snapping must handle signed values.");
     Require(value.Inverse() == new Vector4(1f, 0.5f, 1f / 3f, 0.25f) && value.IsFinite() &&
             !new Vector4(float.NaN, 0f, 0f, 0f).IsFinite() &&
-            new Vector4(MathF.Epsilon * 0.5f, 0f, 0f, 0f).IsZeroApprox() &&
+            new Vector4(Mathf.Epsilon * 0.5f, 0f, 0f, 0f).IsZeroApprox() &&
             value.IsEqualApprox(new Vector4(1.000001f, 2f, 3f, 4f)),
         "Vector4 inverse and numeric predicates must be stable.");
     Require(Vector4.Zero.CubicInterpolate(new Vector4(2f, 2f, 2f, 2f), new Vector4(-2f, -2f, -2f, -2f), new Vector4(4f, 4f, 4f, 4f), 0.5f)

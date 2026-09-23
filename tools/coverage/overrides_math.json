@@ -81,24 +81,24 @@
       "reason": "The mutable third-column field exposes the same origin property; zero-initialized C# values follow ADR 0029."
     },
     {
-      "electron2d": "constant:Electron2D.MathF.Inf()",
+      "electron2d": "constant:Electron2D.Mathf.Inf()",
       "godot": "@GDScript::constant:INF",
-      "reason": "Same scalar constant under typed C# MathF; precision is adapted (ADR 0034)."
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
     },
     {
-      "electron2d": "constant:Electron2D.MathF.NaN()",
+      "electron2d": "constant:Electron2D.Mathf.NaN()",
       "godot": "@GDScript::constant:NAN",
-      "reason": "Same scalar constant under typed C# MathF; precision is adapted (ADR 0034)."
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
     },
     {
-      "electron2d": "constant:Electron2D.MathF.Pi()",
+      "electron2d": "constant:Electron2D.Mathf.Pi()",
       "godot": "@GDScript::constant:PI",
-      "reason": "Same scalar constant under typed C# MathF; precision is adapted (ADR 0034)."
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
     },
     {
-      "electron2d": "constant:Electron2D.MathF.Tau()",
+      "electron2d": "constant:Electron2D.Mathf.Tau()",
       "godot": "@GDScript::constant:TAU",
-      "reason": "Same scalar constant under typed C# MathF; precision is adapted (ADR 0034)."
+      "reason": "Same scalar constant under typed C# Mathf; precision is adapted (ADR 0034)."
     },
     {
       "electron2d": "constructor:Electron2D.Color..ctor(Electron2D.Color,System.Single)",
@@ -251,502 +251,502 @@
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Acos(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Acos(System.Double)",
       "godot": "@GlobalScope::method:acos(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Acos(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Acos(System.Single)",
       "godot": "@GlobalScope::method:acos(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Acosh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Acosh(System.Double)",
       "godot": "@GlobalScope::method:acosh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Acosh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Acosh(System.Single)",
       "godot": "@GlobalScope::method:acosh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.AngleDifference(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Double,System.Double)",
       "godot": "@GlobalScope::method:angle_difference(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.AngleDifference(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.AngleDifference(System.Single,System.Single)",
       "godot": "@GlobalScope::method:angle_difference(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Asin(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Asin(System.Double)",
       "godot": "@GlobalScope::method:asin(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Asin(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Asin(System.Single)",
       "godot": "@GlobalScope::method:asin(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Asinh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Asinh(System.Double)",
       "godot": "@GlobalScope::method:asinh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Asinh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Asinh(System.Single)",
       "godot": "@GlobalScope::method:asinh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atan(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Atan(System.Double)",
       "godot": "@GlobalScope::method:atan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atan(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Atan(System.Single)",
       "godot": "@GlobalScope::method:atan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atan2(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Atan2(System.Double,System.Double)",
       "godot": "@GlobalScope::method:atan2(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atan2(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Atan2(System.Single,System.Single)",
       "godot": "@GlobalScope::method:atan2(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atanh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Atanh(System.Double)",
       "godot": "@GlobalScope::method:atanh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Atanh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Atanh(System.Single)",
       "godot": "@GlobalScope::method:atanh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.BezierDerivative(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:bezier_derivative(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.BezierInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:bezier_interpolate(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CeilToInt(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Double)",
       "godot": "@GlobalScope::method:ceili(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CeilToInt(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.CeilToInt(System.Single)",
       "godot": "@GlobalScope::method:ceili(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Cos(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Cos(System.Double)",
       "godot": "@GlobalScope::method:cos(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Cos(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Cos(System.Single)",
       "godot": "@GlobalScope::method:cos(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Cosh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Cosh(System.Double)",
       "godot": "@GlobalScope::method:cosh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Cosh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Cosh(System.Single)",
       "godot": "@GlobalScope::method:cosh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolate(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngle(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateAngleInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_angle_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.CubicInterpolateInTime(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:cubic_interpolate_in_time(float:,float:,float:,float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DBToLinear(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Double)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DBToLinear(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.DBToLinear(System.Single)",
       "godot": "@GlobalScope::method:db_to_linear(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DecimalCount(System.Decimal)",
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Decimal)",
       "godot": "@GlobalScope::method:step_decimals(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DecimalCount(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.DecimalCount(System.Double)",
       "godot": "@GlobalScope::method:step_decimals(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DegToRad(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.DegToRad(System.Double)",
       "godot": "@GlobalScope::method:deg_to_rad(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.DegToRad(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.DegToRad(System.Single)",
       "godot": "@GlobalScope::method:deg_to_rad(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Ease(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Ease(System.Double,System.Double)",
       "godot": "@GlobalScope::method:ease(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Ease(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Ease(System.Single,System.Single)",
       "godot": "@GlobalScope::method:ease(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Exp(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Exp(System.Double)",
       "godot": "@GlobalScope::method:exp(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Exp(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Exp(System.Single)",
       "godot": "@GlobalScope::method:exp(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.FloorToInt(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Double)",
       "godot": "@GlobalScope::method:floori(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.FloorToInt(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.FloorToInt(System.Single)",
       "godot": "@GlobalScope::method:floori(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.InverseLerp(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.InverseLerp(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.InverseLerp(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:inverse_lerp(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsEqualApprox(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double)",
       "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsEqualApprox(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single)",
       "godot": "@GlobalScope::method:is_equal_approx(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsFinite(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsFinite(System.Double)",
       "godot": "@GlobalScope::method:is_finite(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsFinite(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsFinite(System.Single)",
       "godot": "@GlobalScope::method:is_finite(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsInf(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsInf(System.Double)",
       "godot": "@GlobalScope::method:is_inf(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsInf(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsInf(System.Single)",
       "godot": "@GlobalScope::method:is_inf(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsNaN(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsNaN(System.Double)",
       "godot": "@GlobalScope::method:is_nan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsNaN(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsNaN(System.Single)",
       "godot": "@GlobalScope::method:is_nan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsZeroApprox(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Double)",
       "godot": "@GlobalScope::method:is_zero_approx(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsZeroApprox(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsZeroApprox(System.Single)",
       "godot": "@GlobalScope::method:is_zero_approx(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.LerpAngle(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.LerpAngle(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.LerpAngle(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:lerp_angle(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.LinearToDB(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Double)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.LinearToDB(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.LinearToDB(System.Single)",
       "godot": "@GlobalScope::method:linear_to_db(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Log(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Log(System.Double)",
       "godot": "@GlobalScope::method:log(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Log(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Log(System.Single)",
       "godot": "@GlobalScope::method:log(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Max(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Max(System.Double,System.Double)",
       "godot": "@GlobalScope::method:maxf(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Max(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Mathf.Max(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:maxi(int:,int:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Max(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Max(System.Single,System.Single)",
       "godot": "@GlobalScope::method:maxf(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Min(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Min(System.Double,System.Double)",
       "godot": "@GlobalScope::method:minf(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Min(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Mathf.Min(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:mini(int:,int:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Min(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Min(System.Single,System.Single)",
       "godot": "@GlobalScope::method:minf(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.MoveToward(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.MoveToward(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.MoveToward(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.MoveToward(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:move_toward(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.PingPong(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.PingPong(System.Double,System.Double)",
       "godot": "@GlobalScope::method:pingpong(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.PingPong(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.PingPong(System.Single,System.Single)",
       "godot": "@GlobalScope::method:pingpong(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.PosMod(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Double,System.Double)",
       "godot": "@GlobalScope::method:fposmod(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.PosMod(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Int32,System.Int32)",
       "godot": "@GlobalScope::method:posmod(int:,int:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.PosMod(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.PosMod(System.Single,System.Single)",
       "godot": "@GlobalScope::method:fposmod(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Pow(System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Pow(System.Double,System.Double)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Pow(System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Pow(System.Single,System.Single)",
       "godot": "@GlobalScope::method:pow(float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RadToDeg(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Double)",
       "godot": "@GlobalScope::method:rad_to_deg(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RadToDeg(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.RadToDeg(System.Single)",
       "godot": "@GlobalScope::method:rad_to_deg(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Remap(System.Double,System.Double,System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:remap(float:,float:,float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RotateToward(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.RotateToward(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RotateToward(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.RotateToward(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:rotate_toward(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RoundToInt(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Double)",
       "godot": "@GlobalScope::method:roundi(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.RoundToInt(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.RoundToInt(System.Single)",
       "godot": "@GlobalScope::method:roundi(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sin(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Sin(System.Double)",
       "godot": "@GlobalScope::method:sin(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sin(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Sin(System.Single)",
       "godot": "@GlobalScope::method:sin(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sinh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Sinh(System.Double)",
       "godot": "@GlobalScope::method:sinh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sinh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Sinh(System.Single)",
       "godot": "@GlobalScope::method:sinh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.SmoothStep(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Double,System.Double,System.Double)",
       "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.SmoothStep(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.SmoothStep(System.Single,System.Single,System.Single)",
       "godot": "@GlobalScope::method:smoothstep(float:,float:,float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sqrt(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Sqrt(System.Double)",
       "godot": "@GlobalScope::method:sqrt(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Sqrt(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Sqrt(System.Single)",
       "godot": "@GlobalScope::method:sqrt(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.StepDecimals(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.StepDecimals(System.Double)",
       "godot": "@GlobalScope::method:step_decimals(float:)",
       "reason": "Double-precision C# form of global step_decimals; compare rounding behavior separately."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Tan(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Tan(System.Double)",
       "godot": "@GlobalScope::method:tan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Tan(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Tan(System.Single)",
       "godot": "@GlobalScope::method:tan(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Tanh(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.Tanh(System.Double)",
       "godot": "@GlobalScope::method:tanh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.MathF.Tanh(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.Tanh(System.Single)",
       "godot": "@GlobalScope::method:tanh(float:)",
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
@@ -1788,22 +1788,22 @@
       "adr": "resources.md#adr-0039"
     },
     {
-      "electron2d": "T:Electron2D.MathF",
+      "electron2d": "T:Electron2D.Mathf",
       "reason": "Typed C# home for global scalar functions and constants.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "constant:Electron2D.MathF.E()",
+      "electron2d": "constant:Electron2D.Mathf.E()",
       "reason": "Typed C# scalar constant absent from the XML class reference.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "constant:Electron2D.MathF.Epsilon()",
+      "electron2d": "constant:Electron2D.Mathf.Epsilon()",
       "reason": "Typed C# scalar constant absent from the XML class reference.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "constant:Electron2D.MathF.Sqrt2()",
+      "electron2d": "constant:Electron2D.Mathf.Sqrt2()",
       "reason": "Typed C# scalar constant absent from the XML class reference.",
       "adr": "core-math.md#adr-0034"
     },
@@ -1918,22 +1918,22 @@
       "adr": "resources.md#adr-0039"
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsEqualApprox(System.Double,System.Double,System.Double)",
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Double,System.Double,System.Double)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "method:Electron2D.MathF.IsEqualApprox(System.Single,System.Single,System.Single)",
+      "electron2d": "method:Electron2D.Mathf.IsEqualApprox(System.Single,System.Single,System.Single)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "method:Electron2D.MathF.SinCos(System.Double)",
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Double)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "method:Electron2D.MathF.SinCos(System.Single)",
+      "electron2d": "method:Electron2D.Mathf.SinCos(System.Single)",
       "reason": "Managed C# convenience overload without the same XML signature.",
       "adr": "core-math.md#adr-0034"
     },

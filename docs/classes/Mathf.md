@@ -1,4 +1,4 @@
-# MathF
+# Mathf
 
 Last updated: 2026-09-23
 
@@ -6,9 +6,9 @@ Last updated: 2026-09-23
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Math/MathF.cs`](../../src/Core/Math/MathF.cs)
+- **Source:** [`src/Core/Math/Mathf.cs`](../../src/Core/Math/Mathf.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public static class MathF`
+- **Declaration:** `public static class Mathf`
 
 > Provides scalar constants and common mathematical operations for engine code and games.
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 Provides scalar constants and common mathematical operations for engine code and games.
 
-`MathF` is the engine's stateless scalar-math surface. Use `Electron2D.MathF` or a C# alias when `System.MathF` is also in scope. It centralizes single- and double-precision transcendental functions, angle conversion and shortest-path arithmetic, interpolation, approximation, rounding, wrapping, audio-scale conversion, and integer helpers. It owns no mutable state, resource, handle, callback, or lifecycle.
+`Mathf` is the engine's stateless scalar-math surface. It centralizes single- and double-precision transcendental functions, angle conversion and shortest-path arithmetic, interpolation, approximation, rounding, wrapping, audio-scale conversion, and integer helpers. It owns no mutable state, resource, handle, callback, or lifecycle.
 
 Single precision is the primary engine scalar contract. Double overloads exist where the audited typed API provides them. `Pi`, `Tau`, `E`, `Sqrt2`, `Inf`, `NaN`, and `Epsilon` are single-precision constants; `Epsilon` is exactly `1e-6f`. Double approximate comparisons use an internal `1e-14` threshold.
 
@@ -32,10 +32,10 @@ their individual contract states otherwise.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using MathF = Electron2D.MathF;
+using Electron2D;
 
-float angle = MathF.DegToRad(90f);
-float value = MathF.Lerp(0f, 10f, 0.25f);
+float angle = Mathf.DegToRad(90f);
+float value = Mathf.Lerp(0f, 10f, 0.25f);
 ```
 
 ## Methods
@@ -110,7 +110,7 @@ float value = MathF.Lerp(0f, 10f, 0.25f);
 | [`public static bool IsInf(double value)`](#m-electron2d-mathf-isinf-system-double) | Tests whether a double-precision value is positive or negative infinity. |
 | [`public static bool IsNaN(float value)`](#m-electron2d-mathf-isnan-system-single) | Tests whether a single-precision value is not a number. |
 | [`public static bool IsNaN(double value)`](#m-electron2d-mathf-isnan-system-double) | Tests whether a double-precision value is not a number. |
-| [`public static bool IsZeroApprox(float value)`](#m-electron2d-mathf-iszeroapprox-system-single) | Tests whether a single-precision value's magnitude is strictly below [`MathF.Epsilon`](MathF.md#f-electron2d-mathf-epsilon). |
+| [`public static bool IsZeroApprox(float value)`](#m-electron2d-mathf-iszeroapprox-system-single) | Tests whether a single-precision value's magnitude is strictly below [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon). |
 | [`public static bool IsZeroApprox(double value)`](#m-electron2d-mathf-iszeroapprox-system-double) | Tests whether a double-precision value's magnitude is strictly below the double-precision epsilon. |
 | [`public static float Lerp(float from, float to, float weight)`](#m-electron2d-mathf-lerp-system-single-system-single-system-single) | Linearly interpolates without clamping the weight. |
 | [`public static double Lerp(double from, double to, double weight)`](#m-electron2d-mathf-lerp-system-double-system-double-system-double) | Linearly interpolates double-precision values without clamping the weight. |
@@ -230,7 +230,7 @@ Returns the arc cosine in radians.
 
 - `value`: A cosine value in the inclusive range negative one through one.
 
-**Returns:** An angle from zero through [`MathF.Pi`](MathF.md#f-electron2d-mathf-pi), or NaN for an out-of-range input.
+**Returns:** An angle from zero through [`Mathf.Pi`](Mathf.md#f-electron2d-mathf-pi), or NaN for an out-of-range input.
 
 <a id="m-electron2d-mathf-acos-system-double"></a>
 ### `public static double Acos(double value)`
@@ -938,7 +938,7 @@ Tests two single-precision values for scale-aware approximate equality.
 - `left`: The first value.
 - `right`: The second value.
 
-**Returns:** `true` for exact equality or a difference below the larger of [`MathF.Epsilon`](MathF.md#f-electron2d-mathf-epsilon) and `Epsilon * abs(left)`.
+**Returns:** `true` for exact equality or a difference below the larger of [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon) and `Epsilon * abs(left)`.
 
 <a id="m-electron2d-mathf-isequalapprox-system-double-system-double"></a>
 ### `public static bool IsEqualApprox(double left, double right)`
@@ -1051,7 +1051,7 @@ Tests whether a double-precision value is not a number.
 <a id="m-electron2d-mathf-iszeroapprox-system-single"></a>
 ### `public static bool IsZeroApprox(float value)`
 
-Tests whether a single-precision value's magnitude is strictly below [`MathF.Epsilon`](MathF.md#f-electron2d-mathf-epsilon).
+Tests whether a single-precision value's magnitude is strictly below [`Mathf.Epsilon`](Mathf.md#f-electron2d-mathf-epsilon).
 
 **Parameters**
 
@@ -1837,9 +1837,9 @@ Normal nonthrowing calls allocate zero managed memory after JIT warmup; thrown m
 
 ## Dependencies and interactions
 
-Implementation uses only .NET scalar mathematics and decimal bit access. [`Vector2`](Vector2.md), [`Vector4`](Vector4.md), their integer counterparts, [`Color`](Color.md), [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Entity`](Entity.md) route matching scalar operations through `MathF`. Internal color math continues to call the BCL directly only for cube root because no audited `MathF` member exists for it.
+Implementation uses only .NET scalar mathematics and decimal bit access. [`Vector2`](Vector2.md), [`Vector4`](Vector4.md), their integer counterparts, [`Color`](Color.md), [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Entity`](Entity.md) route matching scalar operations through `Mathf`. Internal color math continues to call the BCL directly only for cube root because no audited `Mathf` member exists for it.
 
-The migration intentionally corrected the former `1e-5f` component-comparison tolerance to the canonical `MathF.Epsilon` contract. Electron2D has no released compatibility baseline, so known incorrect pre-release behavior is corrected rather than preserved behind a second tolerance or compatibility path.
+The migration intentionally corrected the former `1e-5f` component-comparison tolerance to the canonical `Mathf.Epsilon` contract. Electron2D has no released compatibility baseline, so known incorrect pre-release behavior is corrected rather than preserved behind a second tolerance or compatibility path.
 
 ## Verification and known limitations
 

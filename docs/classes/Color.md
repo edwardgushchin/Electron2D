@@ -874,7 +874,7 @@ Warmed numeric operations allocate no managed memory. String formatting/parsing 
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`MathF`](MathF.md) plus .NET globalization and interop metadata. `OkColor.cs` is an internal managed OKHSL implementation with its license retained in source. [`ConfigFile`](ConfigFile.md) serializes finite colors through a strict `{"R", "G", "B", "A"}` JSON object. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Color` directly as a reference-free value.
+The public type depends on canonical scalar [`Mathf`](Mathf.md) plus .NET globalization and interop metadata. `OkColor.cs` is an internal managed OKHSL implementation with its license retained in source. [`ConfigFile`](ConfigFile.md) serializes finite colors through a strict `{"R", "G", "B", "A"}` JSON object. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Color` directly as a reference-free value.
 
 There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. There is no boolean conversion operator because C# has no appropriate implicit color truth-value contract. No `System.Drawing` dependency or implicit conversion is provided; consumers that import another `Color` type use a normal C# alias.
 

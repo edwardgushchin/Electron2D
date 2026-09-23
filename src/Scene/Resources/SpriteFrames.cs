@@ -169,7 +169,7 @@ public sealed class SpriteFrames : Resource
         lock (_gate)
         {
             var frames = Require(animation).Frames; ValidateFrame(texture, duration);
-            frames.Insert(atPosition >= 0 && atPosition < frames.Count ? atPosition : frames.Count, (texture, MathF.Max(0.01f, duration)));
+            frames.Insert(atPosition >= 0 && atPosition < frames.Count ? atPosition : frames.Count, (texture, Mathf.Max(0.01f, duration)));
         }
         EmitChanged();
     }
@@ -191,7 +191,7 @@ public sealed class SpriteFrames : Resource
         {
             var frames = Require(animation).Frames; ArgumentOutOfRangeException.ThrowIfNegative(index);
             if (index >= frames.Count) return;
-            ValidateFrame(texture, duration); frames[index] = (texture, MathF.Max(0.01f, duration));
+            ValidateFrame(texture, duration); frames[index] = (texture, Mathf.Max(0.01f, duration));
         }
         EmitChanged();
     }

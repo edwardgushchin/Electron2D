@@ -13,7 +13,7 @@ internal readonly record struct CanvasAnimationSlice(double Length, double Begin
 {
     internal bool Includes(double time)
     {
-        var local = MathF.PosMod(time - Offset, Length);
+        var local = Mathf.PosMod(time - Offset, Length);
         return local >= Begin && local < End;
     }
 }
@@ -65,8 +65,8 @@ internal static class CanvasGeometry
                     var v = ys[y + (i >= 2 ? 1 : 0)];
                     var uv = source.Position + source.Size * (command.Transpose ? new Vector2(v, u) : new Vector2(u, v));
                     if (command.ClipUV)
-                        uv = new Vector2(MathF.Min(MathF.Max(uv.X, source.Position.X + halfPixel.X), source.End.X - halfPixel.X),
-                            MathF.Min(MathF.Max(uv.Y, source.Position.Y + halfPixel.Y), source.End.Y - halfPixel.Y));
+                        uv = new Vector2(Mathf.Min(Mathf.Max(uv.X, source.Position.X + halfPixel.X), source.End.X - halfPixel.X),
+                            Mathf.Min(Mathf.Max(uv.Y, source.Position.Y + halfPixel.Y), source.End.Y - halfPixel.Y));
                     if (!uv.IsFinite()) throw new InvalidOperationException("Texture coordinates overflowed.");
                     points[i] = transform * (command.A + size * new Vector2(flipX ? 1 - u : u, flipY ? 1 - v : v));
                     quad[i] = new(points[i], color, uv);
@@ -115,14 +115,14 @@ internal static class CanvasGeometry
                             : corners[0] * (1 - p.Y) + corners[2] * p.X + corners[3] * (p.Y - p.X);
                         var uv = source.Position + source.Size * (command.Transpose ? new Vector2(p.Y, p.X) : p) + new Vector2(0.00001f, 0.00001f);
                         if (command.ClipUV)
-                            uv = new(MathF.Min(MathF.Max(uv.X, source.Position.X + halfPixel.X), source.End.X - halfPixel.X),
-                                MathF.Min(MathF.Max(uv.Y, source.Position.Y + halfPixel.Y), source.End.Y - halfPixel.Y));
+                            uv = new(Mathf.Min(Mathf.Max(uv.X, source.Position.X + halfPixel.X), source.End.X - halfPixel.X),
+                                Mathf.Min(Mathf.Max(uv.Y, source.Position.Y + halfPixel.Y), source.End.Y - halfPixel.Y));
                         if (!uv.IsFinite() || !position.IsFinite()) throw new InvalidOperationException("Texture coordinates overflowed.");
                         vertices[i] = new(position, color, uv);
                     }
                     for (var i = 1; i + 1 < count; i++)
                     {
-                        if (MathF.Abs((vertices[i].Position - vertices[0].Position).Cross(vertices[i + 1].Position - vertices[0].Position)) <= 0.000001f) continue;
+                        if (Mathf.Abs((vertices[i].Position - vertices[0].Position).Cross(vertices[i + 1].Position - vertices[0].Position)) <= 0.000001f) continue;
                         output.Add(vertices[0]); output.Add(vertices[i]); output.Add(vertices[i + 1]);
                     }
                 }
@@ -145,7 +145,7 @@ internal static class CanvasGeometry
     private static bool ValidQuad(ReadOnlySpan<Vector2> q)
     {
         foreach (var p in q) if (!p.IsFinite()) throw new InvalidOperationException("Canvas transforms overflowed finite coordinates.");
-        return MathF.Abs((q[1] - q[0]).Cross(q[3] - q[0])) > 0.000001f;
+        return Mathf.Abs((q[1] - q[0]).Cross(q[3] - q[0])) > 0.000001f;
     }
 
 }

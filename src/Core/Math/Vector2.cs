@@ -125,21 +125,21 @@ public struct Vector2 : IEquatable<Vector2>
 
     /// <summary>Returns a vector containing the absolute value of each component.</summary>
     /// <returns>The componentwise absolute value.</returns>
-    public readonly Vector2 Abs() => new(MathF.Abs(X), MathF.Abs(Y));
+    public readonly Vector2 Abs() => new(Mathf.Abs(X), Mathf.Abs(Y));
 
     /// <summary>Returns the angle from the positive X axis to this vector.</summary>
     /// <returns>The clockwise screen-space angle in radians.</returns>
-    public readonly float Angle() => MathF.Atan2(Y, X);
+    public readonly float Angle() => Mathf.Atan2(Y, X);
 
     /// <summary>Returns the signed angle from this vector to another vector.</summary>
     /// <param name="to">The destination vector.</param>
     /// <returns>The signed angle in radians in the range from negative pi through positive pi.</returns>
-    public readonly float AngleTo(Vector2 to) => MathF.Atan2(Cross(to), Dot(to));
+    public readonly float AngleTo(Vector2 to) => Mathf.Atan2(Cross(to), Dot(to));
 
     /// <summary>Returns the angle of the line from this point to another point.</summary>
     /// <param name="to">The destination point.</param>
     /// <returns>The clockwise screen-space angle from the positive X axis, in radians.</returns>
-    public readonly float AngleToPoint(Vector2 to) => MathF.Atan2(to.Y - Y, to.X - X);
+    public readonly float AngleToPoint(Vector2 to) => Mathf.Atan2(to.Y - Y, to.X - X);
 
     /// <summary>Returns the ratio of the horizontal component to the vertical component.</summary>
     /// <returns><c>X / Y</c>, including normal IEEE 754 division behavior.</returns>
@@ -152,8 +152,8 @@ public struct Vector2 : IEquatable<Vector2>
     /// <param name="t">The curve parameter; values outside zero through one extrapolate.</param>
     /// <returns>The curve derivative at <paramref name="t"/>.</returns>
     public readonly Vector2 BezierDerivative(Vector2 control1, Vector2 control2, Vector2 end, float t) => new(
-        MathF.BezierDerivative(X, control1.X, control2.X, end.X, t),
-        MathF.BezierDerivative(Y, control1.Y, control2.Y, end.Y, t));
+        Mathf.BezierDerivative(X, control1.X, control2.X, end.X, t),
+        Mathf.BezierDerivative(Y, control1.Y, control2.Y, end.Y, t));
 
     /// <summary>Returns a point on a cubic Bézier curve.</summary>
     /// <param name="control1">The first control point.</param>
@@ -162,8 +162,8 @@ public struct Vector2 : IEquatable<Vector2>
     /// <param name="t">The curve parameter; values outside zero through one extrapolate.</param>
     /// <returns>The interpolated curve point.</returns>
     public readonly Vector2 BezierInterpolate(Vector2 control1, Vector2 control2, Vector2 end, float t) => new(
-        MathF.BezierInterpolate(X, control1.X, control2.X, end.X, t),
-        MathF.BezierInterpolate(Y, control1.Y, control2.Y, end.Y, t));
+        Mathf.BezierInterpolate(X, control1.X, control2.X, end.X, t),
+        Mathf.BezierInterpolate(Y, control1.Y, control2.Y, end.Y, t));
 
     /// <summary>Returns this vector bounced from a line with a given unit normal.</summary>
     /// <param name="normal">The normalized line normal.</param>
@@ -173,7 +173,7 @@ public struct Vector2 : IEquatable<Vector2>
 
     /// <summary>Rounds both components upward toward positive infinity.</summary>
     /// <returns>The componentwise ceiling.</returns>
-    public readonly Vector2 Ceil() => new(MathF.Ceil(X), MathF.Ceil(Y));
+    public readonly Vector2 Ceil() => new(Mathf.Ceil(X), Mathf.Ceil(Y));
 
     /// <summary>Clamps each component between corresponding vector bounds.</summary>
     /// <param name="min">The componentwise lower bounds.</param>
@@ -181,15 +181,15 @@ public struct Vector2 : IEquatable<Vector2>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException">A lower bound is greater than its corresponding upper bound.</exception>
     public readonly Vector2 Clamp(Vector2 min, Vector2 max) => new(
-        MathF.Clamp(X, min.X, max.X),
-        MathF.Clamp(Y, min.Y, max.Y));
+        Mathf.Clamp(X, min.X, max.X),
+        Mathf.Clamp(Y, min.Y, max.Y));
 
     /// <summary>Clamps both components between scalar bounds.</summary>
     /// <param name="min">The lower bound.</param>
     /// <param name="max">The upper bound.</param>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException"><paramref name="min"/> is greater than <paramref name="max"/>.</exception>
-    public readonly Vector2 Clamp(float min, float max) => new(MathF.Clamp(X, min, max), MathF.Clamp(Y, min, max));
+    public readonly Vector2 Clamp(float min, float max) => new(Mathf.Clamp(X, min, max), Mathf.Clamp(Y, min, max));
 
     /// <summary>Returns the scalar two-dimensional cross product.</summary>
     /// <param name="with">The other vector.</param>
@@ -203,8 +203,8 @@ public struct Vector2 : IEquatable<Vector2>
     /// <param name="weight">The interpolation weight; values outside zero through one extrapolate.</param>
     /// <returns>The interpolated vector.</returns>
     public readonly Vector2 CubicInterpolate(Vector2 b, Vector2 preA, Vector2 postB, float weight) => new(
-        MathF.CubicInterpolate(X, b.X, preA.X, postB.X, weight),
-        MathF.CubicInterpolate(Y, b.Y, preA.Y, postB.Y, weight));
+        Mathf.CubicInterpolate(X, b.X, preA.X, postB.X, weight),
+        Mathf.CubicInterpolate(Y, b.Y, preA.Y, postB.Y, weight));
 
     /// <summary>Performs time-aware Barry-Goldman cubic interpolation.</summary>
     /// <param name="b">The destination vector.</param>
@@ -223,8 +223,8 @@ public struct Vector2 : IEquatable<Vector2>
         float bTime,
         float preATime,
         float postBTime) => new(
-            MathF.CubicInterpolateInTime(X, b.X, preA.X, postB.X, weight, bTime, preATime, postBTime),
-            MathF.CubicInterpolateInTime(Y, b.Y, preA.Y, postB.Y, weight, bTime, preATime, postBTime));
+            Mathf.CubicInterpolateInTime(X, b.X, preA.X, postB.X, weight, bTime, preATime, postBTime),
+            Mathf.CubicInterpolateInTime(Y, b.Y, preA.Y, postB.Y, weight, bTime, preATime, postBTime));
 
     /// <summary>Returns the normalized direction from this point to another point.</summary>
     /// <param name="to">The destination point.</param>
@@ -243,7 +243,7 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Returns the Euclidean distance to another point.</summary>
     /// <param name="to">The destination point.</param>
     /// <returns>The distance.</returns>
-    public readonly float DistanceTo(Vector2 to) => MathF.Sqrt(DistanceSquaredTo(to));
+    public readonly float DistanceTo(Vector2 to) => Mathf.Sqrt(DistanceSquaredTo(to));
 
     /// <summary>Returns the dot product with another vector.</summary>
     /// <param name="with">The other vector.</param>
@@ -252,14 +252,14 @@ public struct Vector2 : IEquatable<Vector2>
 
     /// <summary>Rounds both components downward toward negative infinity.</summary>
     /// <returns>The componentwise floor.</returns>
-    public readonly Vector2 Floor() => new(MathF.Floor(X), MathF.Floor(Y));
+    public readonly Vector2 Floor() => new(Mathf.Floor(X), Mathf.Floor(Y));
 
     /// <summary>Creates an approximately unit vector from an angle.</summary>
     /// <param name="angle">The clockwise screen-space angle in radians.</param>
     /// <returns><c>(cos(angle), sin(angle))</c>.</returns>
     public static Vector2 FromAngle(float angle)
     {
-        var (sine, cosine) = MathF.SinCos(angle);
+        var (sine, cosine) = Mathf.SinCos(angle);
         return new Vector2(cosine, sine);
     }
 
@@ -271,23 +271,23 @@ public struct Vector2 : IEquatable<Vector2>
     /// <param name="other">The vector to compare.</param>
     /// <returns><see langword="true"/> when both components are approximately equal.</returns>
     public readonly bool IsEqualApprox(Vector2 other) =>
-        MathF.IsEqualApprox(X, other.X) && MathF.IsEqualApprox(Y, other.Y);
+        Mathf.IsEqualApprox(X, other.X) && Mathf.IsEqualApprox(Y, other.Y);
 
     /// <summary>Tests whether both components are finite.</summary>
     /// <returns><see langword="true"/> when neither component is NaN or infinity.</returns>
-    public readonly bool IsFinite() => MathF.IsFinite(X) && MathF.IsFinite(Y);
+    public readonly bool IsFinite() => Mathf.IsFinite(X) && Mathf.IsFinite(Y);
 
     /// <summary>Tests whether the squared length is approximately one.</summary>
     /// <returns><see langword="true"/> when the vector is approximately unit length.</returns>
-    public readonly bool IsNormalized() => MathF.Abs(LengthSquared() - 1f) < NormalizedEpsilon;
+    public readonly bool IsNormalized() => Mathf.Abs(LengthSquared() - 1f) < NormalizedEpsilon;
 
     /// <summary>Tests whether both components are approximately zero.</summary>
     /// <returns><see langword="true"/> when each component's absolute value is below the comparison tolerance.</returns>
-    public readonly bool IsZeroApprox() => MathF.IsZeroApprox(X) && MathF.IsZeroApprox(Y);
+    public readonly bool IsZeroApprox() => Mathf.IsZeroApprox(X) && Mathf.IsZeroApprox(Y);
 
     /// <summary>Returns the Euclidean length.</summary>
     /// <returns>The square root of <see cref="LengthSquared"/>.</returns>
-    public readonly float Length() => MathF.Sqrt(LengthSquared());
+    public readonly float Length() => Mathf.Sqrt(LengthSquared());
 
     /// <summary>Returns the squared Euclidean length.</summary>
     /// <returns><c>X * X + Y * Y</c>.</returns>
@@ -312,12 +312,12 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Returns the componentwise maximum with another vector.</summary>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector2 Max(Vector2 with) => new(MathF.Max(X, with.X), MathF.Max(Y, with.Y));
+    public readonly Vector2 Max(Vector2 with) => new(Mathf.Max(X, with.X), Mathf.Max(Y, with.Y));
 
     /// <summary>Returns the componentwise maximum with a scalar.</summary>
     /// <param name="with">The scalar compared with both components.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector2 Max(float with) => new(MathF.Max(X, with), MathF.Max(Y, with));
+    public readonly Vector2 Max(float with) => new(Mathf.Max(X, with), Mathf.Max(Y, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
     /// <returns><see cref="Axis.X"/> when components are equal; otherwise the greatest component's axis.</returns>
@@ -326,12 +326,12 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Returns the componentwise minimum with another vector.</summary>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector2 Min(Vector2 with) => new(MathF.Min(X, with.X), MathF.Min(Y, with.Y));
+    public readonly Vector2 Min(Vector2 with) => new(Mathf.Min(X, with.X), Mathf.Min(Y, with.Y));
 
     /// <summary>Returns the componentwise minimum with a scalar.</summary>
     /// <param name="with">The scalar compared with both components.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector2 Min(float with) => new(MathF.Min(X, with), MathF.Min(Y, with));
+    public readonly Vector2 Min(float with) => new(Mathf.Min(X, with), Mathf.Min(Y, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
     /// <returns><see cref="Axis.Y"/> when components are equal; otherwise the least component's axis.</returns>
@@ -345,7 +345,7 @@ public struct Vector2 : IEquatable<Vector2>
     {
         var difference = to - this;
         var distance = difference.Length();
-        return distance <= delta || MathF.IsZeroApprox(distance) ? to : this + (difference / distance * delta);
+        return distance <= delta || Mathf.IsZeroApprox(distance) ? to : this + (difference / distance * delta);
     }
 
     /// <summary>Returns this vector scaled to unit length.</summary>
@@ -354,7 +354,7 @@ public struct Vector2 : IEquatable<Vector2>
     public readonly Vector2 Normalized()
     {
         var lengthSquared = LengthSquared();
-        return lengthSquared == 0f ? Zero : this / MathF.Sqrt(lengthSquared);
+        return lengthSquared == 0f ? Zero : this / Mathf.Sqrt(lengthSquared);
     }
 
     /// <summary>Returns a perpendicular vector rotated 90 degrees counter-clockwise in screen space.</summary>
@@ -364,12 +364,12 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Applies positive modulus to both components.</summary>
     /// <param name="mod">The scalar divisor.</param>
     /// <returns>The componentwise canonical remainder using the divisor's sign.</returns>
-    public readonly Vector2 PosMod(float mod) => new(MathF.PosMod(X, mod), MathF.PosMod(Y, mod));
+    public readonly Vector2 PosMod(float mod) => new(Mathf.PosMod(X, mod), Mathf.PosMod(Y, mod));
 
     /// <summary>Applies componentwise positive modulus.</summary>
     /// <param name="mod">The component divisors.</param>
     /// <returns>The componentwise canonical remainders using each divisor's sign.</returns>
-    public readonly Vector2 PosMod(Vector2 mod) => new(MathF.PosMod(X, mod.X), MathF.PosMod(Y, mod.Y));
+    public readonly Vector2 PosMod(Vector2 mod) => new(Mathf.PosMod(X, mod.X), Mathf.PosMod(Y, mod.Y));
 
     /// <summary>Projects this vector onto another vector.</summary>
     /// <param name="onNormal">The projection direction; it does not need to be normalized.</param>
@@ -391,18 +391,18 @@ public struct Vector2 : IEquatable<Vector2>
     /// <returns>The rotated vector.</returns>
     public readonly Vector2 Rotated(float angle)
     {
-        var (sine, cosine) = MathF.SinCos(angle);
+        var (sine, cosine) = Mathf.SinCos(angle);
         return new Vector2((X * cosine) - (Y * sine), (X * sine) + (Y * cosine));
     }
 
     /// <summary>Rounds both components to the nearest integer with midpoint-to-even behavior.</summary>
     /// <returns>The componentwise rounded vector.</returns>
-    public readonly Vector2 Round() => new(MathF.Round(X), MathF.Round(Y));
+    public readonly Vector2 Round() => new(Mathf.Round(X), Mathf.Round(Y));
 
     /// <summary>Returns the sign of each component.</summary>
     /// <returns>Components containing negative one, zero, or positive one.</returns>
     /// <exception cref="ArithmeticException">A component is NaN.</exception>
-    public readonly Vector2 Sign() => new(MathF.Sign(X), MathF.Sign(Y));
+    public readonly Vector2 Sign() => new(Mathf.Sign(X), Mathf.Sign(Y));
 
     /// <summary>Spherically interpolates direction while linearly interpolating length.</summary>
     /// <param name="to">The destination vector.</param>
@@ -415,8 +415,8 @@ public struct Vector2 : IEquatable<Vector2>
         if (startLengthSquared == 0f || endLengthSquared == 0f)
             return Lerp(to, weight);
 
-        var startLength = MathF.Sqrt(startLengthSquared);
-        var resultLength = MathF.Lerp(startLength, MathF.Sqrt(endLengthSquared), weight);
+        var startLength = Mathf.Sqrt(startLengthSquared);
+        var resultLength = Mathf.Lerp(startLength, Mathf.Sqrt(endLengthSquared), weight);
         return Rotated(AngleTo(to) * weight) * (resultLength / startLength);
     }
 
@@ -429,12 +429,12 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Snaps each component to the nearest multiple of the corresponding step.</summary>
     /// <param name="step">The componentwise step. A zero component leaves the corresponding value unchanged.</param>
     /// <returns>The snapped vector.</returns>
-    public readonly Vector2 Snapped(Vector2 step) => new(MathF.Snapped(X, step.X), MathF.Snapped(Y, step.Y));
+    public readonly Vector2 Snapped(Vector2 step) => new(Mathf.Snapped(X, step.X), Mathf.Snapped(Y, step.Y));
 
     /// <summary>Snaps both components to the nearest multiple of a scalar step.</summary>
     /// <param name="step">The scalar step. Zero leaves both values unchanged.</param>
     /// <returns>The snapped vector.</returns>
-    public readonly Vector2 Snapped(float step) => new(MathF.Snapped(X, step), MathF.Snapped(Y, step));
+    public readonly Vector2 Snapped(float step) => new(Mathf.Snapped(X, step), Mathf.Snapped(Y, step));
 
     /// <summary>Adds two vectors componentwise.</summary>
     /// <param name="left">The first vector.</param>

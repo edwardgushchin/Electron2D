@@ -23,7 +23,7 @@ This component converts caller-supplied typed events into raw device state, name
 
 ## Dependencies and interactions
 
-The component uses `Resource` for event duplication/change reporting, `PropertyDescriptor` for inherited stored event fields, `ElectronObject` for singleton lifecycle/property discovery, `Vector2`/`Transform`/`MathF` for value operations, Engine/MainLoop for host integration, and Node/SceneTree for dispatch. There is no native backend dependency.
+The component uses `Resource` for event duplication/change reporting, `PropertyDescriptor` for inherited stored event fields, `ElectronObject` for singleton lifecycle/property discovery, `Vector2`/`Transform`/`Mathf` for value operations, Engine/MainLoop for host integration, and Node/SceneTree for dispatch. There is no native backend dependency.
 
 ## Invariants
 

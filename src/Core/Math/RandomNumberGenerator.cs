@@ -108,7 +108,7 @@ public class RandomNumberGenerator : ElectronObject
             ThrowIfDisposed();
             var sample = NextFloat();
             if (sample < 0.00001f) sample += 0.00001f;
-            return mean + deviation * (MathF.Cos(MathF.Tau * NextFloat()) * MathF.Sqrt(-2f * MathF.Log(sample)));
+            return mean + deviation * (Mathf.Cos(Mathf.Tau * NextFloat()) * Mathf.Sqrt(-2f * Mathf.Log(sample)));
         }
     }
 

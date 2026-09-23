@@ -235,7 +235,7 @@ public sealed class Curve : Resource
     /// <summary>Removes all points and emits Changed then PropertyListChanged; an empty curve is a no-op.</summary>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public void ClearPoints() { lock (_gate) { ThrowIfDisposed(); if (_points.Count == 0) return; _points.Clear(); _dirty = true; } EmitChanged(); if (!IsDisposed) NotifyPropertyListChanged(); }
-    /// <summary>Removes later neighbors within MathF.Epsilon in horizontal offset and refreshes automatic tangents.</summary>
+    /// <summary>Removes later neighbors within Mathf.Epsilon in horizontal offset and refreshes automatic tangents.</summary>
     /// <remarks>Preserves the first of each near-duplicate run. Emits Changed only when points were removed;
     /// does not emit PropertyListChanged. Distinct ordered points are never removed just because their difference is signed.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
@@ -246,7 +246,7 @@ public sealed class Curve : Resource
             ThrowIfDisposed(); var changed = false;
             // ponytail: repeated list removal is quadratic for many duplicates; compact in place if bulk imports require it.
             for (var i = 1; i < _points.Count; i++)
-                if (Math.Abs(_points[i].Position.X - _points[i - 1].Position.X) <= MathF.Epsilon) { _points.RemoveAt(i--); changed = true; }
+                if (Math.Abs(_points[i].Position.X - _points[i - 1].Position.X) <= Mathf.Epsilon) { _points.RemoveAt(i--); changed = true; }
             if (!changed) return;
             UpdateAllTangents(); _dirty = true;
         }
@@ -294,8 +294,8 @@ public sealed class Curve : Resource
         if (_baked.Length == 1 || offset >= _maxDomain) return _baked[^1];
         if (offset <= _minDomain) return _baked[0];
         var position = (offset - _minDomain) / (_maxDomain - _minDomain) * (_baked.Length - 1);
-        var index = (int)MathF.Floor(position);
-        return index + 1 < _baked.Length ? MathF.Lerp(_baked[index], _baked[index + 1], position - index) : _baked[^1];
+        var index = (int)Mathf.Floor(position);
+        return index + 1 < _baked.Length ? Mathf.Lerp(_baked[index], _baked[index + 1], position - index) : _baked[^1];
     }
 
     private void SetLimit(float value, bool domain, bool minimum)
@@ -366,9 +366,9 @@ public sealed class Curve : Resource
         var index = FindIndex(offset); var a = _points[index];
         if (index == _points.Count - 1 || index == 0 && offset <= a.Position.X) return a.Position.Y;
         var b = _points[index + 1]; var distance = b.Position.X - a.Position.X;
-        if (MathF.IsZeroApprox(distance)) return b.Position.Y;
+        if (Mathf.IsZeroApprox(distance)) return b.Position.Y;
         var weight = (offset - a.Position.X) / distance; distance /= 3;
-        return MathF.BezierInterpolate(a.Position.Y, a.Position.Y + distance * a.Right, b.Position.Y - distance * b.Left, b.Position.Y, weight);
+        return Mathf.BezierInterpolate(a.Position.Y, a.Position.Y + distance * a.Right, b.Position.Y - distance * b.Left, b.Position.Y, weight);
     }
     private void BakeCore()
     {

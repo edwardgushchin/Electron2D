@@ -73,7 +73,7 @@ Actual SceneTree entry attaches each canvas parent-first and notifies visible en
 
 ## Canvas ordering
 
-TopLevel items and items below neutral Node parents are independent canvas roots. A root's canvas subtree precedes the next root at equal effective Z. ShowBehindParent draws a child subtree before its parent. YSortEnabled orders the item itself at Y = 0 and direct canvas children by local Y; nested enabled children join that group, while disabled children keep their subtree together at their own Y. Approximate Y ties keep scene order using the shared MathF contract. Invisible items are omitted, neutral/TopLevel boundaries end the group, and Z takes precedence everywhere. Changes use the next submission without rerecording retained commands and do not reorder processing/input.
+TopLevel items and items below neutral Node parents are independent canvas roots. A root's canvas subtree precedes the next root at equal effective Z. ShowBehindParent draws a child subtree before its parent. YSortEnabled orders the item itself at Y = 0 and direct canvas children by local Y; nested enabled children join that group, while disabled children keep their subtree together at their own Y. Approximate Y ties keep scene order using the shared Mathf contract. Invisible items are omitted, neutral/TopLevel boundaries end the group, and Z takes precedence everywhere. Changes use the next submission without rerecording retained commands and do not reorder processing/input.
 
 ## Ownership and limits
 

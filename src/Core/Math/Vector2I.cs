@@ -131,7 +131,7 @@ public struct Vector2I : IEquatable<Vector2I>
     /// <summary>Returns a vector containing the absolute value of each component.</summary>
     /// <returns>The componentwise absolute value.</returns>
     /// <exception cref="OverflowException">A component is <see cref="int.MinValue"/>.</exception>
-    public readonly Vector2I Abs() => new(MathF.Abs(X), MathF.Abs(Y));
+    public readonly Vector2I Abs() => new(Mathf.Abs(X), Mathf.Abs(Y));
 
     /// <summary>Returns the ratio of the horizontal component to the vertical component.</summary>
     /// <returns><c>X / Y</c> as a floating-point value, including IEEE 754 zero-division behavior.</returns>
@@ -143,15 +143,15 @@ public struct Vector2I : IEquatable<Vector2I>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException">A lower bound is greater than its corresponding upper bound.</exception>
     public readonly Vector2I Clamp(Vector2I min, Vector2I max) => new(
-        MathF.Clamp(X, min.X, max.X),
-        MathF.Clamp(Y, min.Y, max.Y));
+        Mathf.Clamp(X, min.X, max.X),
+        Mathf.Clamp(Y, min.Y, max.Y));
 
     /// <summary>Clamps both components between scalar bounds.</summary>
     /// <param name="min">The lower bound.</param>
     /// <param name="max">The upper bound.</param>
     /// <returns>The clamped vector.</returns>
     /// <exception cref="ArgumentException"><paramref name="min"/> is greater than <paramref name="max"/>.</exception>
-    public readonly Vector2I Clamp(int min, int max) => new(MathF.Clamp(X, min, max), MathF.Clamp(Y, min, max));
+    public readonly Vector2I Clamp(int min, int max) => new(Mathf.Clamp(X, min, max), Mathf.Clamp(Y, min, max));
 
     /// <summary>Returns the squared Euclidean distance to another point.</summary>
     /// <param name="to">The destination point.</param>
@@ -173,13 +173,13 @@ public struct Vector2I : IEquatable<Vector2I>
     {
         var dx = (long)to.X - X;
         var dy = (long)to.Y - Y;
-        return (float)MathF.Sqrt(((double)dx * dx) + ((double)dy * dy));
+        return (float)Mathf.Sqrt(((double)dx * dx) + ((double)dy * dy));
     }
 
     /// <summary>Returns the Euclidean length.</summary>
     /// <returns>The nonnegative length, rounded to single precision.</returns>
     /// <remarks>Squared terms use widened arithmetic, so this remains finite even when <see cref="LengthSquared"/> exceeds the signed 64-bit range.</remarks>
-    public readonly float Length() => (float)MathF.Sqrt(((double)X * X) + ((double)Y * Y));
+    public readonly float Length() => (float)Mathf.Sqrt(((double)X * X) + ((double)Y * Y));
 
     /// <summary>Returns the squared Euclidean length.</summary>
     /// <returns>The exact squared length when it fits in a signed 64-bit integer.</returns>
@@ -189,12 +189,12 @@ public struct Vector2I : IEquatable<Vector2I>
     /// <summary>Returns the componentwise maximum with another vector.</summary>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector2I Max(Vector2I with) => new(MathF.Max(X, with.X), MathF.Max(Y, with.Y));
+    public readonly Vector2I Max(Vector2I with) => new(Mathf.Max(X, with.X), Mathf.Max(Y, with.Y));
 
     /// <summary>Returns the componentwise maximum with a scalar.</summary>
     /// <param name="with">The scalar compared with both components.</param>
     /// <returns>The componentwise maximum.</returns>
-    public readonly Vector2I Max(int with) => new(MathF.Max(X, with), MathF.Max(Y, with));
+    public readonly Vector2I Max(int with) => new(Mathf.Max(X, with), Mathf.Max(Y, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
     /// <returns><see cref="Axis.X"/> when components are equal; otherwise the greatest component's axis.</returns>
@@ -203,12 +203,12 @@ public struct Vector2I : IEquatable<Vector2I>
     /// <summary>Returns the componentwise minimum with another vector.</summary>
     /// <param name="with">The other vector.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector2I Min(Vector2I with) => new(MathF.Min(X, with.X), MathF.Min(Y, with.Y));
+    public readonly Vector2I Min(Vector2I with) => new(Mathf.Min(X, with.X), Mathf.Min(Y, with.Y));
 
     /// <summary>Returns the componentwise minimum with a scalar.</summary>
     /// <param name="with">The scalar compared with both components.</param>
     /// <returns>The componentwise minimum.</returns>
-    public readonly Vector2I Min(int with) => new(MathF.Min(X, with), MathF.Min(Y, with));
+    public readonly Vector2I Min(int with) => new(Mathf.Min(X, with), Mathf.Min(Y, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
     /// <returns><see cref="Axis.Y"/> when components are equal; otherwise the least component's axis.</returns>
@@ -216,7 +216,7 @@ public struct Vector2I : IEquatable<Vector2I>
 
     /// <summary>Returns the sign of each component.</summary>
     /// <returns>Components containing negative one, zero, or positive one.</returns>
-    public readonly Vector2I Sign() => new(MathF.Sign(X), MathF.Sign(Y));
+    public readonly Vector2I Sign() => new(Mathf.Sign(X), Mathf.Sign(Y));
 
     /// <summary>Snaps each component to the nearest multiple of the corresponding step.</summary>
     /// <param name="step">The componentwise step. A zero component leaves the corresponding value unchanged.</param>
@@ -404,13 +404,13 @@ public struct Vector2I : IEquatable<Vector2I>
         if (step == 0)
             return value;
 
-        var snapped = MathF.Snapped((double)value, step);
+        var snapped = Mathf.Snapped((double)value, step);
         return checked((int)snapped);
     }
 
     private static void ValidateConvertible(float component, string parameterName)
     {
-        if (!MathF.IsFinite(component) || (double)component < int.MinValue || (double)component > int.MaxValue)
+        if (!Mathf.IsFinite(component) || (double)component < int.MinValue || (double)component > int.MaxValue)
             throw new ArgumentOutOfRangeException(parameterName, "Vector2 components must be finite 32-bit signed integer values.");
     }
 }

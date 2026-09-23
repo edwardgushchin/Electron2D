@@ -6,11 +6,10 @@ namespace Electron2D;
 /// primary engine-scalar API; double-precision overloads are provided for calculations that need a
 /// wider range or tighter tolerance. All members are stateless and thread-safe; normal nonthrowing
 /// calls are allocation-free after JIT warmup.
-/// Callers importing both Electron2D and System can use an alias to distinguish this type from System.MathF.
 /// Floating-point members preserve normal IEEE 754 NaN, infinity, and signed-zero behavior unless
 /// their individual contract states otherwise.
 /// </remarks>
-public static class MathF
+public static class Mathf
 {
     private const float FloatEpsilon = 0.000001f;
     private const double DoubleEpsilon = 0.00000000000001d;

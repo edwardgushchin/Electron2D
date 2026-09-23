@@ -45,7 +45,7 @@ Production types include [`Path`](../classes/Path.md), [`PathFollow`](../classes
 
 ## Dependency direction
 
-- Scene depends on Core's `MathF`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
+- Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
 - Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and has no direct SDL3-CS dependency, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.

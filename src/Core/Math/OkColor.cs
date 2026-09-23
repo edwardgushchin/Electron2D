@@ -22,7 +22,7 @@ namespace Electron2D;
 
 internal static class OkColor
 {
-    private const float Pi = MathF.Pi;
+    private const float Pi = Mathf.Pi;
 
     internal readonly record struct Rgb(float R, float G, float B);
 
@@ -43,8 +43,8 @@ internal static class OkColor
         if (lightness == 0f)
             return default;
 
-        var a = MathF.Cos(2f * Pi * hue);
-        var b = MathF.Sin(2f * Pi * hue);
+        var a = Mathf.Cos(2f * Pi * hue);
+        var b = Mathf.Sin(2f * Pi * hue);
         var l = ToeInverse(lightness);
         var cs = GetCs(l, a, b);
         const float middle = 0.8f;
@@ -80,13 +80,13 @@ internal static class OkColor
             FromSRGBChannel(red),
             FromSRGBChannel(green),
             FromSRGBChannel(blue)));
-        var chroma = MathF.Sqrt((lab.A * lab.A) + (lab.B * lab.B));
+        var chroma = Mathf.Sqrt((lab.A * lab.A) + (lab.B * lab.B));
         if (chroma <= 0.0000001f)
             return new Hsl(0f, 0f, Toe(lab.L));
 
         var a = lab.A / chroma;
         var b = lab.B / chroma;
-        var hue = 0.5f + (0.5f * MathF.Atan2(-lab.B, -lab.A) / Pi);
+        var hue = 0.5f + (0.5f * Mathf.Atan2(-lab.B, -lab.A) / Pi);
         var cs = GetCs(lab.L, a, b);
         const float middle = 0.8f;
         const float inverseMiddle = 1.25f;
@@ -125,10 +125,10 @@ internal static class OkColor
     }
 
     private static float ToSRGBChannel(float value) =>
-        value <= 0.0031308f ? 12.92f * value : (1.055f * MathF.Pow(value, 1f / 2.4f)) - 0.055f;
+        value <= 0.0031308f ? 12.92f * value : (1.055f * Mathf.Pow(value, 1f / 2.4f)) - 0.055f;
 
     private static float FromSRGBChannel(float value) =>
-        value > 0.04045f ? MathF.Pow((value + 0.055f) / 1.055f, 2.4f) : value / 12.92f;
+        value > 0.04045f ? Mathf.Pow((value + 0.055f) / 1.055f, 2.4f) : value / 12.92f;
 
     private static Lab LinearSRGBToOKLAB(Rgb color)
     {
@@ -229,7 +229,7 @@ internal static class OkColor
     {
         var saturation = ComputeMaxSaturation(a, b);
         var atMaximum = OKLABToLinearSRGB(new Lab(1f, saturation * a, saturation * b));
-        var lightness = System.MathF.Cbrt(1f / MathF.Max(atMaximum.R, MathF.Max(atMaximum.G, atMaximum.B)));
+        var lightness = System.MathF.Cbrt(1f / Mathf.Max(atMaximum.R, Mathf.Max(atMaximum.G, atMaximum.B)));
         return new Lc(lightness, lightness * saturation);
     }
 
@@ -276,7 +276,7 @@ internal static class OkColor
         var blueSecond = (-0.0041960863f * secondL) - (0.7034186147f * secondM) + (1.7076147010f * secondS);
         var blueU = blueFirst / ((blueFirst * blueFirst) - (0.5f * blue * blueSecond));
         var blueT = blueU >= 0f ? -blue * blueU : float.MaxValue;
-        return intersection + MathF.Min(redT, MathF.Min(greenT, blueT));
+        return intersection + Mathf.Min(redT, Mathf.Min(greenT, blueT));
     }
 
     private static float Toe(float value)
@@ -285,7 +285,7 @@ internal static class OkColor
         const float k2 = 0.03f;
         const float k3 = (1f + k1) / (1f + k2);
         var adjusted = (k3 * value) - k1;
-        return 0.5f * (adjusted + MathF.Sqrt((adjusted * adjusted) + (4f * k2 * k3 * value)));
+        return 0.5f * (adjusted + Mathf.Sqrt((adjusted * adjusted) + (4f * k2 * k3 * value)));
     }
 
     private static float ToeInverse(float value)
@@ -318,15 +318,15 @@ internal static class OkColor
         var cusp = FindCusp(a, b);
         var maximum = FindGamutIntersection(a, b, lightness, 1f, lightness, cusp);
         var maximumSt = ToSt(cusp);
-        var scale = maximum / MathF.Min(lightness * maximumSt.S, (1f - lightness) * maximumSt.T);
+        var scale = maximum / Mathf.Min(lightness * maximumSt.S, (1f - lightness) * maximumSt.T);
         var middleSt = GetStMiddle(a, b);
         var middleA = lightness * middleSt.S;
         var middleB = (1f - lightness) * middleSt.T;
-        var middle = 0.9f * scale * MathF.Sqrt(MathF.Sqrt(
-            1f / ((1f / MathF.Pow(middleA, 4f)) + (1f / MathF.Pow(middleB, 4f)))));
+        var middle = 0.9f * scale * Mathf.Sqrt(Mathf.Sqrt(
+            1f / ((1f / Mathf.Pow(middleA, 4f)) + (1f / Mathf.Pow(middleB, 4f)))));
         var zeroA = lightness * 0.4f;
         var zeroB = (1f - lightness) * 0.8f;
-        var zero = MathF.Sqrt(1f / ((1f / (zeroA * zeroA)) + (1f / (zeroB * zeroB))));
+        var zero = Mathf.Sqrt(1f / ((1f / (zeroA * zeroA)) + (1f / (zeroB * zeroB))));
         return new Cs(zero, middle, maximum);
     }
 }

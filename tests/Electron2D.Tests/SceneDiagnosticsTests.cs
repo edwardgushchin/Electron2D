@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using Electron2D;
 using ScenePath = Electron2D.Path;
 
@@ -63,8 +63,8 @@ internal static class SceneDiagnosticsTests
         using var root = new Node(); var timer = new Electron2D.Timer(); var animated = new AnimatedSprite();
         Check(timer.GetConfigurationWarnings().Length == 0 && animated.GetConfigurationWarnings().Length == 1, "Sibling defaults.");
         timer.WaitTime = .01; Check(timer.GetConfigurationWarnings().Length == 1, "Detached short timer warns.");
-        timer.WaitTime = .05 - MathF.Epsilon; Check(timer.GetConfigurationWarnings().Length == 0, "Timer threshold excludes canonical epsilon boundary.");
-        timer.WaitTime = .05 - 2 * MathF.Epsilon; Check(timer.GetConfigurationWarnings().Length == 1, "Timer threshold includes values below boundary.");
+        timer.WaitTime = .05 - Mathf.Epsilon; Check(timer.GetConfigurationWarnings().Length == 0, "Timer threshold excludes canonical epsilon boundary.");
+        timer.WaitTime = .05 - 2 * Mathf.Epsilon; Check(timer.GetConfigurationWarnings().Length == 1, "Timer threshold includes values below boundary.");
         root.AddChild(timer); root.AddChild(animated); using var tree = new SceneTree(root); tree.EditedSceneRoot = root;
         var calls = new List<string>(); tree.NodeConfigurationWarningChanged += (_, node) => calls.Add(node.Name);
         timer.WaitTime = .01; timer.WaitTime = .01; Check(calls.Count == 2, "Repeated timer duration refreshes.");

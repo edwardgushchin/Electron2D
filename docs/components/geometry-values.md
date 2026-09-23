@@ -25,7 +25,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 ## Runtime flow
 
 1. Callers construct or copy mutable values; zero-initialized structs retain normal all-zero C# state.
-2. Vector operations route shared scalar formulas through [`MathF`](../classes/MathF.md) and return results without global state or steady-state allocation.
+2. Vector operations route shared scalar formulas through [`Mathf`](../classes/Mathf.md) and return results without global state or steady-state allocation.
 3. Floating-point and integer rectangle operations preserve stored position/size and normalize negative sizes only when `Abs()` is called explicitly.
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
 5. `Transform` composes `Entity` local/global state and transforms `Rect` corners into axis-aligned bounds.
@@ -34,7 +34,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 ## Dependencies
 
-- Canonical scalar [`MathF`](../classes/MathF.md), plus .NET globalization, serialization, and interop-layout primitives.
+- Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET globalization, serialization, and interop-layout primitives.
 - Existing typed `ConfigFile`, property descriptor, packed-scene, and `Entity` integration boundaries.
 - No public external numerics dependency and no external package or native library.
 
@@ -55,7 +55,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 ## Current implementation status
 
-Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `MathF`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
+Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
 
 `Geometry` now implements fourteen pure raster, nearest-point, polygon, hull, triangulation, atlas and intersection methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Its class coverage remains partial; polygon clipping/offset, Delaunay triangulation and the other reference methods are not implemented by this slice.
 

@@ -101,7 +101,7 @@ public sealed partial class Image
     {
         ThrowIfDisposed();
         if (!float.IsFinite(quality) || quality is < 0.01f or > 1) throw new ArgumentOutOfRangeException(nameof(quality));
-        return Encode("JPG", (int)MathF.Round(quality * 100));
+        return Encode("JPG", (int)Mathf.Round(quality * 100));
     }
 
     /// <summary>Atomically saves the base image to a PNG file.</summary>

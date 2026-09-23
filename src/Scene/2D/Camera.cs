@@ -73,7 +73,7 @@ public partial class Camera : Entity
     public Vector2 Zoom
     {
         get { CheckQuery(); return _zoom; }
-        set { EnsureMutable(); Finite(value); if (MathF.IsZeroApprox(value.X) || MathF.IsZeroApprox(value.Y)) throw new ArgumentOutOfRangeException(nameof(value), "Zoom axes must be nonzero."); if (_zoom == value) return; _zoom = value; UpdateScrollPreservingPosition(); }
+        set { EnsureMutable(); Finite(value); if (Mathf.IsZeroApprox(value.X) || Mathf.IsZeroApprox(value.Y)) throw new ArgumentOutOfRangeException(nameof(value), "Zoom axes must be nonzero."); if (_zoom == value) return; _zoom = value; UpdateScrollPreservingPosition(); }
     }
 
     /// <summary>Gets or sets the camera anchor mode.</summary>
@@ -164,7 +164,7 @@ public partial class Camera : Entity
     public float PositionSmoothingSpeed
     {
         get { CheckQuery(); return _positionSmoothingSpeed; }
-        set { EnsureMutable(); Finite(value); value = MathF.Max(0, value); if (_positionSmoothingSpeed == value) return; _positionSmoothingSpeed = value; }
+        set { EnsureMutable(); Finite(value); value = Mathf.Max(0, value); if (_positionSmoothingSpeed == value) return; _positionSmoothingSpeed = value; }
     }
 
     /// <summary>Gets or sets whether view rotation interpolates toward the node angle.</summary>
@@ -187,7 +187,7 @@ public partial class Camera : Entity
     public float RotationSmoothingSpeed
     {
         get { CheckQuery(); return _rotationSmoothingSpeed; }
-        set { EnsureMutable(); Finite(value); value = MathF.Max(0, value); if (_rotationSmoothingSpeed == value) return; _rotationSmoothingSpeed = value; }
+        set { EnsureMutable(); Finite(value); value = Mathf.Max(0, value); if (_rotationSmoothingSpeed == value) return; _rotationSmoothingSpeed = value; }
     }
 
     /// <summary>Gets or sets whether horizontal movement waits for a drag margin.</summary>

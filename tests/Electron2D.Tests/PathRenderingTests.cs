@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using Electron2D;
 using ScenePath = Electron2D.Path;
 
@@ -27,7 +27,7 @@ internal static partial class RenderingRuntimeTests
                         Pixel(pixels, 32, 16, Colors.Red); Pixel(pixels, 16, 16, Colors.Black); path.Curve = vertical; break;
                     case 2:
                         Pixel(pixels, 16, 32, Colors.Red); Pixel(pixels, 32, 16, Colors.Black);
-                        Check(Math.Abs(follower.Rotation - MathF.Pi / 2) < .001f, "Native path consumer follows the tangent.");
+                        Check(Math.Abs(follower.Rotation - Mathf.Pi / 2) < .001f, "Native path consumer follows the tangent.");
                         Task.Run(() => vertical.SetPointPosition(1, new(32, 0))).GetAwaiter().GetResult(); break;
                     case 3:
                         Pixel(pixels, 32, 16, Colors.Red); Pixel(pixels, 16, 32, Colors.Black); follower.HOffset = 4; break;

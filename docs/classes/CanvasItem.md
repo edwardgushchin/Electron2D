@@ -352,7 +352,7 @@ Gets or sets this node's local logical visibility.
 <a id="p-electron2d-canvasitem-ysortenabled"></a>
 ### `public bool YSortEnabled { get; set; }`
 
-False by default. True orders the item itself at Y = 0 and its direct canvas children in ascending Y in this item's local coordinate system. The root's global rotation or scale does not change the sorting coordinates. Nested enabled children join the same group using composed local transforms. A child with sorting disabled keeps its canvas subtree together at that child's Y; any deeper enabled group sorts independently within that subtree. Approximate ties use MathF.IsEqualApprox and preserve scene order. Effective Z takes precedence over Y within each canvas.
+False by default. True orders the item itself at Y = 0 and its direct canvas children in ascending Y in this item's local coordinate system. The root's global rotation or scale does not change the sorting coordinates. Nested enabled children join the same group using composed local transforms. A child with sorting disabled keeps its canvas subtree together at that child's Y; any deeper enabled group sorts independently within that subtree. Approximate ties use Mathf.IsEqualApprox and preserve scene order. Effective Z takes precedence over Y within each canvas.
 
 Invisible children do not participate. TopLevel children and children below neutral nodes are separate canvas roots. ShowBehindParent is ignored for items directly ordered by the Y group, but still applies inside unsorted subtrees. Processing and input order remain unchanged.
 
@@ -404,7 +404,7 @@ ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflect
 
 `public void DrawAnimationSlice(double animationLength, double sliceBegin, double sliceEnd, double offset = 0d)`
 
-Records a state command that restricts subsequent drawing. All four arguments are finite double-precision seconds; `offset` defaults to zero. Every submitted frame computes `phase = MathF.PosMod(renderTime - offset, animationLength)` and draws when `phase >= sliceBegin && phase < sliceEnd`. The begin boundary is inclusive, the end exclusive. Offset can be negative or positive; times before the origin wrap through the period. The bounds are not clamped or wrapped: reversed/equal bounds hide everything, and wider bounds can include the whole period. A zero period gives no visible phase; a negative period uses the divisor's signed phase range.
+Records a state command that restricts subsequent drawing. All four arguments are finite double-precision seconds; `offset` defaults to zero. Every submitted frame computes `phase = Mathf.PosMod(renderTime - offset, animationLength)` and draws when `phase >= sliceBegin && phase < sliceEnd`. The begin boundary is inclusive, the end exclusive. Offset can be negative or positive; times before the origin wrap through the period. The bounds are not clamped or wrapped: reversed/equal bounds hide everything, and wider bounds can include the whole period. A zero period gives no visible phase; a negative period uses the divisor's signed phase range.
 
 Each interval replaces the preceding one and is evaluated even if preceding commands are hidden. There is no interval stack. All geometry and transform commands inside a hidden interval are skipped before texture/material access. Recording still validates inputs and resources; only consumption is conditional. Interval state belongs to this item and resets to unrestricted at each replay; it does not propagate to child or sibling items. Retained commands animate without calling OnDraw or QueueRedraw every frame. Explicit redraw replaces the complete command sequence.
 
@@ -507,7 +507,7 @@ protected override void OnDraw()
 {
     DrawPolyline([new(0, 0), new(32, 0), new(32, 24)], Colors.White, 3, true);
     DrawDashedLine(new(0, 40), new(64, 40), Colors.Yellow, 2, 6);
-    DrawArc(new(96, 32), 20, 0, MathF.Pi, 33, Colors.Green, 2);
+    DrawArc(new(96, 32), 20, 0, Mathf.Pi, 33, Colors.Green, 2);
     DrawEllipse(new(32, 80), 24, 12, Colors.Blue);
 }
 ```

@@ -31,7 +31,7 @@ ShaderMaterial accepts this value for float2x2 parameters and arrays, storing on
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var transform = new Transform(MathF.Pi / 4f, new Vector2(32f, 16f));
+var transform = new Transform(Mathf.Pi / 4f, new Vector2(32f, 16f));
 Vector2 worldPoint = transform * localPoint;
 ```
 
@@ -671,7 +671,7 @@ Constructors, scalar math, decomposition, composition, point transformation, inv
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`MathF`](MathF.md), [`Vector2`](Vector2.md), [`Rect`](Rect.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect`](Rect.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
 
 `Entity.Transform`, `Entity.GlobalTransform`, point conversion, reparenting, and relative transforms use this value directly. There is no public implicit or explicit conversion to another numerics library; native or package adapters must remain localized at their future integration boundary.
 

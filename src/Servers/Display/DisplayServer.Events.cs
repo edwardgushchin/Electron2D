@@ -484,7 +484,7 @@ public sealed partial class DisplayServer
             try
             {
                 DispatchWheelButton(source.Y * direction > 0f ? MouseButton.WheelUp : MouseButton.WheelDown,
-                    MathF.Abs(source.Y), source.MouseX, source.MouseY);
+                    Mathf.Abs(source.Y), source.MouseX, source.MouseY);
             }
             catch (Exception exception)
             {
@@ -497,7 +497,7 @@ public sealed partial class DisplayServer
             try
             {
                 DispatchWheelButton(source.X * direction > 0f ? MouseButton.WheelRight : MouseButton.WheelLeft,
-                    MathF.Abs(source.X), source.MouseX, source.MouseY);
+                    Mathf.Abs(source.X), source.MouseX, source.MouseY);
             }
             catch (Exception exception)
             {

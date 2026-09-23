@@ -420,7 +420,7 @@ public abstract partial class CanvasItem : Node
     /// <value>The accumulated or absolute value, clamped to the supported Z range.</value>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
     internal int EffectiveZIndex => ZAsRelative && GetParentItem() is { } parent
-        ? MathF.Clamp(parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
+        ? Mathf.Clamp(parent.EffectiveZIndex + ZIndex, MinimumZIndex, MaximumZIndex)
         : ZIndex;
 
     /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>

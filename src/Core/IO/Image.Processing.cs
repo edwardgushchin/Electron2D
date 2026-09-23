@@ -523,7 +523,7 @@ public sealed partial class Image
                         var nx = (here - toRight) * bumpScale;
                         var ny = (down - here) * bumpScale;
                         var nz = 1f;
-                        var inverseLength = 1f / MathF.Sqrt((nx * nx) + (ny * ny) + 1f);
+                        var inverseLength = 1f / Mathf.Sqrt((nx * nx) + (ny * ny) + 1f);
                         WriteColor(
                             result,
                             ((y * state.Width) + x) * 4,
@@ -1024,7 +1024,7 @@ public sealed partial class Image
 
     private static float CubicKernel(float value)
     {
-        value = MathF.Abs(value);
+        value = Mathf.Abs(value);
         if (value <= 1f)
             return ((1.5f * value) - 2.5f) * value * value + 1f;
         if (value < 2f)
@@ -1034,13 +1034,13 @@ public sealed partial class Image
 
     private static float LanczosKernel(float value)
     {
-        value = MathF.Abs(value);
+        value = Mathf.Abs(value);
         if (value == 0f)
             return 1f;
         if (value >= 3f)
             return 0f;
-        var radians = MathF.Pi * value;
-        return (MathF.Sin(radians) / radians) * (MathF.Sin(radians / 3f) / (radians / 3f));
+        var radians = Mathf.Pi * value;
+        return (Mathf.Sin(radians) / radians) * (Mathf.Sin(radians / 3f) / (radians / 3f));
     }
 
     private static Color Average(Color a, Color b, Color c, Color d) => (a + b + c + d) / 4f;
@@ -1050,7 +1050,7 @@ public sealed partial class Image
         var x = (color.R * 2f) - 1f;
         var y = (color.G * 2f) - 1f;
         var z = (color.B * 2f) - 1f;
-        var length = MathF.Sqrt((x * x) + (y * y) + (z * z));
+        var length = Mathf.Sqrt((x * x) + (y * y) + (z * z));
         if (length == 0f)
             return new Color(0.5f, 0.5f, 1f, color.A);
         return new Color(0.5f + (x / length * 0.5f), 0.5f + (y / length * 0.5f), 0.5f + (z / length * 0.5f), color.A);

@@ -13,7 +13,7 @@ Last updated: 2026-09-21
 
 ### Status
 
-Accepted. ADR 0034 supersedes only the former implicit component-approximation tolerance by making `MathF` authoritative.
+Accepted. ADR 0034 supersedes only the former implicit component-approximation tolerance by making `Mathf` authoritative.
 
 ### Context
 
@@ -369,19 +369,19 @@ Earlier Electron2D values used a `0.00001f` component tolerance. The audited cur
 
 ### Decision
 
-`Electron2D.MathF` is the canonical public scalar-math type. Its short name also exists in .NET as `System.MathF`; call sites that import both namespaces qualify one type or declare an alias.
+`Electron2D.Mathf` is the canonical public scalar-math type. The `Mathf` spelling follows the accepted reference API and keeps it distinct from the .NET `System.MathF` type.
 
 - It implements the complete audited typed surface: `Tau`, `Pi`, `Inf`, `NaN`, `E`, `Sqrt2`, `Epsilon`, and 127 integer/float/double/decimal method overloads.
 - Single precision remains the engine's primary scalar. The public epsilon is exactly `1e-6f`; double approximate operations use `1e-14` internally.
 - API behavior follows typed C# and .NET semantics explicitly: radians by default, midpoint-to-even `Round`, unchecked integer-returning float conversion, managed exceptions for invalid integer operations, and ordinary IEEE NaN/infinity propagation.
-- Matching formulas in `Vector2`, `Vector4`, `Rect`, `Transform`, `Color`, their integer snapping paths, internal color math, and `Entity` degree conversion route through `MathF`. Engine code uses this public type for equivalent scalar operations. Its implementation calls `System.MathF` and `System.Math`; operations without an audited member, such as cube root and truncation, continue to use the BCL directly.
-- The old component tolerance is corrected rather than preserved. Geometry and color approximate predicates now share `MathF.Epsilon`; strict threshold behavior is verified directly.
+- Matching formulas in `Vector2`, `Vector4`, `Rect`, `Transform`, `Color`, their integer snapping paths, internal color math, and `Entity` degree conversion route through `Mathf`. Engine code uses this public type for equivalent scalar operations. Its implementation calls `System.MathF` and `System.Math`; operations without an audited member, such as cube root and truncation, continue to use the BCL directly.
+- The old component tolerance is corrected rather than preserved. Geometry and color approximate predicates now share `Mathf.Epsilon`; strict threshold behavior is verified directly.
 - Before Electron2D's first public release, known incorrect behavior is not retained solely for compatibility. An audited correction replaces it, updates tests/XML/living documents in the same change, and is recorded in the appropriate ADR. This does not authorize unrelated source breakage or silent semantic changes.
 - No generic numeric facade, injectable math provider, compatibility switch, second epsilon, vector overload layer, SIMD abstraction, or dependency is introduced.
 
 ### Consequences
 
-- Engine/game code receives one complete and documented scalar vocabulary. Consumers with both namespaces in scope need an explicit alias or qualified name.
+- Engine/game code receives one complete and documented scalar vocabulary without a name collision with `System.MathF`.
 - Duplicate interpolation, modulus, snapping, angle, and comparison helpers are removed; future fixes land once.
 - The approximation correction can change results for differences from `1e-6f` through `1e-5f`. This is an intentional pre-release correctness change, not a behavior-preserving part of the mechanical migration.
 - All other migrated formulas preserve their prior executable behavior and exception surface.
@@ -392,7 +392,7 @@ Earlier Electron2D values used a `0.00001f` component tolerance. The audited cur
 - **Keep `1e-5f` for compatibility:** rejected because the project has no released compatibility baseline and the value conflicts with the audited canonical contract.
 - **Expose configurable or per-type epsilon:** rejected because it fragments core semantics; callers needing another tolerance already have explicit-tolerance overloads.
 - **Leave duplicated helpers in each value:** rejected because identical formulas would drift and make audits repeat the same work.
-- **Wrap every BCL math operation throughout unrelated domains:** rejected because centralization applies where `MathF` is the engine-facing contract, not as a ban on ordinary implementation primitives.
+- **Wrap every BCL math operation throughout unrelated domains:** rejected because centralization applies where `Mathf` is the engine-facing contract, not as a ban on ordinary implementation primitives.
 - **Add generic math or SIMD now:** rejected because no measured requirement justifies a second API or abstraction.
 
 ### Verification

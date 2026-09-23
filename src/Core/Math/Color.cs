@@ -97,7 +97,7 @@ public struct Color : IEquatable<Color>
     /// <remarks>Setting the value reconstructs RGB through <see cref="FromHSV(float, float, float, float)"/> and preserves alpha.</remarks>
     public float V
     {
-        readonly get => MathF.Max(R, MathF.Max(G, B));
+        readonly get => Mathf.Max(R, Mathf.Max(G, B));
         set => this = FromHSV(H, S, value, A);
     }
 
@@ -260,10 +260,10 @@ public struct Color : IEquatable<Color>
         var minimum = min ?? default;
         var maximum = max ?? Colors.White;
         return new Color(
-            MathF.Clamp(R, minimum.R, maximum.R),
-            MathF.Clamp(G, minimum.G, maximum.G),
-            MathF.Clamp(B, minimum.B, maximum.B),
-            MathF.Clamp(A, minimum.A, maximum.A));
+            Mathf.Clamp(R, minimum.R, maximum.R),
+            Mathf.Clamp(G, minimum.G, maximum.G),
+            Mathf.Clamp(B, minimum.B, maximum.B),
+            Mathf.Clamp(A, minimum.A, maximum.A));
     }
 
     /// <summary>Darkens the RGB components by a ratio while preserving alpha.</summary>
@@ -432,8 +432,8 @@ public struct Color : IEquatable<Color>
     /// <param name="value">Receives the greatest RGB component.</param>
     public readonly void ToHSV(out float hue, out float saturation, out float value)
     {
-        var maximum = MathF.Max(R, MathF.Max(G, B));
-        var minimum = MathF.Min(R, MathF.Min(G, B));
+        var maximum = Mathf.Max(R, Mathf.Max(G, B));
+        var minimum = Mathf.Min(R, Mathf.Min(G, B));
         var delta = maximum - minimum;
         if (delta == 0f)
         {
@@ -476,7 +476,7 @@ public struct Color : IEquatable<Color>
     /// <returns>The decoded linear RGB color with opaque alpha.</returns>
     public static Color FromRGBE9995(uint rgbe)
     {
-        var multiplier = MathF.Pow(2f, ((rgbe >> 27) & 0x1f) - 24f);
+        var multiplier = Mathf.Pow(2f, ((rgbe >> 27) & 0x1f) - 24f);
         return new Color(
             (rgbe & 0x1ff) * multiplier,
             ((rgbe >> 9) & 0x1ff) * multiplier,
@@ -624,12 +624,12 @@ public struct Color : IEquatable<Color>
 
     /// <summary>Tests all components for scale-aware approximate equality.</summary>
     /// <param name="other">The other color.</param>
-    /// <returns><see langword="true"/> when every component is within the scale-aware <see cref="MathF.Epsilon"/> tolerance.</returns>
+    /// <returns><see langword="true"/> when every component is within the scale-aware <see cref="Mathf.Epsilon"/> tolerance.</returns>
     public readonly bool IsEqualApprox(Color other) =>
-        MathF.IsEqualApprox(R, other.R) &&
-        MathF.IsEqualApprox(G, other.G) &&
-        MathF.IsEqualApprox(B, other.B) &&
-        MathF.IsEqualApprox(A, other.A);
+        Mathf.IsEqualApprox(R, other.R) &&
+        Mathf.IsEqualApprox(G, other.G) &&
+        Mathf.IsEqualApprox(B, other.B) &&
+        Mathf.IsEqualApprox(A, other.A);
 
     /// <summary>Returns a hash code based on all four components.</summary>
     /// <returns>The component hash code.</returns>
@@ -655,14 +655,14 @@ public struct Color : IEquatable<Color>
             ClampOkComponent(hsl.L));
     }
 
-    private static float ClampOkComponent(float value) => MathF.IsNaN(value) ? 0f : MathF.Clamp(value, 0f, 1f);
+    private static float ClampOkComponent(float value) => Mathf.IsNaN(value) ? 0f : Mathf.Clamp(value, 0f, 1f);
 
     private static int ToIntegerScale(float component)
     {
-        if (MathF.IsNaN(component))
+        if (Mathf.IsNaN(component))
             return 0;
 
-        var scaled = MathF.Round(component * 255f);
+        var scaled = Mathf.Round(component * 255f);
         if (scaled >= int.MaxValue)
             return int.MaxValue;
         if (scaled <= int.MinValue)
@@ -672,10 +672,10 @@ public struct Color : IEquatable<Color>
     }
 
     private static float LinearChannelToSRGB(float channel) =>
-        channel < 0.0031308f ? 12.92f * channel : (1.055f * MathF.Pow(channel, 1f / 2.4f)) - 0.055f;
+        channel < 0.0031308f ? 12.92f * channel : (1.055f * Mathf.Pow(channel, 1f / 2.4f)) - 0.055f;
 
     private static float SRGBChannelToLinear(float channel) =>
-        channel < 0.04045f ? channel / 12.92f : MathF.Pow((channel + 0.055f) / 1.055f, 2.4f);
+        channel < 0.04045f ? channel / 12.92f : Mathf.Pow((channel + 0.055f) / 1.055f, 2.4f);
 
     private static uint Pack32(float first, float second, float third, float fourth) =>
         ((uint)ToByte(first) << 24) | ((uint)ToByte(second) << 16) | ((uint)ToByte(third) << 8) | ToByte(fourth);
@@ -685,22 +685,22 @@ public struct Color : IEquatable<Color>
 
     private static byte ToByte(float component)
     {
-        if (MathF.IsNaN(component) || component <= 0f)
+        if (Mathf.IsNaN(component) || component <= 0f)
             return 0;
         if (component >= 1f)
             return byte.MaxValue;
 
-        return (byte)MathF.Round(component * byte.MaxValue);
+        return (byte)Mathf.Round(component * byte.MaxValue);
     }
 
     private static ushort ToWord(float component)
     {
-        if (MathF.IsNaN(component) || component <= 0f)
+        if (Mathf.IsNaN(component) || component <= 0f)
             return 0;
         if (component >= 1f)
             return ushort.MaxValue;
 
-        return (ushort)MathF.Round(component * ushort.MaxValue);
+        return (ushort)Mathf.Round(component * ushort.MaxValue);
     }
 
     private static void WriteHexByte(Span<char> destination, int offset, float component)

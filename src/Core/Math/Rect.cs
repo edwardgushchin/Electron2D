@@ -210,19 +210,19 @@ public struct Rect : IEquatable<Rect>
     /// <summary>Tests whether all position and size components are finite.</summary>
     /// <returns><see langword="true"/> when no component is NaN or infinity.</returns>
     public readonly bool IsFinite() =>
-        MathF.IsFinite(_position.X) &&
-        MathF.IsFinite(_position.Y) &&
-        MathF.IsFinite(_size.X) &&
-        MathF.IsFinite(_size.Y);
+        Mathf.IsFinite(_position.X) &&
+        Mathf.IsFinite(_position.Y) &&
+        Mathf.IsFinite(_size.X) &&
+        Mathf.IsFinite(_size.Y);
 
     /// <summary>Tests position and size for scale-aware approximate equality.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when every component is approximately equal.</returns>
     public readonly bool IsEqualApprox(Rect other) =>
-        MathF.IsEqualApprox(_position.X, other._position.X) &&
-        MathF.IsEqualApprox(_position.Y, other._position.Y) &&
-        MathF.IsEqualApprox(_size.X, other._size.X) &&
-        MathF.IsEqualApprox(_size.Y, other._size.Y);
+        Mathf.IsEqualApprox(_position.X, other._position.X) &&
+        Mathf.IsEqualApprox(_position.Y, other._position.Y) &&
+        Mathf.IsEqualApprox(_size.X, other._size.X) &&
+        Mathf.IsEqualApprox(_size.Y, other._size.Y);
 
     /// <summary>Returns the smallest edge-aligned rectangle enclosing this rectangle and another.</summary>
     /// <param name="other">The other rectangle.</param>

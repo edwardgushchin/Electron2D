@@ -34,14 +34,14 @@ internal static class RemoteTransformTests
         target.Position = new(40, 50);
         remote.UpdatePosition = false;
         remote.Rotation = 0.4f;
-        Check(target.Position == new Vector2(40, 50) && Electron2D.MathF.IsEqualApprox(target.Rotation, remote.Rotation),
+        Check(target.Position == new Vector2(40, 50) && Electron2D.Mathf.IsEqualApprox(target.Rotation, remote.Rotation),
             "Independent position and rotation switches.");
         remote.UpdateRotation = false;
         target.Skew = -0.3f;
         remote.Skew = 0.2f;
-        Check(Electron2D.MathF.IsEqualApprox(target.Skew, -0.3f), "Disabled rotation preserves the target skew basis.");
+        Check(Electron2D.Mathf.IsEqualApprox(target.Skew, -0.3f), "Disabled rotation preserves the target skew basis.");
         remote.UpdateRotation = true;
-        Check(Electron2D.MathF.IsEqualApprox(target.Skew, 0.2f), "Enabling rotation copies skew independently of position.");
+        Check(Electron2D.Mathf.IsEqualApprox(target.Skew, 0.2f), "Enabling rotation copies skew independently of position.");
         remote.UpdateRotation = false;
         target.Scale = new(3, 4);
         remote.Scale = new(2, 5);

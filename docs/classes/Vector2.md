@@ -1071,7 +1071,7 @@ Compares vectors lexicographically by X and then Y.
 
 Copies are independent values. Concurrent reads of independent copies are safe; concurrent writes to the same storage location are an ordinary unsynchronized data race. Numeric operations allocate no managed memory after JIT warmup; string formatting allocates.
 
-The type depends on canonical scalar [`MathF`](MathF.md) plus formatting and layout primitives. [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Entity`](Entity.md) use it throughout their public 2D API. [`ConfigFile`](ConfigFile.md) persists finite values as exactly `X` and `Y`; [`PackedScene`](PackedScene.md) stores it directly through typed property descriptors.
+The type depends on canonical scalar [`Mathf`](Mathf.md) plus formatting and layout primitives. [`Rect`](Rect.md), [`Transform`](Transform.md), and [`Entity`](Entity.md) use it throughout their public 2D API. [`ConfigFile`](ConfigFile.md) persists finite values as exactly `X` and `Y`; [`PackedScene`](PackedScene.md) stores it directly through typed property descriptors.
 
 ## Coverage, verification, and limitations
 

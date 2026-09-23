@@ -43,7 +43,7 @@ public struct Transform : IEquatable<Transform>
 
     /// <summary>Gets the clockwise screen-space rotation in radians.</summary>
     /// <value>The angle of <see cref="X"/>, measured from positive X toward positive Y.</value>
-    public readonly float Rotation => MathF.Atan2(X.Y, X.X);
+    public readonly float Rotation => Mathf.Atan2(X.Y, X.X);
 
     /// <summary>Gets the lengths of the basis axes with reflection encoded in the vertical component.</summary>
     /// <value>
@@ -55,7 +55,7 @@ public struct Transform : IEquatable<Transform>
     /// <summary>Gets the angular skew between the basis axes in radians.</summary>
     /// <value>Zero for an orthogonal basis, with reflection accounted for by the determinant sign.</value>
     public readonly float Skew =>
-        MathF.Acos(NormalizedOrZero(X).Dot(Sign(Determinant()) * NormalizedOrZero(Y))) - (MathF.Pi * 0.5f);
+        Mathf.Acos(NormalizedOrZero(X).Dot(Sign(Determinant()) * NormalizedOrZero(Y))) - (Mathf.Pi * 0.5f);
 
     /// <summary>Gets or sets a complete matrix column.</summary>
     /// <param name="column">Zero for <see cref="X"/>, one for <see cref="Y"/>, or two for <see cref="Origin"/>.</param>
@@ -155,7 +155,7 @@ public struct Transform : IEquatable<Transform>
     /// <param name="origin">The translation offset.</param>
     public Transform(float rotation, Vector2 origin)
     {
-        var (sine, cosine) = MathF.SinCos(rotation);
+        var (sine, cosine) = Mathf.SinCos(rotation);
         X = new Vector2(cosine, sine);
         Y = new Vector2(-sine, cosine);
         Origin = origin;
@@ -168,8 +168,8 @@ public struct Transform : IEquatable<Transform>
     /// <param name="origin">The translation offset.</param>
     public Transform(float rotation, Vector2 scale, float skew, Vector2 origin)
     {
-        var (rotationSine, rotationCosine) = MathF.SinCos(rotation);
-        var (skewedSine, skewedCosine) = MathF.SinCos(rotation + skew);
+        var (rotationSine, rotationCosine) = Mathf.SinCos(rotation);
+        var (skewedSine, skewedCosine) = Mathf.SinCos(rotation + skew);
         X = new Vector2(rotationCosine * scale.X, rotationSine * scale.X);
         Y = new Vector2(-skewedSine * scale.Y, skewedCosine * scale.Y);
         Origin = origin;
@@ -219,9 +219,9 @@ public struct Transform : IEquatable<Transform>
     /// <param name="weight">The interpolation weight; values outside zero through one extrapolate.</param>
     /// <returns>A transform built from shortest-path angle interpolation, linear scale, skew, and origin interpolation.</returns>
     public readonly Transform InterpolateWith(Transform other, float weight) => new(
-        MathF.LerpAngle(Rotation, other.Rotation, weight),
+        Mathf.LerpAngle(Rotation, other.Rotation, weight),
         Scale.Lerp(other.Scale, weight),
-        MathF.LerpAngle(Skew, other.Skew, weight),
+        Mathf.LerpAngle(Skew, other.Skew, weight),
         Origin.Lerp(other.Origin, weight));
 
     /// <summary>Returns the fast inverse for an orthonormal basis.</summary>
@@ -241,8 +241,8 @@ public struct Transform : IEquatable<Transform>
     /// <summary>Tests whether the basis preserves angles up to uniform scale and optional reflection.</summary>
     /// <returns><see langword="true"/> for approximately orthogonal axes of approximately equal length.</returns>
     public readonly bool IsConformal() =>
-        (MathF.IsEqualApprox(X.X, Y.Y) && MathF.IsEqualApprox(X.Y, -Y.X)) ||
-        (MathF.IsEqualApprox(X.X, -Y.Y) && MathF.IsEqualApprox(X.Y, Y.X));
+        (Mathf.IsEqualApprox(X.X, Y.Y) && Mathf.IsEqualApprox(X.Y, -Y.X)) ||
+        (Mathf.IsEqualApprox(X.X, -Y.Y) && Mathf.IsEqualApprox(X.Y, Y.X));
 
     /// <summary>Tests all three columns for scale-aware approximate equality.</summary>
     /// <param name="other">The transform to compare.</param>
@@ -266,7 +266,7 @@ public struct Transform : IEquatable<Transform>
     {
         var localTarget = AffineInverse() * target;
         var scaledTarget = localTarget * Scale;
-        return new Transform(Rotation + MathF.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
+        return new Transform(Rotation + Mathf.Atan2(scaledTarget.Y, scaledTarget.X), Origin);
     }
 
     /// <summary>Returns a transform with a Gram-Schmidt orthonormalized basis.</summary>

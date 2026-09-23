@@ -1,4 +1,4 @@
-using MathF = Electron2D.MathF;
+using Mathf = Electron2D.Mathf;
 using Electron2D;
 using ScenePath = Electron2D.Path;
 
@@ -28,9 +28,9 @@ internal static class PathTests
         f.Loop = false; f.Progress = -10; Near(f.Progress, 0); f.Progress = 90; Near(f.Progress, 30);
         f.ProgressRatio = 2; Near(f.ProgressRatio, 1); f.ProgressRatio = -1; Near(f.ProgressRatio, 0);
         f.HOffset = 2; f.VOffset = 3; f.Progress = 15; Near(f.Position, new(17, 3));
-        using var vertical = Line(new(0, 30)); path.Curve = vertical; Near(f.Position, new(-3, 17)); Near(f.Rotation, MathF.Pi / 2);
-        f.Scale = new(2, 3); f.Skew = .2f; f.Rotates = false; Near(f.Position, new(2, 18)); Near(f.Rotation, MathF.Pi / 2); Near(f.Scale, new(2, 3)); Near(f.Skew, .2f);
-        f.Rotation = .7f; f.Progress = 10; Near(f.Rotation, .7f); f.Rotates = true; Near(f.Rotation, MathF.Pi / 2); Near(f.Scale, new(2, 3)); Near(f.Skew, .2f);
+        using var vertical = Line(new(0, 30)); path.Curve = vertical; Near(f.Position, new(-3, 17)); Near(f.Rotation, Mathf.Pi / 2);
+        f.Scale = new(2, 3); f.Skew = .2f; f.Rotates = false; Near(f.Position, new(2, 18)); Near(f.Rotation, Mathf.Pi / 2); Near(f.Scale, new(2, 3)); Near(f.Skew, .2f);
+        f.Rotation = .7f; f.Progress = 10; Near(f.Rotation, .7f); f.Rotates = true; Near(f.Rotation, Mathf.Pi / 2); Near(f.Scale, new(2, 3)); Near(f.Skew, .2f);
         f.HOffset = f.VOffset = 0; f.Progress = 25;
         using var shortCurve = Line(new(0, 10)); path.Curve = shortCurve; Near(f.Progress, 25); Near(f.ProgressRatio, 2.5f); Near(f.Position, new(0, 10));
         f.Loop = true; Near(f.Progress, 25); f.Progress = f.Progress; Near(f.Progress, 5);

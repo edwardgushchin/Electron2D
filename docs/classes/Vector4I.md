@@ -798,7 +798,7 @@ Converts a finite in-range floating-point vector by truncating every component t
 
 Copies are independent. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent values are safe across threads; concurrent shared mutation is not synchronized.
 
-The type depends on canonical scalar [`MathF`](MathF.md) for snapping and scalar operations, plus formatting/layout primitives and [`Vector4`](Vector4.md). [`ConfigFile`](ConfigFile.md) persists exact four-field 32-bit integer objects; [`PackedScene`](PackedScene.md) stores it directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and [`Vector4`](Vector4.md). [`ConfigFile`](ConfigFile.md) persists exact four-field 32-bit integer objects; [`PackedScene`](PackedScene.md) stores it directly.
 
 ## Coverage, verification, and limitations
 

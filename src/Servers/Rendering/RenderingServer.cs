@@ -205,7 +205,7 @@ public sealed class RenderingServer : ElectronObject
             CollectYSort(item, Transform.Identity);
             var count = _ySort.Count - first;
             CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
-                MathF.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
+                Mathf.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
             for (var index = first; index < first + count; index++)
                 OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
             _ySort.RemoveRange(first, count);

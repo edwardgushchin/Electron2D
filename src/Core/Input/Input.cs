@@ -343,7 +343,7 @@ public sealed class Input : ElectronObject
         if (length > 1f)
             vector /= length;
         else if (deadzone > 0f)
-            vector *= MathF.InverseLerp(deadzone, 1f, length) / length;
+            vector *= Mathf.InverseLerp(deadzone, 1f, length) / length;
 
         return vector;
     }
@@ -363,7 +363,7 @@ public sealed class Input : ElectronObject
             throw new ArgumentOutOfRangeException(nameof(strength), strength, "Action strength must be finite.");
 
         lock (_gate)
-            UpdateContribution(action, SyntheticSource, new InputActionMatch(true, MathF.Clamp(strength, 0f, 1f), MathF.Clamp(strength, 0f, 1f)), exact: true, eventId: 0);
+            UpdateContribution(action, SyntheticSource, new InputActionMatch(true, Mathf.Clamp(strength, 0f, 1f), Mathf.Clamp(strength, 0f, 1f)), exact: true, eventId: 0);
     }
 
     /// <summary>Releases the synthetic source of a registered action without producing an input event.</summary>
@@ -811,13 +811,13 @@ public sealed class Input : ElectronObject
 
         foreach (var contribution in state.Contributions.Values)
         {
-            strength = MathF.Max(strength, contribution.Strength);
-            rawStrength = MathF.Max(rawStrength, contribution.RawStrength);
+            strength = Mathf.Max(strength, contribution.Strength);
+            rawStrength = Mathf.Max(rawStrength, contribution.RawStrength);
             if (contribution.Exact)
             {
                 exactPressed = true;
-                exactStrength = MathF.Max(exactStrength, contribution.Strength);
-                exactRawStrength = MathF.Max(exactRawStrength, contribution.RawStrength);
+                exactStrength = Mathf.Max(exactStrength, contribution.Strength);
+                exactRawStrength = Mathf.Max(exactRawStrength, contribution.RawStrength);
             }
         }
 

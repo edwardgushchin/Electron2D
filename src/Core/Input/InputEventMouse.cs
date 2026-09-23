@@ -334,7 +334,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
         {
             ThrowIfDisposed();
             ValidateFinite(value, nameof(value));
-            if (MathF.Abs(value.X) > 1f || MathF.Abs(value.Y) > 1f)
+            if (Mathf.Abs(value.X) > 1f || Mathf.Abs(value.Y) > 1f)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Stylus tilt components must be between -1 and 1.");
             _tilt = value;
             EmitInputChanged();

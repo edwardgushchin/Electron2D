@@ -80,7 +80,7 @@ public class Path : Entity
         base.OnDraw();
         if (Tree is not { DebugPathsHint: true } tree || _curve is not { } curve || curve.PointCount < 2) return;
         var length = curve.GetBakedLength();
-        if (length <= MathF.Epsilon) return;
+        if (length <= Mathf.Epsilon) return;
         var steps = Math.Floor((double)length / 10) + 1;
         if (steps >= 1_048_576) throw new InvalidOperationException("Path diagnostics exceed the 1,048,576 sample budget.");
         var count = (int)steps + 1;

@@ -195,8 +195,8 @@ public sealed class Gradient : Resource
         if (_mode == InterpolationModeEnum.Cubic)
         {
             var before = Transform(_points[Math.Max(high - 1, 0)].Color); var after = Transform(_points[Math.Min(low + 1, _points.Length - 1)].Color);
-            color = new(MathF.CubicInterpolate(first.R, second.R, before.R, after.R, weight), MathF.CubicInterpolate(first.G, second.G, before.G, after.G, weight),
-                MathF.CubicInterpolate(first.B, second.B, before.B, after.B, weight), MathF.CubicInterpolate(first.A, second.A, before.A, after.A, weight));
+            color = new(Mathf.CubicInterpolate(first.R, second.R, before.R, after.R, weight), Mathf.CubicInterpolate(first.G, second.G, before.G, after.G, weight),
+                Mathf.CubicInterpolate(first.B, second.B, before.B, after.B, weight), Mathf.CubicInterpolate(first.A, second.A, before.A, after.A, weight));
         }
         return _colorSpace switch { ColorSpace.LinearSRGB => color.LinearToSRGB(), ColorSpace.OKLAB => OkColor.FromOKLAB(color), _ => color };
     }
