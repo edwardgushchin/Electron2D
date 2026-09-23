@@ -17,6 +17,8 @@ public class Polygon : Entity
         new PropertyDescriptor<Polygon, Vector2>(nameof(TextureOffset), n => n.TextureOffset, (n, v) => n.TextureOffset = v, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Polygon, float>(nameof(TextureRotation), n => n.TextureRotation, (n, v) => n.TextureRotation = v, _ => 0f, stored: true),
         new PropertyDescriptor<Polygon, Vector2>(nameof(TextureScale), n => n.TextureScale, (n, v) => n.TextureScale = v, _ => Vector2.One, stored: true),
+        new PropertyDescriptor<Polygon, bool>(nameof(InvertEnabled), n => n.InvertEnabled, (n, v) => n.InvertEnabled = v, _ => false, stored: true),
+        new PropertyDescriptor<Polygon, float>(nameof(InvertBorder), n => n.InvertBorder, (n, v) => n.InvertBorder = v, _ => 100f, stored: true),
     ];
 
     private Vector2[] _vertices = [], _uv = [];
@@ -27,6 +29,8 @@ public class Polygon : Entity
     private Vector2 _offset, _textureOffset, _textureScale = Vector2.One;
     private float _textureRotation;
     private int _internalVertexCount;
+    private bool _invertEnabled;
+    private float _invertBorder = 100f;
 
     /// <summary>Creates an empty white polygon.</summary>
     public Polygon() { }
@@ -162,15 +166,39 @@ public class Polygon : Entity
         set { EnsureMutable(); ValidateVector(value); _textureScale = value; InvalidateCanvas(); }
     }
 
+    /// <summary>Gets or sets whether the filled region extends outside the vertex contour to its padded bounds.</summary>
+    /// <value>False by default. Explicit Polygons are ignored while inversion is enabled.</value>
+    public bool InvertEnabled
+    {
+        get { ThrowIfDisposed(); return _invertEnabled; }
+        set { EnsureMutable(); _invertEnabled = value; InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or sets the finite padding of the bounding rectangle used for inverted fill.</summary>
+    /// <value>100 local units by default. A nonpositive value may fail triangulation.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned border is nonfinite.</exception>
+    public float InvertBorder
+    {
+        get { ThrowIfDisposed(); return _invertBorder; }
+        set
+        {
+            EnsureMutable();
+            if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            _invertBorder = value; InvalidateCanvas();
+        }
+    }
+
     /// <inheritdoc />
     protected override void OnDraw()
     {
         base.OnDraw();
         if (_vertices.Length < 3) return;
-        var length = _polygons.Length == 0 ? Math.Max(0, _vertices.Length - _internalVertexCount) : _vertices.Length;
+        var length = _invertEnabled || _polygons.Length == 0 ? Math.Max(0, _vertices.Length - _internalVertexCount) : _vertices.Length;
         if (length < 3) return;
         var points = new Vector2[length];
         for (var i = 0; i < length; i++) points[i] = _vertices[i] + _offset;
+        if (_invertEnabled) points = InvertContour(points, _invertBorder);
+        length = points.Length;
         var colors = _vertexColors.Length == length ? _vertexColors : [_color];
         Vector2[] uvs = [];
         if (_texture is { } texture)
@@ -187,7 +215,7 @@ public class Polygon : Entity
             }
         }
 
-        if (_polygons.Length == 0)
+        if (_invertEnabled || _polygons.Length == 0)
         {
             DrawPolygon(points, colors, uvs, _texture);
             return;
@@ -227,6 +255,50 @@ public class Polygon : Entity
     }
 
     private void TextureChanged(Resource _) => InvalidateCanvas();
+
+    private static Vector2[] InvertContour(Vector2[] points, float border)
+    {
+        var minimum = points[0]; var maximum = points[0];
+        var highestIndex = 0;
+        double orientation = 0;
+        for (var i = 0; i < points.Length; i++)
+        {
+            var point = points[i];
+            minimum = new(Math.Min(minimum.X, point.X), Math.Min(minimum.Y, point.Y));
+            maximum = new(Math.Max(maximum.X, point.X), Math.Max(maximum.Y, point.Y));
+            if (point.Y > points[highestIndex].Y) highestIndex = i;
+            var next = points[(i + 1) % points.Length];
+            orientation += ((double)next.X - point.X) * (next.Y + point.Y);
+        }
+
+        minimum -= new Vector2(border, border);
+        maximum += new Vector2(border, border);
+        var highest = points[highestIndex];
+        var bridgeX = highest.X - 0.00001f;
+        if (bridgeX == highest.X) bridgeX = MathF.BitDecrement(highest.X);
+        Vector2[] bridge =
+        [
+            new(highest.X, highest.Y + border),
+            maximum,
+            new(maximum.X, minimum.Y),
+            minimum,
+            new(minimum.X, maximum.Y),
+            new(bridgeX, highest.Y + border),
+            new(bridgeX, highest.Y),
+        ];
+        if (orientation > 0)
+        {
+            (bridge[1], bridge[4]) = (bridge[4], bridge[1]);
+            (bridge[2], bridge[3]) = (bridge[3], bridge[2]);
+            (bridge[5], bridge[0]) = (bridge[0], bridge[5]);
+            (bridge[6], points[highestIndex]) = (points[highestIndex], bridge[6]);
+        }
+        var result = new Vector2[points.Length + bridge.Length];
+        Array.Copy(points, 0, result, 0, highestIndex + 1);
+        Array.Copy(bridge, 0, result, highestIndex + 1, bridge.Length);
+        Array.Copy(points, highestIndex + 1, result, highestIndex + 1 + bridge.Length, points.Length - highestIndex - 1);
+        return result;
+    }
 
     private static int[][] CopyContours(int[][] contours) => contours.Select(contour => (int[])contour.Clone()).ToArray();
 

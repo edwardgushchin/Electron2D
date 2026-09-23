@@ -1,6 +1,6 @@
 {
   "mappings": [
-    {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, offset and packed state execute; full inverted/skeletal geometry remains absent."},
+    {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."},
     {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
     {"electron2d": "method:Electron2D.Control.GetParentAreaSize()", "godot": "Control::method:get_parent_area_size()", "state": "Partial", "reason": "The direct control or root viewport layout area is executable; other canvas-parent anchorable rectangles remain to audit."},
@@ -2580,17 +2580,17 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "Polygon : Entity now draws filled colored/textured contours and stores typed scene state on Linux Wayland GPU/compatibility and dummy/software. Inverted fill, antialiasing and skeletal deformation remain separate member gaps under ADR 0004.",
+      "reason": "Polygon : Entity draws filled, inverted, colored and textured contours and stores typed scene state on tested Linux backends. Antialiasing and skeletal deformation remain separate member gaps under ADR 0004.",
       "godot": ["class:Polygon2D"]
     },
     {
       "state": "Partial",
-      "reason": "Executable retained contour rendering, copied typed state and Linux pixel checks exist. Pinned polygon_2d.cpp was audited for defaults, UV/color fallback and index-contour drawing; complete inverted, antialias and skeleton integration is tracked separately, and edge-case geometry parity remains to audit.",
+      "reason": "Executable retained contour rendering, copied typed state and Linux pixel checks exist. Pinned polygon_2d.cpp was audited for defaults, UV/color fallback, index contours and inverted fill; antialiasing and skeleton integration remain separate, and edge-case geometry parity remains to audit.",
       "godot": ["Polygon2D::property:color", "Polygon2D::property:internal_vertex_count", "Polygon2D::property:offset", "Polygon2D::property:polygons", "Polygon2D::property:texture", "Polygon2D::property:texture_offset", "Polygon2D::property:texture_rotation", "Polygon2D::property:texture_scale", "Polygon2D::property:uv", "Polygon2D::property:vertex_colors"]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Trigger: first polygon-specific inverted-fill triangulation using the retained canvas polygon path, including border, winding, degenerate contours and native pixel checks; part of the Polygon drawing completion slice (ADR 0028).",
+      "state": "Partial",
+      "reason": "InvertEnabled and InvertBorder use the pinned seven-point outer-contour bridge and retained polygon triangulation, ignoring explicit index contours during inversion. Managed square/concave and winding checks, packed-state checks and Linux native square pixels execute; degenerate/self-intersecting geometry and other backends need parity audit.",
       "godot": ["Polygon2D::property:invert_border", "Polygon2D::property:invert_enabled"]
     },
     {

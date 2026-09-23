@@ -31,7 +31,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `Control : CanvasItem`: rectangular anchor/offset layout, pivot transform and resize propagation; focus, theme, GUI input and containers remain gaps.
 - `Sprite`: borrowed texture drawing, sheet frames, atlas regions, local bounds/opacity, change notifications and typed PackedScene state.
 - `Line`: spatial polyline drawing with point edits, width/color/texture resources, cap and joint modes, and typed scene state.
-- `Polygon`: spatial filled contours with color and texture coordinates, indexed subcontours, and copied packed state; inverted fill and skeletal deformation remain absent.
+- `Polygon`: spatial filled and inverted contours with color and texture coordinates, indexed subcontours, and copied packed state; skeletal deformation remains absent.
 - `Path` / `PathFollow`: borrowed PathCurve containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
 - `NodeProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.

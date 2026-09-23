@@ -6,7 +6,8 @@ internal static class PolygonTests
     {
         using var polygon = new Polygon();
         Check(polygon is Entity && polygon.Vertices.Length == 0 && polygon.Color == Colors.White &&
-            polygon.TextureScale == Vector2.One && polygon.InternalVertexCount == 0);
+            polygon.TextureScale == Vector2.One && polygon.InternalVertexCount == 0 &&
+            !polygon.InvertEnabled && polygon.InvertBorder == 100);
         var vertexProperty = polygon.GetPropertyList().Single(p => p.Name == nameof(Polygon.Vertices));
         Check(!vertexProperty.CanRevert(polygon), "Default empty arrays are already at their revert value.");
         Vector2[] square = [new(0, 0), new(20, 0), new(20, 20), new(0, 20)];
@@ -57,6 +58,42 @@ internal static class PolygonTests
         Check(instance.Vertices.SequenceEqual(polygon.Vertices) && instance.Polygons[0][0] == 0 &&
             instance.VertexColors[0] == Colors.Red && ReferenceEquals(instance.Texture, texture));
 
+        foreach (var winding in new[] { false, true })
+        {
+            using var inverted = new Polygon
+            {
+                Vertices = winding ? [new(0, 20), new(20, 20), new(20, 0), new(0, 0)] :
+                    [new(0, 0), new(20, 0), new(20, 20), new(0, 20)],
+                InvertEnabled = true,
+                InvertBorder = 10,
+                Color = Colors.Blue,
+                Polygons = [[0, 1, 2]],
+            };
+            vertices.Clear(); batches.Clear();
+            inverted.PrepareCanvas(); inverted.AppendCanvas(vertices, batches, Transform.Identity);
+            Check(vertices.Count > 0 && Covers(vertices, new(27, 10)) && Covers(vertices, new(-5, 10)) &&
+                !Covers(vertices, new(10, 10)) && !Covers(vertices, new(35, 10)),
+                $"Inversion winding={winding}, triangles={vertices.Count / 3}: right={Covers(vertices, new(27, 10))}, left={Covers(vertices, new(-5, 10))}, center={Covers(vertices, new(10, 10))}, outside={Covers(vertices, new(35, 10))}.");
+            using var invertedScene = new PackedScene(); invertedScene.Pack(inverted);
+            using var invertedInstance = (Polygon)invertedScene.Instantiate();
+            Check(invertedInstance.InvertEnabled && invertedInstance.InvertBorder == 10, "Inversion persists in packed scenes.");
+            inverted.InvertEnabled = false;
+            vertices.Clear(); batches.Clear();
+            inverted.PrepareCanvas(); inverted.AppendCanvas(vertices, batches, Transform.Identity);
+            Check(Covers(vertices, new(17, 7)) && !Covers(vertices, new(27, 10)), "Disabling inversion restores the original fill.");
+
+            inverted.Vertices = winding ?
+                [new(0, 30), new(10, 30), new(10, 10), new(30, 10), new(30, 0), new(0, 0)] :
+                [new(0, 0), new(30, 0), new(30, 10), new(10, 10), new(10, 30), new(0, 30)];
+            inverted.InvertEnabled = true;
+            vertices.Clear(); batches.Clear();
+            inverted.PrepareCanvas(); inverted.AppendCanvas(vertices, batches, Transform.Identity);
+            Check(Covers(vertices, new(23, 19)) && Covers(vertices, new(35, 15)) &&
+                !Covers(vertices, new(4, 7)) && !Covers(vertices, new(45, 15)),
+                $"Concave inverted contour winding={winding}, triangles={vertices.Count / 3}: notch={Covers(vertices, new(23, 19))}, ring={Covers(vertices, new(35, 15))}, center={Covers(vertices, new(4, 7))}, outside={Covers(vertices, new(45, 15))}.");
+        }
+        Reject<ArgumentOutOfRangeException>(() => polygon.InvertBorder = float.PositiveInfinity);
+
         polygon.Polygons = [[9, 1, 2]];
         Reject<ArgumentOutOfRangeException>(() => polygon.PrepareCanvas());
         Reject<ArgumentException>(() => polygon.Vertices = [new(float.NaN, 0)]);
@@ -68,6 +105,13 @@ internal static class PolygonTests
     }
 
     private static void Check(bool value, string? message = null) { if (!value) throw new InvalidOperationException(message ?? "Polygon check failed."); }
+
+    private static bool Covers(List<CanvasVertex> triangles, Vector2 point)
+    {
+        for (var i = 0; i < triangles.Count; i += 3)
+            if (Geometry.PointIsInsideTriangle(point, triangles[i].Position, triangles[i + 1].Position, triangles[i + 2].Position)) return true;
+        return false;
+    }
     private static void Reject<T>(Action action) where T : Exception
     {
         try { action(); } catch (T) { return; }

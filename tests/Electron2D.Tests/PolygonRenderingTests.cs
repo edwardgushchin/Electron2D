@@ -9,7 +9,7 @@ internal static partial class RenderingRuntimeTests
         using var texture = ImageTexture.CreateFromImage(image);
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
-        var window = new Window { Size = new(64, 40), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new(100, 60), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var filled = new Polygon
         {
             Name = "Filled",
@@ -27,7 +27,16 @@ internal static partial class RenderingRuntimeTests
             Texture = texture,
             UV = [new(0, 0), new(2, 0), new(2, 1), new(0, 1)],
         };
-        window.AddChild(filled); window.AddChild(textured);
+        var inverted = new Polygon
+        {
+            Name = "Inverted",
+            Vertices = [new(0, 0), new(12, 0), new(12, 12), new(0, 12)],
+            Position = new(64, 20),
+            InvertEnabled = true,
+            InvertBorder = 8,
+            Color = Colors.Yellow,
+        };
+        window.AddChild(filled); window.AddChild(textured); window.AddChild(inverted);
         var frames = 0;
         window.Ready += _ =>
         {
@@ -39,7 +48,10 @@ internal static partial class RenderingRuntimeTests
                 Pixel(frame, 22, 22, frames == 1 ? Colors.Red : Colors.Blue);
                 Pixel(frame, 28, 8, Colors.Black);
                 Pixel(frame, 35, 8, Colors.Red); Pixel(frame, 49, 8, Colors.Green);
-                if (frames == 1) filled.Color = Colors.Blue;
+                Pixel(frame, 59, 30, Colors.Yellow); Pixel(frame, 81, 30, Colors.Yellow);
+                Pixel(frame, 70, 26, Colors.Black); Pixel(frame, 90, 30, Colors.Black);
+                Pixel(frame, 54, 30, frames == 1 ? Colors.Black : Colors.Yellow);
+                if (frames == 1) { filled.Color = Colors.Blue; inverted.InvertBorder = 12; }
                 else window.Tree!.Quit();
             };
         };

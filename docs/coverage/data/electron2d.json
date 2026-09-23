@@ -53220,6 +53220,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Polygon.InvertBorder()",
+    "kind": "property",
+    "declaringType": "Electron2D.Polygon",
+    "name": "InvertBorder",
+    "signature": "public System.Single InvertBorder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Polygon.InvertEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Polygon",
+    "name": "InvertEnabled",
+    "signature": "public System.Boolean InvertEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Polygon.Offset()",
     "kind": "property",
     "declaringType": "Electron2D.Polygon",
