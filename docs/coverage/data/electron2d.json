@@ -23393,6 +23393,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.TriangulateDelaunay(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "TriangulateDelaunay",
+    "signature": "public static System.Int32[] TriangulateDelaunay(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.TriangulatePolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",

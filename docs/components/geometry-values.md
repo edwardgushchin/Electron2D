@@ -57,7 +57,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `MathF`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
 
-`Geometry` now implements fourteen pure raster, nearest-point, polygon, hull, triangulation, atlas and intersection methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Its class coverage remains partial; polygon clipping/offset, Delaunay triangulation and the other reference methods are not implemented by this slice.
+`Geometry` now implements fifteen pure raster, nearest-point, polygon, hull, triangulation, atlas and intersection methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Its class coverage remains partial; polygon clipping/offset, convex decomposition and the other reference methods are not implemented by this slice.
 
 ## Exclusions and limitations
 
@@ -71,7 +71,7 @@ Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned
 
 The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, the strict internal tolerance migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Entity integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
-`GeometryTests.Run` covers the implemented pure queries on raster orientation/endpoints, integer limits, degenerate and crossing segments, circle boundaries, nullable intersections, polygon winding/containment, convex hull closure, atlas layout and limits, triangulation and segment/circle contact. `CanvasPolygonTests.Run` covers reuse without warmed redraw allocations.
+`GeometryTests.Run` covers the implemented pure queries on raster orientation/endpoints, integer limits, degenerate and crossing segments, circle boundaries, nullable intersections, polygon winding/containment, convex hull closure, atlas layout and limits, polygon and Delaunay triangulation, and segment/circle contact. `CanvasPolygonTests.Run` covers reuse without warmed redraw allocations.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 
