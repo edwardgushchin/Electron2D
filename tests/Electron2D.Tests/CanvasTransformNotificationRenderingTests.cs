@@ -6,12 +6,14 @@ internal static partial class RenderingRuntimeTests
     {
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
-        var window = new Window { Size = new(100, 80) };
+        var window = new Window { Size = new(256, 128) };
         var camera = new Camera { Position = new(50, 40), LimitEnabled = false }; window.AddChild(camera);
         var item = LayerBox("Item", new(20, 20), Colors.Red, material); window.AddChild(item);
         var frames = 0; var notices = 0;
         window.Ready += _ =>
         {
+            var center = window.GetVisibleRect().Size * 0.5f;
+            camera.Position = center;
             camera.ForceUpdateTransform();
             camera.TransformChanged += _ => notices++;
             var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
@@ -19,13 +21,13 @@ internal static partial class RenderingRuntimeTests
             {
                 if (frames == 0)
                 {
-                    camera.Position = new(60, 40);
-                    Check(notices == 0 && camera.GetScreenCenterPosition() == new Vector2(50, 40), "Position changed after frame flush remains queued.");
+                    camera.Position = center + new Vector2(10, 0);
+                    Check(notices == 0 && camera.GetScreenCenterPosition() == center, "Position changed after frame flush remains queued.");
                 }
                 if (frames == 2)
                 {
-                    camera.Position = new(70, 40); camera.ForceUpdateTransform(); camera.ForceUpdateTransform();
-                    Check(camera.GetScreenCenterPosition() == new Vector2(70, 40), "Force publishes the camera before this submission.");
+                    camera.Position = center + new Vector2(20, 0); camera.ForceUpdateTransform(); camera.ForceUpdateTransform();
+                    Check(camera.GetScreenCenterPosition() == center + new Vector2(20, 0), "Force publishes the camera before this submission.");
                 }
             };
             server.FramePostDraw += () =>

@@ -143,6 +143,6 @@ When reflow changes position or size, the control commits both values, invalidat
 
 [ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Further layout policies and GUI behavior are tracked in coverage; this class is only partially implemented against the accepted reference API.
 
-Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software. The full Wayland rendering suite in this run stopped earlier in CameraRenderingTests on a camera pixel assertion; its remaining stages were not verified by that run.
+Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software. The full Wayland rendering suite in this run passed CameraRenderingTests and CanvasTransformNotificationRenderingTests, then stopped in CanvasLayerRenderingTests after a compositor resize; its remaining stages were not verified by that run.
 
 **Decisions:** [scene hierarchy](../decisions/scene.md#adr-0008), [typed 2D API](../decisions/product.md#adr-0004), [rendering](../decisions/rendering.md#adr-0028).

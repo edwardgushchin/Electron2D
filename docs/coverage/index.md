@@ -72,7 +72,7 @@ The pinned upstream and current Electron2D declarations are fully accounted for.
 
 [CanvasItemMaterial](classes/CanvasItemMaterial.md) now maps fixed blend modes with native GPU/compatibility pixel checks. SDL software supports Mix and explicitly rejects other modes. Light and particle properties remain blocked by their respective renderer and simulation integrations.
 
-[Control](classes/Control.md) is now a partial production type under CanvasItem. Its rectangle, anchor/offset reflow, pivot transform, resize notification, PackedScene state and child-canvas placement are executable. Focus, theme, input, minimum/maximum sizing and container behavior remain separate GUI gaps. Targeted Wayland compatibility/GPU and dummy/software hierarchy pixels pass; the full Wayland rendering run stopped earlier at a CameraRenderingTests pixel assertion.
+[Control](classes/Control.md) is now a partial production type under CanvasItem. Its rectangle, anchor/offset reflow, pivot transform, resize notification, PackedScene state and child-canvas placement are executable. Focus, theme, input, minimum/maximum sizing and container behavior remain separate GUI gaps. Targeted Wayland compatibility/GPU and dummy/software hierarchy pixels pass; the full Wayland rendering run reached CanvasLayerRenderingTests and stopped at a coordinate pixel assertion after the compositor resized a small test window.
 
 Image codec methods are explicitly Partial: five native loaders and PNG/JPEG saving have executable Linux checks, but source channel-layout, color/metadata and complete format behavior remain unfinished. The pinned native WebP lossless encoder failed color preservation and has an exact dependency trigger in ADR 0039.
 
