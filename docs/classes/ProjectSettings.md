@@ -221,7 +221,7 @@ Defines `rendering/2d/snap/snap_2d_vertices_to_pixel`, default false. Constructi
 
 `public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`
 
-Defines `rendering/textures/default_filters/use_nearest_mipmap_filter`, default false. The GPU renderer reads the active feature override on construction: false linearly interpolates mip levels for canvas samplers, true chooses the nearest mip. Changes apply to the next renderer run. Non-mipmap filters remain restricted to level zero. Fixed named-material samplers retain their existing nearest-mip profile.
+Defines `rendering/textures/default_filters/use_nearest_mipmap_filter`, default false. The GPU renderer reads the active feature override on construction: false linearly interpolates mip levels for canvas samplers, true chooses the nearest mip. Changes apply to the next renderer run. Non-mipmap filters remain restricted to level zero. Named material samplers use fixed linear filtering and remain restricted to level zero, so this setting does not change their output.
 
 ### AnisotropicFilteringLevel
 

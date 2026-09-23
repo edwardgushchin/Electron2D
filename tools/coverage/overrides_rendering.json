@@ -1467,7 +1467,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Case-sensitive borrowed texture defaults are available at index zero; null clears and material overrides take precedence. Unknown/reserved names, disposed inputs and nonzero indices reject explicitly. Native HLSL/GLSL texture/default/reload checks exist. Sampler arrays and sampler configuration remain pending (ADR 0028).",
+      "reason": "Case-sensitive borrowed texture defaults are available at index zero; null clears and material overrides take precedence. Unknown/reserved names, disposed inputs and nonzero indices reject explicitly. Native HLSL/GLSL texture/default/reload checks exist. Named sampler defaults now match linear/base-level/clamp independently of canvas policy, verified by RenderingTextureTests for both languages. Sampler arrays and sampler configuration remain pending (ADR 0028).",
       "godot": [
         "Shader::method:get_default_texture_parameter(StringName:,int:)",
         "Shader::method:set_default_texture_parameter(StringName:,Texture:,int:)"
@@ -1482,7 +1482,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Typed ShaderMaterial supports copied scalar/vector/array values, borrowed texture overrides, shared shaders, reload migration and graph duplication; mutations notify Changed in the C# Resource model. ShaderVectorRenderingTests and ShaderMatrixRenderingTests cover RGB/Rect/unsigned vectors and Transform float2x2, descriptors/defaults, scalar/array copies, signedness resets, matrix order/stride migration and HLSL/GLSL pixels with zero warm allocation. Further uniform types/defaults, instance uniforms, sampler configuration and full backend behavior remain pending (ADRs 0001/0014/0028).",
+      "reason": "Typed ShaderMaterial supports copied scalar/vector/array values, borrowed texture overrides, shared shaders, reload migration and graph duplication; mutations notify Changed in the C# Resource model. ShaderVectorRenderingTests and ShaderMatrixRenderingTests cover RGB/Rect/unsigned vectors and Transform float2x2, descriptors/defaults, scalar/array copies, signedness resets, matrix order/stride migration and HLSL/GLSL pixels with zero warm allocation. RenderingTextureTests verifies named linear/base-level/clamp defaults across reload and live canvas policies. Source bool currently lowers to physical uint in both importers; logical boolean descriptors require validated import/artifact type metadata. Further uniform types/defaults, instance uniforms, sampler configuration and full backend behavior remain pending (ADRs 0001/0014/0028).",
       "godot": [
         "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
         "ShaderMaterial::property:shader",

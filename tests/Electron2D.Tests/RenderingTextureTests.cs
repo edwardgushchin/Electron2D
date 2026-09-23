@@ -215,11 +215,9 @@ internal static partial class RenderingRuntimeTests
                 using var frame = server.Readback();
                 var expected = frames switch
                 {
-                    1 => Colors.Red,
-                    2 => Colors.Green,
-                    3 => Colors.Blue,
-                    4 => Colors.Yellow,
-                    5 or 14 => Colors.Blue,
+                    1 or 2 or 3 or 5 => Colors.Red,
+                    4 => Colors.Green,
+                    14 => Colors.Blue,
                     6 => new Color(0.5f, 0, 0, 1),
                     7 or 8 => Colors.Cyan,
                     9 or 10 or 12 => Colors.Yellow,
@@ -282,7 +280,91 @@ internal static partial class RenderingRuntimeTests
         Engine.Instance.Run(window);
         Released(window);
         Check(frames == 14 && !texture.IsDisposed && !detail.IsDisposed && !custom.IsDisposed,
-            "Texture sampling, mip uploads, update/replacement, custom resources, binding reload and borrowed cleanup execute through Engine.Run.");
+            "Texture sampling, base-level LOD clamping, update/replacement, custom resources, binding reload and borrowed cleanup execute through Engine.Run.");
+    }
+
+    private static void VerifyNamedSamplerDefaults(string backend, string fixture)
+    {
+        using var shader = LoadShader(fixture);
+        var original = shader.GetSPIRV();
+        using var reordered = LoadShader("TextureReordered");
+        using var source = MipImage(Colors.Red, Colors.Green, Colors.Yellow);
+        for (var y = 0; y < 4; y++)
+            for (var x = 2; x < 4; x++) source.SetPixel(x, y, Colors.Blue);
+        using var texture = ImageTexture.CreateFromImage(source);
+        using var detail = ImageTexture.CreateFromImage(source);
+        shader.SetDefaultTextureParameter("colorMap", texture);
+        shader.SetDefaultTextureParameter("detailMap", detail);
+        using var material = new ShaderMaterial { Shader = shader };
+        material.SetShaderParameter("tint", Colors.White);
+        using var copy = (ShaderMaterial)material.Duplicate();
+        copy.SetShaderParameter("colorMap", texture);
+        var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.NearestWithMipmaps, CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Mirror };
+        var parent = new Entity { TextureFilter = CanvasItem.TextureFilterEnum.Nearest, TextureRepeat = CanvasItem.TextureRepeatEnum.Enabled };
+        window.AddChild(parent);
+        var nodes = new[]
+        {
+            new CanvasNode { Name = "first", Material = material },
+            new CanvasNode { Name = "copy", Material = copy, Position = new(0, 16), TextureFilter = CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic, TextureRepeat = CanvasItem.TextureRepeatEnum.Mirror },
+            new CanvasNode { Name = "shared", Material = material, Position = new(0, 32) }
+        };
+        foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 96, 12), Colors.White); parent.AddChild(node); }
+        var frames = 0; var before = 0L; var allocated = 0L;
+        var settings = ProjectSettings.Instance; var nearestMip = settings.Get(ProjectSettings.UseNearestMipmapFilter);
+        window.Ready += _ =>
+        {
+            var server = RenderingServer.Instance!;
+            server.FramePreDraw += () => before = GC.GetAllocatedBytesForCurrentThread();
+            server.FramePostDraw += () =>
+            {
+                var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (++frames > 20) allocated += bytes;
+                using var image = server.Readback();
+                foreach (var y in new[] { 4, 20, 36 })
+                {
+                    // The base-level boundary lies at u=0.5; sample centers differ by 1/64.
+                    Pixel(image, 31, y, new(.53125f, frames >= 3 ? 1 : 0, .46875f, 1));
+                    Pixel(image, 32, y, new(.46875f, frames >= 3 ? 1 : 0, .53125f, 1));
+                    Pixel(image, 80, y, frames >= 3 ? Colors.Cyan : Colors.Blue);
+                }
+                if (frames == 1)
+                {
+                    material.SetShaderParameter("lod", 2f); copy.SetShaderParameter("lod", 2f);
+                    parent.TextureFilter = CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic;
+                    window.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.LinearWithMipmaps;
+                    window.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Enabled;
+                    settings.Set(ProjectSettings.UseNearestMipmapFilter, !nearestMip);
+                }
+                if (frames == 2)
+                {
+                    for (var y = 0; y < 4; y++)
+                        for (var x = 0; x < 4; x++) source.SetPixel(x, y, x < 2 ? Colors.Yellow : Colors.Cyan);
+                    texture.Update(source); detail.Update(source);
+                }
+                if (frames == 3) shader.SetSPIRV(reordered.GetSPIRV());
+                if (frames == 4)
+                {
+                    // Exercise the second named sampler, after its binding moves during reload.
+                    material.SetShaderParameter("tint", new Color(0, 0, 0, 0)); copy.SetShaderParameter("tint", new Color(0, 0, 0, 0));
+                    material.SetShaderParameter("detailAmount", 1f); copy.SetShaderParameter("detailAmount", 1f);
+                    material.SetShaderParameter("lod", -2f); copy.SetShaderParameter("lod", -2f);
+                }
+                if (frames == 5) shader.SetSPIRV(original);
+                if (frames == 40) window.Tree!.Quit();
+            };
+        };
+        try
+        {
+            if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
+            else
+            {
+                Engine.Instance.Run(window);
+                Check(frames == 40 && allocated == 0 && nodes[0].Draws == 2 && nodes[1].Draws == 1 && nodes[2].Draws == 2, $"Named sampler result: frames={frames}, allocated={allocated}, draws={string.Join(",", nodes.Select(n => n.Draws))}.");
+            }
+        }
+        finally { settings.Set(ProjectSettings.UseNearestMipmapFilter, nearestMip); }
+        Released(window);
+        Check(!texture.IsDisposed && !detail.IsDisposed, "Named sampler teardown preserves borrowed texture resources.");
+        Console.WriteLine($"Named sampler defaults passed: {backend}/{fixture}; {frames} frames; {allocated} warm rendering bytes.");
     }
 
     private static void VerifyTextureFailure(string backend)

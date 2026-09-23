@@ -23,7 +23,7 @@ AnimatedSprite uses the existing internal idle lane and canvas path. Its [timing
 - Uses Resources for copied image snapshots and typed materials; consumers borrow these resources.
 - GPU is primary; compatibility is explicit startup fallback and rejects shaders.
 - Frame submission and native resource lifetimes belong to the scene owner thread.
-- HLSL and GLSL share the SPIR-V interface. Import/build compiles source; runtime consumes bytecode.
+- HLSL and GLSL share the SPIR-V interface. Import/build compiles source; runtime consumes bytecode. Named material samplers have linear/base-level/clamp defaults independently of canvas policies; configurable named sampler state remains pending.
 - Invalid resources or unsupported backend features fail explicitly. SDL types and owned graphics handles remain internal; DisplayServer may expose documented borrowed OS/context identities.
 
 ## Verification and limits

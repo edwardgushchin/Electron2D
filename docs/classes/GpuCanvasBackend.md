@@ -11,7 +11,7 @@ Last updated: 2026-09-23
 
 The SDL GPU implementation of CanvasBackend. Construction retains the display window, creates a device, claims the window, and builds the default pipeline. Construction failure unwinds the completed steps. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread.
 
-GPU sampler cache keys include texel filter, repeat, effective anisotropy and mip interpolation. Non-mipmap canvas modes clamp LOD to zero; mip/anisotropic modes use all uploaded levels. Mirror uses native mirrored repeat. Named material samplers preserve their fixed nearest/nearest-mip/clamp profile. Cached sampler handles release on backend disposal.
+GPU sampler cache keys include texel filter, repeat, effective anisotropy and mip interpolation. Non-mipmap canvas modes clamp LOD to zero; mip/anisotropic modes use all uploaded levels. Mirror uses native mirrored repeat. Named material samplers use linear filtering, clamp-to-edge coordinates and LOD zero, independently of canvas policies. Cached sampler handles release on backend disposal.
 
 ## Internal usage
 

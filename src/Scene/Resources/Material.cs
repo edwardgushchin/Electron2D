@@ -143,7 +143,8 @@ public sealed class ShaderMaterial : Material
     /// <param name="name">The exact, case-sensitive texture parameter name.</param>
     /// <param name="texture">A live texture, or null to use the Shader default.</param>
     /// <remarks>An unbound parameter without a Shader default fails explicitly before drawing. Textures are sampled
-    /// with nearest filtering and clamped coordinates in this integration. Changes emit Changed.</remarks>
+    /// with linear filtering, clamped coordinates and LOD restricted to the base level, independently of canvas sampling
+    /// properties. Configurable named sampler state remains pending. Changes emit Changed.</remarks>
     /// <exception cref="ArgumentException">The parameter is not a sampled texture.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material, shader or supplied texture is disposed.</exception>

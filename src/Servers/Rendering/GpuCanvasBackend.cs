@@ -212,11 +212,10 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         }
     }
 
-    private nint Sampler(CanvasItem.TextureFilterEnum filter, CanvasItem.TextureRepeatEnum repeat, int anisotropy = 1, bool materialSampler = false)
+    private nint Sampler(CanvasItem.TextureFilterEnum filter, CanvasItem.TextureRepeatEnum repeat, int anisotropy = 1)
     {
         var anisotropic = filter >= CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic && anisotropy > 1;
-        var nearestMipmaps = materialSampler || _nearestMipmaps;
-        var key = (filter, repeat, anisotropic ? anisotropy : 1, nearestMipmaps);
+        var key = (filter, repeat, anisotropic ? anisotropy : 1, _nearestMipmaps);
         if (!_samplers.TryGetValue(key, out var sampler))
         {
             var linear = filter is CanvasItem.TextureFilterEnum.Linear or CanvasItem.TextureFilterEnum.LinearWithMipmaps or CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic;
@@ -230,7 +229,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             {
                 MinFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
                 MagFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
-                MipmapMode = nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
+                MipmapMode = _nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
                 AddressModeU = address,
                 AddressModeV = address,
                 AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge,
@@ -290,7 +289,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 if (material.Program.Textures[i].IsCanvasTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(CanvasItem.TextureFilterEnum.NearestWithMipmaps, CanvasItem.TextureRepeatEnum.Disabled, materialSampler: true) };
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(CanvasItem.TextureFilterEnum.Linear, CanvasItem.TextureRepeatEnum.Disabled) };
             }
         }
         finally { Array.Clear(_textureScratch); }

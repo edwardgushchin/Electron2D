@@ -52,7 +52,7 @@ Returns `Shader.Mode.CanvasItem` (1). Throws `ObjectDisposedException` after dis
 
 ### CreateFromSPIRV
 
-Copies `bytecode` before validation. The input must contain the supported canvas fragment interface, one `main` entry point and a little-endian SPIR-V header, within 16 MiB. Invalid structure/reflection throws `ArgumentException`; unsupported interfaces/resources throw `NotSupportedException`. Native-library initialization/load failures remain visible. The complete current profile is in the component page.
+Copies `bytecode` before validation. The input must contain the supported canvas fragment interface, one `main` entry point and a little-endian SPIR-V header, within 16 MiB. Invalid structure/reflection throws `ArgumentException`; unsupported interfaces/resources throw `NotSupportedException`. Native-library initialization/load failures remain visible. Named sampled images use fixed linear filtering, clamp-to-edge coordinates and LOD zero independently of canvas policies. The complete current profile is in the component page.
 
 ### SetSPIRV
 

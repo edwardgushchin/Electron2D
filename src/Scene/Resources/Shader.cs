@@ -9,7 +9,8 @@ namespace Electron2D;
 /// An optional non-array float32 uniform named TIME receives render seconds, scaled by Engine.TimeScale and wrapped
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
 /// Material uniforms use validated std140 buffers at descriptor
-/// set three and sampled 2D textures at set two. Matrices, nested uniform structs and user vertex programs remain pending.</remarks>
+/// set three and sampled 2D textures at set two. Named textures use linear/base-level/clamp sampling, independently
+/// of canvas properties. Sampler configuration, matrices other than float2x2, nested uniform structs and user vertex programs remain pending.</remarks>
 public sealed class Shader : Resource
 {
     /// <summary>Identifies the supported two-dimensional shader domain.</summary>
