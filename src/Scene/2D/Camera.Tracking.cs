@@ -100,6 +100,7 @@ public partial class Camera
         viewport.CanvasTransform = canvas;
         _targetPosition = target; _smoothedPosition = smoothed; _screenRotation = angle; _screenCenter = center;
         _horizontalOffsetChanged = horizontalChanged; _verticalOffsetChanged = verticalChanged; _first = false;
+        viewport.NotifyParallaxCameraMoved(center - halfSize * scale);
     }
 
     private Vector2 LimitOrigin(Vector2 origin, Vector2 extent) => new(

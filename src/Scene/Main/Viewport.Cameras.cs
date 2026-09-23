@@ -3,6 +3,7 @@ namespace Electron2D;
 public abstract partial class Viewport
 {
     private Camera? _camera;
+    private readonly HashSet<Parallax> _parallaxes = [];
 
     /// <summary>Returns the active camera for this viewport's default canvas.</summary>
     /// <returns>A borrowed Camera, or null when no enabled camera is selected.</returns>
@@ -14,6 +15,20 @@ public abstract partial class Viewport
     public Camera? GetCamera() { CheckTransformQuery(); return _camera; }
 
     internal void SetCurrentCamera(Camera camera) => _camera = camera;
+
+    internal void RegisterParallax(Parallax parallax) => _parallaxes.Add(parallax);
+    internal void UnregisterParallax(Parallax parallax) => _parallaxes.Remove(parallax);
+
+    internal void NotifyParallaxCameraMoved(Vector2 adjustedScreenPosition)
+    {
+        if (_parallaxes.Count == 0) return;
+        List<Exception>? errors = null;
+        foreach (var parallax in _parallaxes.ToArray())
+            if (!parallax.IsDisposed && ReferenceEquals(parallax.GetViewport(), this))
+                try { parallax.CameraMoved(adjustedScreenPosition, SnapTransformsToPixel); }
+                catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("One or more parallax camera updates failed.", errors);
+    }
 
     internal void ReleaseCamera(Camera camera)
     {

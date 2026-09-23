@@ -25,6 +25,7 @@
     "Camera2D": "Camera",
     "Line2D": "Line",
     "Polygon2D": "Polygon",
+    "Parallax2D": "Parallax",
     "NoiseTexture2D": "NoiseTexture"
   },
   "enums": {

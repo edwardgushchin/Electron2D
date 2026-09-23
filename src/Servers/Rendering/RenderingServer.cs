@@ -23,6 +23,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasVertex> _vertices = [];
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
+    private readonly Dictionary<Parallax, Transform> _repeatTransforms = [];
     private readonly List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
@@ -136,7 +137,7 @@ public sealed class RenderingServer : ElectronObject
             if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
                 throw new InvalidOperationException("The render clock step is invalid.");
             CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
-            _nodes.Clear(); _order.Clear(); _vertices.Clear(); _batches.Clear();
+            _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _vertices.Clear(); _batches.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
                 if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree)
@@ -164,14 +165,41 @@ public sealed class RenderingServer : ElectronObject
                 order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
             });
             foreach (var item in _order)
-                item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime);
+            {
+                Parallax? repeatSource = null;
+                for (var ancestor = item.Node; ancestor is not null; ancestor = ancestor.GetParentItem())
+                    if (ancestor is Parallax parallax && parallax.RepeatSize != Vector2.Zero)
+                    {
+                        repeatSource = parallax;
+                        break;
+                    }
+                if (repeatSource is null)
+                {
+                    item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime);
+                    continue;
+                }
+                var size = repeatSource.RepeatSize;
+                var times = repeatSource.RepeatTimes;
+                var sourceTransform = _repeatTransforms[repeatSource];
+                var start = size * -(times / 2);
+                var countX = size.X == 0 ? 0 : times;
+                var countY = size.Y == 0 ? 0 : times;
+                for (long y = 0; y <= countY; y++)
+                    for (long x = 0; x <= countX; x++)
+                    {
+                        var transform = item.Transform;
+                        transform.Origin += sourceTransform.BasisXform(start + new Vector2(x * size.X, y * size.Y));
+                        if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
+                        item.Node.AppendCanvas(_vertices, _batches, transform, CanvasTime);
+                    }
+            }
             foreach (var batch in _batches)
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
             _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
             FramePostDraw?.Invoke();
         }
-        finally { _nodes.Clear(); _order.Clear(); _ySort.Clear(); _rendering = false; }
+        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _ySort.Clear(); _rendering = false; }
     }
 
     private void Capture(Node node)
@@ -197,7 +225,7 @@ public sealed class RenderingServer : ElectronObject
         {
             if (alreadyYSorted)
             {
-                _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
+                AddRenderEntry(item, transform);
                 return;
             }
             var first = _ySort.Count;
@@ -212,8 +240,14 @@ public sealed class RenderingServer : ElectronObject
             return;
         }
         OrderChildren(item, transform, behind: true);
-        _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
+        AddRenderEntry(item, transform);
         OrderChildren(item, transform, behind: false);
+    }
+
+    private void AddRenderEntry(CanvasItem item, Transform transform)
+    {
+        if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
+        _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
     }
 
     private void OrderChildren(CanvasItem item, Transform transform, bool behind)
@@ -256,7 +290,7 @@ public sealed class RenderingServer : ElectronObject
             finally
             {
                 FramePreDraw = FramePostDraw = null;
-                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _ySort.Clear();
+                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _ySort.Clear();
                 if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
             }
         }

@@ -1931,6 +1931,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Parallax",
+    "kind": "type",
+    "declaringType": "Electron2D.Parallax",
+    "name": "Parallax",
+    "signature": "public class Electron2D.Parallax",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Path",
     "kind": "type",
     "declaringType": "Electron2D.Path",
@@ -4750,6 +4765,19 @@
     "declaringType": "Electron2D.PackedScene",
     "name": ".ctor",
     "signature": "public PackedScene()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Parallax..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Parallax",
+    "name": ".ctor",
+    "signature": "public Parallax()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -35316,6 +35344,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Parallax.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Parallax",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Parallax.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Parallax",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Parallax.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Parallax",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Path.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Path",
@@ -57415,6 +57488,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.Autoscroll()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "Autoscroll",
+    "signature": "public Electron2D.Vector2 Autoscroll { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.FollowViewport()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "FollowViewport",
+    "signature": "public System.Boolean FollowViewport { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.IgnoreCameraScroll()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "IgnoreCameraScroll",
+    "signature": "public System.Boolean IgnoreCameraScroll { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.LimitBegin()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "LimitBegin",
+    "signature": "public Electron2D.Vector2 LimitBegin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.LimitEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "LimitEnd",
+    "signature": "public Electron2D.Vector2 LimitEnd { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.RepeatSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "RepeatSize",
+    "signature": "public Electron2D.Vector2 RepeatSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.RepeatTimes()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "RepeatTimes",
+    "signature": "public System.Int32 RepeatTimes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.ScreenOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "ScreenOffset",
+    "signature": "public Electron2D.Vector2 ScreenOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.ScrollOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "ScrollOffset",
+    "signature": "public Electron2D.Vector2 ScrollOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Parallax.ScrollScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.Parallax",
+    "name": "ScrollScale",
+    "signature": "public Electron2D.Vector2 ScrollScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

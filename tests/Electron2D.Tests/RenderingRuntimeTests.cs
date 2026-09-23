@@ -129,6 +129,14 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PARALLAX") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyParallax(backend);
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_LAYER") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -242,7 +250,7 @@ internal static partial class RenderingRuntimeTests
                 VerifySamplingCapabilities(backend, software);
                 VerifyCanvasPixelSnap(backend);
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
-                VerifyCamera(backend); VerifyTransformNotifications(backend);
+                VerifyCamera(backend); VerifyParallax(backend); VerifyTransformNotifications(backend);
                 VerifyCanvasLayer(backend);
                 VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyPolygonNode(backend); VerifyLine(backend); VerifyCanvasStrokes(backend); VerifyCanvasTiming(backend);
                 if (backend == "compatibility") VerifyCulledShader();

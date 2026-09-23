@@ -595,7 +595,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Panel](classes/Panel.md) | Control | Blocked | 1 |
 | [PanelContainer](classes/PanelContainer.md) | Container | Blocked | 2 |
 | [PanoramaSkyMaterial](classes/PanoramaSkyMaterial.md) | Material | Excluded | 3 |
-| [Parallax2D](classes/Parallax2D.md) | Node2D | Unimplemented | 11 |
+| [Parallax2D](classes/Parallax2D.md) | Node2D | Partial | 11 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Unimplemented | 7 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | Node2D | Unimplemented | 4 |
 | [ParticleProcessMaterial](classes/ParticleProcessMaterial.md) | Material | Blocked | 166 |

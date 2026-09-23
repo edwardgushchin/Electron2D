@@ -1791,6 +1791,10 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.Parallax..ctor()", "state": "Implemented", "reason": "C# construction of the detached camera-relative canvas node with audited source defaults (ADR 0004)."},
+    {"electron2d": "method:Electron2D.Parallax.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Parallax."},
+    {"electron2d": "method:Electron2D.Parallax.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors store all ten parallax settings and omit calculated Position from packed state."},
+    {"electron2d": "method:Electron2D.Parallax.OnNotification(System.Int32)", "state": "Implemented", "reason": "The internal process lane advances and wraps automatic scroll at the configured repeat period."},
     {"electron2d": "constructor:Electron2D.Polygon..ctor()", "state": "Implemented", "reason": "C# construction of the spatial polygon node with empty contours and white defaults under ADR 0004."},
     {"electron2d": "method:Electron2D.Polygon.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Polygon."},
     {"electron2d": "method:Electron2D.Polygon.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed texture notifications without disposing the texture."},
@@ -2639,6 +2643,26 @@
       "state": "Partial",
       "reason": "Polygon : Entity draws filled, inverted, colored and textured contours and stores typed scene state on tested Linux backends. Antialiasing and skeletal deformation remain separate member gaps under ADR 0004.",
       "godot": ["class:Polygon2D"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Parallax : Entity executes camera-relative scroll, limits, autoscroll, repeated descendant drawing and packed configuration on Linux Wayland compatibility/GPU. The inherited physics-interpolation override awaits the Node interpolation slice; other platforms remain unverified (ADRs 0004/0008/0028).",
+      "godot": ["class:Parallax2D"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pinned parallax_2d.cpp setter/update timing and scroll arithmetic are reproduced; ParallaxTests covers defaults, camera movement, limits, follow/ignore switches, wrapping, processing and packed state. Finite C# validation follows ADR 0004.",
+      "godot": ["Parallax2D::property:autoscroll", "Parallax2D::property:follow_viewport", "Parallax2D::property:ignore_camera_scroll", "Parallax2D::property:limit_begin", "Parallax2D::property:limit_end", "Parallax2D::property:screen_offset", "Parallax2D::property:scroll_offset", "Parallax2D::property:scroll_scale"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pinned repeat count and axis spacing use the same (times+1) per-enabled-axis copy loops and nearest repeat source; retained descendant canvas commands render on Linux Wayland compatibility/GPU. Negative size components and counts clamp as in the pinned setters.",
+      "godot": ["Parallax2D::property:repeat_size", "Parallax2D::property:repeat_times"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: implement Node.PhysicsInterpolationMode and render-pose interpolation across the scene and both canvas backends; Parallax defaults this inherited policy to Off when that first interpolation slice lands (ADR 0008). No inert per-type property is exposed.",
+      "godot": ["Parallax2D::property:physics_interpolation_mode"]
     },
     {
       "state": "Partial",

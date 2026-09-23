@@ -16,7 +16,7 @@ Provides the root window's client rectangle and scene input boundary.
 
 Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies are connected to the root renderer. Incoming window input is converted to viewport coordinates.
 
-Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
 
 ## Examples
 

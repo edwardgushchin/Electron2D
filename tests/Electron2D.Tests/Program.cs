@@ -144,6 +144,7 @@ CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();
 CanvasCoordinateTests.Run();
 CameraTests.Run();
+ParallaxTests.Run();
 CanvasLayerTests.Run();
 CanvasMaskTests.Run();
 CanvasTransformNotificationTests.Run();
