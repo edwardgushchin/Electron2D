@@ -45,6 +45,28 @@ public abstract partial class CanvasItem
     public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null) =>
         RecordPolygon(points, colors, uvs, texture, primitive: true);
 
+    internal void DrawTriangleArray(ReadOnlySpan<CanvasVertex> triangles, Texture? texture)
+    {
+        EnsureDrawing();
+        Rect? uvMapping = null;
+        if (texture is AtlasTexture view) texture = view.ResolvePolygonTexture(true, out uvMapping);
+        EnsureDrawing();
+        if (triangles.Length == 0 || triangles.Length % 3 != 0) throw new ArgumentException("Triangle vertices must form complete triangles.", nameof(triangles));
+        foreach (var vertex in triangles)
+        {
+            if (!vertex.Position.IsFinite() || !vertex.UV.IsFinite()) throw new ArgumentException("Triangle coordinates must be finite.", nameof(triangles));
+            ValidateCanvasColor(vertex.Color);
+        }
+        if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+        _polygons ??= [];
+        if (_polygonCount == _polygons.Count) _polygons.Add(new());
+        var polygon = _polygons[_polygonCount];
+        polygon.SetTriangles(triangles);
+        if (uvMapping is { } mapping) polygon.RemapUV(mapping);
+        (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Polygon: polygon));
+        _polygonCount++;
+    }
+
     private void RecordPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture, bool primitive)
     {
         EnsureDrawing();

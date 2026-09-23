@@ -158,6 +158,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINE") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyLine(backend);
+                    if (backend == "gpu") { VerifyLine(backend, "CanvasHLSL"); VerifyLine(backend, "CanvasGLSL"); }
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STROKES") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -218,7 +227,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasCoordinates(backend); VerifyViewportCoordinateInput(backend);
                 VerifyCamera(backend); VerifyTransformNotifications(backend);
                 VerifyCanvasLayer(backend);
-                VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyCanvasStrokes(backend); VerifyCanvasTiming(backend);
+                VerifyCanvasMasks(backend); VerifyCanvasPolygons(backend); VerifyLine(backend); VerifyCanvasStrokes(backend); VerifyCanvasTiming(backend);
                 if (backend == "compatibility") VerifyCulledShader();
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
@@ -252,6 +261,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasLayer(backend, "CanvasHLSL"); VerifyCanvasLayer(backend, "CanvasGLSL");
                     VerifyCanvasMasks(backend, "CanvasHLSL"); VerifyCanvasMasks(backend, "CanvasGLSL");
                     VerifyCanvasPolygons(backend, "CanvasHLSL"); VerifyCanvasPolygons(backend, "CanvasGLSL");
+                    VerifyLine(backend, "CanvasHLSL"); VerifyLine(backend, "CanvasGLSL");
                     VerifyCanvasStrokes(backend, "CanvasHLSL"); VerifyCanvasStrokes(backend, "CanvasGLSL");
                     VerifyCanvasTiming(backend, "CanvasHLSL"); VerifyCanvasTiming(backend, "CanvasGLSL");
                     VerifyMaterialFrame("MaterialHlsl");

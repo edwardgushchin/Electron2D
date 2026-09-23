@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
     {"electron2d": "method:Electron2D.Control.GetParentAreaSize()", "godot": "Control::method:get_parent_area_size()", "state": "Partial", "reason": "The direct control or root viewport layout area is executable; other canvas-parent anchorable rectangles remain to audit."},
     {"electron2d": "method:Electron2D.Control.GetParentControl()", "godot": "Control::method:get_parent_control()", "state": "Implemented", "reason": "Returns only the direct Control parent, as exercised by ControlLayoutTests."},
@@ -1782,6 +1783,11 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.Line..ctor()", "state": "Implemented", "reason": "Explicit C# construction of the reference polyline node with its audited property defaults (ADR 0004)."},
+    {"electron2d": "method:Electron2D.Line.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Line."},
+    {"electron2d": "method:Electron2D.Line.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed Curve, Gradient and Texture notifications without disposing those resources."},
+    {"electron2d": "method:Electron2D.Line.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors expose all fourteen declared line properties and store copied point arrays and borrowed resources for PackedScene."},
+    {"electron2d": "method:Electron2D.Line.OnDraw()", "state": "Partial", "reason": "Internal retained triangle path draws line geometry, caps, joints and texture; full fringe and reference tessellation parity remain to audit."},
     {"electron2d": "constructor:Electron2D.Control..ctor()", "state": "Implemented", "reason": "C# constructor for the reference Control type; creates detached zero-size layout state under ADR 0004."},
     {"electron2d": "method:Electron2D.Control.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Typed PackedScene factory hook for the reference Control scene node under ADR 0004."},
     {"electron2d": "method:Electron2D.Control.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed layout events under ADR 0003."},
@@ -2566,6 +2572,26 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "Line maps the reference spatial polyline under ADR 0004. Point API, stored state and retained drawing are executable, but exact curve, gradient, texture, corner and antialias geometry still need a complete semantic and backend audit. See docs/classes/Line.md.",
+      "godot": ["class:Line2D"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The three nested enums and all nine numeric values match the pinned source. Exact rendering behavior is tracked on the corresponding property rows.",
+      "godot": ["Line2D::enum:LineCapMode", "Line2D::enum:LineJointMode", "Line2D::enum:LineTextureMode"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Stored-point operations preserve order and duplicates, redraw after mutation, and use typed index/finite-value errors under ADR 0004. The pinned line_2d.cpp behavior and LineTests cover append, indexed insertion, clear, get, remove and replace.",
+      "godot": ["Line2D::method:add_point(Vector2:,int:)", "Line2D::method:clear_points()", "Line2D::method:get_point_count()", "Line2D::method:get_point_position(int:)", "Line2D::method:remove_point(int:)", "Line2D::method:set_point_position(int:,Vector2:)"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable retained geometry and typed PackedScene state exist. Reference tessellation, cap UV placement, abrupt/degenerate corners, variable widths, gradient sampling and complete antialias fringes remain to audit against the pinned builder; see docs/classes/Line.md and LineRenderingTests.",
+      "godot": ["Line2D::property:antialiased", "Line2D::property:begin_cap_mode", "Line2D::property:closed", "Line2D::property:default_color", "Line2D::property:end_cap_mode", "Line2D::property:gradient", "Line2D::property:joint_mode", "Line2D::property:points", "Line2D::property:round_precision", "Line2D::property:sharp_limit", "Line2D::property:texture", "Line2D::property:texture_mode", "Line2D::property:width", "Line2D::property:width_curve"]
+    },
     {
       "state": "Implemented",
       "reason": "RemoteTransform maps the spatial remote-transform type under ADR 0008. Pinned remote_transform_2d.cpp and RemoteTransformTests verify path caching, independent local/global transfer switches, lifecycle, PackedScene, callback reentry/failure and owner-thread checks. Typed string paths and cycle suppression follow the accepted scene boundary; inherited physics interpolation remains separately unimplemented. See docs/classes/RemoteTransform.md.",

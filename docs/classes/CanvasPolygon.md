@@ -17,12 +17,15 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 | `CanvasVertex[] Vertices`, `int VertexCount` | Copied local vertices, finite colors and normalized UVs; trailing capacity is unused. |
 | `int[] Indices`, `int IndexCount` | Filled triangle indices, with reusable capacity. |
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)` | Copies validated attributes; triangulates a contour through shared Geometry logic or creates fixed triangle/quad indices. |
+| `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)` | Copies validated triangle vertices from internal scene drawing and writes sequential indices without contour triangulation. |
 | `void RemapUV(Rect mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
 | `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Appends transformed/modulated triangles, or one-pixel point/line geometry. |
 
 ## Runtime behavior
 
 Set is called only after CanvasItem validates counts, values, resource lifetime and drawing scope. Triangulate uses a reusable index array, normalizes winding, visits consecutive ears and relaxes the convexity/edge test after a stalled pass to permit degenerate final ears. A second stalled pass throws ArgumentException. Self-intersections and holes have no supported contract. Double intermediates keep finite float coordinates from overflowing the determinant calculation. Ear selection has cubic worst-case complexity; large constantly redrawn contours need separate performance work.
+
+Line uses SetTriangles through the internal CanvasItem triangle recorder. It preserves each vertex's color and UV and bypasses contour triangulation, then follows the same retained command, atlas remap, transform and backend batch path.
 
 RemapUV runs before the command is committed. Append rejects transformed positions or modulated colors that overflow. Point/line endpoints transform before expansion so their width stays one framebuffer pixel; coincident two-point lines produce nothing. Filled geometry retains its stored triangulation while positions and colors transform every submission. Vertex snapping does not modify the recorded local values.
 

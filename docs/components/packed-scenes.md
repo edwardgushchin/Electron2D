@@ -64,7 +64,7 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 - No text/binary scene loader or saver, exported-pack integration, UID/import remapping, dependency scanning, or missing-resource recovery.
 - No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
 - No persistent typed event endpoint schema. Runtime C# event subscriptions and `EventConnection` tokens are intentionally not copied.
-- No general node-reference property encoding/remapping and no arbitrary reference-shaped stored property values.
+- No general node-reference property encoding/remapping and no arbitrary reference-shaped stored property values. `Vector2[]` line points are an explicit copied value-array exception.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
 
 ## Verification

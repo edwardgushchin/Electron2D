@@ -160,7 +160,7 @@ Descriptors do not own their target objects and are not disposable. Engine types
 - A null owner causes `ArgumentNullException`.
 - Disposed-owner checks and the exact revert error are supplied by the generic implementation.
 - The base type deliberately exposes no untyped value getter or setter.
-- Packed capture accepts stored strings, `Resource` subtypes, and value types containing no managed references. Other reference-shaped values fail explicitly.
+- Packed capture accepts stored strings, `Resource` subtypes, value types containing no managed references, and copied `Vector2[]` point arrays. Other reference-shaped values fail explicitly.
 
 ## Threading
 

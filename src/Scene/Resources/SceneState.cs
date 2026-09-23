@@ -125,7 +125,7 @@ public sealed class SceneState : ElectronObject
     /// <typeparam name="TValue">The requested result type.</typeparam>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <param name="propertyIndex">The zero-based property index.</param>
-    /// <returns>The captured property value.</returns>
+    /// <returns>The captured property value; stored <see cref="Vector2"/> point arrays are copied on each read.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Either index is outside the state.</exception>
     /// <exception cref="InvalidCastException">The captured value is not compatible with <typeparamref name="TValue"/>.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>

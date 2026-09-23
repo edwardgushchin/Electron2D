@@ -220,13 +220,15 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
 
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
+            typeof(TValue) != typeof(Vector2[]) &&
             !typeof(Resource).IsAssignableFrom(typeof(TValue)))
         {
             throw new NotSupportedException(
                 $"Stored property '{Name}' uses unsupported reference-shaped type {typeof(TValue).FullName}.");
         }
 
-        return new StoredPropertyValue<TValue>(_getter(typedOwner));
+        var value = _getter(typedOwner);
+        return new StoredPropertyValue<TValue>(value is Vector2[] points ? (TValue)(object)points.Clone() : value);
     }
 
     internal override void RestoreStoredValue(
@@ -273,13 +275,14 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
     internal TValue Value { get; } = value;
 
     internal TValue Resolve(Func<Resource, Resource> resolveResource) =>
-        Value is Resource resource ? (TValue)(object)resolveResource(resource) : Value;
+        Value is Resource resource ? (TValue)(object)resolveResource(resource) :
+        Value is Vector2[] points ? (TValue)(object)points.Clone() : Value;
 
     internal override bool TryGetValue<TRequested>(out TRequested value)
     {
         if (Value is TRequested requested)
         {
-            value = requested;
+            value = requested is Vector2[] points ? (TRequested)(object)points.Clone() : requested;
             return true;
         }
 

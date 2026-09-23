@@ -22,7 +22,8 @@
     "RemoteTransform2D": "RemoteTransform",
     "GradientTexture1D": "GradientRampTexture",
     "GradientTexture2D": "GradientTexture",
-    "Camera2D": "Camera"
+    "Camera2D": "Camera",
+    "Line2D": "Line"
   },
   "enums": {
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
@@ -74,6 +75,9 @@
     "GradientTexture2D.Fill": "GradientTexture.FillEnum",
     "GradientTexture2D.Repeat": "GradientTexture.RepeatEnum",
     "Camera2D.AnchorMode": "Camera.AnchorModeEnum",
-    "Camera2D.Camera2DProcessCallback": "Camera.CameraProcessCallback"
+    "Camera2D.Camera2DProcessCallback": "Camera.CameraProcessCallback",
+    "Line2D.LineCapMode": "Line.LineCapMode",
+    "Line2D.LineJointMode": "Line.LineJointMode",
+    "Line2D.LineTextureMode": "Line.LineTextureMode"
   }
 }

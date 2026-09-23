@@ -26,6 +26,15 @@ internal sealed class CanvasPolygon
         Triangulate(points);
     }
 
+    internal void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)
+    {
+        if (Vertices.Length < triangles.Length) Array.Resize(ref Vertices, triangles.Length);
+        if (Indices.Length < triangles.Length) Array.Resize(ref Indices, triangles.Length);
+        VertexCount = IndexCount = triangles.Length;
+        triangles.CopyTo(Vertices);
+        for (var i = 0; i < triangles.Length; i++) Indices[i] = i;
+    }
+
     private void Triangulate(ReadOnlySpan<Vector2> points)
     {
         if (_remaining.Length < points.Length) Array.Resize(ref _remaining, points.Length);

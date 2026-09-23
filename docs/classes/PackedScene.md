@@ -198,7 +198,7 @@ For each included node, capture stores:
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
 - runtime-only empty metadata for nested-scene instances and placeholders, which are not authored by the current implementation.
 
-Supported stored values are strings, `Resource` subtypes, and value types that contain no managed references. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector3`](Vector3.md), [`Vector3I`](Vector3I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), [`RectI`](RectI.md), [`Transform`](Transform.md), and enums such as [`TimerProcessCallback`](TimerProcessCallback.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
+Supported stored values are strings, `Resource` subtypes, value types that contain no managed references, and copied `Vector2[]` point arrays. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2I`](Vector2I.md), [`Vector3`](Vector3.md), [`Vector3I`](Vector3I.md), [`Vector4`](Vector4.md), [`Vector4I`](Vector4I.md), [`Rect`](Rect.md), [`RectI`](RectI.md), [`Transform`](Transform.md), and enums such as [`TimerProcessCallback`](TimerProcessCallback.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Other reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
 `Pack(null)` fails before capture and preserves the previous state. Once a non-null capture begins, the published state is cleared first. Any later factory/property/schema/capture failure leaves the packed scene empty. Both the empty transition and a successful replacement are visible to a live `SceneState`. `Changed` is emitted after the attempt; a throwing handler does not roll back the already committed result.
 
@@ -220,7 +220,7 @@ If any factory, setter, parenting callback, resource duplication/setup callback,
 
 `GetState()` exposes one live metadata object. Successful repacks, reset/copy transitions, and path changes update that object. Disposing a returned state does not dispose the packed scene; the next access or update creates a replacement. Disposing the packed scene does not dispose an externally held state, which retains its final immutable data and last path.
 
-The state is a view, not an ownership transfer. A resource value returned through `SceneState.GetNodePropertyValue<TValue>()` is the stored resource reference and remains governed by normal `Resource` ownership.
+The state is a view, not an ownership transfer. A resource value returned through `SceneState.GetNodePropertyValue<TValue>()` is the stored resource reference and remains governed by normal `Resource` ownership. A stored `Vector2[]` value is returned as a copy.
 
 ## Threading and reentrancy
 

@@ -72,7 +72,9 @@ def main():
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     assert "GUI/editor Shortcut" in class_rows["Shortcut"]
     assert "layered/array texture storage" in class_rows["Texture2DArray"]
-    assert " | Unimplemented | " in class_rows["Line2D"]
+    assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
+    line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]
+    assert len(line_rows) == 33 and all(" | Unimplemented | " not in row and " | Blocked | " not in row for row in line_rows)
     assert "native-menu service" in class_rows["NativeMenu"]
     for name in ("RenderingDevice", "FramebufferCacheRD", "BoxMesh", "RefCounted",
                  "GDScriptLanguageProtocol", "EditorNode3DGizmo"):

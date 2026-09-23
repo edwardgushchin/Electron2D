@@ -1459,6 +1459,75 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Line",
+    "kind": "type",
+    "declaringType": "Electron2D.Line",
+    "name": "Line",
+    "signature": "public class Electron2D.Line",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Line.LineCapMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Line.LineCapMode",
+    "name": "LineCapMode",
+    "signature": "public enum Electron2D.Line.LineCapMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Line.LineJointMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Line.LineJointMode",
+    "name": "LineJointMode",
+    "signature": "public enum Electron2D.Line.LineJointMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Line.LineTextureMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Line.LineTextureMode",
+    "name": "LineTextureMode",
+    "signature": "public enum Electron2D.Line.LineTextureMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MainLoop",
     "kind": "type",
     "declaringType": "Electron2D.MainLoop",
@@ -4162,6 +4231,19 @@
     "name": ".ctor",
     "signature": "protected InputEventWithModifiers()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Line..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Line",
+    "name": ".ctor",
+    "signature": "public Line()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -11453,6 +11535,123 @@
     "parameters": [],
     "returnType": "Electron2D.KeyModifierMask",
     "value": "33554432"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineCapMode.Box()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineCapMode",
+    "name": "Box",
+    "signature": "public const Electron2D.Line.LineCapMode Box = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineCapMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineCapMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineCapMode",
+    "name": "None",
+    "signature": "public const Electron2D.Line.LineCapMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineCapMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineCapMode.Round()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineCapMode",
+    "name": "Round",
+    "signature": "public const Electron2D.Line.LineCapMode Round = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineCapMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineJointMode.Bevel()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineJointMode",
+    "name": "Bevel",
+    "signature": "public const Electron2D.Line.LineJointMode Bevel = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineJointMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineJointMode.Round()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineJointMode",
+    "name": "Round",
+    "signature": "public const Electron2D.Line.LineJointMode Round = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineJointMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineJointMode.Sharp()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineJointMode",
+    "name": "Sharp",
+    "signature": "public const Electron2D.Line.LineJointMode Sharp = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineJointMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineTextureMode.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineTextureMode",
+    "name": "None",
+    "signature": "public const Electron2D.Line.LineTextureMode None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineTextureMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineTextureMode.Stretch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineTextureMode",
+    "name": "Stretch",
+    "signature": "public const Electron2D.Line.LineTextureMode Stretch = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineTextureMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Line.LineTextureMode.Tile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Line.LineTextureMode",
+    "name": "Tile",
+    "signature": "public const Electron2D.Line.LineTextureMode Tile = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineTextureMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.MouseButton.Left()",
@@ -28266,6 +28465,176 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.AddPoint(Electron2D.Vector2,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "AddPoint",
+    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.ClearPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "ClearPoints",
+    "signature": "public System.Void ClearPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.GetPointCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "GetPointCount",
+    "signature": "public System.Int32 GetPointCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.GetPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.RemovePoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Line.SetPointPosition(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Line",
+    "name": "SetPointPosition",
+    "signature": "public System.Void SetPointPosition(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -52164,6 +52533,188 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.InputMap",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Antialiased()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Antialiased",
+    "signature": "public System.Boolean Antialiased { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.BeginCapMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "BeginCapMode",
+    "signature": "public Electron2D.Line.LineCapMode BeginCapMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineCapMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Closed()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Closed",
+    "signature": "public System.Boolean Closed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.DefaultColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "DefaultColor",
+    "signature": "public Electron2D.Color DefaultColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.EndCapMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "EndCapMode",
+    "signature": "public Electron2D.Line.LineCapMode EndCapMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineCapMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Gradient()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Gradient",
+    "signature": "public Electron2D.Gradient Gradient { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Gradient",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.JointMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "JointMode",
+    "signature": "public Electron2D.Line.LineJointMode JointMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineJointMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Points()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Points",
+    "signature": "public Electron2D.Vector2[] Points { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.RoundPrecision()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "RoundPrecision",
+    "signature": "public System.Int32 RoundPrecision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.SharpLimit()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "SharpLimit",
+    "signature": "public System.Single SharpLimit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.TextureMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "TextureMode",
+    "signature": "public Electron2D.Line.LineTextureMode TextureMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Line.LineTextureMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "Width",
+    "signature": "public System.Single Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Line.WidthCurve()",
+    "kind": "property",
+    "declaringType": "Electron2D.Line",
+    "name": "WidthCurve",
+    "signature": "public Electron2D.Curve WidthCurve { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
     "value": null
   },
   {
