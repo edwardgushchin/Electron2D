@@ -4,8 +4,8 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1556 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 1320 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [FastNoiseLite](classes/FastNoiseLite.md), [JSON](classes/JSON.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [Polygon2D](classes/Polygon2D.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
+1. Review 1568 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1302 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [FastNoiseLite](classes/FastNoiseLite.md), [JSON](classes/JSON.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -29,6 +29,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [Viewport](classes/Viewport.md) | 5 | 12 |
 | [FileAccess](classes/FileAccess.md) | 4 | 66 |
 | [Resource](classes/Resource.md) | 4 | 21 |
+| [Polygon2D](classes/Polygon2D.md) | 3 | 11 |
 | [Material](classes/Material.md) | 3 | 0 |
 | [Vector4](classes/Vector4.md) | 2 | 59 |
 | [InputMap](classes/InputMap.md) | 2 | 13 |

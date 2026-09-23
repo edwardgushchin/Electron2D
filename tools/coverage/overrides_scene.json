@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, offset and packed state execute; full inverted/skeletal geometry remains absent."},
     {"electron2d": "method:Electron2D.Line.GetPointCount()", "godot": "Line2D::method:get_point_count()", "state": "Implemented", "reason": "Returns the stored point count, including duplicate points; LineTests covers insertion, removal and clear."},
     {"electron2d": "method:Electron2D.Control.GetGlobalRect()", "godot": "Control::method:get_global_rect()", "state": "Partial", "reason": "Control rectangle query uses the composed canvas transform and current layout size; rotation and layout-direction parity remain to audit."},
     {"electron2d": "method:Electron2D.Control.GetParentAreaSize()", "godot": "Control::method:get_parent_area_size()", "state": "Partial", "reason": "The direct control or root viewport layout area is executable; other canvas-parent anchorable rectangles remain to audit."},
@@ -1783,6 +1784,11 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.Polygon..ctor()", "state": "Implemented", "reason": "C# construction of the spatial polygon node with empty contours and white defaults under ADR 0004."},
+    {"electron2d": "method:Electron2D.Polygon.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Polygon."},
+    {"electron2d": "method:Electron2D.Polygon.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed texture notifications without disposing the texture."},
+    {"electron2d": "method:Electron2D.Polygon.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors capture the eleven implemented polygon properties, including copied color, vector and nested contour arrays."},
+    {"electron2d": "method:Electron2D.Polygon.OnDraw()", "state": "Partial", "reason": "Projects the spatial polygon draw notification into retained contours; inverted fill, antialiasing and skeletal deformation remain absent."},
     {"electron2d": "constructor:Electron2D.Line..ctor()", "state": "Implemented", "reason": "Explicit C# construction of the reference polyline node with its audited property defaults (ADR 0004)."},
     {"electron2d": "method:Electron2D.Line.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type factory for typed PackedScene reconstruction of Line."},
     {"electron2d": "method:Electron2D.Line.Dispose(System.Boolean)", "state": "Implemented", "reason": "Managed lifetime hook disconnects borrowed Curve, Gradient and Texture notifications without disposing those resources."},
@@ -2573,9 +2579,29 @@
   ],
   "statusGroups": [
     {
-      "state": "Unimplemented",
-      "reason": "Accepted target name is Polygon : Entity under ADR 0004; no public node exists yet. Trigger: next 2D scene-node slice using Entity, CanvasItem and the polygon renderer; member-specific missing capabilities remain separate coverage obligations.",
+      "state": "Partial",
+      "reason": "Polygon : Entity now draws filled colored/textured contours and stores typed scene state on Linux Wayland GPU/compatibility and dummy/software. Inverted fill, antialiasing and skeletal deformation remain separate member gaps under ADR 0004.",
       "godot": ["class:Polygon2D"]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable retained contour rendering, copied typed state and Linux pixel checks exist. Pinned polygon_2d.cpp was audited for defaults, UV/color fallback and index-contour drawing; complete inverted, antialias and skeleton integration is tracked separately, and edge-case geometry parity remains to audit.",
+      "godot": ["Polygon2D::property:color", "Polygon2D::property:internal_vertex_count", "Polygon2D::property:offset", "Polygon2D::property:polygons", "Polygon2D::property:texture", "Polygon2D::property:texture_offset", "Polygon2D::property:texture_rotation", "Polygon2D::property:texture_scale", "Polygon2D::property:uv", "Polygon2D::property:vertex_colors"]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "Trigger: first polygon-specific inverted-fill triangulation using the retained canvas polygon path, including border, winding, degenerate contours and native pixel checks; part of the Polygon drawing completion slice (ADR 0028).",
+      "godot": ["Polygon2D::property:invert_border", "Polygon2D::property:invert_enabled"]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The pinned setter stores and queues redraw, but polygon_2d.cpp does not read the flag in its drawing path. Trigger: audit effective upstream edge behavior and implement executable edge antialiasing in the polygon renderer before exposing this property; no inert flag (ADRs 0004/0028).",
+      "godot": ["Polygon2D::property:antialiased"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first 2D Skeleton/Bone scene-node hierarchy and weighted polygon mesh-deformation renderer integration, including path resolution and animation updates; these members belong to that skeletal-animation slice (ADRs 0008/0028).",
+      "godot": ["Polygon2D::method:add_bone(NodePath:,PackedFloat32Array:)", "Polygon2D::method:clear_bones()", "Polygon2D::method:erase_bone(int:)", "Polygon2D::method:get_bone_count()", "Polygon2D::method:get_bone_path(int:)", "Polygon2D::method:get_bone_weights(int:)", "Polygon2D::method:set_bone_path(int:,NodePath:)", "Polygon2D::method:set_bone_weights(int:,PackedFloat32Array:)", "Polygon2D::property:skeleton"]
     },
     {
       "state": "Partial",

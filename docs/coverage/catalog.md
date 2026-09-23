@@ -650,7 +650,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaneMesh](classes/PlaneMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [PointLight2D](classes/PointLight2D.md) | Light2D | Blocked | 4 |
 | [PointMesh](classes/PointMesh.md) | PrimitiveMesh | Excluded | 0 |
-| [Polygon2D](classes/Polygon2D.md) | Node2D | Unimplemented | 23 |
+| [Polygon2D](classes/Polygon2D.md) | Node2D | Partial | 23 |
 | [PolygonOccluder3D](classes/PolygonOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [PolygonPathFinder](classes/PolygonPathFinder.md) | Resource | Blocked | 8 |
 | [Popup](classes/Popup.md) | Window | Blocked | 10 |

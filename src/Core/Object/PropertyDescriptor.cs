@@ -200,7 +200,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     public override bool CanRevert(ElectronObject owner)
     {
         var typedOwner = GetOwner(owner);
-        return _setter is not null && _revertValue is not null && !EqualityComparer<TValue>.Default.Equals(_getter(typedOwner), _revertValue(typedOwner));
+        return _setter is not null && _revertValue is not null && !ValuesEqual(_getter(typedOwner), _revertValue(typedOwner));
     }
 
     /// <inheritdoc />
@@ -221,6 +221,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
             typeof(TValue) != typeof(Vector2[]) &&
+            typeof(TValue) != typeof(Color[]) &&
+            typeof(TValue) != typeof(int[][]) &&
             !typeof(Resource).IsAssignableFrom(typeof(TValue)))
         {
             throw new NotSupportedException(
@@ -228,7 +230,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         }
 
         var value = _getter(typedOwner);
-        return new StoredPropertyValue<TValue>(value is Vector2[] points ? (TValue)(object)points.Clone() : value);
+        return new StoredPropertyValue<TValue>(StoredPropertyValue<TValue>.Snapshot(value));
     }
 
     internal override void RestoreStoredValue(
@@ -257,6 +259,16 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         ObjectDisposedException.ThrowIf(owner.IsDisposed, owner);
         return (TOwner)owner;
     }
+
+    private static bool ValuesEqual(TValue left, TValue right)
+    {
+        if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);
+        if (left is Color[] colors && right is Color[] otherColors) return colors.AsSpan().SequenceEqual(otherColors);
+        if (left is int[][] contours && right is int[][] otherContours)
+            return contours.Length == otherContours.Length &&
+                contours.Zip(otherContours).All(pair => pair.First.AsSpan().SequenceEqual(pair.Second));
+        return EqualityComparer<TValue>.Default.Equals(left, right);
+    }
 }
 
 internal abstract class StoredPropertyValue
@@ -275,14 +287,13 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
     internal TValue Value { get; } = value;
 
     internal TValue Resolve(Func<Resource, Resource> resolveResource) =>
-        Value is Resource resource ? (TValue)(object)resolveResource(resource) :
-        Value is Vector2[] points ? (TValue)(object)points.Clone() : Value;
+        Value is Resource resource ? (TValue)(object)resolveResource(resource) : Snapshot(Value);
 
     internal override bool TryGetValue<TRequested>(out TRequested value)
     {
         if (Value is TRequested requested)
         {
-            value = requested is Vector2[] points ? (TRequested)(object)points.Clone() : requested;
+            value = StoredPropertyValue<TRequested>.Snapshot(requested);
             return true;
         }
 
@@ -300,4 +311,12 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
         Value is Resource resource
             ? new StoredPropertyValue<TValue>((TValue)(object)transform(resource))
             : this;
+
+    internal static TValue Snapshot(TValue value) => value switch
+    {
+        Vector2[] points => (TValue)(object)points.Clone(),
+        Color[] colors => (TValue)(object)colors.Clone(),
+        int[][] contours => (TValue)(object)contours.Select(indices => (int[])indices.Clone()).ToArray(),
+        _ => value,
+    };
 }

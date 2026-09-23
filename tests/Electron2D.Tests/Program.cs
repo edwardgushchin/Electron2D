@@ -128,6 +128,7 @@ CanvasLayerTests.Run();
 CanvasMaskTests.Run();
 CanvasTransformNotificationTests.Run();
 CanvasPolygonTests.Run();
+PolygonTests.Run();
 LineTests.Run();
 CanvasStrokeTests.Run();
 CanvasTimingTests.Run();

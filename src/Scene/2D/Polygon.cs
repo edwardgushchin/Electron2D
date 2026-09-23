@@ -1,0 +1,248 @@
+namespace Electron2D;
+
+/// <summary>Draws a filled polygon from local vertices, optional contours, colors and texture coordinates.</summary>
+/// <remarks>The texture is borrowed. Vertex and contour arrays are copied in both directions; edits request a retained-canvas redraw.</remarks>
+public class Polygon : Entity
+{
+    private static readonly PropertyDescriptor[] PolygonProperties =
+    [
+        new PropertyDescriptor<Polygon, Vector2[]>(nameof(Vertices), n => n.Vertices, (n, v) => n.Vertices = v, _ => [], stored: true),
+        new PropertyDescriptor<Polygon, int>(nameof(InternalVertexCount), n => n.InternalVertexCount, (n, v) => n.InternalVertexCount = v, _ => 0, stored: true),
+        new PropertyDescriptor<Polygon, int[][]>(nameof(Polygons), n => n.Polygons, (n, v) => n.Polygons = v, _ => [], stored: true),
+        new PropertyDescriptor<Polygon, Color>(nameof(Color), n => n.Color, (n, v) => n.Color = v, _ => Colors.White, stored: true),
+        new PropertyDescriptor<Polygon, Color[]>(nameof(VertexColors), n => n.VertexColors, (n, v) => n.VertexColors = v, _ => [], stored: true),
+        new PropertyDescriptor<Polygon, Texture?>(nameof(Texture), n => n.Texture, (n, v) => n.Texture = v, _ => null, stored: true),
+        new PropertyDescriptor<Polygon, Vector2[]>(nameof(UV), n => n.UV, (n, v) => n.UV = v, _ => [], stored: true),
+        new PropertyDescriptor<Polygon, Vector2>(nameof(Offset), n => n.Offset, (n, v) => n.Offset = v, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Polygon, Vector2>(nameof(TextureOffset), n => n.TextureOffset, (n, v) => n.TextureOffset = v, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Polygon, float>(nameof(TextureRotation), n => n.TextureRotation, (n, v) => n.TextureRotation = v, _ => 0f, stored: true),
+        new PropertyDescriptor<Polygon, Vector2>(nameof(TextureScale), n => n.TextureScale, (n, v) => n.TextureScale = v, _ => Vector2.One, stored: true),
+    ];
+
+    private Vector2[] _vertices = [], _uv = [];
+    private int[][] _polygons = [];
+    private Color[] _vertexColors = [];
+    private Color _color = Colors.White;
+    private Texture? _texture;
+    private Vector2 _offset, _textureOffset, _textureScale = Vector2.One;
+    private float _textureRotation;
+    private int _internalVertexCount;
+
+    /// <summary>Creates an empty white polygon.</summary>
+    public Polygon() { }
+
+    /// <summary>Gets or replaces the copied local vertices. At least three are needed to draw.</summary>
+    /// <value>An empty array by default.</value>
+    /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
+    /// <exception cref="ArgumentException">A vertex is nonfinite.</exception>
+    public Vector2[] Vertices
+    {
+        get { ThrowIfDisposed(); return (Vector2[])_vertices.Clone(); }
+        set { EnsureMutable(); ValidateVectors(value); _vertices = (Vector2[])value.Clone(); InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or sets how many trailing vertices are omitted from the default contour.</summary>
+    /// <value>Zero by default. Explicit contours may reference the trailing vertices.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned count is negative.</exception>
+    public int InternalVertexCount
+    {
+        get { ThrowIfDisposed(); return _internalVertexCount; }
+        set { EnsureMutable(); ArgumentOutOfRangeException.ThrowIfNegative(value); _internalVertexCount = value; InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or replaces copied index contours into Vertices.</summary>
+    /// <value>Empty by default, meaning one contour in vertex order. Contours with fewer than three indices are skipped.</value>
+    /// <exception cref="ArgumentNullException">The outer array or a contour is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">A contour index is negative.</exception>
+    public int[][] Polygons
+    {
+        get { ThrowIfDisposed(); return CopyContours(_polygons); }
+        set
+        {
+            EnsureMutable(); ArgumentNullException.ThrowIfNull(value);
+            foreach (var contour in value)
+            {
+                ArgumentNullException.ThrowIfNull(contour);
+                foreach (var index in contour) ArgumentOutOfRangeException.ThrowIfNegative(index);
+            }
+            _polygons = CopyContours(value); InvalidateCanvas();
+        }
+    }
+
+    /// <summary>Gets or sets the finite uniform fill color used when VertexColors has no complete vertex set.</summary>
+    /// <value>Opaque white by default.</value>
+    /// <exception cref="ArgumentException">The assigned color is nonfinite.</exception>
+    public Color Color
+    {
+        get { ThrowIfDisposed(); return _color; }
+        set { EnsureMutable(); ValidateColor(value); _color = value; InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or replaces copied per-vertex colors. An incomplete set uses Color for every vertex.</summary>
+    /// <value>An empty array by default.</value>
+    /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
+    /// <exception cref="ArgumentException">A color is nonfinite.</exception>
+    public Color[] VertexColors
+    {
+        get { ThrowIfDisposed(); return (Color[])_vertexColors.Clone(); }
+        set
+        {
+            EnsureMutable(); ArgumentNullException.ThrowIfNull(value);
+            foreach (var color in value) ValidateColor(color);
+            _vertexColors = (Color[])value.Clone(); InvalidateCanvas();
+        }
+    }
+
+    /// <summary>Gets or sets the borrowed fill texture.</summary>
+    /// <value>Null by default.</value>
+    /// <exception cref="ObjectDisposedException">The assigned texture is disposed.</exception>
+    public Texture? Texture
+    {
+        get { ThrowIfDisposed(); return _texture; }
+        set
+        {
+            EnsureMutable();
+            if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value));
+            if (ReferenceEquals(_texture, value)) return;
+            if (_texture is not null) _texture.Changed -= TextureChanged;
+            _texture = value;
+            if (value is not null) value.Changed += TextureChanged;
+            InvalidateCanvas();
+        }
+    }
+
+    /// <summary>Gets or replaces copied pixel-space texture coordinates. An incomplete set uses local vertices.</summary>
+    /// <value>An empty array by default.</value>
+    /// <exception cref="ArgumentNullException">The assigned array is null.</exception>
+    /// <exception cref="ArgumentException">A coordinate is nonfinite.</exception>
+    public Vector2[] UV
+    {
+        get { ThrowIfDisposed(); return (Vector2[])_uv.Clone(); }
+        set { EnsureMutable(); ValidateVectors(value); _uv = (Vector2[])value.Clone(); InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or sets the finite local translation applied to every vertex before drawing.</summary>
+    /// <value>Zero by default.</value>
+    /// <exception cref="ArgumentException">The assigned offset is nonfinite.</exception>
+    public Vector2 Offset
+    {
+        get { ThrowIfDisposed(); return _offset; }
+        set { EnsureMutable(); ValidateVector(value); _offset = value; InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or sets the finite translation applied to pixel-space texture coordinates.</summary>
+    /// <value>Zero by default.</value>
+    /// <exception cref="ArgumentException">The assigned offset is nonfinite.</exception>
+    public Vector2 TextureOffset
+    {
+        get { ThrowIfDisposed(); return _textureOffset; }
+        set { EnsureMutable(); ValidateVector(value); _textureOffset = value; InvalidateCanvas(); }
+    }
+
+    /// <summary>Gets or sets the finite clockwise texture rotation in radians.</summary>
+    /// <value>Zero by default.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned rotation is nonfinite.</exception>
+    public float TextureRotation
+    {
+        get { ThrowIfDisposed(); return _textureRotation; }
+        set
+        {
+            EnsureMutable();
+            if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            _textureRotation = value; InvalidateCanvas();
+        }
+    }
+
+    /// <summary>Gets or sets the finite texture-coordinate scale before rotation.</summary>
+    /// <value>One on each axis by default.</value>
+    /// <exception cref="ArgumentException">The assigned scale is nonfinite.</exception>
+    public Vector2 TextureScale
+    {
+        get { ThrowIfDisposed(); return _textureScale; }
+        set { EnsureMutable(); ValidateVector(value); _textureScale = value; InvalidateCanvas(); }
+    }
+
+    /// <inheritdoc />
+    protected override void OnDraw()
+    {
+        base.OnDraw();
+        if (_vertices.Length < 3) return;
+        var length = _polygons.Length == 0 ? Math.Max(0, _vertices.Length - _internalVertexCount) : _vertices.Length;
+        if (length < 3) return;
+        var points = new Vector2[length];
+        for (var i = 0; i < length; i++) points[i] = _vertices[i] + _offset;
+        var colors = _vertexColors.Length == length ? _vertexColors : [_color];
+        Vector2[] uvs = [];
+        if (_texture is { } texture)
+        {
+            var size = texture.GetSize();
+            if (!size.IsFinite() || size.X <= 0 || size.Y <= 0)
+                throw new InvalidOperationException("Polygon texture dimensions must be positive and finite.");
+            uvs = new Vector2[length];
+            var transform = new Transform(_textureRotation, _textureOffset);
+            for (var i = 0; i < length; i++)
+            {
+                var source = _uv.Length == length ? _uv[i] : points[i];
+                uvs[i] = (transform * (source * _textureScale)) / size;
+            }
+        }
+
+        if (_polygons.Length == 0)
+        {
+            DrawPolygon(points, colors, uvs, _texture);
+            return;
+        }
+        foreach (var contour in _polygons)
+        {
+            if (contour.Length < 3) continue;
+            var contourPoints = new Vector2[contour.Length];
+            var contourColors = new Color[contour.Length];
+            var contourUV = _texture is null ? [] : new Vector2[contour.Length];
+            for (var i = 0; i < contour.Length; i++)
+            {
+                var index = contour[i];
+                if ((uint)index >= (uint)length) throw new ArgumentOutOfRangeException(nameof(Polygons), "A contour index is outside Vertices.");
+                contourPoints[i] = points[index];
+                contourColors[i] = colors.Length == 1 ? colors[0] : colors[index];
+                if (_texture is not null) contourUV[i] = uvs[index];
+            }
+            DrawPolygon(contourPoints, contourColors, contourUV, _texture);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(PolygonProperties);
+
+    /// <inheritdoc />
+    protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Polygon) ? CreatePolygon : base.CreateSceneInstanceFactory();
+
+    private static Node CreatePolygon() => new Polygon();
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && _texture is not null) _texture.Changed -= TextureChanged;
+        _texture = null;
+        base.Dispose(disposing);
+    }
+
+    private void TextureChanged(Resource _) => InvalidateCanvas();
+
+    private static int[][] CopyContours(int[][] contours) => contours.Select(contour => (int[])contour.Clone()).ToArray();
+
+    private static void ValidateVectors(Vector2[] vectors)
+    {
+        ArgumentNullException.ThrowIfNull(vectors);
+        foreach (var vector in vectors) ValidateVector(vector);
+    }
+
+    private static void ValidateVector(Vector2 vector)
+    {
+        if (!vector.IsFinite()) throw new ArgumentException("Polygon coordinates must be finite.");
+    }
+
+    private static void ValidateColor(Color color)
+    {
+        if (!color.IsFinite()) throw new ArgumentException("Polygon colors must be finite.");
+    }
+}

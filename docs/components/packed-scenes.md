@@ -41,6 +41,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Factories must be static and source-independent and must create a fresh default node of the exact captured type. Their execution context cannot construct a new `SceneTree` or enter an existing one; source and previously issued identities are rejected.
 - Only root-owned descendant branches are present. Parent order, sibling order, owner paths, persistent groups, and typed stored values are deterministic.
 - Reference-free values such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector3`](../classes/Vector3.md), [`Vector3I`](../classes/Vector3I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`TimerProcessCallback`](../classes/TimerProcessCallback.md) are captured and restored directly, including HDR, negative, integer, affine, or enum components, without conversion to strings or a universal container.
+- Stored `Vector2[]`, `Color[]`, and `int[][]` contour arrays are copied at capture and on each state read or instance restore; nested index arrays are copied individually. Resource-valued properties continue to follow scene-local duplication policy.
 - Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.
 - Scene-local duplication preserves graph identity. External non-local resources remain shared; created duplicates are owned and disposed by the returned root.
@@ -64,7 +65,7 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 - No text/binary scene loader or saver, exported-pack integration, UID/import remapping, dependency scanning, or missing-resource recovery.
 - No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
 - No persistent typed event endpoint schema. Runtime C# event subscriptions and `EventConnection` tokens are intentionally not copied.
-- No general node-reference property encoding/remapping and no arbitrary reference-shaped stored property values. `Vector2[]` line points are an explicit copied value-array exception.
+- No general node-reference property encoding/remapping and no arbitrary reference-shaped stored property values. `Vector2[]`, `Color[]`, and `int[][]` contours are explicit copied value-array exceptions.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
 
 ## Verification

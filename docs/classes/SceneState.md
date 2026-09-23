@@ -18,7 +18,7 @@ Provides read-only typed metadata for the current contents of a [`PackedScene`](
 
 `SceneState` is the read-only typed metadata view returned by [`PackedScene.GetState()`](PackedScene.md). It exposes node, property, group, path, owner, placeholder, nested-instance, and connection metadata without a dynamic value container or string-based mutation.
 
-Stored `Vector2[]` point properties are returned as independent copies on each typed read. Resource values remain borrowed references.
+Stored `Vector2[]`, `Color[]`, and nested `int[][]` contour properties are returned as independent copies on each typed read. Resource values remain borrowed references.
 
 Callers cannot construct a state directly. The object owns no nodes or resources and cannot instantiate or mutate a scene. It retains the immutable packed-data reference currently published to it; resource-valued properties are borrowed references governed by normal [`Resource`](Resource.md) ownership.
 
