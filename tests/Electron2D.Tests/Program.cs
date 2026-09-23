@@ -112,6 +112,7 @@ CurveTests.Run();
 CurveTextureTests.Run();
 GradientTests.Run();
 RandomNumberGeneratorTests.Run();
+RegExTests.Run();
 BitMapTests.Run();
 AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();

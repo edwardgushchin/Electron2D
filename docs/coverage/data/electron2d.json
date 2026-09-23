@@ -1898,6 +1898,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RegEx",
+    "kind": "type",
+    "declaringType": "Electron2D.RegEx",
+    "name": "RegEx",
+    "signature": "public sealed class Electron2D.RegEx",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RegExMatch",
+    "kind": "type",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "RegExMatch",
+    "signature": "public sealed class Electron2D.RegExMatch",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RemoteTransform",
     "kind": "type",
     "declaringType": "Electron2D.RemoteTransform",
@@ -4789,6 +4819,51 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RegEx..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RegEx",
+    "name": ".ctor",
+    "signature": "public RegEx()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RegEx..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RegEx",
+    "name": ".ctor",
+    "signature": "public RegEx(System.String pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RegExMatch..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": ".ctor",
+    "signature": "public RegExMatch()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -35709,6 +35784,281 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RegEx.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.Compile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Compile",
+    "signature": "public System.Void Compile(System.String pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.CreateFromString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "CreateFromString",
+    "signature": "public static Electron2D.RegEx CreateFromString(System.String pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RegEx",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.GetNames()",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "GetNames",
+    "signature": "public System.String[] GetNames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.Search(System.String,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Search",
+    "signature": "public Electron2D.RegExMatch Search(System.String subject, System.Int32 offset = 0, System.Int32 end = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "subject",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.RegExMatch",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.SearchAll(System.String,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "SearchAll",
+    "signature": "public Electron2D.RegExMatch[] SearchAll(System.String subject, System.Int32 offset = 0, System.Int32 end = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "subject",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.RegExMatch[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegEx.Sub(System.String,System.String,System.Boolean,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Sub",
+    "signature": "public System.String Sub(System.String subject, System.String replacement, System.Boolean all = false, System.Int32 offset = 0, System.Int32 end = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "subject",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "replacement",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "all",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetEnd(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetEnd",
+    "signature": "public System.Int32 GetEnd(System.Int32 group = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetEnd(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetEnd",
+    "signature": "public System.Int32 GetEnd(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetStart(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetStart",
+    "signature": "public System.Int32 GetStart(System.Int32 group = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetStart(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetStart",
+    "signature": "public System.Int32 GetStart(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetString(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetString",
+    "signature": "public System.String GetString(System.Int32 group = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "group",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RegExMatch.GetString(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GetString",
+    "signature": "public System.String GetString(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RemoteTransform.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.RemoteTransform",
@@ -54196,6 +54546,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegEx.GroupCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegEx",
+    "name": "GroupCount",
+    "signature": "public System.Int32 GroupCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegEx.IsValid()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegEx",
+    "name": "IsValid",
+    "signature": "public System.Boolean IsValid { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegEx.Pattern()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegEx",
+    "name": "Pattern",
+    "signature": "public System.String Pattern { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegExMatch.GroupCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "GroupCount",
+    "signature": "public System.Int32 GroupCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegExMatch.Names()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "Names",
+    "signature": "public System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E Names { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegExMatch.Strings()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "Strings",
+    "signature": "public System.String[] Strings { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RegExMatch.Subject()",
+    "kind": "property",
+    "declaringType": "Electron2D.RegExMatch",
+    "name": "Subject",
+    "signature": "public System.String Subject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

@@ -12,7 +12,7 @@ Its production sources are grouped by upstream module under `src/Core/`: `Config
 
 ## Current state
 
-The domain currently contains twelve implemented components:
+The domain currently contains thirteen active components:
 
 | Component | Responsibility | State |
 | --- | --- | --- |
@@ -26,10 +26,11 @@ The domain currently contains twelve implemented components:
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
 | [Random generation](../components/random-generation.md) | Independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |
+| [Text patterns](../components/text-patterns.md) | Managed expression compilation, capture results, bounded searches and replacement | Partial parity with the pinned PCRE2 dialect |
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -49,6 +50,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `EngineVersionInfo`: immutable typed assembly version metadata.
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
+- `RegEx` and `RegExMatch`: compiled managed text search, substitution and immutable capture inspection with documented PCRE2 compatibility gaps.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
 - `Geometry`: twenty-four stateless grid-line, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset operations.
@@ -70,6 +72,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Core does not depend on SDL3-CS.
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
 - Random generation uses .NET numeric and wall/monotonic clock primitives and inherited object lifetime; encryption and temporary-name code explicitly uses the separate .NET cryptographic generator.
+- Text patterns use .NET regular expressions with a finite timeout and no native or higher-domain dependency.
 - Color math depends on `Mathf`, .NET primitives, and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
 - `Rect`, `Transform`, and Scene's `Entity` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.

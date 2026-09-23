@@ -459,9 +459,44 @@
       "electron2d": "method:Electron2D.ProjectSettings.SetInitialValue`1(ProjectSetting<T>,T)",
       "godot": "ProjectSettings::method:set_initial_value(String:,Variant:)",
       "reason": "Typed setting-key identity and value replace name/Variant parameters (ADR 0019)."
+    },
+    {
+      "electron2d": "method:Electron2D.RegEx.Compile(System.String)",
+      "godot": "RegEx::method:compile(String:,bool:)",
+      "reason": "Managed exception carries compile diagnostics instead of an Error code and show_error logging; regex dialect parity remains partial."
+    },
+    {
+      "electron2d": "method:Electron2D.RegEx.CreateFromString(System.String)",
+      "godot": "RegEx::method:create_from_string(String:,bool:)",
+      "reason": "Managed construction throws on a malformed pattern instead of returning an invalid object; regex dialect parity remains partial."
+    },
+    {
+      "electron2d": "method:Electron2D.RegEx.GetNames()",
+      "godot": "RegEx::method:get_names()",
+      "reason": "Returns a fresh string array; .NET named-group ordering and duplicate-name semantics require further parity work."
+    },
+    {
+      "electron2d": "property:Electron2D.RegEx.IsValid()",
+      "godot": "RegEx::method:is_valid()",
+      "reason": "Managed read-only property for compiled-pattern validity."
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.RegEx..ctor()",
+      "reason": "Managed construction of the reference RegEx type; the reference constructor is not a class-reference declaration.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RegEx..ctor(System.String)",
+      "reason": "Managed compiled construction corresponding to create_from_string; the reference constructor is not a class-reference declaration.",
+      "adr": "adr-0003"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RegExMatch..ctor()",
+      "reason": "Empty managed result construction corresponding to the reference class's default construction; the constructor is not a class-reference declaration.",
+      "adr": "adr-0003"
+    },
     {
       "electron2d": "T:Electron2D.ConfigKey<T>",
       "reason": "Typed section/key identity in place of string/Variant parameters; no upstream helper type.",
@@ -891,6 +926,33 @@
       "electron2d": "method:Electron2D.ProjectSettings.ValidateDisposal()",
       "reason": "Protected lifetime and owner-thread validation override with no upstream callback.",
       "adr": "adr-0009"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": ["RegEx::method:clear()", "RegEx::method:get_pattern()", "RegEx::method:is_valid()"],
+      "state": "Implemented",
+      "reason": "The managed state transition and empty/valid results were compared with the pinned implementation and tested."
+    },
+    {
+      "godot": ["RegExMatch::property:subject"],
+      "state": "Implemented",
+      "reason": "The result retains the full original source string, including when end limits matching."
+    },
+    {
+      "godot": ["class:RegEx", "RegEx::method:compile(String:,bool:)", "RegEx::method:create_from_string(String:,bool:)", "RegEx::method:get_group_count()", "RegEx::method:get_names()"],
+      "state": "Partial",
+      "reason": "The .NET dialect differs from the pinned PCRE2 dialect; named capture ordering/duplicates and malformed-pattern behavior need parity work. Managed exceptions replace numeric errors."
+    },
+    {
+      "godot": ["RegEx::method:search(String:,int:,int:)", "RegEx::method:search_all(String:,int:,int:)", "RegEx::method:sub(String:,String:,bool:,int:,int:)"],
+      "state": "Partial",
+      "reason": "Search and replacement execute, but .NET syntax, replacement tokens and UTF-16 positions differ from PCRE2/code-point behavior."
+    },
+    {
+      "godot": ["class:RegExMatch", "RegExMatch::method:get_end(Variant:)", "RegExMatch::method:get_group_count()", "RegExMatch::method:get_start(Variant:)", "RegExMatch::method:get_string(Variant:)", "RegExMatch::property:names", "RegExMatch::property:strings"],
+      "state": "Partial",
+      "reason": "Typed int/string accessors work, but .NET group numbering for mixed captures, duplicate names and UTF-16 positions need PCRE2/code-point parity."
     }
   ]
 }
