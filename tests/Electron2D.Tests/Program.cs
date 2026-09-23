@@ -2802,6 +2802,7 @@ static void VerifyTransforms()
     var lookingDown = Transform.Identity.LookingAt(Vector2.Down);
     var lookingScaled = affine.LookingAt(new Vector2(9f, 3f));
     Require(NearlyEqual(lookingDown.Rotation, System.MathF.PI * 0.5f) && lookingDown.Origin == Vector2.Zero &&
+            Transform.Identity.LookingAt() == Transform.Identity.LookingAt(Vector2.Zero) &&
             VectorNearlyEqual(lookingDown.Scale, Vector2.One) &&
             lookingScaled.Origin == affine.Origin && VectorNearlyEqual(lookingScaled.Scale, Vector2.One) &&
             NearlyEqual(lookingScaled.Skew, 0f) && NearlyEqual(lookingScaled.Rotation, 0.7553597f),
@@ -2823,7 +2824,8 @@ static void VerifyTransforms()
         "Inverse array transformation must reject null explicitly.");
 
     var scalar = new Transform(1f, 2f, 3f, 4f, 5f, 6f);
-    Require((scalar * 2f) / 2f == scalar && !(scalar / 0f).IsFinite(),
+    Require((scalar * 2f) / 2f == scalar && (scalar * 2) / 2 == scalar &&
+            !(scalar / 0f).IsFinite(),
         "Scalar arithmetic must affect every component and retain IEEE division behavior.");
     var approximate = new Transform(1.000001f, 0f, 0f, 1f, 0f, 0f);
     var nanTransform = new Transform(new Vector2(float.NaN, 0f), Vector2.Down, Vector2.Zero);

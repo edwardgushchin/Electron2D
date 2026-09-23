@@ -70,7 +70,7 @@ Vector2 worldPoint = transform * localPoint;
 | [`public bool IsConformal()`](#m-electron2d-transform-isconformal) | Tests whether the basis preserves angles up to uniform scale and optional reflection. |
 | [`public bool IsEqualApprox(Transform other)`](#m-electron2d-transform-isequalapprox-electron2d-transform) | Tests all three columns for scale-aware approximate equality. |
 | [`public bool IsFinite()`](#m-electron2d-transform-isfinite) | Tests whether every matrix component is finite. |
-| [`public Transform LookingAt(Vector2 target)`](#m-electron2d-transform-lookingat-electron2d-vector2) | Returns a rotation-only transform turned toward a target through this transform's affine local space. |
+| [`public Transform LookingAt(Vector2 target = default)`](#m-electron2d-transform-lookingat-electron2d-vector2) | Returns a rotation-only transform turned toward a target through this transform's affine local space. |
 | [`public Transform Orthonormalized()`](#m-electron2d-transform-orthonormalized) | Returns a transform with a Gram-Schmidt orthonormalized basis. |
 | [`public Transform Rotated(float angle)`](#m-electron2d-transform-rotated-system-single) | Applies a rotation in the global or parent coordinate frame. |
 | [`public Transform RotatedLocal(float angle)`](#m-electron2d-transform-rotatedlocal-system-single) | Applies a rotation in the local coordinate frame. |
@@ -326,13 +326,13 @@ Tests whether every matrix component is finite.
 **Returns:** `true` when no component is NaN or infinity.
 
 <a id="m-electron2d-transform-lookingat-electron2d-vector2"></a>
-### `public Transform LookingAt(Vector2 target)`
+### `public Transform LookingAt(Vector2 target = default)`
 
 Returns a rotation-only transform turned toward a target through this transform's affine local space.
 
 **Parameters**
 
-- `target`: The global target point.
+- `target`: The global target point; defaults to the zero vector.
 
 **Returns:** A transform with the same origin and adjusted rotation; scale and skew are removed.
 
@@ -677,7 +677,7 @@ The public type depends on canonical scalar [`MathF`](MathF.md), [`Vector2`](Vec
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies 24-byte layout, zero/identity/reflection values, constructors, both indexers and failures, matrix order, decomposition including negative scale/skew, point/basis/array/rectangle transforms, negative-size rectangle normalization, general and orthonormal inverse behavior, singular failures, global/local operation differences, shortest-angle interpolation and extrapolation, conformal/finite/exact/approximate behavior including NaN/infinity, degenerate orthonormalization, `LookingAt`, scalar arithmetic, culture-invariant formatting, strict configuration persistence and malformed input, packed-scene storage, and zero warmed allocation for numeric math.
+`tests/Electron2D.Tests/Program.cs` verifies 24-byte layout, zero/identity/reflection values, constructors, both indexers and failures, matrix order, decomposition including negative scale/skew, point/basis/array/rectangle transforms, negative-size rectangle normalization, general and orthonormal inverse behavior, singular failures, global/local operation differences, shortest-angle interpolation and extrapolation, conformal/finite/exact/approximate behavior including NaN/infinity, degenerate orthonormalization, `LookingAt` with its default target, float and implicit-int scalar arithmetic, culture-invariant formatting, strict configuration persistence and malformed input, packed-scene storage, and zero warmed allocation for numeric math. All 43 reference members were audited against the pinned XML, native affine formulas and typed C# value operators; the accepted differences are recorded in [ADR 0029](../decisions/core-math.md#adr-0029).
 
 Execution is currently verified only on Linux/.NET 8. The type has not been exercised through a renderer, native SDL backend, or six-target test matrix.
 

@@ -82,7 +82,7 @@ The initial rectangle slice used System.Numerics.Vector2; ADR 0033 now requires 
 
 ### Decision
 
-`Electron2D.Rect2` is a mutable `[Serializable]`, sequential, 16-byte `struct` implementing `IEquatable<Rect2>`. It stores two private `System.Numerics.Vector2` fields and exposes the complete stable typed C# rectangle surface that does not depend on missing Electron2D types. `Electron2D.Side` is a separate four-value enum with stable numeric identities.
+`Electron2D.Rect` is a mutable `[Serializable]`, sequential, 16-byte `struct` implementing `IEquatable<Rect>`. It stores two `Electron2D.Vector2` values and exposes the applicable stable rectangle surface. `Electron2D.Side` is a separate four-value enum with stable numeric identities.
 
 The following contracts are fixed:
 
@@ -92,11 +92,11 @@ The following contracts are fixed:
 - outer border-only contact is excluded by default, while `Intersects` has an explicit border-inclusion option; a zero-size rectangle strictly inside another retains its position as an empty intersection;
 - algebraic growth may over-shrink and create non-positive size;
 - an undefined `Side` passed to `GrowSide` is a no-op, matching the audited typed implementation;
-- exact equality exposes IEEE NaN behavior; approximate equality checks exact equality first and otherwise uses the repository's scale-aware `0.00001` tolerance;
+- exact equality exposes IEEE NaN behavior; approximate equality checks exact equality first and otherwise uses the repository-wide tolerance defined by ADR 0034;
 - numeric formatting is invariant-culture;
 - `ConfigFile` accepts only finite rectangles and persists exactly nested `Position.X/Y` and `Size.X/Y` fields, rejecting missing, duplicate, unknown, nonnumeric, or non-finite input;
-- typed property descriptors and packed scenes store/copy `Rect2` directly because it contains no managed references;
-- a `Rect2I` constructor is deferred until that complete engine type exists; transform multiplication remains deferred to the explicit Entity/Rect2 migration recorded by ADR 0026 and ADR 0029;
+- typed property descriptors and packed scenes store/copy `Rect` directly because it contains no managed references;
+- `RectI` conversion and `Transform` multiplication are implemented under ADRs 0035 and 0029;
 - language-specific boolean truth conversion is permanently excluded.
 
 No renderer, UI, physics, or platform abstraction is created by this decision.
@@ -107,7 +107,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 - Existing `Vector2` transforms and positions interoperate directly with rectangle positions, sizes, centers, support points, and query points.
 - Negative sizes remain representable and observable; callers must decide when normalization is appropriate.
 - Configuration persistence rejects non-finite values even though ordinary runtime geometry retains them.
-- A future `Rect2I` implementation and the pending migration to the now-implemented standalone `Transform2D` must add and verify the deferred rectangle members rather than retrofitting unrelated .NET types.
+- `RectI` conversions and `Transform` multiplication use the same engine-owned value family without external numeric types.
 - Sequential layout is useful for predictable managed storage but does not promise native backend ABI equivalence.
 
 ### Rejected alternatives
@@ -162,9 +162,9 @@ The spatial surface uses one engine-owned affine vocabulary and documented canon
 - [0008: Scene inheritance](scene.md#adr-0008)
 
 <a id="adr-0029"></a>
-## ADR 0029: Typed Transform2D value and affine semantics
+## ADR 0029: Typed Transform value and affine semantics
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 ### Status
 
@@ -178,11 +178,11 @@ Electron2D already uses `System.Numerics.Vector2`, strict typed configuration sn
 
 ### Decision
 
-`Electron2D.Transform2D` is a mutable `[Serializable]`, sequential, 24-byte `struct` implementing `IEquatable<Transform2D>`. Its public fields `X`, `Y`, and `Origin` are column vectors backed by `System.Numerics.Vector2`.
+`Electron2D.Transform` is a mutable `[Serializable]`, sequential, 24-byte `struct` implementing `IEquatable<Transform>`. Its public fields `X`, `Y`, and `Origin` are column vectors backed by `Electron2D.Vector2`.
 
 The following contracts are fixed:
 
-- `default(Transform2D)` and `new Transform2D()` are the all-zero C# value; `Identity` is explicit;
+- `default(Transform)` and `new Transform()` are the all-zero C# value; `Identity` is explicit;
 - columns are ordered X, Y, Origin and use column-vector affine mathematics, while positive screen-space rotation is clockwise;
 - `left * right` applies the right/child transform first and the left/parent transform second;
 - `AffineInverse` supports any exactly nonsingular basis and throws `InvalidOperationException` for an exact zero determinant;
@@ -191,8 +191,9 @@ The following contracts are fixed:
 - `ScaledLocal` scales basis columns by their respective scalar components and preserves Origin, matching the documented/native contract rather than the audited typed binding discrepancy;
 - decomposition carries reflection in the Y scale, interpolation decomposes and recomposes with shortest-path rotation/skew angles, and weights outside zero through one extrapolate;
 - `IsConformal` and `LookingAt` are implemented because they belong to the stable general contract even though the audited typed binding omits them;
+- `LookingAt` accepts the zero vector as its default target, as in the pinned class reference;
 - zero or dependent axes orthonormalize to zero instead of becoming non-finite;
-- exact equality exposes IEEE NaN behavior; approximate equality uses the repository-wide scale-aware epsilon `0.00001` and exact-equality fast path;
+- exact equality exposes IEEE NaN behavior; approximate equality uses the repository-wide tolerance defined by ADR 0034 and an exact-equality fast path;
 - finite `ConfigFile` values use exactly three nested vectors named `X`, `Y`, and `Origin`, each containing exactly finite numeric `X` and `Y` fields;
 - typed stored-property capture and packed scenes copy the reference-free value directly;
 - array operations allocate a new result and never mutate their source; warmed scalar math remains allocation-free;

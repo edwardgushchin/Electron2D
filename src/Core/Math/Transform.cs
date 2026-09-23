@@ -255,14 +255,14 @@ public struct Transform : IEquatable<Transform>
     public readonly bool IsFinite() => X.IsFinite() && Y.IsFinite() && Origin.IsFinite();
 
     /// <summary>Returns a rotation-only transform turned toward a target through this transform's affine local space.</summary>
-    /// <param name="target">The global target point.</param>
+    /// <param name="target">The global target point; defaults to the zero vector.</param>
     /// <returns>A transform with the same origin and adjusted rotation; scale and skew are removed.</returns>
     /// <exception cref="InvalidOperationException">The basis determinant is exactly zero.</exception>
     /// <remarks>
     /// The target is inverse-transformed and compensated by the signed basis scale before its angle is added to the
     /// current rotation. For a skewed source this differs from using the raw global angle from the origin.
     /// </remarks>
-    public readonly Transform LookingAt(Vector2 target)
+    public readonly Transform LookingAt(Vector2 target = default)
     {
         var localTarget = AffineInverse() * target;
         var scaledTarget = localTarget * Scale;

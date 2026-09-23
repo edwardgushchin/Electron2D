@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "electron2d": "field:Electron2D.Transform.Origin()",
+      "godot": "Transform2D::property:origin",
+      "reason": "The mutable third-column field exposes the same origin property; zero-initialized C# values follow ADR 0029."
+    },
+    {
       "electron2d": "constant:Electron2D.MathF.Inf()",
       "godot": "@GDScript::constant:INF",
       "reason": "Same scalar constant under typed C# MathF; precision is adapted (ADR 0034)."
@@ -859,6 +864,16 @@
       "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,System.Single)",
       "godot": "Transform2D::operator:operator *(float:)",
       "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,System.Single)",
+      "godot": "Transform2D::operator:operator *(int:)",
+      "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant int overload is needed (ADR 0029)."
+    },
+    {
+      "electron2d": "operator:Electron2D.Transform.op_Division(Electron2D.Transform,System.Single)",
+      "godot": "Transform2D::operator:operator /(int:)",
+      "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant int overload is needed (ADR 0029)."
     },
     {
       "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Vector2,Electron2D.Transform)",
@@ -2249,6 +2264,56 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:Transform2D",
+        "Transform2D::constant:FLIP_X",
+        "Transform2D::constant:FLIP_Y",
+        "Transform2D::constant:IDENTITY",
+        "Transform2D::constructor:Transform2D()",
+        "Transform2D::constructor:Transform2D(Transform2D:)",
+        "Transform2D::constructor:Transform2D(Vector2:,Vector2:,Vector2:)",
+        "Transform2D::constructor:Transform2D(float:,Vector2:)",
+        "Transform2D::constructor:Transform2D(float:,Vector2:,float:,Vector2:)",
+        "Transform2D::method:affine_inverse()",
+        "Transform2D::method:basis_xform(Vector2:)",
+        "Transform2D::method:basis_xform_inv(Vector2:)",
+        "Transform2D::method:determinant()",
+        "Transform2D::method:get_origin()",
+        "Transform2D::method:get_rotation()",
+        "Transform2D::method:get_scale()",
+        "Transform2D::method:get_skew()",
+        "Transform2D::method:interpolate_with(Transform2D:,float:)",
+        "Transform2D::method:inverse()",
+        "Transform2D::method:is_conformal()",
+        "Transform2D::method:is_equal_approx(Transform2D:)",
+        "Transform2D::method:is_finite()",
+        "Transform2D::method:looking_at(Vector2:)",
+        "Transform2D::method:orthonormalized()",
+        "Transform2D::method:rotated(float:)",
+        "Transform2D::method:rotated_local(float:)",
+        "Transform2D::method:scaled(Vector2:)",
+        "Transform2D::method:scaled_local(Vector2:)",
+        "Transform2D::method:translated(Vector2:)",
+        "Transform2D::method:translated_local(Vector2:)",
+        "Transform2D::operator:operator !=(Transform2D:)",
+        "Transform2D::operator:operator *(PackedVector2Array:)",
+        "Transform2D::operator:operator *(Rect2:)",
+        "Transform2D::operator:operator *(Transform2D:)",
+        "Transform2D::operator:operator *(Vector2:)",
+        "Transform2D::operator:operator *(float:)",
+        "Transform2D::operator:operator *(int:)",
+        "Transform2D::operator:operator /(float:)",
+        "Transform2D::operator:operator /(int:)",
+        "Transform2D::operator:operator ==(Transform2D:)",
+        "Transform2D::operator:operator [](int:)",
+        "Transform2D::property:origin",
+        "Transform2D::property:x",
+        "Transform2D::property:y"
+      ],
+      "state": "Implemented",
+      "reason": "All 43 members were audited against pinned XML, native formulas and typed C# operators. VerifyTransforms covers values, defaults, algebra, errors and arrays; ADRs 0029/0034 record C# adaptations. Verified on Linux/.NET 8 only."
+    },
     {
       "godot": [
         "class:Vector2i"

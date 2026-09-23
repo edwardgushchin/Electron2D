@@ -37020,7 +37020,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Transform",
     "name": "LookingAt",
-    "signature": "public Electron2D.Transform LookingAt(Electron2D.Vector2 target)",
+    "signature": "public Electron2D.Transform LookingAt(Electron2D.Vector2 target = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -37028,7 +37028,7 @@
       {
         "name": "target",
         "type": "Electron2D.Vector2",
-        "default": null
+        "default": "default"
       }
     ],
     "returnType": "Electron2D.Transform",

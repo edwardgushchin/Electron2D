@@ -883,7 +883,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Timer](classes/Timer.md) | Node | Partial | 14 |
 | [TorusMesh](classes/TorusMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [TouchScreenButton](classes/TouchScreenButton.md) | Node2D | Blocked | 15 |
-| [Transform2D](classes/Transform2D.md) | — | Partial | 43 |
+| [Transform2D](classes/Transform2D.md) | — | Implemented | 43 |
 | [Transform3D](classes/Transform3D.md) | — | Excluded | 35 |
 | [Translation](classes/Translation.md) | Resource | Unimplemented | 12 |
 | [TranslationDomain](classes/TranslationDomain.md) | RefCounted | Unimplemented | 23 |
