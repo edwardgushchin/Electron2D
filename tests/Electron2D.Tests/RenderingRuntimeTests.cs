@@ -13,6 +13,16 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_VECTORS") == "1")
+            {
+                VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_TIME") == "1")
             {
                 VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
@@ -127,6 +137,7 @@ internal static partial class RenderingRuntimeTests
             VerifyImageDependency();
             VerifyResources();
             VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
+            VerifyShaderVectorValues("ValuesHLSL"); VerifyShaderVectorValues("ValuesGLSL");
             VerifyParameters("MaterialHlsl");
             VerifyParameters("MaterialGlsl");
             VerifyTextureResources();
@@ -197,6 +208,7 @@ internal static partial class RenderingRuntimeTests
                     VerifyAtlasMaterial("TextureHlsl");
                     VerifyAtlasMaterial("TextureGlsl");
                 }
+                VerifyShaderVectorFrame(backend, "ValuesHLSL"); VerifyShaderVectorFrame(backend, "ValuesGLSL");
                 VerifyTextureFailure(backend);
             }
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")

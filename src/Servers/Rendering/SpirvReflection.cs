@@ -65,11 +65,14 @@ internal static unsafe partial class SpirvReflection
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
+                    (13, 3) => typeof(Color),
                     (13, 4) => typeof(Vector4),
                     (7, 1) => typeof(int),
                     (7, 2) => typeof(Vector2I),
                     (7, 4) => typeof(Vector4I),
                     (8, 1) => typeof(uint),
+                    (8, 2) => typeof(Vector2I),
+                    (8, 4) => typeof(Vector4I),
                     _ => throw new NotSupportedException($"Uniform '{name}' has no integrated typed material mapping.")
                 };
                 Check(GetMemberOffset(compiler, type, member, out var offset));
@@ -85,7 +88,7 @@ internal static unsafe partial class SpirvReflection
                     if (stride < elementSize || stride % 16 != 0)
                         throw new NotSupportedException($"Uniform '{name}' must use std140 array stride.");
                 }
-                var alignment = dimensions == 1 ? 16 : elementSize;
+                var alignment = dimensions == 1 || width == 3 ? 16 : elementSize;
                 var extent = (ulong)offset + (ulong)(Math.Max(1, length) - 1) * stride + (uint)elementSize;
                 if (offset % alignment != 0 || extent > size)
                     throw new NotSupportedException($"Uniform '{name}' must fit inside its buffer with std140 alignment.");
@@ -97,7 +100,7 @@ internal static unsafe partial class SpirvReflection
                     if (occupied[i]) throw new ArgumentException($"Uniform '{name}' overlaps another member.", nameof(code));
                     occupied[i] = true;
                 }
-                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride));
+                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8));
             }
         }
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));

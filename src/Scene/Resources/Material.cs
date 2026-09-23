@@ -46,11 +46,12 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Sets a typed scalar or vector material uniform.</summary>
-    /// <typeparam name="T">Float, int, uint, Vector2, Vector4, Color, Vector2I or Vector4I as required by the shader.</typeparam>
+    /// <typeparam name="T">Float, int, uint, Vector2, Vector4, Color, Rect, Vector2I or Vector4I as required by the shader.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
-    /// <param name="value">The new value. Color aliases float4 without color-space conversion.</param>
+    /// <param name="value">The new value. Color maps RGB to float3 or RGBA to float4 without color-space conversion.
+    /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.</param>
     /// <remarks>Values start at zero. Updates affect every node sharing the material, without QueueRedraw or
-    /// a managed allocation after initialization. Floating-point values must be finite. Changed is emitted after
+    /// a managed allocation after initialization. Floating-point values, including unused Color alpha, must be finite. Changed is emitted after
     /// mutation. Shader replacement retains values whose names, element types and array lengths still match.</remarks>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match, or a value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
@@ -62,7 +63,7 @@ public sealed class ShaderMaterial : Material
             var state = RequireState();
             var uniform = Find<T>(state, name, array: false);
             ValidateValue(in value);
-            MemoryMarshal.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.ElementSize), in value);
+            uniform.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.ElementSize), in value);
         }
         EmitChanged();
     }
@@ -85,15 +86,15 @@ public sealed class ShaderMaterial : Material
             if (values.Length != uniform.ArrayLength) throw new ArgumentException($"Uniform '{name}' requires {uniform.ArrayLength} elements.", nameof(values));
             foreach (ref readonly var value in values) ValidateValue(in value);
             for (var i = 0; i < values.Length; i++)
-                MemoryMarshal.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), in values[i]);
+                uniform.Write(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), in values[i]);
         }
         EmitChanged();
     }
 
     /// <summary>Reads a typed scalar or vector material uniform.</summary>
-    /// <typeparam name="T">The supported type matching the reflected value; Color also accepts float4.</typeparam>
+    /// <typeparam name="T">The supported type matching the reflected value; Color also accepts float4 and Rect aliases float4.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
-    /// <returns>The current value, or zero before assignment.</returns>
+    /// <returns>The current value, or zero before assignment. Color mapped from float3 always has alpha one.</returns>
     /// <exception cref="ArgumentException">The name, type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -103,14 +104,14 @@ public sealed class ShaderMaterial : Material
         {
             var state = RequireState();
             var uniform = Find<T>(state, name, array: false);
-            return MemoryMarshal.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.ElementSize));
+            return uniform.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset, uniform.ElementSize));
         }
     }
 
     /// <summary>Returns a copy of a fixed-size array uniform.</summary>
     /// <typeparam name="T">The supported type matching the reflected array element type.</typeparam>
     /// <param name="name">The exact, case-sensitive array member name.</param>
-    /// <returns>An independent array with the reflected length, initially filled with zero values.</returns>
+    /// <returns>An independent array with the reflected length, initially zero; float3 Color elements always have alpha one.</returns>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -122,7 +123,7 @@ public sealed class ShaderMaterial : Material
             var uniform = Find<T>(state, name, array: true);
             var values = new T[uniform.ArrayLength];
             for (var i = 0; i < values.Length; i++)
-                values[i] = MemoryMarshal.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize));
+                values[i] = uniform.Read<T>(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize));
             return values;
         }
     }
@@ -168,7 +169,7 @@ public sealed class ShaderMaterial : Material
 
     private static void ValidateValue<T>(in T value) where T : unmanaged
     {
-        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color)) return;
+        if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect)) return;
         foreach (var component in MemoryMarshal.Cast<T, float>(MemoryMarshal.CreateReadOnlySpan(in value, 1)))
             if (!float.IsFinite(component)) throw new ArgumentException("Material floating-point values must be finite.", nameof(value));
     }

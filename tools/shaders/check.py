@@ -5,6 +5,7 @@ import argparse
 import json
 import shutil
 import subprocess
+import struct
 import sys
 import tempfile
 
@@ -75,6 +76,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     assert (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes() == (root / 'src/Servers/Rendering/Shaders/Canvas.frag.spv').read_bytes()
     for language, stem, artifact in [('hlsl', 'Material', 'MaterialHlsl'), ('glsl', 'Material', 'MaterialGlsl'), ('glsl', 'MaterialReordered', 'MaterialReordered'),
                                      ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered'),
+                                     ('hlsl', 'Values', 'ValuesHLSL'), ('glsl', 'Values', 'ValuesGLSL'), ('glsl', 'ValuesReordered', 'ValuesReordered'), ('glsl', 'ValuesSigned', 'ValuesSigned'),
                                      ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly')]:
         source = root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.{language}'
         invoke(source, output)
@@ -146,6 +148,25 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                       .replace('float2 size;', 'float2 size; float TIME;').replace('o.color = color;', 'o.color = color * TIME;'))
     assert 'TIME' in invoke(vertex, output, stage='vertex', success=False)
     assert output.read_bytes() == previous
+    # External vector producers use the same layout checks, without source-only metadata.
+    vectors = (root / 'tests/Electron2D.Tests/Shaders/ValuesGLSL.spv').read_bytes()
+    external.write_bytes(vectors)
+    invoke(external, output)
+    assert output.read_bytes() == vectors
+    for label in ('rgb-offset', 'vector-stride'):
+        words = list(struct.unpack('<' + 'I' * (len(vectors) // 4), vectors))
+        at, changed = 5, False
+        while at < len(words):
+            count, opcode = words[at] >> 16, words[at] & 0xffff
+            if label == 'rgb-offset' and opcode == 72 and count == 5 and words[at + 2:at + 5] == [0, 35, 0]:
+                words[at + 4], changed = 4, True
+            if label == 'vector-stride' and opcode == 71 and count == 4 and words[at + 2:at + 4] == [6, 16]:
+                words[at + 3], changed = 12, True
+            at += count
+        assert changed, label
+        external.write_bytes(struct.pack('<' + 'I' * len(words), *words))
+        invoke(external, output, success=False)
+        assert output.read_bytes() == vectors, 'Invalid vector layout replaced the last usable artifact'
     if args.tool:
         sandbox = directory / 'package'
         shutil.copytree(args.tool.resolve().parent, sandbox)
@@ -161,4 +182,4 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                                  capture_output=True, text=True)
             assert run.returncode == 1 and diagnostic in run.stderr, run.stderr
             assert output.read_bytes() == previous, 'A broken toolchain replaced the last usable artifact'
-print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, reserved TIME and unused resources.')
+print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector mappings, reserved TIME and unused resources.')

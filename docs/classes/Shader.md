@@ -64,7 +64,7 @@ Returns copied bytes and never exposes the backing module. The snapshot may safe
 
 ### GetShaderUniformList
 
-Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color`. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
+Returns a read-only list with exact uniform names. Descriptors use `ShaderMaterial` as owner, scalar/vector element types, `T[]` for fixed arrays, or `Texture?` for texture bindings. Float4 descriptors use `Vector4`; typed parameter calls also accept `Color` and `Rect`. Float3 uses `Color` (RGB, canonical alpha one). Signed/unsigned integer vectors use `Vector2I`/`Vector4I`, retaining component bits. Fixed arrays use the corresponding canonical element descriptors. Getter/setter delegates use the material's current matching parameter, so an incompatible shader replacement is rejected on access. The list itself remains a snapshot after reload. Reserved TEXTURE and TIME are omitted. There are no grouping hints in the current import format.
 
 ### SetDefaultTextureParameter
 

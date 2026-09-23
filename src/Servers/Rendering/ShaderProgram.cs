@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Electron2D;
 
 internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null)
@@ -28,19 +30,35 @@ internal sealed record ShaderTexture(string Name, int Binding)
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 
-internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride)
+internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned)
 {
     internal int Count => Math.Max(1, ArrayLength);
-    internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector4) && typeof(T) == typeof(Color);
-    internal bool SameType(ShaderUniform other) => Type == other.Type && ArrayLength == other.ArrayLength;
+    internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect));
+    internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength;
 
     internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
-        Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Describe<Vector4I>(propertyName);
+        Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Color) ? Describe<Color>(propertyName) : Describe<Vector4I>(propertyName);
 
-    private PropertyDescriptor Describe<T>(string propertyName) where T : unmanaged => ArrayLength == 0
-        ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => default, stored: true)
-        : new PropertyDescriptor<ShaderMaterial, T[]>(propertyName, m => m.GetShaderParameterArray<T>(Name),
-            (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderParameter<T>(Name, v.AsSpan()); }, _ => new T[ArrayLength], stored: true);
+    internal void Write<T>(Span<byte> target, in T value) where T : unmanaged =>
+        MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(in value, 1))[..ElementSize].CopyTo(target);
+
+    internal T Read<T>(ReadOnlySpan<byte> source) where T : unmanaged
+    {
+        T value = default;
+        var bytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref value, 1));
+        source.CopyTo(bytes);
+        if (Type == typeof(Color)) MemoryMarshal.Cast<byte, float>(bytes)[3] = 1;
+        return value;
+    }
+
+    private PropertyDescriptor Describe<T>(string propertyName) where T : unmanaged
+    {
+        var initial = Read<T>(new byte[ElementSize]);
+        return ArrayLength == 0
+            ? new PropertyDescriptor<ShaderMaterial, T>(propertyName, m => m.GetShaderParameter<T>(Name), (m, v) => m.SetShaderParameter(Name, v), _ => initial, stored: true)
+            : new PropertyDescriptor<ShaderMaterial, T[]>(propertyName, m => m.GetShaderParameterArray<T>(Name),
+                (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderParameter<T>(Name, v.AsSpan()); }, _ => Enumerable.Repeat(initial, ArrayLength).ToArray(), stored: true);
+    }
 }

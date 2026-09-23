@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-A published immutable program version: owned SPIR-V bytes, padded uniform buffer sizes, named member layouts, sampled resources and descriptors. The constructor does not validate or copy its collections; ShaderCompiler/SpirvReflection construct them and no writer may mutate them after publication. Shader and its duplicates may share a version safely. Material state and GPU pipeline caches identify that version by reference.
+A published immutable program version: owned SPIR-V bytes, padded uniform buffer sizes, named member layouts (including numeric signedness), sampled resources and descriptors. The constructor does not validate or copy its collections; ShaderCompiler/SpirvReflection construct them and no writer may mutate them after publication. Shader and its duplicates may share a version safely. Material state and GPU pipeline caches identify that version by reference.
 
 ## Internal usage
 
@@ -82,7 +82,7 @@ Validated binding-ordered texture descriptors, including optional reserved TEXTU
 
 `internal readonly IReadOnlyList<PropertyDescriptor> Descriptors`
 
-Unprefixed typed inspection descriptors, omitting reserved TEXTURE and TIME.
+Unprefixed typed inspection descriptors, omitting reserved TEXTURE and TIME. Float3 uses Color with alpha-one revert values; float4 uses Vector4 (material aliases Color and Rect); signed/unsigned integer vectors use Vector2I/Vector4I. Array descriptors retain the canonical element mapping.
 
 ### Material descriptors
 

@@ -13,7 +13,7 @@ Pairs a borrowed Shader with independently owned parameter values and borrowed t
 
 Reserved TIME is not a user parameter: getters, setters, property discovery, duplication and value migration exclude it. The renderer fills its reflected float32 location immediately before each buffer upload without emitting Changed.
 
-State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector or span updates reuse initialized storage. Initial values are zero; no source defaults are extracted. Shader replacement migrates matching names, element types and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at zero; assigning null discards values.
+State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector or span updates reuse initialized storage. Stored components initially contain zero; float3 Color readers reconstruct alpha one. No source defaults are extracted. Shader replacement migrates matching names, shader element types (including integer signedness) and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at zero; assigning null discards values.
 
 ## Example
 
@@ -50,7 +50,7 @@ Assignment borrows a live program. Assigning the same instance is a no-op; a cha
 
 ### SetShaderParameter
 
-Names are nonblank and case-sensitive. Supported types currently include float, int, uint, Vector2, Vector4, Color, Vector2I and Vector4I, subject to the reflected element type. Color aliases float4 without implicit gamma conversion. Every floating component must be finite. Array calls require exactly the reflected array length and copy into internal padded storage.
+Names are nonblank and case-sensitive. Supported types currently include float, int, uint, Vector2, Vector4, Color, Rect, Vector2I and Vector4I, subject to the reflected element type. Color supplies RGB to float3 or RGBA to float4 without implicit gamma conversion. Float3 ignores alpha when storing; reads always reconstruct alpha one. Rect aliases float4 as position.x, position.y, size.x, size.y, including negative sizes. Vector2I and Vector4I carry either signed or unsigned shader vectors with unchanged 32-bit component patterns: -1 supplies 0xffffffffu. Every floating component must be finite, including unused Color alpha. Array calls require exactly the reflected array length and copy into internal padded storage.
 
 Texture overloads require a reflected sampled image name and a live Texture, or null to use the Shader default. Missing defaults or unreadable/disposed textures fail before rendering. Texture updates and changes to bindings affect later frames without redrawing geometry.
 
@@ -58,7 +58,7 @@ The full request is validated before writing, including all array elements. A fa
 
 ### GetShaderParameter
 
-The generic overload returns the matching scalar/vector value, initially zero. The nongeneric overload returns the explicit borrowed texture override, or null when the Shader default applies. The type and scalar shape must match. Uses the same name, missing-Shader and disposal checks as setters. No mutable backing storage is returned.
+The generic overload returns the matching scalar/vector value, initially zero (alpha one for float3 Color). The nongeneric overload returns the explicit borrowed texture override, or null when the Shader default applies. The type and scalar shape must match. Uses the same name, missing-Shader and disposal checks as setters. No mutable backing storage is returned.
 
 ### GetShaderParameterArray
 
@@ -66,10 +66,10 @@ Returns an independent `T[]` containing all elements without buffer padding. Cal
 
 ## Tooling and protected hooks
 
-Inherited property discovery includes Shader and typed parameter descriptors named `shader_parameter/<uniform>`. Their zero revert values and setters share the parameter API. `Shader.GetShaderUniformList()` offers descriptors with unprefixed uniform names for explicit shader inspection.
+Inherited property discovery includes Shader and typed parameter descriptors named `shader_parameter/<uniform>`. Their zero-component revert values (alpha one for float3 Color) and setters share the parameter API. `Shader.GetShaderUniformList()` offers descriptors with unprefixed uniform names for explicit shader inspection.
 
 `CreateDuplicateInstance()` creates a fresh ShaderMaterial. `CopyCustomStateTo(Resource, bool, DeepDuplicateMode, Func<Resource?, Resource?>, Func<Resource?, Resource?>)` independently copies all parameter buffers and applies the resource graph policy to Shader and texture overrides, preserving aliases shared with Shader defaults. `GetPropertyDescriptors()` supplies the stored Shader and parameter descriptors. `Dispose(bool)` clears borrowed/program references and value storage before base cleanup. Resource path, identity and local-scene rules remain inherited.
 
 ## Verification and remaining work
 
-[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. Native coverage is Linux Wayland/Vulkan only. Texture arrays and sampler configuration, matrices, nested structures, boolean/other numeric mappings and per-instance parameters remain unimplemented; see [the component limits](../components/shader-materials.md).
+[RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs) checks named typed access, failure atomicity, independent copies and returned arrays, property discovery, cross-layout reload, disposal and zero allocations over warmed repeated updates. Four GPU frames per imported language check float/int/uint/vector/array values, distinct materials sharing a shader, and image changes without drawing-command regeneration. [ShaderVectorRenderingTests](../../tests/Electron2D.Tests/ShaderVectorRenderingTests.cs) covers RGB/Rect and unsigned vectors, scalar and arrays, defaults/descriptors, adjacent-field integrity, failures, copies, signedness resets, two-language pixels, shared materials, layout reload and warmed allocation checks. Native coverage is Linux Wayland/Vulkan only. Texture arrays and sampler configuration, matrices, nested structures, boolean/other numeric mappings and per-instance parameters remain unimplemented; see [the component limits](../components/shader-materials.md).
