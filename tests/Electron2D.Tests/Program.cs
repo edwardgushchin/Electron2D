@@ -191,6 +191,7 @@ VerifyNodeHierarchyAndTransforms();
 VerifyProcessing();
 VerifySceneTree();
 VerifySceneTreeGroupsEventsAndTimers();
+SceneTreeTimerTests.Run();
 VerifyTimers();
 VerifyTweens();
 VerifySceneTreeFailureSafety();

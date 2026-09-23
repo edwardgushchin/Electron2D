@@ -305,7 +305,7 @@ The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It
 <a id="adr-0036"></a>
 ## ADR 0036: Reusable Node timer and dual-delta frame delivery
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted
 - Scope: Reusable countdown nodes, internal Node processing, and scaled/original frame timing
@@ -329,6 +329,7 @@ The engine is typed C#, uses direct frame traversal for hot paths, and forbids i
 - Node owns private internal process and physics enable flags in addition to public gameplay callback flags. SceneTree schedules a node when either lane is enabled, dispatches the internal notification before the public callback, and attempts both callbacks when the internal callback fails. Public enablement is captured and revalidated: disabling the lane, disposing, or detaching during internal delivery skips the public callback, while newly enabling it does not inject a callback into the current turn.
 - Internal notification IDs `25` and `26` remain public stable identifiers, while scheduling controls and original delta access remain internal engine integration.
 - MainLoop carries the delivered scaled delta, its original lane delta, and the original process step only inside the current callback. Direct calls use their supplied delta for all three. Engine captures the unscaled synchronized process step before its physics catch-up cap and supplies it in both callback lanes, including when `TimeScale` is zero. Timer selects that process step when configured to ignore scaling; other built-in consumers keep the original lane delta.
+- `SceneTree.CreateTimer` accepts the reference four-argument contract. A lightweight timer configured to ignore time scale selects the original delta of its own process or physics lane; direct calls supply the same delta for both modes. It retains one-shot, tree-owned disposal semantics.
 - SceneTree continues using its reusable scheduler buffers. Scheduled-node values compare themselves by priority and captured tree order so sorting creates no steady-state managed allocation.
 - Exact Timer configuration is stored by `PackedScene`; runtime pause and remaining time are not. Derived Timer types follow the existing explicit exact-type factory rule.
 
@@ -339,7 +340,7 @@ The engine is typed C#, uses direct frame traversal for hot paths, and forbids i
 - Ignore-time-scale remains meaningful at every non-negative Engine time scale, with the same process-step decrement in both Timer lanes.
 - Internal callbacks become a deliberate Node/SceneTree integration point for future built-in nodes; they are not a new public override surface.
 - A very short wait is still quantized by delivered frames, and large overshoots catch up at no more than one event per frame.
-- `SceneTreeTimer` remains the smaller auto-disposed one-shot facility and does not gain repeating, Node, packing, or ignore-time-scale behavior in this change.
+- `SceneTreeTimer` remains the smaller auto-disposed one-shot facility without repeating, Node, or packing behavior.
 
 ### Rejected alternatives
 

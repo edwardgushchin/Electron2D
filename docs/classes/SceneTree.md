@@ -63,7 +63,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public void ChangeSceneToPacked(PackedScene packedScene)`](#m-electron2d-scenetree-changescenetopacked-electron2d-packedscene) | Instantiates and schedules a packed scene. |
 | [`public void UnloadCurrentScene()`](#m-electron2d-scenetree-unloadcurrentscene) | Disposes the selected scene immediately. |
 | [`public void SetDeferred<T>(Action<T> setter, T value)`](#m-electron2d-scenetree-setdeferred-1-system-action-0-0) | Thread-safely queues a typed setter invocation for a future deferred flush. |
-| [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
+| [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
 | [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the valid tweens currently registered for processing. |
 | [`public void ProcessFrame(double delta)`](#m-electron2d-scenetree-processframe-system-double) | Runs one host-driven process frame, process timers, process tweens, and one deferred safe point. |
@@ -267,8 +267,8 @@ Thread-safely queues a typed setter invocation for a future deferred flush.
 
 **Remarks:** Has the same atomic lifetime and captured-batch behavior as [`SceneTree.Defer(Action)`](SceneTree.md#m-electron2d-scenetree-defer-system-action).
 
-<a id="m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean"></a>
-### `public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false)`
+<a id="m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean-system-boolean"></a>
+### `public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)`
 
 Creates a one-shot timer owned and processed by this tree.
 
@@ -277,6 +277,7 @@ Creates a one-shot timer owned and processed by this tree.
 - `timeSeconds`: The finite non-negative delay in seconds.
 - `processAlways`: Whether the timer advances while [`SceneTree.Paused`](SceneTree.md#p-electron2d-scenetree-paused) is true.
 - `processInPhysics`: Whether the timer advances after physics callbacks instead of process callbacks.
+- `ignoreTimeScale`: Whether to use the original lane delta when Engine drives the tree.
 
 **Returns:** The live timer. It is automatically disposed after timeout delivery or when this tree is finalized.
 
@@ -288,8 +289,9 @@ Creates a one-shot timer owned and processed by this tree.
 
 **Remarks:** Timers are updated after node callbacks and before deferred work. A timer created during node callbacks can be
 included in that frame's timer phase; a timer created by another timer waits for the next matching frame. Time
-advances only from supplied frame deltas. When [`Engine`](Engine.md) drives the tree, those deltas include its
-[`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale); direct callers control scaling themselves. There is no internal clock. Keeping a
+advances only from supplied frame deltas. When [`Engine`](Engine.md) drives the tree, timers normally use deltas scaled by
+[`Engine.TimeScale`](Engine.md#p-electron2d-engine-timescale); `ignoreTimeScale` selects the original lane delta,
+including at zero scale. Direct callers supply the same delta for both modes. There is no internal clock. Keeping a
 managed reference does not keep an expired timer alive: timeout delivery is followed by deterministic disposal.
 A zero duration expires during the next matching frame, not during this method call.
 
@@ -740,7 +742,7 @@ The class is sealed, so these overrides document lifetime behavior rather than e
 
 A valid inherited or wrapper frame increments its lane counter, delivers transforms around the matching frame event as described below, captures the then-current hierarchy in a reusable buffer, orders candidates by the lane's priority and captured pre-order, and revalidates membership, lifetime, pause eligibility, and public-or-internal enable state before every callback. Engine-internal node processing runs before the same node's independently enabled public callback. Failures are retained while later callbacks/phases are attempted; detachment or disposal during the internal phase skips that node's public phase.
 
-Reusable `Timer` nodes advance inside node processing and can select Engine's original process step in either lane. Matching `SceneTreeTimer` instances are captured afterward. A tree timer created by a node callback may therefore advance in that frame; a tree timer created by another tree timer waits for the next matching frame. Expired tree timers are removed, notify synchronously, and are disposed even when a timeout handler fails. Matching Tweens are then captured and processed in creation order; a tween created by a node or tree-timer callback can enter that frame, while one created by another tween waits. Tweens may select the original Engine delta. Deferred actions then run from one captured batch. A nested `Defer` waits for a later flush. The deletion batch is captured after actions, so deletion requested by a captured action runs in the same flush. All phase failures are flattened into one `AggregateException`.
+Reusable `Timer` nodes advance inside node processing and can select Engine's original process step in either lane. Matching `SceneTreeTimer` instances are captured afterward and can select the original delta of that lane. A tree timer created by a node callback may therefore advance in that frame; a tree timer created by another tree timer waits for the next matching frame. Expired tree timers are removed, notify synchronously, and are disposed even when a timeout handler fails. Matching Tweens are then captured and processed in creation order; a tween created by a node or tree-timer callback can enter that frame, while one created by another tween waits. Tweens may select the original Engine delta. Deferred actions then run from one captured batch. A nested `Defer` waits for a later flush. The deletion batch is captured after actions, so deletion requested by a captured action runs in the same flush. All phase failures are flattened into one `AggregateException`.
 
 Frame and flush execution cannot be re-entered and cannot begin during node lifecycle or pause delivery. Calling `Dispose`, `FinalizeLoop`, any frame entry point, or `FlushDeferred` from frame, flush, lifecycle, or pause callbacks is rejected before queue consumption or tree lifetime changes; the outer operation continues and reports the failure.
 

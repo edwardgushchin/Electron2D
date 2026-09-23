@@ -6,8 +6,8 @@ namespace Electron2D;
 /// <remarks>
 /// The owning tree updates the timer after node callbacks in the selected frame lane. The timer is automatically
 /// disposed after timeout delivery. Keeping a managed reference does not extend its lifetime. Time advances only from
-/// delivered frame deltas; <see cref="Engine"/> scales those deltas when it drives the tree. The timer has no internal
-/// clock or independent time-scale bypass.
+/// delivered frame deltas; <see cref="Engine"/> supplies both scaled and original deltas when it drives the tree.
+/// The timer has no internal clock.
 /// </remarks>
 public sealed class SceneTreeTimer : ElectronObject
 {
@@ -26,12 +26,13 @@ public sealed class SceneTreeTimer : ElectronObject
     private SceneTree? _tree;
     private double _timeLeft;
 
-    internal SceneTreeTimer(SceneTree tree, double timeLeft, bool processAlways, bool processInPhysics)
+    internal SceneTreeTimer(SceneTree tree, double timeLeft, bool processAlways, bool processInPhysics, bool ignoreTimeScale)
     {
         _tree = tree;
         _timeLeft = timeLeft;
         ProcessAlways = processAlways;
         ProcessInPhysics = processInPhysics;
+        IgnoreTimeScale = ignoreTimeScale;
     }
 
     /// <summary>Gets or sets the remaining delay in seconds.</summary>
@@ -63,6 +64,9 @@ public sealed class SceneTreeTimer : ElectronObject
     /// <summary>Gets whether this timer advances in physics frames instead of process frames.</summary>
     /// <value><see langword="true"/> for physics frames; <see langword="false"/> for process frames.</value>
     internal bool ProcessInPhysics { get; }
+
+    /// <summary>Gets whether this timer uses the original frame delta instead of Engine-scaled time.</summary>
+    internal bool IgnoreTimeScale { get; }
 
     /// <summary>Occurs once when the remaining delay reaches zero.</summary>
     /// <remarks>

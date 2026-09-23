@@ -749,7 +749,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SceneReplicationConfig](classes/SceneReplicationConfig.md) | Resource | Blocked | 17 |
 | [SceneState](classes/SceneState.md) | RefCounted | Partial | 28 |
 | [SceneTree](classes/SceneTree.md) | MainLoop | Partial | 51 |
-| [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Partial | 2 |
+| [SceneTreeTimer](classes/SceneTreeTimer.md) | RefCounted | Implemented | 2 |
 | [Script](classes/Script.md) | Resource | Blocked | 18 |
 | [ScriptBacktrace](classes/ScriptBacktrace.md) | RefCounted | Blocked | 16 |
 | [ScriptCreateDialog](classes/ScriptCreateDialog.md) | ConfirmationDialog | Blocked | 5 |

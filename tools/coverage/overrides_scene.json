@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)", "godot": "SceneTree::method:create_timer(float:,bool:,bool:,bool:)", "reason": "All four arguments and defaults map to one-shot timer scheduling."},
     {"electron2d": "method:Electron2D.SceneTree.ChangeSceneToNode(Electron2D.Node)", "godot": "SceneTree::method:change_scene_to_node(Node:)", "reason": "Typed exceptions replace Error values; the old scene exits immediately and the accepted detached node enters at a deferred safe point."},
     {"electron2d": "method:Electron2D.SceneTree.ChangeSceneToPacked(Electron2D.PackedScene)", "godot": "SceneTree::method:change_scene_to_packed(PackedScene:)", "reason": "Instantiates the in-memory scene before scheduling a deferred replacement; typed exceptions replace Error values."},
     {"electron2d": "method:Electron2D.SceneTree.UnloadCurrentScene()", "godot": "SceneTree::method:unload_current_scene()", "reason": "Disposes only the selected current scene immediately."},
@@ -733,12 +734,6 @@
       "godot": "SceneTree::method:call_group(StringName:,StringName:)",
       "state": "Partial",
       "reason": "Typed delegate replaces string method dispatch; ADRs 0001/0006."
-    },
-    {
-      "electron2d": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean)",
-      "godot": "SceneTree::method:create_timer(float:,bool:,bool:,bool:)",
-      "state": "Partial",
-      "reason": "C# overload omits upstream ignore_time_scale parameter; ADR 0036."
     },
     {
       "electron2d": "method:Electron2D.SceneTree.Defer(System.Action)",
@@ -2609,6 +2604,10 @@
     }
   ],
   "statusGroups": [
+    {"state": "Implemented", "reason": "One-shot tree-owned RefCounted role maps to managed ElectronObject lifetime under ADRs 0003/0014; SceneTreeTimerTests and VerifySceneTreeGroupsEventsAndTimers cover both frame lanes, pause, expiry and disposal.", "godot": ["class:SceneTreeTimer"]},
+    {"state": "Implemented", "reason": "Mutable finite non-negative seconds, frame decrement and zero-before-timeout match the timer contract; invalid assignment preserves state. SceneTreeTimerTests covers scale-zero and direct frames.", "godot": ["SceneTreeTimer::property:time_left"]},
+    {"state": "Implemented", "reason": "Typed synchronous event fires once at zero after node callbacks; disposal follows even on handler failure and later timers continue. VerifySceneTreeGroupsEventsAndTimers and SceneTreeTimerTests cover ordering and lifetime.", "godot": ["SceneTreeTimer::signal:timeout()"]},
+    {"state": "Implemented", "reason": "All four arguments and defaults map to one-shot timer scheduling. Original process/physics lane deltas bypass Engine.TimeScale, including zero; SceneTreeTimerTests covers scaled and unscaled timers in both lanes and direct calls.", "godot": ["SceneTree::method:create_timer(float:,bool:,bool:,bool:)"]},
     {"state": "Implemented", "reason": "Pinned scene_tree.cpp current-scene selection, immediate old-scene exit, deferred replacement, supersession, unload and post-entry signal are implemented with the accepted typed exception/event boundary. SceneChangeTests covers lifecycle, packed instantiation, repeated requests, ownership, cleanup, callback failures and owner thread on the managed tree; native and file-loader behavior are separate gaps.", "godot": ["SceneTree::method:change_scene_to_node(Node:)", "SceneTree::method:change_scene_to_packed(PackedScene:)", "SceneTree::method:unload_current_scene()", "SceneTree::property:current_scene", "SceneTree::signal:scene_changed()"]},
     {"state": "Blocked", "reason": "Trigger: implement the typed scene-file loader and path/UID import integration under ADR 0023, then load a PackedScene by path and implement file-based change or reload with the same deferred lifecycle. No file loader exists yet.", "godot": ["SceneTree::method:change_scene_to_file(String:)", "SceneTree::method:reload_current_scene()"]},
     {"state": "Implemented", "reason": "Pinned node.cpp path lookup, depth-first ordering, diagnostic formatting and parent-first notification traversal are covered by NodeTreeDiagnosticsTests. NodePath uses the accepted string path representation; callback failures follow the established failure-continuing scene policy. The tested slice is managed and does not claim editor or native backend behavior.", "godot": ["Node::method:has_node(NodePath:)", "Node::method:is_greater_than(Node:)", "Node::method:get_tree_string()", "Node::method:get_tree_string_pretty()", "Node::method:print_tree()", "Node::method:print_tree_pretty()", "Node::method:propagate_notification(int:)"]},

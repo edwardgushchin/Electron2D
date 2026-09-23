@@ -39873,11 +39873,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean)",
+    "id": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.SceneTree",
     "name": "CreateTimer",
-    "signature": "public Electron2D.SceneTreeTimer CreateTimer(System.Double timeSeconds, System.Boolean processAlways = true, System.Boolean processInPhysics = false)",
+    "signature": "public Electron2D.SceneTreeTimer CreateTimer(System.Double timeSeconds, System.Boolean processAlways = true, System.Boolean processInPhysics = false, System.Boolean ignoreTimeScale = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39894,6 +39894,11 @@
       },
       {
         "name": "processInPhysics",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "ignoreTimeScale",
         "type": "System.Boolean",
         "default": "false"
       }

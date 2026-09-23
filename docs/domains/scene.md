@@ -40,7 +40,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `SceneTree`: concrete main loop and active hierarchy owner with failure-safe lifecycle/finalization, in-memory current-scene replacement, typed input/system-notification propagation, pause state, caller-driven process/physics frames, frame/tree events and counters, typed group work, timers, deferred actions, and deletion flushing.
 - `Timer`: reusable hierarchy-owned countdown with selected frame lane, one-shot/repeat, autostart, local/tree pause, optional time-scale bypass, and typed timeout event.
 - `TimerProcessCallback`: stable physics/process lane selection for `Timer`.
-- `SceneTreeTimer`: lightweight one-shot delay advanced by one selected frame lane and automatically disposed after timeout.
+- `SceneTreeTimer`: lightweight one-shot delay advanced by the selected frame lane with optional Engine time-scale bypass, and automatically disposed after timeout.
 - `GroupCallFlags`: immediate/reverse/deferred/unique policy for typed group operations.
 - `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.

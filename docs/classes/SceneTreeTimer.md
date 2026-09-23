@@ -1,6 +1,6 @@
 # SceneTreeTimer
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -20,8 +20,8 @@ Provides a lightweight one-shot timer processed by a [`SceneTree`](SceneTree.md)
 
 The owning tree updates the timer after node callbacks in the selected frame lane. The timer is automatically
 disposed after timeout delivery. Keeping a managed reference does not extend its lifetime. Time advances only from
-delivered frame deltas; [`Engine`](Engine.md) scales those deltas when it drives the tree. The timer has no internal
-clock or independent time-scale bypass.
+delivered frame deltas; [`Engine`](Engine.md) supplies both scaled and original deltas when it drives the tree.
+The timer has no internal clock.
 
 ## Examples
 
@@ -146,4 +146,4 @@ The timer depends on `SceneTree` for scheduling and ownership and on `ElectronOb
 
 ## Verification and known limitations
 
-Executable checks cover process and physics lanes, pause policy, finite-duration validation, timeout order, automatic disposal, and continuation after a throwing timeout handler. Direct tree calls supply delta unchanged; [`Engine`](Engine.md) applies its time scale before Engine-driven delivery. There is no per-timer ignore-time-scale option, repeating mode, cancellation token, or wall-clock guarantee; use hierarchy-owned [`Timer`](Timer.md) when repeat, autostart, local pause, packing, or time-scale bypass is required.
+Executable checks cover process and physics lanes, pause policy, finite-duration validation, timeout order, automatic disposal, and continuation after a throwing timeout handler. Direct tree calls supply the same delta for both modes; Engine-driven timers use the scaled delta by default or the original lane delta when created with `ignoreTimeScale: true`, including at zero scale. Warm active timers in both lanes allocated zero managed bytes across 128 direct frame pairs. Native and external allocations were not measured. There is no repeating mode, cancellation token, or wall-clock guarantee; use hierarchy-owned [`Timer`](Timer.md) when repeat, autostart, local pause, or packing is required.

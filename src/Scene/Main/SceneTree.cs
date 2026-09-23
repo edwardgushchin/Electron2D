@@ -400,26 +400,28 @@ public sealed partial class SceneTree : MainLoop
     /// <param name="timeSeconds">The finite non-negative delay in seconds.</param>
     /// <param name="processAlways">Whether the timer advances while <see cref="Paused"/> is true.</param>
     /// <param name="processInPhysics">Whether the timer advances after physics callbacks instead of process callbacks.</param>
+    /// <param name="ignoreTimeScale">Whether to use the original frame delta when Engine drives the tree.</param>
     /// <returns>The live timer. It is automatically disposed after timeout delivery or when this tree is finalized.</returns>
     /// <remarks>
     /// Timers are updated after node callbacks and before deferred work. A timer created during node callbacks can be
     /// included in that frame's timer phase; a timer created by another timer waits for the next matching frame. Time
-    /// advances only from supplied frame deltas. When <see cref="Engine"/> drives the tree, those deltas include its
-    /// <see cref="Engine.TimeScale"/>; direct callers control scaling themselves. There is no internal clock. Keeping a
+    /// advances only from supplied frame deltas. When <see cref="Engine"/> drives the tree, timers normally use deltas
+    /// scaled by <see cref="Engine.TimeScale"/>; <paramref name="ignoreTimeScale"/> selects the original lane delta,
+    /// including when the time scale is zero. Direct callers supply the same delta for both modes. There is no internal clock. Keeping a
     /// managed reference does not keep an expired timer alive: timeout delivery is followed by deterministic disposal.
     /// A zero duration expires during the next matching frame, not during this method call.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeSeconds"/> is negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
-    public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false)
+    public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
         EnsureAcceptingWork();
         SceneTreeTimer.ValidateTime(timeSeconds, nameof(timeSeconds));
 
-        var timer = new SceneTreeTimer(this, timeSeconds, processAlways, processInPhysics);
+        var timer = new SceneTreeTimer(this, timeSeconds, processAlways, processInPhysics, ignoreTimeScale);
         _timers.Add(timer);
         return timer;
     }
@@ -1207,7 +1209,7 @@ public sealed partial class SceneTree : MainLoop
             }
 
             if (!physics) FlushTransformNotifications(ref errors);
-            ProcessTimers(delta, physics, ref errors);
+            ProcessTimers(delta, unscaledDelta, physics, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
         }
@@ -1225,7 +1227,7 @@ public sealed partial class SceneTree : MainLoop
             errors);
     }
 
-    private void ProcessTimers(double delta, bool physics, ref List<Exception>? errors)
+    private void ProcessTimers(double delta, double unscaledDelta, bool physics, ref List<Exception>? errors)
     {
         _timerSnapshot.Clear();
 
@@ -1237,7 +1239,7 @@ public sealed partial class SceneTree : MainLoop
 
         foreach (var timer in _timerSnapshot)
         {
-            if (timer.IsDisposed || !timer.Advance(delta, _paused))
+            if (timer.IsDisposed || !timer.Advance(timer.IgnoreTimeScale ? unscaledDelta : delta, _paused))
                 continue;
 
             _timers.Remove(timer);
