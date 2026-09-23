@@ -275,6 +275,74 @@ public static class Geometry
         return TryTriangulatePolygon(polygon, new int[polygon.Length], triangles) ? triangles : [];
     }
 
+    /// <summary>Triangulates a set of points so each triangle has an empty circumcircle.</summary>
+    /// <param name="points">Input points; the returned indices refer to their original order.</param>
+    /// <returns>Consecutive triples of input indices, or an empty array if no triangles can be formed.</returns>
+    /// <remarks>Uses incremental circumcircle removal. Cocircular points have no unique diagonal; input order determines ties. Nonfinite coordinates have no defined result.</remarks>
+    public static int[] TriangulateDelaunay(ReadOnlySpan<Vector2> points)
+    {
+        var count = points.Length;
+        if (count < 3) return [];
+
+        var vertices = new Vector2[checked(count + 3)];
+        points.CopyTo(vertices);
+        var minimum = points[0];
+        var maximum = points[0];
+        for (var i = 1; i < count; i++)
+        {
+            minimum = new Vector2(System.MathF.Min(minimum.X, points[i].X), System.MathF.Min(minimum.Y, points[i].Y));
+            maximum = new Vector2(System.MathF.Max(maximum.X, points[i].X), System.MathF.Max(maximum.Y, points[i].Y));
+        }
+        var span = maximum - minimum;
+        var delta = System.MathF.Max(span.X, span.Y);
+        var center = minimum + span * 0.5f;
+        vertices[count] = new Vector2(center.X - delta * 16f, center.Y - delta);
+        vertices[count + 1] = new Vector2(center.X, center.Y + delta * 16f);
+        vertices[count + 2] = new Vector2(center.X + delta * 16f, center.Y - delta);
+
+        var triangles = new List<(int A, int B, int C, Vector2 Center, float RadiusSquared)>
+        {
+            CreateDelaunayTriangle(vertices, count, count + 1, count + 2)
+        };
+        // ponytail: the reference scans triangles and boundary edges quadratically per insertion; replace only if large point sets need it.
+        for (var i = 0; i < count; i++)
+        {
+            var edges = new List<(int A, int B, bool Bad)>();
+            for (var j = triangles.Count - 1; j >= 0; j--)
+            {
+                var triangle = triangles[j];
+                if (!(vertices[i].DistanceSquaredTo(triangle.Center) < triangle.RadiusSquared)) continue;
+                AddDelaunayEdge(edges, triangle.A, triangle.B);
+                AddDelaunayEdge(edges, triangle.B, triangle.C);
+                AddDelaunayEdge(edges, triangle.C, triangle.A);
+                triangles.RemoveAt(j);
+            }
+
+            for (var j = 0; j < edges.Count; j++)
+            {
+                if (edges[j].Bad) continue;
+                for (var k = j + 1; k < edges.Count; k++)
+                {
+                    if (edges[k].A != edges[j].A || edges[k].B != edges[j].B) continue;
+                    edges[j] = (edges[j].A, edges[j].B, true);
+                    edges[k] = (edges[k].A, edges[k].B, true);
+                    break;
+                }
+                if (!edges[j].Bad) triangles.Add(CreateDelaunayTriangle(vertices, edges[j].A, edges[j].B, i));
+            }
+        }
+
+        var indices = new List<int>();
+        foreach (var triangle in triangles)
+        {
+            if (triangle.A >= count || triangle.B >= count || triangle.C >= count) continue;
+            indices.Add(triangle.A);
+            indices.Add(triangle.B);
+            indices.Add(triangle.C);
+        }
+        return indices.ToArray();
+    }
+
     /// <summary>Packs rectangular tiles into an atlas using the reference scanline layout search.</summary>
     /// <param name="sizes">Tile sizes in input order; components are truncated to integer pixels.</param>
     /// <returns>Tile origins in input order and the unrounded bounding size of the atlas.</returns>
@@ -403,4 +471,16 @@ public static class Geometry
 
     private static double TriangleCross(Vector2 a, Vector2 b, Vector2 c) =>
         ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
+
+    private static (int A, int B, int C, Vector2 Center, float RadiusSquared) CreateDelaunayTriangle(
+        ReadOnlySpan<Vector2> vertices, int first, int second, int third)
+    {
+        var a = vertices[second] - vertices[first];
+        var b = vertices[third] - vertices[first];
+        var offset = (b * a.LengthSquared() - a * b.LengthSquared()).Orthogonal() / (a.Cross(b) * 2f);
+        return (first, second, third, offset + vertices[first], offset.LengthSquared());
+    }
+
+    private static void AddDelaunayEdge(List<(int A, int B, bool Bad)> edges, int first, int second) =>
+        edges.Add(first > second ? (second, first, false) : (first, second, false));
 }

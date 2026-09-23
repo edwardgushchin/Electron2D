@@ -85,6 +85,33 @@ internal static class GeometryTests
             Geometry.TriangulatePolygon([new(0, 0), new(4, 4), new(0, 4), new(4, 0)]).Length == 0,
             "Insufficient and crossing contours return an empty triangulation");
 
+        Check(Geometry.TriangulateDelaunay([]).Length == 0 &&
+            Geometry.TriangulateDelaunay([Vector2.Zero, Vector2.One]).Length == 0 &&
+            Geometry.TriangulateDelaunay([new(0, 0), new(1, 0), new(2, 0)]).Length == 0,
+            "Delaunay triangulation omits insufficient and collinear point sets");
+        var delaunayTriangle = Geometry.TriangulateDelaunay([new(0, 0), new(4, 0), new(0, 4)]);
+        Check(delaunayTriangle.Length == 3 && delaunayTriangle.Order().SequenceEqual([0, 1, 2]),
+            "Delaunay output uses original input indices");
+        Vector2[] delaunayPoints = [new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(2, 2)];
+        var delaunay = Geometry.TriangulateDelaunay(delaunayPoints);
+        float delaunayArea = 0f;
+        for (var i = 0; i < delaunay.Length; i += 3)
+        {
+            var first = delaunay[i]; var second = delaunay[i + 1]; var third = delaunay[i + 2];
+            Check(first >= 0 && first < delaunayPoints.Length && second >= 0 && second < delaunayPoints.Length &&
+                third >= 0 && third < delaunayPoints.Length && first != second && second != third && third != first,
+                "Delaunay triangles use distinct in-range indices");
+            delaunayArea += System.MathF.Abs((delaunayPoints[second] - delaunayPoints[first])
+                .Cross(delaunayPoints[third] - delaunayPoints[first])) * 0.5f;
+        }
+        Check(delaunay.Length == 12 && delaunayArea == 16f && delaunay.Count(index => index == 4) == 4,
+            "Interior point splits the square into four triangles without gaps or overlap");
+        delaunay = Geometry.TriangulateDelaunay([new(0, 0), new(4, 0), new(4, 4), new(0, 3)]);
+        Check(delaunay.Length == 6 &&
+            delaunay.Chunk(3).Select(indices => string.Join(',', indices.Order())).Order()
+                .SequenceEqual(new[] { "0,1,3", "1,2,3" }),
+            "Delaunay chooses the empty-circumcircle diagonal of an asymmetric quadrilateral");
+
         var packed = Geometry.MakeAtlas([new(2, 2), new(2, 2)]);
         Check(packed.Size == new Vector2I(2, 4) && packed.Points.SequenceEqual([new(0, 0), new(0, 2)]),
             "Atlas chooses the first equal-aspect strip and returns positions in input order");
