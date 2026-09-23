@@ -1,5 +1,11 @@
 {
   "mappings": [
+    {"electron2d": "method:Electron2D.XMLParser.GetAttributeCount()", "godot": "XMLParser::method:get_attribute_count()", "reason": "Count of the current opening element's ordered attributes."},
+    {"electron2d": "method:Electron2D.XMLParser.GetCurrentLine()", "godot": "XMLParser::method:get_current_line()", "reason": "Zero-based count of newline bytes consumed by the token cursor."},
+    {"electron2d": "method:Electron2D.XMLParser.GetNodeData()", "godot": "XMLParser::method:get_node_data()", "reason": "Returns decoded text only for a text token."},
+    {"electron2d": "method:Electron2D.XMLParser.GetNodeName()", "godot": "XMLParser::method:get_node_name()", "reason": "Returns element or markup content; text tokens return empty."},
+    {"electron2d": "method:Electron2D.XMLParser.GetNodeOffset()", "godot": "XMLParser::method:get_node_offset()", "reason": "Byte offset uses a managed long and records the start of the read operation."},
+    {"electron2d": "method:Electron2D.XMLParser.GetNodeType()", "godot": "XMLParser::method:get_node_type()", "reason": "Strongly typed enum return with the same numeric node identities."},
     {"electron2d": "method:Electron2D.Translation.OnGetMessage(System.String,System.String)", "godot": "Translation::method:_get_message(StringName:,StringName:)", "reason": "Protected typed virtual override returns null to fall through to catalog storage; an empty string is a resolved value."},
     {"electron2d": "method:Electron2D.Translation.OnGetPluralMessage(System.String,System.String,System.Int64,System.String)", "godot": "Translation::method:_get_plural_message(StringName:,StringName:,int:,StringName:)", "reason": "Protected typed virtual override uses long counts from the existing TrN API and returns null to use local storage."},
     {"electron2d": "method:Electron2D.Translation.GetMessageCount()", "godot": "Translation::method:get_message_count()", "reason": "Returns the number of contextual source entries; plural forms count as one entry."},
@@ -490,6 +496,8 @@
     }
   ],
   "extras": [
+    {"electron2d": "constructor:Electron2D.XMLParser..ctor()", "state": "Implemented", "reason": "Managed construction of an unopened token reader; no constructor row exists upstream.", "adr": "adr-0003"},
+    {"electron2d": "method:Electron2D.XMLParser.Dispose(System.Boolean)", "state": "Implemented", "reason": "Releases the owned input buffer on deterministic managed disposal.", "adr": "adr-0003"},
     {"electron2d": "constructor:Electron2D.Translation..ctor()", "state": "Implemented", "reason": "Managed default construction of an empty en translation resource; the reference class has no constructor row.", "adr": "adr-0007"},
     {"electron2d": "method:Electron2D.Translation.CreateDuplicateInstance()", "state": "Implemented", "reason": "Exact-type factory for the managed Resource duplication contract.", "adr": "adr-0013"},
     {"electron2d": "method:Electron2D.Translation.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)", "state": "Implemented", "reason": "Copies locale, selector reference, and independent message/form containers for Resource duplication.", "adr": "adr-0013"},

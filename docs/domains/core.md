@@ -12,7 +12,7 @@ Its production sources are grouped by upstream module under `src/Core/`: `Config
 
 ## Current state
 
-The domain currently contains thirteen active components:
+The domain currently contains fourteen active components:
 
 | Component | Responsibility | State |
 | --- | --- | --- |
@@ -21,6 +21,7 @@ The domain currently contains thirteen active components:
 | [Typed editor properties](../components/editor-properties.md) | Variant-free property discovery, typed access, validation, and revert behavior | Implemented and verified |
 | [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | Implemented and verified |
 | [File and directory access](../components/file-access.md) | Blocking file/directory I/O, scoped navigation, virtual paths, metadata, links, hashes, temporary ownership, compression, and encryption | Implemented and verified; documented codec/platform gaps |
+| [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Executable managed path; exact malformed-input parity partial |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |
@@ -30,7 +31,7 @@ The domain currently contains thirteen active components:
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`XMLParser`](../classes/XMLParser.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
 ## Public surface
 
@@ -51,6 +52,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Mathf`: seven scalar constants and 127 integer/float/double/decimal operations covering transcendental math, angles, interpolation, approximation, rounding, periodic values, and audio conversion.
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
 - `RegEx` and `RegExMatch`: compiled managed text search, substitution and immutable capture inspection with documented PCRE2 compatibility gaps.
+- `XMLParser`: copied UTF-8 XML tokens, ordered attributes, byte-offset seeking, and nested section skipping with permissive malformed-input behavior.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
 - `Geometry`: twenty-four stateless grid-line, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset operations.
@@ -73,6 +75,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - Scalar math depends only on .NET numeric primitives and has no mutable state, native backend, or higher-domain dependency.
 - Random generation uses .NET numeric and wall/monotonic clock primitives and inherited object lifetime; encryption and temporary-name code explicitly uses the separate .NET cryptographic generator.
 - Text patterns use .NET regular expressions with a finite timeout and no native or higher-domain dependency.
+- XML parsing uses managed byte/token processing and the existing `FileAccess` path resolver; it does not require a native parser or resource loader.
 - Color math depends on `Mathf`, .NET primitives, and the bundled MIT-licensed managed OKHSL formulas; it has no native or rendering dependency. `ConfigFile` provides its strict finite JSON schema, while typed scene property storage consumes the reference-free value without a dependency back from Core Math to Scene.
 - Vector, rectangle, and transform math depends on `Mathf` plus .NET layout/formatting primitives. `ConfigFile` provides strict vector, `Position`/`Size`, and `X`/`Y`/`Origin` schemas, while typed scene storage consumes reference-free values without a dependency back from Core Math to Scene.
 - `Rect`, `Transform`, and Scene's `Entity` use `Electron2D.Vector2`; public external numerics types and old compatibility names are absent.

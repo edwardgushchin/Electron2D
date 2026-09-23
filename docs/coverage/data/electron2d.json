@@ -2676,6 +2676,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.XMLParser",
+    "kind": "type",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "XMLParser",
+    "signature": "public sealed class Electron2D.XMLParser",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.XMLParser.NodeType",
+    "kind": "type",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "NodeType",
+    "signature": "public enum Electron2D.XMLParser.NodeType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constant:Electron2D.AnimatedTexture.MaxFrames()",
     "kind": "constant",
     "declaringType": "Electron2D.AnimatedTexture",
@@ -5443,6 +5476,19 @@
     "declaringType": "Electron2D.Window",
     "name": ".ctor",
     "signature": "public Window()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.XMLParser..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.XMLParser",
+    "name": ".ctor",
+    "signature": "public XMLParser()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -13483,6 +13529,97 @@
     "parameters": [],
     "returnType": "Electron2D.Window.ModeEnum",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.CDATA()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "CDATA",
+    "signature": "public const Electron2D.XMLParser.NodeType CDATA = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.Comment()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "Comment",
+    "signature": "public const Electron2D.XMLParser.NodeType Comment = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.Element()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "Element",
+    "signature": "public const Electron2D.XMLParser.NodeType Element = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.ElementEnd()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "ElementEnd",
+    "signature": "public const Electron2D.XMLParser.NodeType ElementEnd = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "None",
+    "signature": "public const Electron2D.XMLParser.NodeType None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.Text()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "Text",
+    "signature": "public const Electron2D.XMLParser.NodeType Text = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.XMLParser.NodeType.Unknown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.XMLParser.NodeType",
+    "name": "Unknown",
+    "signature": "public const Electron2D.XMLParser.NodeType Unknown = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": "6"
   },
   {
     "id": "event:Electron2D.AnimatedSprite.AnimationChanged()",
@@ -44820,6 +44957,294 @@
     "declaringType": "Electron2D.Window",
     "name": "Show",
     "signature": "public System.Void Show()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetAttributeCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetAttributeCount",
+    "signature": "public System.Int32 GetAttributeCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetAttributeName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetAttributeName",
+    "signature": "public System.String GetAttributeName(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetAttributeValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetAttributeValue",
+    "signature": "public System.String GetAttributeValue(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetCurrentLine()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetCurrentLine",
+    "signature": "public System.Int32 GetCurrentLine()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNamedAttributeValue(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNamedAttributeValue",
+    "signature": "public System.String GetNamedAttributeValue(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNamedAttributeValueSafe(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNamedAttributeValueSafe",
+    "signature": "public System.String GetNamedAttributeValueSafe(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNodeData()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNodeData",
+    "signature": "public System.String GetNodeData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNodeName()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNodeName",
+    "signature": "public System.String GetNodeName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNodeOffset()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNodeOffset",
+    "signature": "public System.Int64 GetNodeOffset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.GetNodeType()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "GetNodeType",
+    "signature": "public Electron2D.XMLParser.NodeType GetNodeType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.XMLParser.NodeType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.HasAttribute(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "HasAttribute",
+    "signature": "public System.Boolean HasAttribute(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.IsEmpty()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "IsEmpty",
+    "signature": "public System.Boolean IsEmpty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.Open(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "Open",
+    "signature": "public System.Void Open(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.OpenBuffer(System.Byte[])",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "OpenBuffer",
+    "signature": "public System.Void OpenBuffer(System.Byte[] buffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.Byte[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.Read()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "Read",
+    "signature": "public System.Boolean Read()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.Seek(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "Seek",
+    "signature": "public System.Boolean Seek(System.Int64 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.XMLParser.SkipSection()",
+    "kind": "method",
+    "declaringType": "Electron2D.XMLParser",
+    "name": "SkipSection",
+    "signature": "public System.Void SkipSection()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
