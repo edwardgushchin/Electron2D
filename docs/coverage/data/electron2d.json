@@ -739,6 +739,60 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Geometry.PolyBooleanOperation",
+    "kind": "type",
+    "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
+    "name": "PolyBooleanOperation",
+    "signature": "public enum Electron2D.Geometry.PolyBooleanOperation",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Geometry.PolyEndType",
+    "kind": "type",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "PolyEndType",
+    "signature": "public enum Electron2D.Geometry.PolyEndType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Geometry.PolyJoinType",
+    "kind": "type",
+    "declaringType": "Electron2D.Geometry.PolyJoinType",
+    "name": "PolyJoinType",
+    "signature": "public enum Electron2D.Geometry.PolyJoinType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Gradient",
     "kind": "type",
     "declaringType": "Electron2D.Gradient",
@@ -6914,6 +6968,162 @@
     "parameters": [],
     "returnType": "Electron2D.FileCompressionMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Difference()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
+    "name": "Difference",
+    "signature": "public const Electron2D.Geometry.PolyBooleanOperation Difference = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyBooleanOperation",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Intersection()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
+    "name": "Intersection",
+    "signature": "public const Electron2D.Geometry.PolyBooleanOperation Intersection = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyBooleanOperation",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Union()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
+    "name": "Union",
+    "signature": "public const Electron2D.Geometry.PolyBooleanOperation Union = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyBooleanOperation",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyBooleanOperation.XOR()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyBooleanOperation",
+    "name": "XOR",
+    "signature": "public const Electron2D.Geometry.PolyBooleanOperation XOR = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyBooleanOperation",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyEndType.Butt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "Butt",
+    "signature": "public const Electron2D.Geometry.PolyEndType Butt = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyEndType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyEndType.Joined()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "Joined",
+    "signature": "public const Electron2D.Geometry.PolyEndType Joined = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyEndType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyEndType.Polygon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "Polygon",
+    "signature": "public const Electron2D.Geometry.PolyEndType Polygon = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyEndType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyEndType.Round()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "Round",
+    "signature": "public const Electron2D.Geometry.PolyEndType Round = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyEndType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyEndType.Square()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyEndType",
+    "name": "Square",
+    "signature": "public const Electron2D.Geometry.PolyEndType Square = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyEndType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyJoinType.Miter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyJoinType",
+    "name": "Miter",
+    "signature": "public const Electron2D.Geometry.PolyJoinType Miter = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyJoinType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyJoinType.Round()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyJoinType",
+    "name": "Round",
+    "signature": "public const Electron2D.Geometry.PolyJoinType Round = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyJoinType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Geometry.PolyJoinType.Square()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Geometry.PolyJoinType",
+    "name": "Square",
+    "signature": "public const Electron2D.Geometry.PolyJoinType Square = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Geometry.PolyJoinType",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Gradient.ColorSpace.LinearSRGB()",
@@ -23055,6 +23265,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.ClipPolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "ClipPolygons",
+    "signature": "public static Electron2D.Vector2[][] ClipPolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonA, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygonA",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygonB",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.ClipPolylineWithPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "ClipPolylineWithPolygon",
+    "signature": "public static Electron2D.Vector2[][] ClipPolylineWithPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polyline, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polyline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.ConvexHull(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",
@@ -23085,6 +23343,30 @@
     "parameters": [
       {
         "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.ExcludePolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "ExcludePolygons",
+    "signature": "public static Electron2D.Vector2[][] ExcludePolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonA, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygonA",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygonB",
         "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
         "default": null
       }
@@ -23182,6 +23464,54 @@
       }
     ],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.IntersectPolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "IntersectPolygons",
+    "signature": "public static Electron2D.Vector2[][] IntersectPolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonA, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygonA",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygonB",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.IntersectPolylineWithPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "IntersectPolylineWithPolygon",
+    "signature": "public static Electron2D.Vector2[][] IntersectPolylineWithPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polyline, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polyline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
     "value": null
   },
   {
@@ -23307,6 +23637,93 @@
       }
     ],
     "returnType": "System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2I\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.MergePolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "MergePolygons",
+    "signature": "public static Electron2D.Vector2[][] MergePolygons(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonA, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygonB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygonA",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "polygonB",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.OffsetPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Single,Electron2D.Geometry.PolyJoinType)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "OffsetPolygon",
+    "signature": "public static Electron2D.Vector2[][] OffsetPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon, System.Single delta, Electron2D.Geometry.PolyJoinType joinType = Square)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "delta",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "joinType",
+        "type": "Electron2D.Geometry.PolyJoinType",
+        "default": "Square"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Geometry.OffsetPolyline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Single,Electron2D.Geometry.PolyJoinType,Electron2D.Geometry.PolyEndType)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "OffsetPolyline",
+    "signature": "public static Electron2D.Vector2[][] OffsetPolyline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polyline, System.Single delta, Electron2D.Geometry.PolyJoinType joinType = Square, Electron2D.Geometry.PolyEndType endType = Square)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polyline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "delta",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "joinType",
+        "type": "Electron2D.Geometry.PolyJoinType",
+        "default": "Square"
+      },
+      {
+        "name": "endType",
+        "type": "Electron2D.Geometry.PolyEndType",
+        "default": "Square"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
     "value": null
   },
   {

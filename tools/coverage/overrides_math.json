@@ -6,6 +6,121 @@
       "reason": "The stateless geometry singleton is projected as a static C# service; the class remains Partial until the other geometry methods and polygon operations are implemented."
     },
     {
+      "godot": "Geometry2D::enum:PolyBooleanOperation",
+      "electron2d": "T:Electron2D.Geometry.PolyBooleanOperation",
+      "reason": "Nested typed C# enum preserves the reference operation, join or end-type choices."
+    },
+    {
+      "godot": "Geometry2D::enum:PolyEndType",
+      "electron2d": "T:Electron2D.Geometry.PolyEndType",
+      "reason": "Nested typed C# enum preserves the reference operation, join or end-type choices."
+    },
+    {
+      "godot": "Geometry2D::enum:PolyJoinType",
+      "electron2d": "T:Electron2D.Geometry.PolyJoinType",
+      "reason": "Nested typed C# enum preserves the reference operation, join or end-type choices."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_DIFFERENCE",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Difference()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_INTERSECTION",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Intersection()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_UNION",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyBooleanOperation.Union()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_XOR",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyBooleanOperation.XOR()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyEndType.END_BUTT",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyEndType.Butt()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyEndType.END_JOINED",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyEndType.Joined()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyEndType.END_POLYGON",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyEndType.Polygon()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyEndType.END_ROUND",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyEndType.Round()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyEndType.END_SQUARE",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyEndType.Square()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyJoinType.JOIN_MITER",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyJoinType.Miter()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyJoinType.JOIN_ROUND",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyJoinType.Round()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::enum_value:PolyJoinType.JOIN_SQUARE",
+      "electron2d": "enumValue:Electron2D.Geometry.PolyJoinType.Square()",
+      "reason": "Numeric identity and operation semantics match the compiled C# enum value."
+    },
+    {
+      "godot": "Geometry2D::method:clip_polygons(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.ClipPolygons(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Polygon region operation with even-odd fill and caller-owned boundary and hole contours."
+    },
+    {
+      "godot": "Geometry2D::method:clip_polyline_with_polygon(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.ClipPolylineWithPolygon(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Open line clipping with even-odd polygon fill and caller-owned contour arrays."
+    },
+    {
+      "godot": "Geometry2D::method:exclude_polygons(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.ExcludePolygons(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Polygon region operation with even-odd fill and caller-owned boundary and hole contours."
+    },
+    {
+      "godot": "Geometry2D::method:intersect_polygons(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.IntersectPolygons(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Polygon region operation with even-odd fill and caller-owned boundary and hole contours."
+    },
+    {
+      "godot": "Geometry2D::method:intersect_polyline_with_polygon(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.IntersectPolylineWithPolygon(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Open line clipping with even-odd polygon fill and caller-owned contour arrays."
+    },
+    {
+      "godot": "Geometry2D::method:merge_polygons(PackedVector2Array:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.MergePolygons(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "Polygon region operation with even-odd fill and caller-owned boundary and hole contours."
+    },
+    {
+      "godot": "Geometry2D::method:offset_polygon(PackedVector2Array:,float:,int:Geometry2D.PolyJoinType)",
+      "electron2d": "method:Electron2D.Geometry.OffsetPolygon(System.ReadOnlySpan<Electron2D.Vector2>,System.Single,Electron2D.Geometry.PolyJoinType)",
+      "reason": "Typed join/end enum defaults, caller-owned contours, five-digit clipping precision and explicit finite-range validation."
+    },
+    {
+      "godot": "Geometry2D::method:offset_polyline(PackedVector2Array:,float:,int:Geometry2D.PolyJoinType,int:Geometry2D.PolyEndType)",
+      "electron2d": "method:Electron2D.Geometry.OffsetPolyline(System.ReadOnlySpan<Electron2D.Vector2>,System.Single,Electron2D.Geometry.PolyJoinType,Electron2D.Geometry.PolyEndType)",
+      "reason": "Typed join/end enum defaults, caller-owned contours, five-digit clipping precision and explicit finite-range validation."
+    },
+    {
       "godot": "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
       "electron2d": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2I,Electron2D.Vector2I)",
       "reason": "Vector2I[] represents the ordered typed grid points; array length above Int32.MaxValue is rejected before allocation."
@@ -2378,8 +2493,37 @@
       "godot": [
         "class:Geometry2D"
       ],
-      "state": "Partial",
-      "reason": "The C# static projection implements sixteen raster, nearest-point, polygon, triangulation, atlas and intersection methods. Polygon boolean/offset and other reference methods remain absent; see docs/classes/Geometry.md."
+      "state": "Implemented",
+      "reason": "All 24 applicable pure geometry methods and 15 enum declarations are implemented in the typed static Geometry API; polygon operations use internally compiled Clipper2 1.5.4. Managed Linux tests cover clipping, holes, open lines, offsets and boundaries; other-platform and exhaustive numeric parity remain unverified."
+    },
+    {
+      "godot": [
+        "Geometry2D::enum:PolyBooleanOperation",
+        "Geometry2D::enum:PolyEndType",
+        "Geometry2D::enum:PolyJoinType",
+        "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_DIFFERENCE",
+        "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_INTERSECTION",
+        "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_UNION",
+        "Geometry2D::enum_value:PolyBooleanOperation.OPERATION_XOR",
+        "Geometry2D::enum_value:PolyEndType.END_BUTT",
+        "Geometry2D::enum_value:PolyEndType.END_JOINED",
+        "Geometry2D::enum_value:PolyEndType.END_POLYGON",
+        "Geometry2D::enum_value:PolyEndType.END_ROUND",
+        "Geometry2D::enum_value:PolyEndType.END_SQUARE",
+        "Geometry2D::enum_value:PolyJoinType.JOIN_MITER",
+        "Geometry2D::enum_value:PolyJoinType.JOIN_ROUND",
+        "Geometry2D::enum_value:PolyJoinType.JOIN_SQUARE",
+        "Geometry2D::method:clip_polygons(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:clip_polyline_with_polygon(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:exclude_polygons(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:intersect_polygons(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:intersect_polyline_with_polygon(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:merge_polygons(PackedVector2Array:,PackedVector2Array:)",
+        "Geometry2D::method:offset_polygon(PackedVector2Array:,float:,int:Geometry2D.PolyJoinType)",
+        "Geometry2D::method:offset_polyline(PackedVector2Array:,float:,int:Geometry2D.PolyJoinType,int:Geometry2D.PolyEndType)"
+      ],
+      "state": "Implemented",
+      "reason": "Three enum types and twelve values preserve numeric identity; eight polygon operations follow the pinned Clipper2 algorithm with even-odd fill, five-digit internal precision, typed arrays and validated coordinates. GeometryTests covers all operations, holes, open lines, offsets, caps and failures on Linux/.NET 8; exhaustive numeric parity and other platforms remain unverified."
     },
     {
       "godot": [

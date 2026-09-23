@@ -1,0 +1,10 @@
+Clipper2 C# source, version 1.5.4
+Repository: https://github.com/AngusJohnson/Clipper2
+Tag: Clipper2_1.5.4
+Commit: ef88ee97c0e759792e43a2b2d8072def6c9244e8
+Source directory: CSharp/Clipper2Lib
+License: Boost Software License 1.0 (see LICENSE)
+
+The seven C# source files are copied from that tag. The sole source change
+is making top-level public types internal so they do not enter Electron2D's
+public API. No separate managed assembly is distributed.

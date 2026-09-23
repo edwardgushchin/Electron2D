@@ -1,3 +1,5 @@
+using Clipper2Lib;
+
 namespace Electron2D;
 
 /// <summary>Provides backend-independent two-dimensional geometry queries.</summary>
@@ -5,6 +7,47 @@ namespace Electron2D;
 public static class Geometry
 {
     private const float ReferenceEpsilon = 0.00001f;
+    private const int ClipperPrecision = 5;
+    private const double ClipperCoordinateLimit = InternalClipper.MaxCoord / 100000d;
+
+    /// <summary>Identifies a boolean operation on polygon regions.</summary>
+    public enum PolyBooleanOperation
+    {
+        /// <summary>Combines both regions.</summary>
+        Union = 0,
+        /// <summary>Removes the second region from the first.</summary>
+        Difference = 1,
+        /// <summary>Keeps only the common region.</summary>
+        Intersection = 2,
+        /// <summary>Keeps points belonging to exactly one region.</summary>
+        XOR = 3,
+    }
+
+    /// <summary>Selects the shape of an offset polygon corner or polyline join.</summary>
+    public enum PolyJoinType
+    {
+        /// <summary>Clips the corner with a square join.</summary>
+        Square = 0,
+        /// <summary>Rounds the corner.</summary>
+        Round = 1,
+        /// <summary>Extends the two offset edges until they meet, subject to the miter limit.</summary>
+        Miter = 2,
+    }
+
+    /// <summary>Selects the cap or closure of an offset polyline.</summary>
+    public enum PolyEndType
+    {
+        /// <summary>Closes the input as a polygon; use <see cref="OffsetPolygon"/> for this shape.</summary>
+        Polygon = 0,
+        /// <summary>Joins both ends of a closed line.</summary>
+        Joined = 1,
+        /// <summary>Stops at the line endpoints.</summary>
+        Butt = 2,
+        /// <summary>Adds square endpoint caps.</summary>
+        Square = 3,
+        /// <summary>Adds round endpoint caps.</summary>
+        Round = 4,
+    }
 
     /// <summary>Returns every integer grid point on a rasterized line, including both endpoints.</summary>
     /// <param name="from">The first grid point.</param>
@@ -298,6 +341,84 @@ public static class Geometry
         return output;
     }
 
+    /// <summary>Subtracts one polygon region from another.</summary>
+    /// <param name="polygonA">The region to clip.</param>
+    /// <param name="polygonB">The region to remove.</param>
+    /// <returns>Boundary and hole contours of the remaining region.</returns>
+    /// <remarks>Holes have the opposite winding from boundaries. Clipping uses five decimal digits of internal precision before converting to single-precision values.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] ClipPolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB) =>
+        OperatePolygons(polygonA, polygonB, PolyBooleanOperation.Difference, false);
+
+    /// <summary>Removes the part of an open polyline inside a polygon.</summary>
+    /// <param name="polyline">The open input line.</param>
+    /// <param name="polygon">The clipping region.</param>
+    /// <returns>The portions of the line outside the polygon.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] ClipPolylineWithPolygon(ReadOnlySpan<Vector2> polyline, ReadOnlySpan<Vector2> polygon) =>
+        OperatePolygons(polyline, polygon, PolyBooleanOperation.Difference, true);
+
+    /// <summary>Returns the portions of two polygons outside their common area.</summary>
+    /// <param name="polygonA">The first region.</param>
+    /// <param name="polygonB">The second region.</param>
+    /// <returns>Boundary and hole contours of the exclusive regions.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] ExcludePolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB) =>
+        OperatePolygons(polygonA, polygonB, PolyBooleanOperation.XOR, false);
+
+    /// <summary>Returns the area common to two polygons.</summary>
+    /// <param name="polygonA">The first region.</param>
+    /// <param name="polygonB">The second region.</param>
+    /// <returns>Boundary and hole contours of the intersection.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] IntersectPolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB) =>
+        OperatePolygons(polygonA, polygonB, PolyBooleanOperation.Intersection, false);
+
+    /// <summary>Returns the portions of an open polyline inside a polygon.</summary>
+    /// <param name="polyline">The open input line.</param>
+    /// <param name="polygon">The clipping region.</param>
+    /// <returns>The portions of the line inside the polygon.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] IntersectPolylineWithPolygon(ReadOnlySpan<Vector2> polyline, ReadOnlySpan<Vector2> polygon) =>
+        OperatePolygons(polyline, polygon, PolyBooleanOperation.Intersection, true);
+
+    /// <summary>Combines two polygon regions.</summary>
+    /// <param name="polygonA">The first region.</param>
+    /// <param name="polygonB">The second region.</param>
+    /// <returns>Boundary and hole contours of the union.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate is nonfinite or outside the clipping range.</exception>
+    /// <exception cref="InvalidOperationException">The clipping backend fails.</exception>
+    public static Vector2[][] MergePolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB) =>
+        OperatePolygons(polygonA, polygonB, PolyBooleanOperation.Union, false);
+
+    /// <summary>Expands or shrinks a closed polygon.</summary>
+    /// <param name="polygon">The input contour.</param>
+    /// <param name="delta">Positive expansion or negative contraction in coordinate units.</param>
+    /// <param name="joinType">The shape of each corner.</param>
+    /// <returns>Boundary and hole contours after offsetting.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate, distance or join choice is invalid for clipping.</exception>
+    public static Vector2[][] OffsetPolygon(ReadOnlySpan<Vector2> polygon, float delta, PolyJoinType joinType = PolyJoinType.Square) =>
+        OffsetPath(polygon, delta, joinType, PolyEndType.Polygon);
+
+    /// <summary>Expands an open or joined polyline into polygons.</summary>
+    /// <param name="polyline">The input line.</param>
+    /// <param name="delta">The nonnegative distance to each side of the line.</param>
+    /// <param name="joinType">The shape of each bend.</param>
+    /// <param name="endType">The endpoint cap or joined-line shape.</param>
+    /// <returns>Offset polygon contours; negative distances return an empty array.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">A coordinate, distance, join or end choice is invalid for clipping.</exception>
+    public static Vector2[][] OffsetPolyline(ReadOnlySpan<Vector2> polyline, float delta,
+        PolyJoinType joinType = PolyJoinType.Square, PolyEndType endType = PolyEndType.Square)
+    {
+        if (endType == PolyEndType.Polygon) return [];
+        return OffsetPath(polyline, delta, joinType, endType);
+    }
+
     /// <summary>Returns the first boundary crossing of a segment and a circle.</summary>
     /// <param name="segmentFrom">The segment start.</param>
     /// <param name="segmentTo">The segment end.</param>
@@ -530,6 +651,89 @@ public static class Geometry
 
     private static double TriangleCross(Vector2 a, Vector2 b, Vector2 c) =>
         ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
+
+    private static Vector2[][] OperatePolygons(ReadOnlySpan<Vector2> first, ReadOnlySpan<Vector2> second,
+        PolyBooleanOperation operation, bool open)
+    {
+        var pathA = ToClipperPath(first, nameof(first));
+        var pathB = ToClipperPath(second, nameof(second));
+        var clipper = new ClipperD(ClipperPrecision) { PreserveCollinear = false };
+        if (open) clipper.AddOpenSubject(pathA);
+        else clipper.AddSubject(pathA);
+        clipper.AddClip(pathB);
+        var clipType = operation switch
+        {
+            PolyBooleanOperation.Union => ClipType.Union,
+            PolyBooleanOperation.Difference => ClipType.Difference,
+            PolyBooleanOperation.Intersection => ClipType.Intersection,
+            PolyBooleanOperation.XOR => ClipType.Xor,
+            _ => throw new ArgumentOutOfRangeException(nameof(operation)),
+        };
+        if (open)
+        {
+            var paths = new PathsD();
+            if (!clipper.Execute(clipType, FillRule.EvenOdd, new PolyTreeD(), paths))
+                throw new InvalidOperationException("Polyline clipping failed.");
+            return FromClipperPaths(paths);
+        }
+        else
+        {
+            var paths = new PathsD();
+            if (!clipper.Execute(clipType, FillRule.EvenOdd, paths))
+                throw new InvalidOperationException("Polygon clipping failed.");
+            return FromClipperPaths(paths);
+        }
+    }
+
+    private static Vector2[][] OffsetPath(ReadOnlySpan<Vector2> points, float delta, PolyJoinType joinType, PolyEndType endType)
+    {
+        var path = ToClipperPath(points, nameof(points));
+        if (!float.IsFinite(delta) || Math.Abs((double)delta) > ClipperCoordinateLimit)
+            throw new ArgumentOutOfRangeException(nameof(delta));
+        var join = joinType switch
+        {
+            PolyJoinType.Square => JoinType.Square,
+            PolyJoinType.Round => JoinType.Round,
+            PolyJoinType.Miter => JoinType.Miter,
+            _ => throw new ArgumentOutOfRangeException(nameof(joinType)),
+        };
+        var end = endType switch
+        {
+            PolyEndType.Polygon => EndType.Polygon,
+            PolyEndType.Joined => EndType.Joined,
+            PolyEndType.Butt => EndType.Butt,
+            PolyEndType.Square => EndType.Square,
+            PolyEndType.Round => EndType.Round,
+            _ => throw new ArgumentOutOfRangeException(nameof(endType)),
+        };
+        if (endType != PolyEndType.Polygon && delta < 0f) return [];
+        return FromClipperPaths(Clipper.InflatePaths(new PathsD { path }, delta, join, end, 2d, ClipperPrecision, 0.25d));
+    }
+
+    private static PathD ToClipperPath(ReadOnlySpan<Vector2> points, string parameterName)
+    {
+        var path = new PathD(points.Length);
+        foreach (var point in points)
+        {
+            if (!float.IsFinite(point.X) || !float.IsFinite(point.Y) ||
+                Math.Abs((double)point.X) > ClipperCoordinateLimit || Math.Abs((double)point.Y) > ClipperCoordinateLimit)
+                throw new ArgumentOutOfRangeException(parameterName, "Polygon coordinates must be finite and fit the clipping range.");
+            path.Add(new PointD(point.X, point.Y));
+        }
+        return path;
+    }
+
+    private static Vector2[][] FromClipperPaths(PathsD paths)
+    {
+        var result = new Vector2[paths.Count][];
+        for (var i = 0; i < paths.Count; i++)
+        {
+            result[i] = new Vector2[paths[i].Count];
+            for (var j = 0; j < paths[i].Count; j++)
+                result[i][j] = new Vector2((float)paths[i][j].x, (float)paths[i][j].y);
+        }
+        return result;
+    }
 
     private static bool TryMergeConvexParts(ReadOnlySpan<Vector2> points, int[] left, int[] right, out int[] merged)
     {

@@ -31,7 +31,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 Use the relevant commands, not necessarily all of them for a documentation-only change. Record only checks that actually ran.
 
 ```bash
-dotnet format Electron2D.csproj --verify-no-changes --no-restore --exclude src/Vendor/SDL3-CS
+dotnet format Electron2D.csproj --verify-no-changes --no-restore --exclude src/Vendor/SDL3-CS src/Vendor/Clipper2
 dotnet format tests/Electron2D.Tests/Electron2D.Tests.csproj --verify-no-changes --no-restore
 dotnet build Electron2D.csproj -c Release
 dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release

@@ -116,6 +116,47 @@ internal static class GeometryTests
             Geometry.TriangulatePolygon([new(0, 0), new(4, 4), new(0, 4), new(4, 0)]).Length == 0,
             "Insufficient and crossing contours return an empty triangulation");
 
+        Vector2[] overlapping = [new(2, 2), new(6, 2), new(6, 6), new(2, 6)];
+        Check(Area(Geometry.IntersectPolygons(square, overlapping)) == 4d &&
+            Area(Geometry.MergePolygons(square, overlapping)) == 28d &&
+            Area(Geometry.ClipPolygons(square, overlapping)) == 12d &&
+            Area(Geometry.ExcludePolygons(square, overlapping)) == 24d,
+            "Polygon intersection, union, difference and XOR preserve region areas");
+        Vector2[] inner = [new(1, 1), new(3, 1), new(3, 3), new(1, 3)];
+        var withHole = Geometry.ClipPolygons(square, inner);
+        Check(withHole.Length == 2 && Area(withHole) == 12d &&
+            SignedArea(withHole[0]) * SignedArea(withHole[1]) < 0d,
+            "Nested difference emits an oppositely wound hole");
+        Check(Geometry.IntersectPolygons(square, [new(8, 8), new(9, 8), new(9, 9), new(8, 9)]).Length == 0 &&
+            Geometry.ClipPolygons(square, square).Length == 0,
+            "Disjoint intersection and identical difference are empty");
+        Vector2[] crossingLine = [new(-1, 2), new(5, 2)];
+        var inside = Geometry.IntersectPolylineWithPolygon(crossingLine, square);
+        var outside = Geometry.ClipPolylineWithPolygon(crossingLine, square);
+        Check(inside.Length == 1 && inside[0].Length == 2 &&
+            inside[0].Contains(new Vector2(0, 2)) && inside[0].Contains(new Vector2(4, 2)) &&
+            outside.Length == 2 && outside.All(part => part.Length == 2) &&
+            outside.SelectMany(part => part).Contains(new Vector2(-1, 2)) &&
+            outside.SelectMany(part => part).Contains(new Vector2(5, 2)),
+            "Open line clipping retains inside and both outside portions");
+        Check(Area(Geometry.OffsetPolygon(square, 1f, Geometry.PolyJoinType.Miter)) == 36d &&
+            Area(Geometry.OffsetPolygon(square, -1f, Geometry.PolyJoinType.Miter)) == 4d &&
+            Geometry.OffsetPolygon(square, 1f, Geometry.PolyJoinType.Round).Length > 0 &&
+            Geometry.OffsetPolygon(square, 1f).Length > 0,
+            "Polygon offsets expand and contract with each corner style");
+        Vector2[] horizontalLine = [new(0, 0), new(4, 0)];
+        Check(Area(Geometry.OffsetPolyline(horizontalLine, 1f, endType: Geometry.PolyEndType.Butt)) == 8d &&
+            Area(Geometry.OffsetPolyline(horizontalLine, 1f, endType: Geometry.PolyEndType.Square)) == 12d &&
+            Geometry.OffsetPolyline(horizontalLine, 1f, endType: Geometry.PolyEndType.Round).Length > 0 &&
+            Geometry.OffsetPolyline(horizontalLine, -1f).Length == 0 &&
+            Geometry.OffsetPolyline(horizontalLine, 1f, endType: Geometry.PolyEndType.Polygon).Length == 0,
+            "Polyline caps, negative offsets and rejected polygon end type");
+        Reject<ArgumentOutOfRangeException>(() => Geometry.ClipPolygons([new(float.NaN, 0)], square));
+        Reject<ArgumentOutOfRangeException>(() => Geometry.MergePolygons([new(float.MaxValue, 0)], square));
+        Reject<ArgumentOutOfRangeException>(() => Geometry.OffsetPolygon(square, float.NaN));
+        Reject<ArgumentOutOfRangeException>(() => Geometry.OffsetPolygon(square, 1f, (Geometry.PolyJoinType)99));
+        Reject<ArgumentOutOfRangeException>(() => Geometry.OffsetPolyline(horizontalLine, 1f, endType: (Geometry.PolyEndType)99));
+
         Check(Geometry.TriangulateDelaunay([]).Length == 0 &&
             Geometry.TriangulateDelaunay([Vector2.Zero, Vector2.One]).Length == 0 &&
             Geometry.TriangulateDelaunay([new(0, 0), new(1, 0), new(2, 0)]).Length == 0,
@@ -164,6 +205,17 @@ internal static class GeometryTests
 
     private static bool Near(Vector2? actual, Vector2 expected) => actual is Vector2 value &&
         System.MathF.Abs(value.X - expected.X) < 0.00001f && System.MathF.Abs(value.Y - expected.Y) < 0.00001f;
+    private static double Area(Vector2[][] contours) => contours.Sum(SignedArea);
+    private static double SignedArea(Vector2[] contour)
+    {
+        var twiceArea = 0d;
+        for (var i = 0; i < contour.Length; i++)
+        {
+            var next = contour[(i + 1) % contour.Length];
+            twiceArea += (double)contour[i].X * next.Y - (double)next.X * contour[i].Y;
+        }
+        return twiceArea / 2d;
+    }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception
     {

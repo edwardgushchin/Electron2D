@@ -10,7 +10,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 | Type | Role | Source |
 | --- | --- | --- |
-| [`Geometry`](../classes/Geometry.md) | Stateless raster, nearest-point, polygon, hull, triangulation, atlas and intersection queries | [`Geometry.cs`](../../src/Core/Math/Geometry.cs) |
+| [`Geometry`](../classes/Geometry.md) | Stateless raster, nearest-point, polygon, hull, triangulation, atlas, clipping and offset queries | [`Geometry.cs`](../../src/Core/Math/Geometry.cs) |
 | [`Vector2`](../classes/Vector2.md) | Canonical two-component floating-point spatial and numeric value | [`Vector2.cs`](../../src/Core/Math/Vector2.cs) |
 | [`Vector2I`](../classes/Vector2I.md) | Canonical two-component integer grid and numeric value | [`Vector2I.cs`](../../src/Core/Math/Vector2I.cs) |
 | [`Vector3`](../classes/Vector3.md) | Three-component floating-point numeric value | [`Vector3.cs`](../../src/Core/Math/Vector3.cs) |
@@ -30,13 +30,13 @@ This Core component owns the engine's backend-independent value mathematics and 
 4. Transform operations use X/Y basis columns plus Origin; callers choose general affine or orthonormal inverse behavior explicitly.
 5. `Transform` composes `Entity` local/global state and transforms `Rect` corners into axis-aligned bounds.
 6. Typed persistence accepts only finite floating-point vectors, rectangles, and transforms; integer vectors and rectangles retain all `int` values. Packed scenes copy every value directly.
-7. `Geometry` performs pure point/segment queries and allocates only for array results.
+7. `Geometry` performs pure point/segment and polygon queries; clipping and offsets route through internally compiled Clipper2 and return caller-owned arrays.
 
 ## Dependencies
 
 - Canonical scalar [`Mathf`](../classes/Mathf.md), plus .NET globalization, serialization, and interop-layout primitives.
 - Existing typed `ConfigFile`, property descriptor, packed-scene, and `Entity` integration boundaries.
-- No public external numerics dependency and no external package or native library.
+- No public external numerics dependency or native library. Clipper2 1.5.4 C# source is [compiled internally](../../src/Vendor/Clipper2/UPSTREAM.txt) into the single runtime assembly.
 
 ## Invariants
 
@@ -57,7 +57,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 
 Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned `Vector2` directly, and duplicated scalar interpolation/modulus/snapping/angle/approximation helpers have been migrated to `Mathf`. `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, and `RectI` provide their complete currently implementable value contracts, including typed conversions within vector and rectangle dimensional pairs. Strict configuration schemas and direct packed-scene storage exist for all six vectors, both rectangles, and transforms. The Vector2 reference audit covers all 82 members, including integer scalar conversion, the default length limit and the accepted midpoint-to-even rounding boundary under ADRs 0033/0034. The Transform reference audit covers all 43 declared members, including the zero target default for `LookingAt` and C# integer scalar conversion under ADR 0029.
 
-`Geometry` now implements sixteen pure raster, nearest-point, polygon, hull, decomposition, triangulation, atlas and intersection methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Convex-part merging adapts PolyPartition ([notice and license](../licenses/PolyPartition-LICENSE.txt)). Its class coverage remains partial; polygon clipping/offset and the other reference methods are not implemented by this slice.
+`Geometry` implements twenty-four pure raster, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Convex-part merging adapts PolyPartition ([notice and license](../licenses/PolyPartition-LICENSE.txt)). The declared geometry class is complete under the accepted typed C# projection; clipping and offsets use internally compiled Clipper2 1.5.4 with five decimal digits of internal precision.
 
 ## Exclusions and limitations
 
@@ -71,7 +71,7 @@ Implemented and verified. `Rect`, `Transform`, and `Entity` use the engine-owned
 
 The executable harness covers every method/operator family, layouts and constants, index failures, interpolation, the strict internal tolerance migration boundaries, NaN/infinity/signed-zero behavior, integer wrap/overflow/zero division, widened integer norms and their checked limits, conversion boundaries, axis ties, floating-point and integer rectangle boundaries, affine order/inversion/decomposition, Entity integration, strict malformed persistence, packed-scene value copying, invariant formatting, and warmed allocation behavior.
 
-`GeometryTests.Run` covers the implemented pure queries on raster orientation/endpoints, integer limits, degenerate and crossing segments, circle boundaries, nullable intersections, polygon winding/containment, convex hull closure, convex decomposition and area, atlas layout and limits, polygon and Delaunay triangulation, and segment/circle contact. `CanvasPolygonTests.Run` covers reuse without warmed redraw allocations.
+`GeometryTests.Run` covers the pure queries on raster orientation/endpoints, integer limits, degenerate and crossing segments, circle boundaries, nullable intersections, polygon winding/containment, convex hull closure, convex decomposition and area, atlas layout and limits, polygon and Delaunay triangulation, segment/circle contact, polygon set-operation areas and holes, open-line clipping, offset joins/caps, and invalid inputs. `CanvasPolygonTests.Run` covers reuse without warmed redraw allocations.
 
 Execution is verified on Linux/.NET 8 only. Native ABI and the Windows/macOS/Linux (X11/Wayland)/Android/iOS/Web build and host matrix remain unverified.
 

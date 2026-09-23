@@ -27,7 +27,7 @@ The domain currently contains twelve implemented components:
 | [Scalar math](../components/scalar-math.md) | Stateless constants, transcendental functions, angles, interpolation, approximation, rounding, wrapping, and audio conversion | Implemented and verified |
 | [Random generation](../components/random-generation.md) | Independent PCG32 streams, seed/state restoration, bounded, weighted and normal sampling | Implemented and managed-verified |
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
-| [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values implemented; Geometry partial |
+| [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
 Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`FileAccessMode`](../classes/FileAccessMode.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
 
@@ -51,7 +51,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `RandomNumberGenerator`: independent managed PCG32 stream with restorable 64-bit seed/state and integer, float, normal and weighted sampling; it is not a cryptographic random source.
 - `Color`: sequential floating-point RGBA value with color-space conversion, math, composition, packing, text, and comparison behavior.
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
-- `Geometry`: sixteen stateless grid-line, nearest-point, polygon, hull, decomposition, triangulation, atlas and intersection operations; the remaining reference geometry API is still absent.
+- `Geometry`: twenty-four stateless grid-line, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset operations.
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
 - `Vector4` and `Vector4I`: complete four-component floating-point/integer numeric tuples without 3D scene semantics.
 - `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators.
@@ -60,7 +60,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 
 ## Dependency direction
 
-- Core depends on the .NET Base Class Library and calls the static Localization-domain `TranslationServer` from `ElectronObject.Tr`/`TrN`.
+- Core depends on the .NET Base Class Library and internally compiled Clipper2 for polygon clipping and offsets; it calls the static Localization-domain `TranslationServer` from `ElectronObject.Tr`/`TrN`.
 - Configuration files use `System.Text.Json`, operating-system file APIs, PBKDF2-HMAC-SHA-256, and AES-256-GCM; they do not depend on an asset loader or platform host.
 - File access uses `ProjectSettings` path resolution/root snapshots, .NET file/directory/drive/compression/hash/cryptography primitives, native filesystem identity/case/capacity and volume metadata, native Linux/macOS xattrs, and Windows alternate data streams. It shares the internal atomic replacement helper with `ConfigFile` and does not depend on a pack/resource loader.
 - Project settings build on `ConfigFile`, typed properties, runtime platform/architecture detection, and ordinary directory paths. Engine reads its fixed-step settings from the process registry and flushes its coalesced event.

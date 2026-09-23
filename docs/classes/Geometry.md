@@ -12,9 +12,9 @@ Last updated: 2026-09-23
 
 ## Description
 
-Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2I`](Vector2I.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Inputs are not generally checked for finiteness. Each returned array is owned by the caller.
+Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2I`](Vector2I.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Polygon clipping and offsets use Clipper2 at five decimal digits of internal precision and reject nonfinite or out-of-range coordinates. Other inputs are not generally checked for finiteness. Each returned array is owned by the caller.
 
-The current production slice covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls and decomposition, simple-polygon and Delaunay triangulation, atlas layout and segment/circle intersections. The rest of the reference geometry surface, including polygon boolean operations and offsets, is still absent; see [reference geometry coverage](../coverage/classes/Geometry2D.md).
+The class covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls and decomposition, simple-polygon and Delaunay triangulation, atlas layout, segment/circle intersections, polygon boolean operations and offsets. The public name is `Geometry`; [`Geometry2D` coverage](../coverage/classes/Geometry2D.md) identifies the reference source only.
 
 ## Example
 
@@ -37,11 +37,19 @@ Vector2? crossing = Geometry.SegmentIntersectsSegment(
 | [`public static Vector2[] GetClosestPointsBetweenSegments(Vector2 p1, Vector2 q1, Vector2 p2, Vector2 q2)`](#getclosestpointsbetweensegments) | Nearest pair, one point on each segment. |
 | [`public static Vector2[] ConvexHull(ReadOnlySpan<Vector2> points)`](#convexhull) | Closed counterclockwise hull. |
 | [`public static Vector2[][] DecomposePolygonInConvex(ReadOnlySpan<Vector2> polygon)`](#decomposepolygoninconvex) | Counterclockwise convex parts, or an empty array. |
+| [`public static Vector2[][] ClipPolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB)`](#polygon-boolean-operations) | Region A minus region B. |
+| [`public static Vector2[][] ClipPolylineWithPolygon(ReadOnlySpan<Vector2> polyline, ReadOnlySpan<Vector2> polygon)`](#polygon-boolean-operations) | Open line portions outside the polygon. |
+| [`public static Vector2[][] ExcludePolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB)`](#polygon-boolean-operations) | Exclusive-or of two regions. |
+| [`public static Vector2[][] IntersectPolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB)`](#polygon-boolean-operations) | Common region. |
+| [`public static Vector2[][] IntersectPolylineWithPolygon(ReadOnlySpan<Vector2> polyline, ReadOnlySpan<Vector2> polygon)`](#polygon-boolean-operations) | Open line portions inside the polygon. |
 | [`public static bool IsPointInCircle(Vector2 point, Vector2 circlePosition, float circleRadius)`](#ispointincircle) | Circle inclusion, including the boundary. |
 | [`public static bool IsPointInPolygon(Vector2 point, ReadOnlySpan<Vector2> polygon)`](#ispointinpolygon) | Odd-even polygon inclusion, including the boundary. |
 | [`public static bool IsPolygonClockwise(ReadOnlySpan<Vector2> polygon)`](#ispolygonclockwise) | Cartesian winding test. |
 | [`public static Vector2? LineIntersectsLine(Vector2 fromA, Vector2 dirA, Vector2 fromB, Vector2 dirB)`](#lineintersectsline) | Unique intersection of infinite lines, or `null`. |
 | [`public static (Vector2[] Points, Vector2I Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)`](#makeatlas) | Tile origins and the occupied atlas size. |
+| [`public static Vector2[][] MergePolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB)`](#polygon-boolean-operations) | Union of both regions. |
+| [`public static Vector2[][] OffsetPolygon(ReadOnlySpan<Vector2> polygon, float delta, PolyJoinType joinType = PolyJoinType.Square)`](#polygon-offsets) | Expanded or contracted polygon contours. |
+| [`public static Vector2[][] OffsetPolyline(ReadOnlySpan<Vector2> polyline, float delta, PolyJoinType joinType = PolyJoinType.Square, PolyEndType endType = PolyEndType.Square)`](#polygon-offsets) | Stroked polygon contours for an open or joined line. |
 | [`public static bool PointIsInsideTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)`](#pointisinsidetriangle) | Strict oriented-edge triangle test. |
 | [`public static float SegmentIntersectsCircle(Vector2 segmentFrom, Vector2 segmentTo, Vector2 circlePosition, float circleRadius)`](#segmentintersectscircle) | First circle crossing fraction, or -1. |
 | [`public static Vector2? SegmentIntersectsSegment(Vector2 fromA, Vector2 toA, Vector2 fromB, Vector2 toB)`](#segmentintersectssegment) | Unique intersection of finite segments, or `null`. |
@@ -73,6 +81,24 @@ Copies and lexicographically sorts the input before constructing a monotone hull
 ### DecomposePolygonInConvex
 
 Returns caller-owned, counterclockwise convex contours for a simple polygon in either winding direction. A convex polygon stays whole; a concave polygon is triangulated and neighboring triangles are merged where both joins remain convex. The number and order of parts are not an optimality guarantee. Fewer than three vertices, zero signed area, or failed triangulation return an empty array. Self-intersections are not repaired, and nonfinite coordinates have no defined result. The input is unchanged.
+
+### Polygon boolean operations
+
+`ClipPolygons`, `ExcludePolygons`, `IntersectPolygons`, and `MergePolygons` respectively compute A minus B, exclusive-or, intersection, and union. `ClipPolylineWithPolygon` and `IntersectPolylineWithPolygon` return the outside and inside portions of an open line. Polygon results may include multiple disconnected boundaries and holes; holes have opposite winding from their surrounding boundary. Open-line results are arrays of separate open segments. The result contour order is not guaranteed. Inputs are read without mutation and outputs are caller-owned.
+
+These methods apply the even-odd fill rule and use five-decimal-place internal clipping precision before conversion back to single-precision `Vector2`. Points must be finite and within the backend coordinate range; otherwise `ArgumentOutOfRangeException` is thrown. An internal clipping failure throws `InvalidOperationException`. Self-intersecting or degenerate input is governed by the clipping backend's fill rule, not repaired as a simple polygon.
+
+### Polygon offsets
+
+`OffsetPolygon` uses positive `delta` to expand and negative `delta` to contract a closed contour. `OffsetPolyline` strokes an open or joined line on both sides; negative `delta` and `PolyEndType.Polygon` return an empty result. Polygon offsets can split a contour or remove it entirely. Join and cap shapes are selected by the enums below. The miter limit is 2; round corners use an arc tolerance of 0.25 coordinate units. The same finite-coordinate and bounded-range validation applies as for boolean operations. Invalid join or end enum values and nonfinite/out-of-range distances throw `ArgumentOutOfRangeException`.
+
+## Enumerations
+
+| Type | Values | Meaning |
+| --- | --- | --- |
+| `Geometry.PolyBooleanOperation` | `Union = 0`, `Difference = 1`, `Intersection = 2`, `XOR = 3` | Region operations used by the polygon methods. |
+| `Geometry.PolyJoinType` | `Square = 0`, `Round = 1`, `Miter = 2` | Offset corner and line-join shape. |
+| `Geometry.PolyEndType` | `Polygon = 0`, `Joined = 1`, `Butt = 2`, `Square = 3`, `Round = 4` | Closure or endpoint cap of an offset line. |
 
 ### IsPointInCircle
 
@@ -116,7 +142,7 @@ Returns three indices into the input contour per triangle, in counterclockwise o
 
 ## Dependencies and verification
 
-Only Core math and the .NET base library are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering and decomposition, atlas layout and limits, both triangulation methods and segment/circle contact. Convex decomposition checks a whole convex contour, reversed winding, a concave L contour's area and convexity, input ownership and failed inputs. Delaunay checks cover insufficient and collinear inputs, original indices, an interior point, and an asymmetric quadrilateral. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
+Only Core math, the .NET base library and internally compiled [Clipper2 1.5.4](../../src/Vendor/Clipper2/UPSTREAM.txt) are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering and decomposition, atlas layout and limits, both triangulation methods, segment/circle contact, all polygon boolean operations, holes, open lines, offsets, caps and invalid inputs. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
 
 ## Decisions
 
