@@ -1,6 +1,6 @@
 # InputEventScreenTouch
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** [InputEventFromWindow](InputEventFromWindow.md)
 
@@ -17,9 +17,9 @@ Last updated: 2026-09-21
 Represents one touch contact beginning, ending, or being canceled.
 
 - Responsibility: begin/end/cancel state for one touch contact.
-- Complete declared API: non-negative `Index`, finite `Position`, `Pressed`, `Canceled`, `DoubleTap`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All five declared values are stored typed descriptors.
+- Complete declared API: signed `Index`, finite `Position`, `Pressed`, `Canceled`, `DoubleTap`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All five declared values are stored typed descriptors.
 - Transform/lifecycle: returns an independent duplicate with transformed position. A canceled contact is neither pressed nor released. Caller owns/disposes event resources.
-- Errors/threading/verification: negative index, non-finite position, or disposed access fails; copy, state, text, and transform are covered. Native touch generation and emulation begin with the SDL event-adapter trigger.
+- Errors/threading/verification: non-finite position or disposed access fails; signed index storage and copying, state, text, and transform are covered. Native touch generation and emulation begin with the SDL event-adapter trigger.
 
 ## Examples
 
@@ -69,11 +69,10 @@ Initializes a new InputEventScreenTouch instance.
 
 Gets or sets the touch-contact index.
 
-**Value:** A non-negative identifier that remains stable for the life of one contact.
+**Value:** A signed identifier that remains stable for the life of one contact.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The assigned value is negative.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

@@ -1,6 +1,6 @@
 # InputEventScreenDrag
 
-Last updated: 2026-09-21
+Last updated: 2026-09-23
 
 **Inherits:** [InputEventFromWindow](InputEventFromWindow.md)
 
@@ -19,7 +19,7 @@ Represents movement of one active touch or stylus contact.
 - Responsibility: movement/stylus data for one active touch contact.
 - Complete declared API: `Index`, `PenInverted`, `Position`, `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All nine declared values are stored typed descriptors.
 - Accumulation/transform: equal contact indexes merge atomically after validating summed deltas, adopt newest position/velocities, and emit one change notification. Only local position/relative/velocity transform; screen values remain unchanged.
-- Invariants/errors: index non-negative; vectors finite; pressure `[0,1]`; tilt components `[-1,1]`; disposed access fails.
+- Invariants/errors: index is a signed identifier; vectors finite; pressure `[0,1]`; tilt components `[-1,1]`; disposed access fails.
 - Verification: boundary validation, compatible/incompatible accumulation, duplication, and coordinate transforms are covered.
 
 ## Examples
@@ -75,11 +75,10 @@ Initializes a new InputEventScreenDrag instance.
 
 Gets or sets the touch-contact index.
 
-**Value:** A non-negative identifier matching the corresponding touch event.
+**Value:** A signed identifier matching the corresponding touch event.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The assigned value is negative.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

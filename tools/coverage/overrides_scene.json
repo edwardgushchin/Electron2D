@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"electron2d": "property:Electron2D.InputEventScreenTouch.Index()", "godot": "InputEventScreenTouch::property:index", "reason": "Signed touch-contact identifier maps to the typed C# property."},
+    {"electron2d": "property:Electron2D.InputEventScreenDrag.Index()", "godot": "InputEventScreenDrag::property:index", "reason": "Signed drag-contact identifier maps to the typed C# property."},
     {"electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)", "godot": "Control::method:_gui_input(InputEvent:)", "state": "Partial", "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing and focused keyboard delivery. Hover, clipping, full draw order, nested viewports and callback/signal order remain to audit."},
     {"electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)", "godot": "Control::method:_has_point(Vector2:)", "state": "Partial", "reason": "A virtual half-open local rectangle test is used for root viewport pointer targeting; custom shapes work. Clipping and full draw order remain to audit."},
     {"electron2d": "property:Electron2D.Polygon.Vertices()", "godot": "Polygon2D::property:polygon", "state": "Partial", "reason": "ADR 0004 maps the vertex list to Vertices because C# forbids a Polygon member on Polygon. Copied finite vertices, default contour, inverted fill and packed state execute; full skeletal geometry remains absent."},
@@ -2580,6 +2582,11 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "Default zero and unrestricted signed int storage match the pinned setter/getter; VerifyInput checks int.MinValue and duplication. Native SDL-generated indexes are a separate adapter concern.",
+      "godot": ["InputEventScreenTouch::property:index", "InputEventScreenDrag::property:index"]
+    },
     {
       "state": "Implemented",
       "reason": "Control.AcceptEvent forwards to the active SceneTree handled flag; ControlInputTests verifies that GUI and unhandled delivery stop while the original input event remains caller-owned.",

@@ -4335,8 +4335,16 @@ static void VerifyInput()
                 "Pointer pressure must remain in its unit interval.");
             Expect<ArgumentOutOfRangeException>(() => invalidMotion.Tilt = new Vector2(0f, float.PositiveInfinity),
                 "Pointer tilt must reject non-finite components.");
-            Expect<ArgumentOutOfRangeException>(() => invalidTouch.Index = -1,
-                "Touch contact indexes must be non-negative.");
+            using var signedDrag = new InputEventScreenDrag();
+            Require(invalidTouch.Index == 0 && signedDrag.Index == 0,
+                "Touch and drag indexes must default to zero.");
+            invalidTouch.Index = int.MinValue;
+            signedDrag.Index = int.MinValue;
+            using var copiedTouch = (InputEventScreenTouch)invalidTouch.Duplicate();
+            using var copiedDrag = (InputEventScreenDrag)signedDrag.Duplicate();
+            Require(invalidTouch.Index == int.MinValue && copiedTouch.Index == int.MinValue &&
+                    signedDrag.Index == int.MinValue && copiedDrag.Index == int.MinValue,
+                "Touch and drag indexes must preserve signed values across duplication.");
             Expect<ArgumentOutOfRangeException>(() => invalidMagnify.Factor = 0f,
                 "Magnification factors must be positive.");
         }

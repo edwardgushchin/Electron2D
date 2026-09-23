@@ -39,6 +39,7 @@ The component uses `Resource` for event duplication/change reporting, `PropertyD
 - Node ordering and handled semantics are deterministic; callback exceptions are aggregated.
 - Event resources remain caller-owned. Input neither disposes nor stores submitted event objects after transition identity expires.
 - Every event value has a validated stored typed property descriptor, and constructor-specific device defaults are the corresponding revert values.
+- Touch and drag contact indexes retain the full signed `int` value supplied by a caller; the native display adapter assigns its own non-negative contact indexes.
 - Warmed non-emulated matching and traversal reuse bounded collections. Emulated events and positional viewport-conversion copies are short-lived owned resources and allocate.
 
 ## Current implementation status and exclusions

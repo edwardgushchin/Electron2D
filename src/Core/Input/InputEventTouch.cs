@@ -18,21 +18,13 @@ public sealed class InputEventScreenTouch : InputEventFromWindow
     private Vector2 _position;
 
     /// <summary>Gets or sets the touch-contact index.</summary>
-    /// <value>A non-negative identifier that remains stable for the life of one contact.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative.</exception>
+    /// <value>A signed identifier that remains stable for the life of one contact.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public int Index
     {
         get { ThrowIfDisposed(); return _index; }
-        set
-        {
-            ThrowIfDisposed();
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "A touch index cannot be negative.");
-            _index = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _index = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets the touch position in the current local coordinate space.</summary>
@@ -144,21 +136,13 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
     private Vector2 _velocity;
 
     /// <summary>Gets or sets the touch-contact index.</summary>
-    /// <value>A non-negative identifier matching the corresponding touch event.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative.</exception>
+    /// <value>A signed identifier matching the corresponding touch event.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public int Index
     {
         get { ThrowIfDisposed(); return _index; }
-        set
-        {
-            ThrowIfDisposed();
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "A touch index cannot be negative.");
-            _index = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _index = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets whether the eraser end of a stylus generated the event.</summary>
