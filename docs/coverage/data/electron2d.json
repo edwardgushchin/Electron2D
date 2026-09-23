@@ -14417,6 +14417,104 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.DrawArc(Electron2D.Vector2,System.Single,System.Single,System.Single,System.Int32,Electron2D.Color,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawArc",
+    "signature": "public System.Void DrawArc(Electron2D.Vector2 center, System.Single radius, System.Single startAngle, System.Single endAngle, System.Int32 pointCount, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "center",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "radius",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "startAngle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "endAngle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "pointCount",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawCircle(Electron2D.Vector2,System.Single,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawCircle",
+    "signature": "public System.Void DrawCircle(Electron2D.Vector2 position, System.Single radius, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "radius",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "filled",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.DrawColoredPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Color,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Texture)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14445,6 +14543,163 @@
         "name": "texture",
         "type": "Electron2D.Texture",
         "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawDashedLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Single,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawDashedLine",
+    "signature": "public System.Void DrawDashedLine(Electron2D.Vector2 from, Electron2D.Vector2 to, Electron2D.Color color, System.Single width = -1f, System.Single dash = 2f, System.Boolean aligned = true, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "dash",
+        "type": "System.Single",
+        "default": "2f"
+      },
+      {
+        "name": "aligned",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawEllipse(Electron2D.Vector2,System.Single,System.Single,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawEllipse",
+    "signature": "public System.Void DrawEllipse(Electron2D.Vector2 position, System.Single major, System.Single minor, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "major",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "minor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "filled",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawEllipseArc(Electron2D.Vector2,System.Single,System.Single,System.Single,System.Single,System.Int32,Electron2D.Color,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawEllipseArc",
+    "signature": "public System.Void DrawEllipseArc(Electron2D.Vector2 center, System.Single major, System.Single minor, System.Single startAngle, System.Single endAngle, System.Int32 pointCount, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "center",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "major",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "minor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "startAngle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "endAngle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "pointCount",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",
@@ -14490,6 +14745,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.DrawMultiline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Color,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMultiline",
+    "signature": "public System.Void DrawMultiline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMultilineColors(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMultilineColors",
+    "signature": "public System.Void DrawMultilineColors(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "colors",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.DrawPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Texture)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14518,6 +14841,74 @@
         "name": "texture",
         "type": "Electron2D.Texture",
         "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawPolyline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.Color,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawPolyline",
+    "signature": "public System.Void DrawPolyline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, Electron2D.Color color, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawPolylineColors(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.ReadOnlySpan\u003CElectron2D.Color\u003E,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawPolylineColors",
+    "signature": "public System.Void DrawPolylineColors(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points, System.ReadOnlySpan\u003CElectron2D.Color\u003E colors, System.Single width = -1f, System.Boolean antialiased = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "colors",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "antialiased",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",

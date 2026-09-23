@@ -9,21 +9,21 @@ Last updated: 2026-09-23
 
 ## Description
 
-A retained local drawing operation recorded only during CanvasItem.OnDraw. CanvasItem owns its list, clears it before redraw, and releases references on disposal. Material selection is captured later by CanvasItem.AppendCanvas; commands borrow their Texture and never dispose it. Pixel updates are consumed on replay without recording new commands.
+A retained local drawing operation recorded during CanvasItem NotificationDraw/Draw/OnDraw. CanvasItem owns its list, clears it before redraw, and releases references on disposal. Material selection is captured later by CanvasItem.AppendCanvas; commands borrow their Texture and never dispose it. Pixel updates are consumed on replay without recording new commands.
 
 ## Member summary
 
 | Declaration | Contract |
 | --- | --- |
-| `CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled, float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default, bool Transpose = false, bool ClipUV = false, bool Tile = false)` | [Construction and values](#construction-and-values) |
+| `CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled, float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default, bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null)` | [Construction and values](#construction-and-values) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled, float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default, bool Transpose = false, bool ClipUV = false, bool Tile = false)`
+`CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled, float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default, bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null)`
 
-For lines A/B are endpoints; for rectangles they are position/size. Width is local units when positive and one framebuffer pixel when negative; zero-width outlines/lines contribute nothing. Transform is the extra local drawing transform. A texture command stores normalized Source coordinates, destination sign flips, transpose, clipping and tiling flags. Constructor arguments become record properties. Recording validates geometry and color; replay additionally validates transformations and referenced pixels.
+For lines A/B are endpoints; for rectangles they are position/size. Width is local units when positive and one framebuffer pixel when negative; zero-width outlines/lines contribute nothing. Transform is the extra local drawing transform. A texture command stores normalized Source coordinates, destination sign flips, transpose, clipping and tiling flags. Polygon and Stroke optionally reference item-owned retained geometry, taking precedence over rectangle/line fields. Each committed command has a distinct reusable pool slot; redraw resets its cursor. Constructor arguments become record properties. Recording validates geometry and color; replay additionally validates transformations and referenced pixels.
 
 ## Verification and limits
 

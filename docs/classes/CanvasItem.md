@@ -163,7 +163,16 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 
 | Member | Contract |
 | --- | --- |
-| [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands, pooled polygon storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
+| [`protected override void Dispose(bool disposing)`](#m-electron2d-canvasitem-dispose-system-boolean) | Disposes the scene hierarchy and clears retained canvas commands, pooled polygon/stroke storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned. |
+| [`public void DrawPolyline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`](#drawpolyline) | Joined strip with a uniform color. |
+| [`public void DrawPolylineColors(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width = -1f, bool antialiased = false)`](#drawpolylinecolors) | Joined strip with interpolated vertex colors. |
+| [`public void DrawMultiline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`](#drawmultiline) | Independent endpoint pairs with a uniform color. |
+| [`public void DrawMultilineColors(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width = -1f, bool antialiased = false)`](#drawmultilinecolors) | Independent pairs with per-segment colors. |
+| [`public void DrawDashedLine(Vector2 from, Vector2 to, Color color, float width = -1f, float dash = 2f, bool aligned = true, bool antialiased = false)`](#drawdashedline) | Aligned or unaligned local dash pattern. |
+| [`public void DrawArc(Vector2 center, float radius, float startAngle, float endAngle, int pointCount, Color color, float width = -1f, bool antialiased = false)`](#drawarc) | Sampled circular arc. |
+| [`public void DrawEllipseArc(Vector2 center, float major, float minor, float startAngle, float endAngle, int pointCount, Color color, float width = -1f, bool antialiased = false)`](#drawellipsearc) | Sampled elliptical arc. |
+| [`public void DrawCircle(Vector2 position, float radius, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#drawcircle) | Filled circle or circular outline. |
+| [`public void DrawEllipse(Vector2 position, float major, float minor, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#drawellipse) | Filled ellipse or elliptical outline. |
 | [`public void DrawColoredPolygon(ReadOnlySpan<Vector2> points, Color color, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`](#drawcoloredpolygon) | Filled contour with uniform color. |
 | [`public void DrawPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`](#drawpolygon) | Triangulated contour with interpolated colors and UVs. |
 | [`public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null)`](#drawprimitive) | Point, line, triangle or quad. |
@@ -389,6 +398,86 @@ ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflect
 
 ## Method Descriptions
 
+### Stroke recording contract
+
+All nine methods below return void and require this item's active NotificationDraw, synchronous Draw event or OnDraw scope. Off-owner or outside-scope calls throw InvalidOperationException; a disposed item throws ObjectDisposedException. Invalid point/color counts or nonfinite used geometry, colors and widths throw ArgumentException. Derived local coordinates are also checked for overflow before committing a command. An uncaught callback error discards the partial recording and leaves a redraw pending. A caught invalid call does not overwrite previously recorded commands.
+
+Inputs and generated local geometry are retained in reusable storage until redraw. Item/draw transforms, inherited modulation and current material are applied during submission; changing item placement or modulation requires no redraw. Commands use the same GPU/compatibility triangle batches and HLSL/GLSL material interface as other canvas drawing. Transformed nonfinite positions/colors throw InvalidOperationException. Disposal releases the storage; no borrowed material is disposed.
+
+Unless a filled shape ignores it, positive `width` is local, negative width is one framebuffer pixel regardless of scaling, and zero produces no stroke geometry. Antialiased positive widths compensate the opaque core: widths up to 2.5 are halved, widths from 2.5 to 5 interpolate toward a 0.625 reduction, and larger widths subtract 0.625. The local feather is 1.25 units, proportionally reduced for compensated widths below one. It scales with item/draw transforms. Negative-width polyline/multiline paths ignore `antialiased`; DrawLine and the short-dash fallback can still feather their thin cores. Final vertex snapping occurs after tessellation, including thin-line expansion. Exact hardware line raster coverage is not yet matched; thin lines currently use triangles.
+
+### DrawPolyline
+
+`public void DrawPolyline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`
+
+Copies at least two finite local `points` with the finite uniform `color`. The last endpoint approximately equal to the first closes the strip. Consecutive segments share miter vertices; bisector length is limited to three half-widths. Open endpoints use flat caps. Repeated points use adjacent nonzero directions; coincident geometry has no area. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawPolylineColors
+
+`public void DrawPolylineColors(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width = -1f, bool antialiased = false)`
+
+Uses the same point, join, width and lifetime contract as DrawPolyline. `colors` are interpolated along the strip: empty means white, one color is uniform, missing entries repeat the last supplied color, and entries beyond the point count are ignored. Only used colors must be finite. Colors are copied during recording. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawMultiline
+
+`public void DrawMultiline(ReadOnlySpan<Vector2> points, Color color, float width = -1f, bool antialiased = false)`
+
+Copies a nonempty even-length `points` sequence as independent endpoint pairs, all with the finite `color`. There is no connecting geometry across pairs. Each segment uses the shared straight-line positive-width geometry and flat caps; negative-width segments ignore antialiasing. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawMultilineColors
+
+`public void DrawMultilineColors(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width = -1f, bool antialiased = false)`
+
+Uses the independent-pair contract of DrawMultiline. `colors` contains either one finite uniform color or exactly one finite color per segment, not one per endpoint. Empty or other counts throw ArgumentException. Coincident endpoints contribute no geometry. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawDashedLine
+
+`public void DrawDashedLine(Vector2 from, Vector2 to, Color color, float width = -1f, float dash = 2f, bool aligned = true, bool antialiased = false)`
+
+Draws from finite local `from` to `to` with finite `color`. `dash` is a positive finite local dash length, default 2. An odd number of alternating dash/gap steps is chosen. With `aligned = true`, partial end dashes are fitted symmetrically and touch both endpoints; false starts with a full dash and may leave an undrawn tail. A line shorter than `dash` calls DrawLine, including its negative-width antialias behavior. Nonpositive/nonfinite dash or a computed count beyond array capacity throws ArgumentOutOfRangeException; no unbounded integer conversion occurs. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawArc
+
+`public void DrawArc(Vector2 center, float radius, float startAngle, float endAngle, int pointCount, Color color, float width = -1f, bool antialiased = false)`
+
+Circular counterpart of DrawEllipseArc: finite signed `radius` supplies both axes. `center` is local; `startAngle` and `endAngle` are finite radians. `pointCount` includes both endpoints and must be at least two, otherwise ArgumentOutOfRangeException. Sweep is clamped to plus or minus one full turn. The finite `color`, width, joins and antialiasing follow DrawPolyline. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawEllipseArc
+
+`public void DrawEllipseArc(Vector2 center, float major, float minor, float startAngle, float endAngle, int pointCount, Color color, float width = -1f, bool antialiased = false)`
+
+Samples an ellipse around finite local `center` with finite signed horizontal `major` and vertical `minor` radii. Finite `startAngle` and `endAngle` are radians; the signed difference clamps to one full turn. `pointCount` must be at least two and includes both endpoints. Clockwise/counterclockwise sweeps, zero sweep and signed radii are accepted. Resulting points follow DrawPolyline with the finite uniform `color`. Too few samples throw ArgumentOutOfRangeException; sampling overflow throws ArgumentException before a command is committed. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawCircle
+
+`public void DrawCircle(Vector2 position, float radius, Color color, bool filled = true, float width = -1f, bool antialiased = false)`
+
+Circular counterpart of DrawEllipse with finite local `position`, finite signed `radius` and finite `color`. `filled = true` uses a 64-segment fan and ignores finite width. An outline at least as wide as its diameter becomes a filled circle with radius increased by half the width. Other outlines use a closed 65-point strip. Feathering follows the ellipse rules below. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+### DrawEllipse
+
+`public void DrawEllipse(Vector2 position, float major, float minor, Color color, bool filled = true, float width = -1f, bool antialiased = false)`
+
+Uses finite local `position`, finite signed horizontal `major` and vertical `minor` radii, and finite `color`. The default `filled = true` emits a 64-segment fan and ignores finite width. An outline at least as wide as the larger diameter becomes a filled ellipse with both axes increased by half the width; other outlines use a closed strip. With antialiasing, filled core radii shrink by 0.3125 local units and clamp to zero; an outer 1.25-unit alpha ring scales down for subpixel axes. Outline feathering follows DrawPolyline. Signed radii are accepted, including the zero-clamping effect in the filled antialiased path. All shared guards, storage and width rules are defined in the [stroke recording contract](#stroke-recording-contract).
+
+#### Stroke example and verification
+
+Override on an Entity subclass, inside its draw callback:
+
+```csharp
+protected override void OnDraw()
+{
+    DrawPolyline([new(0, 0), new(32, 0), new(32, 24)], Colors.White, 3, true);
+    DrawDashedLine(new(0, 40), new(64, 40), Colors.Yellow, 2, 6);
+    DrawArc(new(96, 32), 20, 0, Mathf.Pi, 33, Colors.Green, 2);
+    DrawEllipse(new(32, 80), 24, 12, Colors.Blue);
+}
+```
+
+[CanvasStrokeTests](../../tests/Electron2D.Tests/CanvasStrokeTests.cs) checks joins, degenerate/closed paths, colors, snapshots, widths, arcs, dashes, exceptions, rollback, thread/disposal guards and zero managed allocation over 1,000 warmed redraw/replay iterations. [CanvasStrokeRenderingTests](../../tests/Electron2D.Tests/CanvasStrokeRenderingTests.cs) checks backend pixels and retained state over three frames. See [component verification and limits](../components/canvas-rendering.md#stroke-commands).
+
+The software driver truncates fractional triangle positions before rasterization. The circle feather check therefore samples the adjacent inner pixel on software and explicitly checks its excluded outer pixel; hardware checks the fractional outer ring. This preserves the documented [fallback precision limit](../components/canvas-rendering.md#pixel-snapping), without claiming identical edge coverage.
+
 ### DrawColoredPolygon
 
 Source: [CanvasItem.Polygons.cs](../../src/Scene/Main/CanvasItem.Polygons.cs).
@@ -433,7 +522,7 @@ protected override void OnDraw()
 <a id="m-electron2d-canvasitem-dispose-system-boolean"></a>
 ### `protected override void Dispose(bool disposing)`
 
-Disposes the scene hierarchy and clears retained canvas commands, pooled polygon storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned.
+Disposes the scene hierarchy and clears retained canvas commands, pooled polygon/stroke storage and this layer's subscribers in a finally block. Borrowed resources remain caller-owned.
 
 <a id="m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean"></a>
 ### `public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`
@@ -448,9 +537,9 @@ Records a straight line during canvas recording.
 
 **Parameter `width`:** Width in local units; a negative value uses one framebuffer pixel.
 
-**Parameter `antialiased`:** Whether to feather the boundary over one framebuffer pixel.
+**Parameter `antialiased`:** Whether to add a local alpha feather with compensated core width.
 
-**Remarks:** Lines use flat caps. Coincident endpoints or zero width draw nothing.
+**Remarks:** Lines use flat caps. Coincident endpoints or zero width draw nothing. The local feather scales with the item/draw transform. Unlike thin polylines, a negative-width DrawLine can still add local feather geometry around its one-pixel core. See the [stroke width contract](#stroke-recording-contract).
 
 **System.ArgumentException:** Geometry, color or width is not finite.
 

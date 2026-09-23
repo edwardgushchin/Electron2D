@@ -163,7 +163,7 @@ public abstract partial class CanvasItem : Node
         {
             if (disposing)
             {
-                _canvasCommands?.Clear(); _polygons?.Clear(); _polygonCount = 0; _material = null;
+                _canvasCommands?.Clear(); _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null;
                 VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
             }
         }

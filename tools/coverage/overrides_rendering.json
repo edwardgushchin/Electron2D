@@ -1189,6 +1189,66 @@
       "electron2d": "method:Electron2D.CanvasItem.DrawPrimitive(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Texture)",
       "state": "Partial",
       "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified. Points/lines execute via one-pixel triangle footprints, including texture/color interpolation and scaling; exact subpixel coverage against native hardware point/line raster rules remains unaudited. Triangle/quad layout and partial-attribute defaults are checked."
+    },
+    {
+      "godot": "CanvasItem::method:draw_arc(Vector2:,float:,float:,float:,int:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawArc(Electron2D.Vector2,System.Single,System.Single,System.Single,System.Int32,Electron2D.Color,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_circle(Vector2:,float:,Color:,bool:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawCircle(Electron2D.Vector2,System.Single,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_dashed_line(Vector2:,Vector2:,Color:,float:,float:,bool:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawDashedLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Single,System.Boolean,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_ellipse(Vector2:,float:,float:,Color:,bool:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawEllipse(Electron2D.Vector2,System.Single,System.Single,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_ellipse_arc(Vector2:,float:,float:,float:,float:,int:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawEllipseArc(Electron2D.Vector2,System.Single,System.Single,System.Single,System.Single,System.Int32,Electron2D.Color,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_multiline(PackedVector2Array:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMultiline(System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Color,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_multiline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMultilineColors(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_polyline(PackedVector2Array:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawPolyline(System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.Color,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawPolylineColors(System.ReadOnlySpan<Electron2D.Vector2>,System.ReadOnlySpan<Electron2D.Color>,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
+    },
+    {
+      "godot": "CanvasItem::method:draw_line(Vector2:,Vector2:,Color:,float:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawLine(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Color,System.Single,System.Boolean)",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands."
     }
   ],
   "statusGroups": [
@@ -1759,8 +1819,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Retained triangle/material/texture rendering is available. Implement the complete stroked/curved canvas command family, including joins, widths, antialiasing and backend pixels; no missing rendering backend blocks these methods.",
+      "state": "Partial",
+      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. Remaining gap: negative-width cores use triangle expansion; exact native hardware subpixel line/end coverage is not established. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands.",
       "godot": [
         "CanvasItem::method:draw_arc(Vector2:,float:,float:,float:,int:,Color:,float:,bool:)",
         "CanvasItem::method:draw_circle(Vector2:,float:,Color:,bool:,float:,bool:)",
@@ -1770,7 +1830,8 @@
         "CanvasItem::method:draw_multiline(PackedVector2Array:,Color:,float:,bool:)",
         "CanvasItem::method:draw_multiline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
         "CanvasItem::method:draw_polyline(PackedVector2Array:,Color:,float:,bool:)",
-        "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)"
+        "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
+        "CanvasItem::method:draw_line(Vector2:,Vector2:,Color:,float:,bool:)"
       ]
     },
     {
@@ -1876,6 +1937,13 @@
       "godot": [
         "CanvasItem::method:draw_polygon(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)",
         "CanvasItem::method:draw_colored_polygon(PackedVector2Array:,Color:,PackedVector2Array:,Texture2D:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Executable retained rectangles exist, but antialiased fills/outlines still use framebuffer feathering instead of the pinned local compensation/closed-polyline path. Audit and implement rectangle-specific positive, thin, wide and degenerate behavior with native pixels; the new stroke family does not establish rectangle parity.",
+      "godot": [
+        "CanvasItem::method:draw_rect(Rect2:,Color:,bool:,float:,bool:)"
       ]
     }
   ],

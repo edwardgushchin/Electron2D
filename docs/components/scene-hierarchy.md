@@ -29,7 +29,7 @@ CanvasItem.GetTransform is abstract. Entity implements it with an engine-owned T
 
 Entity.Reparent overrides the neutral operation. It validates a destination inverse before mutation when retaining global state, preserves structural lifecycle checks, then restores its local transform after attachment. A neutral reparent has no spatial state to preserve. GetRelativeTransformToParent separately multiplies local transforms along an uninterrupted spatial-node chain. Translate adds in parent space; MoveLocalX/Y move along the current local basis.
 
-RenderingServer traverses all Nodes and records only CanvasItems. NotificationDraw/Draw/OnDraw recording, QueueRedraw and rectangle/line/polygon/primitive/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
+RenderingServer traverses all Nodes and records only CanvasItems. NotificationDraw/Draw/OnDraw recording, QueueRedraw and rectangle/line/polyline/dash/arc/circle/ellipse/polygon/primitive/texture methods belong to CanvasItem; Texture draw methods accept that base. Retained resource notifications atomically schedule owner-thread recording. Commands borrow Texture and Material; renderer backends own native caches.
 
 PackedScene captures any Node root. Each inheritance layer contributes only its own stored descriptors. Neutral and spatial nodes have separate default factories; derived types still supply an explicit static exact-type factory. Reconstruction is detached, shared resources remain borrowed, and the root owns scene-local duplicates.
 

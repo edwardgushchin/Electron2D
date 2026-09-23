@@ -95,8 +95,9 @@ public abstract partial class CanvasItem
     /// <param name="to">The finite ending point in local coordinates.</param>
     /// <param name="color">The finite drawing color.</param>
     /// <param name="width">Width in local units; a negative value uses one framebuffer pixel.</param>
-    /// <param name="antialiased">Whether to feather the boundary over one framebuffer pixel.</param>
-    /// <remarks>Lines use flat caps. Coincident endpoints or zero width draw nothing.</remarks>
+    /// <param name="antialiased">Whether to add a local antialias feather with compensated core width.</param>
+    /// <remarks>Lines use flat caps. Coincident endpoints or zero width draw nothing. Feather widths scale with local transforms;
+    /// negative-width lines retain a one-pixel core and can still add local feathers, unlike thin polylines.</remarks>
     /// <exception cref="ArgumentException">Geometry, color or width is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -216,7 +217,7 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
-        _polygonCount = 0;
+        _polygonCount = 0; _strokeCount = 0;
         _drawTransform = Transform.Identity;
         _drawing = true;
         try

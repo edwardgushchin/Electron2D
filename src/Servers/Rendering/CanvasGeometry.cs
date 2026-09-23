@@ -7,12 +7,13 @@ internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vect
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color, bool Filled,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default,
-    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null);
+    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null);
 
 internal static class CanvasGeometry
 {
     internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)
     {
+        if (command.Stroke is { } stroke) { stroke.Append(output, transform, modulation, snapVertices); return; }
         if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices); return; }
         var first = output.Count;
         var color = command.Color * modulation;
@@ -22,16 +23,8 @@ internal static class CanvasGeometry
         Span<Vector2> inner = stackalloc Vector2[4];
         if (command.Line)
         {
-            if (command.Width == 0f || command.A == command.B) return;
-            var a = command.A;
-            var b = command.B;
-            if (command.Width < 0) { a = transform * a; b = transform * b; transform = Transform.Identity; }
-            var direction = (b - a).Normalized();
-            var normal = new Vector2(-direction.Y, direction.X) * (command.Width < 0 ? 0.5f : command.Width / 2);
-            outer[0] = transform * (a + normal); outer[1] = transform * (b + normal);
-            outer[2] = transform * (b - normal); outer[3] = transform * (a - normal);
-            if (!ValidQuad(outer)) return;
-            Quad(output, outer, color);
+            CanvasStroke.AppendLine(output, command.A, command.B, color, command.Width, command.Antialiased, transform, snapVertices);
+            return;
         }
         else
         {
