@@ -5,7 +5,11 @@ namespace Electron2D;
 public abstract partial class CanvasItem : Node
 {
     /// <summary>Initializes a detached canvas item with visibility enabled, white modulation and no material.</summary>
-    protected CanvasItem() { }
+    protected CanvasItem() => TransformQueueEntry = new(this);
+
+    internal readonly LinkedListNode<CanvasItem> TransformQueueEntry;
+    private bool _globalTransformInvalid = true;
+    private Transform _globalTransform;
 
     /// <summary>Returns the local transform supplied by this item's placement model.</summary>
     /// <returns>The transform relative to the direct canvas parent.</returns>
@@ -14,11 +18,20 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Returns the transform composed through the direct canvas-parent chain.</summary>
     /// <returns>The local transform when the parent is non-canvas or TopLevel is enabled.</returns>
+    /// <remarks>Resolves global invalidation without consuming an already queued notification. Global values are
+    /// current immediately; ForceUpdateTransform controls notification delivery, not mathematical composition.</remarks>
+    /// <exception cref="InvalidOperationException">An attached item is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetGlobalTransform()
     {
         ThrowIfDisposed();
-        return GetParentItem() is { } parent ? parent.GetGlobalTransform() * GetTransform() : GetTransform();
+        Tree?.EnsureOwnerThread();
+        if (_globalTransformInvalid)
+        {
+            _globalTransform = GetParentItem() is { } parent ? parent.GetGlobalTransform() * GetTransform() : GetTransform();
+            _globalTransformInvalid = false;
+        }
+        return _globalTransform;
     }
 
     internal CanvasItem? GetParentItem() => TopLevel ? null : Parent as CanvasItem;
@@ -37,34 +50,45 @@ public abstract partial class CanvasItem : Node
         ItemRectChanged?.Invoke(this);
     }
 
-    /// <summary>Delivers enabled transform notifications after a derived placement model changes.</summary>
-    /// <remarks>The local transform must be committed first. Descendant delivery stops at neutral nodes and
-    /// top-level canvas items. All affected items are attempted before callback failures are aggregated.
-    /// Child snapshots use the shared array pool and clear references on return; warmed propagation allocates
-    /// no snapshot arrays and remains isolated across callback reentry.</remarks>
+    /// <summary>Invalidates global transforms and delivers an enabled local-transform notification.</summary>
+    /// <remarks>Commit the local transform first. Global invalidation stops at neutral and TopLevel descendants.
+    /// Global notifications coalesce in the scene queue; local notification and its typed event are synchronous,
+    /// only while attached and NotifyLocalTransformChanges is enabled. Even equal assignments notify.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
-    /// <exception cref="AggregateException">A notification or event handler fails.</exception>
+    /// <exception cref="Exception">A local notification callback throws after global invalidation.</exception>
     protected void NotifyLocalTransformChanged()
     {
         EnsureMutable();
-        List<Exception>? errors = null;
-        try { if (_notifyLocalTransformChanges) DispatchNotification(NotificationLocalTransformChanged); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        try { LocalTransformChanged?.Invoke(this); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        try { PropagateGlobalTransformChanged(); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Canvas transform callbacks failed.", errors);
+        PropagateGlobalTransformChanged();
+        if (IsInsideTree && _notifyLocalTransformChanges) DispatchNotification(NotificationLocalTransformChanged);
+    }
+
+    /// <summary>Immediately delivers this item's pending global-transform notification, if any.</summary>
+    /// <remarks>Requires active tree membership. Removes the pending entry before calling user code. Does not
+    /// flush descendants, change the transform, clear its invalidation state or request redraw. A second call
+    /// without a new pending entry does nothing. Callback failure leaves the consumed entry removed.</remarks>
+    /// <exception cref="InvalidOperationException">The item is detached, accessed off-owner, or a scene capture is active.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    /// <exception cref="Exception">A transform notification callback throws.</exception>
+    public void ForceUpdateTransform()
+    {
+        EnsureMutable();
+        var tree = Tree ?? throw new InvalidOperationException("A transform update requires an active scene tree.");
+        if (TransformQueueEntry.List is null) return;
+        tree.CancelTransformNotification(this);
+        tree.DeliverTransformNotification(this);
     }
 
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationVisibilityChanged)
+        if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
         {
             base.OnNotification(what);
-            VisibilityChanged?.Invoke(this);
+            if (what == NotificationVisibilityChanged) VisibilityChanged?.Invoke(this);
+            else if (what == NotificationLocalTransformChanged) LocalTransformChanged?.Invoke(this);
+            else TransformChanged?.Invoke(this);
             return;
         }
         if (what is not (NotificationParented or NotificationUnparented))
@@ -75,7 +99,7 @@ public abstract partial class CanvasItem : Node
         List<Exception>? errors = null;
         try { base.OnNotification(what); }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { PropagateGlobalTransformChanged(); }
+        try { if (what == NotificationParented) NotifyLocalTransformChanged(); else PropagateGlobalTransformChanged(); }
         catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Canvas lifecycle callbacks failed.", errors);
     }
@@ -89,16 +113,20 @@ public abstract partial class CanvasItem : Node
     {
         if (!entering)
         {
+            Tree!.CancelTransformNotification(this);
+            _globalTransformInvalid = true;
             try { ExitCanvas(); }
             finally { _parentVisible = false; }
             return;
         }
+        _globalTransformInvalid = true;
         _parentVisible = GetParentVisibility();
         List<Exception>? errors = null;
         try { EnterCanvas(); }
         catch (Exception error) { CollectException(ref errors, error); }
         try { if (IsVisibleInTree) DispatchNotification(NotificationVisibilityChanged); }
         catch (Exception error) { CollectException(ref errors, error); }
+        if (!IsDisposed && IsInsideTree) Tree!.QueueTransformNotification(this);
         ThrowCollected("Canvas entry callbacks failed.", errors);
     }
 
@@ -174,7 +202,7 @@ public abstract partial class CanvasItem : Node
     /// <summary>Identifies a local-transform change notification when local notification delivery is enabled.</summary>
     public const int NotificationLocalTransformChanged = 35;
 
-    /// <summary>Identifies a global-transform change notification when global notification delivery is enabled.</summary>
+    /// <summary>Identifies a global-transform notification queued on tree entry or on enabled global invalidation.</summary>
     public const int NotificationTransformChanged = 2000;
 
     /// <summary>Specifies the smallest supported local or effective Z index.</summary>
@@ -303,7 +331,7 @@ public abstract partial class CanvasItem : Node
                 _topLevel = value;
                 try { EnterCanvas(); }
                 catch (Exception error) { CollectException(ref errors, error); }
-                try { if (!IsDisposed) PropagateGlobalTransformChanged(); }
+                try { if (!IsDisposed) NotifyLocalTransformChanged(); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
             finally { _rebindingCanvas = false; }
@@ -396,14 +424,15 @@ public abstract partial class CanvasItem : Node
         : ZIndex;
 
     /// <summary>Gets or sets whether local transform changes dispatch <see cref="NotificationLocalTransformChanged"/>.</summary>
-    /// <value><see langword="false"/> by default. <see cref="LocalTransformChanged"/> is raised regardless.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <value>False by default. Enables both the numeric local notification and its typed event while attached.</value>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool NotifyLocalTransformChanges
     {
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _notifyLocalTransformChanges;
         }
         set
@@ -414,20 +443,25 @@ public abstract partial class CanvasItem : Node
     }
 
     /// <summary>Gets or sets whether global transform changes dispatch <see cref="NotificationTransformChanged"/>.</summary>
-    /// <value><see langword="false"/> by default. <see cref="TransformChanged"/> is raised regardless.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <value>False by default. Enables queuing on global invalidation; initial tree entry always queues once.</value>
+    /// <remarks>Enabling while attached resolves the current global transform without queuing. Disabling does not
+    /// cancel an already queued notification. Delivery includes the typed TransformChanged event.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool NotifyTransformChanges
     {
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _notifyTransformChanges;
         }
         set
         {
             EnsureMutable();
+            if (_notifyTransformChanges == value) return;
             _notifyTransformChanges = value;
+            if (value && IsInsideTree) _ = GetGlobalTransform();
         }
     }
 
@@ -444,12 +478,12 @@ public abstract partial class CanvasItem : Node
     /// on the mutating thread, restricted to the scene owner while attached, including while hidden.</remarks>
     public event Action<CanvasItem>? ItemRectChanged;
 
-    /// <summary>Occurs after this node's local transform actually changes.</summary>
-    /// <remarks>The event is always enabled; numeric local-transform notification delivery is separately configurable.</remarks>
+    /// <summary>Projects the local-transform notification with this item as sender.</summary>
+    /// <remarks>Automatic delivery is synchronous, attached-only and controlled by NotifyLocalTransformChanges. Manual notifications also deliver it.</remarks>
     public event Action<CanvasItem>? LocalTransformChanged;
 
-    /// <summary>Occurs when this node's global transform is affected by a local or ancestor change.</summary>
-    /// <remarks>Propagation stops at top-level descendants. The event is independent of numeric transform notifications.</remarks>
+    /// <summary>Projects the global-transform notification with this item as sender.</summary>
+    /// <remarks>Automatic delivery uses the scene queue or ForceUpdateTransform. It follows the numeric notification, including initial entry and manual notifications.</remarks>
     public event Action<CanvasItem>? TransformChanged;
 
     /// <summary>Moves this node to the last position among its siblings.</summary>
@@ -477,25 +511,12 @@ public abstract partial class CanvasItem : Node
 
     private void PropagateGlobalTransformChanged()
     {
-        List<Exception>? errors = null;
-        try { if (_notifyTransformChanges) DispatchNotification(NotificationTransformChanged); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        try { TransformChanged?.Invoke(this); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        var count = Children.Count;
-        var snapshot = count == 0 ? null : System.Buffers.ArrayPool<Node>.Shared.Rent(count);
-        try
-        {
-            for (var i = 0; i < count; i++) snapshot![i] = Children[i];
-            for (var i = 0; i < count; i++)
-            {
-                if (snapshot![i] is not CanvasItem { TopLevel: false } item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
-                try { item.PropagateGlobalTransformChanged(); }
-                catch (Exception error) { CollectException(ref errors, error); }
-            }
-        }
-        finally { if (snapshot is not null) System.Buffers.ArrayPool<Node>.Shared.Return(snapshot, clearArray: true); }
-        ThrowCollected("Canvas transform callbacks failed.", errors);
+        if (_globalTransformInvalid) return;
+        _globalTransformInvalid = true;
+        if (_notifyTransformChanges && IsInsideTree) Tree!.QueueTransformNotification(this);
+        for (var i = 0; i < ChildCount; i++)
+            if (GetChild(i) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
+                child.PropagateGlobalTransformChanged();
     }
 
     internal void PropagateVisibilityChanged()

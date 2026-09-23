@@ -171,15 +171,16 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
 | [`public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
 | [`public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
+| [`public void ForceUpdateTransform()`](#forceupdatetransform) | Immediately delivers this item's pending global notification. |
 | [`public Transform GetGlobalTransform()`](#m-electron2d-canvasitem-getglobaltransform) | Returns the transform composed through the direct canvas-parent chain. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-canvasitem-getpropertydescriptors) | Extends neutral descriptors with visibility, ordering, top-level state, modulation and borrowed materials. |
 | [`public abstract Transform GetTransform()`](#m-electron2d-canvasitem-gettransform) | Returns the local transform supplied by this item's placement model. |
 | [`public void Hide()`](#m-electron2d-canvasitem-hide) | Sets `CanvasItem.Visible` to `false`. |
 | [`public void MoveToFront()`](#m-electron2d-canvasitem-movetofront) | Moves this node to the last position among its siblings. |
 | [`protected void NotifyItemRectChanged(bool sizeChanged = true)`](#m-electron2d-canvasitem-notifyitemrectchanged-system-boolean) | Reports a possible local-bounds change, optionally requesting redraw first. |
-| [`protected void NotifyLocalTransformChanged()`](#m-electron2d-canvasitem-notifylocaltransformchanged) | Delivers enabled transform notifications after a derived placement model changes. |
+| [`protected void NotifyLocalTransformChanged()`](#m-electron2d-canvasitem-notifylocaltransformchanged) | Invalidates global transforms and delivers an enabled local-transform notification after a derived placement model commits state. |
 | [`protected virtual void OnDraw()`](#m-electron2d-canvasitem-ondraw) | Records this node's retained canvas commands before its first visible frame and after QueueRedraw. |
-| [`protected override void OnNotification(int what)`](#m-electron2d-canvasitem-onnotification-system-int32) | Preserves inherited lifecycle dispatch, projects NotificationVisibilityChanged to its typed event and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications. |
+| [`protected override void OnNotification(int what)`](#m-electron2d-canvasitem-onnotification-system-int32) | Preserves inherited lifecycle dispatch, projects visibility and local/global transform notifications to their typed events and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications. |
 | [`public void QueueRedraw()`](#m-electron2d-canvasitem-queueredraw) | Requests regeneration of this node's retained drawing commands before a later visible frame. |
 | [`public void Show()`](#m-electron2d-canvasitem-show) | Sets `CanvasItem.Visible` to `true`. |
 
@@ -190,8 +191,8 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public event Action<CanvasItem>? Draw`](#e-electron2d-canvasitem-draw) | Synchronous recording event between NotificationDraw and OnDraw. |
 | [`public event Action<CanvasItem>? Hidden`](#e-electron2d-canvasitem-hidden) | Effective transition to hidden, after visibility delivery. |
 | [`public event Action<CanvasItem>? ItemRectChanged`](#e-electron2d-canvasitem-itemrectchanged) | Synchronous local geometry notification; does not propagate to children. |
-| [`public event Action<CanvasItem>? LocalTransformChanged`](#e-electron2d-canvasitem-localtransformchanged) | Occurs after this node's local transform actually changes. |
-| [`public event Action<CanvasItem>? TransformChanged`](#e-electron2d-canvasitem-transformchanged) | Occurs when this node's global transform is affected by a local or ancestor change. |
+| [`public event Action<CanvasItem>? LocalTransformChanged`](#e-electron2d-canvasitem-localtransformchanged) | Projects NotificationLocalTransformChanged with this item as sender. |
+| [`public event Action<CanvasItem>? TransformChanged`](#e-electron2d-canvasitem-transformchanged) | Projects NotificationTransformChanged with this item as sender. |
 | [`public event Action<CanvasItem>? VisibilityChanged`](#e-electron2d-canvasitem-visibilitychanged) | Occurs after local or inherited logical visibility is propagated to this node. |
 
 ## Constants
@@ -204,7 +205,7 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public const int NotificationEnterCanvas = 32`](#f-electron2d-canvasitem-notificationentercanvas) | Delivered on canvas attachment, parent-first during tree entry. |
 | [`public const int NotificationExitCanvas = 33`](#f-electron2d-canvasitem-notificationexitcanvas) | Delivered on canvas detachment, child-first during tree exit; ordinary C# override/base dispatch applies. |
 | [`public const int NotificationLocalTransformChanged = 35`](#f-electron2d-canvasitem-notificationlocaltransformchanged) | Identifies a local-transform change notification when local notification delivery is enabled. |
-| [`public const int NotificationTransformChanged = 2000`](#f-electron2d-canvasitem-notificationtransformchanged) | Identifies a global-transform change notification when global notification delivery is enabled. |
+| [`public const int NotificationTransformChanged = 2000`](#f-electron2d-canvasitem-notificationtransformchanged) | Identifies a global-transform notification queued on tree entry or on enabled global invalidation. |
 | [`public const int NotificationVisibilityChanged = 31`](#f-electron2d-canvasitem-notificationvisibilitychanged) | Identifies the notification propagated after local or inherited visibility changes. |
 
 ## Constructor Descriptions
@@ -256,7 +257,7 @@ Gets or sets the color multiplier inherited by this node's descendants.
 
 Gets or sets whether local transform changes dispatch `CanvasItem.NotificationLocalTransformChanged`.
 
-**Value:** `false` by default. `CanvasItem.LocalTransformChanged` is raised regardless.
+**Value:** `false` by default. Enables both NotificationLocalTransformChanged and its typed LocalTransformChanged event while attached. Detached changes are silent. This runtime policy is not stored by PackedScene.
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
@@ -267,7 +268,7 @@ Gets or sets whether local transform changes dispatch `CanvasItem.NotificationLo
 
 Gets or sets whether global transform changes dispatch `CanvasItem.NotificationTransformChanged`.
 
-**Value:** `false` by default. `CanvasItem.TransformChanged` is raised regardless.
+**Value:** `false` by default. Enables queueing when the resolved global transform becomes invalid. Tree entry queues an initial notification regardless of this flag. Enabling while attached resolves the current global transform without queueing; disabling does not cancel an existing queued notification. This runtime policy is not stored by PackedScene. See [delivery details](#transform-notification-delivery).
 
 **System.InvalidOperationException:** An attached node is mutated off the owner thread.
 
@@ -538,7 +539,7 @@ Stretches a source region of a borrowed texture over a local rectangle during ca
 
 Returns the transform composed through the direct canvas-parent chain.
 
-**Returns:** The local transform when the parent is non-canvas or TopLevel is enabled.
+**Returns:** The local transform when the parent is non-canvas or TopLevel is enabled. Results are cached until global invalidation; querying resolves invalidation but leaves queued notifications intact. Attached off-owner queries throw InvalidOperationException. See [global invalidation](#global-invalidation-and-cached-queries).
 
 **System.ObjectDisposedException:** The item is disposed.
 
@@ -590,15 +591,15 @@ Delivery is synchronous on the caller's thread, restricted to the scene owner wh
 <a id="m-electron2d-canvasitem-notifylocaltransformchanged"></a>
 ### `protected void NotifyLocalTransformChanged()`
 
-Delivers enabled transform notifications after a derived placement model changes.
+Invalidates global transforms and delivers an enabled local-transform notification after a derived placement model commits state.
 
-**Remarks:** The local transform must be committed first. Descendant delivery stops at neutral nodes and top-level canvas items. All affected items are attempted before callback failures are aggregated.
+**Remarks:** The local transform must be committed first. Global invalidation and queueing precede local callback delivery and stop at neutral nodes and TopLevel canvas items. Local notification and its typed event run synchronously only while attached and NotifyLocalTransformChanges is enabled; equal assignments notify too. A local callback failure leaves global invalidation and pending entries intact.
 
 **System.InvalidOperationException:** The caller is not the scene owner or a capture is active.
 
 **System.ObjectDisposedException:** The item is disposed.
 
-**System.AggregateException:** A notification or event handler fails.
+**System.Exception:** A local notification callback fails after global invalidation.
 
 <a id="m-electron2d-canvasitem-ondraw"></a>
 ### `protected virtual void OnDraw()`
@@ -610,7 +611,7 @@ Records this node's retained canvas commands before its first visible frame and 
 <a id="m-electron2d-canvasitem-onnotification-system-int32"></a>
 ### `protected override void OnNotification(int what)`
 
-Preserves inherited lifecycle dispatch, projects NotificationVisibilityChanged to its typed event and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications.
+Preserves inherited lifecycle dispatch, projects visibility and local/global transform notifications to their typed events and propagates transform changes at parent boundaries. Actual canvas attachment is owned by SceneTree membership, independently of manually dispatched tree notifications.
 
 <a id="m-electron2d-canvasitem-queueredraw"></a>
 ### `public void QueueRedraw()`
@@ -654,16 +655,16 @@ Reports a possible local drawing-bounds change, with this item as sender. Derive
 <a id="e-electron2d-canvasitem-localtransformchanged"></a>
 ### `public event Action<CanvasItem>? LocalTransformChanged`
 
-Occurs after this node's local transform actually changes.
+Projects NotificationLocalTransformChanged with this item as sender.
 
-**Remarks:** The event is always enabled; numeric local-transform notification delivery is separately configurable.
+**Remarks:** The base notification handler delivers this event. Automatic delivery is synchronous, attached-only and enabled by NotifyLocalTransformChanges; explicit manual notifications deliver regardless of that policy. A throwing subscriber stops later subscribers in that invocation.
 
 <a id="e-electron2d-canvasitem-transformchanged"></a>
 ### `public event Action<CanvasItem>? TransformChanged`
 
-Occurs when this node's global transform is affected by a local or ancestor change.
+Projects NotificationTransformChanged with this item as sender.
 
-**Remarks:** Propagation stops at top-level descendants. The event is independent of numeric transform notifications.
+**Remarks:** The base notification handler delivers this event during queued, forced or manual global notification delivery. Initial tree entry also queues one notification. A throwing subscriber stops later subscribers in that invocation; a scene delivery pass continues other items and aggregates failures.
 
 <a id="e-electron2d-canvasitem-visibilitychanged"></a>
 ### `public event Action<CanvasItem>? VisibilityChanged`
@@ -692,7 +693,7 @@ Identifies a local-transform change notification when local notification deliver
 <a id="f-electron2d-canvasitem-notificationtransformchanged"></a>
 ### `public const int NotificationTransformChanged = 2000`
 
-Identifies a global-transform change notification when global notification delivery is enabled.
+Identifies a global-transform notification queued on tree entry or on enabled global invalidation.
 
 <a id="f-electron2d-canvasitem-notificationvisibilitychanged"></a>
 ### `public const int NotificationVisibilityChanged = 31`
@@ -718,7 +719,7 @@ Delivered on canvas detachment, child-first during tree exit; ordinary C# overri
 
 The parent owns its children; SceneTree owns the active root. PackedScene capture uses explicit stored descriptors and static exact-type factories. Scene-local resources belong to the instantiated root; externally supplied textures/materials are borrowed. Mutations honor scene capture, lifetime and owner-thread guards. Callback failures are reported after the documented committed state; cleanup attempts every owned stage. See [Node](Node.md) for inherited lifecycle and [the scene hierarchy component](../components/scene-hierarchy.md) for cross-layer flow.
 
-Drawing commands retain borrowed resources and are valid during NotificationDraw, synchronous Draw handlers and OnDraw. Deferred handlers execute outside the recording scope and cannot draw. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform notifications stop at neutral and TopLevel children. Failed transform/visibility delivery does not skip later direct canvas siblings.
+Drawing commands retain borrowed resources and are valid during NotificationDraw, synchronous Draw handlers and OnDraw. Deferred handlers execute outside the recording scope and cannot draw. QueueRedraw coalesces requests; resource-thread notifications only set an atomic flag, and recording runs on the owner thread. Global transform invalidation stops at neutral and TopLevel children. Failed queued transform delivery does not skip later pending items. Failed visibility delivery does not skip later direct canvas siblings.
 
 ## Verification and limits
 
@@ -782,3 +783,28 @@ Returns whether the zero-based bit 0 through 31 is set. Invalid indices throw Ar
 `public void SetVisibilityLayerBit(int layer, bool enabled)`
 
 Sets or clears the zero-based bit 0 through 31, preserving every other bit. Invalid indices throw ArgumentOutOfRangeException before mutation. The same mutation guards and retained-command behavior as VisibilityLayer apply; repeating a value has no additional effect.
+
+## Transform notification delivery
+
+### ForceUpdateTransform
+
+`public void ForceUpdateTransform()`
+
+Requires a live item in an active tree on its owner thread. If this item has a pending global notification, removes it before dispatching NotificationTransformChanged and the typed TransformChanged event. Repeated calls without a pending entry do nothing. It neither flushes descendants nor forces a redraw. It does not resolve the global transform's invalidation flag: call GetGlobalTransform to read/resolve coordinates. A callback failure propagates with its entry already consumed; explicit reentrant forcing can consume a newly queued change.
+
+Off-owner, detached or scene-capture calls throw InvalidOperationException. Disposed calls throw ObjectDisposedException. Delivery uses the scene execution barrier so callback attempts to dispose or run the tree recursively fail before state changes. Queue membership belongs to the current tree and is canceled on exit, disposal or failed activation.
+
+```csharp
+// Existing attached Entity; opt in before changing its placement.
+entity.NotifyTransformChanges = true;
+entity.Position += Vector2.One;
+entity.ForceUpdateTransform();
+```
+
+### Global invalidation and cached queries
+
+GetGlobalTransform computes and caches the direct canvas-parent composition until invalidated; neutral nodes and TopLevel end that chain. Querying resolves global invalidation without removing a queued notification. A setter invalidates the item and direct canvas descendants once; already-invalid items stop redundant traversal. Attached items with NotifyTransformChanges enabled queue once. Disabling the flag does not cancel an existing entry; re-enabling resolves the current transform so future writes can invalidate it again. Queries require the attached owner thread and reject disposed access.
+
+Local notifications are attached-only, synchronous and enabled by NotifyLocalTransformChanges. Entity transform setters notify even when assigned an equal matrix. Global invalidation is committed first, so a local callback can read the new global transform or force the already queued notification. The typed events now project the numeric notifications, replacing the former unconditional synchronous event path.
+
+[The component audit](../components/scene-hierarchy.md#transform-invalidation-and-delivery) records exact source semantics, safe phases, reentry policy and tests. Hidden, masked or processing-disabled canvas items can still receive queued notifications. No interpolation, physics backend or UI implementation is implied.

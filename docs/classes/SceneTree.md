@@ -90,8 +90,8 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public event Action<SceneTree, Node> NodeAdded`](#e-electron2d-scenetree-nodeadded) | Occurs after a node enters this tree. |
 | [`public event Action<SceneTree, Node> NodeRemoved`](#e-electron2d-scenetree-noderemoved) | Occurs after a node exits this tree. |
 | [`public event Action<SceneTree, Node> NodeRenamed`](#e-electron2d-scenetree-noderenamed) | Occurs after an active node is renamed. |
-| [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs immediately before eligible node process callbacks are captured and invoked. |
-| [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs immediately before eligible node physics-process callbacks are captured and invoked. |
+| [`public event Action<SceneTree> ProcessFrameStarted`](#e-electron2d-scenetree-processframestarted) | Occurs before the idle transform-delivery phase and eligible node process callbacks. |
+| [`public event Action<SceneTree> PhysicsFrameStarted`](#e-electron2d-scenetree-physicsframestarted) | Occurs after pending transform delivery and before eligible node physics-process callbacks. |
 | [`public event Action<SceneTree> TreeChanged`](#e-electron2d-scenetree-treechanged) | Occurs after the active hierarchy is structurally changed or an active node is renamed. |
 
 ## Constructor Descriptions
@@ -670,14 +670,14 @@ later subscribers of this event invocation from running.
 <a id="e-electron2d-scenetree-processframestarted"></a>
 ### `public event Action<SceneTree> ProcessFrameStarted`
 
-Occurs immediately before eligible node process callbacks are captured and invoked.
+Occurs before the idle transform-delivery phase and eligible node process callbacks.
 
 **Remarks:** A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.
 
 <a id="e-electron2d-scenetree-physicsframestarted"></a>
 ### `public event Action<SceneTree> PhysicsFrameStarted`
 
-Occurs immediately before eligible node physics-process callbacks are captured and invoked.
+Occurs after pending transform delivery and before eligible node physics-process callbacks.
 
 **Remarks:** A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.
 
@@ -707,7 +707,7 @@ The class is sealed, so these overrides document lifetime behavior rather than e
 
 ## Frame, timer, and deferred flow
 
-A valid inherited or wrapper frame increments its lane counter, raises the matching frame event, captures the then-current hierarchy in a reusable buffer, orders candidates by the lane's priority and captured pre-order, and revalidates membership, lifetime, pause eligibility, and public-or-internal enable state before every callback. Engine-internal node processing runs before the same node's independently enabled public callback. Failures are retained while later callbacks/phases are attempted; detachment or disposal during the internal phase skips that node's public phase.
+A valid inherited or wrapper frame increments its lane counter, delivers transforms around the matching frame event as described below, captures the then-current hierarchy in a reusable buffer, orders candidates by the lane's priority and captured pre-order, and revalidates membership, lifetime, pause eligibility, and public-or-internal enable state before every callback. Engine-internal node processing runs before the same node's independently enabled public callback. Failures are retained while later callbacks/phases are attempted; detachment or disposal during the internal phase skips that node's public phase.
 
 Reusable `Timer` nodes advance inside node processing and can select Engine's original delta. Matching `SceneTreeTimer` instances are captured afterward. A tree timer created by a node callback may therefore advance in that frame; a tree timer created by another tree timer waits for the next matching frame. Expired tree timers are removed, notify synchronously, and are disposed even when a timeout handler fails. Matching Tweens are then captured and processed in creation order; a tween created by a node or tree-timer callback can enter that frame, while one created by another tween waits. Tweens may select the original Engine delta. Deferred actions then run from one captured batch. A nested `Defer` waits for a later flush. The deletion batch is captured after actions, so deletion requested by a captured action runs in the same flush. All phase failures are flattened into one `AggregateException`.
 
@@ -771,3 +771,7 @@ tree.DebugPathsHint = true; // Attached Path nodes draw on the next canvas recor
 ```
 
 EditedSceneRoot and DebugPathsHint are independent transient tooling state, not PackedScene properties. A selected subtree is not reselected automatically after detachment/reentry. A selection may be the tree root or any attached descendant. Disposal closes diagnostics together with other tree operations and clears event subscribers. These runtime capabilities do not create editor UI, enable script tool mode, or implement accessibility/navigation/collision diagnostics. See [scene paths](../components/scene-paths.md) and [SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs).
+
+## Canvas transform phases
+
+Canvas transform notifications use dedicated owner-thread queues. Physics delivers pending entries before PhysicsFrameStarted. Idle delivers after ProcessFrameStarted and again after node callbacks. Both lanes deliver after timers, tweens and the captured deferred-action batch, before queued deletion. Each pass follows pending-list order, capturing the next entry before invoking a callback. Reentrant additions behind an existing successor can be reached in that pass; an addition from the current tail waits for another pass. Cancellation advances the saved cursor before unlinking a pending entry, so force, exit and disposal cannot strand later items. Callback failures are aggregated after the other pending entries and later frame stages are attempted. Explicit FlushDeferred remains an action/deletion flush, not a transform flush. ForceUpdateTransform selects one item inside or outside a frame under the same execution barrier.

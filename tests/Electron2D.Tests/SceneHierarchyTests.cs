@@ -96,11 +96,13 @@ internal static class SceneHierarchyTests
         using var root = new Entity();
         var first = new Entity { Name = "first" }; var second = new Entity { Name = "second" };
         root.AddChild(first); root.AddChild(second);
+        using var tree = new SceneTree(root); tree.ProcessFrame(0);
+        first.NotifyTransformChanges = second.NotifyTransformChanges = true;
         var reached = 0;
         Action<CanvasItem> fail = _ => throw new InvalidOperationException("expected");
         first.TransformChanged += fail;
         second.TransformChanged += _ => reached++;
-        Reject<AggregateException>(() => root.Position = Vector2.One);
+        root.Position = Vector2.One; Reject<AggregateException>(() => tree.ProcessFrame(0));
         Check(reached == 1 && second.GlobalPosition == Vector2.One, "Failed transform callbacks do not skip siblings.");
         first.TransformChanged -= fail;
     }

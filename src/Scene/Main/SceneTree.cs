@@ -5,6 +5,10 @@ namespace Electron2D;
 /// <summary>Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.</summary>
 /// <remarks>
 /// The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
+/// Canvas transform notifications coalesce in owner-thread queues. Idle frames deliver after the frame event,
+/// after node processing and after timers, tweens and deferred actions; physics frames deliver before the frame
+/// event and after those updates. Delivery precedes queued deletion and follows pending-list order;
+/// callback failures and cancellation do not skip other pending items.
 /// Electron2D does not create a frame-pump thread. A host can drive the loop through <see cref="Engine.AdvanceFrame"/>,
 /// call <see cref="MainLoop.Process"/> and <see cref="MainLoop.PhysicsProcess"/> directly, or use this class's wrappers.
 /// </remarks>
@@ -36,6 +40,8 @@ public sealed class SceneTree : MainLoop
     private readonly List<SceneTreeTimer> _timers = [];
     private readonly List<Tween> _tweenSnapshot = [];
     private readonly List<Tween> _tweens = [];
+    private readonly LinkedList<CanvasItem> _transformChanges = new();
+    private LinkedListNode<CanvasItem>? _nextTransformNotification;
     private ConcurrentQueue<Action> _deferred = new();
     private ConcurrentQueue<DeletionRequest> _deletions = new();
     private List<Node>? _activationReadied;
@@ -346,11 +352,11 @@ public sealed class SceneTree : MainLoop
     /// </remarks>
     public event Action<SceneTree, Node>? NodeRenamed;
 
-    /// <summary>Occurs immediately before eligible node process callbacks are captured and invoked.</summary>
+    /// <summary>Occurs before the idle transform-delivery phase and eligible node process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? ProcessFrameStarted;
 
-    /// <summary>Occurs immediately before eligible node physics-process callbacks are captured and invoked.</summary>
+    /// <summary>Occurs after pending transform delivery and before eligible node physics-process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
     public event Action<SceneTree>? PhysicsFrameStarted;
 
@@ -1093,6 +1099,7 @@ public sealed class SceneTree : MainLoop
             else
                 _processFrameCount++;
 
+            if (physics) FlushTransformNotifications(ref errors);
             try
             {
                 if (physics)
@@ -1105,6 +1112,7 @@ public sealed class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
 
+            if (!physics) FlushTransformNotifications(ref errors);
             _scheduledNodes.Clear();
             CaptureScheduledNodes(physics);
             _scheduledNodes.Sort();
@@ -1128,9 +1136,10 @@ public sealed class SceneTree : MainLoop
                 }
             }
 
+            if (!physics) FlushTransformNotifications(ref errors);
             ProcessTimers(delta, physics, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
-            FlushDeferredCore(ref errors);
+            FlushDeferredCore(ref errors, flushTransforms: true);
         }
         finally
         {
@@ -1297,7 +1306,7 @@ public sealed class SceneTree : MainLoop
         }
     }
 
-    private void FlushDeferredCore(ref List<Exception>? errors)
+    private void FlushDeferredCore(ref List<Exception>? errors, bool flushTransforms = false)
     {
         ConcurrentQueue<Action>? actions = null;
 
@@ -1321,6 +1330,8 @@ public sealed class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
         }
+
+        if (flushTransforms) FlushTransformNotifications(ref errors);
 
         ConcurrentQueue<DeletionRequest>? deletions = null;
 
@@ -1498,6 +1509,47 @@ public sealed class SceneTree : MainLoop
         _activeExecution = 1;
     }
 
+    internal void QueueTransformNotification(CanvasItem item)
+    {
+        if (item.TransformQueueEntry.List is null) _transformChanges.AddLast(item.TransformQueueEntry);
+    }
+
+    internal void DeliverTransformNotification(CanvasItem item)
+    {
+        _lifecycleExecutionDepth++;
+        try { item.DispatchNotification(CanvasItem.NotificationTransformChanged); }
+        finally { _lifecycleExecutionDepth--; }
+    }
+
+    internal void CancelTransformNotification(CanvasItem item)
+    {
+        var entry = item.TransformQueueEntry;
+        if (ReferenceEquals(_nextTransformNotification, entry)) _nextTransformNotification = entry.Next;
+        entry.List?.Remove(entry);
+    }
+
+    private void FlushTransformNotifications(ref List<Exception>? errors)
+    {
+        var entry = _transformChanges.First;
+        try
+        {
+            while (entry is not null)
+            {
+                // Capture the successor before callbacks. Cancellation advances this cursor before unlinking.
+                _nextTransformNotification = entry.Next;
+                _transformChanges.Remove(entry);
+                var item = entry.Value;
+                if (!item.IsDisposed && ReferenceEquals(item.Tree, this))
+                {
+                    try { DeliverTransformNotification(item); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                }
+                entry = _nextTransformNotification;
+            }
+        }
+        finally { _nextTransformNotification = null; }
+    }
+
     internal void RenderCanvas(RenderingServer renderer)
     {
         ThrowIfDisposed(); EnsureOwnerThread(); EnsureAcceptingWork(); BeginExecution();
@@ -1524,6 +1576,7 @@ public sealed class SceneTree : MainLoop
         _deferred = new ConcurrentQueue<Action>();
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();
+        _transformChanges.Clear(); _nextTransformNotification = null;
     }
 
     private void ClearEventSubscribers()

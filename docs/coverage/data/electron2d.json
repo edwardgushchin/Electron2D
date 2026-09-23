@@ -14655,6 +14655,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.ForceUpdateTransform()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "ForceUpdateTransform",
+    "signature": "public System.Void ForceUpdateTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.GetCanvasLayerNode()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",

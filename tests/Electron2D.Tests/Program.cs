@@ -119,6 +119,7 @@ CanvasCoordinateTests.Run();
 CameraTests.Run();
 CanvasLayerTests.Run();
 CanvasMaskTests.Run();
+CanvasTransformNotificationTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
 VerifyNotificationsAndProperties();
@@ -5973,18 +5974,20 @@ static void VerifyNodeHierarchyAndTransforms()
     Require(VectorNearlyEqual(first.Scale, new Vector2(2f, 3f)) && NearlyEqual(first.Rotation, 0.4f) && NearlyEqual(first.Skew, 0.2f),
         "Transform decomposition must preserve rotation, scale, and skew.");
 
+    first.ForceUpdateTransform(); mover.ForceUpdateTransform();
     first.NotifyLocalTransformChanges = true;
     first.NotifyTransformChanges = true;
     mover.NotifyTransformChanges = true;
     first.Notifications.Clear();
     mover.Notifications.Clear();
     first.Position += Vector2.One;
+    first.ForceUpdateTransform(); mover.ForceUpdateTransform();
     Require(first.Notifications.Contains(Entity.NotificationLocalTransformChanged) &&
             first.Notifications.Contains(Entity.NotificationTransformChanged) &&
             mover.Notifications.Contains(Entity.NotificationTransformChanged),
         "A local transform change must notify the node and affected descendants.");
 
-    mover.TopLevel = true;
+    mover.TopLevel = true; mover.ForceUpdateTransform();
     mover.Notifications.Clear();
     first.Position += Vector2.One;
     Require(!mover.Notifications.Contains(Entity.NotificationTransformChanged),

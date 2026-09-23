@@ -85,7 +85,7 @@ internal static partial class RenderingRuntimeTests
                             Check(inputs == 1, "Layer native input delivered."); Pixel(pixels, 16, 9, Colors.Red); Pixel(pixels, 36, 19, Colors.Black);
                             camera.Enabled = true; layer.FollowViewportEnabled = true; break;
                         case 2:
-                            Pixel(pixels, 36, 19, Colors.Red); camera.Position = new(40, 20); layer.FollowViewportScale = 2;
+                            Pixel(pixels, 36, 19, Colors.Red); camera.Position = new(40, 20); camera.ForceUpdateTransform(); layer.FollowViewportScale = 2;
                             Check(red.GetGlobalTransformWithCanvas().Origin.IsEqualApprox(new(32, 32)), "Logical follow matrix retains its separate query contract."); break;
                         case 3: Pixel(pixels, 2, 18, Colors.Red); layer.FollowViewportScale = .5f; break;
                         case 4: Pixel(pixels, 38, 35, Colors.Red); layer.FollowViewportScale = 0; break;

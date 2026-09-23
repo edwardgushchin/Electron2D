@@ -915,26 +915,26 @@
     {
       "electron2d": "property:Electron2D.CanvasItem.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:is_local_transform_notification_enabled()",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.NotifyLocalTransformChanges()",
       "godot": "CanvasItem::method:set_notify_local_transform(bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.NotifyTransformChanges()",
       "godot": "CanvasItem::method:is_transform_notification_enabled()",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.NotifyTransformChanges()",
       "godot": "CanvasItem::method:set_notify_transform(bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     },
     {
       "electron2d": "property:Electron2D.Node.PhysicsProcessEnabled()",
@@ -1305,8 +1305,8 @@
     {
       "electron2d": "method:Electron2D.CanvasItem.GetGlobalTransform()",
       "godot": "CanvasItem::method:get_global_transform()",
-      "state": "Partial",
-      "reason": "Composes only direct canvas parents; neutral parents and TopLevel end the chain. SceneHierarchyTests and native mixed-tree pixels verify both canvas branches."
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     },
     {
       "electron2d": "method:Electron2D.Entity.Reparent(Electron2D.Node,System.Boolean)",
@@ -1733,6 +1733,12 @@
       "godot": "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
       "state": "Implemented",
       "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.ForceUpdateTransform()",
+      "godot": "CanvasItem::method:force_update_transform()",
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified."
     }
   ],
   "extras": [
@@ -1858,12 +1864,12 @@
     },
     {
       "electron2d": "event:Electron2D.CanvasItem.LocalTransformChanged()",
-      "reason": "Typed local-transform notification; CanvasItem uses notification IDs.",
+      "reason": "Typed projection of NotificationLocalTransformChanged through the base handler. Automatic delivery is attached-only, synchronous and enabled by NotifyLocalTransformChanges; manual notifications also deliver. CanvasTransformNotificationTests verifies timing, flags, identity and errors.",
       "adr": "docs/decisions/scene.md#adr-0008"
     },
     {
       "electron2d": "event:Electron2D.CanvasItem.TransformChanged()",
-      "reason": "Typed global-transform notification; CanvasItem uses notification IDs.",
+      "reason": "Typed projection of NotificationTransformChanged through the base handler. Delivered by the scene queue, ForceUpdateTransform or manual notification, including initial entry. CanvasTransformNotificationTests verifies coalescing, failure continuation and reentry; Pending-list reentrant order is preserved; cancellation and exceptions do not strand later items under ADR 0011.",
       "adr": "docs/decisions/scene.md#adr-0008"
     },
     {
@@ -2404,7 +2410,7 @@
     },
     {
       "electron2d": "method:Electron2D.CanvasItem.NotifyLocalTransformChanged()",
-      "reason": "Protected typed projection of local/global transform notifications for a derived canvas placement model; supports the same transform-change capability as the canvas base.",
+      "reason": "Protected typed projection for a custom canvas placement model: invalidates global composition/descendants and queues before attached opted-in local notification. Equal assignments notify; CanvasTransformNotificationTests verifies custom cached placement and descendant invalidation.",
       "adr": "ADR 0008; ADR 0005; ADR 0023"
     },
     {
@@ -3166,6 +3172,18 @@
         "Viewport::method:get_canvas_cull_mask_bit(int:)",
         "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
         "Viewport::property:canvas_cull_mask"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Pinned canvas_item.cpp/.h, node_2d.cpp and scene_tree.cpp audit: cached global composition, valid-to-invalid queueing, initial entry regardless of policy, attached-only synchronous local delivery, enabling resolves state, disabling retains pending entry, force removes only its receiver before notifying and does not resolve invalidation. Typed getter/setter properties and events preserve notification roles under ADR 0008. CanvasTransformNotificationTests covers defaults, equal assignments, hierarchy/cache, force, cancellation/rollback, failures/reentry, phase order, owner/capture/disposal and zero warm allocation. Camera/Path and native Wayland GPU/compatibility, HLSL/GLSL and dummy checks exercise consumers. Pending-list order matches the native loop: appends behind a pending successor can run in the current pass; tail additions wait. Cancellation advances the saved cursor and exceptions continue delivery under ADR 0011. See docs/components/scene-hierarchy.md#transform-invalidation-and-delivery. Physics interpolation remains a separate domain dependency; other native platforms unverified.",
+      "godot": [
+        "CanvasItem::method:is_local_transform_notification_enabled()",
+        "CanvasItem::method:set_notify_local_transform(bool:)",
+        "CanvasItem::method:is_transform_notification_enabled()",
+        "CanvasItem::method:set_notify_transform(bool:)",
+        "CanvasItem::method:get_global_transform()",
+        "CanvasItem::method:force_update_transform()"
       ]
     }
   ]

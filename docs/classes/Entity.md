@@ -90,7 +90,7 @@ Gets or sets translation in hierarchy-global coordinates.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 <a id="p-electron2d-entity-globalrotation"></a>
 ### `public float GlobalRotation { get; set; }`
@@ -105,7 +105,7 @@ Gets or sets hierarchy-global rotation in radians.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="p-electron2d-entity-globalrotationdegrees"></a>
 ### `public float GlobalRotationDegrees { get; set; }`
@@ -120,7 +120,7 @@ Gets or sets hierarchy-global rotation in degrees.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="p-electron2d-entity-globalscale"></a>
 ### `public Vector2 GlobalScale { get; set; }`
@@ -137,7 +137,7 @@ Gets or sets hierarchy-global scale.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the scale changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the scale changes.
 
 <a id="p-electron2d-entity-globalskew"></a>
 ### `public float GlobalSkew { get; set; }`
@@ -152,7 +152,7 @@ Gets or sets the hierarchy-global skew angle in radians.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the skew changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the skew changes.
 
 <a id="p-electron2d-entity-globaltransform"></a>
 ### `public Transform GlobalTransform { get; set; }`
@@ -167,7 +167,7 @@ Gets or sets the affine transform in hierarchy-global coordinates.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the transform changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the transform changes.
 
 <a id="p-electron2d-entity-position"></a>
 ### `public Vector2 Position { get; set; }`
@@ -182,7 +182,7 @@ Gets or sets local translation in pixels or other host-defined 2D units.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 <a id="p-electron2d-entity-rotation"></a>
 ### `public float Rotation { get; set; }`
@@ -197,7 +197,7 @@ Gets or sets local rotation in radians.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="p-electron2d-entity-rotationdegrees"></a>
 ### `public float RotationDegrees { get; set; }`
@@ -212,7 +212,7 @@ Gets or sets local rotation in degrees.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="p-electron2d-entity-scale"></a>
 ### `public Vector2 Scale { get; set; }`
@@ -229,7 +229,7 @@ Gets or sets local scale.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the scale changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the scale changes.
 
 <a id="p-electron2d-entity-skew"></a>
 ### `public float Skew { get; set; }`
@@ -244,7 +244,7 @@ Gets or sets the local skew angle in radians.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the skew changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the skew changes.
 
 <a id="p-electron2d-entity-transform"></a>
 ### `public Transform Transform { get; set; }`
@@ -259,7 +259,7 @@ Gets or sets the affine transform relative to the parent.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the transform changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the transform changes.
 
 ## Method Descriptions
 
@@ -276,7 +276,7 @@ Component-multiplies the local scale by a ratio.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the scale changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the scale changes.
 
 <a id="m-electron2d-entity-createsceneinstancefactory"></a>
 ### `protected override Func<Node> CreateSceneInstanceFactory()`
@@ -338,7 +338,7 @@ Moves this node by a hierarchy-global offset.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 <a id="m-electron2d-entity-lookat-electron2d-vector2"></a>
 ### `public void LookAt(Vector2 globalPoint)`
@@ -355,7 +355,7 @@ Rotates this node so its positive local X direction points at a global point.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="m-electron2d-entity-movelocalx-system-single-system-boolean"></a>
 ### `public void MoveLocalX(float delta, bool scaled = false)`
@@ -374,7 +374,7 @@ Moves this node along its local X basis axis.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 <a id="m-electron2d-entity-movelocaly-system-single-system-boolean"></a>
 ### `public void MoveLocalY(float delta, bool scaled = false)`
@@ -393,7 +393,7 @@ Moves this node along its local Y basis axis.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 <a id="m-electron2d-entity-reparent-electron2d-node-system-boolean"></a>
 ### `public override void Reparent(Node newParent, bool keepGlobalTransform = true)`
@@ -413,7 +413,7 @@ Adds an angle to the local rotation.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the rotation changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the rotation changes.
 
 <a id="m-electron2d-entity-toglobal-electron2d-vector2"></a>
 ### `public Vector2 ToGlobal(Vector2 localPoint)`
@@ -458,7 +458,7 @@ Adds an offset to this node's position in its parent coordinate space.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-**System.Exception:** A transform notification or event handler throws after the position changes.
+**System.Exception:** An enabled local-transform notification or event handler throws after the position changes.
 
 ## Ownership, errors and dependencies
 
@@ -478,3 +478,5 @@ The hierarchy is implemented; complete reference API parity is not claimed. Miss
 - [0004: Product scope and API correspondence](../decisions/product.md#adr-0004)
 - [0023: Typed packed scenes](../decisions/scene.md#adr-0023)
 - [0028: Rendering](../decisions/rendering.md#adr-0028)
+
+Transform assignments commit immediately, including equal values. Enabled local notifications run synchronously while attached; global notifications coalesce until scene delivery or inherited ForceUpdateTransform. GlobalTransform queries resolve the cached mathematical composition without consuming pending notifications. See [CanvasItem delivery](CanvasItem.md#transform-notification-delivery).

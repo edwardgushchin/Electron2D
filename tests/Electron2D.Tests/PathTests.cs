@@ -82,6 +82,7 @@ internal static class PathTests
     {
         using var curve = Line(new(30, 0)); using var root = new Node(); var path = new ScenePath { Curve = curve }; root.AddChild(path);
         var first = new PathFollow { Name = "first", Progress = 15 }; var second = new PathFollow { Name = "second", Progress = 15 }; path.AddChild(first); path.AddChild(second); using var tree = new SceneTree(root);
+        first.NotifyLocalTransformChanges = second.NotifyLocalTransformChanges = true;
         var owner = Environment.CurrentManagedThreadId; var events = 0; second.LocalTransformChanged += _ => { Check(Environment.CurrentManagedThreadId == owner, "Scene events stay on the owner thread."); events++; };
         Task.Run(() => curve.SetPointPosition(1, new(30, 15))).GetAwaiter().GetResult(); Check(events == 0, "Worker curve edits defer transforms.");
         tree.FlushDeferred(); Check(events > 0 && second.Position.Y > 0, "Deferred worker update reaches followers.");
