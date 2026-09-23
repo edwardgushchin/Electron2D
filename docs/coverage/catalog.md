@@ -180,7 +180,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |
 | [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Blocked | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |
-| [Color](classes/Color.md) | — | Partial | 206 |
+| [Color](classes/Color.md) | — | Implemented | 206 |
 | [ColorPalette](classes/ColorPalette.md) | Resource | Blocked | 1 |
 | [ColorPicker](classes/ColorPicker.md) | VBoxContainer | Blocked | 62 |
 | [ColorPickerButton](classes/ColorPickerButton.md) | Button | Blocked | 10 |

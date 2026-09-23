@@ -1301,8 +1301,10 @@ static void VerifyColors()
 
     Require(ColorNearlyEqual(rgba + rgba, new Color(0.2f, 0.4f, 0.6f, 0.8f)) &&
             rgba - rgba == default && +rgba == rgba && ColorNearlyEqual(-rgba, new Color(0.9f, 0.8f, 0.7f, 0.6f)) &&
-            rgba * 2f == 2f * rgba && ColorNearlyEqual(rgba * rgba, new Color(0.01f, 0.04f, 0.09f, 0.16f)) &&
-            ColorNearlyEqual((rgba * 2f) / 2f, rgba) && ColorNearlyEqual(rgba / rgba, Colors.White),
+            rgba * 2f == 2f * rgba && rgba * 2 == rgba * 2f &&
+            ColorNearlyEqual(rgba * rgba, new Color(0.01f, 0.04f, 0.09f, 0.16f)) &&
+            ColorNearlyEqual((rgba * 2f) / 2f, rgba) && rgba / 2 == rgba / 2f &&
+            ColorNearlyEqual(rgba / rgba, Colors.White),
         "Arithmetic operators must act componentwise, including alpha.");
     var divisionByZero = Colors.White / 0f;
     Require(float.IsPositiveInfinity(divisionByZero.R) && float.IsPositiveInfinity(divisionByZero.A),

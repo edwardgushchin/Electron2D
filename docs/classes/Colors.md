@@ -1221,7 +1221,7 @@ The class depends on `Color`, `System.Collections.Frozen`, and ordinal/invariant
 
 ## Verification and known limitations
 
-The executable harness reflects the public static properties and requires exactly 146 `Color` properties, verifies that every property round-trips through named parsing, checks aliases and historically distinct web values, and performs parallel lookup. This proves catalog/API consistency, not visual appearance on a future renderer or color-managed display.
+The executable harness reflects the public static properties and requires exactly 146 `Color` properties, verifies that every property round-trips through named parsing, checks aliases and historically distinct web values, and performs parallel lookup. The coverage audit also compared all 146 packed property values with the pinned XML constants. This verifies the value catalog, not appearance on a color-managed display.
 
 ## Decisions
 

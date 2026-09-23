@@ -857,6 +857,7 @@ Named parsing is case-insensitive and removes spaces, hyphens, underscores, apos
 ## Numeric invariants and error behavior
 
 - Ordinary float construction and arithmetic preserve out-of-range, infinity, and NaN values.
+- `Color8` accepts byte channels, matching the accepted typed C# binding; the reference language's integer-channel overload also accepts values outside `0..255`. Call the float constructor for those colors. Integer scalar multiplication and division compile through the existing `float` operators.
 - `R8/G8/B8/A8` deliberately retain the C# integer-scale behavior instead of clamping to byte range; NaN maps to zero and overflow saturates at an `int` endpoint for cross-platform determinism.
 - HTML and packed integer output use Electron2D's portable quantization contract: clamp finite values to `0..1`, map NaN to zero, map infinities to an endpoint, then midpoint-to-even rounding.
 - `Clamp` follows `Math.Clamp`; if any minimum exceeds its corresponding maximum, the operation throws before returning a result.
@@ -879,9 +880,9 @@ There is no dependency on Scene, rendering, SDL, input, audio, physics, resource
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies layout/defaults, constructors, every component view and index failure, HSV and independent OKHSL primary anchors/interior round trips/saturated-boundary fixture, luminance, blend, clamping failures, unbounded adjustment/interpolation, transfer functions, exhaustive byte round trips, packing order and edge quantization, RGBE9995, all HTML forms and failures, normalized named lookup, all 146 properties, concurrent lookup, every operator family, NaN/infinity behavior, hashing, invariant formatting, strict `ConfigFile` serialization, `PackedScene` storage, and zero warmed numeric allocation.
+The pinned reference audit covers all 206 members and the type row. All 146 named values were compared with the pinned XML; three previously unmapped signatures are available through the explicit-alpha constructor and C# integer-to-float scalar conversion. `tests/Electron2D.Tests/Program.cs` verifies layout/defaults, constructors, every component view and index failure, HSV and independent OKHSL primary anchors/interior round trips/saturated-boundary fixture, luminance, blend, clamping failures, unbounded adjustment/interpolation, transfer functions, exhaustive byte round trips, packing order and edge quantization, RGBE9995, all HTML forms and failures, normalized named lookup, all 146 properties, concurrent lookup, integer scalar calls and every operator family, NaN/infinity behavior, hashing, invariant formatting, strict `ConfigFile` serialization, `PackedScene` storage, and zero warmed numeric allocation.
 
-Execution is currently verified on Linux/.NET 8. Native backend conversion and rendering output cannot be verified until those domains exist. The API intentionally follows the current typed C# surface; language-specific boolean evaluation and native-only named-color-index helpers are permanently excluded, while image/renderer format interactions remain dependency-blocked rather than stubbed.
+Execution of the color-value contract is verified on Linux/.NET 8. Rendering tests verify canvas and material pixels separately; this audit does not establish native color ABI or other-platform behavior. The API follows the accepted typed C# surface; language-specific boolean evaluation and native-only named-color-index helpers are permanently excluded, while remaining image/renderer format interactions retain their own coverage rows.
 
 ## Decisions
 

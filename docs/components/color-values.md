@@ -44,7 +44,7 @@ The API preserves uppercase acronyms under [ADR 0045](../decisions/product.md#ad
 
 ## Current implementation status
 
-Implemented and verified. The delivered public surface contains the complete typed C# color contract: 14 component/property members, all constructors and conversions, arithmetic/equality/relational operators, 146 standard named properties, strict parsing/error behavior, OKHSL, and integration with the already implemented typed configuration and packed-scene storage layers.
+Implemented and verified. The pinned reference audit covers all 206 Color members and the type row, including 146 named values checked against XML. The delivered public surface contains the accepted typed C# color contract: 14 component/property members, all constructors and conversions, arithmetic/equality/relational operators, 146 standard named properties, strict parsing/error behavior, OKHSL, and integration with the already implemented typed configuration and packed-scene storage layers. Explicit alpha construction and integer scalar calls are available through existing C# signatures; `Color8` uses byte channels under ADR 0024.
 
 ## Exclusions and deferred integration
 
