@@ -15,6 +15,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimatedTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "AnimatedTexture",
+    "signature": "public sealed class Electron2D.AnimatedTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AtlasTexture",
     "kind": "type",
     "declaringType": "Electron2D.AtlasTexture",
@@ -2384,6 +2399,19 @@
     "value": null
   },
   {
+    "id": "constant:Electron2D.AnimatedTexture.MaxFrames()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "MaxFrames",
+    "signature": "public const System.Int32 MaxFrames = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "256"
+  },
+  {
     "id": "constant:Electron2D.CanvasItem.MaximumZIndex()",
     "kind": "constant",
     "declaringType": "Electron2D.CanvasItem",
@@ -3377,6 +3405,19 @@
     "declaringType": "Electron2D.AnimatedSprite",
     "name": ".ctor",
     "signature": "public AnimatedSprite()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AnimatedTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": ".ctor",
+    "signature": "public AnimatedTexture()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14347,6 +14388,239 @@
       }
     ],
     "returnType": "Electron2D.PropertyDescriptor",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetFrameDuration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetFrameDuration",
+    "signature": "public System.Single GetFrameDuration(System.Int32 frame)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetFrameTexture(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetFrameTexture",
+    "signature": "public Electron2D.Texture GetFrameTexture(System.Int32 frame)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.IsPixelOpaque(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "IsPixelOpaque",
+    "signature": "public override System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.SetFrameDuration(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "SetFrameDuration",
+    "signature": "public System.Void SetFrameDuration(System.Int32 frame, System.Single duration)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimatedTexture.SetFrameTexture(System.Int32,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "SetFrameTexture",
+    "signature": "public System.Void SetFrameTexture(System.Int32 frame, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -45216,6 +45490,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.SpriteFrames",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.CurrentFrame()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "CurrentFrame",
+    "signature": "public System.Int32 CurrentFrame { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.Frames()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "Frames",
+    "signature": "public System.Int32 Frames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.HasMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "HasMipmaps",
+    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.MipmapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "MipmapCount",
+    "signature": "public System.Int32 MipmapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.OneShot()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "OneShot",
+    "signature": "public System.Boolean OneShot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.Pause()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "Pause",
+    "signature": "public System.Boolean Pause { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "PixelFormat",
+    "signature": "public Electron2D.Image.Format PixelFormat { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimatedTexture.SpeedScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimatedTexture",
+    "name": "SpeedScale",
+    "signature": "public System.Single SpeedScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

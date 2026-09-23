@@ -176,6 +176,15 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATED_TEXTURE") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyAnimatedTexture(backend);
+                }
+                VerifyAnimatedTextureFailure();
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_HIERARCHY") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -220,8 +229,10 @@ internal static partial class RenderingRuntimeTests
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
                 VerifyAnimatedSprite(backend);
+                VerifyAnimatedTexture(backend);
                 VerifyScenePaths(backend); VerifyPathDiagnostics(backend);
                 VerifyAnimatedSpriteFailure();
+                VerifyAnimatedTextureFailure();
                 VerifyAtlasFrame(backend);
                 VerifyCanvasTextureFailures();
                 VerifyCanvasHDR(backend);

@@ -87,7 +87,7 @@ Validates all channels before changing state. Nonfinite values throw ArgumentExc
 
 ### FramePreDraw
 
-Runs synchronously within the scene execution barrier before capturing visible nodes and delivering pending NotificationDraw, Draw and OnDraw recording stages. A failed stage aborts recording and clears its partial commands before propagating. A subscriber failure aborts the frame and propagates through Engine.Run cleanup. Frame and native-pump re-entry are rejected.
+Runs synchronously within the scene execution barrier after [AnimatedTexture](AnimatedTexture.md) resources advance and emit frame-change notifications, and before capturing visible nodes and delivering pending NotificationDraw, Draw and OnDraw recording stages. A failed stage aborts recording and clears its partial commands before propagating. A subscriber failure aborts the frame and propagates through Engine.Run cleanup. Frame and native-pump re-entry are rejected.
 
 ### FramePostDraw
 

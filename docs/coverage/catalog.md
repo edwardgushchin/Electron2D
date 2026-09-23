@@ -20,7 +20,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimatableBody3D](classes/AnimatableBody3D.md) | StaticBody3D | Excluded | 1 |
 | [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Implemented | 22 |
 | [AnimatedSprite3D](classes/AnimatedSprite3D.md) | SpriteBase3D | Excluded | 18 |
-| [AnimatedTexture](classes/AnimatedTexture.md) | Texture2D | Unimplemented | 11 |
+| [AnimatedTexture](classes/AnimatedTexture.md) | Texture2D | Implemented | 11 |
 | [Animation](classes/Animation.md) | Resource | Blocked | 114 |
 | [AnimationLibrary](classes/AnimationLibrary.md) | Resource | Blocked | 11 |
 | [AnimationMixer](classes/AnimationMixer.md) | Node | Blocked | 49 |

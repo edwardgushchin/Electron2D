@@ -1270,28 +1270,49 @@
       "electron2d": "property:Electron2D.ProjectSettings.RenderingTimeRolloverSeconds()",
       "reason": "Audited finite positive typed setting, reference key and 3600-second default; scaled render-clock wrapping and live base/feature changes drive retained intervals and float32 GPU fragment TIME. CanvasTimingTests/CanvasTimingRenderingTests and ShaderTimeRenderingTests verify pause/TimeScale, reload, shared/independent materials, actual HLSL/GLSL pixels, guards, cleanup and zero warm allocation. Reserved TIME is validated for source and external SPIR-V, excluded from material APIs and uploaded at reflected offsets. Current native gate: Linux Wayland/Vulkan; compatibility rejects shader materials, other target backends remain unverified. See docs/components/shader-materials.md#render-time.",
       "state": "Implemented"
+    },
+    {
+      "godot": "AnimatedTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "Inherited ResourceLocalToScene is the stored scene-local switch. PackedScene duplicates the animated texture and its force-local frame graph; AnimatedTextureTests verifies the local scene association."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
       "reason": "Five blend modes and the live BlendMode resource are executable on Linux Wayland GPU and compatibility hardware renderers. Software supports Mix and rejects the other modes. Light modes require the first 2D light and occlusion slice; particle animation requires 2D particle simulation and renderer integration (ADR 0028).",
-      "godot": ["class:CanvasItemMaterial"]
+      "godot": [
+        "class:CanvasItemMaterial"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The five blend identities and live property are verified by resource-copy and native pixel checks on GPU and compatibility hardware. SDL software explicitly rejects modes it cannot execute correctly.",
-      "godot": ["CanvasItemMaterial::enum:BlendMode", "CanvasItemMaterial::property:blend_mode"]
+      "godot": [
+        "CanvasItemMaterial::enum:BlendMode",
+        "CanvasItemMaterial::property:blend_mode"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "Trigger: first 2D light and occlusion renderer slice; integrate LightMode with actual light-pass selection and verify all values on both supported hardware backends (ADR 0028).",
-      "godot": ["CanvasItemMaterial::enum:LightMode", "CanvasItemMaterial::property:light_mode", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED"]
+      "godot": [
+        "CanvasItemMaterial::enum:LightMode",
+        "CanvasItemMaterial::property:light_mode",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "Trigger: first 2D particle simulation, material and renderer slice; wire frame counts, loop and animation enablement to particle sprite sampling (ADR 0028).",
-      "godot": ["CanvasItemMaterial::property:particles_anim_h_frames", "CanvasItemMaterial::property:particles_anim_v_frames", "CanvasItemMaterial::property:particles_anim_loop", "CanvasItemMaterial::property:particles_animation"]
+      "godot": [
+        "CanvasItemMaterial::property:particles_anim_h_frames",
+        "CanvasItemMaterial::property:particles_anim_v_frames",
+        "CanvasItemMaterial::property:particles_anim_loop",
+        "CanvasItemMaterial::property:particles_animation"
+      ]
     },
     {
       "state": "Partial",
@@ -1993,6 +2014,29 @@
       "godot": [
         "ProjectSettings::property:rendering/limits/time/time_rollover_secs"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The 256-slot texture resource has timed forward/reverse playback, one-shot and pause, borrowed texture access, typed bounds/finite validation, monotonic renderer scheduling, scene-local graph copying and current-frame pixels. AnimatedTextureTests covers state/edge/ownership paths; AnimatedTextureRenderingTests covers native Wayland GPU/compatibility and dummy timed pixels. The pinned source uses a strict > transition and caps catch-up at frame count; this implementation uses an exact boundary and skips complete cycles for stable elapsed-time semantics. Mixed-size active frames crop to the smallest dimensions, including source changes. Shared Texture/Resource gaps remain on their declaring pages.",
+      "godot": [
+        "AnimatedTexture::method:get_frame_duration(int:)",
+        "AnimatedTexture::method:get_frame_texture(int:)",
+        "AnimatedTexture::method:set_frame_duration(int:,float:)",
+        "AnimatedTexture::property:current_frame",
+        "AnimatedTexture::property:frames",
+        "AnimatedTexture::property:one_shot",
+        "AnimatedTexture::property:pause",
+        "AnimatedTexture::property:resource_local_to_scene",
+        "AnimatedTexture::property:speed_scale"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "All declared frame APIs and inherited texture behavior execute. Mixed-size active frames crop to the smallest width and height from the top left; current-frame CPU images, opacity, mipmap metadata and native Wayland GPU/compatibility plus dummy pixels are verified. Borrowed source resizing invalidates the crop and metadata. AnimatedTextureTests and AnimatedTextureRenderingTests also cover timed playback, scene graph copies, callback reentry/failure and cleanup. Monotonic timing and typed validation follow ADR 0013; shared Texture/Resource gaps remain on their base pages.",
+      "godot": [
+        "class:AnimatedTexture",
+        "AnimatedTexture::method:set_frame_texture(int:,Texture2D:)"
+      ]
     }
   ],
   "extras": [
@@ -2385,6 +2429,58 @@
       "electron2d": "method:Electron2D.CanvasLayer.Dispose(System.Boolean)",
       "reason": "Existing deterministic Node cleanup releases children and clears borrowed viewport references and subscriptions.",
       "adr": "ADRs 0003/0004/0005/0008/0023"
+    },
+    {
+      "electron2d": "constructor:Electron2D.AnimatedTexture..ctor()",
+      "reason": "C# construction projects the reference resource creation and default one-frame state; AnimatedTextureTests verifies defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# protected override projects inherited Resource duplication, typed property metadata or deterministic disposal for this concrete texture; AnimatedTextureTests verifies graph copies and borrowed-source cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.CreateDuplicateInstance()",
+      "reason": "C# protected override projects inherited Resource duplication, typed property metadata or deterministic disposal for this concrete texture; AnimatedTextureTests verifies graph copies and borrowed-source cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.Dispose(System.Boolean)",
+      "reason": "C# protected override projects inherited Resource duplication, typed property metadata or deterministic disposal for this concrete texture; AnimatedTextureTests verifies graph copies and borrowed-source cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.GetHeight()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.GetImage()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.GetPropertyDescriptors()",
+      "reason": "C# protected override projects inherited Resource duplication, typed property metadata or deterministic disposal for this concrete texture; AnimatedTextureTests verifies graph copies and borrowed-source cleanup."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.GetWidth()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatedTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimatedTexture.HasAlpha()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimatedTexture.HasMipmaps()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimatedTexture.MipmapCount()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
+    },
+    {
+      "electron2d": "property:Electron2D.AnimatedTexture.PixelFormat()",
+      "reason": "Concrete override projects inherited Texture2D/Texture current-frame dimensions, image/opacity queries or image format/mipmap metadata; AnimatedTextureTests verifies current/empty-frame queries. Mixed-size frame crop and source-resize invalidation are verified by managed and native tests."
     }
   ]
 }

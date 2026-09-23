@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -23,6 +24,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
     private readonly List<YSortEntry> _ySort = [];
+    private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
     private ulong _canvasID;
     private bool _renderLoopEnabled = true;
@@ -83,7 +85,8 @@ public sealed class RenderingServer : ElectronObject
     }
 
     /// <summary>Occurs before the scene's canvas commands are prepared for a frame.</summary>
-    /// <remarks>Runs synchronously on the owner thread within the scene execution barrier. A failing subscriber
+    /// <remarks>Runs after animated textures advance and emit frame-change notifications, synchronously on the
+    /// owner thread within the scene execution barrier. A failing subscriber
     /// aborts this frame and Engine.Run cleans up before propagating the error.</remarks>
     public event Action? FramePreDraw;
 
@@ -128,6 +131,7 @@ public sealed class RenderingServer : ElectronObject
         _rendering = true;
         try
         {
+            AnimatedTexture.AdvanceAll(this, Stopwatch.GetTimestamp(), _animatedChanges);
             FramePreDraw?.Invoke();
             if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
                 throw new InvalidOperationException("The render clock step is invalid.");

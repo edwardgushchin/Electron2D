@@ -59,6 +59,10 @@ Texture source changes invalidate without forwarding Changed. Texture setters fo
 
 Under ADR 0034, width-one ramps sample offset zero instead of the pinned 0/0 calculation. Gradient interpolation weight and fill geometry widen finite coordinate arithmetic to avoid intermediate overflow (for example, a black/white transition from -float.MaxValue to +float.MaxValue must yield gray at zero). The near-zero Linear fill cutoff (squared span below 1e-20) remains intact. Derived color overflow/overshoot is retained; explicit nonfinite inputs use typed exceptions. Valid dimensions can still exceed managed buffer or memory limits; failed baking retains prior pixels. GUI inspector-only hiding of color space in Constant mode awaits the first editor slice. [Gradient component](../components/gradients.md) records executable semantics and native verification limits.
 
+### Concrete timed texture resource
+
+`AnimatedTexture` is a `Texture` resource, not a scene node. It borrows up to 256 frame textures and advances before renderer `FramePreDraw` from unscaled monotonic time, independent of scene processing and the scaled canvas shader clock. The first submitted frame establishes its clock origin. A weak registry does not extend resource lifetime; changed-frame notifications run outside that registry's lock. The smallest active width and height define a top-left crop for larger frames, including copied image queries and native pixel snapshots; source changes invalidate that crop. No public renderer ID or second scheduler is introduced. Resource duplication and scene-local instantiation use the existing typed graph hooks. The pinned source's strict greater-than duration boundary and frame-count catch-up cap are replaced by an exact boundary and complete-cycle skip so elapsed-time playback is deterministic. [AnimatedTexture coverage](../coverage/classes/AnimatedTexture.md) records the executable contract.
+
 ### Consequences
 
 - Derived resource authors must write small explicit copy hooks, but adding a field cannot silently produce an incomplete duplicate.

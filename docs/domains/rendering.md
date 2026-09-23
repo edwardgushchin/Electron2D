@@ -12,12 +12,14 @@ Rendering turns retained scene commands and typed resources into frames for the 
 
 | Component | Public types and integration | State |
 | --- | --- | --- |
-| [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), CanvasItem drawing, [Sprite](../classes/Sprite.md) and [AnimatedSprite](../classes/AnimatedSprite.md) nodes and Texture drawing | Executable rectangle/line/stroke/curve/polygon/primitive/texture path; full API incomplete |
+| [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), CanvasItem drawing, [Sprite](../classes/Sprite.md) and [AnimatedSprite](../classes/AnimatedSprite.md) nodes, [AnimatedTexture](../classes/AnimatedTexture.md) and Texture drawing | Executable rectangle/line/stroke/curve/polygon/primitive/texture path; full API incomplete |
 | [Shader materials](../components/shader-materials.md) | Shader, ShaderMaterial, CanvasItemMaterial, Material, Texture, ImageTexture and AtlasTexture, owned by Resources | Executable HLSL/GLSL import, typed uniforms and sampled textures; five fixed blend modes on Wayland GPU/compatibility hardware; broader language profile incomplete |
 
 Games use Sprite for texture, sheet-frame and region drawing, AnimatedSprite with SpriteFrames for timed playback, or record custom commands from CanvasItem.OnDraw through CanvasItem and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer. CanvasItem and Viewport supply filtering/repeat policies and GPU mip/anisotropy settings, with explicit fallback limits. CanvasItem.ItemRectChanged reports local geometry changes synchronously; Sprite integrates the event with its setters while resource worker notifications remain atomic redraw requests.
 
 AnimatedSprite uses the existing internal idle lane and canvas path. Its [timing audit](../classes/AnimatedSprite.md#timing-contract-and-source-audit) records duration-transition and ping-pong behavior. Native readback covers real timed completion, texture/atlas/blank frames and callback-failure cleanup.
+
+AnimatedTexture is a node-independent Texture that selects borrowed frame sources. RenderingServer advances it before FramePreDraw using unscaled monotonic time, then the existing texture batch path samples the selected image. Managed state and timed native readback are covered in [the canvas component](../components/canvas-rendering.md#animated-frame-playback).
 
 ## Dependencies and invariants
 

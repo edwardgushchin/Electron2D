@@ -110,6 +110,7 @@ CurveTests.Run();
 CurveTextureTests.Run();
 GradientTests.Run();
 AnimatedSpriteTests.Run();
+AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();
 ControlLayoutTests.Run();
