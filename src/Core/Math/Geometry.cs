@@ -239,6 +239,65 @@ public static class Geometry
         return hull;
     }
 
+    /// <summary>Partitions a simple polygon into convex polygons.</summary>
+    /// <param name="polygon">The input contour in perimeter order, in either winding direction.</param>
+    /// <returns>Caller-owned counterclockwise convex contours, or an empty array when decomposition fails.</returns>
+    /// <remarks>An already convex contour is returned as one copy. Concave contours are triangulated and neighboring parts are merged while convexity is preserved. The input is unchanged; nonfinite coordinates have no defined result.</remarks>
+    public static Vector2[][] DecomposePolygonInConvex(ReadOnlySpan<Vector2> polygon)
+    {
+        if (polygon.Length < 3) return [];
+        double area = 0d;
+        for (var i = 0; i < polygon.Length; i++)
+        {
+            var a = polygon[i];
+            var b = polygon[(i + 1) % polygon.Length];
+            area += (double)a.X * b.Y - (double)a.Y * b.X;
+        }
+        if (area == 0d) return [];
+
+        var convex = true;
+        for (var i = 0; i < polygon.Length; i++)
+        {
+            var turn = TriangleCross(polygon[(i + polygon.Length - 1) % polygon.Length], polygon[i], polygon[(i + 1) % polygon.Length]);
+            if (area > 0d ? turn >= 0d : turn <= 0d) continue;
+            convex = false;
+            break;
+        }
+        if (convex)
+        {
+            var result = polygon.ToArray();
+            if (area < 0d) Array.Reverse(result);
+            return [result];
+        }
+
+        var triangles = TriangulatePolygon(polygon);
+        if (triangles.Length == 0) return [];
+        var parts = new List<int[]>(triangles.Length / 3);
+        for (var i = 0; i < triangles.Length; i += 3)
+            parts.Add([triangles[i], triangles[i + 1], triangles[i + 2]]);
+
+        // Convex-part merging adapts Ivan Fratric's PolyPartition algorithm; see docs/licenses/PolyPartition-LICENSE.txt.
+        // ponytail: pairwise edge search is cubic; use an edge index only if large contour decomposition needs it.
+        for (var first = 0; first < parts.Count; first++)
+        {
+            for (var second = first + 1; second < parts.Count; second++)
+            {
+                if (!TryMergeConvexParts(polygon, parts[first], parts[second], out var merged)) continue;
+                parts[first] = merged;
+                parts.RemoveAt(second);
+                second = first;
+            }
+        }
+
+        var output = new Vector2[parts.Count][];
+        for (var i = 0; i < parts.Count; i++)
+        {
+            output[i] = new Vector2[parts[i].Length];
+            for (var j = 0; j < parts[i].Length; j++) output[i][j] = polygon[parts[i][j]];
+        }
+        return output;
+    }
+
     /// <summary>Returns the first boundary crossing of a segment and a circle.</summary>
     /// <param name="segmentFrom">The segment start.</param>
     /// <param name="segmentTo">The segment end.</param>
@@ -471,6 +530,31 @@ public static class Geometry
 
     private static double TriangleCross(Vector2 a, Vector2 b, Vector2 c) =>
         ((double)b.X - a.X) * ((double)c.Y - a.Y) - ((double)b.Y - a.Y) * ((double)c.X - a.X);
+
+    private static bool TryMergeConvexParts(ReadOnlySpan<Vector2> points, int[] left, int[] right, out int[] merged)
+    {
+        for (var i = 0; i < left.Length; i++)
+        {
+            var nextLeft = (i + 1) % left.Length;
+            for (var j = 0; j < right.Length; j++)
+            {
+                var nextRight = (j + 1) % right.Length;
+                if (left[i] != right[nextRight] || left[nextLeft] != right[j]) continue;
+                if (TriangleCross(points[left[(i + left.Length - 1) % left.Length]], points[left[i]],
+                        points[right[(nextRight + 1) % right.Length]]) <= 0d ||
+                    TriangleCross(points[right[(j + right.Length - 1) % right.Length]], points[left[nextLeft]],
+                        points[left[(nextLeft + 1) % left.Length]]) <= 0d) continue;
+
+                merged = new int[left.Length + right.Length - 2];
+                var count = 0;
+                for (var index = nextLeft; index != i; index = (index + 1) % left.Length) merged[count++] = left[index];
+                for (var index = nextRight; index != j; index = (index + 1) % right.Length) merged[count++] = right[index];
+                return true;
+            }
+        }
+        merged = [];
+        return false;
+    }
 
     private static (int A, int B, int C, Vector2 Center, float RadiusSquared) CreateDelaunayTriangle(
         ReadOnlySpan<Vector2> vertices, int first, int second, int third)

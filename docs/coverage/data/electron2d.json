@@ -23074,6 +23074,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Geometry.DecomposePolygonInConvex(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Geometry",
+    "name": "DecomposePolygonInConvex",
+    "signature": "public static Electron2D.Vector2[][] DecomposePolygonInConvex(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "polygon",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",

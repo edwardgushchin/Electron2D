@@ -60,6 +60,37 @@ internal static class GeometryTests
         Check(Geometry.ConvexHull([]).Length == 0 && Geometry.ConvexHull([new(2, 3)]).SequenceEqual([new(2, 3)]) &&
             Geometry.ConvexHull([new(0, 0), new(1, 0), new(2, 0)]).SequenceEqual([new(0, 0), new(2, 0), new(0, 0)]),
             "Convex hull empty, single and collinear inputs");
+        var convexParts = Geometry.DecomposePolygonInConvex(square);
+        Check(convexParts.Length == 1 && convexParts[0].SequenceEqual(square) &&
+            !ReferenceEquals(convexParts[0], square), "Convex polygon stays whole and the result is caller-owned");
+        convexParts = Geometry.DecomposePolygonInConvex(square.Reverse().ToArray());
+        Check(convexParts.Length == 1 && convexParts[0].SequenceEqual(square),
+            "Clockwise convex input yields a counterclockwise contour");
+        Vector2[] lShape = [new(0, 0), new(4, 0), new(4, 1), new(1, 1), new(1, 4), new(0, 4)];
+        convexParts = Geometry.DecomposePolygonInConvex(lShape);
+        var partArea = 0f;
+        foreach (var part in convexParts)
+        {
+            Check(part.Length >= 3, "Convex decomposition parts have at least three vertices");
+            for (var i = 0; i < part.Length; i++)
+            {
+                var current = part[i];
+                var next = part[(i + 1) % part.Length];
+                var following = part[(i + 2) % part.Length];
+                partArea += current.Cross(next) * 0.5f;
+                Check((next - current).Cross(following - next) >= 0f,
+                    "Every decomposed part is counterclockwise and convex");
+            }
+        }
+        Check(convexParts.Length == 2 && partArea == 7f && lShape[3] == new Vector2(1, 1),
+            "Concave L contour partitions into two convex parts without lost area or input mutation");
+        Check(Geometry.DecomposePolygonInConvex(lShape.Reverse().ToArray()).Length == 2,
+            "Clockwise concave contour is decomposed into the same number of convex parts");
+        Check(Geometry.DecomposePolygonInConvex([]).Length == 0 &&
+            Geometry.DecomposePolygonInConvex([Vector2.Zero, Vector2.One]).Length == 0 &&
+            Geometry.DecomposePolygonInConvex([new(0, 0), new(1, 0), new(2, 0)]).Length == 0 &&
+            Geometry.DecomposePolygonInConvex([new(0, 0), new(4, 4), new(0, 4), new(4, 0)]).Length == 0,
+            "Insufficient, zero-area and crossing contours do not produce convex parts");
         Check(Geometry.SegmentIntersectsCircle(new(-2, 0), new(2, 0), a, 1f) == 0.25f &&
             Geometry.SegmentIntersectsCircle(new(0, 0), new(2, 0), a, 1f) == 0.5f &&
             Geometry.SegmentIntersectsCircle(new(-1, 1), new(1, 1), a, 1f) == 0.5f &&

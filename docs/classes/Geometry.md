@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2I`](Vector2I.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Inputs are not generally checked for finiteness. Each returned array is owned by the caller.
 
-The current production slice covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls, simple-polygon and Delaunay triangulation, atlas layout and segment/circle intersections. The rest of the reference geometry surface, including polygon boolean operations, offsets and convex decomposition, is still absent; see [reference geometry coverage](../coverage/classes/Geometry2D.md).
+The current production slice covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls and decomposition, simple-polygon and Delaunay triangulation, atlas layout and segment/circle intersections. The rest of the reference geometry surface, including polygon boolean operations and offsets, is still absent; see [reference geometry coverage](../coverage/classes/Geometry2D.md).
 
 ## Example
 
@@ -36,6 +36,7 @@ Vector2? crossing = Geometry.SegmentIntersectsSegment(
 | [`public static Vector2 GetClosestPointToSegmentUncapped(Vector2 point, Vector2 s1, Vector2 s2)`](#getclosestpointtosegmentuncapped) | Projection on the infinite line. |
 | [`public static Vector2[] GetClosestPointsBetweenSegments(Vector2 p1, Vector2 q1, Vector2 p2, Vector2 q2)`](#getclosestpointsbetweensegments) | Nearest pair, one point on each segment. |
 | [`public static Vector2[] ConvexHull(ReadOnlySpan<Vector2> points)`](#convexhull) | Closed counterclockwise hull. |
+| [`public static Vector2[][] DecomposePolygonInConvex(ReadOnlySpan<Vector2> polygon)`](#decomposepolygoninconvex) | Counterclockwise convex parts, or an empty array. |
 | [`public static bool IsPointInCircle(Vector2 point, Vector2 circlePosition, float circleRadius)`](#ispointincircle) | Circle inclusion, including the boundary. |
 | [`public static bool IsPointInPolygon(Vector2 point, ReadOnlySpan<Vector2> polygon)`](#ispointinpolygon) | Odd-even polygon inclusion, including the boundary. |
 | [`public static bool IsPolygonClockwise(ReadOnlySpan<Vector2> polygon)`](#ispolygonclockwise) | Cartesian winding test. |
@@ -68,6 +69,10 @@ Returns a two-element array, first the point on `p1`–`q1`, then the point on `
 ### ConvexHull
 
 Copies and lexicographically sorts the input before constructing a monotone hull. The returned points are counterclockwise in Cartesian coordinates, omit collinear interior points, and repeat the first vertex at the end for two or more input points. Empty input returns an empty array; one input point returns one point. The input is unchanged. Nonfinite coordinates have no defined hull ordering.
+
+### DecomposePolygonInConvex
+
+Returns caller-owned, counterclockwise convex contours for a simple polygon in either winding direction. A convex polygon stays whole; a concave polygon is triangulated and neighboring triangles are merged where both joins remain convex. The number and order of parts are not an optimality guarantee. Fewer than three vertices, zero signed area, or failed triangulation return an empty array. Self-intersections are not repaired, and nonfinite coordinates have no defined result. The input is unchanged.
 
 ### IsPointInCircle
 
@@ -111,7 +116,7 @@ Returns three indices into the input contour per triangle, in counterclockwise o
 
 ## Dependencies and verification
 
-Only Core math and the .NET base library are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering, atlas layout and limits, both triangulation methods and segment/circle contact. Delaunay checks cover insufficient and collinear inputs, original indices, an interior point, and an asymmetric quadrilateral. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
+Only Core math and the .NET base library are used; no scene, renderer, physics or native backend is required. `GeometryTests.Run` checks raster orientation/endpoints, integer extremes, projections, nearest pairs, circle boundaries, crossings, polygon interior/boundaries/winding, convex hull ordering and decomposition, atlas layout and limits, both triangulation methods and segment/circle contact. Convex decomposition checks a whole convex contour, reversed winding, a concave L contour's area and convexity, input ownership and failed inputs. Delaunay checks cover insufficient and collinear inputs, original indices, an interior point, and an asymmetric quadrilateral. `CanvasPolygonTests.Run` checks drawing reuse and zero-allocation redraw. These managed checks pass on Linux/.NET 8. Native canvas polygon pixel checks pass on Wayland for compatibility and GPU backends, including HLSL/GLSL fixtures; other platforms and exhaustive numeric parity with the reference remain unverified.
 
 ## Decisions
 

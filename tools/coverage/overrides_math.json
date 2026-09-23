@@ -16,6 +16,11 @@
       "reason": "A read-only input span and caller-owned Vector2[] preserve the sorted closed hull without mutating input."
     },
     {
+      "godot": "Geometry2D::method:decompose_polygon_in_convex(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.Geometry.DecomposePolygonInConvex(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "A caller-owned jagged array projects the reference array of convex contours; convex inputs stay whole, while concave inputs are triangulated and adjacent convex parts are merged."
+    },
+    {
       "godot": "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.Geometry.GetClosestPointToSegment(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
       "reason": "Capped projection on the finite segment with the pinned degenerate threshold."
@@ -2374,12 +2379,13 @@
         "class:Geometry2D"
       ],
       "state": "Partial",
-      "reason": "The C# static projection implements fifteen raster, nearest-point, polygon, triangulation, atlas and intersection methods. Polygon boolean/offset, convex decomposition and other reference methods remain absent; see docs/classes/Geometry.md."
+      "reason": "The C# static projection implements sixteen raster, nearest-point, polygon, triangulation, atlas and intersection methods. Polygon boolean/offset and other reference methods remain absent; see docs/classes/Geometry.md."
     },
     {
       "godot": [
         "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
         "Geometry2D::method:convex_hull(PackedVector2Array:)",
+        "Geometry2D::method:decompose_polygon_in_convex(PackedVector2Array:)",
         "Geometry2D::method:get_closest_point_to_segment(Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:get_closest_point_to_segment_uncapped(Vector2:,Vector2:,Vector2:)",
         "Geometry2D::method:get_closest_points_between_segments(Vector2:,Vector2:,Vector2:,Vector2:)",
@@ -2395,7 +2401,7 @@
         "Geometry2D::method:triangulate_polygon(PackedVector2Array:)"
       ],
       "state": "Implemented",
-      "reason": "Fifteen stateless methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundaries, degenerate inputs, winding, hull, both triangulation methods, atlas layout, crossing and null cases on Linux/.NET 8. CanvasPolygonTests covers renderer reuse and zero-allocation redraw. Native and exhaustive numeric parity remain unverified."
+      "reason": "Sixteen stateless methods follow the pinned formulas and typed result adaptation; GeometryTests covers boundaries, degenerate inputs, winding, hull, convex decomposition, both triangulation methods, atlas layout, crossing and null cases on Linux/.NET 8. CanvasPolygonTests covers renderer reuse and zero-allocation redraw. Native and exhaustive numeric parity remain unverified."
     },
     {
       "godot": [
