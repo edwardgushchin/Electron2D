@@ -27,10 +27,13 @@ The separate Linux x64 `ShaderImport` tool packages **glslang 16.4.0**, **SPIRV-
 | Software | Intended role | Decision and current state |
 | --- | --- | --- |
 | SDL_ttf 3 with HarfBuzz and FreeType; SDL3-CS TTF bindings | Font loading, shaping and glyph rasterization integrated with Electron2D's canvas. | [ADR 0046](decisions/rendering.md#adr-0046). Text backend, native package and managed bindings are not integrated yet. |
-| FAudio over SDL3; managed FAudio binding | Audio voices, bus routing and effects. | [ADR 0047](decisions/audio.md#adr-0047). Audio backend, native package and managed binding are not integrated yet; compressed-audio decoders remain unselected. |
+| FAudio over SDL3; FAudio# managed binding | Audio voices, bus routing and effects. | [ADR 0047](decisions/audio.md#adr-0047). Audio backend, native package and managed binding are not integrated yet. |
+| [NVorbis](https://github.com/NVorbis/NVorbis) | Managed C# Ogg Vorbis decoder, to be compiled internally into `Electron2D.dll`. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |
+| [NLayer](https://github.com/naudio/NLayer) | Managed C# MP3 decoder, to be compiled internally into `Electron2D.dll`; NAudio is not required. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |
+| [qoa-fu](https://github.com/pfusik/qoa-fu) C# translation | Managed QOA encoder/decoder for imported WAV samples, to be compiled internally into `Electron2D.dll`. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |
 | Box2D.NET | 2D physics backend, with managed source compiled into `Electron2D.dll`. | [ADR 0012](decisions/product.md#adr-0012). Physics source and domain are not integrated yet. |
 
-SDL_mixer is not the selected audio mixer. Silk.NET.Shaderc.Native is not part of the runtime shader path. These choices are recorded in [ADR 0047](decisions/audio.md#adr-0047) and [ADR 0028](decisions/rendering.md#adr-0028).
+SDL3-CS already supplies the selected WAV loading bindings; IMA ADPCM is an engine-owned C# codec, not an additional third-party library. SDL_mixer is not the selected audio mixer or decoder. Silk.NET.Shaderc.Native is not part of the runtime shader path. These choices are recorded in [ADR 0047](decisions/audio.md#adr-0047) and [ADR 0028](decisions/rendering.md#adr-0028).
 
 ## Host-provided libraries
 
