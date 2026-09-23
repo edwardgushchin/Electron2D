@@ -111,7 +111,7 @@ def reason_for_type(item, lookup):
     if name in {"Variant", "Callable", "Signal", "ClassDB", "Array", "Dictionary", "String", "bool", "float", "int"} or name.startswith("Packed") and name.endswith("Array"):
         return "Excluded", "Engine-owned dynamic/untyped primitive or collection is replaced by C# types and typed contracts (ADR 0001/0002); no engine-owned duplicate."
     if name == "RefCounted":
-        return "Excluded", "Public reference-count lifetime is excluded by ADR 0013; Resource uses managed ownership."
+        return "Excluded", "Public manual reference counting is excluded by ADRs 0003 and 0014. RefCounted ancestry maps to ElectronObject managed lifetime and IDisposable; descendant APIs are audited on their own pages."
     if name in {"NodePath", "StringName"}:
         return "Excluded", "Separate path/name wrapper is excluded by the string-based Node and group contract (ADRs 0008 and 0001); use string."
     if name.startswith("RD") or name.startswith("UniformSetCacheRD"):
@@ -416,7 +416,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        audit_date = "2026-09-23" if page_name in {"Vector3", "Vector3i", "Shader", "ShaderMaterial"} else "2026-09-22"
+        audit_date = "2026-09-23" if page_name in {"Vector3", "Vector3i", "Shader", "ShaderMaterial", "RefCounted"} else "2026-09-22"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {audit_date}", ""]
         if page_name == "Texture":
             if page not in page_text:
