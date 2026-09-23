@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -26,7 +26,7 @@ var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 | `internal static SDL3.SDL.GPUShaderFormat GetFormats()` | [Backend formats](#backend-formats) |
 | `internal static nint CreateShader(nint device, byte[] code, bool fragment)` | [GPU shader creation](#gpu-shader-creation) |
 | `internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode)` | [Fragment validation](#fragment-validation) |
-| `internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment)` | [Shared validation](#shared-validation) |
+| `internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)` | [Shared validation](#shared-validation) |
 
 ## Member descriptions
 
@@ -50,9 +50,11 @@ Runs the shared interface validation for the public canvas fragment resource.
 
 ### Shared validation
 
-`internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment)`
+`internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)`
 
 Rejects lengths below 20 bytes, above 16 MiB or not divisible by four before copying. Checks little-endian header, SPIR-V versions 1.0 through 1.6, bounded IDs, nonzero/in-bounds instruction word counts, a single selected-stage main entry point, baseline Shader capability and logical GLSL450 memory model when declared. Reflection then checks active resources, std140 values, contiguous bindings and fixed canvas varyings. Fragment inputs are optional float4 color/location 0 and float2 UV/location 1, with one float4 output/location 0. The internal vertex profile requires float2 position/location 0, float4 color/location 1, float2 UV/location 2, one uniform buffer and color/UV outputs. Malformed data raises ArgumentException; unsupported interfaces raise NotSupportedException. This is not full instruction-semantic validation; import runs spirv-val separately.
+
+The optional internal sourceTypes table is used only by import preflight to recover logical booleans before annotation. Every reflected member must have a source entry. Already annotated input is rejected in this mode. Published artifacts and runtime callers omit the table and validate embedded boolean records against unsigned physical width/array layout; unmatched or malformed records fail. The importer validates the final annotated output again through this ordinary path. See [the schema](../components/shader-materials.md#boolean-type-information).
 
 ## Verification and limits
 

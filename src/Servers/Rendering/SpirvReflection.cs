@@ -10,8 +10,12 @@ internal static unsafe partial class SpirvReflection
     private const string Library = "spirv-cross-c-shared";
     private const int Binding = 33, DescriptorSet = 34;
 
-    internal static ShaderProgram Read(byte[] code, bool fragment)
+    internal static ShaderProgram Read(byte[] code, bool fragment,
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
     {
+        var booleans = ReadBooleans(code);
+        if (sourceTypes is not null && booleans.Count != 0)
+            throw new ArgumentException("Source compilation must not supply existing shader type metadata.", nameof(code));
         if (CreateContext(out var context) != 0 || context == 0)
             throw new InvalidOperationException("Could not create the SPIR-V reflection context.");
         using var owner = new RenderHandle(context, DestroyContext);
@@ -62,7 +66,12 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a fragment uniform buffer.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
                     throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float2x2 matrix or a fixed one-dimensional array; other matrices and nested structs are not integrated yet.");
-                var valueType = matrix ? typeof(Transform) : (GetBaseType(field), width) switch
+                booleans.Remove(name, out var logical);
+                if (sourceTypes is not null && !sourceTypes.TryGetValue(((int)binding, name), out logical))
+                    throw new NotSupportedException($"Source reflection did not retain uniform '{name}'.");
+                if (logical.Width != 0 && (GetBaseType(field) != 8 || GetColumns(field) != 1 || width != logical.Width))
+                    throw new ArgumentException($"Boolean metadata for '{name}' does not match its unsigned 32-bit storage.", nameof(code));
+                var valueType = logical.Width != 0 ? (logical.Width == 1 ? typeof(bool) : typeof(int)) : matrix ? typeof(Transform) : (GetBaseType(field), width) switch
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
@@ -102,6 +111,8 @@ internal static unsafe partial class SpirvReflection
                     if (stride < elementSize || stride % 16 != 0)
                         throw new NotSupportedException($"Uniform '{name}' must use std140 array stride.");
                 }
+                if (logical.Width != 0 && length != logical.Length)
+                    throw new ArgumentException($"Boolean metadata for '{name}' does not match its array shape.", nameof(code));
                 var alignment = dimensions == 1 || matrix || width == 3 ? 16 : elementSize;
                 var extent = (ulong)offset + (ulong)(Math.Max(1, length) - 1) * stride + (uint)elementSize;
                 if (offset % alignment != 0 || extent > size)
@@ -114,7 +125,7 @@ internal static unsafe partial class SpirvReflection
                     if (occupied[i]) throw new ArgumentException($"Uniform '{name}' overlaps another member.", nameof(code));
                     occupied[i] = true;
                 }
-                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor));
+                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor, logical.Width));
             }
         }
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));
@@ -167,6 +178,7 @@ internal static unsafe partial class SpirvReflection
                 if (GetDecoration(compiler, pair.Image, Binding) != GetDecoration(compiler, pair.Sampler, Binding))
                     throw new NotSupportedException("An image must be sampled with a sampler at the same binding.");
         }
+        if (booleans.Count != 0) throw new ArgumentException("Shader type metadata names an absent or inactive uniform.", nameof(code));
         uniforms.Remove("TIME", out var timeUniform);
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform);
     }

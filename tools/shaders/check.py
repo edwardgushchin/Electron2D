@@ -2,6 +2,8 @@
 """Verify both source import paths, diagnostics, binary validation and atomic output replacement."""
 from pathlib import Path
 import argparse
+import base64
+import re
 import json
 import shutil
 import subprocess
@@ -76,6 +78,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     assert (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes() == (root / 'src/Servers/Rendering/Shaders/Canvas.frag.spv').read_bytes()
     for language, stem, artifact in [('hlsl', 'Material', 'MaterialHlsl'), ('glsl', 'Material', 'MaterialGlsl'), ('glsl', 'MaterialReordered', 'MaterialReordered'),
                                      ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered'),
+                                     ('hlsl', 'Booleans', 'BooleansHLSL'), ('glsl', 'Booleans', 'BooleansGLSL'), ('glsl', 'BooleansReordered', 'BooleansReordered'),
                                      ('hlsl', 'Matrices', 'MatricesHLSL'), ('glsl', 'Matrices', 'MatricesGLSL'), ('glsl', 'MatricesReordered', 'MatricesReordered'),
                                      ('hlsl', 'Values', 'ValuesHLSL'), ('glsl', 'Values', 'ValuesGLSL'), ('glsl', 'ValuesReordered', 'ValuesReordered'), ('glsl', 'ValuesSigned', 'ValuesSigned'),
                                      ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly')]:
@@ -209,6 +212,74 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         invalid.write_text(source)
         assert 'float2x2' in invoke(invalid, output, success=False)
         assert output.read_bytes() == previous
+    # Source type reflection must preserve bool without relabeling neighboring uint.
+    def boolean_records(code):
+        words = struct.unpack('<' + 'I' * (len(code) // 4), code)
+        at, records = 5, {}
+        while at < len(words):
+            count, opcode = words[at] >> 16, words[at] & 0xffff
+            if opcode == 7:
+                text = code[(at + 2) * 4:(at + count) * 4].split(b'\0', 1)[0]
+                if text.startswith(b'Electron2D:'):
+                    kind, version, width, length, name = text.decode().split(':')[1:]
+                    assert kind == 'bool' and version == '1'
+                    name = base64.b64decode(name).decode()
+                    assert name not in records
+                    records[name] = (int(width), int(length))
+            at += count
+        return records
+
+    expected = {'enabled': (1, 0), 'switches': (1, 3), 'pair': (2, 0), 'triple': (3, 0),
+                'quad': (4, 0), 'pairs': (2, 2), 'triples': (3, 2), 'quads': (4, 2)}
+    for language, artifact in [('hlsl', 'BooleansHLSL'), ('glsl', 'BooleansGLSL')]:
+        source = (root / f'tests/Electron2D.Tests/Shaders/Booleans.frag.{language}').read_text()
+        original = (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()
+        assert boolean_records(original) == expected
+        external.write_bytes(original)
+        invoke(external, output)
+        assert output.read_bytes() == original
+        # Native frontend metadata handles macros/includes, typedefs and unused resources.
+        if language == 'hlsl':
+            header = '#if !defined(__spirv__) || __SPIRV_MAJOR_VERSION__ != 1 || __SPIRV_MINOR_VERSION__ != 0\n#error Unexpected target\n#endif\ntypedef bool Flag;\n'
+            variant = '#include "flags.inc"\ncbuffer Unused : register(b3, space3) { bool dead; };\n' + source.replace('bool enabled;', 'Flag enabled;')
+        else:
+            header = '#define Flag bool\n'
+            variant = source.replace('#version 450', '#version 450\n#extension GL_GOOGLE_include_directive : require\n#include "flags.inc"')
+            variant = variant.replace('bool enabled;', 'Flag enabled;').replace('void main()', 'layout(set = 3, binding = 3, std140) uniform Unused { bool dead; };\nvoid main()')
+        (directory / 'flags.inc').write_text(header)
+        input_variant = directory / f'source-types.{language}'
+        input_variant.write_text(variant)
+        invoke(input_variant, output)
+        assert boolean_records(output.read_bytes()) == expected
+        if language == 'hlsl':
+            end = source.index('};') + 2
+            variant = source[:end].replace('cbuffer Values : register(b0, space3)', 'struct Values') + '\nConstantBuffer<Values> values : register(b0, space3);' + source[end:]
+            end = variant.index('float bits')
+            variant = variant[:end] + re.sub(r'\b(' + '|'.join([*expected, 'number', 'afterTriple', 'tail']) + r')\b', r'values.\1', variant[end:])
+            input_variant.write_text(variant)
+            invoke(input_variant, output)
+            assert boolean_records(output.read_bytes()) == expected
+            input_variant.write_text(source.replace('cbuffer Values : register(b0, space3)', '[[vk::binding(0, 3)]] cbuffer Values'))
+            invoke(input_variant, output)
+            assert boolean_records(output.read_bytes()) == expected
+        # A one-element array remains an array, even if optimization reuses its reads.
+        variant = source.replace('switches[1]', 'switches[0]').replace('switches[2]', 'switches[0]').replace('switches[3]', 'switches[1]')
+        input_variant.write_text(variant)
+        invoke(input_variant, output)
+        assert boolean_records(output.read_bytes()) == expected | {'switches': (1, 1)}
+        external.write_bytes(original)
+        invoke(external, output)
+        for before, after in [(b'Electron2D:bool:1:1:0:', b'Electron2D:bool:2:1:0:'),
+                              (b'Electron2D:bool:1:1:0:', b'Electron2D:bool:1:2:0:'),
+                              (b'Electron2D:bool:1:1:0:', b'Electron2D:bool:1:1:1:'),
+                              (b'ZW5hYmxlZA==', b'ZW5hYmxlZQ=='),
+                              (b'ZW5hYmxlZA==', b'/w5hYmxlZA==')]:
+            # Last two mutations exercise absent names and malformed UTF-8 in base64 data.
+            invalid_bytes = original.replace(before, after)
+            assert invalid_bytes != original
+            external.write_bytes(invalid_bytes)
+            invoke(external, output, success=False)
+            assert output.read_bytes() == original, 'Invalid bool metadata replaced the usable artifact'
     if args.tool:
         sandbox = directory / 'package'
         shutil.copytree(args.tool.resolve().parent, sandbox)
@@ -224,4 +295,4 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                                  capture_output=True, text=True)
             assert run.returncode == 1 and diagnostic in run.stderr, run.stderr
             assert output.read_bytes() == previous, 'A broken toolchain replaced the last usable artifact'
-print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector/mat2 mappings, reserved TIME and unused resources.')
+print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector/mat2 mappings, boolean source/artifact metadata, reserved TIME and unused resources.')

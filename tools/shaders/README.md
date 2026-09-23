@@ -70,6 +70,29 @@ header range is not a claim that every module or instruction version is valid or
 supported. The packaged importer verifies the narrower Vulkan 1.0 baseline;
 runtime reflection is not a replacement for instruction-level validation.
 
+## Boolean parameter types
+
+Import preserves bool and bool2/3/4 (GLSL bvec2/3/4), including fixed arrays.
+HLSL uses a second compilation through ShaderCross to reflect original DXIL types
+with the already packaged DXC library; GLSL uses a second glslang `-gV` pass.
+This work occurs only during import. HLSL reflection selects the same Vulkan 1.0
+preprocessor macros and matches buffer names to actual SPIR-V bindings, including
+`vk::binding` and `ConstantBuffer<T>`. No additional package is required.
+
+The resulting SPIR-V contains standard OpString records of the form
+`Electron2D:bool:1:<width>:<array-length>:<base64-utf8-member-name>`.
+Width is 1..4; length zero denotes an individual value, 1..1024 a fixed array.
+Every record must name a unique reflected member of an active buffer and match
+its unsigned 32-bit physical components and array shape. Unknown versions,
+invalid names/encoding, duplicate records or layout mismatches reject the import
+without replacing prior output. External producers may supply the same records.
+Unannotated unsigned storage remains numeric; stripping records loses logical
+boolean types. Final output passes `spirv-val` and the ordinary runtime validator.
+
+C# scalar bool uses bool. Boolean vectors use an int mask whose low bits map to
+X/Y/Z/W; each array element uses the same mapping. Defaults are false/zero.
+See [the complete contract](../../docs/components/shader-materials.md#boolean-type-information).
+
 ## Render time input
 
 Canvas fragment programs may declare a scalar `float TIME` in a normal uniform

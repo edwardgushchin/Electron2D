@@ -46,14 +46,15 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Sets a typed scalar, vector or matrix material uniform.</summary>
-    /// <typeparam name="T">Float, int, uint, Vector2, Vector4, Color, Rect, Transform, Vector2I or Vector4I as required by the shader.</typeparam>
+    /// <typeparam name="T">Bool, float, int, uint, Vector2, Vector4, Color, Rect, Transform, Vector2I or Vector4I as required by the shader.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <param name="value">The new value. Color maps RGB to float3 or RGBA to float4 without color-space conversion.
     /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.
+    /// Logical bool uses bool; bool2/3/4 use an int mask whose low bits select true components. Higher bits are ignored.
     /// Transform supplies its X/Y basis to float2x2; Origin is not stored.</param>
     /// <remarks>Matrices start at identity; other stored components start at zero. Updates affect every node sharing the material, without QueueRedraw or
     /// a managed allocation after initialization. Floating-point values, including unused Color alpha and Transform Origin, must be finite. Changed is emitted after
-    /// mutation. Shader replacement retains values whose names, element types and array lengths still match.</remarks>
+    /// mutation. Shader replacement retains values whose names, logical element types (including boolean width) and array lengths still match.</remarks>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match, or a value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -72,7 +73,7 @@ public sealed class ShaderMaterial : Material
     /// <summary>Replaces every element of a fixed-size array uniform.</summary>
     /// <typeparam name="T">The supported scalar, vector or matrix type matching the reflected element type.</typeparam>
     /// <param name="name">The exact, case-sensitive array member name.</param>
-    /// <param name="values">Values copied into the material, with exactly the reflected array length.</param>
+    /// <param name="values">Values copied into the material, with exactly the reflected array length. Boolean vectors use one int mask per vector.</param>
     /// <remarks>Validation completes before mutation; a failure preserves all prior elements. The renderer handles
     /// reflected padding. A successful replacement emits Changed.</remarks>
     /// <exception cref="ArgumentException">The name, element type, array length or a floating-point value is invalid.</exception>
@@ -96,7 +97,7 @@ public sealed class ShaderMaterial : Material
     /// <typeparam name="T">The supported type matching the reflected value; Color also accepts float4 and Rect aliases float4.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <returns>The current value; initially identity for matrices and zero for other stored components.
-    /// Color mapped from float3 always has alpha one. Transform mapped from float2x2 always has zero Origin.</returns>
+    /// Boolean vectors return only their represented low mask bits. Color mapped from float3 always has alpha one. Transform mapped from float2x2 always has zero Origin.</returns>
     /// <exception cref="ArgumentException">The name, type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -114,7 +115,7 @@ public sealed class ShaderMaterial : Material
     /// <typeparam name="T">The supported type matching the reflected array element type.</typeparam>
     /// <param name="name">The exact, case-sensitive array member name.</param>
     /// <returns>An independent array with the reflected length; initially identity matrices or zero components.
-    /// Float3 Color elements always have alpha one; float2x2 Transform elements always have zero Origin.</returns>
+    /// Boolean scalar arrays use bool elements; boolean vector arrays use int masks. Float3 Color elements always have alpha one; float2x2 Transform elements always have zero Origin.</returns>
     /// <exception cref="ArgumentException">The name, element type or scalar/array shape does not match.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>

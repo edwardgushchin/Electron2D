@@ -57,7 +57,7 @@ with tempfile.TemporaryDirectory(prefix="electron2d shader build '&-") as tempor
 
     save_project()
     (directory / 'Program.cs').write_text('''using Electron2D;
-var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, "Shaders"), "*.spv");
+var files = Directory.GetFiles(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders"), "*.spv");
 if (files.Length != 4) throw new Exception("Missing imported shaders");
 foreach (var file in files) {
     using var shader = Shader.CreateFromSPIRV(File.ReadAllBytes(file));

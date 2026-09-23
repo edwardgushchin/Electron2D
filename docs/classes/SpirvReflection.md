@@ -3,7 +3,7 @@
 Last updated: 2026-09-23
 
 - Declaration: `internal static unsafe partial class SpirvReflection`
-- Source: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs)
+- Sources: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs), [SpirvReflection.Booleans.cs](../../src/Servers/Rendering/SpirvReflection.Booleans.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
@@ -23,19 +23,21 @@ var program = SpirvReflection.Read(ownedBytecode, fragment: true);
 
 | Declaration | Contract |
 | --- | --- |
-| `internal static ShaderProgram Read(byte[] code, bool fragment)` | [Read](#read) |
+| `internal static ShaderProgram Read(byte[] code, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)` | [Read](#read) |
 
 ## Member descriptions
 
 ### Read
 
-`internal static ShaderProgram Read(byte[] code, bool fragment)`
+`internal static ShaderProgram Read(byte[] code, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)`
 
 Requires the bounded structurally checked payload from ShaderCompiler. Parses active resources and accepts at most four uniform buffers (1..16384 bytes each) and sixteen fragment textures. Validates sets, contiguous bindings, names, std140 alignment/strides (including 16-byte float3 alignment with twelve stored bytes), fixed array lengths, member bounds/overlap, image types and actual HLSL image/sampler pairing. TIME is reserved for a non-array float32 scalar in a fragment uniform buffer. A wrong type, texture named TIME, duplicate member name or unsupported vertex TIME fails explicitly. The same name/layout checks apply to all input origins. TIME layout is separated from ordinary uniforms before constructing ShaderProgram descriptors; buffer sizing still includes it. Maps float3 to Color and unsigned 2/4-component vectors to Vector2I/Vector4I, preserving shader signedness for migration. Accepts float2x2 matrices and arrays mapped to Transform. Matrices require exactly one explicit RowMajor/ColMajor decoration, a positive 16-byte-multiple MatrixStride within the buffer limit, aligned offsets, valid array stride and no overlap. Other matrix shapes remain unsupported. Copies layout into ShaderProgram. Context creation failure raises InvalidOperationException; parser/reflection errors raise ArgumentException; unsupported layouts raise NotSupportedException. The adopted Code array remains owned/immutable by caller agreement.
 
 ## Native layout helpers
 
 Private sequential `ReflectedResource` stores the three uint IDs (`Id`, `BaseTypeId`, `TypeId`) and borrowed name pointer returned by SPIRV-Cross. Private sequential `CombinedSampler` stores combined/image/sampler uint IDs. Their fields match the C ABI and are read only while the context is live. LibraryImport methods use exact native entry points and Cdecl; they are implementation details of Read.
+
+The optional internal sourceTypes table is used only by import preflight to recover logical booleans before annotation. Every reflected member must have a source entry. Already annotated input is rejected in this mode. Published artifacts and runtime callers omit the table and validate embedded boolean records against unsigned physical width/array layout; unmatched or malformed records fail. The importer validates the final annotated output again through this ordinary path. See [the schema](../components/shader-materials.md#boolean-type-information).
 
 ## Verification and limits
 

@@ -13,6 +13,16 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_BOOLEANS") == "1")
+            {
+                VerifyShaderBooleans("BooleansHLSL"); VerifyShaderBooleans("BooleansGLSL");
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyShaderBooleanFrame(backend, "BooleansHLSL"); VerifyShaderBooleanFrame(backend, "BooleansGLSL");
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_SAMPLERS") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -154,6 +164,7 @@ internal static partial class RenderingRuntimeTests
                 }
                 return;
             }
+            VerifyShaderBooleans("BooleansHLSL"); VerifyShaderBooleans("BooleansGLSL");
             VerifyImageDependency();
             VerifyResources();
             VerifyShaderTimeContract("TimeHLSL"); VerifyShaderTimeContract("TimeGLSL");
@@ -233,6 +244,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyShaderMatrixFrame(backend, "MatricesHLSL"); VerifyShaderMatrixFrame(backend, "MatricesGLSL");
                 VerifyNamedSamplerDefaults(backend, "TextureHlsl");
                 VerifyNamedSamplerDefaults(backend, "TextureGlsl");
+                VerifyShaderBooleanFrame(backend, "BooleansHLSL"); VerifyShaderBooleanFrame(backend, "BooleansGLSL");
                 VerifyTextureFailure(backend);
             }
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")

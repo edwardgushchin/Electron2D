@@ -8,6 +8,8 @@ namespace Electron2D;
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
 /// An optional non-array float32 uniform named TIME receives render seconds, scaled by Engine.TimeScale and wrapped
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
+/// Logical boolean types are retained by validated metadata in the imported SPIR-V payload. External modules may
+/// supply the same metadata; unannotated unsigned storage retains its numeric type.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D textures at set two. Named textures use linear/base-level/clamp sampling, independently
 /// of canvas properties. Sampler configuration, matrices other than float2x2, nested uniform structs and user vertex programs remain pending.</remarks>
@@ -70,7 +72,7 @@ public sealed class Shader : Resource
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
     /// material access also accepts Color and Rect. Float2x2 uses Transform with an identity revert value. Float3 uses Color with alpha one; signed/unsigned integer vectors
-    /// use Vector2I or Vector4I with preserved component bits. Fixed arrays use array-valued descriptors; sampled images use Texture descriptors.
+    /// use Vector2I or Vector4I with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed arrays use array-valued descriptors; sampled images use Texture descriptors.
     /// The built-in command TEXTURE and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>

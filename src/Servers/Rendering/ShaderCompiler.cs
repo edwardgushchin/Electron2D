@@ -40,13 +40,14 @@ internal static unsafe class ShaderCompiler
 
     internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode) => ValidateInterface(bytecode, fragment: true);
 
-    internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment)
+    internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
     {
         if (bytecode.Length < 20 || bytecode.Length > MaximumBytecodeBytes || bytecode.Length % 4 != 0)
             throw new ArgumentException("SPIR-V must contain aligned words and a header, within 16 MiB.", nameof(bytecode));
         var code = bytecode.ToArray();
         ValidateStructure(code, fragment);
-        var program = SpirvReflection.Read(code, fragment);
+        var program = SpirvReflection.Read(code, fragment, sourceTypes);
         Run(() =>
         {
             fixed (byte* pointer = code)

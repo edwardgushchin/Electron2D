@@ -4,6 +4,8 @@ Last updated: 2026-09-23
 
 ## Responsibility
 
+Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
+
 The Resources domain defines reusable typed data and portable CPU image buffers used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.

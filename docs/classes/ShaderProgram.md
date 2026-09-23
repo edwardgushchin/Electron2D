@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-A published immutable program version: owned SPIR-V bytes, padded uniform buffer sizes, named member layouts (including numeric signedness, matrix stride and row/column order), sampled resources and descriptors. The constructor does not validate or copy its collections; ShaderCompiler/SpirvReflection construct them and no writer may mutate them after publication. Shader and its duplicates may share a version safely. Material state and GPU pipeline caches identify that version by reference.
+A published immutable program version: owned SPIR-V bytes, padded uniform buffer sizes, named member layouts (including numeric signedness, logical boolean width, matrix stride and row/column order), sampled resources and descriptors. The constructor does not validate or copy its collections; ShaderCompiler/SpirvReflection construct them and no writer may mutate them after publication. Shader and its duplicates may share a version safely. Material state and GPU pipeline caches identify that version by reference.
 
 ## Internal usage
 

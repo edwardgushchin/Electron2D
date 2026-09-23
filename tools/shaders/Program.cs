@@ -12,8 +12,10 @@ if (args.Length != 3 || args[1] is not ("vertex" or "fragment"))
 var input = IOPath.GetFullPath(args[0]);
 var output = IOPath.GetFullPath(args[2]);
 var temporary = IOPath.Combine(IOPath.GetTempPath(), "electron2d-shader-" + Guid.NewGuid().ToString("N") + ".spv");
+var debugTemporary = temporary + ".debug";
 try
 {
+    Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null;
     await RequireVersion("spirv-val", "SPIRV-Tools v2026.3");
     switch (IOPath.GetExtension(input).ToLowerInvariant())
     {
@@ -22,21 +24,29 @@ try
             // Keep original source locations in diagnostics reported by the native compiler.
             var escaped = input.Replace("\\", "/").Replace("\"", "\\\"");
             var code = CompileHLSL("#line 1 \"" + escaped + "\"\n" + source,
-                fragment: args[1] == "fragment", includeDirectory: IOPath.GetDirectoryName(input));
+                fragment: args[1] == "fragment", includeDirectory: IOPath.GetDirectoryName(input), out sourceTypes);
             File.WriteAllBytes(temporary, code);
             break;
         case ".glsl":
             await RequireVersion("glslangValidator", "Glslang Version: 11:16.4.0");
             Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
                 args[1] == "fragment" ? "frag" : "vert", "-e", "main", "-o", temporary, input));
+            Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
+                args[1] == "fragment" ? "frag" : "vert", "-e", "main", "-gV", "-o", debugTemporary, input));
+            sourceTypes = ShaderSourceTypes.GLSL(File.ReadAllBytes(debugTemporary), args[1] == "fragment");
             break;
         case ".spv":
             File.Copy(input, temporary);
             break;
         default: throw new ArgumentException("The supported source languages are HLSL and GLSL; external compilers must supply SPIR-V.");
     }
-    Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
     var result = File.ReadAllBytes(temporary);
+    if (sourceTypes is not null)
+    {
+        result = ShaderSourceTypes.Annotate(result, args[1] == "fragment", sourceTypes);
+        File.WriteAllBytes(temporary, result);
+    }
+    Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
     ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment");
     if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
         File.ReadAllBytes(output).AsSpan().SequenceEqual(result))
@@ -60,7 +70,7 @@ catch (Exception error)
     Console.Error.WriteLine($"{input} ({args[1]}): {error.Message}");
     return 1;
 }
-finally { File.Delete(temporary); }
+finally { File.Delete(temporary); File.Delete(debugTemporary); }
 
 static async Task<string> Execute(string executable, params string[] arguments)
 {
@@ -78,7 +88,8 @@ static async Task<string> Execute(string executable, params string[] arguments)
     return diagnostic;
 }
 
-static byte[] CompileHLSL(string source, bool fragment, string? includeDirectory)
+static byte[] CompileHLSL(string source, bool fragment, string? includeDirectory,
+    out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)> types)
 {
     if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
     try
@@ -91,6 +102,7 @@ static byte[] CompileHLSL(string source, bool fragment, string? includeDirectory
             if (size > 16 * 1024 * 1024) throw new ArgumentException("Shader bytecode exceeds 16 MiB.");
             var code = new byte[checked((int)size)];
             Marshal.Copy(memory, code, 0, code.Length);
+            types = ShaderSourceTypes.HLSL(source, fragment, includeDirectory, code);
             return code;
         }
         finally { SDL.Free(memory); }

@@ -5,6 +5,7 @@
     <AssemblyName>Electron2D.ShaderImport</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ShaderToolchainDirectory>$(MSBuildThisFileDirectory)obj/toolchain/$(NETCoreSdkRuntimeIdentifier)</ShaderToolchainDirectory>
   </PropertyGroup>

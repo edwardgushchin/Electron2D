@@ -211,7 +211,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [MaterialState](classes/MaterialState.md) | [Material.cs](../src/Scene/Resources/Material.cs) | [shader-materials](components/shader-materials.md) |
 | [BuiltInShaders](classes/BuiltInShaders.md) | [BuiltInShaders.cs](../src/Servers/Rendering/BuiltInShaders.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [ShaderCompiler](classes/ShaderCompiler.md) | [ShaderCompiler.cs](../src/Servers/Rendering/ShaderCompiler.cs) | [shader-materials](components/shader-materials.md) |
-| [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs) | [shader-materials](components/shader-materials.md) |
+| [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs), [boolean metadata](../src/Servers/Rendering/SpirvReflection.Booleans.cs) | [shader-materials](components/shader-materials.md) |
 | [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [shader-materials](components/shader-materials.md) |
 
 ## Explicitly absent
