@@ -11,10 +11,14 @@ The component owns [RenderingServer](../classes/RenderingServer.md) and its inte
 1. Open the backend selected by typed ProjectSettings. GPU initialization can fall back only when enabled; shader-dependent draws fail on compatibility.
 2. Deliver FramePreDraw, advance the scaled render clock and capture visible nodes. For pending recording, clear commands, then deliver NotificationDraw, synchronous Draw handlers and OnDraw in order. All three may draw. QueueRedraw inside this recording coalesces; internal resource changes remain pending for the next frame. Failure clears partial commands, retains the dirty flag and closes the recording scope before host cleanup.
 3. Recapture after drawing callbacks. Resolve canvas roots in scene order, behind-parent subtrees and nested local Y groups; group by canvas layer and sibling index, then sort by effective Z within each canvas, preserving the resolved item order at equal Z. Replay ordered animation/transform state afresh per item, then transform visible retained local geometry into framebuffer pixels. Inherited Modulate and local SelfModulate multiply command colors.
-4. Batch adjacent commands only when material, texture, filter, repeat and anisotropy limit match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates do not require OnDraw.
+4. Batch adjacent commands only when shader state, blend mode, texture, filter, repeat and anisotropy limit match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates and blend mode changes do not require OnDraw.
 5. Upload and submit to the RGBA8 target, copy it to the native window and deliver FramePostDraw. Submission is not display completion. Callback failures trigger Engine.Run cleanup.
 
 ## Drawing contract
+
+### Fixed canvas blending
+
+[CanvasItemMaterial](../classes/CanvasItemMaterial.md) selects one of five [blend equations](../classes/CanvasItemMaterial.BlendModeEnum.md) for an item's retained geometry, including texture draws. GPU pipelines use both program payload and mode in their cache key; compatibility hardware selects equivalent SDL factors for each geometry or texture batch. The source is not premultiplied automatically for PremultAlpha. SDL software reports success for a premultiplied setting while producing Mix pixels for untextured geometry, so this backend rejects every non-Mix mode before drawing. Native pixel checks cover both kinds of geometry, all five modes on Wayland hardware, live changes without OnDraw, and the software rejection. Light and particle properties remain dependent on their own 2D renderer domains.
 
 Filled rectangles, centered outlines and flat-cap lines use local geometry with compensated local antialias feathers. Negative-width outlines/lines have one-framebuffer-pixel cores. Zero-width ordinary strokes produce no geometry; wide rectangle outlines can expand zero-area input into a visible fill. Nonfinite geometry, transforms or resulting colors fail explicitly. See the stroke and rectangle contracts below for degenerate and thin-width behavior.
 

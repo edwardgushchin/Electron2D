@@ -23,6 +23,7 @@
     "Camera2D": "Camera"
   },
   "enums": {
+    "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
     "@GlobalScope.ClockDirection": "ClockDirection",
     "@GlobalScope.JoyAxis": "JoyAxis",
     "@GlobalScope.JoyButton": "JoyButton",

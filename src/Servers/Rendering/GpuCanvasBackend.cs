@@ -9,8 +9,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private readonly nint _window;
     private readonly RenderHandle _vertexShader;
     private readonly byte[] _defaultFragment;
-    private readonly Dictionary<byte[], RenderHandle> _pipelines = [];
-    private readonly HashSet<byte[]> _usedPrograms = [];
+    private readonly Dictionary<(byte[] Code, CanvasItemMaterial.BlendModeEnum Blend), RenderHandle> _pipelines = [];
+    private readonly HashSet<(byte[] Code, CanvasItemMaterial.BlendModeEnum Blend)> _usedPrograms = [];
     private readonly Dictionary<Texture, GpuTexture> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
@@ -44,7 +44,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             vertex = CreateShader(BuiltInShaders.Vertex, fragment: false);
             _vertexShader = vertex;
             _defaultFragment = BuiltInShaders.Fragment;
-            _pipelines.Add(_defaultFragment, CreatePipeline(_defaultFragment));
+            _pipelines.Add((_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix), CreatePipeline(_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix));
         }
         catch
         {
@@ -66,7 +66,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment), h => SDL.ReleaseGPUShader(Device, h), _device);
     }
 
-    private RenderHandle CreatePipeline(byte[] code)
+    private RenderHandle CreatePipeline(byte[] code, CanvasItemMaterial.BlendModeEnum blend)
     {
         using var fragment = CreateShader(code, fragment: true);
         var buffer = new SDL.GPUVertexBufferDescription { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
@@ -74,18 +74,27 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         attributes[0] = new() { Location = 0, Format = SDL.GPUVertexElementFormat.Float2, Offset = 0 };
         attributes[1] = new() { Location = 1, Format = SDL.GPUVertexElementFormat.Float4, Offset = 8 };
         attributes[2] = new() { Location = 2, Format = SDL.GPUVertexElementFormat.Float2, Offset = 24 };
+        var blendState = blend switch
+        {
+            CanvasItemMaterial.BlendModeEnum.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
+            CanvasItemMaterial.BlendModeEnum.Add => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.Add),
+            CanvasItemMaterial.BlendModeEnum.Sub => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.ReverseSubtract),
+            CanvasItemMaterial.BlendModeEnum.Mul => (SDL.GPUBlendFactor.DstColor, SDL.GPUBlendFactor.Zero, SDL.GPUBlendFactor.DstAlpha, SDL.GPUBlendFactor.Zero, SDL.GPUBlendOp.Add),
+            CanvasItemMaterial.BlendModeEnum.PremultAlpha => (SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
+            _ => throw new ArgumentOutOfRangeException(nameof(blend)),
+        };
         var color = new SDL.GPUColorTargetDescription
         {
             Format = SDL.GPUTextureFormat.R8G8B8A8Unorm,
             BlendState = new SDL.GPUColorTargetBlendState
             {
                 EnableBlend = true,
-                SrcColorBlendFactor = SDL.GPUBlendFactor.SrcAlpha,
-                DstColorBlendFactor = SDL.GPUBlendFactor.OneMinusSrcAlpha,
-                ColorBlendOp = SDL.GPUBlendOp.Add,
-                SrcAlphaBlendFactor = SDL.GPUBlendFactor.One,
-                DstAlphaBlendFactor = SDL.GPUBlendFactor.OneMinusSrcAlpha,
-                AlphaBlendOp = SDL.GPUBlendOp.Add
+                SrcColorBlendFactor = blendState.Item1,
+                DstColorBlendFactor = blendState.Item2,
+                ColorBlendOp = blendState.Item5,
+                SrcAlphaBlendFactor = blendState.Item3,
+                DstAlphaBlendFactor = blendState.Item4,
+                AlphaBlendOp = blendState.Item5
             }
         };
         var info = new SDL.GPUGraphicsPipelineCreateInfo
@@ -104,15 +113,16 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         var size = GetPixelSize();
         if (size.X <= 0 || size.Y <= 0) return;
         _usedPrograms.Clear();
-        _usedPrograms.Add(_defaultFragment);
+        _usedPrograms.Add((_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix));
         _usedTextures.Clear(); _usedMaterials.Clear();
         foreach (var batch in batches)
         {
             if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
             var code = batch.ShaderCode ?? _defaultFragment;
-            _usedPrograms.Add(code);
-            if (!_pipelines.ContainsKey(code)) _pipelines.Add(code, CreatePipeline(code));
+            var key = (code, batch.Blend);
+            _usedPrograms.Add(key);
+            if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, batch.Blend));
             if (batch.Material is { } material && material.Textures.Length != 0 && _usedMaterials.Add(material)) PrepareTextures(material);
             if (UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
         }
@@ -162,7 +172,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
                     SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
                     foreach (var batch in batches)
                     {
-                        SDL.BindGPUGraphicsPipeline(pass, _pipelines[batch.ShaderCode ?? _defaultFragment].DangerousGetHandle());
+                        SDL.BindGPUGraphicsPipeline(pass, _pipelines[(batch.ShaderCode ?? _defaultFragment, batch.Blend)].DangerousGetHandle());
                         batch.Material?.PushUniforms(command, (float)time);
                         if (batch.Material is { Textures.Length: > 0 } textured)
                         {

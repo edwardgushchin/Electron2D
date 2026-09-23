@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 The rendering integration contains executable canvas fragment shaders, material uniform buffers and sampled image textures. This is partial shader support under [ADR 0028](../decisions/rendering.md#adr-0028): matrix shapes beyond float2x2, nested structs and custom vertex programs remain unfinished. The native verification covers Linux Wayland/Vulkan; other GPU backends and platforms are unverified.
 
-Public resources are [Shader](../classes/Shader.md), [Shader.Mode](../classes/Shader.Mode.md), [Material](../classes/Material.md), [ShaderMaterial](../classes/ShaderMaterial.md), [Texture](../classes/Texture.md) [ImageTexture](../classes/ImageTexture.md) and [AtlasTexture](../classes/AtlasTexture.md). Their managed state belongs to the Resources domain. The rendering backend owns GPU devices and pipelines; resources contain no native handles.
+Public resources are [Shader](../classes/Shader.md), [Shader.Mode](../classes/Shader.Mode.md), [Material](../classes/Material.md), [ShaderMaterial](../classes/ShaderMaterial.md), [CanvasItemMaterial](../classes/CanvasItemMaterial.md), [Texture](../classes/Texture.md), [ImageTexture](../classes/ImageTexture.md) and [AtlasTexture](../classes/AtlasTexture.md). CanvasItemMaterial's fixed blending is documented in [canvas rendering](canvas-rendering.md#fixed-canvas-blending). Their managed state belongs to the Resources domain. The rendering backend owns GPU devices and pipelines; resources contain no native handles.
 
 ## Import and runtime flow
 
@@ -19,7 +19,7 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 3. `Shader.CreateFromSPIRV` and `SetSPIRV` copy the bytes and perform the same structural, capability, resource-layout and interface checks for every input origin. These checks do not duplicate the import tool's instruction-level validator. Runtime source compilation is absent.
 4. An immutable `ShaderProgram` publishes code, buffer sizes, member layouts and typed descriptors together. SPIRV-Cross reflects active resources and members; SDL_shadercross reflects stage interfaces and translates programs for the active GPU backend. The SPIRV-Cross C library is already shipped in `SDL3-CS.Linux.Shadercross`; member reflection introduces no additional package.
 5. `ShaderMaterial` owns mutable uniform buffers. Before a draw, the renderer obtains the current program/state and pushes each buffer through SDL3-CS `PushGPUFragmentUniformData`. Resource mutation and upload serialize through the material gate. No callback runs under that gate.
-6. Reloading a shader rebuilds material buffers on their next access. Matching names, shader element types (including integer signedness and logical boolean width) and array lengths retain values even if bindings and offsets change. New or incompatible members start at their typed defaults: identity for float2x2 matrices and zero for other stored components. GPU pipelines are cached by program payload and discarded when unused.
+6. Reloading a shader rebuilds material buffers on their next access. Matching names, shader element types (including integer signedness and logical boolean width) and array lengths retain values even if bindings and offsets change. New or incompatible members start at their typed defaults: identity for float2x2 matrices and zero for other stored components. GPU pipelines are cached by program payload and blend mode and discarded when unused.
 
 ## Current shader interface
 

@@ -162,6 +162,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasItemMaterial",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": "CanvasItemMaterial",
+    "signature": "public sealed class Electron2D.CanvasItemMaterial",
+    "visibility": "public",
+    "baseType": "Electron2D.Material",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "BlendModeEnum",
+    "signature": "public enum Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasLayer",
     "kind": "type",
     "declaringType": "Electron2D.CanvasLayer",
@@ -3363,6 +3396,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CanvasItemMaterial..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": ".ctor",
+    "signature": "public CanvasItemMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CanvasLayer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CanvasLayer",
@@ -5142,6 +5188,71 @@
     "parameters": [],
     "returnType": "Electron2D.CanvasItem.TextureRepeatEnum",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasItemMaterial.BlendModeEnum.Add()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "Add",
+    "signature": "public const Electron2D.CanvasItemMaterial.BlendModeEnum Add = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasItemMaterial.BlendModeEnum.Mix()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "Mix",
+    "signature": "public const Electron2D.CanvasItemMaterial.BlendModeEnum Mix = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasItemMaterial.BlendModeEnum.Mul()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "Mul",
+    "signature": "public const Electron2D.CanvasItemMaterial.BlendModeEnum Mul = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasItemMaterial.BlendModeEnum.PremultAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "PremultAlpha",
+    "signature": "public const Electron2D.CanvasItemMaterial.BlendModeEnum PremultAlpha = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.CanvasItemMaterial.BlendModeEnum.Sub()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "name": "Sub",
+    "signature": "public const Electron2D.CanvasItemMaterial.BlendModeEnum Sub = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.ClockDirection.Clockwise()",
@@ -15901,6 +16012,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItemMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItemMaterial.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItemMaterial.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -45374,6 +45550,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItemMaterial.BlendMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItemMaterial",
+    "name": "BlendMode",
+    "signature": "public Electron2D.CanvasItemMaterial.BlendModeEnum BlendMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItemMaterial.BlendModeEnum",
     "value": null
   },
   {

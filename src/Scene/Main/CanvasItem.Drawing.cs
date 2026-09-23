@@ -41,7 +41,8 @@ public abstract partial class CanvasItem
 
     /// <summary>Gets or sets the borrowed material for this node's canvas commands.</summary>
     /// <value>Null uses ordinary source-alpha color drawing.</value>
-    /// <remarks>Disposing the node does not dispose this shared resource. An assigned shader requires GPU rendering.</remarks>
+    /// <remarks>Disposing the node does not dispose this shared resource. ShaderMaterial with an assigned shader requires GPU rendering.
+    /// CanvasItemMaterial selects fixed blending; unsupported software modes fail before drawing.</remarks>
     /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node or assigned material is disposed.</exception>
     public Material? Material
@@ -278,6 +279,7 @@ public abstract partial class CanvasItem
         var anisotropy = filter >= TextureFilterEnum.NearestWithMipmapsAnisotropic
             ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;
+        var blend = CanvasItemMaterial.BlendModeEnum.Mix;
         var capturedMaterial = false;
         var drawingTransform = Transform.Identity;
         var skipping = false;
@@ -290,12 +292,18 @@ public abstract partial class CanvasItem
             CanvasGeometry.Append(vertices, command, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
             var count = vertices.Count - first;
             if (count == 0) continue;
-            if (!capturedMaterial) { material = CanvasMaterial?.GetCanvasState(); capturedMaterial = true; }
+            if (!capturedMaterial)
+            {
+                var canvasMaterial = CanvasMaterial;
+                material = canvasMaterial?.GetCanvasState();
+                blend = canvasMaterial?.GetCanvasBlendMode() ?? CanvasItemMaterial.BlendModeEnum.Mix;
+                capturedMaterial = true;
+            }
             var repeat = command.Tile ? TextureRepeatEnum.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy)
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend)
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy));
+            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy, blend));
         }
     }
 

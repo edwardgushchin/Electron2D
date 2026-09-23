@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "CanvasItemMaterial::enum:BlendMode",
+      "electron2d": "T:Electron2D.CanvasItemMaterial.BlendModeEnum",
+      "reason": "The C# nested enum uses an Enum suffix because the public property retains the BlendMode name. Its five numeric values and frame behavior are audited by CanvasMaterialRenderingTests."
+    },
+    {
       "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
@@ -1270,6 +1275,26 @@
   "statusGroups": [
     {
       "state": "Partial",
+      "reason": "Five blend modes and the live BlendMode resource are executable on Linux Wayland GPU and compatibility hardware renderers. Software supports Mix and rejects the other modes. Light modes require the first 2D light and occlusion slice; particle animation requires 2D particle simulation and renderer integration (ADR 0028).",
+      "godot": ["class:CanvasItemMaterial"]
+    },
+    {
+      "state": "Implemented",
+      "reason": "The five blend identities and live property are verified by resource-copy and native pixel checks on GPU and compatibility hardware. SDL software explicitly rejects modes it cannot execute correctly.",
+      "godot": ["CanvasItemMaterial::enum:BlendMode", "CanvasItemMaterial::property:blend_mode"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first 2D light and occlusion renderer slice; integrate LightMode with actual light-pass selection and verify all values on both supported hardware backends (ADR 0028).",
+      "godot": ["CanvasItemMaterial::enum:LightMode", "CanvasItemMaterial::property:light_mode", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL", "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED"]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first 2D particle simulation, material and renderer slice; wire frame counts, loop and animation enablement to particle sprite sampling (ADR 0028).",
+      "godot": ["CanvasItemMaterial::property:particles_anim_h_frames", "CanvasItemMaterial::property:particles_anim_v_frames", "CanvasItemMaterial::property:particles_anim_loop", "CanvasItemMaterial::property:particles_animation"]
+    },
+    {
+      "state": "Partial",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Canvas sampling inheritance, GPU mipmaps and anisotropy are verified by CanvasSamplingRenderingTests; further texture kinds and full canvas integration remain pending under ADR 0028.",
       "godot": [
         "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
@@ -1971,6 +1996,26 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CanvasItemMaterial..ctor()",
+      "reason": "Managed construction of the existing canvas material resource with the default Mix mode.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItemMaterial.CreateDuplicateInstance()",
+      "reason": "Typed resource duplication factory for the existing CanvasItemMaterial concept.",
+      "adr": "ADRs 0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItemMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Copies the canvas blend mode through the existing managed resource-copy contract.",
+      "adr": "ADRs 0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItemMaterial.GetPropertyDescriptors()",
+      "reason": "Exposes the stored blend property through the existing typed resource metadata contract.",
+      "adr": "ADRs 0001/0014/0028"
+    },
     {
       "electron2d": "constructor:Electron2D.Texture..ctor()",
       "reason": "Managed construction of the existing texture/shader/material resource concept has no separate class-reference constructor row. Defaults and lifecycle are described in the corresponding class page; this does not assert complete rendering behavior.",

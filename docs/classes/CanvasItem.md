@@ -247,7 +247,7 @@ Gets or sets the borrowed material for this node's canvas commands.
 
 **Value:** Null uses ordinary source-alpha color drawing.
 
-**Remarks:** Disposing the node does not dispose this shared resource. An assigned shader requires GPU rendering.
+**Remarks:** Disposing the node does not dispose this shared resource. [ShaderMaterial](ShaderMaterial.md) with an assigned shader requires GPU rendering. [CanvasItemMaterial](CanvasItemMaterial.md) selects fixed blending; SDL software rejects modes other than Mix before drawing.
 
 **System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
 

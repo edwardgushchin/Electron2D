@@ -4,12 +4,13 @@ using SDL3;
 namespace Electron2D;
 
 /// <summary>A resource selecting how canvas geometry is shaded.</summary>
-/// <remarks>The executable material type is ShaderMaterial. Materials are borrowed by nodes; disposing a node
+/// <remarks>Materials are borrowed by nodes; disposing a node
 /// does not dispose shared materials. Three-dimensional render priority and next-pass chains are not supported.</remarks>
 public abstract class Material : Resource
 {
     private protected Material() { }
     internal abstract MaterialState? GetCanvasState();
+    internal virtual CanvasItemMaterial.BlendModeEnum GetCanvasBlendMode() => CanvasItemMaterial.BlendModeEnum.Mix;
 }
 
 /// <summary>Applies a programmable fragment shader to a node's canvas commands.</summary>

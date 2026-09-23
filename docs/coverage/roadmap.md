@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1839 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1840 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
 2. Complete 1257 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatedTexture](classes/AnimatedTexture.md), [BitMap](classes/BitMap.md), [FastNoiseLite](classes/FastNoiseLite.md), [Geometry2D](classes/Geometry2D.md), [JSON](classes/JSON.md), [Line2D](classes/Line2D.md), [Marker2D](classes/Marker2D.md), [Noise](classes/Noise.md), [OptimizedTranslation](classes/OptimizedTranslation.md), [Parallax2D](classes/Parallax2D.md), [ParallaxBackground](classes/ParallaxBackground.md), [ParallaxLayer](classes/ParallaxLayer.md), [Polygon2D](classes/Polygon2D.md), [RandomNumberGenerator](classes/RandomNumberGenerator.md), [RegEx](classes/RegEx.md), [RegExMatch](classes/RegExMatch.md), [RemoteTransform2D](classes/RemoteTransform2D.md), [Translation](classes/Translation.md), [TranslationDomain](classes/TranslationDomain.md), [XMLParser](classes/XMLParser.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -104,7 +104,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
-| Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
@@ -112,6 +111,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 2 |
 | Trigger: first audio decoding and playback slice. | 2 |
 | Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028). | 2 |
+| Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |
 | Trigger: first retained-canvas visibility tracking and notification slice (ADR 0028). | 2 |
 | Trigger: first shader include import and dependency-tracking slice (ADR 0028). | 2 |
 | Trigger: first typed GUI/editor Shortcut ownership and focus-routing slice (ADR 0038). | 2 |

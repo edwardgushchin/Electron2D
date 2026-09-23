@@ -156,7 +156,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CameraTexture](classes/CameraTexture.md) | Texture2D | Blocked | 4 |
 | [CanvasGroup](classes/CanvasGroup.md) | Node2D | Blocked | 3 |
 | [CanvasItem](classes/CanvasItem.md) | Node | Partial | 114 |
-| [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Blocked | 16 |
+| [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Partial | 16 |
 | [CanvasLayer](classes/CanvasLayer.md) | Node | Partial | 14 |
 | [CanvasModulate](classes/CanvasModulate.md) | Node2D | Blocked | 1 |
 | [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Blocked | 8 |
