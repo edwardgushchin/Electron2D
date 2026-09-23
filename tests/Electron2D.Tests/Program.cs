@@ -21,6 +21,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_NATIVE") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
+{
+    InputPointerNativeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_IME_MOVE") == "1")
 {
     DisplayServerImeNativeTests.RunMove();
@@ -4263,6 +4269,14 @@ static void VerifyInput()
     {
         Require(ReferenceEquals(input, Input.Instance) && ReferenceEquals(map, InputMap.Instance),
             "Input and InputMap must be process-wide singletons.");
+        Require((int)Input.MouseModeEnum.ConfinedHidden == 4 && (int)Input.CursorShape.Help == 16,
+            "Input pointer enums retain the reference numeric identities.");
+        Expect<InvalidOperationException>(() => _ = input.MouseMode,
+            "Native pointer mode cannot be queried without a display.");
+        Expect<InvalidOperationException>(() => input.SetDefaultCursorShape(),
+            "Cursor requests cannot silently succeed without a display.");
+        Expect<ArgumentException>(() => input.WarpMouse(new Vector2(float.NaN, 0)),
+            "Pointer warping rejects nonfinite coordinates before requesting a display.");
         Expect<InvalidOperationException>(input.Dispose, "The process-wide Input service must reject disposal.");
         Expect<InvalidOperationException>(map.Dispose, "The process-wide InputMap service must reject disposal.");
         Expect<ArgumentException>(() => map.AddAction(" "), "Input action names must reject whitespace.");

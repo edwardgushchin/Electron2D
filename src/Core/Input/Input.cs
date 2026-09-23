@@ -6,7 +6,7 @@ namespace Electron2D;
 /// so callbacks observe the new state. Queries and synthetic action changes are lock-serialized; event delivery is
 /// synchronous on the caller thread and an attached <see cref="SceneTree"/> requires its owner thread.
 /// </remarks>
-public sealed class Input : ElectronObject
+public sealed partial class Input : ElectronObject
 {
     /// <summary>Defines the maximum number of binding sources supported by one action.</summary>
     internal const int MaxEventsPerAction = 32;

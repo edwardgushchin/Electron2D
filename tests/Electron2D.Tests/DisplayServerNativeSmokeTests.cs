@@ -83,8 +83,9 @@ internal static class DisplayServerNativeSmokeTests
         for (var index = 0; index < (int)DisplayServer.CursorShape.Max; index++)
         {
             var shape = (DisplayServer.CursorShape)index;
-            display.CursorSetShape(shape);
-            Check(display.CursorGetShape() == shape && SDL.GetCursor() != 0,
+            Input.Instance.SetDefaultCursorShape((Input.CursorShape)index);
+            Check(display.CursorGetShape() == shape && Input.Instance.GetCurrentCursorShape() == (Input.CursorShape)index &&
+                  SDL.GetCursor() != 0,
                 $"Cursor shape {shape} is retained and installed natively.");
         }
         display.CursorSetShape(DisplayServer.CursorShape.Arrow);
@@ -97,11 +98,11 @@ internal static class DisplayServerNativeSmokeTests
         using (var image = Electron2D.Image.CreateFromData(2, 2, false, Electron2D.Image.Format.Rgba8,
                    [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255]))
         {
-            display.CursorSetCustomImage(image, hotspot: new Vector2(1.75f, 0.25f));
+            Input.Instance.SetCustomMouseCursor(image, hotspot: new Vector2(1.75f, 0.25f));
             validCursor = SDL.GetCursor();
             try
             {
-                display.CursorSetCustomImage(image, hotspot: new Vector2(float.NaN, 0));
+                Input.Instance.SetCustomMouseCursor(image, hotspot: new Vector2(float.NaN, 0));
                 throw new InvalidOperationException("A nonfinite cursor hotspot was accepted.");
             }
             catch (ArgumentOutOfRangeException)

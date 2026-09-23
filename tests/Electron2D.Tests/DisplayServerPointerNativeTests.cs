@@ -24,11 +24,11 @@ internal static class DisplayServerPointerNativeTests
         {
             foreach (var mode in modes)
             {
-                display.MouseSetMode(mode);
-                display.MouseSetMode(mode);
+                Input.Instance.MouseMode = (Input.MouseModeEnum)mode;
+                Input.Instance.MouseMode = (Input.MouseModeEnum)mode;
                 var flags = SDL.GetWindowFlags(window);
                 var expectedGrab = mode is DisplayServer.MouseMode.Confined or DisplayServer.MouseMode.ConfinedHidden;
-                Check(display.MouseGetMode() == mode &&
+                Check(display.MouseGetMode() == mode && Input.Instance.MouseMode == (Input.MouseModeEnum)mode &&
                       SDL.GetWindowRelativeMouseMode(window) == (mode == DisplayServer.MouseMode.Captured) &&
                       ((flags & SDL.WindowFlags.MouseGrabbed) != 0) == expectedGrab &&
                       SDL.CursorVisible() == (mode is DisplayServer.MouseMode.Visible or DisplayServer.MouseMode.Confined),
@@ -58,6 +58,12 @@ internal static class DisplayServerPointerNativeTests
             }
             Check(warpRejected && display.MouseGetPosition() == beforeWarp,
                 "Wayland warp rejects the unavailable capability without synthetic pointer movement.");
+            try
+            {
+                Input.Instance.WarpMouse(new Vector2(20, 20));
+                throw new InvalidOperationException("Input pointer warping bypassed the Wayland capability check.");
+            }
+            catch (NotSupportedException) { }
             Console.WriteLine("Wayland pointer modes passed; unavailable pointer warp rejected.");
         }
         finally

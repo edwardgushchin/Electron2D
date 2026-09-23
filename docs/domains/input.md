@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Responsibility
 
-Input owns typed input-event values, the process-wide action map, raw and mapped input state, frame-latched transitions, and delivery into the active node hierarchy. It is platform-neutral production code in `Electron2D.dll`; the separate Display domain now provides an SDL native event source.
+Input owns typed input-event values, the process-wide action map, raw and mapped input state, frame-latched transitions, and delivery into the active node hierarchy. Its pointer controls delegate to the active Display domain, which provides the SDL native event source and owns native cursor/window state. Input itself does not call SDL.
 
 ## Component inventory
 
@@ -16,7 +16,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 
 ## Public surface
 
-- `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, and release-all.
+- `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, native mouse mode/cursor controls and warp, and release-all.
 - `InputMap`: action registration, deadzones, binding management, matching, and descriptions.
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads.
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
@@ -25,7 +25,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 
 ## Dependency direction
 
-Input depends on Core object/resource lifecycle and math. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Input has no dependency on SDL, a renderer, GUI, audio, physics, networking, or an editor.
+Input depends on Core object/resource lifecycle and math. `Engine` registers the two process singletons and `MainLoop` owns transition-window completion. Scene consumes Input events for node delivery. Pointer controls query `DisplayServer.Instance` and use its owner-thread native operations, with no separate cached pointer state. Input has no direct SDL, renderer, audio, physics, networking, or editor dependency.
 
 ## Domain-wide invariants
 
@@ -40,7 +40,7 @@ Input depends on Core object/resource lifecycle and math. `Engine` registers the
 
 ## Current limitations
 
-The Display domain now implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Root viewport Control pointer routing and keyboard focus are implemented; hover, clipping, touch targeting, focus navigation, exact drawing order and nested viewport routing remain absent. Controller lifecycle/effects, sensors, MIDI, shortcuts and project-setting action persistence also remain absent. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
+The Display domain implements native cursor/window operations and direct SDL event pumping, including mouse-motion accumulation, explicit input flush, mouse/touch emulation, and deduplication of SDL-generated pointer counterparts. Input exposes mouse modes, 17 cursor shapes, custom image slots and warp via that domain. The cursor-default call currently changes only the active native shape; retained viewport defaults, Control hover overrides and synthetic motion refresh require the GUI hover/cursor routing slice. Wayland rejects pointer warp; supported backend movement is unverified. Root viewport Control pointer routing and keyboard focus are implemented; hover, clipping, touch targeting, focus navigation, exact drawing order and nested viewport routing remain absent. Controller lifecycle/effects, sensors, MIDI, shortcuts and project-setting action persistence also remain absent. [ADR 0038](../decisions/input.md#adr-0038) names the exact implementation trigger and actionability rule for every gap.
 
 The SDL keyboard adapter supplies distinct logical, physical, and current-layout label keys. Its label is derived from the unmodified scancode and can preserve non-Latin key identity. Left/right control, shift, alt, and GUI scancodes set the corresponding `KeyLocation`; all other scancodes are `Unspecified`. Native key events currently leave `Unicode` at zero; text input is delivered separately. SDL key events contain no produced text scalar, and a text-input event can represent multiple scalars or an IME commit without identifying a key press. A native per-key Unicode source with verified IME/composition semantics is required in the first native keyboard/text adapter slice. Caller-created typed key events may carry a Unicode scalar.
 
