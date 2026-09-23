@@ -1,0 +1,37 @@
+# Third-party software
+
+Last updated: 2026-09-23
+
+This page lists Electron2D's direct third-party integrations and backends selected by accepted decisions. **Selected** does not mean **integrated**. The project files, vendor provenance records and shader toolchain lock are the sources for exact versions; native packages may have their own transitive dependencies.
+
+## Integrated runtime dependencies
+
+| Software | Role and delivery | Version source |
+| --- | --- | --- |
+| SDL3-CS (SDL, Image and ShaderCross bindings) | Complete managed source modules compiled internally into the single `Electron2D.dll`; no public SDL types or separate managed binding assembly. | [Vendor provenance](../src/Vendor/SDL3-CS/UPSTREAM.md): `v3.4.16.1` |
+| SDL3 | Native window, input and rendering foundation. The Linux native package is a runtime project dependency. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux` `3.4.16.0` |
+| SDL_image 3 | Native image decoding and encoding through the vendored Image bindings. The Linux native package is a runtime project dependency. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux.Image` `3.4.6.9` |
+| SDL_shadercross 3 | Native SPIR-V translation and reflection through the vendored ShaderCross bindings; its Linux package also supplies the DXC and SPIRV-Cross libraries used by the shader path. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux.Shadercross` `3.0.0.11`; [shader component](components/shader-materials.md) |
+| Clipper2 | Polygon clipping and offset operations; seven C# source files compiled internally into `Electron2D.dll`. | [Vendor provenance](../src/Vendor/Clipper2/UPSTREAM.txt): `1.5.4`; [license](../src/Vendor/Clipper2/LICENSE) |
+| PolyPartition algorithm | Adapted convex polygon part merging; no separate package or binary. | [Geometry component](components/geometry-values.md); [notice and license](licenses/PolyPartition-LICENSE.txt) |
+| PCG32 algorithm | Adapted random number generator core; no separate package or binary. | [Random generation component](components/random-generation.md); [notice and license](licenses/PCG32-LICENSE.txt) |
+
+These are direct integrations. On Linux, the three pinned native SDL packages are delivered separately from `Electron2D.dll`; the single-assembly rule applies to managed code, not native binaries. Other target platforms have no equivalent verified native package matrix yet. See [ADR 0012](decisions/product.md#adr-0012) and [ADR 0021](decisions/product.md#adr-0021).
+
+## Shader import and build tools
+
+The separate Linux x64 `ShaderImport` tool packages **glslang 16.4.0**, **SPIRV-Tools v2026.3** (`spirv-val`) and matching **SPIRV-Headers**. Revisions and archive hashes are pinned in [toolchain.lock.json](../tools/shaders/toolchain.lock.json). HLSL import uses DXC from the already listed SDL_shadercross native package. These compilers and validators run during import/build, not inside the game runtime. See the [importer README](../tools/shaders/README.md) and [ADR 0028](decisions/rendering.md#adr-0028).
+
+## Selected for future executable slices
+
+| Software | Intended role | Decision and current state |
+| --- | --- | --- |
+| SDL_ttf 3 with HarfBuzz and FreeType; SDL3-CS TTF bindings | Font loading, shaping and glyph rasterization integrated with Electron2D's canvas. | [ADR 0046](decisions/rendering.md#adr-0046). Text backend, native package and managed bindings are not integrated yet. |
+| FAudio over SDL3; managed FAudio binding | Audio voices, bus routing and effects. | [ADR 0047](decisions/audio.md#adr-0047). Audio backend, native package and managed binding are not integrated yet; compressed-audio decoders remain unselected. |
+| Box2D.NET | 2D physics backend, with managed source compiled into `Electron2D.dll`. | [ADR 0012](decisions/product.md#adr-0012). Physics source and domain are not integrated yet. |
+
+SDL_mixer is not the selected audio mixer. Silk.NET.Shaderc.Native is not part of the runtime shader path. These choices are recorded in [ADR 0047](decisions/audio.md#adr-0047) and [ADR 0028](decisions/rendering.md#adr-0028).
+
+## Host-provided libraries
+
+Linux display integration directly probes the system's `libdbus-1.so.3`. GTK 3, GDK, GObject and libdecor's GTK plugin are optional host facilities used for native-looking Wayland window decorations where available. They are not engine-owned NuGet packages. See the [display component](components/display-server.md). This page is not an inventory of every operating-system library or transitive native codec dependency.

@@ -38,6 +38,7 @@ This directory describes the engine as it exists now. Planned features are liste
 ## Navigation
 
 - [Inventory](inventory.md)
+- [Third-party software](thirdparty.md)
 - [API comparison and implementation roadmap](coverage/index.md)
 - Domain: [Core](domains/core.md)
 - Domain: [Input](domains/input.md)
