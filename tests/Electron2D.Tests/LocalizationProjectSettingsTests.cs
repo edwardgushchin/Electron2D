@@ -15,6 +15,7 @@ internal static class LocalizationProjectSettingsTests
             using (var saved = new ProjectSettings(project, user))
             {
                 Check(!saved.Get(ProjectSettings.PseudolocalizationEnabled) &&
+                    saved.Get(ProjectSettings.RootNodeAutoTranslate) &&
                     saved.Get(ProjectSettings.PseudolocalizationReplaceWithAccents) &&
                     saved.Get(ProjectSettings.PseudolocalizationSkipPlaceholders) &&
                     saved.Get(ProjectSettings.PseudolocalizationPrefix) == "[" &&
@@ -25,6 +26,7 @@ internal static class LocalizationProjectSettingsTests
                 saved.Set(ProjectSettings.PseudolocalizationPrefix, "<");
                 saved.Set(ProjectSettings.LocaleTest, "fr-CA");
                 saved.Set(ProjectSettings.LocaleFallback, "de");
+                saved.Set(ProjectSettings.RootNodeAutoTranslate, false);
                 saved.Save();
             }
             using var loaded = new ProjectSettings(project, user);
@@ -35,6 +37,7 @@ internal static class LocalizationProjectSettingsTests
                 loaded.Get(ProjectSettings.PseudolocalizationPrefix) == "<" &&
                 loaded.Get(ProjectSettings.LocaleTest) == "fr-CA" &&
                 loaded.Get(ProjectSettings.LocaleFallback) == "de", "Typed localization settings survive a project-file round trip.");
+            Check(!loaded.Get(ProjectSettings.RootNodeAutoTranslate), "The root translation mode setting survives a project-file round trip.");
             Reject<ArgumentOutOfRangeException>(() => loaded.Set(ProjectSettings.PseudolocalizationExpansionRatio, -0.1f));
             Reject<ArgumentOutOfRangeException>(() => loaded.Set(ProjectSettings.LocaleTest, "bad locale!"));
             Reject<ArgumentException>(() => loaded.Set(ProjectSettings.PseudolocalizationExpansionRatio, float.NaN));

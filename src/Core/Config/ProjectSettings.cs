@@ -204,6 +204,11 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<string> LocaleFallback { get; } =
         new("internationalization/locale/fallback", "en", IsValidProjectLocale);
 
+    /// <summary>Determines whether a newly activated scene root automatically translates messages.</summary>
+    /// <value>The permanent typed project setting, true by default; sampled at scene-tree construction.</value>
+    public static ProjectSetting<bool> RootNodeAutoTranslate { get; } =
+        new("internationalization/rendering/root_node_auto_translate", true);
+
     /// <summary>Enables pseudolocalization when an application loop starts.</summary>
     /// <value>The permanent typed project setting, false by default.</value>
     public static ProjectSetting<bool> PseudolocalizationEnabled { get; } =
@@ -340,6 +345,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(DebugPathsColor, isBasic: false);
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
+        RegisterInternal(RootNodeAutoTranslate, isBasic: false);
         RegisterInternal(PseudolocalizationEnabled, isBasic: false);
         RegisterInternal(PseudolocalizationReplaceWithAccents, isBasic: false);
         RegisterInternal(PseudolocalizationDoubleVowels, isBasic: false);
@@ -1700,6 +1706,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, DebugPathsColor) ||
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleFallback) ||
+        ReferenceEquals(setting, RootNodeAutoTranslate) ||
         ReferenceEquals(setting, PseudolocalizationEnabled) ||
         ReferenceEquals(setting, PseudolocalizationReplaceWithAccents) ||
         ReferenceEquals(setting, PseudolocalizationDoubleVowels) ||

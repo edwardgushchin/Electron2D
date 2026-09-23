@@ -74,7 +74,8 @@ public sealed partial class SceneTree : MainLoop
     /// If activation fails, the tree first stops accepting work, every attached node is exited, ready state consumed
     /// by this attempt is restored, created timers are disposed, created tweens are invalidated, queued work is discarded,
     /// and the supplied hierarchy remains owned by the caller. A reference captured from an activation callback observes
-    /// a terminal disposed tree.
+    /// a terminal disposed tree. A root whose automatic translation mode is inherited samples
+    /// <see cref="ProjectSettings.RootNodeAutoTranslate"/> before entry.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="root"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="root"/> has a parent, belongs to a tree, or is queued for deletion.</exception>
@@ -108,6 +109,7 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
+            root.InitializeRootAutoTranslateMode(ProjectSettings.Instance.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
             if (attachToEngine)
                 Engine.Instance.AttachConstructingTree(this);
             Initialize();

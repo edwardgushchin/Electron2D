@@ -80,9 +80,10 @@ public abstract class ElectronObject : IDisposable
 
     /// <summary>Gets or sets the translation domain used by this object.</summary>
     /// <value>The case-sensitive domain passed to <see cref="TranslationServer"/>. The default is an empty string.</value>
+    /// <remarks><see cref="Node"/> overrides this property to inherit its parent's domain until explicitly assigned.</remarks>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
-    public string TranslationDomain
+    public virtual string TranslationDomain
     {
         get
         {

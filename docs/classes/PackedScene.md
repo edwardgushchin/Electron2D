@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md)
 
@@ -22,6 +22,8 @@ The snapshot owns no source [`Node`](Node.md). It retains source-independent sta
 
 Runtime packing is typed and uses storage-enabled [`PropertyDescriptor`](PropertyDescriptor.md) instances. Text and binary scene
 files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
+
+The node automatic-translation mode is stored. Translation domains are stored only when explicitly assigned; an inheriting descendant continues to resolve the current parent domain after instantiation.
 
 ## Examples
 

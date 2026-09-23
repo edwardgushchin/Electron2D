@@ -1,5 +1,10 @@
 {
   "mappings": [
+    {"electron2d": "T:Electron2D.NodeAutoTranslateMode", "godot": "Node::enum:AutoTranslateMode", "reason": "Typed top-level C# enum for Node automatic translation policy."},
+    {"electron2d": "enumValue:Electron2D.NodeAutoTranslateMode.Inherit()", "godot": "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_INHERIT", "reason": "Same numeric mode value and inherited behavior."},
+    {"electron2d": "enumValue:Electron2D.NodeAutoTranslateMode.Always()", "godot": "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_ALWAYS", "reason": "Same numeric mode value and enabled behavior."},
+    {"electron2d": "enumValue:Electron2D.NodeAutoTranslateMode.Disabled()", "godot": "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_DISABLED", "reason": "Same numeric mode value and disabled behavior."},
+    {"electron2d": "property:Electron2D.ProjectSettings.RootNodeAutoTranslate()", "godot": "ProjectSettings::property:internationalization/rendering/root_node_auto_translate", "reason": "Typed setting sampled before scene-root entry."},
     {"electron2d": "method:Electron2D.SceneTree.CreateTimer(System.Double,System.Boolean,System.Boolean,System.Boolean)", "godot": "SceneTree::method:create_timer(float:,bool:,bool:,bool:)", "reason": "All four arguments and defaults map to one-shot timer scheduling."},
     {"electron2d": "method:Electron2D.SceneTree.ChangeSceneToNode(Electron2D.Node)", "godot": "SceneTree::method:change_scene_to_node(Node:)", "reason": "Typed exceptions replace Error values; the old scene exits immediately and the accepted detached node enters at a deferred safe point."},
     {"electron2d": "method:Electron2D.SceneTree.ChangeSceneToPacked(Electron2D.PackedScene)", "godot": "SceneTree::method:change_scene_to_packed(PackedScene:)", "reason": "Instantiates the in-memory scene before scheduling a deferred replacement; typed exceptions replace Error values."},
@@ -1799,6 +1804,7 @@
     }
   ],
   "extras": [
+    {"electron2d": "property:Electron2D.Node.TranslationDomain()", "reason": "Derived C# override of the inherited Object translation-domain contract; Node resolves its parent's current domain until explicitly assigned, as required by ADR 0007.", "adr": "adr-0007"},
     {"electron2d": "constructor:Electron2D.ParallaxBackground..ctor()", "state": "Implemented", "reason": "Typed construction initializes the inherited canvas layer to -100 and all scroll settings to their pinned defaults."},
     {"electron2d": "method:Electron2D.ParallaxBackground.CreateSceneInstanceFactory()", "state": "Implemented", "reason": "Static exact-type constructor for PackedScene reconstruction."},
     {"electron2d": "method:Electron2D.ParallaxBackground.GetPropertyDescriptors()", "state": "Implemented", "reason": "Typed descriptors store six scroll settings and the background-specific inherited layer default."},
@@ -2604,6 +2610,11 @@
     }
   ],
   "statusGroups": [
+    {"state": "Implemented", "reason": "NodeAutoTranslateMode preserves all three numeric values; NodeLocalizationTests checks inherited, overriding and disabled resolution.", "godot": ["Node::enum:AutoTranslateMode", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_INHERIT", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_ALWAYS", "Node::enum_value:AutoTranslateMode.AUTO_TRANSLATE_MODE_DISABLED"]},
+    {"state": "Implemented", "reason": "NodeLocalizationTests checks nearest-ancestor resolution, explicit disabled/always overrides, root policy, and per-object message enablement independence.", "godot": ["Node::method:can_auto_translate()"]},
+    {"state": "Implemented", "reason": "NodeLocalizationTests checks explicit and inherited domain changes, active notification delivery, and PackedScene preservation of live inherited domains.", "godot": ["Node::method:set_translation_domain_inherited()"]},
+    {"state": "Partial", "reason": "Automatic policy, singular/plural source fallback, root setting and change notifications execute in NodeLocalizationTests; exact locale/catalog parity remains Partial on TranslationServer, and absent text controls do not yet consume automatic translation.", "godot": ["Node::method:atr(String:,StringName:)", "Node::method:atr_n(String:,StringName:,int:,StringName:)", "Node::property:auto_translate_mode"]},
+    {"state": "Implemented", "reason": "The typed boolean default and persistence are checked in LocalizationProjectSettingsTests; SceneTree samples it once before root entry, and NodeLocalizationTests checks both values and runtime retention.", "godot": ["ProjectSettings::property:internationalization/rendering/root_node_auto_translate"]},
     {"state": "Implemented", "reason": "One-shot tree-owned RefCounted role maps to managed ElectronObject lifetime under ADRs 0003/0014; SceneTreeTimerTests and VerifySceneTreeGroupsEventsAndTimers cover both frame lanes, pause, expiry and disposal.", "godot": ["class:SceneTreeTimer"]},
     {"state": "Implemented", "reason": "Mutable finite non-negative seconds, frame decrement and zero-before-timeout match the timer contract; invalid assignment preserves state. SceneTreeTimerTests covers scale-zero and direct frames.", "godot": ["SceneTreeTimer::property:time_left"]},
     {"state": "Implemented", "reason": "Typed synchronous event fires once at zero after node callbacks; disposal follows even on handler failure and later timers continue. VerifySceneTreeGroupsEventsAndTimers and SceneTreeTimerTests cover ordering and lifetime.", "godot": ["SceneTreeTimer::signal:timeout()"]},

@@ -24,6 +24,13 @@ public class Node : ElectronObject
             _ => NodeProcessMode.Inherit,
             (_, value) => Enum.IsDefined(value),
             stored: true),
+        new PropertyDescriptor<Node, NodeAutoTranslateMode>(
+            nameof(AutoTranslateMode),
+            node => node.AutoTranslateMode,
+            (node, value) => node.AutoTranslateMode = value,
+            _ => NodeAutoTranslateMode.Inherit,
+            (_, value) => Enum.IsDefined(value),
+            stored: true),
         new PropertyDescriptor<Node, bool>(nameof(ProcessEnabled), node => node.ProcessEnabled, (node, value) => node.ProcessEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(PhysicsProcessEnabled), node => node.PhysicsProcessEnabled, (node, value) => node.PhysicsProcessEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<Node, bool>(nameof(InputEnabled), node => node.InputEnabled, (node, value) => node.InputEnabled = value, _ => false, stored: true),
@@ -159,6 +166,10 @@ public class Node : ElectronObject
 
     private NodeProcessMode _processMode;
 
+    private NodeAutoTranslateMode _autoTranslateMode;
+
+    private bool _translationDomainInherited = true;
+
     private bool _processEnabled;
 
     private bool _physicsProcessEnabled;
@@ -254,6 +265,145 @@ public class Node : ElectronObject
     /// <summary>Gets the direct parent.</summary>
     /// <value>The owning parent, or <see langword="null"/> while detached.</value>
     public Node? Parent { get; private set; }
+
+    /// <summary>Gets or sets this node's translation domain, inherited from its parent until explicitly assigned.</summary>
+    /// <value>The effective domain, or the empty main domain for a parentless node without an override.</value>
+    /// <remarks>An explicit assignment, including an empty string, stops inheritance. Changes notify affected active nodes.</remarks>
+    /// <exception cref="ArgumentNullException">The assigned domain is null.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public override string TranslationDomain
+    {
+        get
+        {
+            ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
+            return _translationDomainInherited ? Parent?.TranslationDomain ?? string.Empty : base.TranslationDomain;
+        }
+        set
+        {
+            EnsureMutable();
+            ArgumentNullException.ThrowIfNull(value);
+            if (!_translationDomainInherited && base.TranslationDomain == value)
+                return;
+            base.TranslationDomain = value;
+            _translationDomainInherited = false;
+            NotifyInheritedTranslationDomainChanged();
+        }
+    }
+
+    /// <summary>Restores inheritance of the parent's translation domain, or the main domain without a parent.</summary>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public void SetTranslationDomainInherited()
+    {
+        EnsureMutable();
+        if (!_translationDomainInherited)
+        {
+            _translationDomainInherited = true;
+            NotifyInheritedTranslationDomainChanged();
+        }
+    }
+
+    internal bool IsTranslationDomainInherited => _translationDomainInherited;
+
+    internal void InitializeRootAutoTranslateMode(bool enabled)
+    {
+        if (_autoTranslateMode == NodeAutoTranslateMode.Inherit)
+            _autoTranslateMode = enabled ? NodeAutoTranslateMode.Always : NodeAutoTranslateMode.Disabled;
+    }
+
+    /// <summary>Gets or sets whether automatic translation is inherited, enabled, or disabled for this subtree.</summary>
+    /// <value><see cref="NodeAutoTranslateMode.Inherit"/> by default; a scene root resolves it from <see cref="ProjectSettings.RootNodeAutoTranslate"/> when its tree starts.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is not a defined mode.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread, or an active root is set to Inherit.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public NodeAutoTranslateMode AutoTranslateMode
+    {
+        get { ThrowIfDisposed(); return _autoTranslateMode; }
+        set
+        {
+            EnsureMutable();
+            if (!Enum.IsDefined(value))
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown automatic translation mode.");
+            if (value == NodeAutoTranslateMode.Inherit && IsInsideTree && Parent is null)
+                throw new InvalidOperationException("An active scene root cannot inherit automatic translation mode.");
+            if (_autoTranslateMode == value)
+                return;
+            _autoTranslateMode = value;
+            PropagateNotification(NotificationTranslationChanged);
+        }
+    }
+
+    /// <summary>Gets whether this node's inherited automatic translation policy is enabled.</summary>
+    /// <returns>True for the nearest ancestor's Always mode, or for a parentless inherited node.</returns>
+    /// <exception cref="InvalidOperationException">An attached node is queried off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public bool CanAutoTranslate()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        for (Node? node = this; node is not null; node = node.Parent)
+        {
+            if (node._autoTranslateMode != NodeAutoTranslateMode.Inherit)
+                return node._autoTranslateMode == NodeAutoTranslateMode.Always;
+        }
+        return true;
+    }
+
+    /// <summary>Translates a message only when automatic translation is enabled for this node.</summary>
+    /// <param name="message">The source message.</param>
+    /// <param name="context">An optional disambiguation context.</param>
+    /// <returns>The resolved translation or the source message.</returns>
+    /// <exception cref="ArgumentNullException">The message is null.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is queried off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public string Atr(string message, string? context = null)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(message);
+        return CanAutoTranslate() ? Tr(message, context) : message;
+    }
+
+    /// <summary>Translates singular or plural text only when automatic translation is enabled for this node.</summary>
+    /// <param name="singular">The source singular form.</param>
+    /// <param name="plural">The source plural form.</param>
+    /// <param name="count">The message quantity.</param>
+    /// <param name="context">An optional disambiguation context.</param>
+    /// <returns>The resolved form or the source form for the quantity.</returns>
+    /// <exception cref="ArgumentNullException">Either source form is null.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is queried off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public string AtrN(string singular, string plural, long count, string? context = null)
+    {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(singular);
+        ArgumentNullException.ThrowIfNull(plural);
+        return CanAutoTranslate() ? TrN(singular, plural, count, context) : count == 1 ? singular : plural;
+    }
+
+    private void NotifyInheritedTranslationDomainChanged()
+    {
+        List<Exception>? errors = null;
+        NotifyInheritedTranslationDomainChanged(ref errors);
+        ThrowCollected("One or more translation-change callbacks failed.", errors);
+    }
+
+    private void NotifyInheritedTranslationDomainChanged(ref List<Exception>? errors)
+    {
+        if (!IsInsideTree)
+            return;
+
+        if (CanAutoTranslate())
+        {
+            try { DispatchNotification(NotificationTranslationChanged); }
+            catch (Exception error) { CollectException(ref errors, error); }
+        }
+
+        foreach (var child in _children.ToArray())
+            if (!child.IsDisposed && child._translationDomainInherited && ReferenceEquals(child.Parent, this))
+                child.NotifyInheritedTranslationDomainChanged(ref errors);
+    }
 
     /// <summary>Gets the external resource path from which this scene root was instantiated.</summary>
     /// <value>The packed-scene path for an instantiated external scene root; otherwise an empty string.</value>
@@ -1371,7 +1521,7 @@ public class Node : ElectronObject
     }
 
     /// <inheritdoc />
-    /// <remarks>Appends this class's typed hierarchy, ownership, and processing descriptors to the inherited descriptors.</remarks>
+    /// <remarks>Appends this class's typed hierarchy, ownership, processing, and automatic translation descriptors to the inherited descriptors.</remarks>
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SceneNodeProperties);
 
     /// <inheritdoc />
@@ -1718,6 +1868,12 @@ public class Node : ElectronObject
         catch (Exception error)
         {
             CollectException(ref errors, error);
+        }
+
+        if (CanAutoTranslate())
+        {
+            try { DispatchNotification(NotificationTranslationChanged); }
+            catch (Exception error) { CollectException(ref errors, error); }
         }
 
         try

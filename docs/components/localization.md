@@ -8,11 +8,11 @@ This Localization component stores and resolves domain/context translations for 
 
 ## Owned type
 
-[`TranslationServer`](../classes/TranslationServer.md) resolves direct registrations and owns named [`TranslationDomain`](../classes/TranslationDomain.md) registrations of borrowed [`Translation`](../classes/Translation.md) resources. [`OptimizedTranslation`](../classes/OptimizedTranslation.md) is a derived catalog that stores compressed values without source keys. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server.
+[`TranslationServer`](../classes/TranslationServer.md) resolves direct registrations and owns named [`TranslationDomain`](../classes/TranslationDomain.md) registrations of borrowed [`Translation`](../classes/Translation.md) resources. [`OptimizedTranslation`](../classes/OptimizedTranslation.md) is a derived catalog that stores compressed values without source keys. `ElectronObject` provides per-instance domain and enablement settings and delegates `Tr`/`TrN` calls to the server. [`Node`](../classes/Node.md) inherits domains from parents and adds automatic translation policy and `Atr`/`AtrN`.
 
 ## Current implementation status
 
-Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. No catalog asset loader or operating-system locale discovery exists.
+Direct registration and contextual, mutable resource catalogs execute through the same lookup path. A registered domain can override culture and enablement and pseudolocalize singular results. Two typed project settings select the startup test culture and fallback locale; nine further settings supply pseudolocalization enablement and main-domain transforms. A twelfth setting selects the initial scene-root auto-translate mode. `TranslationServer.ReloadPseudolocalization` reapplies the eight transforms during a run without toggling enablement. Resource duplication copies independent message containers. Optimized catalogs generate hash-keyed, optionally Brotli-compressed values, skip contextual entries, keep only the first plural form, hide source keys, and duplicate their lookup maps. No catalog asset loader or operating-system locale discovery exists.
 
 ## Dependencies
 
@@ -30,7 +30,7 @@ Direct registration, domain registry changes, clearing, and culture changes use 
 
 ## Exclusions
 
-The component does not load catalog files, format parameters, infer plural rules, or select culture from the operating system after startup. Reloading pseudolocalization does not reload asset remaps or notify an active scene of a translation change. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
+The component does not load catalog files, format parameters, infer plural rules, or select culture from the operating system after startup. Reloading pseudolocalization does not reload asset remaps or notify an active scene of a translation change; local node domain and mode changes do notify affected nodes. Optimized catalogs do not implement the source engine's serialized Smaz format or restrict `Generate` to an editor build in the shared assembly.
 
 ## Verification
 

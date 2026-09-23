@@ -1909,6 +1909,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NodeAutoTranslateMode",
+    "kind": "type",
+    "declaringType": "Electron2D.NodeAutoTranslateMode",
+    "name": "NodeAutoTranslateMode",
+    "signature": "public enum Electron2D.NodeAutoTranslateMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NodeProcessMode",
     "kind": "type",
     "declaringType": "Electron2D.NodeProcessMode",
@@ -13649,6 +13667,45 @@
     "parameters": [],
     "returnType": "Electron2D.MouseButtonMask",
     "value": "256"
+  },
+  {
+    "id": "enumValue:Electron2D.NodeAutoTranslateMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NodeAutoTranslateMode",
+    "name": "Always",
+    "signature": "public const Electron2D.NodeAutoTranslateMode Always = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NodeAutoTranslateMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NodeAutoTranslateMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.NodeAutoTranslateMode Disabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NodeAutoTranslateMode.Inherit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NodeAutoTranslateMode",
+    "name": "Inherit",
+    "signature": "public const Electron2D.NodeAutoTranslateMode Inherit = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.NodeProcessMode.Always()",
@@ -34709,6 +34766,77 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.Atr(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "Atr",
+    "signature": "public System.String Atr(System.String message, System.String context = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "message",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.AtrN(System.String,System.String,System.Int64,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "AtrN",
+    "signature": "public System.String AtrN(System.String singular, System.String plural, System.Int64 count, System.String context = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "singular",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "plural",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "context",
+        "type": "System.String",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.CanAutoTranslate()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "CanAutoTranslate",
+    "signature": "public System.Boolean CanAutoTranslate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.CanProcess()",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -35498,6 +35626,19 @@
     "declaringType": "Electron2D.Node",
     "name": "RequestReady",
     "signature": "public System.Void RequestReady()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.SetTranslationDomainInherited()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetTranslationDomainInherited",
+    "signature": "public System.Void SetTranslationDomainInherited()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -58261,6 +58402,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Node.AutoTranslateMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "AutoTranslateMode",
+    "signature": "public Electron2D.NodeAutoTranslateMode AutoTranslateMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Node.ChildCount()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -58474,6 +58628,19 @@
     "declaringType": "Electron2D.Node",
     "name": "SceneFilePath",
     "signature": "public System.String SceneFilePath { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.TranslationDomain()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "TranslationDomain",
+    "signature": "public System.String TranslationDomain { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -59688,6 +59855,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.RootNodeAutoTranslate()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "RootNodeAutoTranslate",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E RootNodeAutoTranslate { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

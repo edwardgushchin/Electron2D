@@ -162,6 +162,7 @@ VerifyLifetime();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
 VerifyTranslations();
+NodeLocalizationTests.Run();
 TranslationDomainTests.Run();
 LocalizationProjectSettingsTests.Run();
 VerifyMathF();
@@ -5644,6 +5645,9 @@ static void VerifyMainLoop()
     notificationRoot.AddChild(new SystemNotificationNode("child", notificationLog));
     using (var tree = new SceneTree(notificationRoot))
     {
+        Require(notificationLog.SequenceEqual(["root:2010", "child:2010"]),
+            "Tree entry must notify nodes that their translated messages may have changed.");
+        notificationLog.Clear();
         Require(tree is MainLoop, "SceneTree must implement the MainLoop contract.");
         Expect<InvalidOperationException>(tree.Initialize, "SceneTree construction must complete MainLoop initialization.");
         Require(!tree.Process(0d) && tree.ProcessFrameCount == 1,
@@ -5654,10 +5658,12 @@ static void VerifyMainLoop()
     }
 
     var failingNotificationLog = new List<string>();
-    var failingNotificationRoot = new SystemNotificationNode("root", failingNotificationLog) { ThrowOnSystem = true };
+    var failingNotificationRoot = new SystemNotificationNode("root", failingNotificationLog);
     failingNotificationRoot.AddChild(new SystemNotificationNode("child", failingNotificationLog));
     using (var tree = new SceneTree(failingNotificationRoot))
     {
+        failingNotificationLog.Clear();
+        failingNotificationRoot.ThrowOnSystem = true;
         Require(Capture(() => tree.Notify(MainLoop.NotificationApplicationPaused)) is AggregateException &&
                 failingNotificationLog.SequenceEqual(["root:2015", "child:2015"]),
             "A failing system-notification callback must not prevent later live nodes from receiving it.");
@@ -9138,7 +9144,7 @@ sealed class SystemNotificationNode : Entity
         _log = log;
     }
 
-    public bool ThrowOnSystem { get; init; }
+    public bool ThrowOnSystem { get; set; }
 
     protected override void OnNotification(int what)
     {

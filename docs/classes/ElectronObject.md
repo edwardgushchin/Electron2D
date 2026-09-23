@@ -1,6 +1,6 @@
 # ElectronObject
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -45,7 +45,7 @@ Console.WriteLine(value.InstanceID);
 | [`public string ClassName { get; }`](#p-electron2d-electronobject-classname) | Gets the unqualified runtime class name. |
 | [`public bool IsDisposed { get; }`](#p-electron2d-electronobject-isdisposed) | Gets whether deterministic disposal has started. |
 | [`public bool CanTranslateMessages { get; set; }`](#p-electron2d-electronobject-cantranslatemessages) | Gets or sets whether this object resolves messages through [`TranslationServer`](TranslationServer.md). |
-| [`public string TranslationDomain { get; set; }`](#p-electron2d-electronobject-translationdomain) | Gets or sets the translation domain used by this object. |
+| [`public virtual string TranslationDomain { get; set; }`](#p-electron2d-electronobject-translationdomain) | Gets or sets the translation domain used by this object; Node overrides it for inheritance. |
 
 ## Methods
 
@@ -127,9 +127,11 @@ Gets or sets whether this object resolves messages through [`TranslationServer`]
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
 
 <a id="p-electron2d-electronobject-translationdomain"></a>
-### `public string TranslationDomain { get; set; }`
+### `public virtual string TranslationDomain { get; set; }`
 
 Gets or sets the translation domain used by this object.
+
+`Node` overrides this property to inherit a parent's domain until explicitly assigned.
 
 **Value:** The case-sensitive domain passed to [`TranslationServer`](TranslationServer.md). The default is an empty string.
 

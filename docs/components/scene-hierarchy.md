@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope and owned types
 
@@ -13,6 +13,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
+| [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
 [Sprite](../classes/Sprite.md) and [Parallax](../classes/Parallax.md) derive from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [CanvasLayer](../classes/CanvasLayer.md) derives directly from Node and establishes an independent canvas. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control has executable layout, transform, root viewport pointer routing, hover/cursor selection, keyboard focus and Tab/arrow navigation. The root Viewport exposes the focused Control, explicit release and a focus-change event; Control receives focus notifications before its focus events. Button will be reached through the absent BaseButton. Themes, containers and complete GUI routing remain unimplemented.
 
@@ -21,6 +22,8 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 ## Runtime flow
 
 Node owns ordered children of any Node subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use Node. Node also reports depth-first tree order, prints subtree paths or Unicode branches, and propagates manual notifications parent-first. Propagation prevents direct child-list changes while visiting a node and collects callback failures after attempting other descendants. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
+
+Node inherits its translation domain and automatic-translation mode from the nearest parent unless either is explicitly overridden. SceneTree samples the typed root setting before entry; entry and later mode/domain changes notify affected nodes. PackedScene stores explicit domain overrides and the auto-translation mode, preserving live inheritance for other descendants.
 
 CanvasItem adds retained drawing and canvas state. A direct canvas parent contributes transform, modulation and material; a neutral Node breaks those chains. Global transform, Z accumulation and canvas sampler inheritance stop at TopLevel. CanvasItem filters/repeat resolve through direct canvas parents, then Viewport defaults; neutral nodes break canvas inheritance. Toggling TopLevel preserves local state and recomputes global coordinates. Visibility follows direct canvas parents, including TopLevel, and the containing window. Window owns native visibility independently; its changes notify canvas roots, including roots below neutral nodes.
 

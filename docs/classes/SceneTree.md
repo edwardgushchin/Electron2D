@@ -20,6 +20,8 @@ Owns one active node hierarchy and coordinates its lifecycle, input, frames, gro
 
 `SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
+Before entry, a root still set to `NodeAutoTranslateMode.Inherit` samples `ProjectSettings.RootNodeAutoTranslate` and becomes `Always` or `Disabled`. Each automatically translating node receives `NotificationTranslationChanged` during entry; the setting is not re-read for an active tree.
+
 The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 Electron2D does not create a frame-pump thread. A host can drive the loop through [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double),
 call [`MainLoop.Process(Double)`](MainLoop.md#m-electron2d-mainloop-process-system-double) and [`MainLoop.PhysicsProcess(Double)`](MainLoop.md#m-electron2d-mainloop-physicsprocess-system-double) directly, or use this class's wrappers.

@@ -6,6 +6,7 @@ namespace Electron2D;
 /// <remarks>
 /// Runtime packing is typed and uses storage-enabled <see cref="PropertyDescriptor"/> instances. Text and binary scene
 /// files, editor metadata, inheritance authoring, placeholders, and persistent event endpoints belong to later domains.
+/// An inherited node translation domain is omitted from storage so it continues to track its parent after instantiation.
 /// </remarks>
 public sealed class PackedScene : Resource
 {
@@ -294,7 +295,8 @@ public sealed class PackedScene : Resource
             var parentPath = parentIndex < 0 ? "." : nodes[parentIndex].Path;
             var ownerPath = ownerIndex < 0 ? string.Empty : ownerIndex == 0 ? "." : nodes[ownerIndex].Path;
             var properties = node.GetPropertyList()
-                .Where(property => property.IsStored && property.Name != nameof(Node.Name))
+                .Where(property => property.IsStored && property.Name != nameof(Node.Name) &&
+                    !(property.Name == nameof(Node.TranslationDomain) && node.IsTranslationDomainInherited))
                 .Select(property => new ScenePropertyData(property.Name, property.CaptureStoredValue(node)))
                 .ToArray();
 

@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion and packed-scene ownership. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
+The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
 ## Examples
 
@@ -34,6 +34,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public NodeAutoTranslateMode AutoTranslateMode { get; set; }`](#p-electron2d-node-autotranslatemode) | Gets or sets the inherited automatic translation policy. |
 | [`public int ChildCount { get; }`](#p-electron2d-node-childcount) | Gets the number of direct children. |
 | [`public IReadOnlyList<Node> Children { get; }`](#p-electron2d-node-children) | Gets a live read-only view of the ordered direct children. |
 | [`public bool InputEnabled { get; set; }`](#p-electron2d-node-inputenabled) | Gets or sets whether this node receives the first input-propagation stage. |
@@ -52,6 +53,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public int ProcessPriority { get; set; }`](#p-electron2d-node-processpriority) | Gets or sets this node's ascending process-frame order key. |
 | [`public string SceneFilePath { get; }`](#p-electron2d-node-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
 | [`public SceneTree? Tree { get; }`](#p-electron2d-node-tree) | Gets the active scene tree containing this node. |
+| [`public override string TranslationDomain { get; set; }`](#p-electron2d-node-translationdomain) | Gets or explicitly overrides the inherited translation domain. |
 | [`public bool UnhandledInputEnabled { get; set; }`](#p-electron2d-node-unhandledinputenabled) | Gets or sets whether this node receives input left unhandled by earlier stages. |
 | [`public bool UnhandledKeyInputEnabled { get; set; }`](#p-electron2d-node-unhandledkeyinputenabled) | Gets or sets whether this node receives unhandled keyboard events before general unhandled input. |
 
@@ -64,6 +66,9 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public void AddChild(Node child)`](#m-electron2d-node-addchild-electron2d-scenenode) | Appends a detached node as the last direct child. |
 | [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-scenenode) | Inserts a detached node immediately after this node in its parent's child order. |
 | [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-node-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
+| [`public string Atr(string message, string? context = null)`](#m-electron2d-node-atr-system-string-system-string) | Translates a singular message when automatic translation is enabled. |
+| [`public string AtrN(string singular, string plural, long count, string? context = null)`](#m-electron2d-node-atrn-system-string-system-string-system-int64-system-string) | Translates a plural message when automatic translation is enabled. |
+| [`public bool CanAutoTranslate()`](#m-electron2d-node-canautotranslate) | Resolves the nearest ancestor's automatic translation policy. |
 | [`public bool CanProcess()`](#m-electron2d-node-canprocess) | Determines whether the resolved process mode allows callbacks in the current tree pause state. |
 | [`public bool CancelFree()`](#m-electron2d-node-cancelfree) | Atomically cancels a pending deletion request. |
 | [`protected virtual Func<Node> CreateSceneInstanceFactory()`](#m-electron2d-node-createsceneinstancefactory) | Creates a reusable factory for packed-scene instances of this exact runtime node type. |
@@ -85,7 +90,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public TNode GetNode<TNode>(string path)`](#m-electron2d-node-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
 | [`public string GetPath()`](#m-electron2d-node-getpath) | Builds this node's absolute path from the root of its current hierarchy. |
 | [`public string GetPathTo(Node node)`](#m-electron2d-node-getpathto-electron2d-scenenode) | Builds a relative path from this node to another node in the same hierarchy. |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process, input and automatic translation state for inspection and packed scenes. |
 | [`public Viewport GetViewport()`](#m-electron2d-node-getviewport) | Finds this node's nearest viewport, including itself. |
 | [`public Window GetWindow()`](#m-electron2d-node-getwindow) | Finds this node's containing window, including itself. |
 | [`public bool HasNode(string path)`](#m-electron2d-node-hasnode-system-string) | Tests whether a node path resolves. |
@@ -110,6 +115,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool RemoveFromGroup(string group)`](#m-electron2d-node-removefromgroup-system-string) | Removes this node from a case-sensitive group. |
 | [`public virtual void Reparent(Node newParent, bool keepGlobalTransform = true)`](#m-electron2d-node-reparent-electron2d-node-system-boolean) | Moves this non-root node under a new parent. |
 | [`public void RequestReady()`](#m-electron2d-node-requestready) | Requests ready delivery the next time SceneTree attachment reaches the ready phase. |
+| [`public void SetTranslationDomainInherited()`](#m-electron2d-node-settranslationdomaininherited) | Restores inherited translation domain lookup. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-node-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 | [`protected override void ValidateMutation()`](#m-electron2d-node-validatemutation) | Validates that mutable base state may change at the current lifecycle point. |
 
@@ -170,6 +176,16 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 Initializes a detached node with its runtime class name and no parent.
 
 ## Property Descriptions
+
+<a id="p-electron2d-node-autotranslatemode"></a>
+### `public NodeAutoTranslateMode AutoTranslateMode { get; set; }`
+
+Defaults to `Inherit`. Detached parentless nodes resolve this as enabled; `SceneTree` samples `ProjectSettings.RootNodeAutoTranslate` and assigns `Always` or `Disabled` to a root still set to `Inherit`. Changing the mode notifies this subtree. An active root cannot return to `Inherit`. Unknown values throw `ArgumentOutOfRangeException`; attached changes require the tree owner thread.
+
+<a id="p-electron2d-node-translationdomain"></a>
+### `public override string TranslationDomain { get; set; }`
+
+Returns the nearest inherited parent domain, or the main empty domain without a parent. Assigning any string, including empty, creates an explicit override; `SetTranslationDomainInherited` removes it. Active changes notify this node and inheriting descendants while preserving explicit descendant domains. `PackedScene` stores only explicit overrides, so inherited domains remain live after instantiation. A null assignment throws `ArgumentNullException`; attached changes require the owner thread.
 
 <a id="p-electron2d-node-childcount"></a>
 ### `public int ChildCount { get; }`
@@ -388,6 +404,26 @@ Gets or sets whether this node receives unhandled keyboard events before general
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-node-atr-system-string-system-string"></a>
+### `public string Atr(string message, string? context = null)`
+
+Returns the source message when `CanAutoTranslate()` is false; otherwise delegates to inherited `Tr`, including its per-object message enablement, domain and context behavior. A null message throws `ArgumentNullException`.
+
+<a id="m-electron2d-node-atrn-system-string-system-string-system-int64-system-string"></a>
+### `public string AtrN(string singular, string plural, long count, string? context = null)`
+
+Returns singular only for count one, or plural otherwise, while automatic translation is disabled. Otherwise delegates to inherited `TrN`. Null source forms throw `ArgumentNullException`.
+
+<a id="m-electron2d-node-canautotranslate"></a>
+### `public bool CanAutoTranslate()`
+
+Returns whether this node or its nearest non-inheriting ancestor uses `Always`. Detached roots with `Inherit` resolve as enabled. This policy is separate from per-object `CanTranslateMessages`.
+
+<a id="m-electron2d-node-settranslationdomaininherited"></a>
+### `public void SetTranslationDomainInherited()`
+
+Clears an explicit domain override so this node resolves its parent's current domain, or the main empty domain when parentless. Affected active inheriting descendants receive `NotificationTranslationChanged`; explicit descendant overrides stop propagation. Attached changes require the owner thread.
 
 <a id="m-electron2d-node-hasnode-system-string"></a>
 ### `public bool HasNode(string path)`
@@ -1241,7 +1277,7 @@ The parent owns its children; SceneTree owns the active root. PackedScene captur
 
 ## Verification and limits
 
-[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
+[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. [NodeLocalizationTests](../../tests/Electron2D.Tests/NodeLocalizationTests.cs) checks inherited/explicit domains, automatic translation modes, root setting, entry/change notifications, callback failure continuation, thread affinity and packed state. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
 
 The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 

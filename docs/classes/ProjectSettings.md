@@ -29,7 +29,7 @@ available when a matching typed setting is later registered. The registry never 
 
 Six non-unregisterable built-in `ProjectSetting<InputActionSettings>` definitions store GUI focus actions under `input/ui_*`. Other actions may be registered with the same value type and `input/<action>` key. After `Load`, call [`InputMap.LoadFromProjectSettings`](InputMap.md#m-electron2d-inputmap-loadfromprojectsettings) during project setup to replace the live map. A settings change alone does not reload it.
 
-Two built-in locale settings select an optional test locale and a fallback catalog locale. Nine further built-in settings configure the main translation domain's pseudolocalization. `Engine.Run` samples them before creating its scene; `Engine.Start` samples them before attaching the supplied loop. The locale and pseudolocalization enablement settings are sampled at startup, while [`TranslationServer.ReloadPseudolocalization`](TranslationServer.md#reloadpseudolocalization) reloads the eight transform options. Assign `TranslationServer.Culture` or `TranslationServer.PseudolocalizationEnabled` for an immediate runtime change.
+Two built-in locale settings select an optional test locale and a fallback catalog locale. Nine further built-in settings configure the main translation domain's pseudolocalization; one setting selects the initial scene-root auto-translation mode. `Engine.Run` samples catalog settings before creating its scene; `Engine.Start` samples them before attaching the supplied loop. `SceneTree` samples the root mode during construction. The locale and pseudolocalization enablement settings are sampled at startup, while [`TranslationServer.ReloadPseudolocalization`](TranslationServer.md#reloadpseudolocalization) reloads the eight transform options. Assign `TranslationServer.Culture` or `TranslationServer.PseudolocalizationEnabled` for an immediate runtime change.
 
 ## Examples
 
@@ -67,6 +67,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<Color> DefaultClearColor { get; }`](#p-electron2d-projectsettings-defaultclearcolor) | Defines the initial root-framebuffer clear color. |
 | [`public static ProjectSetting<string> LocaleTest { get; }`](#localetest) | Optional startup locale override; empty by default. |
 | [`public static ProjectSetting<string> LocaleFallback { get; }`](#localefallback) | Fallback catalog locale; `en` by default. |
+| [`public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`](#rootnodeautotranslate) | Initial scene-root automatic translation; true by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`](#pseudolocalizationenabled) | Startup enablement; false by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; }`](#pseudolocalizationreplacewithaccents) | Accent substitution; true by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; }`](#pseudolocalizationdoublevowels) | Vowel doubling; false by default. |
@@ -264,6 +265,11 @@ Defines `internationalization/locale/test`, default empty. A nonempty supported 
 ### `public static ProjectSetting<string> LocaleFallback { get; }`
 
 Defines `internationalization/locale/fallback`, default `en`. Engine startup samples the active feature override for resource-catalog and direct-entry fallback after primary locale lookup. Empty disables fallback. Supported .NET culture names and underscore separators are accepted; unsupported names fail validation. Changing the setting takes effect on the next Engine startup.
+
+<a id="rootnodeautotranslate"></a>
+### `public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`
+
+Defines `internationalization/rendering/root_node_auto_translate`, default true. `SceneTree` samples the active value when constructing a root whose `Node.AutoTranslateMode` is still `Inherit`, assigning `Always` or `Disabled`. Existing roots retain their selected mode when the setting changes.
 
 <a id="pseudolocalizationenabled"></a>
 ### `public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`
