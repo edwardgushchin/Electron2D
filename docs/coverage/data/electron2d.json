@@ -14798,6 +14798,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetVisibilityLayerBit(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetVisibilityLayerBit",
+    "signature": "public System.Boolean GetVisibilityLayerBit(System.Int32 layer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layer",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.Hide()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -14935,6 +14954,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.SetVisibilityLayerBit(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "SetVisibilityLayerBit",
+    "signature": "public System.Void SetVisibilityLayerBit(System.Int32 layer, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -38245,6 +38288,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.GetCanvasCullMaskBit(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetCanvasCullMaskBit",
+    "signature": "public System.Boolean GetCanvasCullMaskBit(System.Int32 layer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layer",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.GetFinalTransform()",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -38341,6 +38403,30 @@
         "name": "inLocalCoordinates",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.SetCanvasCullMaskBit(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "SetCanvasCullMaskBit",
+    "signature": "public System.Void SetCanvasCullMaskBit(System.Int32 layer, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layer",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -41993,6 +42079,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItem.VisibilityLayer()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "VisibilityLayer",
+    "signature": "public System.UInt32 VisibilityLayer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
     "value": null
   },
   {
@@ -48012,6 +48111,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Viewport.AnisotropicFiltering",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.CanvasCullMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "CanvasCullMask",
+    "signature": "public System.UInt32 CanvasCullMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
     "value": null
   },
   {

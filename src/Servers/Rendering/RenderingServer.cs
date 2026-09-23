@@ -173,7 +173,7 @@ public sealed class RenderingServer : ElectronObject
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
     {
-        if (!item.IsVisibleInTree) return;
+        if (!item.IsVisibleInTree || (item.VisibilityLayer & _window.CanvasCullMask) == 0) return;
         if (!alreadyYSorted)
         {
             var local = item.GetTransform();
@@ -218,7 +218,7 @@ public sealed class RenderingServer : ElectronObject
     {
         for (var index = 0; index < parent.ChildCount; index++)
         {
-            if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible) continue;
+            if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
             var local = child.GetTransform();
             if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;

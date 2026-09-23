@@ -1697,6 +1697,42 @@
       "godot": "CanvasItem::method:make_input_local(InputEvent:)",
       "state": "Partial",
       "reason": "Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; content stretch, embedded/offscreen viewports and GUI remain missing integrations (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection."
+    },
+    {
+      "electron2d": "property:Electron2D.CanvasItem.VisibilityLayer()",
+      "godot": "CanvasItem::property:visibility_layer",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.GetVisibilityLayerBit(System.Int32)",
+      "godot": "CanvasItem::method:get_visibility_layer_bit(int:)",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasItem.SetVisibilityLayerBit(System.Int32,System.Boolean)",
+      "godot": "CanvasItem::method:set_visibility_layer_bit(int:,bool:)",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "property:Electron2D.Viewport.CanvasCullMask()",
+      "godot": "Viewport::property:canvas_cull_mask",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.GetCanvasCullMaskBit(System.Int32)",
+      "godot": "Viewport::method:get_canvas_cull_mask_bit(int:)",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.Viewport.SetCanvasCullMaskBit(System.Int32,System.Boolean)",
+      "godot": "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified."
     }
   ],
   "extras": [
@@ -2554,16 +2590,13 @@
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_MAX",
         "Viewport::enum_value:VRSUpdateMode.VRS_UPDATE_ONCE",
         "Viewport::method:find_world_2d()",
-        "Viewport::method:get_canvas_cull_mask_bit(int:)",
         "Viewport::method:get_oversampling()",
         "Viewport::method:get_positional_shadow_atlas_quadrant_subdiv(int:)",
         "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)",
         "Viewport::method:get_stretch_transform()",
         "Viewport::method:get_texture()",
         "Viewport::method:get_viewport_rid()",
-        "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
         "Viewport::method:set_positional_shadow_atlas_quadrant_subdiv(int:,int:Viewport.PositionalShadowAtlasQuadrantSubdiv)",
-        "Viewport::property:canvas_cull_mask",
         "Viewport::property:debug_draw",
         "Viewport::property:disable_3d",
         "Viewport::property:fsr_sharpness",
@@ -3121,6 +3154,18 @@
         "Viewport::method:warp_mouse(Vector2:)",
         "Viewport::property:canvas_transform",
         "Viewport::property:global_canvas_transform"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Unsigned stored 32-bit mask and checked zero-based bit API (0..31). Audited pinned canvas_item.cpp, viewport.cpp and renderer_canvas_cull.cpp: each ancestor independently intersects the unchanged viewport mask; failed branches are pruned before nested Y-sort collection. CanvasMaskTests verifies defaults, all bits, atomic invalid indices, packing, logical visibility and owner/capture/disposal guards. CanvasMaskRenderingTests verifies eleven pixel stages on Wayland GPU/compatibility and dummy/software, HLSL/GLSL, independent roots/layers, retained commands, OnDraw mutation, injected input/process, culled shader rejection and cleanup; warmed renderer allocation is zero. Typed exceptions follow ADR 0004. See docs/components/canvas-rendering.md#canvas-visibility-masks; independent/offscreen viewport and RID identities remain separate dependencies, other native platforms unverified.",
+      "godot": [
+        "CanvasItem::method:get_visibility_layer_bit(int:)",
+        "CanvasItem::method:set_visibility_layer_bit(int:,bool:)",
+        "CanvasItem::property:visibility_layer",
+        "Viewport::method:get_canvas_cull_mask_bit(int:)",
+        "Viewport::method:set_canvas_cull_mask_bit(int:,bool:)",
+        "Viewport::property:canvas_cull_mask"
       ]
     }
   ]

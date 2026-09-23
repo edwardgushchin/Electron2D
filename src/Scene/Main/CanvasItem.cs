@@ -146,6 +146,7 @@ public abstract partial class CanvasItem : Node
         new PropertyDescriptor<CanvasItem, bool>(nameof(ShowBehindParent), node => node.ShowBehindParent, (node, value) => node.ShowBehindParent = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(YSortEnabled), node => node.YSortEnabled, (node, value) => node.YSortEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),
+        new PropertyDescriptor<CanvasItem, uint>(nameof(VisibilityLayer), node => node.VisibilityLayer, (node, value) => node.VisibilityLayer = value, _ => 1u, stored: true),
         new PropertyDescriptor<CanvasItem, int>(
             nameof(ZIndex),
             node => node.ZIndex,
@@ -183,6 +184,49 @@ public abstract partial class CanvasItem : Node
     public const int MaximumZIndex = 4096;
 
     private bool _visible = true;
+    private uint _visibilityLayer = 1;
+
+    /// <summary>Gets or sets the rendering visibility bits tested against the viewport's canvas cull mask.</summary>
+    /// <value>One initially; all 32 bits are available. Zero excludes this item's canvas subtree from rendering.</value>
+    /// <remarks>Each direct canvas ancestor must independently intersect the viewport mask. Masks are not
+    /// inherited or combined with each other. TopLevel, neutral-node and CanvasLayer boundaries start independent
+    /// canvas roots. Changes affect retained submission without redraw, visibility events or changes to Visible,
+    /// IsVisibleInTree, input or processing. Logically visible items still record their pending drawing commands.</remarks>
+    /// <exception cref="InvalidOperationException">An attached item is accessed off-owner or mutated during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public uint VisibilityLayer
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _visibilityLayer; }
+        set { EnsureMutable(); _visibilityLayer = value; }
+    }
+
+    /// <summary>Returns whether a zero-based rendering visibility bit is enabled.</summary>
+    /// <param name="layer">Bit index from zero through 31, inclusive.</param>
+    /// <returns>True when the selected bit in VisibilityLayer is set.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The bit index is outside zero through 31.</exception>
+    /// <exception cref="InvalidOperationException">An attached item is queried off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public bool GetVisibilityLayerBit(int layer)
+    {
+        var mask = VisibilityLayer;
+        if ((uint)layer >= 32) throw new ArgumentOutOfRangeException(nameof(layer));
+        return (mask & (1u << layer)) != 0;
+    }
+
+    /// <summary>Changes one rendering visibility bit without changing the other bits.</summary>
+    /// <param name="layer">Bit index from zero through 31, inclusive.</param>
+    /// <param name="enabled">True to enable the bit; false to clear it.</param>
+    /// <remarks>Does not request redraw or emit visibility events.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The bit index is outside zero through 31.</exception>
+    /// <exception cref="InvalidOperationException">An attached item is mutated off-owner or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public void SetVisibilityLayerBit(int layer, bool enabled)
+    {
+        EnsureMutable();
+        if ((uint)layer >= 32) throw new ArgumentOutOfRangeException(nameof(layer));
+        var bit = 1u << layer;
+        _visibilityLayer = enabled ? _visibilityLayer | bit : _visibilityLayer & ~bit;
+    }
 
     private bool _zAsRelative = true;
 
@@ -296,6 +340,7 @@ public abstract partial class CanvasItem : Node
     /// <summary>Gets whether this node is active and locally visible through its direct canvas ancestor chain.</summary>
     /// <value><see langword="true"/> only inside a tree when this node and its direct canvas visibility chain are visible.
     /// A direct CanvasLayer parent supplies its own visibility; other non-canvas boundaries use the containing window.</value>
+    /// <remarks>This logical query does not account for VisibilityLayer or Viewport.CanvasCullMask.</remarks>
     /// <exception cref="ObjectDisposedException">This node or a queried ancestor is disposing on another thread, or has finished disposing.</exception>
     public bool IsVisibleInTree => IsInsideTree && Visible && _parentVisible;
 

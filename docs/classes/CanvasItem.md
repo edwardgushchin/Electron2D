@@ -744,3 +744,41 @@ The hierarchy is implemented; complete reference API parity is not claimed. Miss
 [Viewport](Viewport.md#pixel-snapping-properties) controls render-only transform and vertex rounding. GetTransform/GetGlobalTransform remain logical queries. Transform snapping participates in Y sorting; vertex snapping applies after DrawSetTransform and framebuffer scaling. Retained recording is not invalidated merely by changing these flags. See [the canvas contract](../components/canvas-rendering.md#pixel-snapping) for Sprite offsets and texture clipping.
 
 Transform propagation uses pooled child snapshots, clears retained references on return, and revalidates each child after callback mutations. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) verifies zero allocation for warmed follower movement with a child. Pool growth, exceptions and user callbacks can still allocate.
+
+## Rendering visibility masks
+
+| Declaration | Contract |
+| --- | --- |
+| `public uint VisibilityLayer { get; set; }` | [Stored rendering mask](#visibilitylayer) |
+| `public bool GetVisibilityLayerBit(int layer)` | [Read one bit](#getvisibilitylayerbit) |
+| `public void SetVisibilityLayerBit(int layer, bool enabled)` | [Change one bit](#setvisibilitylayerbit) |
+
+Example with an existing root window and item:
+
+```csharp
+item.VisibilityLayer = 0;
+item.SetVisibilityLayerBit(3, true);
+window.CanvasCullMask = 1u << 3;
+```
+
+### VisibilityLayer
+
+`public uint VisibilityLayer { get; set; }`
+
+Defaults to 1; all 32 bits, including zero and `uint.MaxValue`, are accepted and stored by PackedScene. Rendering requires a nonzero intersection with Viewport.CanvasCullMask. Each direct canvas ancestor must pass that same viewport mask independently; masks are not inherited or intersected with each other. A failed ancestor suppresses its direct canvas subtree, including nested Y-sort groups. TopLevel, neutral Node and CanvasLayer boundaries start independent canvas roots for mask culling.
+
+Mask edits affect retained submission without QueueRedraw or visibility events. Visible and IsVisibleInTree stay unchanged, as do input and frame processing. Logically visible nodes still execute pending OnDraw, even with a zero mask; changes made there affect the current submission. Layer visibility and local Visible remain separate conditions. See the [source audit and backend checks](../components/canvas-rendering.md#canvas-visibility-masks).
+
+Live detached access is allowed; attached access requires the scene owner thread. Off-owner access or mutation during scene capture throws InvalidOperationException; disposed access throws ObjectDisposedException. Mask changes do not acquire or release resources.
+
+### GetVisibilityLayerBit
+
+`public bool GetVisibilityLayerBit(int layer)`
+
+Returns whether the zero-based bit 0 through 31 is set. Invalid indices throw ArgumentOutOfRangeException; the same query ownership/disposal guards as VisibilityLayer apply. Does not query actual on-screen visibility.
+
+### SetVisibilityLayerBit
+
+`public void SetVisibilityLayerBit(int layer, bool enabled)`
+
+Sets or clears the zero-based bit 0 through 31, preserving every other bit. Invalid indices throw ArgumentOutOfRangeException before mutation. The same mutation guards and retained-command behavior as VisibilityLayer apply; repeating a value has no additional effect.

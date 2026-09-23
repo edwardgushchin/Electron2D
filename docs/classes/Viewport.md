@@ -261,3 +261,38 @@ See the [Window runtime component](../components/window-runtime.md) for ownershi
 Decisions: [0004](../decisions/product.md#adr-0004), [0008](../decisions/scene.md#adr-0008), [0021](../decisions/product.md#adr-0021), [0028](../decisions/rendering.md#adr-0028).
 
 Sampling verification: [managed checks](../../tests/Electron2D.Tests/CanvasSamplingTests.cs), [native readback and rejection checks](../../tests/Electron2D.Tests/CanvasSamplingRenderingTests.cs).
+
+## Canvas culling mask
+
+| Declaration | Contract |
+| --- | --- |
+| `public uint CanvasCullMask { get; set; }` | [Stored canvas selection](#canvascullmask) |
+| `public bool GetCanvasCullMaskBit(int layer)` | [Read one bit](#getcanvascullmaskbit) |
+| `public void SetCanvasCullMaskBit(int layer, bool enable)` | [Change one bit](#setcanvascullmaskbit) |
+
+### CanvasCullMask
+
+`public uint CanvasCullMask { get; set; }`
+
+Defaults to `uint.MaxValue`; all 32 bits and zero are valid. Stored by PackedScene. The root renderer tests every canvas item and each direct canvas ancestor independently against this mask. Parent and child need not share bits with each other: layers 1 and 2 both pass viewport mask 3. CanvasLayer groups use the same viewport mask; TopLevel and neutral-node boundaries establish independent item roots.
+
+Zero suppresses geometry while clear, frame callbacks and presentation continue. Culling does not change logical visibility, input, processing, scene order or pending OnDraw. Changes reuse retained commands and affect submission after drawing callbacks. Compatibility shader capability rejection applies only to submitted geometry, so a fully culled shader material does not fail until it is selected for drawing.
+
+Live detached configuration is allowed. Attached access requires the owner thread; off-owner access or mutation during scene capture throws InvalidOperationException. Disposed access throws ObjectDisposedException. Independent/offscreen viewport rendering remains absent. See [CanvasItem.VisibilityLayer](CanvasItem.md#visibilitylayer) and the [source audit and verification](../components/canvas-rendering.md#canvas-visibility-masks).
+
+### GetCanvasCullMaskBit
+
+`public bool GetCanvasCullMaskBit(int layer)`
+
+Returns whether the zero-based bit 0 through 31 is set. Invalid indices throw ArgumentOutOfRangeException. The same query owner/disposal guards as CanvasCullMask apply.
+
+### SetCanvasCullMaskBit
+
+`public void SetCanvasCullMaskBit(int layer, bool enable)`
+
+Sets or clears the zero-based bit 0 through 31 without changing other bits. Invalid indices throw ArgumentOutOfRangeException before mutation. The same owner/capture/disposal guards and retained-command behavior as CanvasCullMask apply.
+
+```csharp
+window.CanvasCullMask = 0;
+window.SetCanvasCullMaskBit(31, true);
+```

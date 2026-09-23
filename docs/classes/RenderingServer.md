@@ -108,3 +108,7 @@ RenderingRuntimeTests measures zero managed allocation from FramePreDraw through
 Depends on Window, SceneTree, Node, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, clipping, polygons, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
 
 Root canvas replay starts with `framebufferScale * window.GetFinalTransform() * window.CanvasTransform`, then composes the existing canvas hierarchy/drawing transforms. Both compatibility and GPU paths, including custom materials, consume that same transform. Live viewport changes do not rerecord retained commands. See [canvas coordinates](../components/canvas-rendering.md#viewport-coordinates) for input/query semantics and verification.
+
+## Canvas mask submission
+
+Before ordering/traversing a canvas branch, RenderingServer independently tests CanvasItem.VisibilityLayer against the root Viewport.CanvasCullMask. Nested Y-sort collection prunes rejected intermediaries before flattening. Separate roots and CanvasLayer groups retain their normal ordering. Pending drawing still records, and zero masks still clear/present frames. Only submitted batches participate in shader capability rejection. See [mask semantics and native checks](../components/canvas-rendering.md#canvas-visibility-masks).
