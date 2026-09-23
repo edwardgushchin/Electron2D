@@ -107,6 +107,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 SceneDiagnosticsTests.Run();
 PathTests.Run();
 CurveTests.Run();
+CurveTextureTests.Run();
 AnimatedSpriteTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();

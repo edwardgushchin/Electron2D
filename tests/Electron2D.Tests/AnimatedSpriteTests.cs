@@ -236,8 +236,8 @@ internal static class AnimatedSpriteTests
     private sealed class RegionTexture : Texture
     {
         internal Rect Destination, Source; internal bool Clip;
-        public override int Width => 2;
-        public override int Height => 2;
+        public override int GetWidth() => 2;
+        public override int GetHeight() => 2;
         public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         { Destination = rect; Source = sourceRect; Clip = clipUV; canvasItem.DrawRect(rect, Colors.Red); }
     }

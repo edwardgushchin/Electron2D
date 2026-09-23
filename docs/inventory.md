@@ -112,6 +112,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`Curve`](classes/Curve.md) | [`Curve.cs`](../src/Scene/Resources/Curve.cs) | Current | Scalar cubic sampling, tangent modes, limits and lazy baking |
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`Curve.TangentMode`](classes/Curve.TangentMode.md) | [`Curve.cs`](../src/Scene/Resources/Curve.cs) | Current | Free and Linear tangent policies with stable values |
 | [Resources](domains/resources.md) | [Curves](components/curves.md) | [`PathCurve`](classes/PathCurve.md) | [`PathCurve.cs`](../src/Scene/Resources/PathCurve.cs) | Current | Spatial Bézier geometry, distance/tangent baking, tessellation and nearest queries |
+| [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveTexture`](classes/CurveTexture.md) | [`CurveTexture.cs`](../src/Scene/Resources/CurveTexture.cs) | Current | Scalar RGB/Red float textures with live borrowed curves |
+| [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveXYZTexture`](classes/CurveXYZTexture.md) | [`CurveXYZTexture.cs`](../src/Scene/Resources/CurveXYZTexture.cs) | Current | Three independent scalar channels with deduplicated subscriptions |
+| [Resources](domains/resources.md) | [Curves](components/curves.md) | [`CurveTexture.TextureModeEnum`](classes/CurveTexture.TextureModeEnum.md) | [`CurveTexture.cs`](../src/Scene/Resources/CurveTexture.cs) | Current | RGB and Red channel storage modes |
 | [Resources](domains/resources.md) | [Resource base](components/resources.md) | [`Resource`](classes/Resource.md) | [`Resource.cs`](../src/Core/IO/Resource.cs) | Current | Implemented and verified |
 | [Resources](domains/resources.md) | [Resource base](components/resources.md) | [`DeepDuplicateMode`](classes/DeepDuplicateMode.md) | [`DeepDuplicateMode.cs`](../src/Core/IO/DeepDuplicateMode.cs) | Current | Implemented and verified |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image`](classes/Image.md) | [`Image.cs`](../src/Core/IO/Image.cs), [`Image.Processing.cs`](../src/Core/IO/Image.Processing.cs) | Current | Managed storage/processing, five file/buffer loaders and PNG/JPEG saving; further codec/render integration pending |
@@ -185,6 +188,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [CompatibilityCanvasBackend](classes/CompatibilityCanvasBackend.md) | [CompatibilityCanvasBackend.cs](../src/Servers/Rendering/CompatibilityCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [GpuTexture](classes/GpuTexture.md) | [GpuTexture.cs](../src/Servers/Rendering/GpuTexture.cs) | [shader-materials](components/shader-materials.md) |
 | [TexturePixels](classes/TexturePixels.md) | [Texture.cs](../src/Scene/Resources/Texture.cs) | [shader-materials](components/shader-materials.md) |
+| [CurveTextureData](classes/CurveTextureData.md) | [CurveTextureData.cs](../src/Scene/Resources/CurveTextureData.cs) | [curves](components/curves.md) |
 | [Image.State](classes/Image.State.md) | [Image.cs](../src/Core/IO/Image.cs) | [images](components/images.md) |
 | [ShaderProgram](classes/ShaderProgram.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderUniform](classes/ShaderUniform.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |

@@ -58,8 +58,8 @@ internal static partial class RenderingRuntimeTests
 
     private sealed class CursorTexture(Func<Image?> read) : Texture
     {
-        public override int Width => 2;
-        public override int Height => 2;
+        public override int GetWidth() => 2;
+        public override int GetHeight() => 2;
         public override Image? GetImage() => read();
     }
 
@@ -75,11 +75,11 @@ internal static partial class RenderingRuntimeTests
         pixels.Fill(Colors.Green);
         using var independent = texture.GetImage()!;
         Pixel(independent, 1, 1, Colors.Red);
-        Check(texture.Width == 2 && texture.Height == 2 && texture.Size == new Vector2(2, 2) && texture.HasAlpha && !texture.HasMipmaps && texture.MipmapCount == 0,
+        Check(texture.GetWidth() == 2 && texture.GetHeight() == 2 && texture.GetSize() == new Vector2(2, 2) && texture.HasAlpha && !texture.HasMipmaps && texture.MipmapCount == 0,
             "Texture metadata describes its copied original pixels.");
         Check(!texture.IsPixelOpaque(0, 0) && texture.IsPixelOpaque(1, 1) && texture.IsPixelOpaque(int.MaxValue, int.MaxValue), "Opacity checks clamp safely.");
         texture.SetSizeOverride(new Vector2I(8, 0));
-        Check(texture.Size == new Vector2(8, 2) && !texture.IsPixelOpaque(3, 0) && texture.IsPixelOpaque(4, 0), "Logical texture sizes map to original pixel coordinates.");
+        Check(texture.GetSize() == new Vector2(8, 2) && !texture.IsPixelOpaque(3, 0) && texture.IsPixelOpaque(4, 0), "Logical texture sizes map to original pixel coordinates.");
         Reject<ArgumentOutOfRangeException>(() => texture.SetSizeOverride(new Vector2I(-1, 0)));
         using var wrongSize = Image.CreateEmpty(1, 2, false, Image.Format.Rgba8);
         Reject<ArgumentException>(() => texture.Update(wrongSize));
@@ -89,17 +89,17 @@ internal static partial class RenderingRuntimeTests
         Reject<ArgumentException>(() => texture.Update(wrongMips));
         var original = texture.CapturePixels()!;
         texture.Update(image);
-        Check(texture.Size == new Vector2(8, 2) && ReferenceEquals(texture.CapturePixels()!.Allocation, original.Allocation), "Update retains logical size and native allocation identity.");
+        Check(texture.GetSize() == new Vector2(8, 2) && ReferenceEquals(texture.CapturePixels()!.Allocation, original.Allocation), "Update retains logical size and native allocation identity.");
         using var updated = texture.GetImage()!;
         Pixel(updated, 0, 0, Colors.Blue);
         texture.SetImage(image);
-        Check(texture.Size == new Vector2(2, 2) && !ReferenceEquals(texture.CapturePixels()!.Allocation, original.Allocation), "SetImage resets logical size and replaces allocation identity.");
+        Check(texture.GetSize() == new Vector2(2, 2) && !ReferenceEquals(texture.CapturePixels()!.Allocation, original.Allocation), "SetImage resets logical size and replaces allocation identity.");
         using var duplicate = (ImageTexture)texture.Duplicate();
         image.Fill(Colors.Yellow); texture.Update(image);
         using var copiedPixels = duplicate.GetImage()!;
         Pixel(copiedPixels, 1, 1, Colors.Blue);
         using var empty = new ImageTexture();
-        Check(empty.GetImage() is null && empty.Size == Vector2.Zero && !empty.HasAlpha && empty.IsPixelOpaque(0, 0), "Uninitialized texture metadata is safe.");
+        Check(empty.GetImage() is null && empty.GetSize() == Vector2.Zero && !empty.HasAlpha && empty.IsPixelOpaque(0, 0), "Uninitialized texture metadata is safe.");
         Reject<InvalidOperationException>(() => empty.Update(image));
         using var emptyImage = new Image();
         Reject<ArgumentException>(() => texture.SetImage(emptyImage));
@@ -301,8 +301,8 @@ internal static partial class RenderingRuntimeTests
         private readonly Image _image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         internal int Reads;
         internal TestTexture(Color color) { _image.Fill(color); }
-        public override int Width { get { ThrowIfDisposed(); return _image.Width; } }
-        public override int Height { get { ThrowIfDisposed(); return _image.Height; } }
+        public override int GetWidth() { ThrowIfDisposed(); return _image.Width; }
+        public override int GetHeight() { ThrowIfDisposed(); return _image.Height; }
         public override Image GetImage() { ThrowIfDisposed(); Reads++; return (Image)_image.Duplicate(); }
         internal void Fill(Color color) { ThrowIfDisposed(); _image.Fill(color); EmitChanged(); }
         protected override void Dispose(bool disposing) { if (disposing) _image.Dispose(); base.Dispose(disposing); }

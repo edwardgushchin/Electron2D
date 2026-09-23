@@ -47,53 +47,53 @@
     },
     {
       "godot": "Texture2D::method:get_width()",
-      "electron2d": "property:Electron2D.Texture.Width()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.Texture.GetWidth()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_width()",
-      "electron2d": "property:Electron2D.ImageTexture.Width()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.ImageTexture.GetWidth()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:_get_width()",
-      "electron2d": "property:Electron2D.Texture.Width()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.Texture.GetWidth()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:_get_width()",
-      "electron2d": "property:Electron2D.ImageTexture.Width()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.ImageTexture.GetWidth()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_height()",
-      "electron2d": "property:Electron2D.Texture.Height()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.Texture.GetHeight()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_height()",
-      "electron2d": "property:Electron2D.ImageTexture.Height()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.ImageTexture.GetHeight()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:_get_height()",
-      "electron2d": "property:Electron2D.Texture.Height()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.Texture.GetHeight()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:_get_height()",
-      "electron2d": "property:Electron2D.ImageTexture.Height()",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.ImageTexture.GetHeight()",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_size()",
-      "electron2d": "property:Electron2D.Texture.Size()",
-      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.Texture.GetSize()",
+      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_size()",
-      "electron2d": "property:Electron2D.ImageTexture.Size()",
-      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
+      "electron2d": "method:Electron2D.ImageTexture.GetSize()",
+      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
     },
     {
       "godot": "Texture2D::method:get_format()",
@@ -317,12 +317,12 @@
     },
     {
       "godot": "Texture2D::method:get_height()",
-      "electron2d": "property:Electron2D.AtlasTexture.Height()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetHeight()",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:_get_height()",
-      "electron2d": "property:Electron2D.AtlasTexture.Height()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetHeight()",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
@@ -337,17 +337,17 @@
     },
     {
       "godot": "Texture2D::method:get_size()",
-      "electron2d": "property:Electron2D.AtlasTexture.Size()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetSize()",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:get_width()",
-      "electron2d": "property:Electron2D.AtlasTexture.Width()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetWidth()",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:_get_width()",
-      "electron2d": "property:Electron2D.AtlasTexture.Width()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetWidth()",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
@@ -394,6 +394,116 @@
       "godot": "SpriteFrames::method:get_animation_names()",
       "electron2d": "method:Electron2D.SpriteFrames.GetAnimationNames()",
       "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, deprecated bool-loop aliases, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed. See docs/classes/SpriteFrames.md."
+    },
+    {
+      "godot": "CurveTexture::enum:TextureMode",
+      "electron2d": "T:Electron2D.CurveTexture.TextureModeEnum",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::enum_value:TextureMode.TEXTURE_MODE_RED",
+      "electron2d": "enumValue:Electron2D.CurveTexture.TextureModeEnum.Red()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::enum_value:TextureMode.TEXTURE_MODE_RGB",
+      "electron2d": "enumValue:Electron2D.CurveTexture.TextureModeEnum.RGB()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::property:curve",
+      "electron2d": "property:Electron2D.CurveTexture.Curve()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::property:texture_mode",
+      "electron2d": "property:Electron2D.CurveTexture.TextureMode()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveTexture::property:width",
+      "electron2d": "property:Electron2D.CurveTexture.Width()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.CurveTexture.GetWidth()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.CurveTexture.GetWidth()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.CurveTexture.GetHeight()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.CurveTexture.GetHeight()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.CurveTexture.GetImage()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md. Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID."
+    },
+    {
+      "godot": "CurveXYZTexture::property:curve_x",
+      "electron2d": "property:Electron2D.CurveXYZTexture.CurveX()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveXYZTexture::property:curve_y",
+      "electron2d": "property:Electron2D.CurveXYZTexture.CurveY()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveXYZTexture::property:curve_z",
+      "electron2d": "property:Electron2D.CurveXYZTexture.CurveZ()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveXYZTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "CurveXYZTexture::property:width",
+      "electron2d": "property:Electron2D.CurveXYZTexture.Width()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetWidth()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetWidth()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetHeight()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetHeight()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetImage()",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md. Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID."
     }
   ],
   "statusGroups": [
@@ -414,7 +524,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
       "godot": [
         "Texture2D::method:get_width()",
         "Texture2D::method:_get_width()"
@@ -422,7 +532,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The C# virtual/abstract property and ImageTexture override project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
       "godot": [
         "Texture2D::method:get_height()",
         "Texture2D::method:_get_height()"
@@ -430,14 +540,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Virtual Size and its synchronized ImageTexture override return logical Width/Height as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028).",
+      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028).",
       "godot": [
         "Texture2D::method:get_size()"
       ]
     },
     {
       "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039).",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Compressed and integer-sampled formats are rejected, and compatibility rendering currently samples only the base mip level. Full texture-format/backend coverage remains pending (ADRs 0004/0028/0039). Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID.",
       "godot": [
         "Texture2D::method:get_format()",
         "Texture2D::method:_get_format()"
@@ -469,7 +579,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028).",
+      "reason": "Virtual GetImage and the ImageTexture override project the public query and extension hook. Results are caller-owned image copies; an uninitialized/unreadable texture returns null. GPU allocation is owned separately by the renderer. Additional texture kinds, compressed/integer formats and GPU-only readback remain pending (ADRs 0014/0028). Curve texture GetImage/PixelFormat expose generated CPU snapshots under ADR 0013: the pinned curve classes inherit the base null/FORMAT_MAX fallthrough, while the documented general query contract specifies copied image data and format. This implements that capability without GPU readback; it is not literal preservation of the inherited omission. Uninitialized curve textures return null/L8 and reject drawing rather than creating an opaque placeholder RID.",
       "godot": [
         "Texture2D::method:get_image()",
         "Texture2D::method:_get_image()"
@@ -769,6 +879,32 @@
         "AnimatedSprite2D::signal:frame_changed()",
         "AnimatedSprite2D::signal:sprite_frames_changed()"
       ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md.",
+      "godot": [
+        "class:CurveTexture",
+        "CurveTexture::enum:TextureMode",
+        "CurveTexture::enum_value:TextureMode.TEXTURE_MODE_RED",
+        "CurveTexture::enum_value:TextureMode.TEXTURE_MODE_RGB",
+        "CurveTexture::property:curve",
+        "CurveTexture::property:resource_local_to_scene",
+        "CurveTexture::property:texture_mode",
+        "CurveTexture::property:width"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md.",
+      "godot": [
+        "class:CurveXYZTexture",
+        "CurveXYZTexture::property:curve_x",
+        "CurveXYZTexture::property:curve_y",
+        "CurveXYZTexture::property:curve_z",
+        "CurveXYZTexture::property:resource_local_to_scene",
+        "CurveXYZTexture::property:width"
+      ]
     }
   ],
   "extras": [
@@ -971,6 +1107,56 @@
       "electron2d": "method:Electron2D.SpriteFrames.Dispose(System.Boolean)",
       "reason": "Managed lifetime hook releases frame lists without disposing borrowed textures.",
       "adr": "ADRs 0003/0004/0005/0008/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CurveTexture..ctor()",
+      "reason": "Default construction of the curve-generated texture resource without an active renderer or native allocation.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type Resource duplication factory for the curve-generated texture.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copy hook preserves width/channel mode and routes borrowed curves through graph-preserving duplication.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveTexture.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook detaches source change subscriptions and drops generated pixels without disposing borrowed curves.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveTexture.GetPropertyDescriptors()",
+      "reason": "Typed metadata for existing writable curve-texture settings; the Width property is distinct from the inherited GetWidth query.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CurveXYZTexture..ctor()",
+      "reason": "Default construction of the curve-generated texture resource without an active renderer or native allocation.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveXYZTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type Resource duplication factory for the curve-generated texture.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveXYZTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copy hook preserves width/channel mode and routes borrowed curves through graph-preserving duplication.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveXYZTexture.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook detaches source change subscriptions and drops generated pixels without disposing borrowed curves.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.CurveXYZTexture.GetPropertyDescriptors()",
+      "reason": "Typed metadata for existing writable curve-texture settings; the Width property is distinct from the inherited GetWidth query.",
+      "adr": "ADRs 0003/0004/0013/0014"
     }
   ]
 }

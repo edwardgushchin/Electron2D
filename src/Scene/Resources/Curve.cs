@@ -273,13 +273,29 @@ public sealed class Curve : Resource
         lock (_gate)
         {
             ThrowIfDisposed(); Finite(offset, nameof(offset)); if (_dirty) BakeCore();
-            if (_baked.Length == 0) return _points.Count == 0 ? 0 : _points[0].Position.Y;
-            if (_baked.Length == 1 || offset >= _maxDomain) return _baked[^1];
-            if (offset <= _minDomain) return _baked[0];
-            var position = (offset - _minDomain) / (_maxDomain - _minDomain) * (_baked.Length - 1);
-            var index = (int)MathF.Floor(position);
-            return index + 1 < _baked.Length ? Mathf.Lerp(_baked[index], _baked[index + 1], position - index) : _baked[^1];
+            return SampleBakedCore(offset);
         }
+    }
+
+    internal float[] SampleTexture(int width)
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed(); if (_dirty) BakeCore();
+            var values = new float[width];
+            for (var i = 0; i < width; i++) values[i] = SampleBakedCore(i / (float)width);
+            return values;
+        }
+    }
+
+    private float SampleBakedCore(float offset)
+    {
+        if (_baked.Length == 0) return _points.Count == 0 ? 0 : _points[0].Position.Y;
+        if (_baked.Length == 1 || offset >= _maxDomain) return _baked[^1];
+        if (offset <= _minDomain) return _baked[0];
+        var position = (offset - _minDomain) / (_maxDomain - _minDomain) * (_baked.Length - 1);
+        var index = (int)MathF.Floor(position);
+        return index + 1 < _baked.Length ? Mathf.Lerp(_baked[index], _baked[index + 1], position - index) : _baked[^1];
     }
 
     private void SetLimit(float value, bool domain, bool minimum)

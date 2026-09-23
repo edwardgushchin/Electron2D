@@ -211,8 +211,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Curve](classes/Curve.md) | Resource | Implemented | 37 |
 | [Curve2D](classes/Curve2D.md) | Resource | Implemented | 24 |
 | [Curve3D](classes/Curve3D.md) | Resource | Excluded | 32 |
-| [CurveTexture](classes/CurveTexture.md) | Texture2D | Unimplemented | 7 |
-| [CurveXYZTexture](classes/CurveXYZTexture.md) | Texture2D | Unimplemented | 5 |
+| [CurveTexture](classes/CurveTexture.md) | Texture2D | Implemented | 7 |
+| [CurveXYZTexture](classes/CurveXYZTexture.md) | Texture2D | Implemented | 5 |
 | [CylinderMesh](classes/CylinderMesh.md) | PrimitiveMesh | Blocked | 7 |
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |

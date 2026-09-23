@@ -218,6 +218,54 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CurveTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "CurveTexture",
+    "signature": "public sealed class Electron2D.CurveTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CurveTexture.TextureModeEnum",
+    "kind": "type",
+    "declaringType": "Electron2D.CurveTexture.TextureModeEnum",
+    "name": "TextureModeEnum",
+    "signature": "public enum Electron2D.CurveTexture.TextureModeEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CurveXYZTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CurveXYZTexture",
+    "signature": "public sealed class Electron2D.CurveXYZTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DeepDuplicateMode",
     "kind": "type",
     "declaringType": "Electron2D.DeepDuplicateMode",
@@ -3216,6 +3264,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CurveTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": ".ctor",
+    "signature": "public CurveTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CurveXYZTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": ".ctor",
+    "signature": "public CurveXYZTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.ElectronObject..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.ElectronObject",
@@ -4644,6 +4718,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Curve.TangentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CurveTexture.TextureModeEnum.RGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CurveTexture.TextureModeEnum",
+    "name": "RGB",
+    "signature": "public const Electron2D.CurveTexture.TextureModeEnum RGB = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CurveTexture.TextureModeEnum",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CurveTexture.TextureModeEnum.Red()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CurveTexture.TextureModeEnum",
+    "name": "Red",
+    "signature": "public const Electron2D.CurveTexture.TextureModeEnum Red = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CurveTexture.TextureModeEnum",
     "value": "1"
   },
   {
@@ -13409,6 +13509,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AtlasTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AtlasTexture.GetImage()",
     "kind": "method",
     "declaringType": "Electron2D.AtlasTexture",
@@ -13432,6 +13545,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -15368,6 +15507,252 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CurveXYZTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -20837,6 +21222,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ImageTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ImageTexture.GetImage()",
     "kind": "method",
     "declaringType": "Electron2D.ImageTexture",
@@ -20847,6 +21245,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImageTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImageTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -32310,6 +32734,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Texture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.Texture",
+    "name": "GetHeight",
+    "signature": "public abstract System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Texture.GetImage()",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
@@ -32333,6 +32770,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Texture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Texture",
+    "name": "GetSize",
+    "signature": "public virtual Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Texture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.Texture",
+    "name": "GetWidth",
+    "signature": "public abstract System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -39419,19 +39882,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.AtlasTexture.Height()",
-    "kind": "property",
-    "declaringType": "Electron2D.AtlasTexture",
-    "name": "Height",
-    "signature": "public System.Int32 Height { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.AtlasTexture.Margin()",
     "kind": "property",
     "declaringType": "Electron2D.AtlasTexture",
@@ -39481,32 +39931,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AtlasTexture.Size()",
-    "kind": "property",
-    "declaringType": "Electron2D.AtlasTexture",
-    "name": "Size",
-    "signature": "public Electron2D.Vector2 Size { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AtlasTexture.Width()",
-    "kind": "property",
-    "declaringType": "Electron2D.AtlasTexture",
-    "name": "Width",
-    "signature": "public System.Int32 Width { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -41850,6 +42274,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CurveTexture.Curve()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "Curve",
+    "signature": "public Electron2D.Curve Curve { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveTexture.TextureMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "TextureMode",
+    "signature": "public Electron2D.CurveTexture.TextureModeEnum TextureMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CurveTexture.TextureModeEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveXYZTexture.CurveX()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CurveX",
+    "signature": "public Electron2D.Curve CurveX { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveXYZTexture.CurveY()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CurveY",
+    "signature": "public Electron2D.Curve CurveY { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveXYZTexture.CurveZ()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "CurveZ",
+    "signature": "public Electron2D.Curve CurveZ { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CurveXYZTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.CurveXYZTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.DirAccess.IncludeHidden()",
     "kind": "property",
     "declaringType": "Electron2D.DirAccess",
@@ -42653,45 +43168,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.ImageTexture.Height()",
-    "kind": "property",
-    "declaringType": "Electron2D.ImageTexture",
-    "name": "Height",
-    "signature": "public System.Int32 Height { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.ImageTexture.Size()",
-    "kind": "property",
-    "declaringType": "Electron2D.ImageTexture",
-    "name": "Size",
-    "signature": "public Electron2D.Vector2 Size { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.ImageTexture.Width()",
-    "kind": "property",
-    "declaringType": "Electron2D.ImageTexture",
-    "name": "Width",
-    "signature": "public System.Int32 Width { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -44775,19 +45251,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Texture.Height()",
-    "kind": "property",
-    "declaringType": "Electron2D.Texture",
-    "name": "Height",
-    "signature": "public System.Int32 Height { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.Texture.MipmapCount()",
     "kind": "property",
     "declaringType": "Electron2D.Texture",
@@ -44811,32 +45274,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Image.Format",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Texture.Size()",
-    "kind": "property",
-    "declaringType": "Electron2D.Texture",
-    "name": "Size",
-    "signature": "public Electron2D.Vector2 Size { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.Texture.Width()",
-    "kind": "property",
-    "declaringType": "Electron2D.Texture",
-    "name": "Width",
-    "signature": "public System.Int32 Width { get;  }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
     "value": null
   },
   {

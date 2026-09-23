@@ -5,7 +5,7 @@ Last updated: 2026-09-23
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
 - Inherits: [Resource](Resource.md)
-- Inherited by: [ImageTexture](ImageTexture.md), [AtlasTexture](AtlasTexture.md)
+- Inherited by: [ImageTexture](ImageTexture.md), [AtlasTexture](AtlasTexture.md), [CurveTexture](CurveTexture.md), [CurveXYZTexture](CurveXYZTexture.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description
@@ -14,7 +14,7 @@ A two-dimensional image texture with a logical drawing size, original pixel meta
 
 AtlasTexture overrides metadata queries with its view defaults (unspecified format and no own mipmaps); rendering still uses the full source storage. See [AtlasTexture metadata](AtlasTexture.md#pixelformat).
 
-Nodes, materials and shaders borrow textures. An ImageTexture owns managed pixel data, while AtlasTexture borrows its source; the renderer owns native allocations. Creating or reading a texture does not require an active window. Disposing a node, material or renderer does not dispose borrowed textures.
+Nodes, materials and shaders borrow textures. ImageTexture and the curve textures own managed pixel data, while AtlasTexture borrows its source; the renderer owns native allocations. Creating or reading a texture does not require an active window. Disposing a node, material or renderer does not dispose borrowed textures.
 
 ## Example
 
@@ -32,9 +32,9 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | Declaration | Contract |
 | --- | --- |
 | `protected Texture()` | Registers invalidation of cached custom image data on Changed. |
-| `abstract int Width { get; }` | Logical width in pixels. |
-| `abstract int Height { get; }` | Logical height in pixels. |
-| `virtual Vector2 Size { get; }` | Logical width and height. |
+| `abstract int GetWidth()` | Logical width in pixels. |
+| `abstract int GetHeight()` | Logical height in pixels. |
+| `virtual Vector2 GetSize()` | Logical width and height. |
 | `virtual Image.Format PixelFormat { get; }` | Original pixel format; L8 when uninitialized. |
 | `virtual bool HasAlpha { get; }` | Original format has alpha; false when uninitialized. |
 | `virtual bool HasMipmaps { get; }` | Original pixels contain a complete mip chain. |
@@ -46,18 +46,6 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | `virtual bool IsPixelOpaque(int x, int y)` | Tests alpha above 0.1 at clamped logical coordinates. |
 
 ## Property descriptions
-
-### Width
-
-Logical horizontal size. Custom subclasses provide this property and define their own synchronization. ImageTexture returns zero before initialization and throws after disposal.
-
-### Height
-
-Logical vertical size, with the same contract as Width.
-
-### Size
-
-Returns Width and Height as a Vector2. ImageTexture reads both coordinates atomically.
 
 ### PixelFormat
 
@@ -77,9 +65,21 @@ Counts levels following the base image. It is zero for a texture without mipmaps
 
 ## Method descriptions
 
+### GetWidth
+
+Logical horizontal size. Custom subclasses implement this method and define their own synchronization. ImageTexture returns zero before initialization and throws after disposal.
+
+### GetHeight
+
+Logical vertical size, with the same contract as GetWidth.
+
+### GetSize
+
+Returns GetWidth() and GetHeight() as a Vector2. ImageTexture reads both coordinates atomically.
+
 ### Draw
 
-Records a borrowed texture at `position` with its current logical Size. The target must be inside its own canvas recording scope on the scene owner thread; null targets, disposed resources and nonfinite arguments are rejected. Null modulation means white. Transpose exchanges source axes and the destination width/height. An uninitialized zero-size texture records nothing.
+Records a borrowed texture at `position` with its current logical GetSize(). The target must be inside its own canvas recording scope on the scene owner thread; null targets, disposed resources and nonfinite arguments are rejected. Null modulation means white. Transpose exchanges source axes and the destination width/height. An uninitialized zero-size texture records nothing.
 
 ### DrawRect
 
@@ -101,8 +101,8 @@ Scales integer logical coordinates into original pixel coordinates using widened
 
 ## Protected extension points and lifecycle
 
-Width, Height and GetImage define a custom texture's readable pixel source. GetPropertyDescriptors includes typed read-only metadata. Dispose(bool) unsubscribes cache invalidation, clears cached pixels and delegates Resource cleanup. Custom subclasses own disposal and duplication of their own pixel source. Resource path, identity, local-scene and Changed behavior remain inherited.
+GetWidth, GetHeight and GetImage define a custom texture's readable pixel source. GetPropertyDescriptors includes typed read-only pixel metadata. Dimensions are queries, not base properties: concrete resources such as CurveTexture can expose a writable Width without hiding an inherited getter-only property. Dispose(bool) unsubscribes cache invalidation, clears cached pixels and delegates Resource cleanup. Custom subclasses own disposal and duplication of their own pixel source. Resource path, identity, local-scene and Changed behavior remain inherited.
 
 ## Limits and checks
 
-The current GPU integration accepts float-sampled images up to 16384 pixels per axis. Compressed/integer-sampled formats, configurable filtering, texture arrays and placeholder textures remain unfinished. Compatibility checks native support for high-precision images and non-power-of-two repeat before drawing. See [the component](../components/shader-materials.md) for precise format, binding and platform limits. [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) checks custom snapshot reuse and invalidation through real shader draws. [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) verifies public drawing, virtual overrides, retained updates/replacement, UV clipping and disposal on Linux Wayland and the software renderer.
+The current GPU integration accepts float-sampled images up to 16384 pixels per axis. Compressed/integer-sampled formats, texture arrays and placeholder textures remain unfinished. Compatibility checks native support for high-precision images and non-power-of-two repeat before drawing. See [the component](../components/shader-materials.md) for precise format, binding and platform limits. [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) checks custom snapshot reuse and invalidation through real shader draws. [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) verifies public drawing, virtual overrides, retained updates/replacement, UV clipping and disposal on Linux Wayland and the software renderer.

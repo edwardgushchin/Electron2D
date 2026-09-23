@@ -266,7 +266,7 @@ def special_reason(item, member):
     if any(token in name for token in ("accessibility", "theme_", "tooltip", "gui_")):
         return "Blocked", "Trigger: first typed 2D GUI and accessibility slice after rendering."
     if item["name"] in {"CurveTexture", "CurveXYZTexture"}:
-        return None  # All members share the concrete curve-texture trigger, including texture-mode values.
+        return None  # Audited curve-texture members use the rendering overrides, including texture-mode values.
     if any(token in name for token in ("draw_", "canvas_", "texture_", "shader_", "render_")):
         return "Blocked", "Trigger: first SDL3 GPU 2D rendering slice (ADR 0028)."
     return None

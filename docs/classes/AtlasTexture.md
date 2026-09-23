@@ -39,9 +39,9 @@ This constructs resources and a detached node; scene attachment uses the normal 
 | `Rect Region { get; set; }` | Stored source rectangle; calculations floor only its size. |
 | `Rect Margin { get; set; }` | Drawing offset and total extra size. |
 | `bool FilterClip { get; set; }` | Restrict sampling to the selected region's texel centers. |
-| `override int Width { get; }` | Effective logical width including applicable margin. |
-| `override int Height { get; }` | Effective logical height including applicable margin. |
-| `override Vector2 Size { get; }` | Width and Height from one serialized traversal. |
+| `override int GetWidth()` | Effective logical width including applicable margin. |
+| `override int GetHeight()` | Effective logical height including applicable margin. |
+| `override Vector2 GetSize()` | Dimensions from one serialized traversal. |
 | `override bool HasAlpha { get; }` | Source alpha capability, false without a source. |
 | `override Image.Format PixelFormat { get; }` | Image.Format.Max: the view has no own pixel format. |
 | `override bool HasMipmaps { get; }` | False for the view. |
@@ -72,18 +72,6 @@ Position offsets the region within the logical view; Size is the total additiona
 
 False by default. Every assignment emits Changed, even if unchanged. This controls the half-texel sampling boundary; it does not enable geometry clipping, which always clips the region. It overrides the DrawRectRegion caller flag. When nesting views, the innermost view controls the flag reaching the actual source texture.
 
-### Width
-
-If the floored region width is zero, returns the source width or one without a source. Otherwise adds Margin.Size.X to the floored width, then truncates toward zero. An unrepresentable integer sum throws OverflowException. Signed invalid drawing dimensions are not silently normalized.
-
-### Height
-
-Uses the Width rules independently for the vertical axis.
-
-### Size
-
-Reads both dimensions under the graph gate. Source metadata can change independently when the source is a custom texture; custom resources retain their own synchronization obligations.
-
 ### HasAlpha
 
 Delegates to the immediate source's virtual HasAlpha, or false for null. The other metadata queries describe the view itself, as detailed below.
@@ -102,6 +90,18 @@ Always zero for the view. Query Atlas.MipmapCount for the immediate source's met
 
 ## Method descriptions
 
+### GetWidth
+
+If the floored region width is zero, returns the source width or one without a source. Otherwise adds Margin.Size.X to the floored width, then truncates toward zero. An unrepresentable integer sum throws OverflowException. Signed invalid drawing dimensions are not silently normalized.
+
+### GetHeight
+
+Uses the GetWidth rules independently for the vertical axis.
+
+### GetSize
+
+Reads both dimensions under the graph gate. Source metadata can change independently when the source is a custom texture; custom resources retain their own synchronization obligations.
+
 ### GetImage
 
 Calls the immediate source's GetImage and disposes that temporary image on success or failure. Null remains null. Crops its effective region after checked integer truncation of position and size. Image.GetRegion clips against actual image bounds and returns an empty image for an empty intersection; it removes mipmaps. Margin offset/size and logical source-size overrides do not resample the CPU image. Nested views crop the already cropped immediate source image. Integer overflow throws OverflowException; other source/image errors propagate. The caller owns the returned image.
@@ -116,11 +116,11 @@ Delegates the effective region at `position + Margin.Position`, using the region
 
 ### DrawRect
 
-Uses the logical Width/Height as the source rectangle, maps the region and margins proportionally into the destination, and delegates a source-region draw. Negative destination dimensions mirror the corresponding axis without moving its drawing origin. The tile parameter intentionally has no effect: an atlas view stretches once.
+Uses the logical GetWidth()/GetHeight() as the source rectangle, maps the region and margins proportionally into the destination, and delegates a source-region draw. Negative destination dimensions mirror the corresponding axis without moving its drawing origin. The tile parameter intentionally has no effect: an atlas view stretches once.
 
 ### DrawRectRegion
 
-The supplied source is in logical view coordinates. If both size axes are zero, uses rounded Region.Size, then Atlas.Size if both remain zero. A remaining zero axis produces no geometry. Adds Region.Position minus Margin.Position, intersects with the effective region, and proportionally adjusts the destination, including negative destination scales. An empty intersection produces no draw. It does not normalize signed source rectangles. Nested sources perform the same mapping at each layer; FilterClip replaces the caller's clipUV.
+The supplied source is in logical view coordinates. If both size axes are zero, uses rounded Region.Size, then Atlas.GetSize() if both remain zero. A remaining zero axis produces no geometry. Adds Region.Position minus Margin.Position, intersects with the effective region, and proportionally adjusts the destination, including negative destination scales. An empty intersection produces no draw. It does not normalize signed source rectangles. Nested sources perform the same mapping at each layer; FilterClip replaces the caller's clipUV.
 
 All drawing entry points validate lifetime, non-null CanvasItem, finite rectangles/colors and the canvas recording scope even when no atlas is assigned. Invalid arguments throw ArgumentException/ArgumentNullException, wrong scope/thread throws InvalidOperationException, disposal throws ObjectDisposedException. Derived geometry overflow is rejected before delegation. Zero-area geometry produces no pixels. Custom source implementations may impose additional requirements.
 

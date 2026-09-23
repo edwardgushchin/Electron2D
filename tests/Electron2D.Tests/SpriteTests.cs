@@ -291,8 +291,8 @@ internal static class SpriteTests
         internal int LogicalWidth = 2;
         internal Rect Destination, Source;
         internal bool Clip;
-        public override int Width => LogicalWidth;
-        public override int Height => 2;
+        public override int GetWidth() => LogicalWidth;
+        public override int GetHeight() => 2;
         public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         {
             Destination = rect; Source = sourceRect; Clip = clipUV;

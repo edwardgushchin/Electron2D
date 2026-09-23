@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Describes a two-dimensional texture with a logical size and readable image data.</summary>
-/// <remarks>Custom implementations provide Width, Height and GetImage, and emit Changed when their pixels change.
+/// <remarks>Custom implementations provide GetWidth, GetHeight and GetImage, and emit Changed when their pixels change.
 /// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer.</remarks>
 public abstract class Texture : Resource
 {
@@ -12,14 +12,14 @@ public abstract class Texture : Resource
     protected Texture() { Changed += InvalidatePixels; }
 
     /// <summary>Gets the logical width used for drawing.</summary>
-    /// <value>Width in pixels; zero for an uninitialized texture.</value>
-    public abstract int Width { get; }
+    /// <returns>Width in pixels, as defined by the concrete texture.</returns>
+    public abstract int GetWidth();
     /// <summary>Gets the logical height used for drawing.</summary>
-    /// <value>Height in pixels; zero for an uninitialized texture.</value>
-    public abstract int Height { get; }
+    /// <returns>Height in pixels, as defined by the concrete texture.</returns>
+    public abstract int GetHeight();
     /// <summary>Gets the logical drawing size.</summary>
-    /// <value>The width and height as a floating-point vector.</value>
-    public virtual Vector2 Size => new(Width, Height);
+    /// <returns>The width and height as a floating-point vector.</returns>
+    public virtual Vector2 GetSize() => new(GetWidth(), GetHeight());
     /// <summary>Gets the original image's pixel format.</summary>
     /// <value>L8 for an uninitialized texture.</value>
     public virtual Image.Format PixelFormat => CapturePixels()?.Source.Format ?? Image.Format.L8;
@@ -51,7 +51,7 @@ public abstract class Texture : Resource
     public virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
-        canvasItem.RecordTexture(this, new Rect(position, Size), null, modulate ?? Colors.White, false, transpose, false);
+        canvasItem.RecordTexture(this, new Rect(position, GetSize()), null, modulate ?? Colors.White, false, transpose, false);
     }
 
     /// <summary>Stretches or tiles this texture over a local rectangle during canvas recording.</summary>
@@ -98,7 +98,7 @@ public abstract class Texture : Resource
     public virtual bool IsPixelOpaque(int x, int y)
     {
         var pixels = CapturePixels();
-        return SampleOpacity(pixels, new Vector2I(Width, Height), x, y);
+        return SampleOpacity(pixels, new Vector2I(GetWidth(), GetHeight()), x, y);
     }
 
     private protected static bool SampleOpacity(TexturePixels? pixels, Vector2I size, int x, int y)
@@ -125,9 +125,6 @@ public abstract class Texture : Resource
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<Texture, int>(nameof(Width), t => t.Width),
-        new PropertyDescriptor<Texture, int>(nameof(Height), t => t.Height),
-        new PropertyDescriptor<Texture, Vector2>(nameof(Size), t => t.Size),
         new PropertyDescriptor<Texture, Image.Format>(nameof(PixelFormat), t => t.PixelFormat),
         new PropertyDescriptor<Texture, bool>(nameof(HasAlpha), t => t.HasAlpha),
         new PropertyDescriptor<Texture, bool>(nameof(HasMipmaps), t => t.HasMipmaps),

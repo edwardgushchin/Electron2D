@@ -32,29 +32,27 @@ texture.Update(image);
 | `void SetImage(Image image)` | Copies pixels, replaces allocation configuration and resets logical size. |
 | `void Update(Image image)` | Copies matching pixels while retaining configuration and logical size. |
 | `void SetSizeOverride(Vector2I size)` | Overrides logical axes; zero retains the current axis. |
-| `override int Width { get; }` | Logical width. |
-| `override int Height { get; }` | Logical height. |
-| `override Vector2 Size { get; }` | Atomic logical dimensions. |
+| `override int GetWidth()` | Logical width. |
+| `override int GetHeight()` | Logical height. |
+| `override Vector2 GetSize()` | Atomic logical dimensions. |
 | `override bool IsPixelOpaque(int x, int y)` | Clamped alpha test using one state snapshot. |
 | `override Image? GetImage()` | New independent original image, or null when uninitialized. |
 
 PixelFormat, HasAlpha, HasMipmaps and MipmapCount follow the [Texture metadata contract](Texture.md#property-descriptions).
 
-## Property descriptions
+## Method descriptions
 
-### Width
+### GetWidth
 
 Current logical width; zero before initialization. Disposal throws ObjectDisposedException.
 
-### Height
+### GetHeight
 
-Current logical height, with the same lifecycle as Width.
+Current logical height, with the same lifecycle as GetWidth.
 
-### Size
+### GetSize
 
 Reads both logical dimensions under one lock. Logical overrides do not change the image returned by GetImage.
-
-## Method descriptions
 
 ### CreateFromImage
 

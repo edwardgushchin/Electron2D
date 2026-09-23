@@ -8,7 +8,7 @@ internal static partial class RenderingRuntimeTests
         image.Fill(Colors.Red); image.SetPixel(1, 0, Colors.Transparent);
         using var texture = ImageTexture.CreateFromImage(image);
         using var atlas = new AtlasTexture();
-        Check(atlas.Size == Vector2.One && !atlas.HasAlpha && !atlas.HasMipmaps && atlas.GetImage() is null &&
+        Check(atlas.GetSize() == Vector2.One && !atlas.HasAlpha && !atlas.HasMipmaps && atlas.GetImage() is null &&
             atlas.IsPixelOpaque(int.MaxValue, int.MinValue) && atlas.Region == default && atlas.Margin == default &&
             !atlas.FilterClip && !atlas.ResourceLocalToScene && atlas.PixelFormat == Image.Format.Max && atlas.MipmapCount == 0, "Empty atlas defaults.");
         using var mipImage = MipImage(Colors.Red, Colors.Green, Colors.Blue);
@@ -18,11 +18,11 @@ internal static partial class RenderingRuntimeTests
             mipAtlas.CapturePixels()!.Levels == 3, "View metadata remains unspecified/no mips while rendering retains full source mip storage.");
         var changes = 0; atlas.Changed += _ => changes++;
         atlas.Atlas = texture; atlas.Atlas = texture; atlas.Region = default; atlas.Margin = default;
-        Check(changes == 1 && atlas.Size == new Vector2(4, 2), "Identity and equal rectangle setters do not emit.");
+        Check(changes == 1 && atlas.GetSize() == new Vector2(4, 2), "Identity and equal rectangle setters do not emit.");
         atlas.FilterClip = false;
         Check(changes == 2, "Filter clipping emits even when unchanged.");
         atlas.Region = new Rect(1.25f, 0, 2.9f, 1.9f); atlas.Margin = new Rect(1, 1, 3.9f, 2.9f);
-        Check(atlas.Size == new Vector2(5, 3) && atlas.Region.Size == new Vector2(2.9f, 1.9f), "Only region size is floored; dimension sums truncate.");
+        Check(atlas.GetSize() == new Vector2(5, 3) && atlas.Region.Size == new Vector2(2.9f, 1.9f), "Only region size is floored; dimension sums truncate.");
         using (var cropped = atlas.GetImage()!)
         {
             Check(cropped.Size == new Vector2I(2, 1) && !cropped.HasMipmaps, "Image crop excludes margins and mipmaps.");
@@ -34,7 +34,7 @@ internal static partial class RenderingRuntimeTests
         var before = changes; image.Fill(Colors.Green); texture.Update(image);
         Check(changes == before && atlas.IsPixelOpaque(1, 1), "Ordinary source changes do not forward but pixels remain live.");
         atlas.Region = new Rect(0, 0, 0, 1.9f);
-        Check(atlas.Size == new Vector2(4, 3), "Zero region axis ignores its margin size.");
+        Check(atlas.GetSize() == new Vector2(4, 3), "Zero region axis ignores its margin size.");
         Reject<ArgumentException>(() => atlas.Region = new Rect(float.NaN, 0, 1, 1));
         Reject<ArgumentException>(() => atlas.Margin = new Rect(0, 0, float.PositiveInfinity, 1));
         using var nested = new AtlasTexture { Atlas = atlas, Region = new Rect(0, 0, 1, 1) };
@@ -88,7 +88,7 @@ internal static partial class RenderingRuntimeTests
             () => { try { second.Atlas = first; } catch (ArgumentException) { } });
         Check(!(ReferenceEquals(first.Atlas, second) && ReferenceEquals(second.Atlas, first)), "Concurrent setters cannot create a cycle.");
         atlas.Dispose();
-        Reject<ObjectDisposedException>(() => _ = atlas.Width);
+        Reject<ObjectDisposedException>(() => _ = atlas.GetWidth());
         Reject<ObjectDisposedException>(() => atlas.GetImage());
         Reject<ObjectDisposedException>(() => atlas.CapturePixels());
         Check(!texture.IsDisposed, "Disposing a view retains the borrowed source.");
@@ -142,8 +142,8 @@ internal static partial class RenderingRuntimeTests
     private sealed class AtlasDrawProbe : Texture
     {
         internal Action? ReadWidthAction;
-        public override int Width { get { ReadWidthAction?.Invoke(); return 16; } }
-        public override int Height => 16;
+        public override int GetWidth() { ReadWidthAction?.Invoke(); return 16; }
+        public override int GetHeight() => 16;
         internal Rect Destination, Source;
         internal Color? Color;
         internal bool Transpose, Clip;

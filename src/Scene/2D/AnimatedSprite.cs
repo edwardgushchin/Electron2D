@@ -358,7 +358,7 @@ public class AnimatedSprite : Entity
     protected override void OnDraw()
     {
         if (_frames?.TryRead(_animation, _frame, out _, out _, out _, out var texture, out _) != true || texture is null) return;
-        var size = texture.Size;
+        var size = texture.GetSize();
         if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Animation texture dimensions must be finite and nonnegative.");
         var offset = _centered ? _offset - size / 2 : _offset;
         if (IsInsideTree && GetViewport()?.SnapTransformsToPixel == true) offset = CanvasGeometry.Snap(offset);

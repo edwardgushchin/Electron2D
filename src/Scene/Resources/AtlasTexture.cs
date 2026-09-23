@@ -100,12 +100,12 @@ public sealed class AtlasTexture : Texture
     /// <inheritdoc />
     /// <remarks>A zero region width uses the source width, or one without a source. Otherwise returns the
     /// floored region width plus the margin width, truncated to an integer. Unrepresentable sums throw OverflowException.</remarks>
-    public override int Width { get { lock (GraphGate) { ThrowIfDisposed(); return _roundedRegion.Size.X == 0 ? _atlas?.Width ?? 1 : checked((int)(_roundedRegion.Size.X + _margin.Size.X)); } } }
+    public override int GetWidth() { lock (GraphGate) { ThrowIfDisposed(); return _roundedRegion.Size.X == 0 ? _atlas?.GetWidth() ?? 1 : checked((int)(_roundedRegion.Size.X + _margin.Size.X)); } }
     /// <inheritdoc />
-    /// <remarks>Uses the same zero-axis fallback and checked integer conversion as Width.</remarks>
-    public override int Height { get { lock (GraphGate) { ThrowIfDisposed(); return _roundedRegion.Size.Y == 0 ? _atlas?.Height ?? 1 : checked((int)(_roundedRegion.Size.Y + _margin.Size.Y)); } } }
+    /// <remarks>Uses the same zero-axis fallback and checked integer conversion as GetWidth.</remarks>
+    public override int GetHeight() { lock (GraphGate) { ThrowIfDisposed(); return _roundedRegion.Size.Y == 0 ? _atlas?.GetHeight() ?? 1 : checked((int)(_roundedRegion.Size.Y + _margin.Size.Y)); } }
     /// <inheritdoc />
-    public override Vector2 Size { get { lock (GraphGate) { ThrowIfDisposed(); return LogicalSize(_atlas, _roundedRegion, _margin); } } }
+    public override Vector2 GetSize() { lock (GraphGate) { ThrowIfDisposed(); return LogicalSize(_atlas, _roundedRegion, _margin); } }
     /// <inheritdoc />
     public override bool HasAlpha { get { lock (GraphGate) { ThrowIfDisposed(); return _atlas?.HasAlpha ?? false; } } }
 
@@ -151,7 +151,7 @@ public sealed class AtlasTexture : Texture
             if (atlas is null) return true;
             var px = Math.Truncate((double)x + _roundedRegion.Position.X - _margin.Position.X);
             var py = Math.Truncate((double)y + _roundedRegion.Position.Y - _margin.Position.Y);
-            return px >= 0 && px < atlas.Width && py >= 0 && py < atlas.Height && atlas.IsPixelOpaque((int)px, (int)py);
+            return px >= 0 && px < atlas.GetWidth() && py >= 0 && py < atlas.GetHeight() && atlas.IsPixelOpaque((int)px, (int)py);
         }
     }
 
@@ -200,7 +200,7 @@ public sealed class AtlasTexture : Texture
         var atlas = _atlas!; var region = _roundedRegion; var margin = _margin; var clip = _filterClip;
         var source = requestedSource ?? new Rect(Vector2.Zero, LogicalSize(atlas, region, margin));
         if (source.Size == Vector2.Zero) source.Size = region.Size;
-        if (source.Size == Vector2.Zero) source.Size = atlas.Size;
+        if (source.Size == Vector2.Zero) source.Size = atlas.GetSize();
         if (source.Size.X == 0 || source.Size.Y == 0) return;
         var scale = rect.Size / source.Size;
         source.Position += region.Position - margin.Position;
@@ -217,12 +217,12 @@ public sealed class AtlasTexture : Texture
     }
 
     private static Rect EffectiveRegion(Texture? atlas, Rect region) => new(region.Position, new Vector2(
-        region.Size.X == 0 ? atlas?.Width ?? 0 : region.Size.X,
-        region.Size.Y == 0 ? atlas?.Height ?? 0 : region.Size.Y));
+        region.Size.X == 0 ? atlas?.GetWidth() ?? 0 : region.Size.X,
+        region.Size.Y == 0 ? atlas?.GetHeight() ?? 0 : region.Size.Y));
 
     private static Vector2 LogicalSize(Texture? atlas, Rect region, Rect margin) => new(
-        region.Size.X == 0 ? atlas?.Width ?? 1 : checked((int)(region.Size.X + margin.Size.X)),
-        region.Size.Y == 0 ? atlas?.Height ?? 1 : checked((int)(region.Size.Y + margin.Size.Y)));
+        region.Size.X == 0 ? atlas?.GetWidth() ?? 1 : checked((int)(region.Size.X + margin.Size.X)),
+        region.Size.Y == 0 ? atlas?.GetHeight() ?? 1 : checked((int)(region.Size.Y + margin.Size.Y)));
 
     private void ValidateDraw(CanvasItem canvasItem, Rect rect, Color? modulate)
     {

@@ -14,11 +14,11 @@ public sealed class ImageTexture : Texture
     public ImageTexture() { }
 
     /// <inheritdoc />
-    public override int Width { get { lock (_gate) { ThrowIfDisposed(); return _size.X; } } }
+    public override int GetWidth() { lock (_gate) { ThrowIfDisposed(); return _size.X; } }
     /// <inheritdoc />
-    public override int Height { get { lock (_gate) { ThrowIfDisposed(); return _size.Y; } } }
+    public override int GetHeight() { lock (_gate) { ThrowIfDisposed(); return _size.Y; } }
     /// <inheritdoc />
-    public override Vector2 Size { get { lock (_gate) { ThrowIfDisposed(); return new(_size.X, _size.Y); } } }
+    public override Vector2 GetSize() { lock (_gate) { ThrowIfDisposed(); return new(_size.X, _size.Y); } }
     /// <inheritdoc />
     public override bool IsPixelOpaque(int x, int y) { lock (_gate) { ThrowIfDisposed(); return SampleOpacity(_pixels, _size, x, y); } }
 

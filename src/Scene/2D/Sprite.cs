@@ -261,7 +261,7 @@ public class Sprite : Entity
         if (!position.IsFinite()) throw new ArgumentException("A sprite point must be finite.", nameof(position));
         if (_texture is not { } texture) return false;
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(Texture));
-        var width = texture.Width; var height = texture.Height;
+        var width = texture.GetWidth(); var height = texture.GetHeight();
         if (width < 0 || height < 0) throw new InvalidOperationException("Sprite texture dimensions must be nonnegative.");
         if (width == 0 || height == 0) return false;
         GetDrawRects(texture, out var source, out var destination);
@@ -335,7 +335,7 @@ public class Sprite : Entity
     private Rect BaseRegion(Texture texture)
     {
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(Texture));
-        var region = _regionEnabled ? _regionRect : new Rect(Vector2.Zero, texture.Size);
+        var region = _regionEnabled ? _regionRect : new Rect(Vector2.Zero, texture.GetSize());
         if (!region.IsFinite() || !_regionEnabled && (region.Size.X < 0 || region.Size.Y < 0))
             throw new InvalidOperationException("Sprite texture dimensions must be finite and nonnegative.");
         return region;

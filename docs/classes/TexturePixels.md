@@ -1,6 +1,6 @@
 # TexturePixels
 
-Last updated: 2026-09-22
+Last updated: 2026-09-23
 
 - Declaration: `internal sealed class TexturePixels`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-22
 
 ## Description
 
-The immutable pixel payload shared by ImageTexture snapshots and backend caches. Source preserves original format/mips; Upload contains a sampling-compatible copy. Array data is engine-owned and must never be mutated after publication. Allocation is the only mutable identity token, assigned before publishing an Update snapshot to preserve an existing GPU allocation.
+The immutable pixel payload shared by ImageTexture and curve-texture snapshots and backend caches. Source preserves original format/mips; Upload contains a sampling-compatible copy. Array data is engine-owned and must never be mutated after publication. Allocation is the only mutable identity token, assigned before publishing an Update snapshot to preserve an existing GPU allocation.
 
 ## Internal usage
 
@@ -55,7 +55,7 @@ Total stored levels, including the base image; follows the complete halving chai
 
 `internal object Allocation`
 
-New by default. Compatible ImageTexture.Update copies the previous identity; SetImage creates a new one.
+New by default. Compatible ImageTexture.Update and curve-source rebakes copy the previous identity; SetImage or changed curve width/storage format creates a new one. RF/RGBF curve payloads retain original storage and expand to RGBA32Float for upload.
 
 ### Pixel stride
 
