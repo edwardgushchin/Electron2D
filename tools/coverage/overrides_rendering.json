@@ -3,47 +3,47 @@
     {
       "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawTexture(Electron2D.Texture,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
       "electron2d": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
       "electron2d": "method:Electron2D.Texture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
       "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
       "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
       "electron2d": "method:Electron2D.Texture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
       "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
       "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Configurable filtering/repeat inheritance, further texture kinds and full canvas integration remain pending under ADR 0028."
+      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:get_width()",
@@ -249,6 +249,141 @@
       "godot": "Sprite2D::method:get_rect()",
       "electron2d": "method:Electron2D.Sprite.GetRect()",
       "reason": "Local inspection bounds remain a typed method on Sprite : Entity. Signed dimensions and two-stage integer truncation are preserved; attached viewport transform snapping rounds the local offset (ADRs 0008/0028)."
+    },
+    {
+      "godot": "class:AtlasTexture",
+      "electron2d": "T:Electron2D.AtlasTexture",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw(RID:,Vector2:,Color:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:get_image()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetImage()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_is_pixel_opaque(int:,int:)",
+      "electron2d": "method:Electron2D.AtlasTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "AtlasTexture::property:atlas",
+      "electron2d": "property:Electron2D.AtlasTexture.Atlas()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "AtlasTexture::property:filter_clip",
+      "electron2d": "property:Electron2D.AtlasTexture.FilterClip()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:has_alpha()",
+      "electron2d": "property:Electron2D.AtlasTexture.HasAlpha()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_has_alpha()",
+      "electron2d": "property:Electron2D.AtlasTexture.HasAlpha()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:get_height()",
+      "electron2d": "property:Electron2D.AtlasTexture.Height()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_height()",
+      "electron2d": "property:Electron2D.AtlasTexture.Height()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "AtlasTexture::property:margin",
+      "electron2d": "property:Electron2D.AtlasTexture.Margin()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "AtlasTexture::property:region",
+      "electron2d": "property:Electron2D.AtlasTexture.Region()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:get_size()",
+      "electron2d": "property:Electron2D.AtlasTexture.Size()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:get_width()",
+      "electron2d": "property:Electron2D.AtlasTexture.Width()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "Texture2D::method:_get_width()",
+      "electron2d": "property:Electron2D.AtlasTexture.Width()",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
+    },
+    {
+      "godot": "AtlasTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "Inherited false default is preserved; AtlasTextureTests verifies nested local atlas/source duplication and scene-root ownership with PackedScene."
+    },
+    {
+      "godot": "Texture2D::method:get_format()",
+      "electron2d": "property:Electron2D.AtlasTexture.PixelFormat()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "Texture2D::method:_get_format()",
+      "electron2d": "property:Electron2D.AtlasTexture.PixelFormat()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "Texture2D::method:get_mipmap_count()",
+      "electron2d": "property:Electron2D.AtlasTexture.MipmapCount()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "Texture2D::method:_get_mipmap_count()",
+      "electron2d": "property:Electron2D.AtlasTexture.MipmapCount()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "Texture2D::method:has_mipmaps()",
+      "electron2d": "property:Electron2D.AtlasTexture.HasMipmaps()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
+    },
+    {
+      "godot": "Texture2D::method:_has_mipmaps()",
+      "electron2d": "property:Electron2D.AtlasTexture.HasMipmaps()",
+      "reason": "Atlas view preserves the pinned inherited metadata defaults: unspecified Image.Format.Max, false HasMipmaps and zero MipmapCount. AtlasTextureTests distinguishes these query values from full underlying mip storage used by rendering; source/cropped image metadata remains separately accessible. AtlasTexture header has no metadata overrides, so the pinned Texture2D.cpp defaults apply."
     }
   ],
   "statusGroups": [
@@ -554,8 +689,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "Texture virtual drawing and the canvas consumer now exist. Next complete AtlasTexture slice must implement atlas ownership/change propagation, region and transparent margins, clipping, image/opacity queries and Resource duplication; no GUI prerequisite is required (ADRs 0013/0028).",
+      "state": "Implemented",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md.",
       "godot": [
         "class:AtlasTexture",
         "AtlasTexture::property:atlas",
@@ -746,6 +881,31 @@
       "electron2d": "method:Electron2D.Sprite.Dispose(System.Boolean)",
       "reason": "Protected managed lifetime hook disconnects the borrowed texture and clears typed events before inherited Entity cleanup; ordinary borrowed resources are not disposed.",
       "adr": "ADRs 0003/0006"
+    },
+    {
+      "electron2d": "constructor:Electron2D.AtlasTexture..ctor()",
+      "reason": "Default construction of the existing rectangular texture-view resource concept; initializes null source and zero rectangles without native allocation.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.AtlasTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copy hook preserves atlas view state and passes source resources through the graph duplication policy.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.AtlasTexture.CreateDuplicateInstance()",
+      "reason": "Exact-type construction hook for Resource duplication of the existing atlas-view resource.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.AtlasTexture.Dispose(System.Boolean)",
+      "reason": "Managed lifetime hook disconnects nested source change forwarding without disposing a borrowed source.",
+      "adr": "ADRs 0003/0004/0013/0014"
+    },
+    {
+      "electron2d": "method:Electron2D.AtlasTexture.GetPropertyDescriptors()",
+      "reason": "Typed stored-property metadata for the four existing atlas-view properties, consumed by resource inspection and scene-local copying.",
+      "adr": "ADRs 0003/0004/0013/0014"
     }
   ]
 }

@@ -54,7 +54,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ArrayMesh](classes/ArrayMesh.md) | Mesh | Blocked | 23 |
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
 | [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Blocked | 13 |
-| [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Unimplemented | 5 |
+| [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
 | [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Blocked | 1 |
 | [AudioEffectAmplify](classes/AudioEffectAmplify.md) | AudioEffect | Blocked | 2 |

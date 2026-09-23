@@ -17,6 +17,7 @@ internal static partial class RenderingRuntimeTests
             VerifyParameters("MaterialHlsl");
             VerifyParameters("MaterialGlsl");
             VerifyTextureResources();
+            VerifyAtlasResources();
             VerifyCanvasGeometryAllocations();
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy") VerifyTextureCursor();
             foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
@@ -33,6 +34,7 @@ internal static partial class RenderingRuntimeTests
                 VerifyFrameAllocations(backend, snapPixels: true);
                 VerifyCanvasTexture(backend);
                 VerifySprite(backend);
+                VerifyAtlasFrame(backend);
                 VerifyCanvasTextureFailures();
                 VerifyCanvasHDR(backend);
                 VerifyFailure(backend, "SwapHlsl");
@@ -51,6 +53,10 @@ internal static partial class RenderingRuntimeTests
                     VerifyCanvasTexture(backend, "CanvasGLSL");
                     VerifyCanvasUV();
                     VerifySprite(backend, "CanvasGLSL");
+                    VerifyAtlasFrame(backend, "CanvasHLSL");
+                    VerifyAtlasFrame(backend, "CanvasGLSL");
+                    VerifyAtlasMaterial("TextureHlsl");
+                    VerifyAtlasMaterial("TextureGlsl");
                 }
                 VerifyTextureFailure(backend);
             }

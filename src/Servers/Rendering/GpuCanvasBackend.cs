@@ -263,6 +263,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
 
     private nint PrepareTexture(Texture texture)
     {
+        if (texture is AtlasTexture atlas) texture = atlas.RenderingTexture
+            ?? throw new InvalidOperationException("A sampled atlas has no source texture.");
         if (_usedTextures.Add(texture))
         {
             var pixels = texture.CapturePixels() ?? throw new InvalidOperationException("A sampled texture has no readable image.");

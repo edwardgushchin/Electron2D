@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 The rendering integration contains executable canvas fragment shaders, material uniform buffers and sampled image textures. This is partial shader support under [ADR 0028](../decisions/rendering.md#adr-0028): matrices, nested structs and custom vertex programs remain unfinished. The native verification covers Linux Wayland/Vulkan; other GPU backends and platforms are unverified.
 
-Public resources are [Shader](../classes/Shader.md), [Shader.Mode](../classes/Shader.Mode.md), [Material](../classes/Material.md), [ShaderMaterial](../classes/ShaderMaterial.md), [Texture](../classes/Texture.md) and [ImageTexture](../classes/ImageTexture.md). Their managed state belongs to the Resources domain. The rendering backend owns GPU devices and pipelines; resources contain no native handles.
+Public resources are [Shader](../classes/Shader.md), [Shader.Mode](../classes/Shader.Mode.md), [Material](../classes/Material.md), [ShaderMaterial](../classes/ShaderMaterial.md), [Texture](../classes/Texture.md) [ImageTexture](../classes/ImageTexture.md) and [AtlasTexture](../classes/AtlasTexture.md). Their managed state belongs to the Resources domain. The rendering backend owns GPU devices and pipelines; resources contain no native handles.
 
 ## Import and runtime flow
 
@@ -36,7 +36,8 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 - At most sixteen fragment texture bindings in descriptor set 2, with unique contiguous slots starting at zero. Names are nonblank, case-sensitive and unique across textures and uniform members.
 - GLSL uses combined `sampler2D` resources. HLSL uses paired `Texture2D<float4>` and `SamplerState` declarations at the same binding; reflection checks actual image/sampler pairings in sampling operations. These are shader-language intrinsic names, not engine resource names.
 - Only ordinary float-sampled 2D images are integrated. Texture arrays, depth comparison, multisampling, storage images and vertex textures fail explicitly. Resource reflection uses active variables, matching SDL_shadercross; unused declarations do not add material slots.
-- `Texture` derives from Resource and ImageTexture derives directly from Texture. All textures are 2D by product definition; there is no separate dimension-neutral parent or dimension suffix in the public type name.
+- `Texture` derives from Resource and ImageTexture and AtlasTexture derive directly from Texture. All textures are 2D by product definition; there is no separate dimension-neutral parent or dimension suffix in the public type name.
+- `AtlasTexture` borrows a source and maps regions/margins through virtual drawing, including nested views. Its CPU image excludes margins; named material bindings resolve to full source storage and share the GPU allocation. Only nested atlas changes forward; Sprite redraws on view changes. Stored view state participates in resource duplication and packed-scene local ownership. See [AtlasTexture](../classes/AtlasTexture.md) for zero-axis, opacity, clipping and no-tiling semantics.
 - `ImageTexture.CreateFromImage` and SetImage copy pixels. SetImage resets logical size and replaces allocation identity; Update requires matching original dimensions/format/mips and retains logical overrides and allocation identity. GetImage returns an independent original image. Size overrides use zero to retain an axis, reject negative axes, and never resample pixels.
 - GPU upload accepts uncompressed byte and normalized/float formats. Byte formats convert to RGBA8; other accepted formats convert to RGBA32Float, preserving HDR values. Original image data and metadata remain unchanged. Compressed and integer-sampled formats remain explicit gaps. The backend checks sampling-format support before allocation.
 - All mip levels upload before drawing. Updates reuse allocation with native cycling; upload completion is recorded only after successful submission. Per-renderer texture and binding caches are pruned when no longer used, and GPU resources are released during shutdown. Logical resources remain caller-owned.
@@ -91,3 +92,5 @@ A self-contained linux-x64 publish of the test executable also passed the five-f
 The fourteenth texture frame uploads pixels decoded by the public `Image.LoadPNGFromBuffer` API from `SavePNGToBuffer`, then checks blue output for both source languages.
 
 The self-contained linux-x64 test publish also passed the complete canvas texture sequence on Wayland and dummy/software from `/tmp` with `LD_LIBRARY_PATH` unset. The publish includes the updated embedded vertex/fragment programs and both imported canvas fixtures. This verifies package delivery for these operations, not AOT or other platforms.
+
+AtlasTextureTests adds managed resource/graph checks and native atlas/Sprite readback on both canvas backends, HLSL/GLSL canvas shaders, and full-storage named material binding/update/failure checks.

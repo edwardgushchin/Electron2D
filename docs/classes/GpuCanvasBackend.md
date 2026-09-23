@@ -80,3 +80,5 @@ Idempotently waits for device idle, releases caches, samplers, target/buffers/sh
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+Named AtlasTexture bindings resolve to the terminal source before texture-cache lookup. Views therefore share the native allocation with direct source use, sample full source storage, observe updates, and reject empty/disposed chains before submission. Region/margin remapping belongs to virtual canvas drawing, not named material binding.

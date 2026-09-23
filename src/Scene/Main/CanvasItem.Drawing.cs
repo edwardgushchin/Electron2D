@@ -156,7 +156,7 @@ public abstract partial class CanvasItem
         texture.DrawRectRegion(this, rect, sourceRect, modulate, transpose, clipUV);
     }
 
-    private void ValidateTextureDraw(Texture texture, Rect rect, Color color)
+    internal void ValidateTextureDraw(Texture texture, Rect rect, Color color)
     {
         EnsureDrawing(); ArgumentNullException.ThrowIfNull(texture);
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(texture));

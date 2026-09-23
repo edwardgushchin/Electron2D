@@ -1,5 +1,20 @@
 [
   {
+    "id": "T:Electron2D.AtlasTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "AtlasTexture",
+    "signature": "public sealed class Electron2D.AtlasTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AwaitTweener",
     "kind": "type",
     "declaringType": "Electron2D.AwaitTweener",
@@ -2845,6 +2860,19 @@
     "parameters": [],
     "returnType": "System.String",
     "value": "\u0022project.e2d\u0022"
+  },
+  {
+    "id": "constructor:Electron2D.AtlasTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": ".ctor",
+    "signature": "public AtlasTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
   },
   {
     "id": "constructor:Electron2D.CanvasItem..ctor()",
@@ -12571,6 +12599,244 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.Draw(Electron2D.CanvasItem,Electron2D.Vector2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Draw",
+    "signature": "public override System.Void Draw(Electron2D.CanvasItem canvasItem, Electron2D.Vector2 position, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "DrawRect",
+    "signature": "public override System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "tile",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "DrawRectRegion",
+    "signature": "public override System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "sourceRect",
+        "type": "Electron2D.Rect",
+        "default": null
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "clipUV",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AtlasTexture.IsPixelOpaque(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "IsPixelOpaque",
+    "signature": "public override System.Boolean IsPixelOpaque(System.Int32 x, System.Int32 y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -36712,6 +36978,149 @@
       }
     ],
     "returnType": "Electron2D.Vector4I",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Atlas()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Atlas",
+    "signature": "public Electron2D.Texture Atlas { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.FilterClip()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "FilterClip",
+    "signature": "public System.Boolean FilterClip { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.HasMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "HasMipmaps",
+    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Height()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Height",
+    "signature": "public System.Int32 Height { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Margin()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Margin",
+    "signature": "public Electron2D.Rect Margin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.MipmapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "MipmapCount",
+    "signature": "public System.Int32 MipmapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "PixelFormat",
+    "signature": "public Electron2D.Image.Format PixelFormat { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Region()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Region",
+    "signature": "public Electron2D.Rect Region { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2 Size { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AtlasTexture.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.AtlasTexture",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

@@ -70,6 +70,8 @@ The texture must outlive its use by the scene. `Engine.Instance.Run(window)` own
 
 ### Texture
 
+AtlasTexture supplies a borrowed view with its own region/margins and virtual opacity behavior. Nested view changes request redraw; ordinary source pixel updates remain visible without a new view notification. See [AtlasTexture](AtlasTexture.md).
+
 Assigns a live texture or null. Assigning the same instance is a no-op. A disposed replacement throws ObjectDisposedException before changing state. The old subscription is removed before publishing the new reference. A content change requests redraw, so changes in logical size also rebuild geometry. Null clears the retained image on the next visible frame. Disposal of a still-borrowed texture is an error when rendering or reading its data.
 
 ### Centered
