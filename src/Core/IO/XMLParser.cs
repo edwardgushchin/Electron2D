@@ -40,8 +40,9 @@ public sealed class XMLParser : ElectronObject
     /// <summary>Creates an unopened parser.</summary>
     public XMLParser() { }
 
-    /// <summary>Copies a nonempty buffer and resets the token cursor.</summary>
+    /// <summary>Copies a nonempty buffer and resets its byte cursor and line counter.</summary>
     /// <param name="buffer">UTF-8 XML bytes; the caller retains ownership.</param>
+    /// <remarks>The last token and attributes remain observable immediately after opening, before the next <see cref="Read"/>. Invalid input leaves the previous source intact.</remarks>
     /// <exception cref="ArgumentException">The buffer is empty.</exception>
     /// <exception cref="ArgumentNullException">The buffer is null.</exception>
     /// <exception cref="ObjectDisposedException">The parser is disposed.</exception>
@@ -53,12 +54,14 @@ public sealed class XMLParser : ElectronObject
         {
             ThrowIfDisposed();
             _data = (byte[])buffer.Clone();
-            ResetCursor();
+            _position = 0;
+            _currentLine = 0;
         }
     }
 
-    /// <summary>Reads an ordinary or directory-backed virtual file and resets the token cursor.</summary>
+    /// <summary>Reads an ordinary or directory-backed virtual file and resets its byte cursor and line counter.</summary>
     /// <param name="path">An operating-system, res://, or user:// path.</param>
+    /// <remarks>A failed open preserves the previous source and token. A successful open retains the prior token immediately after opening, before the next <see cref="Read"/>.</remarks>
     /// <exception cref="IOException">The file cannot be read or is empty.</exception>
     /// <exception cref="ArgumentNullException">The path is null.</exception>
     /// <exception cref="ObjectDisposedException">The parser is disposed.</exception>
@@ -154,7 +157,7 @@ public sealed class XMLParser : ElectronObject
     }
 
     /// <summary>Gets the current token type.</summary>
-    /// <returns>The current token identity, or None before reading.</returns>
+    /// <returns>The current token identity, or None on a new parser before its first read.</returns>
     public NodeType GetNodeType() { lock (_gate) { ThrowIfDisposed(); return _nodeType; } }
 
     /// <summary>Gets the current name or markup content; reports an error and returns empty for text tokens.</summary>

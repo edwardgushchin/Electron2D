@@ -63,11 +63,11 @@ while (parser.Read())
 
 ### OpenBuffer
 
-Copies nonempty input and resets token, cursor, line and attribute state. Caller edits cannot change parsing. Null throws `ArgumentNullException`; empty input throws `ArgumentException`. A failed call leaves the old buffer intact.
+Copies nonempty input and resets the byte cursor and line counter. The previous token and attribute state remain visible immediately after opening, before the next `Read`; caller edits cannot change the copied input. Null throws `ArgumentNullException`; empty input throws `ArgumentException` without replacing the old source.
 
 ### Open
 
-Reads the complete file through `FileAccess.GetFileAsBytes`, then performs the same reset as `OpenBuffer`. Empty files throw `IOException`; path and access errors use the existing file-access exception contract. The previous buffer remains available if reading fails.
+Reads the complete file through `FileAccess.GetFileAsBytes`, then performs the same cursor/line reset as `OpenBuffer`. Ordinary and directory-backed `res://` paths are checked in the managed harness. Empty files throw `IOException`; path and access errors use the existing file-access exception contract. A failed read preserves the prior source and token.
 
 ### Read
 
@@ -83,7 +83,7 @@ For a nonempty opening element, reads nested opening and closing tokens until th
 
 ### GetNodeType
 
-Returns `None` before the first successful read or after reopening, otherwise the current token kind. EOF does not erase the last token.
+Returns `None` on a new parser before its first read; reopening retains the previous token until the next read updates it. EOF does not erase the last token.
 
 ### GetNodeName
 
@@ -135,7 +135,7 @@ Deterministic disposal releases the copied input and rejects later operations th
 
 ## Verification and limitations
 
-[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers all seven token identities, getter values and invalid-call diagnostics, ordered/duplicate attributes, retained attributes across non-element tokens, byte offsets and lines, seeking, section skipping, file reads, input copying, reopening and disposal. Getter and enum rows are Implemented in [coverage](../coverage/classes/XMLParser.md). Open, Read, Seek, SkipSection and the class aggregate remain Partial until malformed byte, declaration, entity and cursor edges are compared. This type does not provide a DTD, external-entity resolver, document tree or streaming input.
+[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers all seven token identities, getter values and invalid-call diagnostics, ordered/duplicate attributes, retained attributes across non-element tokens, byte offsets and lines, seeking, section skipping, ordinary/virtual file reads, input copying, failed/open reopening and disposal. Getter, enum and open rows are Implemented in [coverage](../coverage/classes/XMLParser.md). Read, Seek, SkipSection and the class aggregate remain Partial until malformed byte, declaration, entity and cursor edges are compared. This type does not provide a DTD, external-entity resolver, document tree or streaming input.
 
 ## Decisions
 

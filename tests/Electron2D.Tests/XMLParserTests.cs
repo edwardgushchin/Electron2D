@@ -68,10 +68,16 @@ internal static class XMLParserTests
         Check(parser.Seek(offset) && parser.GetNodeName() == "item" && parser.GetNodeOffset() == offset, "Seek must parse from a byte offset.");
         Reject<ArgumentOutOfRangeException>(() => parser.Seek(long.MaxValue));
 
+        Reject<ArgumentException>(() => parser.OpenBuffer([]));
+        Check(parser.GetNodeType() == XMLParser.NodeType.Element && parser.GetNodeName() == "item" &&
+              parser.GetNodeOffset() == offset && parser.GetAttributeCount() == 1,
+            "A failed buffer open must preserve the previous token and input.");
         parser.OpenBuffer("<open><broken"u8.ToArray());
-        Check(parser.GetNodeType() == XMLParser.NodeType.None && parser.Read() && parser.GetNodeName() == "open" &&
+        Check(parser.GetNodeType() == XMLParser.NodeType.Element && parser.GetNodeName() == "item" &&
+              parser.GetAttributeCount() == 1 && parser.GetCurrentLine() == 0 &&
+              parser.Read() && parser.GetNodeName() == "open" && parser.GetAttributeCount() == 0 &&
               parser.Read() && parser.GetNodeName() == "broken" && !parser.Read(),
-            "Reopening must reset state and incomplete XML must remain tokenizable.");
+            "Reopening resets the cursor and line while retaining the last token until reading the new input.");
 
         parser.OpenBuffer("<outer><inner/><inner><leaf/></inner></outer>"u8.ToArray());
         Check(parser.Read() && parser.GetNodeName() == "outer", "Outer token must be available before skipping.");
@@ -100,11 +106,30 @@ internal static class XMLParserTests
         var path = System.IO.Path.GetTempFileName();
         try
         {
+            Reject<IOException>(() => parser.Open(path));
+            Check(parser.GetNodeType() == XMLParser.NodeType.ElementEnd && parser.GetNodeName() == "node",
+                "Opening an empty file must preserve the previous source and token.");
             File.WriteAllText(path, "<file/>");
             parser.Open(path);
-            Check(parser.Read() && parser.GetNodeName() == "file" && parser.IsEmpty(), "Open must compose with file access.");
+            Check(parser.GetNodeType() == XMLParser.NodeType.ElementEnd && parser.GetCurrentLine() == 0 &&
+                  parser.Read() && parser.GetNodeName() == "file" && parser.IsEmpty(),
+                "Ordinary file open must preserve the last token until a read and then use the new file.");
+            Reject<FileNotFoundException>(() => parser.Open(path + ".missing"));
+            Check(parser.GetNodeName() == "file" && parser.IsEmpty(),
+                "A failed file read must leave the prior input and token available.");
         }
         finally { File.Delete(path); }
+
+        var virtualName = $"xml-parser-{Guid.NewGuid():N}.xml";
+        var virtualPath = System.IO.Path.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
+        try
+        {
+            File.WriteAllText(virtualPath, "<virtual/>");
+            parser.Open("res://" + virtualName);
+            Check(parser.Read() && parser.GetNodeName() == "virtual" && parser.IsEmpty(),
+                "Open must compose with the directory-backed resource path resolver.");
+        }
+        finally { File.Delete(virtualPath); }
 
         parser.Dispose();
         Reject<ObjectDisposedException>(() => parser.Read());
