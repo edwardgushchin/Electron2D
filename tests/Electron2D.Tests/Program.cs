@@ -227,6 +227,7 @@ VerifyTimers();
 VerifyTweens();
 VerifyTweenCallbackIntervals();
 VerifyTweenMethods();
+VerifyTweenProperties();
 VerifySceneTreeFailureSafety();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
 {
@@ -10057,6 +10058,397 @@ static void VerifyTweenMethods()
         "A throwing typed interpolator must invalidate its tween without emitting completion or suppressing later work.");
 }
 
+static void VerifyTweenProperties()
+{
+    static double Read(TweenValueHolder value) => value.Value;
+    static void Write(TweenValueHolder target, double value) => target.Value = value;
+
+    using var tree = new SceneTree(new Entity());
+    using var holder = new TweenValueHolder();
+    var rejected = tree.CreateTween();
+    Expect<ArgumentNullException>(() => rejected.TweenProperty<TweenValueHolder, double>(null!, Read, Write, 1d, 1d),
+        "A null property target must be rejected before append.");
+    Expect<ArgumentNullException>(() => rejected.TweenProperty<TweenValueHolder, double>(holder, null!, Write, 1d, 1d),
+        "A null property getter must be rejected before append.");
+    Expect<ArgumentNullException>(() => rejected.TweenProperty<TweenValueHolder, double>(holder, Read, null!, 1d, 1d),
+        "A null property setter must be rejected before append.");
+    Expect<ArgumentOutOfRangeException>(() => rejected.TweenProperty(holder, Read, Write, 1d, double.NaN),
+        "A non-finite property duration must be rejected before append.");
+    Expect<NotSupportedException>(() => rejected.TweenProperty<TweenValueHolder, DateTime>(holder,
+            static _ => DateTime.UnixEpoch, static (_, _) => { }, DateTime.UnixEpoch.AddDays(1), 1d),
+        "An unsupported property value must require an explicit typed interpolator.");
+    Expect<InvalidOperationException>(() => rejected.TweenProperty<TweenValueHolder, double>(holder,
+            static _ => throw new InvalidOperationException("expected append getter failure"), Write, 1d, 1d),
+        "A getter failure during append must propagate before the tweener is stored.");
+    Require(!rejected.HasTweeners(), "Rejected property appends must leave the sequence empty.");
+    rejected.Kill();
+
+    holder.Value = 2d;
+    var getterReads = 0;
+    var basic = tree.CreateTween();
+    basic.TweenProperty(holder, value => { getterReads++; return value.Value; }, Write, 10d, 1d);
+    Require(getterReads == 1, "The typed getter must capture the append-time value.");
+    holder.Value = 4d;
+    tree.ProcessFrame(0.5d);
+    Require(getterReads == 2 && DoubleNearlyEqual(holder.Value, 7d),
+        "Default property interpolation must recapture the value when its step starts.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Value == 10d && !basic.IsRunning(),
+        "A property tweener must write the exact final value at completion.");
+
+    holder.Value = 2d;
+    var chainedFrom = tree.CreateTween();
+    var configuredFrom = chainedFrom.TweenProperty(holder, Read, Write, 10d, 1d);
+    Require(ReferenceEquals(configuredFrom.From(4d).FromCurrent(), configuredFrom),
+        "From and FromCurrent must return the same configured tweener.");
+    holder.Value = 8d;
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 7d),
+        "FromCurrent must retain an explicit From value already stored by the tweener.");
+    chainedFrom.Kill();
+
+    holder.Value = 2d;
+    var delayed = tree.CreateTween();
+    var delayedProperty = delayed.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(0.5d);
+    Require(ReferenceEquals(delayedProperty, delayedProperty.SetDelay(0.5d)),
+        "Property SetDelay must return its own tweener.");
+    Expect<ArgumentOutOfRangeException>(() => delayedProperty.SetDelay(double.PositiveInfinity),
+        "A non-finite property delay must preserve the previous threshold.");
+    tree.ProcessFrame(0.25d);
+    holder.Value = 6d;
+    tree.ProcessFrame(0.25d);
+    Require(holder.Value == 6d, "A delayed default property must capture the current value at the exact delay boundary.");
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 8d), "A delayed property must interpolate from its delay-end capture.");
+    delayed.Kill();
+
+    holder.Value = 2d;
+    var changedDelay = tree.CreateTween();
+    var changedDelayProperty = changedDelay.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(1d);
+    tree.ProcessFrame(0.25d);
+    holder.Value = 7d;
+    Expect<InvalidOperationException>(() => Task.Run(() => changedDelayProperty.SetDelay(0d))
+            .GetAwaiter().GetResult(),
+        "Property delay mutation must require the tween owner thread.");
+    changedDelayProperty.SetDelay(0d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 6d),
+        "Changing an active delay to zero must keep its append-time start instead of recapturing the property.");
+    changedDelay.Kill();
+
+    holder.Value = 2d;
+    var changedDelayFrom = tree.CreateTween();
+    var changedDelayFromProperty = changedDelayFrom.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(1d);
+    tree.ProcessFrame(0.25d);
+    changedDelayFromProperty.SetDelay(0d).From(4d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 8d),
+        "A live From after a delay changes to zero must preserve the original active displacement.");
+    changedDelayFrom.Kill();
+
+    holder.Value = 2d;
+    var nearZero = tree.CreateTween();
+    nearZero.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(0.000005d);
+    tree.ProcessFrame(0d);
+    holder.Value = 6d;
+    tree.ProcessFrame(0.5d);
+    Require(Math.Abs(holder.Value - 5.99996d) < 0.000001d,
+        "A delay below the pinned zero-approximation threshold must capture at step start.");
+    nearZero.Kill();
+
+    holder.Value = 2d;
+    var atThreshold = tree.CreateTween();
+    atThreshold.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(0.00001d);
+    tree.ProcessFrame(0d);
+    holder.Value = 6d;
+    tree.ProcessFrame(0.5d);
+    Require(Math.Abs(holder.Value - 7.99996d) < 0.000001d,
+        "A delay at the pinned threshold must capture when the delay expires.");
+    atThreshold.Kill();
+
+    holder.Value = 2d;
+    var negativeDelay = tree.CreateTween();
+    negativeDelay.TweenProperty(holder, Read, Write, 10d, 1d).SetDelay(-0.2d);
+    tree.ProcessFrame(0d);
+    holder.Value = 6d;
+    tree.ProcessFrame(0.1d);
+    Require(DoubleNearlyEqual(holder.Value, 7.2d),
+        "A negative property delay must capture at its first positive step and use signed elapsed time.");
+    negativeDelay.Kill();
+
+    holder.Value = 2d;
+    var relative = tree.CreateTween();
+    relative.TweenProperty(holder, Read, Write, 3d, 1d).AsRelative();
+    holder.Value = 8d;
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 9.5d),
+        "An undelayed relative property must add its delta to the step-start value.");
+    relative.Kill();
+
+    holder.Value = 2d;
+    var delayedRelative = tree.CreateTween();
+    delayedRelative.TweenProperty(holder, Read, Write, 3d, 1d).AsRelative().SetDelay(0.5d);
+    tree.ProcessFrame(0.25d);
+    holder.Value = 8d;
+    tree.ProcessFrame(0.25d);
+    Require(holder.Value == 8d, "A delayed relative property must recapture its initial value at delay end.");
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 6.5d),
+        "A delayed relative property must retain the final value resolved from its append-time base.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Value == 5d, "A delayed relative property must write its fixed relative final value.");
+
+    holder.Value = 1d;
+    var explicitLoops = tree.CreateTween().SetLoops(2);
+    var explicitFinishes = 0;
+    explicitLoops.TweenProperty(holder, Read, Write, 3d, 0.1d).From(4d).AsRelative()
+        .Finished += _ => explicitFinishes++;
+    tree.ProcessFrame(0.25d);
+    Require(holder.Value == 7d && explicitFinishes == 2,
+        "An explicit relative From start must be reused for each loop execution.");
+
+    holder.Value = 0d;
+    var liveRelative = tree.CreateTween().SetLoops(2);
+    var liveRelativeProperty = liveRelative.TweenProperty(holder, Read, Write, 3d, 0.1d);
+    tree.ProcessFrame(0.05d);
+    liveRelativeProperty.AsRelative();
+    tree.ProcessFrame(0.15d);
+    Require(holder.Value == 6d,
+        "Enabling relative mode during a step must preserve that step's final value and affect the next loop.");
+
+    holder.Value = 0d;
+    var liveFrom = tree.CreateTween();
+    var liveFromProperty = liveFrom.TweenProperty(holder, Read, Write, 10d, 1d);
+    tree.ProcessFrame(0.25d);
+    liveFromProperty.From(4d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 9d),
+        "A live From change must shift intermediate interpolation while retaining the active displacement.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Value == 10d,
+        "The final property write must still use the originally configured final value after live From.");
+
+    holder.Value = 0d;
+    var liveCustomFrom = tree.CreateTween();
+    var liveCustomProperty = liveCustomFrom.TweenProperty(holder, Read, Write, 10d, 1d)
+        .SetCustomInterpolator(static weight => weight);
+    tree.ProcessFrame(0.25d);
+    liveCustomProperty.From(4d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 7d),
+        "A custom-weight property must interpolate toward its fixed final value after a live From change.");
+    liveCustomFrom.Kill();
+
+    var unsupportedRelative = tree.CreateTween();
+    var unsupportedRelativeProperty = unsupportedRelative.TweenProperty<TweenValueHolder, DateTime>(holder,
+        static _ => DateTime.UnixEpoch, static (_, _) => { }, DateTime.UnixEpoch.AddDays(1), 1d,
+        static (from, to, weight) => weight < 0.5d ? from : to);
+    Expect<NotSupportedException>(() => unsupportedRelativeProperty.AsRelative(),
+        "Relative mode must require a built-in typed addition contract even with custom interpolation.");
+    unsupportedRelative.Kill();
+
+    holder.Value = 0d;
+    var custom = tree.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+    var customProperty = custom.TweenProperty(holder, Read, Write, 10d, 1d);
+    Require(ReferenceEquals(customProperty.SetCustomInterpolator(static weight => weight * 2d), customProperty),
+        "A custom interpolator setter must return its own property tweener.");
+    Expect<ArgumentNullException>(() => customProperty.SetCustomInterpolator(null!),
+        "A null custom interpolator must leave the previous mapping intact.");
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 5d),
+        "A custom interpolator must receive the already-eased weight before the setter.");
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 20d),
+        "A custom interpolator must also map the final weight and allow overshoot.");
+
+    holder.Value = 0d;
+    var curves = tree.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+    var curveProperty = curves.TweenProperty(holder, Read, Write, 10d, 1d);
+    Require(ReferenceEquals(curveProperty.SetTrans(Tween.TransitionType.Cubic), curveProperty) &&
+            ReferenceEquals(curveProperty.SetEase(Tween.EaseType.Out), curveProperty),
+        "Per-property transition and ease overrides must return their tweener.");
+    Expect<ArgumentOutOfRangeException>(() => curveProperty.SetTrans((Tween.TransitionType)99),
+        "An undefined property transition must preserve the current curve.");
+    Expect<ArgumentOutOfRangeException>(() => curveProperty.SetEase((Tween.EaseType)99),
+        "An undefined property ease must preserve the current direction.");
+    Expect<InvalidOperationException>(() => Task.Run(() => curveProperty.SetTrans(Tween.TransitionType.Linear))
+            .GetAwaiter().GetResult(),
+        "Property transition mutation must require the owner thread.");
+    Expect<InvalidOperationException>(() => Task.Run(() => curveProperty.SetEase(Tween.EaseType.In))
+            .GetAwaiter().GetResult(),
+        "Property ease mutation must require the owner thread.");
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 5.78125d),
+        "Cubic/Out must override the parent Quad/In curve at a property interpolation sample.");
+    curveProperty.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(holder.Value, 5d),
+        "Live property curve changes must affect the next interpolation sample.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Value == 10d, "Property curve overrides must still write the exact final value.");
+
+    holder.Value = 1d;
+    var signed = tree.CreateTween();
+    var signedFinished = 0;
+    var signedNext = false;
+    signed.TweenProperty(holder, Read, Write, 10d, -1d).SetDelay(-0.2d)
+        .Finished += _ => signedFinished++;
+    signed.TweenCallback(() => signedNext = true);
+    tree.ProcessFrame(0.1d);
+    Require(holder.Value == 10d && signedFinished == 1 && signedNext,
+        "Negative property duration and delay must deliver the final value on the first positive step.");
+
+    holder.Value = 1d;
+    var zero = tree.CreateTween();
+    zero.TweenProperty(holder, Read, Write, 2d, 0d);
+    tree.ProcessFrame(0d);
+    Require(holder.Value == 1d, "A zero-duration property still needs positive processing time.");
+    tree.ProcessFrame(0.1d);
+    Require(holder.Value == 2d, "A zero-duration property must write its final value on the first positive frame.");
+
+    holder.Flag = false;
+    var relativeFlag = tree.CreateTween();
+    relativeFlag.TweenProperty(holder, static value => value.Flag,
+        static (value, current) => value.Flag = current, true, 1d).AsRelative();
+    tree.ProcessFrame(0.5d);
+    Require(holder.Flag, "A relative boolean property must use the typed replacement addition contract.");
+    relativeFlag.Kill();
+
+    holder.Integer = int.MinValue;
+    var fullSpan = tree.CreateTween();
+    fullSpan.TweenProperty(holder, static value => value.Integer,
+        static (value, current) => value.Integer = current, int.MaxValue, 1d);
+    tree.ProcessFrame(0.5d);
+    Require(holder.Integer == -1,
+        "A full-span integer property must keep the double-based interpolation path when its delta exceeds Int32.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Integer == int.MaxValue, "A full-span integer property must write its exact final value.");
+
+    holder.Integer = int.MinValue;
+    var fullSpanFrom = tree.CreateTween();
+    var fullSpanFromProperty = fullSpanFrom.TweenProperty(holder, static value => value.Integer,
+        static (value, current) => value.Integer = current, int.MaxValue, 1d);
+    tree.ProcessFrame(0.25d);
+    fullSpanFromProperty.From(0);
+    tree.ProcessFrame(0.25d);
+    Require(holder.Integer == 1_073_741_824,
+        "A live From with an unrepresentable Int32 displacement must retain typed endpoint interpolation.");
+    tree.ProcessFrame(0.5d);
+    Require(holder.Integer == int.MaxValue,
+        "A full-span live From must still write the configured final integer value.");
+
+    using var spatial = new Entity();
+    var vectorTween = tree.CreateTween();
+    var vectorProperty = vectorTween.TweenProperty(spatial, static node => node.Position,
+        static (node, value) => node.Position = value, new Vector2(10f, 20f), 1d);
+    tree.ProcessFrame(0.25d);
+    vectorProperty.From(new Vector2(4f, 8f));
+    tree.ProcessFrame(0.25d);
+    Require(spatial.Position == new Vector2(9f, 18f),
+        "Live From must preserve the active vector displacement for intermediate samples.");
+    tree.ProcessFrame(0.5d);
+    Require(spatial.Position == new Vector2(10f, 20f),
+        "Live From must still write the fixed vector final value.");
+
+    spatial.Transform = Transform.Identity;
+    var transformTween = tree.CreateTween();
+    var transformProperty = transformTween.TweenProperty(spatial, static node => node.Transform,
+        static (node, value) => node.Transform = value,
+        new Transform(0f, new Vector2(10f, 0f)), 1d);
+    tree.ProcessFrame(0.25d);
+    transformProperty.From(new Transform(0f, new Vector2(4f, 0f)));
+    tree.ProcessFrame(0.25d);
+    Require(spatial.Transform.Origin == new Vector2(9f, 0f),
+        "Live From must compose the active affine displacement for intermediate transform samples.");
+    tree.ProcessFrame(0.5d);
+    Require(spatial.Transform.Origin == new Vector2(10f, 0f),
+        "The transform property must still write its configured final transform.");
+
+    spatial.Transform = new Transform(0f, new Vector2(2f, 0f));
+    var relativeTransform = tree.CreateTween();
+    relativeTransform.TweenProperty(spatial, static node => node.Transform,
+        static (node, value) => node.Transform = value,
+        new Transform(0f, new Vector2(3f, 0f)), 1d).AsRelative();
+    tree.ProcessFrame(0.5d);
+    Require(spatial.Transform.Origin == new Vector2(3.5f, 0f),
+        "A relative transform property must compose its step-start transform with the configured delta.");
+    tree.ProcessFrame(0.5d);
+    Require(spatial.Transform.Origin == new Vector2(5f, 0f),
+        "A relative transform property must write its composed final value.");
+
+    var firstDate = DateTime.UnixEpoch;
+    var lastDate = firstDate.AddDays(1);
+    var dateValue = DateTime.MinValue;
+    var customTyped = tree.CreateTween();
+    customTyped.TweenProperty<TweenValueHolder, DateTime>(holder, _ => firstDate,
+        (_, value) => dateValue = value, lastDate, 1d,
+        (from, to, weight) => weight < 0.5d ? from : to)
+        .SetCustomInterpolator(static weight => weight);
+    tree.ProcessFrame(0.25d);
+    Require(dateValue == firstDate,
+        "A custom typed property interpolator must support a value without a built-in interpolation contract.");
+    tree.ProcessFrame(0.25d);
+    Require(dateValue == lastDate,
+        "The custom typed property interpolator must receive the current eased weight.");
+    customTyped.Kill();
+
+    holder.Value = 0d;
+    var inheritedCurve = tree.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+    inheritedCurve.TweenProperty(holder, Read, Write, 10d, 1d);
+    inheritedCurve.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(holder.Value, 2.5d),
+        "A property must retain the parent's transition and ease captured when it was appended.");
+    inheritedCurve.Kill();
+
+    var startGetterReads = 0;
+    var getterSiblingRan = false;
+    var startGetterFailure = tree.CreateTween();
+    startGetterFailure.TweenProperty(holder, value =>
+        {
+            if (++startGetterReads == 2)
+                throw new InvalidOperationException("expected start getter failure");
+            return value.Value;
+        }, Write, 10d, 1d);
+    tree.CreateTween().TweenCallback(() => getterSiblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && startGetterReads == 2 &&
+            getterSiblingRan && !startGetterFailure.IsValid(),
+        "A getter failure at step start must invalidate only its tween and preserve later work.");
+
+    var setterFinished = false;
+    var setterSiblingRan = false;
+    var setterFailure = tree.CreateTween();
+    setterFailure.TweenProperty(holder, Read,
+            static (_, _) => throw new InvalidOperationException("expected setter failure"), 10d, 1d)
+        .Finished += _ => setterFinished = true;
+    tree.CreateTween().TweenCallback(() => setterSiblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && !setterFinished &&
+            setterSiblingRan && !setterFailure.IsValid(),
+        "A property setter failure must omit tweener completion and preserve later work.");
+
+    var customFailureFinished = false;
+    var customSiblingRan = false;
+    var customFailure = tree.CreateTween();
+    customFailure.TweenProperty(holder, Read, Write, 10d, 1d)
+        .SetCustomInterpolator(static _ => throw new InvalidOperationException("expected custom curve failure"))
+        .Finished += _ => customFailureFinished = true;
+    tree.CreateTween().TweenCallback(() => customSiblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && !customFailureFinished &&
+            customSiblingRan && !customFailure.IsValid(),
+        "A custom property interpolator failure must invalidate its tween without suppressing later work.");
+
+    using var allocationTree = new SceneTree(new Entity());
+    using var allocationTarget = new TweenValueHolder();
+    allocationTree.CreateTween().TweenProperty(allocationTarget, Read, Write, 1d, 1_000d);
+    for (var index = 0; index < 16; index++)
+        allocationTree.ProcessFrame(0.001d);
+    var before = GC.GetAllocatedBytesForCurrentThread();
+    for (var index = 0; index < 128; index++)
+        allocationTree.ProcessFrame(0.001d);
+    Require(GC.GetAllocatedBytesForCurrentThread() == before,
+        "A warmed active property-tween frame must not allocate managed memory.");
+}
+
 static void VerifySceneTreeFailureSafety()
 {
     var enterRoot = new FailingLifecycleNode
@@ -12370,6 +12762,10 @@ sealed class TweenEventSource : ElectronObject
 sealed class TweenValueHolder : ElectronObject
 {
     public double Value { get; set; }
+
+    public bool Flag { get; set; }
+
+    public int Integer { get; set; }
 
     public void SetValue(double value) => Value = value;
 }

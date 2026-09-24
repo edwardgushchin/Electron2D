@@ -1,6 +1,6 @@
 # PropertyTweener\<TValue\>
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -18,9 +18,9 @@ Interpolates a typed property through explicit getter and setter delegates.
 
 Created only by `Tween.TweenProperty<TTarget,TValue>`, this owned task reads and writes one property through explicit typed delegates. Its declared public API is `From(TValue)`, `FromCurrent()`, `AsRelative()`, `SetCustomInterpolator(Func<double,double>)`, `SetDelay(double)`, `SetEase(Tween.EaseType)`, and `SetTrans(Tween.TransitionType)`; all return this tweener for fluent configuration. `Finished` and inherited object API come from [`Tweener`](Tweener.md).
 
-Default execution captures the property when the step starts, or when a configured delay ends. `From` fixes an explicit start for every loop; `FromCurrent` fixes the value captured at append time. `AsRelative` treats the configured final value as a delta and requires a supported addition operation. Transition/ease are copied from the parent when appended and can be overridden. A custom interpolator receives the already-eased `0..1` weight and may return overshoot. Exact completion writes either the exact final value or the custom-weight result before raising `Finished`.
+Default execution captures the property when the step starts if the delay magnitude is below `0.00001` second, or when the delay ends otherwise. `From` sets an explicit start for each loop; a live `From` shifts intermediate built-in interpolation when its displacement is representable, while retaining the active step's fixed final write. A full-span integer displacement falls back to endpoint interpolation. `FromCurrent` disables continuation and retains the configured start, initially the append-time value; a preceding `From` value remains. `AsRelative` treats the configured final value as a delta and requires a supported addition operation. With delayed continuation, its final value is resolved from the append-time base at step start before the delay-end start recapture. Transition/ease are copied from the parent when appended and can be changed during playback. A custom interpolator receives the already-eased weight and may return overshoot, including on the final write.
 
-The target is held while the parent exists, but logical target disposal completes the tweener without writing. Getter, setter, interpolator, arithmetic, and event exceptions invalidate the parent after parallel siblings are attempted. Time and enum validation is explicit; calls use the parent owner thread. Built-in supported values and threading are documented in the [Tweening component](../components/tweening.md).
+The target is held while the parent exists, but logical target disposal completes the tweener without writing. Getter, setter, interpolator, arithmetic, and event exceptions invalidate the parent after parallel siblings are attempted. Duration and delay accept finite signed seconds; negative values finish or begin on the first positive step. Non-finite times and undefined enums are rejected. Calls use the parent owner thread. Built-in supported values and threading are documented in the [Tweening component](../components/tweening.md).
 
 The tweener completes without writing when its target has been disposed.
 
@@ -57,6 +57,8 @@ Uses the supplied value as the start of every sequence execution.
 
 **Returns:** This tweener.
 
+**Remarks:** A change during an active step shifts intermediate built-in interpolation while retaining that step's final value. An integer displacement outside its type's range keeps endpoint interpolation.
+
 **Exceptions**
 
 - `InvalidOperationException`: The call is off the owner thread.
@@ -65,9 +67,11 @@ Uses the supplied value as the start of every sequence execution.
 <a id="m-electron2d-propertytweener-1-fromcurrent"></a>
 ### `public PropertyTweener<TValue> FromCurrent()`
 
-Uses the property value captured when this tweener was appended as its starting value.
+Disables continuation from the step-start property; the configured start initially equals the append-time value.
 
 **Returns:** This tweener.
+
+**Remarks:** A preceding [`From`](#m-electron2d-propertytweener-1-from-0) value remains configured.
 
 **Exceptions**
 
@@ -80,6 +84,8 @@ Uses the property value captured when this tweener was appended as its starting 
 Interprets the configured final value as a delta from the captured start.
 
 **Returns:** This tweener.
+
+**Remarks:** For a delayed continuation, the relative final value is resolved at step start before the delay-end recapture.
 
 **Exceptions**
 
@@ -98,6 +104,8 @@ Sets a custom mapping applied after the configured transition and easing.
 
 **Returns:** This tweener.
 
+**Remarks:** The mapping is also called with weight one on the final step, so the final write may overshoot.
+
 **Exceptions**
 
 - `ArgumentNullException`: `interpolator` is `null`.
@@ -111,13 +119,13 @@ Sets the delay before property interpolation begins.
 
 **Parameters**
 
-- `delay`: Finite non-negative seconds.
+- `delay`: Finite seconds; a negative delay begins on the first positive step.
 
 **Returns:** This tweener.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `delay` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `delay` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tweener is disposing or disposed.
 

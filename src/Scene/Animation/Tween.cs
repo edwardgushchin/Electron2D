@@ -506,12 +506,12 @@ public sealed class Tween : ElectronObject
     /// <param name="getter">Reads the property from the target.</param>
     /// <param name="setter">Writes the property on the target.</param>
     /// <param name="finalValue">The final absolute value, or relative delta after <see cref="PropertyTweener{TValue}.AsRelative"/>.</param>
-    /// <param name="duration">Finite non-negative interpolation seconds.</param>
+    /// <param name="duration">Finite interpolation seconds; a non-positive duration writes the final value on the first positive step.</param>
     /// <param name="interpolator">Optional typed interpolation. Omit it for a supported built-in value type.</param>
     /// <returns>The appended typed property tweener.</returns>
     /// <remarks>The getter is called immediately to capture the value used by <see cref="PropertyTweener{TValue}.FromCurrent"/>.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="duration"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="duration"/> is NaN or infinite.</exception>
     /// <exception cref="NotSupportedException">No interpolator is supplied for an unsupported type.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread, processing started, or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween or target is disposing or disposed.</exception>
@@ -529,7 +529,8 @@ public sealed class Tween : ElectronObject
         ArgumentNullException.ThrowIfNull(getter);
         ArgumentNullException.ThrowIfNull(setter);
         ObjectDisposedException.ThrowIf(target.IsDisposed, target);
-        ValidateDuration(duration, nameof(duration));
+        if (!double.IsFinite(duration))
+            throw new ArgumentOutOfRangeException(nameof(duration), duration, "Property duration must be finite.");
         EnsureCanAppend();
         interpolator ??= TweenValue<TValue>.Interpolate ?? throw TweenValue<TValue>.Unsupported();
         var current = getter(target);

@@ -57,7 +57,9 @@ The lifecycle audit checks creation, pause/resume, stop/restart after a partial 
 
 The callback/interval audit checks null and non-finite rollback, zero/exact/negative timing, live delay changes, owner-thread guards, disposed direct targets, cancellation, callback failure, per-loop completion and the full tweener/step/loop/final event order. The callback/interval types and their own methods plus shared completion-signal rows are Implemented.
 
-The method-tweener audit checks typed built-in and custom interpolation, finite signed duration/delay, exact start and final values, per-tweener default/override curves, live configuration, loop resets, unavailable direct targets, and callback/interpolator failures. Its own declaration rows are Implemented; property, subtween and await builders remain Partial.
+The method-tweener audit checks typed built-in and custom interpolation, finite signed duration/delay, exact start and final values, per-tweener default/override curves, live configuration, loop resets, unavailable direct targets, and callback/interpolator failures. Its own declaration rows are Implemented.
+
+The property-tweener audit checks typed append validation, immediate and deferred start capture around the pinned `1e-5` threshold, `From`/`FromCurrent` chaining and live displacement, delayed relative final values, scalar/vector/transform/bool interpolation, signed times, custom final-weight overshoot, curve changes, error continuation and zero warmed managed allocations. Its own declaration rows are Implemented; subtween and await builders remain Partial.
 
 ## Decisions
 

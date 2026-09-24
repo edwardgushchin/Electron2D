@@ -147,6 +147,7 @@ internal static class TweenValue<TValue>
 {
     internal static readonly Func<TValue, TValue, double, TValue>? Interpolate = CreateInterpolator();
     internal static readonly Func<TValue, TValue, TValue>? Add = CreateAdder();
+    internal static readonly Func<TValue, TValue, TValue>? Subtract = CreateSubtractor();
 
     internal static NotSupportedException Unsupported() =>
         new($"Tween interpolation is not defined for {typeof(TValue).FullName}. Supply a typed interpolator explicitly.");
@@ -232,6 +233,41 @@ internal static class TweenValue<TValue>
             return Cast((RectI left, RectI right) => new RectI(left.Position + right.Position, left.Size + right.Size));
         if (typeof(TValue) == typeof(Transform))
             return Cast((Transform left, Transform right) => left * right);
+        return null;
+    }
+
+    private static Func<TValue, TValue, TValue>? CreateSubtractor()
+    {
+        if (typeof(TValue) == typeof(float))
+            return Cast((float left, float right) => left - right);
+        if (typeof(TValue) == typeof(double))
+            return Cast((double left, double right) => left - right);
+        if (typeof(TValue) == typeof(bool))
+            return Cast((bool left, bool _) => left);
+        if (typeof(TValue) == typeof(int))
+            return Cast((int left, int right) => checked(left - right));
+        if (typeof(TValue) == typeof(long))
+            return Cast((long left, long right) => checked(left - right));
+        if (typeof(TValue) == typeof(Vector2))
+            return Cast((Vector2 left, Vector2 right) => left - right);
+        if (typeof(TValue) == typeof(Vector2I))
+            return Cast((Vector2I left, Vector2I right) => left - right);
+        if (typeof(TValue) == typeof(Vector3))
+            return Cast((Vector3 left, Vector3 right) => left - right);
+        if (typeof(TValue) == typeof(Vector3I))
+            return Cast((Vector3I left, Vector3I right) => left - right);
+        if (typeof(TValue) == typeof(Vector4))
+            return Cast((Vector4 left, Vector4 right) => left - right);
+        if (typeof(TValue) == typeof(Vector4I))
+            return Cast((Vector4I left, Vector4I right) => left - right);
+        if (typeof(TValue) == typeof(Color))
+            return Cast((Color left, Color right) => left - right);
+        if (typeof(TValue) == typeof(Rect))
+            return Cast((Rect left, Rect right) => new Rect(left.Position - right.Position, left.Size - right.Size));
+        if (typeof(TValue) == typeof(RectI))
+            return Cast((RectI left, RectI right) => new RectI(left.Position - right.Position, left.Size - right.Size));
+        if (typeof(TValue) == typeof(Transform))
+            return Cast((Transform left, Transform right) => right.AffineInverse() * left);
         return null;
     }
 

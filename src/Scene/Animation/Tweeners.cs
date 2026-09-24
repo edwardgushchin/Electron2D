@@ -79,19 +79,24 @@ public abstract class Tweener : ElectronObject
 
 /// <summary>Interpolates a typed property through explicit getter and setter delegates.</summary>
 /// <typeparam name="TValue">The property value type.</typeparam>
-/// <remarks>The tweener completes without writing when its target has been disposed.</remarks>
+/// <remarks>The tweener completes without writing when its target has been disposed. Continuation captures at step start for delays with magnitude below 0.00001 second, or after the delay otherwise.</remarks>
 public sealed class PropertyTweener<TValue> : Tweener
 {
+    private const double DelayZeroThreshold = 0.00001d;
+
     private readonly ElectronObject _target;
     private readonly Func<TValue> _getter;
     private readonly Action<TValue> _setter;
     private readonly Func<TValue, TValue, double, TValue> _interpolate;
     private readonly Func<TValue, TValue, TValue>? _add;
-    private readonly TValue _creationValue;
+    private readonly Func<TValue, TValue, TValue>? _subtract;
     private readonly TValue _baseFinalValue;
     private readonly double _duration;
     private TValue _initialValue;
     private TValue _finalValue;
+    private TValue _activeDelta = default!;
+    private bool _hasStarted;
+    private bool _useActiveDelta;
     private double _delay;
     private bool _continueFromStart = true;
     private bool _captureAfterDelay;
@@ -113,42 +118,58 @@ public sealed class PropertyTweener<TValue> : Tweener
         _target = target;
         _getter = getter;
         _setter = setter;
-        _creationValue = creationValue;
         _initialValue = creationValue;
         _baseFinalValue = finalValue;
         _finalValue = finalValue;
         _duration = duration;
         _interpolate = interpolate;
         _add = add;
+        _subtract = TweenValue<TValue>.Subtract;
     }
 
     /// <summary>Uses the supplied value as the start of every sequence execution.</summary>
     /// <param name="value">The explicit starting value.</param>
     /// <returns>This tweener.</returns>
+    /// <remarks>A change during an active step shifts intermediate built-in interpolation while retaining that step's final value. An integer displacement outside its type's range keeps endpoint interpolation.</remarks>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public PropertyTweener<TValue> From(TValue value)
     {
         EnsureMutable();
+        if (_hasStarted && (!_captureAfterDelay || Math.Abs(_delay) < DelayZeroThreshold) &&
+            !_useActiveDelta && _customInterpolator is null &&
+            _add is not null && _subtract is not null)
+        {
+            try
+            {
+                _activeDelta = _subtract(_finalValue, _initialValue);
+                _useActiveDelta = true;
+            }
+            catch (OverflowException)
+            {
+                // A full-span integer keeps the existing double-based endpoint interpolation.
+            }
+        }
         _initialValue = value;
         _continueFromStart = false;
         return this;
     }
 
-    /// <summary>Uses the property value captured when this tweener was appended as its starting value.</summary>
+    /// <summary>Disables continuation from the step-start property; the configured start initially equals the append-time value.</summary>
     /// <returns>This tweener.</returns>
+    /// <remarks>A preceding <see cref="From"/> value remains configured.</remarks>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public PropertyTweener<TValue> FromCurrent()
     {
         EnsureMutable();
-        _initialValue = _creationValue;
         _continueFromStart = false;
         return this;
     }
 
     /// <summary>Interprets the configured final value as a delta from the captured start.</summary>
     /// <returns>This tweener.</returns>
+    /// <remarks>For a delayed continuation, the relative final value is resolved at step start before the delay-end recapture.</remarks>
     /// <exception cref="NotSupportedException"><typeparamref name="TValue"/> has no built-in addition contract.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
@@ -164,6 +185,7 @@ public sealed class PropertyTweener<TValue> : Tweener
     /// <summary>Sets a custom mapping applied after the configured transition and easing.</summary>
     /// <param name="interpolator">Maps the eased weight to a final interpolation weight; overshoot values are allowed.</param>
     /// <returns>This tweener.</returns>
+    /// <remarks>The mapping is also called with weight one on the final step, so the final write may overshoot.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="interpolator"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
@@ -176,15 +198,16 @@ public sealed class PropertyTweener<TValue> : Tweener
     }
 
     /// <summary>Sets the delay before property interpolation begins.</summary>
-    /// <param name="delay">Finite non-negative seconds.</param>
+    /// <param name="delay">Finite seconds; a negative delay begins on the first positive step.</param>
     /// <returns>This tweener.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public PropertyTweener<TValue> SetDelay(double delay)
     {
         EnsureMutable();
-        Tween.ValidateDuration(delay, nameof(delay));
+        if (!double.IsFinite(delay))
+            throw new ArgumentOutOfRangeException(nameof(delay), delay, "Property delay must be finite.");
         _delay = delay;
         return this;
     }
@@ -227,7 +250,9 @@ public sealed class PropertyTweener<TValue> : Tweener
     internal override void Start()
     {
         base.Start();
-        _captureAfterDelay = _continueFromStart && _delay > 0d;
+        _hasStarted = true;
+        _useActiveDelta = false;
+        _captureAfterDelay = _continueFromStart && Math.Abs(_delay) >= DelayZeroThreshold;
         if (_continueFromStart && !_captureAfterDelay && !_target.IsDisposed)
             _initialValue = _getter();
         ResolveFinalValue();
@@ -248,10 +273,9 @@ public sealed class PropertyTweener<TValue> : Tweener
             return true;
         }
 
-        if (_captureAfterDelay)
+        if (_captureAfterDelay && Math.Abs(_delay) >= DelayZeroThreshold)
         {
             _initialValue = _getter();
-            ResolveFinalValue();
             _captureAfterDelay = false;
         }
 
@@ -261,7 +285,10 @@ public sealed class PropertyTweener<TValue> : Tweener
             var weight = TweenMath.Ease(time / _duration, _transition, _ease);
             if (_customInterpolator is not null)
                 weight = _customInterpolator(weight);
-            _setter(_interpolate(_initialValue, _finalValue, weight));
+            var endpoint = _customInterpolator is null && _useActiveDelta && _add is not null
+                ? _add(_initialValue, _activeDelta)
+                : _finalValue;
+            _setter(_interpolate(_initialValue, endpoint, weight));
             remaining = 0d;
             return true;
         }

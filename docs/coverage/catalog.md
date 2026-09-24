@@ -663,7 +663,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ProgressBar](classes/ProgressBar.md) | Range | Blocked | 16 |
 | [ProjectSettings](classes/ProjectSettings.md) | Object | Partial | 963 |
 | [Projection](classes/Projection.md) | — | Excluded | 48 |
-| [PropertyTweener](classes/PropertyTweener.md) | Tweener | Partial | 7 |
+| [PropertyTweener](classes/PropertyTweener.md) | Tweener | Implemented | 7 |
 | [QuadMesh](classes/QuadMesh.md) | PlaneMesh | Excluded | 2 |
 | [QuadOccluder3D](classes/QuadOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [Quaternion](classes/Quaternion.md) | — | Excluded | 43 |
