@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 TEXTURE_NAMES = {
     "Texture2D": "Texture",
@@ -178,6 +178,8 @@ def reason_for_type(item, lookup):
          "first procedural 2D curve or noise resource slice after typed resource storage (ADR 0013)"),
         ({"Path2D", "PathFollow2D"},
          "first scene path/follower slice using the implemented Curve2D and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
+        ({"AStarGrid2D"},
+         "standalone 2D grid pathfinding slice with cell shape, diagonals, weights and jump-point behavior (ADR 0052); no navigation-server backend is required"),
         ({"Line2D", "Marker2D", "Parallax2D", "ParallaxBackground", "ParallaxLayer", "Polygon2D", "RemoteTransform2D"},
          "next 2D scene-node slice using the existing Entity, CanvasItem, canvas layers and polygon renderer (ADRs 0008 and 0028)"),
         ({"CurveTexture", "CurveXYZTexture"},
@@ -275,7 +277,7 @@ def reason_for_type(item, lookup):
     families = (
         ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "first Box2D.NET-backed 2D physics slice (ADR 0012)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
-        ("Navigation2D", r"Navigation|AStar(?:Grid)?2D|PathFollow2D|Path2D", "first 2D navigation slice"),
+        ("Navigation2D", r"Navigation", "first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052)"),
         ("Animation", r"Animation|Skeleton2D|Bone2D", "first scene animation slice"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
         ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
@@ -506,7 +508,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name in {"@GlobalScope", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

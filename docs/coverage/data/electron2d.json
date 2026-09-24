@@ -1,5 +1,20 @@
 [
   {
+    "id": "T:Electron2D.AStar2D",
+    "kind": "type",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "AStar2D",
+    "signature": "public class Electron2D.AStar2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnchorMode",
     "kind": "type",
     "declaringType": "Electron2D.AnchorMode",
@@ -4325,6 +4340,19 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "-2147483648"
+  },
+  {
+    "id": "constructor:Electron2D.AStar2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AStar2D",
+    "name": ".ctor",
+    "signature": "public AStar2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
   },
   {
     "id": "constructor:Electron2D.AnimatedSprite..ctor()",
@@ -17460,6 +17488,597 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.AddPoint(System.Int64,Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "AddPoint",
+    "signature": "public System.Void AddPoint(System.Int64 id, Electron2D.Vector2 position, System.Single weightScale = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "weightScale",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.ArePointsConnected(System.Int64,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "ArePointsConnected",
+    "signature": "public System.Boolean ArePointsConnected(System.Int64 id, System.Int64 toID, System.Boolean bidirectional = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "bidirectional",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.ConnectPoints(System.Int64,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "ConnectPoints",
+    "signature": "public System.Void ConnectPoints(System.Int64 id, System.Int64 toID, System.Boolean bidirectional = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "bidirectional",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.DisconnectPoints(System.Int64,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "DisconnectPoints",
+    "signature": "public System.Void DisconnectPoints(System.Int64 id, System.Int64 toID, System.Boolean bidirectional = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "bidirectional",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetAvailablePointID()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetAvailablePointID",
+    "signature": "public System.Int64 GetAvailablePointID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetClosestPoint(Electron2D.Vector2,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetClosestPoint",
+    "signature": "public System.Int64 GetClosestPoint(Electron2D.Vector2 toPosition, System.Boolean includeDisabled = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "includeDisabled",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetClosestPositionInSegment(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetClosestPositionInSegment",
+    "signature": "public Electron2D.Vector2 GetClosestPositionInSegment(Electron2D.Vector2 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetIDPath(System.Int64,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetIDPath",
+    "signature": "public System.Int64[] GetIDPath(System.Int64 fromID, System.Int64 toID, System.Boolean allowPartialPath = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "allowPartialPath",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int64[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointCapacity()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointCapacity",
+    "signature": "public System.Int64 GetPointCapacity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointConnections(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointConnections",
+    "signature": "public System.Int64[] GetPointConnections(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointCount",
+    "signature": "public System.Int64 GetPointCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointIDs()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointIDs",
+    "signature": "public System.Int64[] GetPointIDs()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointPath(System.Int64,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointPath",
+    "signature": "public Electron2D.Vector2[] GetPointPath(System.Int64 fromID, System.Int64 toID, System.Boolean allowPartialPath = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "allowPartialPath",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointPosition(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.GetPointWeightScale(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "GetPointWeightScale",
+    "signature": "public System.Single GetPointWeightScale(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.HasPoint(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "HasPoint",
+    "signature": "public System.Boolean HasPoint(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.IsPointDisabled(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "IsPointDisabled",
+    "signature": "public System.Boolean IsPointDisabled(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.OnComputeCost(System.Int64,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "OnComputeCost",
+    "signature": "protected virtual System.Single OnComputeCost(System.Int64 fromID, System.Int64 toID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.OnEstimateCost(System.Int64,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "OnEstimateCost",
+    "signature": "protected virtual System.Single OnEstimateCost(System.Int64 fromID, System.Int64 endID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "endID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.OnFilterNeighbor(System.Int64,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "OnFilterNeighbor",
+    "signature": "protected virtual System.Boolean OnFilterNeighbor(System.Int64 fromID, System.Int64 neighborID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "neighborID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.RemovePoint(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.ReserveSpace(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "ReserveSpace",
+    "signature": "public System.Void ReserveSpace(System.Int64 numNodes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "numNodes",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.SetPointDisabled(System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "SetPointDisabled",
+    "signature": "public System.Void SetPointDisabled(System.Int64 id, System.Boolean disabled = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.SetPointPosition(System.Int64,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "SetPointPosition",
+    "signature": "public System.Void SetPointPosition(System.Int64 id, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.SetPointWeightScale(System.Int64,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "SetPointWeightScale",
+    "signature": "public System.Void SetPointWeightScale(System.Int64 id, System.Single weightScale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "weightScale",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStar2D.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -53915,6 +54534,19 @@
       }
     ],
     "returnType": "Electron2D.Vector4i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStar2D.NeighborFilterEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStar2D",
+    "name": "NeighborFilterEnabled",
+    "signature": "public System.Boolean NeighborFilterEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

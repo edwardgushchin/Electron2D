@@ -66,8 +66,10 @@ def main():
                      "RefCounted", "Line2D", "NativeMenu", "GDScriptLanguageProtocol",
                      "EditorNode3DGizmo")
     }
-    assert " | Blocked | Navigation2D:" in class_rows["AStar2D"]
-    assert " | Blocked | Navigation2D:" in class_rows["AStarGrid2D"]
+    astar_rows = [row for row in pages[CLASS_PAGES / "AStar2D.md"].splitlines()
+                  if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(astar_rows) == 28 and all(" | Implemented | " in row for row in astar_rows)
+    assert " | Unimplemented | Accepted 2D capability" in class_rows["AStarGrid2D"]
     assert "cryptography utility contract" in class_rows["AESContext"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     assert "GUI/editor Shortcut" in class_rows["Shortcut"]
