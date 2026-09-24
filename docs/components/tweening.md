@@ -59,7 +59,9 @@ The callback/interval audit checks null and non-finite rollback, zero/exact/nega
 
 The method-tweener audit checks typed built-in and custom interpolation, finite signed duration/delay, exact start and final values, per-tweener default/override curves, live configuration, loop resets, unavailable direct targets, and callback/interpolator failures. Its own declaration rows are Implemented.
 
-The property-tweener audit checks typed append validation, immediate and deferred start capture around the pinned `1e-5` threshold, `From`/`FromCurrent` chaining and live displacement, delayed relative final values, scalar/vector/transform/bool interpolation, signed times, custom final-weight overshoot, curve changes, error continuation and zero warmed managed allocations. Its own declaration rows are Implemented; subtween and await builders remain Partial.
+The property-tweener audit checks typed append validation, immediate and deferred start capture around the pinned `1e-5` threshold, `From`/`FromCurrent` chaining and live displacement, delayed relative final values, scalar/vector/transform/bool interpolation, signed times, custom final-weight overshoot, curve changes, error continuation and zero warmed managed allocations. Its own declaration rows are Implemented.
+
+The subtween audit checks signed/live delay, source-tree detachment including cross-tree transfer on a shared owner thread, parent pause/lane and combined speed, child reset across loops, next-frame completion and unused-time forwarding. Invalid children are skipped; explicit child disposal and nested callback failure release or invalidate the parent safely. The subtween's own rows are Implemented; await remains Partial.
 
 ## Decisions
 

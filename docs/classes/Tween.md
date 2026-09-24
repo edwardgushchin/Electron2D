@@ -519,7 +519,7 @@ Appends a child tween as one step and removes it from independent tree processin
 
 **Parameters**
 
-- `subtween`: A valid tween owned by the same scene tree.
+- `subtween`: A tween on the same owner thread; it is detached from its original scene tree if registered.
 
 **Returns:** The appended nested-tween step.
 
@@ -527,8 +527,10 @@ Appends a child tween as one step and removes it from independent tree processin
 
 - `ArgumentNullException`: `subtween` is `null`.
 - `ArgumentException`: The tween is nested into itself, already nested, or would create a cycle.
-- `InvalidOperationException`: The call is off the owner thread, parent processing has started, a tween is invalid or currently processing, or the tweens belong to different trees.
+- `InvalidOperationException`: The call is off either owner's thread, parent processing has started, or the child is currently processing.
 - `ObjectDisposedException`: Either tween is disposing or disposed.
+
+**Remarks:** An invalid child is accepted and skipped when its parent reaches the step. Self, repeated and cyclic nesting are rejected before ownership changes.
 
 <a id="m-electron2d-tween-tweenawait-electron2d-electronobject-system-action-system-action-system-action-system-action"></a>
 ### `public AwaitTweener TweenAwait(ElectronObject source, Action<Action> subscribe, Action<Action> unsubscribe)`
@@ -679,7 +681,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 An empty tween is valid on creation but fails and invalidates if any matching frame reaches it without appended tweeners, including a zero-delta frame. First processing captures property start values and freezes the append surface. `Stop()` reopens appending and resets cursor/time without changing targets; the last completed-loop count remains visible until `Play()` starts the sequence again. Exact step completion with no remaining delta defers the next zero-duration step to a later positive-delta frame. Final delivery stops the tween but keeps it valid and registered; a following manual step returns `false`, and the next eligible tree step removes it. A `Finished` subscriber can use `Stop()` and `Play()` to restart it. Kill invalidates immediately but leaves its registry entry for the next eligible sweep. Kill, bound-node disposal, tree finalization, an empty sequence, and user callback failure do not raise `Finished`.
 
-Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Non-finite time values, invalid enum values, cross-tree binding/nesting, cyclic/multiple/in-progress nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly. Callback, method and property delays, intervals and interpolation durations accept finite signed values.
+Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Non-finite time values, invalid enum values, cross-tree node binding, cyclic/multiple/in-progress tween nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly. Tween nesting can transfer across trees on a shared owner thread. Callback, method, property and subtween delays, intervals and interpolation durations accept finite signed values.
 
 All public mutation, processing, and disposal are owner-thread operations. Typed event notification may arrive on another thread; `AwaitTweener` only atomically records it. Reads are not a synchronization contract. Disposal is rejected during processing, invalidates nested tweens, disposes owned tweener objects, clears subscribers, and aggregates cleanup failures. A nested Tween object remains managed and inspectable until separately disposed.
 

@@ -228,6 +228,7 @@ VerifyTweens();
 VerifyTweenCallbackIntervals();
 VerifyTweenMethods();
 VerifyTweenProperties();
+VerifyTweenSubtweens();
 VerifySceneTreeFailureSafety();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
 {
@@ -9594,12 +9595,9 @@ static void VerifyTweens()
         "Appending a subtween must remove it from independent tree processing.");
     tree.ProcessFrame(0.3d);
     tree.ProcessFrame(0.1d);
-    Require(nestedLog.SequenceEqual(["before", "child"]) && parentTween.IsValid(),
-        "A finished subtween must release the parent's following step without executing it at exact exhaustion.");
-    tree.ProcessFrame(0.1d);
     Require(nestedLog.SequenceEqual(["before", "child", "after"]) &&
             parentTween.IsValid() && childTween.IsValid() && !parentTween.IsRunning(),
-        "A subtween must execute in sequence and retain the parent's finishing frame.");
+        "A finished subtween must forward unused time to the parent's next step before tree removal.");
     tree.ProcessFrame(0.1d);
     Require(!parentTween.IsValid() && !childTween.IsValid(),
         "A completed parent must unregister and terminate its nested tween on the next frame.");
@@ -10447,6 +10445,232 @@ static void VerifyTweenProperties()
         allocationTree.ProcessFrame(0.001d);
     Require(GC.GetAllocatedBytesForCurrentThread() == before,
         "A warmed active property-tween frame must not allocate managed memory.");
+}
+
+static void VerifyTweenSubtweens()
+{
+    using var tree = new SceneTree(new Entity());
+    var rejected = tree.CreateTween();
+    Expect<ArgumentNullException>(() => rejected.TweenSubtween(null!),
+        "A null child tween must be rejected before append.");
+    Expect<ArgumentException>(() => rejected.TweenSubtween(rejected),
+        "A tween cannot contain itself.");
+    Require(!rejected.HasTweeners() && tree.GetProcessedTweens().Contains(rejected),
+        "Rejected subtween appends must preserve the parent and its registry entry.");
+    rejected.Kill();
+
+    var offThreadParent = tree.CreateTween();
+    var offThreadChild = tree.CreateTween();
+    offThreadChild.TweenInterval(1d);
+    Expect<InvalidOperationException>(() => Task.Run(() => offThreadParent.TweenSubtween(offThreadChild))
+            .GetAwaiter().GetResult(),
+        "Subtween ownership transfer must require the parent owner thread.");
+    Require(tree.GetProcessedTweens().Contains(offThreadChild),
+        "Rejected off-thread transfer must retain the child's original registration.");
+    offThreadParent.Kill();
+    offThreadChild.Kill();
+
+    var events = new List<string>();
+    var child = tree.CreateTween();
+    child.TweenInterval(0.2d);
+    child.TweenCallback(() => events.Add("child"));
+    var parent = tree.CreateTween();
+    parent.TweenCallback(() => events.Add("before"));
+    var nested = parent.TweenSubtween(child);
+    var nestedFinishes = 0;
+    nested.Finished += _ => nestedFinishes++;
+    parent.TweenCallback(() => events.Add("after"));
+    Require(!tree.GetProcessedTweens().Contains(child) && tree.GetProcessedTweens().Contains(parent),
+        "Appending a child must transfer it from the tree registry to its parent.");
+    tree.ProcessFrame(0.3d);
+    Require(events.SequenceEqual(["before", "child"]) && nestedFinishes == 0,
+        "A child's finishing frame must not yet release the parent's subtween step.");
+    tree.ProcessFrame(0.1d);
+    Require(events.SequenceEqual(["before", "child", "after"]) && nestedFinishes == 1 &&
+            parent.IsValid() && !parent.IsRunning(),
+        "The next frame must finish the nested step and forward unused time to the parent's following callback.");
+    tree.ProcessFrame(0.1d);
+    Require(!parent.IsValid() && !child.IsValid(),
+        "The completed parent's registry sweep must terminate its nested child.");
+
+    var loopedChildCalls = 0;
+    var loopedSubtweenFinishes = 0;
+    var loopedChild = tree.CreateTween();
+    loopedChild.TweenCallback(() => loopedChildCalls++).SetDelay(0.1d);
+    var loopedParent = tree.CreateTween().SetLoops(2);
+    loopedParent.TweenSubtween(loopedChild).Finished += _ => loopedSubtweenFinishes++;
+    tree.ProcessFrame(0.1d);
+    tree.ProcessFrame(0.1d);
+    tree.ProcessFrame(0.1d);
+    Require(loopedChildCalls == 2 && loopedSubtweenFinishes == 2 && !loopedParent.IsRunning(),
+        "Each parent loop must stop, restart and complete its child once.");
+
+    var delayedValue = 0d;
+    var delayedChild = tree.CreateTween();
+    delayedChild.TweenMethod(value => delayedValue = value, 0d, 1d, 1d);
+    var delayedParent = tree.CreateTween();
+    var delayedStep = delayedParent.TweenSubtween(delayedChild);
+    Require(ReferenceEquals(delayedStep.SetDelay(0.5d), delayedStep),
+        "Subtween SetDelay must return its own tweener.");
+    Expect<ArgumentOutOfRangeException>(() => delayedStep.SetDelay(double.NaN),
+        "A non-finite subtween delay must preserve the previous threshold.");
+    Expect<InvalidOperationException>(() => Task.Run(() => delayedStep.SetDelay(0d)).GetAwaiter().GetResult(),
+        "Subtween delay mutation must require the owner thread.");
+    tree.ProcessFrame(0.25d);
+    Require(delayedValue == 0d && delayedChild.GetTotalElapsedTime() == 0d,
+        "A parent delay must leave its child untouched before the threshold.");
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(delayedValue, 0.25d) &&
+            DoubleNearlyEqual(delayedChild.GetTotalElapsedTime(), 0.25d),
+        "At the parent delay boundary, the child must receive the full delivered frame delta.");
+    delayedParent.Kill();
+
+    var killedDuring = tree.CreateTween();
+    killedDuring.TweenInterval(1d);
+    var killedDuringParent = tree.CreateTween();
+    var afterKill = false;
+    killedDuringParent.TweenSubtween(killedDuring);
+    killedDuringParent.TweenCallback(() => afterKill = true);
+    tree.ProcessFrame(0.25d);
+    killedDuring.Kill();
+    tree.ProcessFrame(0.25d);
+    Require(afterKill && !killedDuringParent.IsRunning(),
+        "Killing an active child must release its remaining parent time to the following step.");
+
+    var liveValue = 0d;
+    var liveChild = tree.CreateTween();
+    liveChild.TweenMethod(value => liveValue = value, 0d, 1d, 1d);
+    var liveParent = tree.CreateTween();
+    var liveDelay = liveParent.TweenSubtween(liveChild).SetDelay(1d);
+    tree.ProcessFrame(0.25d);
+    liveDelay.SetDelay(0.25d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(liveValue, 0.25d),
+        "Changing an active subtween delay must use the new threshold and full child frame delta.");
+    liveParent.Kill();
+
+    var negativeValue = 0d;
+    var negativeChild = tree.CreateTween();
+    negativeChild.TweenMethod(value => negativeValue = value, 0d, 1d, 1d);
+    var negativeParent = tree.CreateTween();
+    negativeParent.TweenSubtween(negativeChild).SetDelay(-0.2d);
+    tree.ProcessFrame(0.1d);
+    Require(DoubleNearlyEqual(negativeValue, 0.1d) &&
+            DoubleNearlyEqual(negativeChild.GetTotalElapsedTime(), 0.1d),
+        "A negative subtween delay must start on the first positive frame without inflating child time.");
+    negativeParent.Kill();
+
+    var policyValue = 0d;
+    var policyChild = tree.CreateTween()
+        .SetProcessMode(Tween.TweenProcessMode.Physics)
+        .SetPauseMode(Tween.TweenPauseMode.Stop)
+        .SetSpeedScale(2d);
+    policyChild.TweenMethod(value => policyValue = value, 0d, 1d, 1d);
+    var policyParent = tree.CreateTween()
+        .SetPauseMode(Tween.TweenPauseMode.Process)
+        .SetSpeedScale(2d);
+    policyParent.TweenSubtween(policyChild);
+    tree.Paused = true;
+    tree.ProcessFrame(0.1d);
+    Require(DoubleNearlyEqual(policyValue, 0.4d),
+        "The parent pause/lane policy must drive its child while both speed multipliers still apply.");
+    tree.Paused = false;
+    policyParent.Kill();
+
+    var skippedCalls = 0;
+    var invalidChild = tree.CreateTween();
+    invalidChild.TweenCallback(() => skippedCalls++);
+    tree.ProcessFrame(0.25d);
+    invalidChild.Kill();
+    var skippedParent = tree.CreateTween();
+    var skippedStep = skippedParent.TweenSubtween(invalidChild);
+    var skippedFinishes = 0;
+    var afterSkipped = false;
+    skippedStep.Finished += _ => skippedFinishes++;
+    skippedParent.TweenCallback(() => afterSkipped = true);
+    tree.ProcessFrame(0.1d);
+    Require(skippedCalls == 1 && skippedFinishes == 1 && afterSkipped &&
+            invalidChild.GetTotalElapsedTime() == 0d,
+        "An invalid child must be reset then skipped, allowing the parent's next step to run.");
+
+    var disposedBefore = tree.CreateTween();
+    disposedBefore.TweenInterval(1d);
+    var disposedBeforeParent = tree.CreateTween();
+    var disposedBeforeFinished = false;
+    disposedBeforeParent.TweenSubtween(disposedBefore).Finished += _ => disposedBeforeFinished = true;
+    disposedBefore.Dispose();
+    tree.ProcessFrame(0.1d);
+    Require(disposedBeforeFinished, "A child disposed before its nested step must finish that step safely.");
+
+    var disposedDuring = tree.CreateTween();
+    disposedDuring.TweenInterval(1d);
+    var disposedDuringParent = tree.CreateTween();
+    var afterDisposal = false;
+    disposedDuringParent.TweenSubtween(disposedDuring);
+    disposedDuringParent.TweenCallback(() => afterDisposal = true);
+    tree.ProcessFrame(0.25d);
+    disposedDuring.Dispose();
+    tree.ProcessFrame(0.25d);
+    Require(afterDisposal && !disposedDuringParent.IsRunning(),
+        "Disposing an active child between frames must release the parent without querying disposed child state.");
+
+    using var otherTree = new SceneTree(new Entity());
+    var transferredCalls = 0;
+    var transferred = otherTree.CreateTween();
+    transferred.TweenCallback(() => transferredCalls++);
+    var transferParent = tree.CreateTween();
+    transferParent.TweenSubtween(transferred);
+    Require(!otherTree.GetProcessedTweens().Contains(transferred),
+        "A cross-tree child on the same owner thread must leave its original registry.");
+    otherTree.ProcessFrame(0.1d);
+    Require(transferredCalls == 0, "The original tree must not independently process a transferred child.");
+    tree.ProcessFrame(0.1d);
+    Require(transferredCalls == 1, "The parent tree must drive a transferred child on its own frame.");
+    transferParent.Kill();
+
+    var duplicateParent = tree.CreateTween();
+    var duplicateChild = tree.CreateTween();
+    duplicateChild.TweenInterval(1d);
+    duplicateParent.TweenSubtween(duplicateChild);
+    Expect<ArgumentException>(() => duplicateParent.TweenSubtween(duplicateChild),
+        "A child cannot be nested twice.");
+    Expect<ArgumentException>(() => duplicateChild.TweenSubtween(duplicateParent),
+        "Nested tween cycles must be rejected before ownership changes.");
+    duplicateParent.Kill();
+
+    var startedParent = tree.CreateTween();
+    startedParent.TweenInterval(1d);
+    tree.ProcessFrame(0.1d);
+    var lateChild = tree.CreateTween();
+    lateChild.TweenInterval(1d);
+    Expect<InvalidOperationException>(() => startedParent.TweenSubtween(lateChild),
+        "A parent must reject appending a child after its processing starts.");
+    Require(tree.GetProcessedTweens().Contains(lateChild),
+        "Rejecting a late child must preserve its original tree registration.");
+    startedParent.Kill();
+    lateChild.Kill();
+
+    var processingChild = tree.CreateTween();
+    var availableParent = tree.CreateTween();
+    availableParent.TweenInterval(1d);
+    Exception? processingChildError = null;
+    processingChild.TweenCallback(() => processingChildError = Capture(() => availableParent.TweenSubtween(processingChild)));
+    tree.ProcessFrame(0.1d);
+    Require(processingChildError is InvalidOperationException,
+        "A child cannot transfer into another tween while its callback is processing.");
+    availableParent.Kill();
+
+    var failedChild = tree.CreateTween();
+    failedChild.TweenCallback(() => throw new InvalidOperationException("expected child failure"));
+    var failedParent = tree.CreateTween().SetParallel();
+    var parallelSiblingRan = false;
+    var laterTweenRan = false;
+    failedParent.TweenSubtween(failedChild);
+    failedParent.TweenCallback(() => parallelSiblingRan = true);
+    tree.CreateTween().TweenCallback(() => laterTweenRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && parallelSiblingRan &&
+            laterTweenRan && !failedParent.IsValid() && !failedChild.IsValid(),
+        "A child failure must invalidate its parent while preserving parallel siblings and later tree work.");
 }
 
 static void VerifySceneTreeFailureSafety()

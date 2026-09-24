@@ -836,7 +836,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StyleBoxTexture](classes/StyleBoxTexture.md) | StyleBox | Blocked | 24 |
 | [SubViewport](classes/SubViewport.md) | Viewport | Blocked | 16 |
 | [SubViewportContainer](classes/SubViewportContainer.md) | Container | Blocked | 5 |
-| [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Partial | 1 |
+| [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |
 | [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Blocked | 46 |
 | [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Blocked | 7 |
 | [SystemFont](classes/SystemFont.md) | Font | Blocked | 17 |

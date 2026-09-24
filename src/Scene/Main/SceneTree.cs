@@ -1097,13 +1097,6 @@ public sealed partial class SceneTree : MainLoop
         _tweens.Remove(tween);
     }
 
-    internal void DetachTween(Tween tween)
-    {
-        EnsureOwnerThread();
-        if (!_tweens.Remove(tween))
-            throw new InvalidOperationException("Only a tween processed by this SceneTree can be nested.");
-    }
-
     internal void CompleteTween(Tween tween)
     {
         EnsureOwnerThread();

@@ -546,11 +546,12 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Appends a child tween as one step and removes it from independent tree processing.</summary>
-    /// <param name="subtween">A valid tween owned by the same scene tree.</param>
+    /// <param name="subtween">A tween on the same owner thread; it is detached from its original scene tree if registered.</param>
     /// <returns>The appended nested-tween step.</returns>
+    /// <remarks>An invalid child is accepted and skipped when its parent reaches the step. Self, repeated and cyclic nesting are rejected before ownership changes.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="subtween"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The tween is nested into itself, already nested, or would create a cycle.</exception>
-    /// <exception cref="InvalidOperationException">The call is off the owner thread, parent processing has started, a tween is invalid or currently processing, or the tweens belong to different trees.</exception>
+    /// <exception cref="InvalidOperationException">The call is off either owner's thread, parent processing has started, or the child is currently processing.</exception>
     /// <exception cref="ObjectDisposedException">Either tween is disposing or disposed.</exception>
     public SubtweenTweener TweenSubtween(Tween subtween)
     {
@@ -560,21 +561,17 @@ public sealed class Tween : ElectronObject
         subtween.EnsureOwnerThread();
         if (ReferenceEquals(this, subtween))
             throw new ArgumentException("A tween cannot contain itself.", nameof(subtween));
-        if (!subtween._valid)
-            throw new InvalidOperationException("Only a valid tween can be nested.");
         if (subtween._inStep)
             throw new InvalidOperationException("A tween cannot be nested while it is being processed.");
         if (subtween._parentTween is not null)
             throw new ArgumentException("A tween can be nested by only one parent.", nameof(subtween));
-        if (!ReferenceEquals(_tree, subtween._tree))
-            throw new InvalidOperationException("A nested tween must belong to the same SceneTree.");
         for (var ancestor = this; ancestor is not null; ancestor = ancestor._parentTween)
         {
             if (ReferenceEquals(ancestor, subtween))
                 throw new ArgumentException("Nesting would create a tween cycle.", nameof(subtween));
         }
 
-        _tree!.DetachTween(subtween);
+        subtween._tree?.RemoveTween(subtween);
         subtween._parentTween = this;
         return Append(new SubtweenTweener(subtween));
     }

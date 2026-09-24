@@ -1,6 +1,6 @@
 # SubtweenTweener
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -18,7 +18,7 @@ Runs another tween as one step in a parent tween.
 
 `SubtweenTweener` is created only by `Tween.TweenSubtween(Tween)` and runs another Tween as one parent step. Its complete declared public API is `SubtweenTweener SetDelay(double delay)`; completion and object API are inherited from [`Tweener`](Tweener.md).
 
-Appending requires a valid same-tree tween, removes it from independent SceneTree processing, rejects self/multiple/cyclic/cross-tree nesting, and transfers final lifetime to the parent. Each parent-loop start resets and plays the child. Parent pause, process lane, speed, and delivered delta control the child; the child's own tree scheduling settings no longer schedule it separately. Parent completion, killing, disposal, or failure invalidates the child. A child failure invalidates the parent and is aggregated.
+Appending detaches the child from its original SceneTree, including a different tree on the same owner thread. An already invalid child is accepted and skipped when the parent reaches it. Self, repeated and cyclic nesting, a processing child, and cross-thread mutation are rejected before transfer. Each parent-loop start resets and plays a valid child. Parent pause, process lane, speed, and delivered delta control the child; its original tree no longer schedules it independently. The child retains its own speed policy. On completion, unused time advances the parent's next step. Parent completion, killing, disposal, or failure invalidates the child. A child failure invalidates the parent and is aggregated; a disposed child releases the parent without a disposed-state query.
 
 ## Examples
 
@@ -43,15 +43,17 @@ Sets the delay before the nested tween begins.
 
 **Parameters**
 
-- `delay`: Finite non-negative seconds.
+- `delay`: Finite seconds; a negative delay begins on the first positive step.
 
 **Returns:** This tweener.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `delay` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `delay` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tweener is disposing or disposed.
+
+**Remarks:** On completion, unused child time advances the parent's next step. A disposed child releases the parent without a disposed-state query.
 
 ## Inherited API
 

@@ -496,6 +496,7 @@ public sealed class IntervalTweener : Tweener
 }
 
 /// <summary>Runs another tween as one step in a parent tween.</summary>
+/// <remarks>On completion, unused child time advances the parent's next step. A disposed child releases the parent without a disposed-state query.</remarks>
 public sealed class SubtweenTweener : Tweener
 {
     private readonly Tween _subtween;
@@ -504,16 +505,17 @@ public sealed class SubtweenTweener : Tweener
     internal SubtweenTweener(Tween subtween) => _subtween = subtween;
 
     /// <summary>Sets the delay before the nested tween begins.</summary>
-    /// <param name="delay">Finite non-negative seconds.</param>
+    /// <param name="delay">Finite seconds; a negative delay begins on the first positive step.</param>
     /// <returns>This tweener.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public SubtweenTweener SetDelay(double delay)
     {
         ThrowIfDisposed();
         Owner?.EnsureOwnerThreadForTweener();
-        Tween.ValidateDuration(delay, nameof(delay));
+        if (!double.IsFinite(delay))
+            throw new ArgumentOutOfRangeException(nameof(delay), delay, "Subtween delay must be finite.");
         _delay = delay;
         return this;
     }
@@ -521,13 +523,16 @@ public sealed class SubtweenTweener : Tweener
     internal override void Start()
     {
         base.Start();
-        if (_subtween.IsDisposed || !_subtween.IsValid())
+        if (_subtween.IsDisposed)
         {
             Finish();
             return;
         }
         _subtween.Stop();
-        _subtween.Play();
+        if (_subtween.IsValid())
+            _subtween.Play();
+        else
+            Finish();
     }
 
     internal override bool OnAdvance(ref double remaining)
@@ -540,12 +545,17 @@ public sealed class SubtweenTweener : Tweener
             remaining = 0d;
             return true;
         }
+        if (_subtween.IsDisposed)
+        {
+            Finish();
+            return false;
+        }
         if (_subtween.Advance(remaining))
         {
             remaining = 0d;
             return true;
         }
-        remaining = 0d;
+        remaining = ElapsedTime - _delay - _subtween.GetTotalElapsedTime();
         Finish();
         return false;
     }
