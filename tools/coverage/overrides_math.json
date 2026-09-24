@@ -281,14 +281,14 @@
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
     {
-      "electron2d": "enumValue:Electron2D.Image.AstcFormat.Format4X4()",
+      "electron2d": "enumValue:Electron2D.Image.ASTCFormat.Format4X4()",
       "godot": "Image::enum_value:ASTCFormat.ASTC_FORMAT_4x4",
-      "reason": "ASTC format enum name adaptation; numeric identity verified."
+      "reason": "C# enum member spelling; numeric identity verified."
     },
     {
-      "electron2d": "enumValue:Electron2D.Image.AstcFormat.Format8X8()",
+      "electron2d": "enumValue:Electron2D.Image.ASTCFormat.Format8X8()",
       "godot": "Image::enum_value:ASTCFormat.ASTC_FORMAT_8x8",
-      "reason": "ASTC format enum name adaptation; numeric identity verified."
+      "reason": "C# enum member spelling; numeric identity verified."
     },
     {
       "electron2d": "enumValue:Electron2D.Image.UsedChannels.Luminance()",

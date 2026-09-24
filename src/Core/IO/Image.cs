@@ -209,7 +209,7 @@ public sealed partial class Image : Resource
     }
 
     /// <summary>Defines the pixel-block footprint requested from a future ASTC encoder.</summary>
-    public enum AstcFormat
+    public enum ASTCFormat
     {
         /// <summary>Uses 4-by-4 pixel blocks for higher quality and larger storage.</summary>
         Format4X4 = 0,

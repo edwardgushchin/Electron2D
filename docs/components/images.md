@@ -1,6 +1,6 @@
 # Images component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -18,7 +18,7 @@ This Resources component owns portable managed 2D pixel buffers, binary masks, r
 | [`Image.UsedChannels`](../classes/Image.UsedChannels.md) | Detected minimal channel set | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.CompressSource`](../classes/Image.CompressSource.md) | Channel-detection source semantics | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`Image.CompressMode`](../classes/Image.CompressMode.md) | Future block-compression family selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
-| [`Image.AstcFormat`](../classes/Image.AstcFormat.md) | Future ASTC footprint selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
+| [`Image.ASTCFormat`](../classes/Image.ASTCFormat.md) | Future ASTC footprint selection | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`ImageMetrics`](../classes/ImageMetrics.md) | Typed absolute-error and peak-SNR result | [`Image.cs`](../../src/Core/IO/Image.cs) |
 | [`ClockDirection`](../classes/ClockDirection.md) | Stable 2D rotation direction | [`ClockDirection.cs`](../../src/Core/Math/ClockDirection.cs) |
 

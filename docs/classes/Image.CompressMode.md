@@ -1,6 +1,6 @@
 # Image.CompressMode
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** `System.Enum`
 
@@ -58,7 +58,7 @@ Selects BPTC/BC6H or BC7 compression for HDR RGB or normalized RGBA data.
 <a id="astc"></a>
 ### `Astc = 4`
 
-Selects ASTC compression; [`Image.AstcFormat`](Image.AstcFormat.md) chooses the supported block footprint.
+Selects ASTC compression; [`Image.ASTCFormat`](Image.ASTCFormat.md) chooses the supported block footprint.
 
 <a id="max"></a>
 ### `Max = 5`

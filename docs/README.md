@@ -1,6 +1,6 @@
 # Electron2D documentation
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
@@ -131,7 +131,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [Resource](classes/Resource.md)
 - Enum: [DeepDuplicateMode](classes/DeepDuplicateMode.md)
 - Class: [Image](classes/Image.md)
-- Image enums: [Image.Format](classes/Image.Format.md), [Image.Interpolation](classes/Image.Interpolation.md), [Image.AlphaMode](classes/Image.AlphaMode.md), [Image.UsedChannels](classes/Image.UsedChannels.md), [Image.CompressSource](classes/Image.CompressSource.md), [Image.CompressMode](classes/Image.CompressMode.md), and [Image.AstcFormat](classes/Image.AstcFormat.md)
+- Image enums: [Image.Format](classes/Image.Format.md), [Image.Interpolation](classes/Image.Interpolation.md), [Image.AlphaMode](classes/Image.AlphaMode.md), [Image.UsedChannels](classes/Image.UsedChannels.md), [Image.CompressSource](classes/Image.CompressSource.md), [Image.CompressMode](classes/Image.CompressMode.md), and [Image.ASTCFormat](classes/Image.ASTCFormat.md)
 - Struct: [ImageMetrics](classes/ImageMetrics.md)
 - Enum: [ClockDirection](classes/ClockDirection.md)
 - Decisions: [routing index](decisions/index.md) with bounded logs for [Product architecture](decisions/product.md), [Core object/runtime](decisions/core-object-runtime.md), [Core data/I/O](decisions/core-data-io.md), [Core math](decisions/core-math.md), [Input](decisions/input.md), [Scene](decisions/scene.md), [Resources](decisions/resources.md), [Localization](decisions/localization.md), and [Rendering](decisions/rendering.md).

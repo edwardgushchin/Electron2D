@@ -1156,11 +1156,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Image.AlphaMode",
+    "id": "T:Electron2D.Image.ASTCFormat",
     "kind": "type",
-    "declaringType": "Electron2D.Image.AlphaMode",
-    "name": "AlphaMode",
-    "signature": "public enum Electron2D.Image.AlphaMode",
+    "declaringType": "Electron2D.Image.ASTCFormat",
+    "name": "ASTCFormat",
+    "signature": "public enum Electron2D.Image.ASTCFormat",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -1174,11 +1174,11 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Image.AstcFormat",
+    "id": "T:Electron2D.Image.AlphaMode",
     "kind": "type",
-    "declaringType": "Electron2D.Image.AstcFormat",
-    "name": "AstcFormat",
-    "signature": "public enum Electron2D.Image.AstcFormat",
+    "declaringType": "Electron2D.Image.AlphaMode",
+    "name": "AlphaMode",
+    "signature": "public enum Electron2D.Image.AlphaMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -9189,6 +9189,32 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.Image.ASTCFormat.Format4X4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Image.ASTCFormat",
+    "name": "Format4X4",
+    "signature": "public const Electron2D.Image.ASTCFormat Format4X4 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.ASTCFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Image.ASTCFormat.Format8X8()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Image.ASTCFormat",
+    "name": "Format8X8",
+    "signature": "public const Electron2D.Image.ASTCFormat Format8X8 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.ASTCFormat",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.Image.AlphaMode.Bit()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Image.AlphaMode",
@@ -9226,32 +9252,6 @@
     "parameters": [],
     "returnType": "Electron2D.Image.AlphaMode",
     "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.Image.AstcFormat.Format4X4()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Image.AstcFormat",
-    "name": "Format4X4",
-    "signature": "public const Electron2D.Image.AstcFormat Format4X4 = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Image.AstcFormat",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.Image.AstcFormat.Format8X8()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Image.AstcFormat",
-    "name": "Format8X8",
-    "signature": "public const Electron2D.Image.AstcFormat Format8X8 = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Image.AstcFormat",
-    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.Image.CompressMode.Astc()",

@@ -1545,11 +1545,11 @@ static void VerifyImages()
             Enum.GetValues<Image.Interpolation>().Length == 5 && Enum.GetValues<Image.AlphaMode>().Length == 3 &&
             Enum.GetValues<Image.UsedChannels>().Length == 6 && Enum.GetValues<Image.CompressSource>().Length == 3 &&
             Enum.GetValues<Image.CompressMode>().Length == 6 && (int)Image.CompressMode.Max == 5 &&
-            Enum.GetValues<Image.AstcFormat>().Length == 2,
+            Enum.GetValues<Image.ASTCFormat>().Length == 2,
         "Image constants and nested enum identities must remain stable.");
     Require(typeof(Image).GetNestedTypes(System.Reflection.BindingFlags.Public).Length == 7 &&
             (int)Image.CompressMode.S3tc == 0 && (int)Image.CompressMode.Astc == 4 &&
-            (int)Image.AstcFormat.Format4X4 == 0 && (int)Image.AstcFormat.Format8X8 == 1,
+            (int)Image.ASTCFormat.Format4X4 == 0 && (int)Image.ASTCFormat.Format8X8 == 1,
         "Image must expose the complete audited nested enum family and stable identities.");
     Require((int)ClockDirection.Clockwise == 0 && (int)ClockDirection.CounterClockwise == 1,
         "ClockDirection values must remain stable.");

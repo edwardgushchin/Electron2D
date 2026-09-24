@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -124,7 +124,7 @@ byte[] ownedCopy = image.GetData();
 | [`Image.UsedChannels`](Image.UsedChannels.md) | Minimal meaningful channel sets. |
 | [`Image.CompressSource`](Image.CompressSource.md) | Source semantics used during channel detection and future compression. |
 | [`Image.CompressMode`](Image.CompressMode.md) | Future block-compression family selection. |
-| [`Image.AstcFormat`](Image.AstcFormat.md) | Future ASTC block-footprint selection. |
+| [`Image.ASTCFormat`](Image.ASTCFormat.md) | Future ASTC block-footprint selection. |
 
 ## Constants
 

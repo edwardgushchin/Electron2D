@@ -181,7 +181,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.UsedChannels`](classes/Image.UsedChannels.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Implemented and verified |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.CompressSource`](classes/Image.CompressSource.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Detection semantics implemented; compression backend absent |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.CompressMode`](classes/Image.CompressMode.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Typed future compression family implemented; encoder absent |
-| [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.AstcFormat`](classes/Image.AstcFormat.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Typed future ASTC footprint implemented; encoder absent |
+| [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.ASTCFormat`](classes/Image.ASTCFormat.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Typed future ASTC footprint implemented; encoder absent |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`ImageMetrics`](classes/ImageMetrics.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Implemented and verified |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`ClockDirection`](classes/ClockDirection.md) | [`ClockDirection.cs`](../src/Core/Math/ClockDirection.cs) | Current | Implemented and verified |
 

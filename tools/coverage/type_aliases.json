@@ -44,7 +44,6 @@
     "FileAccess.CompressionMode": "FileCompressionMode",
     "FileAccess.ModeFlags": "FileAccessMode",
     "FileAccess.UnixPermissionFlags": "UnixPermissionFlags",
-    "Image.ASTCFormat": "Image.AstcFormat",
     "Image.AlphaMode": "Image.AlphaMode",
     "Image.CompressMode": "Image.CompressMode",
     "Image.CompressSource": "Image.CompressSource",
