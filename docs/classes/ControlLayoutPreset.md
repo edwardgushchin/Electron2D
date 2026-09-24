@@ -8,7 +8,7 @@ Last updated: 2026-09-24
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum ControlLayoutPreset`
 
-The sixteen numeric values identify the arrangement applied by [`Control.SetAnchorsPreset`](Control.md). Corner and center values place all four anchors at one point. `LeftWide`, `RightWide` and `VCenterWide` span the parent's height; `TopWide`, `BottomWide` and `HCenterWide` span its width. `FullRect` anchors to all four parent edges.
+The sixteen numeric values identify the arrangement applied by [`Control.SetAnchorsPreset`](Control.md), `SetOffsetsPreset` and `SetAnchorsAndOffsetsPreset`. Corner and center values place all four anchors at one point. `LeftWide`, `RightWide` and `VCenterWide` span the parent's height; `TopWide`, `BottomWide` and `HCenterWide` span its width. `FullRect` anchors to all four parent edges.
 
 | Values | Numeric identities |
 | --- | --- |

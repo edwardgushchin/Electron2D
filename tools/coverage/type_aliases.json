@@ -29,6 +29,7 @@
     "Control.LayoutPreset": "ControlLayoutPreset",
     "Control.GrowDirection": "ControlGrowDirection",
     "Control.LayoutDirection": "ControlLayoutDirection",
+    "Control.LayoutPresetMode": "ControlLayoutPresetMode",
     "Control.MouseFilter": "ControlMouseFilter",
     "FileAccess.CompressionMode": "FileCompressionMode",
     "FileAccess.ModeFlags": "FileAccessMode",

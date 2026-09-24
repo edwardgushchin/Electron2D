@@ -419,6 +419,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlLayoutPresetMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlLayoutPresetMode",
+    "name": "ControlLayoutPresetMode",
+    "signature": "public enum Electron2D.ControlLayoutPresetMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ControlMouseFilter",
     "kind": "type",
     "declaringType": "Electron2D.ControlMouseFilter",
@@ -7086,6 +7104,58 @@
     "parameters": [],
     "returnType": "Electron2D.ControlLayoutPreset",
     "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutPresetMode.KeepHeight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutPresetMode",
+    "name": "KeepHeight",
+    "signature": "public const Electron2D.ControlLayoutPresetMode KeepHeight = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutPresetMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutPresetMode.KeepSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutPresetMode",
+    "name": "KeepSize",
+    "signature": "public const Electron2D.ControlLayoutPresetMode KeepSize = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutPresetMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutPresetMode.KeepWidth()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutPresetMode",
+    "name": "KeepWidth",
+    "signature": "public const Electron2D.ControlLayoutPresetMode KeepWidth = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutPresetMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutPresetMode.MinSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutPresetMode",
+    "name": "MinSize",
+    "signature": "public const Electron2D.ControlLayoutPresetMode MinSize = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutPresetMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.ControlMouseFilter.Ignore()",
@@ -21342,6 +21412,69 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.SetAnchorAndOffset(Electron2D.Side,System.Single,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetAnchorAndOffset",
+    "signature": "public System.Void SetAnchorAndOffset(Electron2D.Side side, System.Single anchor, System.Single offset, System.Boolean pushOppositeAnchor = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "side",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "anchor",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "pushOppositeAnchor",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetAnchorsAndOffsetsPreset(Electron2D.ControlLayoutPreset,Electron2D.ControlLayoutPresetMode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetAnchorsAndOffsetsPreset",
+    "signature": "public System.Void SetAnchorsAndOffsetsPreset(Electron2D.ControlLayoutPreset preset, Electron2D.ControlLayoutPresetMode resizeMode = MinSize, System.Int32 margin = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "preset",
+        "type": "Electron2D.ControlLayoutPreset",
+        "default": null
+      },
+      {
+        "name": "resizeMode",
+        "type": "Electron2D.ControlLayoutPresetMode",
+        "default": "MinSize"
+      },
+      {
+        "name": "margin",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.SetAnchorsPreset(Electron2D.ControlLayoutPreset,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21408,6 +21541,35 @@
         "name": "offset",
         "type": "System.Single",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetOffsetsPreset(Electron2D.ControlLayoutPreset,Electron2D.ControlLayoutPresetMode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetOffsetsPreset",
+    "signature": "public System.Void SetOffsetsPreset(Electron2D.ControlLayoutPreset preset, Electron2D.ControlLayoutPresetMode resizeMode = MinSize, System.Int32 margin = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "preset",
+        "type": "Electron2D.ControlLayoutPreset",
+        "default": null
+      },
+      {
+        "name": "resizeMode",
+        "type": "Electron2D.ControlLayoutPresetMode",
+        "default": "MinSize"
+      },
+      {
+        "name": "margin",
+        "type": "System.Int32",
+        "default": "0"
       }
     ],
     "returnType": "System.Void",
