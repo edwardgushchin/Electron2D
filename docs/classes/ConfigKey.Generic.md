@@ -1,6 +1,6 @@
 # ConfigKey\<T\>
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -18,7 +18,7 @@ Identifies one strongly typed value in a [`ConfigFile`](ConfigFile.md).
 
 `ConfigKey<T>` is an immutable, reusable identity for one entry in a [`ConfigFile`](ConfigFile.md). It binds a case-sensitive section and entry name to the compile-time value type used for serialization and deserialization. The key owns no configuration value or native resource and does not require disposal.
 
-The empty section addresses entries before the first section header. Entry names must be non-null and nonempty. Section and entry names may otherwise contain arbitrary Unicode text; unsafe text-format characters are quoted by `ConfigFile`.
+The empty section addresses entries before the first section header. Section and entry names must be non-null and may be empty. Empty entry names are quoted by `ConfigFile` when encoded; other unsafe text-format characters are quoted as well.
 
 Reuse one key instance for each logical setting. The empty section addresses entries before the first section header.
 Values are serialized with the declared type rather than a runtime-wide universal value container.
@@ -28,7 +28,7 @@ Values are serialized with the declared type rather than a runtime-wide universa
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var fullscreen = new ConfigKey<bool>("display/fullscreen", false);
+var fullscreen = new ConfigKey<bool>("display", "fullscreen");
 using var config = new ConfigFile();
 config.SetValue(fullscreen, true);
 ```
@@ -62,12 +62,11 @@ Initializes a typed configuration key.
 **Parameters**
 
 - `section`: The case-sensitive section name, or an empty string for a sectionless entry.
-- `name`: The nonempty case-sensitive entry name.
+- `name`: The case-sensitive entry name, which may be empty.
 
 **Exceptions**
 
 - `ArgumentNullException`: `section` or `name` is `null`.
-- `ArgumentException`: `name` is empty.
 - `NotSupportedException`: `T` is an untyped JSON DOM value, `Object`, a delegate, or an engine object.
 
 ## Property Descriptions
@@ -84,7 +83,7 @@ Gets the case-sensitive section name.
 
 Gets the case-sensitive entry name.
 
-**Value:** The nonempty entry name.
+**Value:** The entry name, which may be empty.
 
 ## Method Descriptions
 
@@ -116,7 +115,6 @@ Other unsupported serializer shapes fail when a value is assigned or decoded. A 
 ## Error behavior
 
 - Null section/name: `ArgumentNullException`.
-- Empty name: `ArgumentException`.
 - Universal, document-model, delegate, or engine-object value type: `NotSupportedException`.
 
 ## Dependencies and interactions

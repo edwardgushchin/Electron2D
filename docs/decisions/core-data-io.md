@@ -9,7 +9,7 @@ Decisions in this log: [0018](#adr-0018), [0019](#adr-0019), [0020](#adr-0020), 
 <a id="adr-0018"></a>
 ## ADR 0018: Typed configuration files
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 ### Status
 
@@ -23,7 +23,7 @@ At the time of this decision Electron2D had accepted managed deterministic lifet
 
 ### Decision
 
-`ConfigFile` inherits `ElectronObject` directly; managed memory replaces reference-counted lifetime. `ConfigKey<T>` binds each section/name pair to a compile-time type. The public boundary rejects `object`, JSON DOM nodes, delegates, and engine objects. Values are serialized immediately as compact JSON tokens with public fields enabled, allowing typed scalars, 2D numerics, collections, and stable user models without storing CLR type names or live aliases.
+`ConfigFile` inherits `ElectronObject` directly; managed memory replaces reference-counted lifetime. `ConfigKey<T>` binds each section/name pair to a compile-time type; section and entry names may be empty. The public boundary rejects `object`, JSON DOM nodes, delegates, and engine objects. Values are serialized immediately as compact JSON tokens with public fields enabled, allowing typed scalars, 2D numerics, collections, and stable user models without storing CLR type names or live aliases.
 
 The text container remains section-oriented and human-readable. Safe identifiers are bare; unsafe identifiers are JSON-quoted. Values are one-line JSON. Full semicolon comment lines and a leading BOM are accepted, comments are discarded, names are ordinal/case-sensitive, and first-insertion order is preserved. Null means removal. Parse/load fully validate before one locked merge; existing unmentioned values survive, matching the reference merge behavior while removing its partial-mutation-on-parse-error risk.
 
@@ -61,7 +61,7 @@ All public operations are safe for concurrent callers through locked state trans
 
 ### Consequences
 
-- Callers receive compile-time value types, fresh decoded values, and normal exception diagnostics.
+- Callers receive compile-time value types, fresh decoded values, and normal exception diagnostics. Empty entry names are encoded as quoted identifiers and round-trip through the text format.
 - The same section/name can still be misdeclared through a second incompatible key; decoding detects this at runtime because portable files do not embed CLR type identity.
 - Arbitrary external edits remain possible using JSON tokens, while comments are not round-tripped.
 - Strong authenticated encryption and atomic replacement are available without an external package.

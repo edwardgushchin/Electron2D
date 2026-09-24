@@ -97,37 +97,37 @@
     {
       "electron2d": "method:Electron2D.ConfigFile.EraseSectionKey`1(ConfigKey<T>)",
       "godot": "ConfigFile::method:erase_section_key(String:,String:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.GetSections()",
       "godot": "ConfigFile::method:get_sections()",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.GetValue`1(ConfigKey<T>)",
       "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.GetValue`1(ConfigKey<T>,T)",
       "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.HasSectionKey`1(ConfigKey<T>)",
       "godot": "ConfigFile::method:has_section_key(String:,String:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.SetValue`1(ConfigKey<T>,T)",
       "godot": "ConfigFile::method:set_value(String:,String:,Variant:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.ConfigFile.TryGetValue`1(ConfigKey<T>,ref T)",
       "godot": "ConfigFile::method:get_value(String:,String:,Variant:)",
-      "reason": "ConfigKey<T> carries section/key identity and generic value type; compare absence/default semantics (ADR 0018)."
+      "reason": "ConfigKey<T> carries typed section/key identity; ADR 0018 accepts exception and snapshot adaptations, and VerifyConfigFiles audits absence, fallback, order and removal."
     },
     {
       "electron2d": "method:Electron2D.DirAccess.GetCurrentDrive()",
@@ -1072,6 +1072,8 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["class:ConfigFile"], "state": "Partial", "reason": "ADR 0018 typed storage is executable; section/key state and lookup members have a pinned-source behavioral audit. Text parsing/encoding and plain/encrypted file operations retain their own Partial rows pending format, error and integration audits."},
+    {"godot": ["ConfigFile::method:clear()", "ConfigFile::method:erase_section(String:)", "ConfigFile::method:erase_section_key(String:,String:)", "ConfigFile::method:get_section_keys(String:)", "ConfigFile::method:get_sections()", "ConfigFile::method:get_value(String:,String:,Variant:)", "ConfigFile::method:has_section(String:)", "ConfigFile::method:has_section_key(String:,String:)", "ConfigFile::method:set_value(String:,String:,Variant:)"], "state": "Implemented", "reason": "ADR 0018 accepts typed keys, snapshot values, exceptions and concurrent managed access. Pinned config_file.cpp state transitions match Clear, lookup/fallback, insertion order, sectionless priority, null removal and last-key section removal; VerifyConfigFiles covers empty names, round-trip, replacement, snapshot enumeration, reinsertion, absence and wrong-type errors."},
     {"godot": ["TranslationServer::method:find_translations(String:,bool:)", "TranslationServer::method:has_translation_for_locale(String:,bool:)", "TranslationServer::method:get_translation_object(String:)"], "state": "Partial", "reason": "Managed main-domain queries use normalized exact or positive-score locale matching; reference alias/default-script tables and editor behavior remain unaudited (ADR 0007)."},
     {"godot": ["InputMap::signal:project_settings_loaded()"], "state": "Implemented", "reason": "InputActionSettingsTests verifies synchronous delivery after committed replacement and pressed-state invalidation, no delivery on validation failure, and a throwing subscriber observing committed state (ADR 0038)."},
     {"godot": ["class:JSON"], "state": "Implemented", "reason": "All nine own members are executable and audited under the typed document boundary of ADR 0048. JsonTests covers state, parsing, diagnostics, formatting, conversion and failure paths; native object reconstruction is excluded by the decision."},

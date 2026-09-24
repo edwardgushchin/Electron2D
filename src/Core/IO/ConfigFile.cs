@@ -18,9 +18,8 @@ public sealed class ConfigKey<T>
 {
     /// <summary>Initializes a typed configuration key.</summary>
     /// <param name="section">The case-sensitive section name, or an empty string for a sectionless entry.</param>
-    /// <param name="name">The nonempty case-sensitive entry name.</param>
+    /// <param name="name">The case-sensitive entry name, which may be empty.</param>
     /// <exception cref="ArgumentNullException"><paramref name="section"/> or <paramref name="name"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="name"/> is empty.</exception>
     /// <exception cref="NotSupportedException">
     /// <typeparamref name="T"/> is an untyped JSON DOM value, <see cref="object"/>, a delegate, or an engine object.
     /// </exception>
@@ -28,9 +27,6 @@ public sealed class ConfigKey<T>
     {
         ArgumentNullException.ThrowIfNull(section);
         ArgumentNullException.ThrowIfNull(name);
-
-        if (name.Length == 0)
-            throw new ArgumentException("A configuration key name cannot be empty.", nameof(name));
 
         ConfigFile.ValidateValueType(typeof(T));
         Section = section;
@@ -42,7 +38,7 @@ public sealed class ConfigKey<T>
     public string Section { get; }
 
     /// <summary>Gets the case-sensitive entry name.</summary>
-    /// <value>The nonempty entry name.</value>
+    /// <value>The entry name, which may be empty.</value>
     public string Name { get; }
 
     /// <summary>Returns the section and entry name for diagnostics.</summary>

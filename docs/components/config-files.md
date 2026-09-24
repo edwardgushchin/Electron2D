@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -35,6 +35,7 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 
 - Public value access is generic and keyed; top-level and nested generic/array types reject `object`, `dynamic`, JSON DOM, and engine-object storage boundaries.
 - Identifier matching is ordinal and case-sensitive.
+- Empty section and entry names are valid; empty entry names use quoted text identifiers.
 - Entry/section order is stable after first insertion; replacement does not reorder.
 - Sectionless entries precede named sections.
 - Failed parsing, decoding, serialization, authentication, or file reads do not mutate in-memory state.
@@ -52,7 +53,7 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 
 ## Current implementation status
 
-Implemented and covered by the executable test harness. All reference surface that is independent of absent domains is present: clear, parse/encode, section/key discovery/removal, typed value access, plain load/save, key encryption, and password encryption. Error-return APIs are adapted to normal C# exceptions, universal values to `ConfigKey<T>`, and reference-counted lifetime to `ElectronObject`/managed memory.
+The in-memory section/key surface is implemented and audited against the pinned state transitions: clear, discovery, typed lookup, replacement and removal, including empty names and order snapshots. Text parse/encode and plain/encrypted file methods are executable but retain Partial coverage until their format, error and integration behavior is audited. Error-return APIs are adapted to normal C# exceptions, universal values to `ConfigKey<T>`, and reference-counted lifetime to `ElectronObject`/managed memory.
 
 ## Exclusions and deferred integration
 

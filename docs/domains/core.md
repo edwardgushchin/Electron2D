@@ -19,7 +19,7 @@ The domain currently contains fifteen active components:
 | [Object lifecycle](../components/object-lifecycle.md) | Process-local identity, runtime type diagnostics, deterministic disposal, and disposed-state protection | Implemented and verified |
 | [Typed event connections](../components/event-connections.md) | Disposable typed subscriptions with one-shot and deferred delivery | Implemented and verified |
 | [Typed editor properties](../components/editor-properties.md) | Variant-free property discovery, typed access, validation, and revert behavior | Implemented and verified |
-| [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | Implemented and verified |
+| [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | In-memory section/key API audited; text and file semantics Partial |
 | [JSON documents](../components/json.md) | Document-scoped JSON parsing, diagnostics, formatting, and typed native conversion | Applicable own API Implemented and verified under ADR 0048 |
 | [File and directory access](../components/file-access.md) | Blocking file/directory I/O, scoped navigation, virtual paths, metadata, links, hashes, temporary ownership, compression, and encryption | Implemented and verified; documented codec/platform gaps |
 | [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Executable managed path; exact malformed-input parity partial |

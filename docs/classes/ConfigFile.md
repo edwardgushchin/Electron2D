@@ -1,6 +1,6 @@
 # ConfigFile
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -31,7 +31,7 @@ The following focused snippet uses the current public API. Names not declared in
 
 ```csharp
 using var config = new ConfigFile();
-var volume = new ConfigKey<float>("audio/volume", 1f);
+var volume = new ConfigKey<float>("audio", "volume");
 config.SetValue(volume, 0.75f);
 ```
 
@@ -513,6 +513,8 @@ The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives
 ## Verification and known limitations
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/floating-rectangle/integer-rectangle/transform round trips, exact schemas for all six vector types and both rectangle types, malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
+
+The in-memory state audit also checks empty entry names, quoted-text round trips, replacement without reordering, stable enumeration snapshots, last-key section removal, sectionless priority, reinsertion order and caller-owned fallback values. Those nine own state members are Implemented in [coverage](../coverage/classes/ConfigFile.md); the class aggregate and text/file members retain their separate Partial audits.
 
 There is no comment preservation, direct virtual path resolution, asynchronous or streaming I/O, external binary-envelope compatibility, or custom public serializer registry. Feature overrides and virtual paths belong to `ProjectSettings`. JSON models must be supported by the built-in serializer and should be stable data contracts rather than live engine types.
 

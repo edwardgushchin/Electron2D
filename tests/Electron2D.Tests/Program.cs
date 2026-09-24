@@ -3605,8 +3605,7 @@ static void VerifyConfigFiles()
         "Configuration key sections must reject null.");
     Expect<ArgumentNullException>(() => new ConfigKey<int>("section", null!),
         "Configuration key names must reject null.");
-    Expect<ArgumentException>(() => new ConfigKey<int>("section", string.Empty),
-        "Configuration key names must reject empty values.");
+    var emptyNameKey = new ConfigKey<int>("state", string.Empty);
     Expect<NotSupportedException>(() => new ConfigKey<object>("section", "untyped"),
         "Configuration keys must reject object as an implicit universal value.");
     Expect<NotSupportedException>(() => new ConfigKey<List<object>>("section", "nested-untyped"),
@@ -3615,6 +3614,54 @@ static void VerifyConfigFiles()
         "Configuration keys must reject engine objects.");
     Require(rootKey.ToString() == "root" && answerKey.ToString() == "gameplay/answer",
         "Configuration keys must expose stable diagnostic paths.");
+
+    using (var state = new ConfigFile())
+    {
+        var first = new ConfigKey<int>("state", "first");
+        var second = new ConfigKey<int>("state", "second");
+        var tail = new ConfigKey<int>("tail", "value");
+        var root = new ConfigKey<int>(string.Empty, "root");
+        var absentList = new ConfigKey<List<int>>("absent", "list");
+        var fallback = new List<int> { 4 };
+        Require(ReferenceEquals(state.GetValue(absentList, fallback), fallback) &&
+                !state.HasSection("absent") && !state.HasSectionKey(absentList),
+            "A missing typed value returns the caller's fallback without creating a section.");
+        state.SetValue(first, 1);
+        state.SetValue(second, 2);
+        state.SetValue(emptyNameKey, 3);
+        state.SetValue(tail, 4);
+        state.SetValue(root, 5);
+        var sectionsSnapshot = state.GetSections();
+        var keysSnapshot = state.GetSectionKeys("state");
+        state.SetValue(first, 6);
+        Require(state.GetValue(first) == 6 && state.GetValue(emptyNameKey) == 3 &&
+                state.HasSectionKey(emptyNameKey) &&
+                state.GetSections().SequenceEqual([string.Empty, "state", "tail"]) &&
+                state.GetSectionKeys("state").SequenceEqual(["first", "second", string.Empty]),
+            "Replacement preserves insertion order and empty names remain addressable.");
+        using (var roundTrip = new ConfigFile())
+        {
+            roundTrip.Parse(state.EncodeToText());
+            Require(roundTrip.GetValue(emptyNameKey) == 3 &&
+                    roundTrip.GetSectionKeys("state").SequenceEqual(["first", "second", string.Empty]),
+                "An empty typed name round-trips through quoted configuration text.");
+        }
+        state.EraseSectionKey(first);
+        state.EraseSectionKey(second);
+        state.EraseSectionKey(emptyNameKey);
+        Require(!state.HasSection("state") && !state.HasSectionKey(emptyNameKey) &&
+                sectionsSnapshot.SequenceEqual([string.Empty, "state", "tail"]) &&
+                keysSnapshot.SequenceEqual(["first", "second", string.Empty]),
+            "Removing the final entry drops its section without mutating enumeration snapshots.");
+        state.SetValue(first, 7);
+        Require(state.GetSections().SequenceEqual([string.Empty, "tail", "state"]),
+            "Recreating a named section appends it after surviving sections.");
+        state.EraseSection("tail");
+        state.Clear();
+        Require(state.GetSections().Count == 0 && !state.HasSection(string.Empty) &&
+                state.EncodeToText() == string.Empty,
+            "Clear removes sectionless and named entries without leaving empty sections.");
+    }
 
     using var config = new ConfigFile();
     Require(config.GetSections().Count == 0 && config.EncodeToText().Length == 0,
