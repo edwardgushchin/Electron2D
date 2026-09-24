@@ -156,6 +156,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         Check(SDL.SetRenderTarget(renderer, _target!.DangerousGetHandle()), "bind canvas framebuffer");
         try
         {
+            Check(SDL.SetRenderClipRect(renderer, 0), "reset canvas clipping");
             Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set clear color");
             Check(SDL.RenderClear(renderer), "clear canvas framebuffer");
             if (_vertices.Length < vertices.Length) Array.Resize(ref _vertices, Math.Max(vertices.Length, _vertices.Length * 2));
@@ -169,8 +170,19 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     TexCoord = new SDL.FPoint { X = v.UV.X, Y = v.UV.Y }
                 };
             }
+            Rect2i? activeClip = null;
             foreach (var batch in batches)
             {
+                if (batch.Clip != activeClip)
+                {
+                    if (batch.Clip is { } clip)
+                    {
+                        var rect = new SDL.Rect { X = clip.Position.X, Y = clip.Position.Y, W = clip.Size.X, H = clip.Size.Y };
+                        Check(SDL.SetRenderClipRect(renderer, in rect), "set canvas clipping");
+                    }
+                    else Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping");
+                    activeClip = batch.Clip;
+                }
                 var mode = batch.Repeat == TextureRepeat.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
                 var texture = batch.Texture is null ? 0 : _textures[batch.Texture].Handle.DangerousGetHandle();
@@ -186,7 +198,11 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             }
             _hasFrame = true;
         }
-        finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
+        finally
+        {
+            try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
+            finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
+        }
         if (!present) return;
         Check(SDL.RenderTexture(renderer, _target.DangerousGetHandle(), 0, 0), "copy canvas to window");
         Check(SDL.RenderPresent(renderer), "present canvas");

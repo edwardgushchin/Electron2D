@@ -172,6 +172,9 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
                     SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
                     foreach (var batch in batches)
                     {
+                        var clip = batch.Clip ?? new Rect2i(0, 0, size.X, size.Y);
+                        var scissor = new SDL.Rect { X = clip.Position.X, Y = clip.Position.Y, W = clip.Size.X, H = clip.Size.Y };
+                        SDL.SetGPUScissor(pass, in scissor);
                         SDL.BindGPUGraphicsPipeline(pass, _pipelines[(batch.ShaderCode ?? _defaultFragment, batch.Blend)].DangerousGetHandle());
                         batch.Material?.PushUniforms(command, (float)time);
                         if (batch.Material is { Textures.Length: > 0 } textured)

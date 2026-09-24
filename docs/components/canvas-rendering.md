@@ -85,11 +85,17 @@ The `ZIndex`, `ZAsRelative` and `MoveToFront` audit checks local range/defaults,
 
 The appearance audit checks white modulation defaults, finite color validation, borrowed material lifetime, equal-assignment PropertyListChanged, callback-failure commitment, PackedScene storage and attached owner-thread reads. `Modulate` accumulates through direct canvas parents; `SelfModulate` affects only the item's own vertices. `UseParentMaterial` selects the direct parent's effective material without discarding an assigned own material, stopping at neutral and TopLevel boundaries. Focused live pixels pass for inherited Add, own Sub and root Mix blending on Linux/Wayland compatibility/GPU; three modulation frames also pass on dummy/software. Modulation and material-policy changes reuse retained commands; TopLevel rebinding may separately request redraw. Editor UI, other platforms and visual owner acceptance remain unverified.
 
+## Control descendant clipping
+
+`Control.ClipContents` clips each direct canvas descendant's retained batches to the transformed Control rectangle. Nested rectangles intersect; a top-level item, neutral Node or CanvasLayer starts another canvas branch. The GPU path uses a scissor rectangle and compatibility uses the render target's clip rectangle. The Control's own drawing remains unclipped while its clip has visible area; an empty clip culls the entire item. The scene input picker applies the unrounded parent rectangles. Repeated Parallax controls use the combined repeated bounds. [ControlClipRenderingTests](../../tests/Electron2D.Tests/ControlClipRenderingTests.cs) checks nested, rotated, repeated, empty, restored and top-level pixels on dummy/software and Linux Wayland compatibility/GPU. Native output on other platforms and owner visual acceptance remain unverified.
+
+The same rendering checks include a clipped child over 20 warmed frames with zero managed allocations between FramePreDraw and FramePostDraw on each tested backend. Native driver allocations and the host event pump are outside that measurement.
+
 ## Ownership and limits
 
 Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary CanvasItem geometry instead of providing an image.
 
-Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, clipping hierarchy, mesh API, public offscreen targets, GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
+Current framebuffer and blending precision is RGBA8. GPU samples byte and supported floating-point images, including stored mips. Compatibility support depends on the native driver; the tested drivers reject float textures explicitly. The component has no lights, general alpha-mask clipping, mesh API, public offscreen targets, theme/widget GUI drawing, independent window renderers or device-loss recovery. Other targets remain unverified under [ADR 0021](../decisions/product.md#adr-0021).
 
 ## Sampling verification
 
@@ -229,7 +235,7 @@ The pinned [CanvasItem drawing methods](https://github.com/godotengine/godot/blo
 
 Polygon atlas UV remapping differs from Texture.DrawRectRegion: margins, clipping, recursive view mapping and zero-size expansion are not applied. Primitive atlas UVs do not remap at all. All input origins use the same existing texture and material checks. One-pixel points/lines are emitted as triangles, with backend-specific subpixel coverage; exact native hardware point/line raster rules are not yet a verified match, so DrawPrimitive remains Partial in compatibility coverage.
 
-The remaining drawing family is classified individually in coverage: fonts/styleboxes/meshes depend on their absent resource integrations. Clipping requires alpha-mask composition and intermediate render surfaces on both backends, not just a stored flag. No new public contour utility, Polygon node, mesh or clipping API is implied by these commands.
+The remaining drawing family is classified individually in coverage: fonts/styleboxes/meshes depend on their absent resource integrations. Control.ClipContents uses axis-aligned scissor rectangles on both backends; general canvas masks still require alpha-mask composition and intermediate render surfaces. No new public contour utility, Polygon node, mesh or clipping API is implied by these commands.
 
 ### Polygon verification
 

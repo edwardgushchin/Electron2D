@@ -56508,6 +56508,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.ClipContents()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "ClipContents",
+    "signature": "public System.Boolean ClipContents { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.CustomMaximumSize()",
     "kind": "property",
     "declaringType": "Electron2D.Control",

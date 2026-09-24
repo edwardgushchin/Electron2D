@@ -1451,6 +1451,11 @@ public sealed partial class SceneTree : MainLoop
                 !control.IsVisibleInTree || control.EffectiveMouseFilter == MouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
             try
             {
+                var clipped = false;
+                for (var ancestor = control.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
+                    if (ancestor is Control { ClipContents: true } parent && !parent.ContainsClipPoint(point))
+                    { clipped = true; break; }
+                if (clipped) continue;
                 if (!control.HitTest(point)) continue;
                 var layer = control.GetCanvasLayerNode()?.Layer ?? 0;
                 var z = control.EffectiveZIndex;

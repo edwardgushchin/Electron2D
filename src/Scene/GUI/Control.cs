@@ -28,6 +28,7 @@ public partial class Control : CanvasItem
     private Vector2 _customMaximumSize = new(-1, -1);
     private Vector2 _lastMaximumSize = new(-1, -1);
     private bool _propagateMaximumSize;
+    private bool _clipContents;
     private GrowDirection _growHorizontal = GrowDirection.End;
     private GrowDirection _growVertical = GrowDirection.End;
     private bool _minimumSizeUpdatePending;
@@ -68,6 +69,30 @@ public partial class Control : CanvasItem
     {
         get { ThrowIfDisposed(); return _size; }
         set => SetSize(value);
+    }
+
+    /// <summary>Gets or sets whether this control clips its canvas descendants and pointer targeting to its rectangle.</summary>
+    /// <value>False by default. The control's own drawing is not clipped while its clip has visible area.</value>
+    /// <remarks>Only direct canvas descendants inherit clipping; a top-level or non-canvas boundary starts a new canvas branch. Changes refresh root-viewport hover and affect the next rendered frame without rerecording retained commands.</remarks>
+    /// <exception cref="InvalidOperationException">An attached mutation is off the scene owner thread or occurs during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
+    public bool ClipContents
+    {
+        get { ThrowIfDisposed(); return _clipContents; }
+        set
+        {
+            EnsureMutable();
+            if (_clipContents == value) return;
+            _clipContents = value;
+            Tree?.RefreshGUIHover();
+            QueueRedraw();
+        }
+    }
+
+    internal bool ContainsClipPoint(Vector2 viewportPoint)
+    {
+        var point = MakeCanvasPositionLocal(viewportPoint);
+        return point.IsFinite() && point.X >= 0 && point.Y >= 0 && point.X < _size.X && point.Y < _size.Y;
     }
 
     /// <summary>Gets or sets the caller-supplied lower bound for layout size.</summary>
@@ -841,6 +866,7 @@ public partial class Control : CanvasItem
 
     private static readonly PropertyDescriptor[] ControlProperties =
     [
+        new PropertyDescriptor<Control, bool>(nameof(ClipContents), node => node.ClipContents, (node, value) => node.ClipContents = value, _ => false, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Position), node => node.Position, (node, value) => node.Position = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Size), node => node.Size, (node, value) => node.Size = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, float>(nameof(RotationDegrees), node => node.RotationDegrees, (node, value) => node.RotationDegrees = value, _ => 0f, stored: true),
