@@ -3387,6 +3387,72 @@
       "reason": "Pinned L1 normalization and lower-hemisphere fold match the typed method. VerifyVector3Values checks back/right/forward axis encodings and zero-vector NaN behavior on Linux/.NET 8."
     },
     {
+      "godot": ["class:Vector3i"],
+      "state": "Implemented",
+      "reason": "All 56 declared members have pinned-source and accepted ADR 0033 managed-boundary audits in VerifyVector3IValues, including typed persistence. Three axis enum values retain separately verified numeric identities. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
+    },
+    {
+      "godot": [
+        "Vector3i::constant:BACK", "Vector3i::constant:DOWN", "Vector3i::constant:FORWARD",
+        "Vector3i::constant:LEFT", "Vector3i::constant:MAX", "Vector3i::constant:MIN",
+        "Vector3i::constant:ONE", "Vector3i::constant:RIGHT", "Vector3i::constant:UP",
+        "Vector3i::constant:ZERO"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector3IValues checks all ten pinned three-component constants, including Int32 minima/maxima and signed unit directions; Linux/.NET 8 managed values."
+    },
+    {
+      "godot": [
+        "Vector3i::constructor:Vector3i()", "Vector3i::constructor:Vector3i(Vector3:)",
+        "Vector3i::constructor:Vector3i(Vector3i:)", "Vector3i::constructor:Vector3i(int:,int:,int:)",
+        "Vector3i::enum:Axis", "Vector3i::operator:operator [](int:)",
+        "Vector3i::property:x", "Vector3i::property:y", "Vector3i::property:z"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector3IValues checks 12-byte sequential zero storage, value-copy isolation, mutable X/Y/Z indexes, enum identities, typed bad-index errors, finite truncation and non-finite/out-of-range conversion rejection under ADR 0033; Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3i::method:distance_squared_to(Vector3i:)", "Vector3i::method:distance_to(Vector3i:)",
+        "Vector3i::method:length()", "Vector3i::method:length_squared()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0033 widens coordinate subtraction and squared terms, returns checked Int64 squares and finite float lengths even across the full Int32 span. VerifyVector3IValues checks ordinary values, a 9e18 distance, exact two-axis Int64 boundary, three-axis overflow and full-span finite lengths on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3i::method:abs()", "Vector3i::method:clamp(Vector3i:,Vector3i:)",
+        "Vector3i::method:clampi(int:,int:)", "Vector3i::method:max(Vector3i:)",
+        "Vector3i::method:max_axis_index()", "Vector3i::method:maxi(int:)",
+        "Vector3i::method:min(Vector3i:)", "Vector3i::method:min_axis_index()",
+        "Vector3i::method:mini(int:)", "Vector3i::method:sign()",
+        "Vector3i::method:snapped(Vector3i:)", "Vector3i::method:snappedi(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3i.h/cpp applies componentwise integer scalar formulas and first-maximum/last-minimum ties. VerifyVector3IValues checks signed values, reversed-bound and Int32.MinValue errors, negative/zero/vector snap steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3i::operator:operator %(Vector3i:)", "Vector3i::operator:operator %(int:)",
+        "Vector3i::operator:operator *(Vector3i:)", "Vector3i::operator:operator *(float:)",
+        "Vector3i::operator:operator *(int:)", "Vector3i::operator:operator +(Vector3i:)",
+        "Vector3i::operator:operator -(Vector3i:)", "Vector3i::operator:operator /(Vector3i:)",
+        "Vector3i::operator:operator /(float:)", "Vector3i::operator:operator /(int:)",
+        "Vector3i::operator:operator unary+()", "Vector3i::operator:operator unary-()"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector3IValues checks componentwise wrapping add/subtract/multiply/negation, signed truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar result and IEEE zero division under ADR 0033; Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3i::operator:operator !=(Vector3i:)", "Vector3i::operator:operator <(Vector3i:)",
+        "Vector3i::operator:operator <=(Vector3i:)", "Vector3i::operator:operator ==(Vector3i:)",
+        "Vector3i::operator:operator >(Vector3i:)", "Vector3i::operator:operator >=(Vector3i:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3i.h orders X, Y, then Z and compares components exactly. VerifyVector3IValues checks equality, less/equal/greater boundaries, high-X precedence and copy hashing on Linux/.NET 8."
+    },
+    {
       "godot": [
         "Vector4::operator:operator *(int:)",
         "Vector4::operator:operator /(int:)"

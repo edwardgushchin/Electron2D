@@ -194,6 +194,7 @@ VerifyImages();
 VerifyVector2Values();
 VerifyVector2IValues();
 VerifyVector3Values();
+VerifyVector3IValues();
 VerifyVector4Values();
 VerifyVector4IValues();
 VerifyRectangles();
@@ -2225,6 +2226,133 @@ static void VerifyVector3Values()
     Expect<JsonException>(() => config.SetValue(floatKey, Vector3.Inf), "Configuration rejects nonfinite triples.");
     config.Parse("[math]\ntriple={\"X\":1,\"Y\":2,\"Z\":3,\"W\":4}\n");
     Expect<InvalidDataException>(() => config.GetValue(floatKey), "Configuration rejects a fourth field.");
+}
+
+static void VerifyVector3IValues()
+{
+    Require(Marshal.SizeOf<Vector3I>() == 12 && Vector3I.Zero == default &&
+            Vector3I.One == new Vector3I(1, 1, 1) &&
+            Vector3I.MinValue == new Vector3I(int.MinValue, int.MinValue, int.MinValue) &&
+            Vector3I.MaxValue == new Vector3I(int.MaxValue, int.MaxValue, int.MaxValue) &&
+            Vector3I.Right == new Vector3I(1, 0, 0) && Vector3I.Left == new Vector3I(-1, 0, 0) &&
+            Vector3I.Up == new Vector3I(0, 1, 0) && Vector3I.Down == new Vector3I(0, -1, 0) &&
+            Vector3I.Forward == new Vector3I(0, 0, -1) && Vector3I.Back == new Vector3I(0, 0, 1) &&
+            (int)Vector3I.Axis.X == 0 && (int)Vector3I.Axis.Y == 1 && (int)Vector3I.Axis.Z == 2,
+        "Vector3I layout, constants and axis identities retain the three-component contract.");
+    var value = new Vector3I(3, 4, 12);
+    var copy = value;
+    copy[0] = -7;
+    copy[1] = 9;
+    copy[2] = 5;
+    var (x, y, z) = value;
+    Require(value == new Vector3I(3, 4, 12) && copy == new Vector3I(-7, 9, 5) &&
+            (x, y, z) == (3, 4, 12) && value[0] == 3 && value[1] == 4 && value[2] == 12,
+        "Vector3I indexed mutation does not alias value copies or reorder components.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "A negative Vector3I index fails explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => copy[3] = 1, "A fourth Vector3I component cannot be assigned.");
+    Require(copy == new Vector3I(-7, 9, 5), "A rejected Vector3I index write leaves state intact.");
+
+    Require(new Vector3I(new Vector3(1.9f, -2.9f, 3.9f)) == new Vector3I(1, -2, 3) &&
+            (Vector3I)new Vector3((float)int.MinValue, 0f, 0f) ==
+                new Vector3I(int.MinValue, 0, 0) &&
+            (Vector3)new Vector3I(16_777_217, int.MinValue, int.MaxValue) ==
+                new Vector3(16_777_216f, int.MinValue, 2_147_483_648f),
+        "Vector3I floating conversions truncate finite components and expose float precision loss.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(float.NaN, 0f, 0f),
+        "Vector3I conversion rejects NaN before casting.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0f, float.PositiveInfinity, 0f),
+        "Vector3I conversion rejects infinity before casting.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0f, 0f, (float)int.MaxValue),
+        "Vector3I conversion rejects the rounded-up Int32 maximum.");
+
+    Require(value.LengthSquared() == 169L && value.Length() == 13f &&
+            value.DistanceSquaredTo(Vector3I.Zero) == 169L && value.DistanceTo(Vector3I.Zero) == 13f &&
+            new Vector3I(int.MaxValue, int.MaxValue, 0).LengthSquared() ==
+                2L * int.MaxValue * int.MaxValue &&
+            new Vector3I(-1_500_000_000, 0, 0).DistanceSquaredTo(
+                new Vector3I(1_500_000_000, 0, 0)) == 9_000_000_000_000_000_000L &&
+            float.IsFinite(Vector3I.MinValue.Length()) &&
+            float.IsFinite(Vector3I.MinValue.DistanceTo(Vector3I.MaxValue)),
+        "Vector3I norms widen before multiplication/subtraction and ordinary distances stay finite.");
+    Expect<OverflowException>(() => _ = Vector3I.MinValue.LengthSquared(),
+        "Three minimum components exceed the exact Int64 squared-length limit.");
+    Expect<OverflowException>(() => _ = Vector3I.MinValue.DistanceSquaredTo(Vector3I.MaxValue),
+        "Full-span three-axis squared distance rejects Int64 overflow.");
+
+    Require(new Vector3I(-3, 4, -5).Abs() == new Vector3I(3, 4, 5) &&
+            new Vector3I(int.MinValue, 0, int.MaxValue).Sign() == new Vector3I(-1, 0, 1) &&
+            new Vector3I(5, -2, 8).Clamp(new Vector3I(1, -1, 2), new Vector3I(4, 3, 7)) ==
+                new Vector3I(4, -1, 7) &&
+            new Vector3I(5, -2, 8).Clamp(0, 4) == new Vector3I(4, 0, 4) &&
+            new Vector3I(1, 5, -1).Max(new Vector3I(3, 2, 0)) == new Vector3I(3, 5, 0) &&
+            new Vector3I(1, 5, -1).Min(2) == new Vector3I(1, 2, -1) &&
+            new Vector3I(1, 5, -1).Max(2) == new Vector3I(2, 5, 2) &&
+            new Vector3I(1, 5, -1).Min(new Vector3I(3, 2, 0)) == new Vector3I(1, 2, -1),
+        "Vector3I componentwise absolute/sign/clamp/min/max preserve every axis.");
+    Expect<OverflowException>(() => _ = Vector3I.MinValue.Abs(), "Int32 minimum absolute value fails explicitly.");
+    Expect<ArgumentException>(() => _ = value.Clamp(2, 1), "Reversed scalar clamp bounds fail explicitly.");
+    Expect<ArgumentException>(() => _ = value.Clamp(new Vector3I(0, 5, 0), new Vector3I(9, 4, 20)),
+        "Reversed bounds on one vector axis fail explicitly.");
+    Require(Vector3I.One.MinAxisIndex() == Vector3I.Axis.Z &&
+            Vector3I.One.MaxAxisIndex() == Vector3I.Axis.X &&
+            new Vector3I(1, 2, 2).MaxAxisIndex() == Vector3I.Axis.Y &&
+            new Vector3I(2, 1, 1).MinAxisIndex() == Vector3I.Axis.Z,
+        "Vector3I axis ties match the pinned first-maximum and last-minimum rules.");
+
+    Require(new Vector3I(5, -5, 7).Snapped(2) == new Vector3I(6, -4, 8) &&
+            new Vector3I(5, -5, 7).Snapped(new Vector3I(2, 0, 3)) ==
+                new Vector3I(6, -5, 6) &&
+            new Vector3I(5, -5, 7).Snapped(-2) == new Vector3I(4, -6, 6) &&
+            value.Snapped(0) == value,
+        "Vector3I snapping respects midpoint, negative and independent zero steps.");
+    Expect<OverflowException>(() => _ = Vector3I.MaxValue.Snapped(2),
+        "Vector3I snapping rejects an Int32-overflowing rounded result.");
+
+    Require(value + Vector3I.One == new Vector3I(4, 5, 13) &&
+            value - Vector3I.One == new Vector3I(2, 3, 11) &&
+            +value == value && -value == new Vector3I(-3, -4, -12) &&
+            value * new Vector3I(2, 3, 4) == new Vector3I(6, 12, 48) &&
+            value * 2 == 2 * value && value * .5f == .5f * value &&
+            value / 2f == new Vector3(1.5f, 2f, 6f) &&
+            new Vector3I(7, -7, 9) / 2 == new Vector3I(3, -3, 4) &&
+            new Vector3I(8, 9, -10) / new Vector3I(2, 3, -2) == new Vector3I(4, 3, 5) &&
+            new Vector3I(7, -7, 9) % 3 == new Vector3I(1, -1, 0) &&
+            new Vector3I(7, 8, -9) % new Vector3I(3, 5, 4) == new Vector3I(1, 3, -1),
+        "Vector3I arithmetic uses wrapping components and truncated integer division/remainder.");
+    Require(Vector3I.MaxValue + Vector3I.One == Vector3I.MinValue &&
+            -new Vector3I(int.MinValue, 0, 0) == new Vector3I(int.MinValue, 0, 0) &&
+            new Vector3I(int.MaxValue, 0, 0) * 2 == new Vector3I(-2, 0, 0) &&
+            float.IsPositiveInfinity((new Vector3I(1, -1, 0) / 0f).X) &&
+            float.IsNegativeInfinity((new Vector3I(1, -1, 0) / 0f).Y) &&
+            float.IsNaN((new Vector3I(1, -1, 0) / 0f).Z),
+        "Ordinary Int32 overflow wraps while floating division by zero follows IEEE behavior.");
+    Expect<DivideByZeroException>(() => _ = value / 0, "Integer scalar division rejects zero.");
+    Expect<DivideByZeroException>(() => _ = value % new Vector3I(1, 1, 0),
+        "Integer component remainder rejects zero.");
+    Expect<OverflowException>(() => _ = new Vector3I(int.MinValue, 0, 0) / -1,
+        "Int32 minimum division by -1 surfaces managed overflow.");
+    Expect<OverflowException>(() => _ = new Vector3I(int.MinValue, 0, 0) % -1,
+        "Int32 minimum remainder by -1 surfaces managed overflow.");
+
+    var same = new Vector3I(3, 4, 12);
+    Require(value == same && !(value != same) &&
+            new Vector3I(1, 2, 3) < new Vector3I(1, 2, 4) &&
+            new Vector3I(1, 2, 3) <= new Vector3I(1, 2, 3) &&
+            new Vector3I(2, -100, 0) > new Vector3I(1, 100, 100) &&
+            new Vector3I(2, 0, 0) >= new Vector3I(2, 0, 0) &&
+            value.Equals((object)same) && value.GetHashCode() == same.GetHashCode(),
+        "Vector3I equality, hashing and lexicographic ordering retain X/Y/Z precedence.");
+    VerifyInvariantString(() => new Vector3I(12, -34, 5).ToString("D3"), "(012, -034, 005)", "Vector3I");
+    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector3I rejects invalid numeric formats.");
+    using var config = new ConfigFile();
+    var key = new ConfigKey<Vector3I>("math", "vector3i");
+    config.SetValue(key, value);
+    Require(config.GetValue(key) == value &&
+            config.EncodeToText() == "[math]\n\nvector3i={\"X\":3,\"Y\":4,\"Z\":12}\n",
+        "ConfigFile retains the exact three-component integer schema.");
+    config.Parse("[math]\nvector3i={\"X\":1.5,\"Y\":2,\"Z\":3}\n");
+    Expect<InvalidDataException>(() => config.GetValue(key),
+        "ConfigFile rejects a fractional integer-vector component.");
 }
 
 static void VerifyVector3CoreValues()

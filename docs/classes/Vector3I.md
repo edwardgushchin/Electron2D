@@ -1,6 +1,6 @@
 # Vector3I
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - **Source:** [`src/Core/Math/Vector3I.cs`](../../src/Core/Math/Vector3I.cs)
 - **Declaration:** `public struct Vector3I`
@@ -10,7 +10,9 @@ Last updated: 2026-09-23
 
 `Vector3I` is a mutable sequential three-component 32-bit integer numeric value with X/Y/Z storage. It is independent of scene nodes and three-dimensional rendering. Its layout is 12 bytes. Ordinary numeric operations do not allocate managed memory; formatting and configuration serialization do.
 
-The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
+The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict integer X/Y/Z schema and rejects fractional fields. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
+
+All 56 declared members and the type row have managed behavioral audits on Linux/.NET 8. `VerifyVector3IValues` checks constants, mutable copies, typed conversion errors, first/last axis ties, component operations, negative and zero snapping steps, checked 64-bit squared norms, full-range finite lengths, wrapping ordinary arithmetic, division/remainder failures, ordering and strict persistence. Native ABI and other platforms remain unverified.
 
 ## Example
 
