@@ -18,6 +18,7 @@ internal static class SceneHierarchyTests
             typeof(Texture).GetMethod("Draw")!.GetParameters()[0].ParameterType == typeof(CanvasItem), "API argument roles.");
         MixedTree();
         CanvasOrderValues();
+        CanvasAppearanceValues();
         PackedHierarchy();
         CallbackFailures();
         Console.WriteLine("Scene hierarchy checks passed.");
@@ -129,6 +130,89 @@ internal static class SceneHierarchyTests
         using var copy = (Entity)packed.Instantiate();
         Check(copy.ZIndex == -3 && !copy.ZAsRelative,
             "PackedScene restores local Z and relative-order policy independently.");
+    }
+
+    private static void CanvasAppearanceValues()
+    {
+        using var material = new CanvasItemMaterial();
+        using var ownMaterial = new CanvasItemMaterial();
+        using var root = new Entity { Name = "AppearanceRoot" };
+        var child = new Entity { Name = "AppearanceChild", UseParentMaterial = true };
+        root.AddChild(child);
+        using (var tree = new SceneTree(root))
+        {
+            Check(root.Modulate == Colors.White && root.SelfModulate == Colors.White &&
+                root.Material is null && !root.UseParentMaterial,
+                "Canvas appearance defaults are white modulation, no material and no inheritance.");
+            var lists = 0;
+            root.PropertyListChanged += _ => lists++;
+            root.Material = material;
+            root.Material = material;
+            Check(lists == 2 && ReferenceEquals(child.CanvasMaterial, material),
+                "Every material assignment refreshes tooling and direct children inherit the live material.");
+            child.Material = ownMaterial;
+            Check(ReferenceEquals(child.CanvasMaterial, material),
+                "UseParentMaterial overrides an assigned local material without discarding it.");
+            child.UseParentMaterial = false;
+            Check(ReferenceEquals(child.CanvasMaterial, ownMaterial),
+                "Disabling parent material restores the child's borrowed material.");
+            child.UseParentMaterial = true;
+            child.TopLevel = true;
+            Check(child.CanvasMaterial is null, "TopLevel ends material inheritance.");
+            child.TopLevel = false;
+            Check(ReferenceEquals(child.CanvasMaterial, material), "Clearing TopLevel restores direct-parent inheritance.");
+
+            Action<ElectronObject> fail = _ => throw new ApplicationException("material list");
+            root.PropertyListChanged += fail;
+            Reject<ApplicationException>(() => root.Material = null);
+            root.PropertyListChanged -= fail;
+            Check(root.Material is null && lists == 3 && child.CanvasMaterial is null,
+                "Failed material-list callback observes the committed null assignment.");
+            root.Material = material;
+            using var disposed = new CanvasItemMaterial();
+            disposed.Dispose();
+            Reject<ObjectDisposedException>(() => root.Material = disposed);
+            Check(ReferenceEquals(root.Material, material) && lists == 4,
+                "A disposed material is rejected without replacing or notifying the previous one.");
+            using var externallyDisposed = new CanvasItemMaterial();
+            root.Material = externallyDisposed;
+            externallyDisposed.Dispose();
+            Check(ReferenceEquals(root.Material, externallyDisposed) && root.Material.IsDisposed,
+                "A borrowed material remains inspectable after external disposal until replaced.");
+            root.Material = material;
+            Check(lists == 6, "Replacing an externally disposed material refreshes tooling state.");
+            var neutral = new Node { Name = "Neutral" };
+            root.AddChild(neutral);
+            child.Reparent(neutral, keepGlobalTransform: false);
+            Check(child.CanvasMaterial is null, "A neutral parent breaks canvas material inheritance.");
+            child.UseParentMaterial = false;
+            Check(ReferenceEquals(child.CanvasMaterial, ownMaterial),
+                "A child under a neutral parent can still use its own borrowed material.");
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = root.Modulate).GetAwaiter().GetResult());
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = root.SelfModulate).GetAwaiter().GetResult());
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = root.Material).GetAwaiter().GetResult());
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = child.UseParentMaterial).GetAwaiter().GetResult());
+            Reject<ArgumentException>(() => root.Modulate = new Color(float.NaN, 1f, 1f));
+            Reject<ArgumentException>(() => root.SelfModulate = new Color(1f, float.PositiveInfinity, 1f));
+            Check(root.Modulate == Colors.White && root.SelfModulate == Colors.White,
+                "Invalid modulation leaves both color properties unchanged.");
+        }
+        Check(!material.IsDisposed && !ownMaterial.IsDisposed,
+            "Canvas node disposal does not dispose borrowed materials.");
+        using var stored = new Entity
+        {
+            Name = "StoredAppearance",
+            Modulate = new Color(.5f, 1f, 1f),
+            SelfModulate = new Color(1f, .5f, 1f),
+            Material = material,
+            UseParentMaterial = true,
+        };
+        using var packed = new PackedScene();
+        packed.Pack(stored);
+        using var copy = (Entity)packed.Instantiate();
+        Check(copy.Modulate == stored.Modulate && copy.SelfModulate == stored.SelfModulate &&
+            ReferenceEquals(copy.Material, material) && copy.UseParentMaterial,
+            "PackedScene stores both modulation values, borrowed material and parent-material policy.");
     }
 
     private static void PackedHierarchy()

@@ -18,6 +18,8 @@ Canvas roots follow scene order; a root's canvas subtree is ordered before the f
 
 The Z and sibling-order audit closes `ZIndex`, `ZAsRelative` and `MoveToFront`. Local Z accepts -4096 through 4096; an invalid assignment throws and preserves state under ADR 0008. Equal valid Z assignments still request configuration-warning refresh. Relative Z follows direct canvas parents and stops at neutral/TopLevel boundaries. `MoveToFront` moves a child to the last sibling position, preserves the committed order after callback failure and leaves a root unchanged. Attached reads and moves enforce the scene owner thread. Managed checks and 31 Linux/Wayland pixel cases on compatibility and GPU pass; the class and other member rows retain their individual coverage states.
 
+The appearance audit closes `Material`, `Modulate`, `SelfModulate` and `UseParentMaterial`. Material assignments store a borrowed resource and emit `PropertyListChanged` even for an equal assignment; callback failure leaves the assignment committed. Parent modulation reaches direct canvas descendants, while self modulation affects only this item's drawing. Parent material inheritance stops at neutral and TopLevel boundaries; a child's own material remains stored while inheritance is enabled. Managed checks and focused live pixel readback pass on Linux/Wayland compatibility and GPU, with modulation also checked in dummy/software. Editor UI, other platforms and owner visual acceptance remain separate.
+
 Canvas attachment is part of actual SceneTree membership. Entry delivers NotificationEnterCanvas before the tree-enter callback, then visibility delivery when initially visible. Exit delivers NotificationExitCanvas after the tree-exit callback, with children exiting first. Changing TopLevel emits an exit/entry pair for this item and schedules redraw; failures are aggregated after the transition. These notifications use ordinary C# override/base dispatch under the engine's notification contract. Manual tree notifications do not attach or detach a canvas.
 
 Local Visible changes notify the item, including while detached or below a hidden parent. Effective changes propagate only through locally visible direct canvas children; Hidden follows visibility delivery when becoming hidden in the tree. Tree exit does not emit Hidden. Visible entry and showing schedule redraw. A visibility notification delivered with Notify raises VisibilityChanged through the base handler without changing state.
@@ -249,11 +251,13 @@ Gets or sets the borrowed material for this node's canvas commands.
 
 **Value:** Null uses ordinary source-alpha color drawing.
 
-**Remarks:** Disposing the node does not dispose this shared resource. [ShaderMaterial](ShaderMaterial.md) with an assigned shader requires GPU rendering. [CanvasItemMaterial](CanvasItemMaterial.md) selects fixed blending; SDL software rejects modes other than Mix before drawing.
+**Remarks:** Disposing the node does not dispose this shared resource. [ShaderMaterial](ShaderMaterial.md) with an assigned shader requires GPU rendering. [CanvasItemMaterial](CanvasItemMaterial.md) selects fixed blending; SDL software rejects modes other than Mix before drawing. An externally disposed borrowed material remains readable but cannot be used for rendering until replaced. Every assignment, including an equal one, raises PropertyListChanged after storing the borrowed reference.
 
-**System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
+**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
 
-**System.ObjectDisposedException:** The node or assigned material is disposed.
+**System.ObjectDisposedException:** The node is disposed, or the assigned value is already disposed.
+
+**System.Exception:** A property-list subscriber throws after the material changes.
 
 <a id="p-electron2d-canvasitem-modulate"></a>
 ### `public Color Modulate { get; set; }`
@@ -264,7 +268,7 @@ Gets or sets the color multiplier inherited by this node's descendants.
 
 **System.ArgumentException:** The color is not finite.
 
-**System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
+**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -299,7 +303,7 @@ Gets or sets the color multiplier applied only to this node's drawing.
 
 **System.ArgumentException:** The color is not finite.
 
-**System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
+**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -332,7 +336,7 @@ Gets or sets whether this node uses its parent's effective material.
 
 **Value:** False by default. A root using its parent material uses ordinary color drawing.
 
-**System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
+**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 

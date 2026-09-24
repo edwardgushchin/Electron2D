@@ -34,6 +34,8 @@ The component depends on Core's `ElectronObject` and `Resource` plus .NET delega
 
 The base object exposes `InstanceID`, `ClassName`, `IsDisposed`, `CanTranslateMessages`, and `TranslationDomain`. The two translation properties are stored. `Node` adds stored name, process/input enablement and priority properties. `CanvasItem` adds stored visibility, Z order, top-level state, modulation and borrowed material properties. Spatial `Entity` adds stored Position, RotationDegrees, Scale and Skew. Neutral nodes have no canvas or spatial descriptors. Identity/lifetime entries are not stored. [`Timer`](../classes/Timer.md) adds stored process lane, wait, one-shot, autostart, and ignore-time-scale configuration plus runtime-only local pause and read-only remaining time. Global/derived state and notification switches are deliberately runtime API rather than tooling properties.
 
+Each `CanvasItem.Material` assignment, including an equal one, now raises the typed `PropertyListChanged` event after storing the borrowed reference. A throwing subscriber observes committed state. This runtime signal is available to future editor tooling; no editor inspector behavior is claimed yet.
+
 ## Invariants and errors
 
 - Names are non-empty and unique within a resolved property list.

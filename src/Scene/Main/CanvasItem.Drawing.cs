@@ -20,44 +20,53 @@ public abstract partial class CanvasItem
     /// <summary>Gets or sets the color multiplier inherited by this node's descendants.</summary>
     /// <value>Opaque white by default.</value>
     /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Color Modulate
     {
-        get { ThrowIfDisposed(); return _modulate; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _modulate; }
         set { EnsureMutable(); ValidateCanvasColor(value); _modulate = value; }
     }
 
     /// <summary>Gets or sets the color multiplier applied only to this node's drawing.</summary>
     /// <value>Opaque white by default.</value>
     /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Color SelfModulate
     {
-        get { ThrowIfDisposed(); return _selfModulate; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _selfModulate; }
         set { EnsureMutable(); ValidateCanvasColor(value); _selfModulate = value; }
     }
 
     /// <summary>Gets or sets the borrowed material for this node's canvas commands.</summary>
     /// <value>Null uses ordinary source-alpha color drawing.</value>
     /// <remarks>Disposing the node does not dispose this shared resource. ShaderMaterial with an assigned shader requires GPU rendering.
-    /// CanvasItemMaterial selects fixed blending; unsupported software modes fail before drawing.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
-    /// <exception cref="ObjectDisposedException">The node or assigned material is disposed.</exception>
+    /// CanvasItemMaterial selects fixed blending; unsupported software modes fail before drawing. An externally
+    /// disposed borrowed material remains readable but cannot be used for rendering until replaced. Every assignment,
+    /// including an equal one, raises PropertyListChanged after storing the borrowed reference.</remarks>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed, or the assigned value is already disposed.</exception>
+    /// <exception cref="Exception">A property-list subscriber throws after the material changes.</exception>
     public Material? Material
     {
-        get { ThrowIfDisposed(); return _material; }
-        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); _material = value; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _material; }
+        set
+        {
+            EnsureMutable();
+            if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value));
+            _material = value;
+            NotifyPropertyListChanged();
+        }
     }
 
     /// <summary>Gets or sets whether this node uses its parent's effective material.</summary>
     /// <value>False by default. A root using its parent material uses ordinary color drawing.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool UseParentMaterial
     {
-        get { ThrowIfDisposed(); return _useParentMaterial; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useParentMaterial; }
         set { EnsureMutable(); _useParentMaterial = value; }
     }
 

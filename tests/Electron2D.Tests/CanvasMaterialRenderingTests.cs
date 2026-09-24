@@ -77,6 +77,9 @@ internal static partial class RenderingRuntimeTests
         Engine.Instance.Run(window);
         Released(window);
         Check(frames == modes.Length && node.Draws == 1, "Blend modes update retained geometry without re-recording.");
+        if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") != "dummy")
+            VerifyCanvasMaterialInheritanceFrame(backend);
+        VerifyCanvasModulationFrame(backend);
         if (backend == "compatibility" && Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy")
         {
             using var unsupported = new CanvasItemMaterial { BlendMode = Blend.Add };
@@ -86,5 +89,120 @@ internal static partial class RenderingRuntimeTests
             Released(rejected);
         }
         Console.WriteLine($"Canvas material pixels passed: {backend}.");
+    }
+
+    private static void VerifyCanvasMaterialInheritanceFrame(string backend)
+    {
+        using var inherited = new CanvasItemMaterial { BlendMode = Blend.Add };
+        using var own = new CanvasItemMaterial { BlendMode = Blend.Sub };
+        var window = new Window { Size = new(32, 32) };
+        var parent = new Entity { Material = inherited };
+        var child = new CanvasNode
+        {
+            Name = "Inherited",
+            Material = own,
+            UseParentMaterial = true,
+            DrawAction = n => n.DrawRect(new Rect(4, 4, 16, 16), new Color(.8f, .2f, .1f, .5f)),
+        };
+        parent.AddChild(child);
+        window.AddChild(parent);
+        Color[] expected =
+        [
+            new Color(.6f, .5f, .65f, 1f),
+            new Color(0f, .3f, .55f, .75f),
+            new Color(.5f, .3f, .35f, 1f),
+        ];
+        var frames = 0;
+        child.ReadyAction = n =>
+        {
+            var server = RenderingServer.Instance!;
+            server.SetDefaultClearColor(new Color(.2f, .4f, .6f, 1f));
+            server.FramePostDraw += () =>
+            {
+                using var frame = server.Readback();
+                var actual = frame.GetPixel(12, 12);
+                var target = expected[frames];
+                Check(Math.Abs(actual.R - target.R) < .025f && Math.Abs(actual.G - target.G) < .025f &&
+                    Math.Abs(actual.B - target.B) < .025f && Math.Abs(actual.A - target.A) < .025f,
+                    $"{backend} inherited material frame {frames}: expected {target}, got {actual}.");
+                frames++;
+                if (frames == 1) n.UseParentMaterial = false;
+                else if (frames == 2)
+                {
+                    Check(child.Draws == 1, "Changing material inheritance reuses retained geometry.");
+                    n.UseParentMaterial = true;
+                    n.TopLevel = true;
+                }
+                else n.Tree!.Quit();
+            };
+        };
+        Engine.Instance.Run(window);
+        Released(window);
+        Check(frames == 3, "Direct-parent, local and TopLevel material paths render with the expected live policy.");
+    }
+
+    private static void VerifyCanvasModulationFrame(string backend)
+    {
+        var window = new Window { Size = new(64, 16) };
+        var parent = new CanvasNode
+        {
+            Modulate = new Color(.5f, .75f, 1f, 1f),
+            SelfModulate = new Color(1f, .5f, 1f, 1f),
+            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+        };
+        var child = new CanvasNode
+        {
+            Name = "TintChild",
+            Position = new Vector2(20f, 0f),
+            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+        };
+        var neutral = new Node { Name = "Neutral" };
+        var separate = new CanvasNode
+        {
+            Name = "Separate",
+            Position = new Vector2(40f, 0f),
+            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+        };
+        parent.AddChild(child);
+        parent.AddChild(neutral);
+        neutral.AddChild(separate);
+        window.AddChild(parent);
+        var frames = 0;
+        child.ReadyAction = n =>
+        {
+            var server = RenderingServer.Instance!;
+            server.SetDefaultClearColor(Colors.Black);
+            server.FramePostDraw += () =>
+            {
+                using var frame = server.Readback();
+                var expectedOwn = frames == 0 ? new Color(.5f, .375f, 1f) : new Color(.25f, .25f, .75f);
+                var expectedInherited = frames switch
+                {
+                    0 => new Color(.5f, .75f, 1f),
+                    1 => new Color(.25f, .125f, .75f),
+                    _ => new Color(1f, .25f, 1f),
+                };
+                Pixel(frame, 8, 8, expectedOwn);
+                Pixel(frame, 28, 8, expectedInherited);
+                Pixel(frame, 48, 8, Colors.White);
+                frames++;
+                if (frames == 1)
+                {
+                    parent.Modulate = new Color(.25f, .5f, .75f);
+                    n.SelfModulate = new Color(1f, .25f, 1f);
+                }
+                else if (frames == 2)
+                {
+                    Check(parent.Draws == 1 && child.Draws == 1,
+                        "Modulation changes reuse both retained command streams.");
+                    n.TopLevel = true;
+                }
+                else n.Tree!.Quit();
+            };
+        };
+        Engine.Instance.Run(window);
+        Released(window);
+        Check(frames == 3 && parent.Draws == 1 && separate.Draws == 1,
+            "Live modulation and neutral/TopLevel boundaries retain unaffected recorded geometry.");
     }
 }
