@@ -6,7 +6,6 @@
     "WeakRef": "WeakRef<T>",
     "Object": "ElectronObject",
     "Rect2": "Rect",
-    "Rect2i": "RectI",
     "Transform2D": "Transform",
     "Texture2D": "Texture",
     "MethodTweener": "MethodTweener<TValue>",

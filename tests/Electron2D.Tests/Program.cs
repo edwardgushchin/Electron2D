@@ -648,12 +648,12 @@ static void VerifyDisplayServer()
         }
 
         display.ProcessEvents();
-        var initialRect = new RectI(display.WindowGetPosition(), display.WindowGetSize());
+        var initialRect = new Rect2i(display.WindowGetPosition(), display.WindowGetSize());
         var movedPosition = initialRect.Position + new Vector2i(17, 19);
         var resizedSize = initialRect.Size + new Vector2i(23, 29);
-        var rectDelivery = new List<RectI>();
+        var rectDelivery = new List<Rect2i>();
         var rectOrder = new List<string>();
-        Action<RectI> rectChanged = rect =>
+        Action<Rect2i> rectChanged = rect =>
         {
             rectDelivery.Add(rect);
             rectOrder.Add("rect");
@@ -688,8 +688,8 @@ static void VerifyDisplayServer()
             Require(rectDelivery.Count == 0, "An off-thread pump leaves rectangle events queued.");
             display.ProcessEvents();
             Require(rectDelivery.SequenceEqual([
-                    new RectI(movedPosition, initialRect.Size),
-                    new RectI(movedPosition, resizedSize),
+                    new Rect2i(movedPosition, initialRect.Size),
+                    new Rect2i(movedPosition, resizedSize),
                 ]) && rectOrder.SequenceEqual(["rect", "quit", "rect"]),
                 "Move and resize callbacks deliver full intermediate rectangles in queue order; duplicate and foreign events are ignored.");
 
@@ -698,7 +698,7 @@ static void VerifyDisplayServer()
             rectEvent.Window.Data1 = movedPosition.X + 5;
             rectEvent.Window.Data2 = movedPosition.Y + 7;
             var throwOnNextRect = true;
-            Action<RectI> failingRect = rect =>
+            Action<Rect2i> failingRect = rect =>
             {
                 if (throwOnNextRect)
                 {
@@ -723,9 +723,9 @@ static void VerifyDisplayServer()
                 catch (AggregateException errors)
                 {
                     Require(errors.InnerExceptions.Count == 1 && rectDelivery.Count == 4 &&
-                            rectDelivery[2] == new RectI(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
+                            rectDelivery[2] == new Rect2i(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
                                 resizedSize) &&
-                            rectDelivery[3] == new RectI(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
+                            rectDelivery[3] == new Rect2i(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
                                 new Vector2i(resizedSize.X + 11, resizedSize.Y + 13)) &&
                             rectOrder.SequenceEqual(["rect", "quit", "rect", "rect", "rect", "quit"]),
                         "The rectangle cache commits before callbacks, and callback failure does not stop later events.");
@@ -1650,11 +1650,11 @@ static void VerifyImages()
 
         image.Fill(new Color(0f, 0f, 0f, 0f));
         Require(image.IsInvisible, "An alpha-capable image with zero alpha must be invisible.");
-        image.FillRect(new RectI(-1, -1, 3, 3), Colors.Red);
+        image.FillRect(new Rect2i(-1, -1, 3, 3), Colors.Red);
         Require(image.GetPixel(0, 0).R == 1f && image.GetPixel(1, 1).R == 1f && image.GetPixel(2, 2).A == 0f,
             "FillRect must clip a half-open rectangle to image bounds.");
         Require(image.DetectAlpha() == Image.AlphaMode.Bit && !image.IsInvisible &&
-                image.GetUsedRect() == new RectI(0, 0, 2, 2) && image.DetectUsedChannels() == Image.UsedChannels.Rgba,
+                image.GetUsedRect() == new Rect2i(0, 0, 2, 2) && image.DetectUsedChannels() == Image.UsedChannels.Rgba,
             "Alpha and used-region detection must inspect the base level.");
         Expect<ArgumentOutOfRangeException>(() => image.DetectUsedChannels((Image.CompressSource)3),
             "Channel detection must reject its source sentinel.");
@@ -1708,7 +1708,7 @@ static void VerifyImages()
                 integerAlpha.DetectUsedChannels() == Image.UsedChannels.Rgba,
             "Integer alpha detection must use the 16-bit opaque endpoint, not normalized one.");
         integerSource.Fill(new Color(1000f, 0f, 0f, 32768f));
-        integerAlpha.BlendRect(integerSource, new RectI(0, 0, 1, 1), new Vector2i(1, 0));
+        integerAlpha.BlendRect(integerSource, new Rect2i(0, 0, 1, 1), new Vector2i(1, 0));
         var mixed = integerAlpha.GetPixel(1, 0);
         Require(mixed.R is >= 499f and <= 501f && mixed.B is >= 499f and <= 501f && mixed.A == 65535f,
             "Integer-alpha compositing must normalize only alpha during straight-alpha mixing.");
@@ -1732,10 +1732,10 @@ static void VerifyImages()
         Expect<ArgumentOutOfRangeException>(() => image.Rotate90((ClockDirection)7),
             "Rotate90 must reject an undefined direction.");
 
-        using var region = image.GetRegion(new RectI(1, 1, 4, 4));
+        using var region = image.GetRegion(new Rect2i(1, 1, 4, 4));
         Require(region.Size == Vector2i.One && region.GetPixel(0, 0) == image.GetPixel(1, 1),
             "GetRegion must return only the clipped source intersection.");
-        using var emptyRegion = image.GetRegion(new RectI(9, 9, 1, 1));
+        using var emptyRegion = image.GetRegion(new Rect2i(9, 9, 1, 1));
         Require(emptyRegion.IsEmpty, "GetRegion must return an empty image for a disjoint rectangle.");
     }
 
@@ -1790,21 +1790,21 @@ static void VerifyImages()
         source.Fill(new Color(1f, 0f, 0f, 0.5f));
         mask.Fill(new Color(1f, 1f, 1f, 0f));
         mask.SetPixel(1, 0, Colors.White);
-        destination.BlendRectMask(source, mask, new RectI(0, 0, 2, 2), new Vector2i(1, 0));
+        destination.BlendRectMask(source, mask, new Rect2i(0, 0, 2, 2), new Vector2i(1, 0));
         Require(ColorNearlyEqual(destination.GetPixel(2, 0), new Color(0.5f, 0f, 0.5f, 1f), 0.01f) &&
                 destination.GetPixel(1, 0).B == 1f && destination.HasMipmaps,
             "Masked blending must honor mask alpha, clipping, straight alpha, and mipmap rebuilding.");
-        destination.BlitRectMask(source, mask, new RectI(0, 0, 2, 2), Vector2i.Zero);
+        destination.BlitRectMask(source, mask, new Rect2i(0, 0, 2, 2), Vector2i.Zero);
         Require(destination.GetPixel(1, 0).R == 1f && destination.GetPixel(0, 0).B == 1f,
             "Masked blitting must copy only selected source pixels without blending.");
-        destination.BlendRect(source, new RectI(0, 0, 1, 1), Vector2i.Zero);
+        destination.BlendRect(source, new Rect2i(0, 0, 1, 1), Vector2i.Zero);
         Require(destination.GetPixel(0, 0).R > 0f && destination.GetPixel(0, 0).B > 0f,
             "Unmasked blending must composite straight-alpha source and destination colors.");
         source.Fill(Colors.Green);
-        destination.BlitRect(source, new RectI(0, 0, 2, 2), new Vector2i(-1, 0));
+        destination.BlitRect(source, new Rect2i(0, 0, 2, 2), new Vector2i(-1, 0));
         Require(destination.GetPixel(0, 0).G > 0f, "BlitRect must clip negative destinations while keeping source alignment.");
         using var wrongFormat = Image.CreateEmpty(1, 1, false, Image.Format.Rgb8);
-        Expect<ArgumentException>(() => destination.BlitRect(wrongFormat, new RectI(0, 0, 1, 1), Vector2i.Zero),
+        Expect<ArgumentException>(() => destination.BlitRect(wrongFormat, new Rect2i(0, 0, 1, 1), Vector2i.Zero),
             "BlitRect must reject format mismatch.");
     }
 
@@ -3159,133 +3159,133 @@ static Rect ExerciseRectHotPath(int iterations)
 
 static void VerifyIntegerRectangles()
 {
-    Require(Marshal.SizeOf<RectI>() == 16 && typeof(RectI).IsDefined(typeof(SerializableAttribute), inherit: false) &&
-            typeof(RectI).StructLayoutAttribute?.Value == LayoutKind.Sequential,
-        "RectI must be a serializable sequential four-integer value type.");
-    Require(default(RectI) == new RectI(Vector2i.Zero, Vector2i.Zero) &&
-            new RectI(new Vector2i(1, 2), new Vector2i(3, 4)) == new RectI(1, 2, 3, 4) &&
-            new RectI(new Vector2i(1, 2), 3, 4) == new RectI(1, 2, new Vector2i(3, 4)),
-        "Zero initialization and every RectI constructor must preserve position and size.");
+    Require(Marshal.SizeOf<Rect2i>() == 16 && typeof(Rect2i).IsDefined(typeof(SerializableAttribute), inherit: false) &&
+            typeof(Rect2i).StructLayoutAttribute?.Value == LayoutKind.Sequential,
+        "Rect2i must be a serializable sequential four-integer value type.");
+    Require(default(Rect2i) == new Rect2i(Vector2i.Zero, Vector2i.Zero) &&
+            new Rect2i(new Vector2i(1, 2), new Vector2i(3, 4)) == new Rect2i(1, 2, 3, 4) &&
+            new Rect2i(new Vector2i(1, 2), 3, 4) == new Rect2i(1, 2, new Vector2i(3, 4)),
+        "Zero initialization and every Rect2i constructor must preserve position and size.");
 
-    var mutable = new RectI(new Vector2i(1, 2), new Vector2i(3, 4));
+    var mutable = new Rect2i(new Vector2i(1, 2), new Vector2i(3, 4));
     var independentCopy = mutable;
     mutable.Position = new Vector2i(2, 3);
     mutable.Size = new Vector2i(5, 6);
-    Require(mutable.End == new Vector2i(7, 9) && independentCopy == new RectI(1, 2, 3, 4),
-        "RectI Position and Size mutation must update the computed end.");
+    Require(mutable.End == new Vector2i(7, 9) && independentCopy == new Rect2i(1, 2, 3, 4),
+        "Rect2i Position and Size mutation must update the computed end.");
     mutable.End = new Vector2i(10, 12);
     Require(mutable.Position == new Vector2i(2, 3) && mutable.Size == new Vector2i(8, 9),
-        "Assigning RectI.End must preserve Position and derive Size.");
-    var wrappedEnd = new RectI(int.MaxValue, int.MinValue, 0, 0);
+        "Assigning Rect2i.End must preserve Position and derive Size.");
+    var wrappedEnd = new Rect2i(int.MaxValue, int.MinValue, 0, 0);
     wrappedEnd.End = new Vector2i(int.MinValue, int.MaxValue);
     Require(wrappedEnd.Position == new Vector2i(int.MaxValue, int.MinValue) &&
             wrappedEnd.Size == new Vector2i(1, -1),
-        "Assigning RectI.End wraps the derived size without moving Position.");
-    Require(new RectI(0, 0, 3, 4).Area == 12 && new RectI(0, 0, -3, -4).Area == 12 &&
-            !new RectI(0, 0, -3, -4).HasArea() &&
-            new RectI(int.MaxValue, 0, 1, 1).End.X == int.MinValue &&
-            new RectI(0, 0, int.MaxValue, 2).Area == -2,
-        "RectI area, end, and ordinary overflow must use documented 32-bit behavior.");
+        "Assigning Rect2i.End wraps the derived size without moving Position.");
+    Require(new Rect2i(0, 0, 3, 4).Area == 12 && new Rect2i(0, 0, -3, -4).Area == 12 &&
+            !new Rect2i(0, 0, -3, -4).HasArea() &&
+            new Rect2i(int.MaxValue, 0, 1, 1).End.X == int.MinValue &&
+            new Rect2i(0, 0, int.MaxValue, 2).Area == -2,
+        "Rect2i area, end, and ordinary overflow must use documented 32-bit behavior.");
 
-    var normalized = new RectI(25, 25, -100, -50).Abs();
-    Require(normalized == new RectI(-75, -25, 100, 50),
-        "RectI.Abs must move the origin and normalize both size components.");
-    Require(new RectI(int.MaxValue, 0, 1, 2).Abs() == new RectI(int.MaxValue, 0, 1, 2) &&
-            new RectI(int.MinValue, 0, -1, 2).Abs() == new RectI(int.MaxValue, 0, 1, 2),
-        "RectI.Abs must select negative size before position addition, even across wraparound.");
-    Expect<OverflowException>(() => _ = new RectI(0, 0, int.MinValue, 1).Abs(),
-        "RectI.Abs must expose minimum-integer absolute-value overflow.");
+    var normalized = new Rect2i(25, 25, -100, -50).Abs();
+    Require(normalized == new Rect2i(-75, -25, 100, 50),
+        "Rect2i.Abs must move the origin and normalize both size components.");
+    Require(new Rect2i(int.MaxValue, 0, 1, 2).Abs() == new Rect2i(int.MaxValue, 0, 1, 2) &&
+            new Rect2i(int.MinValue, 0, -1, 2).Abs() == new Rect2i(int.MaxValue, 0, 1, 2),
+        "Rect2i.Abs must select negative size before position addition, even across wraparound.");
+    Expect<OverflowException>(() => _ = new Rect2i(0, 0, int.MinValue, 1).Abs(),
+        "Rect2i.Abs must expose minimum-integer absolute-value overflow.");
 
-    var outer = new RectI(0, 0, 10, 10);
-    Require(outer.Encloses(new RectI(0, 0, 10, 10)) &&
-            outer.Encloses(new RectI(2, 3, 4, 5)) &&
-            !outer.Encloses(new RectI(-1, 3, 4, 5)),
-        "RectI.Encloses must accept coincident edges and reject an escaped edge.");
-    Require(new RectI(0, 0, 5, 5).Expand(new Vector2i(-2, 7)) == new RectI(-2, 0, 7, 7) &&
+    var outer = new Rect2i(0, 0, 10, 10);
+    Require(outer.Encloses(new Rect2i(0, 0, 10, 10)) &&
+            outer.Encloses(new Rect2i(2, 3, 4, 5)) &&
+            !outer.Encloses(new Rect2i(-1, 3, 4, 5)),
+        "Rect2i.Encloses must accept coincident edges and reject an escaped edge.");
+    Require(new Rect2i(0, 0, 5, 5).Expand(new Vector2i(-2, 7)) == new Rect2i(-2, 0, 7, 7) &&
             outer.Expand(new Vector2i(10, 10)) == outer &&
-            new RectI(1, 2, 3, 5).GetCenter() == new Vector2i(2, 4) &&
-            new RectI(0, 0, -3, -5).GetCenter() == new Vector2i(-1, -2),
-        "RectI expansion and integer center rounding must preserve edge semantics.");
+            new Rect2i(1, 2, 3, 5).GetCenter() == new Vector2i(2, 4) &&
+            new Rect2i(0, 0, -3, -5).GetCenter() == new Vector2i(-1, -2),
+        "Rect2i expansion and integer center rounding must preserve edge semantics.");
 
-    var baseRect = new RectI(1, 2, 3, 4);
-    Require(baseRect.Grow(2) == new RectI(-1, 0, 7, 8) &&
-            baseRect.Grow(-1) == new RectI(2, 3, 1, 2) &&
-            baseRect.GrowIndividual(1, 2, 3, 4) == new RectI(0, 0, 7, 10),
-        "RectI growth must move origins and add matching side amounts.");
-    Require(baseRect.GrowSide(Side.Left, 1) == new RectI(0, 2, 4, 4) &&
-            baseRect.GrowSide(Side.Top, 1) == new RectI(1, 1, 3, 5) &&
-            baseRect.GrowSide(Side.Right, 1) == new RectI(1, 2, 4, 4) &&
-            baseRect.GrowSide(Side.Bottom, 1) == new RectI(1, 2, 3, 5) &&
+    var baseRect = new Rect2i(1, 2, 3, 4);
+    Require(baseRect.Grow(2) == new Rect2i(-1, 0, 7, 8) &&
+            baseRect.Grow(-1) == new Rect2i(2, 3, 1, 2) &&
+            baseRect.GrowIndividual(1, 2, 3, 4) == new Rect2i(0, 0, 7, 10),
+        "Rect2i growth must move origins and add matching side amounts.");
+    Require(baseRect.GrowSide(Side.Left, 1) == new Rect2i(0, 2, 4, 4) &&
+            baseRect.GrowSide(Side.Top, 1) == new Rect2i(1, 1, 3, 5) &&
+            baseRect.GrowSide(Side.Right, 1) == new Rect2i(1, 2, 4, 4) &&
+            baseRect.GrowSide(Side.Bottom, 1) == new Rect2i(1, 2, 3, 5) &&
             baseRect.GrowSide((Side)99, 1) == baseRect &&
-            new RectI(int.MinValue, 0, 1, 1).Grow(1).Position.X == int.MaxValue,
-        "RectI.GrowSide must cover every side, undefined values, and unchecked overflow.");
+            new Rect2i(int.MinValue, 0, 1, 1).Grow(1).Position.X == int.MaxValue,
+        "Rect2i.GrowSide must cover every side, undefined values, and unchecked overflow.");
 
-    Require(outer.HasArea() && !new RectI(0, 0, 0, 1).HasArea() &&
-            !new RectI(0, 0, 1, -1).HasArea(),
-        "RectI.HasArea must reject zero and negative size components.");
+    Require(outer.HasArea() && !new Rect2i(0, 0, 0, 1).HasArea() &&
+            !new Rect2i(0, 0, 1, -1).HasArea(),
+        "Rect2i.HasArea must reject zero and negative size components.");
     Require(outer.HasPoint(Vector2i.Zero) && outer.HasPoint(new Vector2i(9, 9)) &&
             !outer.HasPoint(new Vector2i(10, 5)) && !outer.HasPoint(new Vector2i(5, 10)) &&
             !outer.HasPoint(new Vector2i(-1, 5)),
-        "RectI.HasPoint must include left/top edges and exclude right/bottom edges.");
+        "Rect2i.HasPoint must include left/top edges and exclude right/bottom edges.");
 
-    var overlap = new RectI(8, 4, 5, 8);
-    var touching = new RectI(10, 2, 4, 3);
-    var containedEmpty = new RectI(5, 6, 0, 0);
-    Require(outer.Intersects(overlap) && outer.Intersection(overlap) == new RectI(8, 4, 2, 6) &&
+    var overlap = new Rect2i(8, 4, 5, 8);
+    var touching = new Rect2i(10, 2, 4, 3);
+    var containedEmpty = new Rect2i(5, 6, 0, 0);
+    Require(outer.Intersects(overlap) && outer.Intersection(overlap) == new Rect2i(8, 4, 2, 6) &&
             !outer.Intersects(touching) && outer.Intersection(touching) == default &&
-            !outer.Intersects(new RectI(11, 0, 1, 1)) && outer.Intersects(containedEmpty) &&
+            !outer.Intersects(new Rect2i(11, 0, 1, 1)) && outer.Intersects(containedEmpty) &&
             outer.Intersection(containedEmpty) == containedEmpty,
-        "RectI intersections must distinguish positive overlap, touching borders, separation, and contained emptiness.");
-    Require(outer.Merge(overlap) == new RectI(0, 0, 13, 12),
-        "RectI.Merge must return the smallest enclosing rectangle.");
+        "Rect2i intersections must distinguish positive overlap, touching borders, separation, and contained emptiness.");
+    Require(outer.Merge(overlap) == new Rect2i(0, 0, 13, 12),
+        "Rect2i.Merge must return the smallest enclosing rectangle.");
 
-    var exact = new RectI(1, 2, 3, 4);
-    Require(exact == new RectI(1, 2, 3, 4) && exact != new RectI(1, 2, 3, 5) &&
-            exact.Equals((object)new RectI(1, 2, 3, 4)) && exact.Equals(new RectI(1, 2, 3, 4)) &&
-            exact.GetHashCode() == new RectI(1, 2, 3, 4).GetHashCode(),
-        "RectI exact equality and hashing must use position and size.");
+    var exact = new Rect2i(1, 2, 3, 4);
+    Require(exact == new Rect2i(1, 2, 3, 4) && exact != new Rect2i(1, 2, 3, 5) &&
+            exact.Equals((object)new Rect2i(1, 2, 3, 4)) && exact.Equals(new Rect2i(1, 2, 3, 4)) &&
+            exact.GetHashCode() == new Rect2i(1, 2, 3, 4).GetHashCode(),
+        "Rect2i exact equality and hashing must use position and size.");
     Require((Rect)exact == new Rect(1f, 2f, 3f, 4f) &&
-            (RectI)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new RectI(1, -2, 3, -4) &&
-            (RectI)new Rect(int.MinValue, 0f, 1f, 1f) == new RectI(int.MinValue, 0, 1, 1) &&
-            (Rect)new RectI(16_777_217, 0, int.MaxValue, 1) ==
+            (Rect2i)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new Rect2i(1, -2, 3, -4) &&
+            (Rect2i)new Rect(int.MinValue, 0f, 1f, 1f) == new Rect2i(int.MinValue, 0, 1, 1) &&
+            (Rect)new Rect2i(16_777_217, 0, int.MaxValue, 1) ==
                 new Rect(16_777_216f, 0f, 2_147_483_648f, 1f),
-        "Rect and RectI conversions must widen implicitly and truncate explicitly.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (RectI)new Rect(float.NaN, 0f, 1f, 1f),
-        "Rect to RectI conversion must reject non-finite components.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (RectI)new Rect(2147483648f, 0f, 1f, 1f),
-        "Rect to RectI conversion must reject out-of-range components.");
-    VerifyInvariantString(() => new RectI(1, 2, 3, 4).ToString("D2"), "(01, 02), (03, 04)", "RectI");
+        "Rect and Rect2i conversions must widen implicitly and truncate explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect(float.NaN, 0f, 1f, 1f),
+        "Rect to Rect2i conversion must reject non-finite components.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect(2147483648f, 0f, 1f, 1f),
+        "Rect to Rect2i conversion must reject out-of-range components.");
+    VerifyInvariantString(() => new Rect2i(1, 2, 3, 4).ToString("D2"), "(01, 02), (03, 04)", "Rect2i");
     Expect<FormatException>(() => _ = exact.ToString("Q"),
-        "RectI formatting must surface invalid numeric formats.");
+        "Rect2i formatting must surface invalid numeric formats.");
 
-    var rectangleKey = new ConfigKey<RectI>("geometry", "integer_bounds");
+    var rectangleKey = new ConfigKey<Rect2i>("geometry", "integer_bounds");
     using (var config = new ConfigFile())
     {
-        var stored = new RectI(-2, -3, 8, 9);
+        var stored = new Rect2i(-2, -3, 8, 9);
         config.SetValue(rectangleKey, stored);
         Require(config.EncodeToText() ==
                 "[geometry]\n\ninteger_bounds={\"Position\":{\"X\":-2,\"Y\":-3},\"Size\":{\"X\":8,\"Y\":9}}\n" &&
                 config.GetValue(rectangleKey) == stored,
-            "ConfigFile must preserve the strict RectI Position/Size schema.");
+            "ConfigFile must preserve the strict Rect2i Position/Size schema.");
 
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject a RectI with a missing field.");
+            "ConfigFile must reject a Rect2i with a missing field.");
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4},\"End\":{\"X\":4,\"Y\":6}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject unknown RectI fields.");
+            "ConfigFile must reject unknown Rect2i fields.");
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"X\":2,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject duplicate RectI vector components.");
+            "ConfigFile must reject duplicate Rect2i vector components.");
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject duplicate RectI fields.");
+            "ConfigFile must reject duplicate Rect2i fields.");
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":2147483648,\"Y\":4}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject out-of-range RectI components.");
+            "ConfigFile must reject out-of-range Rect2i components.");
         config.Parse("[geometry]\ninteger_bounds={\"Position\":{\"X\":1.5,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n");
         Expect<InvalidDataException>(() => config.GetValue(rectangleKey),
-            "ConfigFile must reject non-integer RectI components.");
+            "ConfigFile must reject non-integer Rect2i components.");
     }
 
     using (var scene = new PackedScene())
@@ -3293,31 +3293,31 @@ static void VerifyIntegerRectangles()
         var source = new ColorPackedNode
         {
             Name = "IntegerGeometryRoot",
-            BoundsI = new RectI(-2, -3, 8, 9),
+            BoundsI = new Rect2i(-2, -3, 8, 9),
         };
         scene.Pack(source);
         source.Dispose();
         using var instance = (ColorPackedNode)scene.Instantiate();
-        Require(instance.BoundsI == new RectI(-2, -3, 8, 9),
-            "PackedScene must preserve stored RectI properties.");
+        Require(instance.BoundsI == new Rect2i(-2, -3, 8, 9),
+            "PackedScene must preserve stored Rect2i properties.");
     }
 
-    _ = ExerciseRectIHotPath(32);
+    _ = ExerciseRect2iHotPath(32);
     var beforeAllocations = GC.GetAllocatedBytesForCurrentThread();
-    var hotResult = ExerciseRectIHotPath(10_000);
+    var hotResult = ExerciseRect2iHotPath(10_000);
     var allocated = GC.GetAllocatedBytesForCurrentThread() - beforeAllocations;
     Require(allocated == 0 && hotResult.HasArea(),
-        "Warmed RectI geometry operations must not allocate managed memory.");
+        "Warmed Rect2i geometry operations must not allocate managed memory.");
 }
 
-static RectI ExerciseRectIHotPath(int iterations)
+static Rect2i ExerciseRect2iHotPath(int iterations)
 {
-    var value = new RectI(1, 2, 3, 4);
-    var bounds = new RectI(-100_000, -100_000, 200_000, 200_000);
+    var value = new Rect2i(1, 2, 3, 4);
+    var bounds = new Rect2i(-100_000, -100_000, 200_000, 200_000);
     for (var index = 0; index < iterations; index++)
     {
         value = value.Grow(1).Intersection(bounds);
-        value = value.Merge(new RectI(1, 2, 3, 4));
+        value = value.Merge(new Rect2i(1, 2, 3, 4));
     }
 
     return value;
@@ -10098,8 +10098,8 @@ static void VerifyTweenInterpolation()
             .IsEqualApprox(new Color(0.5f, 0.3f, 0.3f, 1f)) &&
             Tween.InterpolateValue(new Rect(0f, 0f, 2f, 4f), new Rect(4f, 6f, 2f, 2f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect(2f, 3f, 3f, 5f) &&
-            Tween.InterpolateValue(new RectI(0, 0, 2, 4), new RectI(3, 5, 3, 5), 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new RectI(2, 3, 4, 7) &&
+            Tween.InterpolateValue(new Rect2i(0, 0, 2, 4), new Rect2i(3, 5, 3, 5), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect2i(2, 3, 4, 7) &&
             Tween.InterpolateValue(Transform.Identity, new Transform(0f, new Vector2(4f, 6f)), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In).Origin == new Vector2(2f, 3f),
         "Color, rectangle and 2D affine values must follow their typed interpolation and composition contracts.");
@@ -12278,7 +12278,7 @@ sealed class ColorPackedNode : Entity
         (node, value) => node.Bounds = value,
         _ => default,
         stored: true);
-    private static readonly PropertyDescriptor<ColorPackedNode, RectI> BoundsIProperty = new(
+    private static readonly PropertyDescriptor<ColorPackedNode, Rect2i> BoundsIProperty = new(
         nameof(BoundsI),
         node => node.BoundsI,
         (node, value) => node.BoundsI = value,
@@ -12323,7 +12323,7 @@ sealed class ColorPackedNode : Entity
 
     private Color _tint = Colors.White;
     private Rect _bounds;
-    private RectI _boundsI;
+    private Rect2i _boundsI;
     private Transform _transform = Transform.Identity;
     private Vector2 _vector2;
     private Vector2i _vector2I;
@@ -12352,7 +12352,7 @@ sealed class ColorPackedNode : Entity
         }
     }
 
-    public RectI BoundsI
+    public Rect2i BoundsI
     {
         get => _boundsI;
         set

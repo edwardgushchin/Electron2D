@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 Represents a two-component integer vector for pixels, grids, tile coordinates, and integer pairs.
 
-`Vector2i` is the engine-owned mutable two-component 32-bit integer value for pixels, grid and tile coordinates, texture dimensions, chunk addresses, integer pairs, and [`RectI`](RectI.md) geometry. Sequential X/Y layout is verified as 8 bytes. It owns no resources or lifecycle.
+`Vector2i` is the engine-owned mutable two-component 32-bit integer value for pixels, grid and tile coordinates, texture dimensions, chunk addresses, integer pairs, and [`Rect2i`](Rect2i.md) geometry. Sequential X/Y layout is verified as 8 bytes. It owns no resources or lifecycle.
 
 Arithmetic uses 32-bit signed integers. Addition, subtraction, multiplication, and negation wrap on overflow.
 Division and remainder follow C# truncated-division rules. The zero-initialized value is [`Vector2i.Zero`](Vector2i.md#p-electron2d-vector2i-zero).
@@ -814,7 +814,7 @@ Converts a finite in-range floating-point vector by truncating each component to
 
 Copies are independent. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies can be used concurrently; shared mutation is unsynchronized.
 
-The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`RectI`](RectI.md) uses it for position, size, and integer geometry. [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md) for snapping and scalar operations, plus formatting/layout primitives and its paired [`Vector2`](Vector2.md). [`Rect2i`](Rect2i.md) uses it for position, size, and integer geometry. [`ConfigFile`](ConfigFile.md) persists exactly two 32-bit integer fields; [`PackedScene`](PackedScene.md) stores it directly.
 
 ## Coverage, verification, and limitations
 

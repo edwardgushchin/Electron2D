@@ -2263,15 +2263,15 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.RectI",
+    "id": "T:Electron2D.Rect2i",
     "kind": "type",
-    "declaringType": "Electron2D.RectI",
-    "name": "RectI",
-    "signature": "public struct Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
+    "name": "Rect2i",
+    "signature": "public struct Electron2D.Rect2i",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [
-      "System.IEquatable\u003CElectron2D.RectI\u003E"
+      "System.IEquatable\u003CElectron2D.Rect2i\u003E"
     ],
     "parameters": null,
     "returnType": null,
@@ -5373,11 +5373,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,Electron2D.Vector2i)",
+    "id": "constructor:Electron2D.Rect2i..ctor(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "constructor",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": ".ctor",
-    "signature": "public RectI(Electron2D.Vector2i position, Electron2D.Vector2i size)",
+    "signature": "public Rect2i(Electron2D.Vector2i position, Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5397,11 +5397,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.Rect2i..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
     "kind": "constructor",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": ".ctor",
-    "signature": "public RectI(Electron2D.Vector2i position, System.Int32 width, System.Int32 height)",
+    "signature": "public Rect2i(Electron2D.Vector2i position, System.Int32 width, System.Int32 height)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5426,11 +5426,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
+    "id": "constructor:Electron2D.Rect2i..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
     "kind": "constructor",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": ".ctor",
-    "signature": "public RectI(System.Int32 x, System.Int32 y, Electron2D.Vector2i size)",
+    "signature": "public Rect2i(System.Int32 x, System.Int32 y, Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5455,11 +5455,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.Rect2i..ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
     "kind": "constructor",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": ".ctor",
-    "signature": "public RectI(System.Int32 x, System.Int32 y, System.Int32 width, System.Int32 height)",
+    "signature": "public Rect2i(System.Int32 x, System.Int32 y, System.Int32 width, System.Int32 height)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -15927,12 +15927,12 @@
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowRectChanged",
-    "signature": "public event System.Action\u003CElectron2D.RectI\u003E WindowRectChanged",
+    "signature": "public event System.Action\u003CElectron2D.Rect2i\u003E WindowRectChanged",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.RectI\u003E",
+    "returnType": "System.Action\u003CElectron2D.Rect2i\u003E",
     "value": null
   },
   {
@@ -18006,11 +18006,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.RectI)",
+    "id": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.Rect2i)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "GrowMask",
-    "signature": "public System.Void GrowMask(System.Int32 pixels, Electron2D.RectI rect)",
+    "signature": "public System.Void GrowMask(System.Int32 pixels, Electron2D.Rect2i rect)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -18022,7 +18022,7 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -18030,18 +18030,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.RectI,System.Single)",
+    "id": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.Rect2i,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "OpaqueToPolygons",
-    "signature": "public Electron2D.Vector2[][] OpaqueToPolygons(Electron2D.RectI rect, System.Single epsilon = 2f)",
+    "signature": "public Electron2D.Vector2[][] OpaqueToPolygons(Electron2D.Rect2i rect, System.Single epsilon = 2f)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -18102,18 +18102,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.SetBitRect(Electron2D.RectI,System.Boolean)",
+    "id": "method:Electron2D.BitMap.SetBitRect(Electron2D.Rect2i,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "SetBitRect",
-    "signature": "public System.Void SetBitRect(Electron2D.RectI rect, System.Boolean bit)",
+    "signature": "public System.Void SetBitRect(Electron2D.Rect2i rect, System.Boolean bit)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -23444,7 +23444,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "ScreenGetUsableRect",
-    "signature": "public Electron2D.RectI ScreenGetUsableRect(System.Int32 screen = -1)",
+    "signature": "public Electron2D.Rect2i ScreenGetUsableRect(System.Int32 screen = -1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23455,7 +23455,7 @@
         "default": "-1"
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
@@ -27486,11 +27486,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlendRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
+    "id": "method:Electron2D.Image.BlendRect(Electron2D.Image,Electron2D.Rect2i,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlendRect",
-    "signature": "public System.Void BlendRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
+    "signature": "public System.Void BlendRect(Electron2D.Image source, Electron2D.Rect2i sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27502,7 +27502,7 @@
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -27515,11 +27515,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlendRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
+    "id": "method:Electron2D.Image.BlendRectMask(Electron2D.Image,Electron2D.Image,Electron2D.Rect2i,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlendRectMask",
-    "signature": "public System.Void BlendRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
+    "signature": "public System.Void BlendRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.Rect2i sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27536,7 +27536,7 @@
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -27549,11 +27549,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlitRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
+    "id": "method:Electron2D.Image.BlitRect(Electron2D.Image,Electron2D.Rect2i,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlitRect",
-    "signature": "public System.Void BlitRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
+    "signature": "public System.Void BlitRect(Electron2D.Image source, Electron2D.Rect2i sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27565,7 +27565,7 @@
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -27578,11 +27578,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlitRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
+    "id": "method:Electron2D.Image.BlitRectMask(Electron2D.Image,Electron2D.Image,Electron2D.Rect2i,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlitRectMask",
-    "signature": "public System.Void BlitRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
+    "signature": "public System.Void BlitRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.Rect2i sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27599,7 +27599,7 @@
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -27959,18 +27959,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.FillRect(Electron2D.RectI,Electron2D.Color)",
+    "id": "method:Electron2D.Image.FillRect(Electron2D.Rect2i,Electron2D.Color)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "FillRect",
-    "signature": "public System.Void FillRect(Electron2D.RectI rectangle, Electron2D.Color color)",
+    "signature": "public System.Void FillRect(Electron2D.Rect2i rectangle, Electron2D.Color color)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rectangle",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
@@ -28129,18 +28129,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.GetRegion(Electron2D.RectI)",
+    "id": "method:Electron2D.Image.GetRegion(Electron2D.Rect2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "GetRegion",
-    "signature": "public Electron2D.Image GetRegion(Electron2D.RectI region)",
+    "signature": "public Electron2D.Image GetRegion(Electron2D.Rect2i region)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "region",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -28152,12 +28152,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "GetUsedRect",
-    "signature": "public Electron2D.RectI GetUsedRect()",
+    "signature": "public Electron2D.Rect2i GetUsedRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
@@ -39066,31 +39066,31 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Abs()",
+    "id": "method:Electron2D.Rect2i.Abs()",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Abs",
-    "signature": "public Electron2D.RectI Abs()",
+    "signature": "public Electron2D.Rect2i Abs()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Encloses(Electron2D.RectI)",
+    "id": "method:Electron2D.Rect2i.Encloses(Electron2D.Rect2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Encloses",
-    "signature": "public System.Boolean Encloses(Electron2D.RectI other)",
+    "signature": "public System.Boolean Encloses(Electron2D.Rect2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -39098,18 +39098,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Equals(Electron2D.RectI)",
+    "id": "method:Electron2D.Rect2i.Equals(Electron2D.Rect2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Equals",
-    "signature": "public virtual System.Boolean Equals(Electron2D.RectI other)",
+    "signature": "public virtual System.Boolean Equals(Electron2D.Rect2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -39117,9 +39117,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Equals(System.Object)",
+    "id": "method:Electron2D.Rect2i.Equals(System.Object)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Equals",
     "signature": "public override System.Boolean Equals(System.Object obj)",
     "visibility": "public",
@@ -39136,11 +39136,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Expand(Electron2D.Vector2i)",
+    "id": "method:Electron2D.Rect2i.Expand(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Expand",
-    "signature": "public Electron2D.RectI Expand(Electron2D.Vector2i point)",
+    "signature": "public Electron2D.Rect2i Expand(Electron2D.Vector2i point)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39151,13 +39151,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.GetCenter()",
+    "id": "method:Electron2D.Rect2i.GetCenter()",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "GetCenter",
     "signature": "public Electron2D.Vector2i GetCenter()",
     "visibility": "public",
@@ -39168,9 +39168,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.GetHashCode()",
+    "id": "method:Electron2D.Rect2i.GetHashCode()",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "GetHashCode",
     "signature": "public override System.Int32 GetHashCode()",
     "visibility": "public",
@@ -39181,11 +39181,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Grow(System.Int32)",
+    "id": "method:Electron2D.Rect2i.Grow(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Grow",
-    "signature": "public Electron2D.RectI Grow(System.Int32 amount)",
+    "signature": "public Electron2D.Rect2i Grow(System.Int32 amount)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39196,15 +39196,15 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.GrowIndividual(System.Int32,System.Int32,System.Int32,System.Int32)",
+    "id": "method:Electron2D.Rect2i.GrowIndividual(System.Int32,System.Int32,System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "GrowIndividual",
-    "signature": "public Electron2D.RectI GrowIndividual(System.Int32 left, System.Int32 top, System.Int32 right, System.Int32 bottom)",
+    "signature": "public Electron2D.Rect2i GrowIndividual(System.Int32 left, System.Int32 top, System.Int32 right, System.Int32 bottom)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39230,15 +39230,15 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.GrowSide(Electron2D.Side,System.Int32)",
+    "id": "method:Electron2D.Rect2i.GrowSide(Electron2D.Side,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "GrowSide",
-    "signature": "public Electron2D.RectI GrowSide(Electron2D.Side side, System.Int32 amount)",
+    "signature": "public Electron2D.Rect2i GrowSide(Electron2D.Side side, System.Int32 amount)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39254,13 +39254,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.HasArea()",
+    "id": "method:Electron2D.Rect2i.HasArea()",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "HasArea",
     "signature": "public System.Boolean HasArea()",
     "visibility": "public",
@@ -39271,9 +39271,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.HasPoint(Electron2D.Vector2i)",
+    "id": "method:Electron2D.Rect2i.HasPoint(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "HasPoint",
     "signature": "public System.Boolean HasPoint(Electron2D.Vector2i point)",
     "visibility": "public",
@@ -39290,37 +39290,37 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Intersection(Electron2D.RectI)",
+    "id": "method:Electron2D.Rect2i.Intersection(Electron2D.Rect2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Intersection",
-    "signature": "public Electron2D.RectI Intersection(Electron2D.RectI other)",
+    "signature": "public Electron2D.Rect2i Intersection(Electron2D.Rect2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Intersects(Electron2D.RectI)",
+    "id": "method:Electron2D.Rect2i.Intersects(Electron2D.Rect2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Intersects",
-    "signature": "public System.Boolean Intersects(Electron2D.RectI other)",
+    "signature": "public System.Boolean Intersects(Electron2D.Rect2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -39328,28 +39328,28 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Merge(Electron2D.RectI)",
+    "id": "method:Electron2D.Rect2i.Merge(Electron2D.Rect2i)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Merge",
-    "signature": "public Electron2D.RectI Merge(Electron2D.RectI other)",
+    "signature": "public Electron2D.Rect2i Merge(Electron2D.Rect2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.ToString()",
+    "id": "method:Electron2D.Rect2i.ToString()",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "ToString",
     "signature": "public override System.String ToString()",
     "visibility": "public",
@@ -39360,9 +39360,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.ToString(System.String)",
+    "id": "method:Electron2D.Rect2i.ToString(System.String)",
     "kind": "method",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "ToString",
     "signature": "public System.String ToString(System.String format)",
     "visibility": "public",
@@ -49708,23 +49708,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.RectI.op_Equality(Electron2D.RectI,Electron2D.RectI)",
+    "id": "operator:Electron2D.Rect2i.op_Equality(Electron2D.Rect2i,Electron2D.Rect2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "op_Equality",
-    "signature": "public static System.Boolean op_Equality(Electron2D.RectI left, Electron2D.RectI right)",
+    "signature": "public static System.Boolean op_Equality(Electron2D.Rect2i left, Electron2D.Rect2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -49732,11 +49732,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.RectI.op_Explicit(Electron2D.Rect)",
+    "id": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect)",
     "kind": "operator",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "op_Explicit",
-    "signature": "public static Electron2D.RectI op_Explicit(Electron2D.Rect value)",
+    "signature": "public static Electron2D.Rect2i op_Explicit(Electron2D.Rect value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49747,22 +49747,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.RectI",
+    "returnType": "Electron2D.Rect2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.RectI.op_Implicit(Electron2D.RectI)",
+    "id": "operator:Electron2D.Rect2i.op_Implicit(Electron2D.Rect2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "op_Implicit",
-    "signature": "public static Electron2D.Rect op_Implicit(Electron2D.RectI value)",
+    "signature": "public static Electron2D.Rect op_Implicit(Electron2D.Rect2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -49770,23 +49770,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.RectI.op_Inequality(Electron2D.RectI,Electron2D.RectI)",
+    "id": "operator:Electron2D.Rect2i.op_Inequality(Electron2D.Rect2i,Electron2D.Rect2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "op_Inequality",
-    "signature": "public static System.Boolean op_Inequality(Electron2D.RectI left, Electron2D.RectI right)",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.Rect2i left, Electron2D.Rect2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.RectI",
+        "type": "Electron2D.Rect2i",
         "default": null
       }
     ],
@@ -60641,9 +60641,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.RectI.Area()",
+    "id": "property:Electron2D.Rect2i.Area()",
     "kind": "property",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Area",
     "signature": "public System.Int32 Area { get;  }",
     "visibility": "public",
@@ -60654,9 +60654,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.RectI.End()",
+    "id": "property:Electron2D.Rect2i.End()",
     "kind": "property",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "End",
     "signature": "public Electron2D.Vector2i End { get; set; }",
     "visibility": "public",
@@ -60667,9 +60667,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.RectI.Position()",
+    "id": "property:Electron2D.Rect2i.Position()",
     "kind": "property",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Position",
     "signature": "public Electron2D.Vector2i Position { get; set; }",
     "visibility": "public",
@@ -60680,9 +60680,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.RectI.Size()",
+    "id": "property:Electron2D.Rect2i.Size()",
     "kind": "property",
-    "declaringType": "Electron2D.RectI",
+    "declaringType": "Electron2D.Rect2i",
     "name": "Size",
     "signature": "public Electron2D.Vector2i Size { get; set; }",
     "visibility": "public",

@@ -881,7 +881,7 @@
       "reason": "PascalCase C# spelling of the rectangle center query (ADRs 0025/0035)."
     },
     {
-      "electron2d": "method:Electron2D.RectI.GetCenter()",
+      "electron2d": "method:Electron2D.Rect2i.GetCenter()",
       "godot": "Rect2i::method:get_center()",
       "reason": "PascalCase C# spelling of the rectangle center query (ADRs 0025/0035)."
     },
@@ -1041,12 +1041,12 @@
       "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
     },
     {
-      "electron2d": "operator:Electron2D.RectI.op_Explicit(Electron2D.Rect)",
+      "electron2d": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect)",
       "godot": "Rect2i::constructor:Rect2i(Rect2:)",
       "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
     },
     {
-      "electron2d": "operator:Electron2D.RectI.op_Implicit(Electron2D.RectI)",
+      "electron2d": "operator:Electron2D.Rect2i.op_Implicit(Electron2D.Rect2i)",
       "godot": "Rect2::constructor:Rect2(Rect2i:)",
       "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
     },
@@ -1838,67 +1838,67 @@
     {
       "godot": "BitMap::method:convert_to_image()",
       "electron2d": "method:Electron2D.BitMap.ConvertToImage()",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:create(Vector2i:)",
       "electron2d": "method:Electron2D.BitMap.Create(Electron2D.Vector2i)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:create_from_image_alpha(Image:,float:)",
       "electron2d": "method:Electron2D.BitMap.CreateFromImageAlpha(Electron2D.Image,System.Single)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_bit(int:,int:)",
       "electron2d": "method:Electron2D.BitMap.GetBit(System.Int32,System.Int32)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_bitv(Vector2i:)",
       "electron2d": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2i)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_size()",
       "electron2d": "method:Electron2D.BitMap.GetSize()",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_true_bit_count()",
       "electron2d": "method:Electron2D.BitMap.GetTrueBitCount()",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:grow_mask(int:,Rect2i:)",
-      "electron2d": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.RectI)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.Rect2i)",
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:opaque_to_polygons(Rect2i:,float:)",
-      "electron2d": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.RectI,System.Single)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.Rect2i,System.Single)",
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:resize(Vector2i:)",
       "electron2d": "method:Electron2D.BitMap.Resize(Electron2D.Vector2i)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bit(int:,int:,bool:)",
       "electron2d": "method:Electron2D.BitMap.SetBit(System.Int32,System.Int32,System.Boolean)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bit_rect(Rect2i:,bool:)",
-      "electron2d": "method:Electron2D.BitMap.SetBitRect(Electron2D.RectI,System.Boolean)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.SetBitRect(Electron2D.Rect2i,System.Boolean)",
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bitv(Vector2i:,bool:)",
       "electron2d": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2i,System.Boolean)",
-      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/Rect2i/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "electron2d": "operator:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,System.Single)",
@@ -1973,12 +1973,12 @@
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
+      "electron2d": "constructor:Electron2D.Rect2i..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
+      "electron2d": "constructor:Electron2D.Rect2i..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
@@ -2108,27 +2108,27 @@
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.RectI.Equals(Electron2D.RectI)",
+      "electron2d": "method:Electron2D.Rect2i.Equals(Electron2D.Rect2i)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.RectI.Equals(System.Object)",
+      "electron2d": "method:Electron2D.Rect2i.Equals(System.Object)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.RectI.GetHashCode()",
+      "electron2d": "method:Electron2D.Rect2i.GetHashCode()",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.RectI.ToString()",
+      "electron2d": "method:Electron2D.Rect2i.ToString()",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.RectI.ToString(System.String)",
+      "electron2d": "method:Electron2D.Rect2i.ToString(System.String)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },

@@ -12,7 +12,7 @@ namespace Electron2D;
 /// </remarks>
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-public struct RectI : IEquatable<RectI>
+public struct Rect2i : IEquatable<Rect2i>
 {
     private Vector2i _position;
     private Vector2i _size;
@@ -51,7 +51,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Initializes an integer rectangle from a position and size.</summary>
     /// <param name="position">The beginning corner.</param>
     /// <param name="size">The integer width and height.</param>
-    public RectI(Vector2i position, Vector2i size)
+    public Rect2i(Vector2i position, Vector2i size)
     {
         _position = position;
         _size = size;
@@ -61,7 +61,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="position">The beginning corner.</param>
     /// <param name="width">The integer width.</param>
     /// <param name="height">The integer height.</param>
-    public RectI(Vector2i position, int width, int height)
+    public Rect2i(Vector2i position, int width, int height)
         : this(position, new Vector2i(width, height))
     {
     }
@@ -70,7 +70,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="x">The horizontal position.</param>
     /// <param name="y">The vertical position.</param>
     /// <param name="size">The integer width and height.</param>
-    public RectI(int x, int y, Vector2i size)
+    public Rect2i(int x, int y, Vector2i size)
         : this(new Vector2i(x, y), size)
     {
     }
@@ -80,7 +80,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="y">The vertical position.</param>
     /// <param name="width">The integer width.</param>
     /// <param name="height">The integer height.</param>
-    public RectI(int x, int y, int width, int height)
+    public Rect2i(int x, int y, int width, int height)
         : this(new Vector2i(x, y), new Vector2i(width, height))
     {
     }
@@ -90,13 +90,13 @@ public struct RectI : IEquatable<RectI>
     /// <remarks>The position adds the negative part of each size component before the size is made absolute.
     /// This order preserves unchecked position wraparound independently of positive size components.</remarks>
     /// <exception cref="OverflowException">A size component is <see cref="int.MinValue"/>.</exception>
-    public readonly RectI Abs() => new(_position + _size.Min(0), _size.Abs());
+    public readonly Rect2i Abs() => new(_position + _size.Min(0), _size.Abs());
 
     /// <summary>Tests whether this integer rectangle completely encloses another rectangle.</summary>
     /// <param name="other">The candidate enclosed rectangle.</param>
     /// <returns><see langword="true"/> when both edges of <paramref name="other"/> lie within or on this rectangle.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly bool Encloses(RectI other) =>
+    public readonly bool Encloses(Rect2i other) =>
         other._position.X >= _position.X &&
         other._position.Y >= _position.Y &&
         other.End.X <= End.X &&
@@ -106,7 +106,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="point">The integer point to include.</param>
     /// <returns>The expanded rectangle.</returns>
     /// <remarks>A point exactly on an existing edge does not change the rectangle.</remarks>
-    public readonly RectI Expand(Vector2i point)
+    public readonly Rect2i Expand(Vector2i point)
     {
         var begin = _position;
         var end = End;
@@ -118,7 +118,7 @@ public struct RectI : IEquatable<RectI>
             end.X = point.X;
         if (point.Y > end.Y)
             end.Y = point.Y;
-        return new RectI(begin, end - begin);
+        return new Rect2i(begin, end - begin);
     }
 
     /// <summary>Gets the integer center point.</summary>
@@ -129,7 +129,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Returns a copy extended equally on every side.</summary>
     /// <param name="amount">The integer amount added outward on each side; a negative value shrinks.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
-    public readonly RectI Grow(int amount) => GrowIndividual(amount, amount, amount, amount);
+    public readonly Rect2i Grow(int amount) => GrowIndividual(amount, amount, amount, amount);
 
     /// <summary>Returns a copy extended independently on each side.</summary>
     /// <param name="left">The amount added outward on the left.</param>
@@ -137,7 +137,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="right">The amount added outward on the right.</param>
     /// <param name="bottom">The amount added outward on the bottom.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
-    public readonly RectI GrowIndividual(int left, int top, int right, int bottom) => new(
+    public readonly Rect2i GrowIndividual(int left, int top, int right, int bottom) => new(
         unchecked(_position.X - left),
         unchecked(_position.Y - top),
         unchecked(_size.X + left + right),
@@ -147,7 +147,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="side">The side to extend.</param>
     /// <param name="amount">The amount added outward; a negative value shrinks that side.</param>
     /// <returns>The grown or shrunk rectangle. An undefined <paramref name="side"/> leaves the rectangle unchanged.</returns>
-    public readonly RectI GrowSide(Side side, int amount) => GrowIndividual(
+    public readonly Rect2i GrowSide(Side side, int amount) => GrowIndividual(
         side == Side.Left ? amount : 0,
         side == Side.Top ? amount : 0,
         side == Side.Right ? amount : 0,
@@ -175,20 +175,20 @@ public struct RectI : IEquatable<RectI>
     /// rectangle is considered intersecting and produces a zero-size result at its own position. Negative size
     /// components are unsupported.
     /// </remarks>
-    public readonly RectI Intersection(RectI other)
+    public readonly Rect2i Intersection(Rect2i other)
     {
         if (!Intersects(other))
             return default;
 
         var position = _position.Max(other._position);
-        return new RectI(position, End.Min(other.End) - position);
+        return new Rect2i(position, End.Min(other.End) - position);
     }
 
     /// <summary>Tests whether this integer rectangle overlaps another rectangle.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when the interiors overlap; touching outer borders are excluded.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly bool Intersects(RectI other) =>
+    public readonly bool Intersects(Rect2i other) =>
         _position.X < other.End.X && End.X > other._position.X &&
         _position.Y < other.End.Y && End.Y > other._position.Y;
 
@@ -196,45 +196,45 @@ public struct RectI : IEquatable<RectI>
     /// <param name="other">The other rectangle.</param>
     /// <returns>The merged rectangle.</returns>
     /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
-    public readonly RectI Merge(RectI other)
+    public readonly Rect2i Merge(Rect2i other)
     {
         var position = _position.Min(other._position);
-        return new RectI(position, End.Max(other.End) - position);
+        return new Rect2i(position, End.Max(other.End) - position);
     }
 
     /// <summary>Tests both position and size for exact component equality.</summary>
     /// <param name="left">The first rectangle.</param>
     /// <param name="right">The second rectangle.</param>
     /// <returns><see langword="true"/> when all four components are equal.</returns>
-    public static bool operator ==(RectI left, RectI right) => left.Equals(right);
+    public static bool operator ==(Rect2i left, Rect2i right) => left.Equals(right);
 
     /// <summary>Tests whether either position or size differs.</summary>
     /// <param name="left">The first rectangle.</param>
     /// <param name="right">The second rectangle.</param>
     /// <returns><see langword="true"/> when at least one component differs.</returns>
-    public static bool operator !=(RectI left, RectI right) => !left.Equals(right);
+    public static bool operator !=(Rect2i left, Rect2i right) => !left.Equals(right);
 
     /// <summary>Converts an integer rectangle to a floating-point rectangle.</summary>
     /// <param name="value">The integer rectangle to convert.</param>
     /// <returns>A floating-point rectangle with corresponding position and size components.</returns>
     /// <remarks>Large integer components can lose low-order precision.</remarks>
-    public static implicit operator Rect(RectI value) => new(value._position, value._size);
+    public static implicit operator Rect(Rect2i value) => new(value._position, value._size);
 
     /// <summary>Converts a floating-point rectangle by truncating each position and size component toward zero.</summary>
     /// <param name="value">The floating-point rectangle to convert.</param>
     /// <returns>The truncated integer rectangle.</returns>
     /// <exception cref="ArgumentOutOfRangeException">A component is not finite or is outside the 32-bit signed integer range.</exception>
-    public static explicit operator RectI(Rect value) => new((Vector2i)value.Position, (Vector2i)value.Size);
+    public static explicit operator Rect2i(Rect value) => new((Vector2i)value.Position, (Vector2i)value.Size);
 
     /// <summary>Tests whether another object is an equal integer rectangle.</summary>
     /// <param name="obj">The object to compare.</param>
     /// <returns><see langword="true"/> when <paramref name="obj"/> is an integer rectangle with equal components.</returns>
-    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is RectI other && Equals(other);
+    public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Rect2i other && Equals(other);
 
     /// <summary>Tests position and size for exact component equality.</summary>
     /// <param name="other">The other rectangle.</param>
     /// <returns><see langword="true"/> when all four components are equal.</returns>
-    public readonly bool Equals(RectI other) => _position == other._position && _size == other._size;
+    public readonly bool Equals(Rect2i other) => _position == other._position && _size == other._size;
 
     /// <summary>Returns a hash code based on position and size.</summary>
     /// <returns>The component hash code.</returns>

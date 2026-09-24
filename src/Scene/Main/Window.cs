@@ -314,7 +314,7 @@ public partial class Window : Viewport
         }
     }
 
-    private void HandleRect(RectI rect) => CommitSize(rect.Size);
+    private void HandleRect(Rect2i rect) => CommitSize(rect.Size);
     private void HandleFocus(bool focused) { if (focused) FocusEntered?.Invoke(); else FocusExited?.Invoke(); }
     private void HandleMouseEntered()
     {

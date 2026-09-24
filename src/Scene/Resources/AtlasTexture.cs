@@ -133,7 +133,7 @@ public sealed class AtlasTexture : Texture
             var region = EffectiveRegion(atlas, _roundedRegion);
             using var image = atlas?.GetImage();
             if (image is null) return null;
-            return image.GetRegion(new RectI(checked((int)region.Position.X), checked((int)region.Position.Y),
+            return image.GetRegion(new Rect2i(checked((int)region.Position.X), checked((int)region.Position.Y),
                 checked((int)region.Size.X), checked((int)region.Size.Y)));
         }
     }

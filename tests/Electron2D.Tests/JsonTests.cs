@@ -257,7 +257,7 @@ internal static class JsonTests
               RoundTrip(new Vector3(1f, 2f, 3f)) && RoundTrip(new Vector3i(1, 2, 3)) &&
               RoundTrip(new Vector4(1f, 2f, 3f, 4f)) && RoundTrip(new Vector4i(1, 2, 3, 4)) &&
               RoundTrip(new Color(0.2f, 0.4f, 0.6f, 1f)) &&
-              RoundTrip(new Rect(1f, 2f, 3f, 4f)) && RoundTrip(new RectI(1, 2, 3, 4)) &&
+              RoundTrip(new Rect(1f, 2f, 3f, 4f)) && RoundTrip(new Rect2i(1, 2, 3, 4)) &&
               RoundTrip(new Transform(0f, new Vector2(2f, 3f))),
             "Typed native conversion must round-trip every registered scalar and engine math schema.");
         Check(EngineJSON.FromNative<string?>(null) is null &&

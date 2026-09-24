@@ -20,7 +20,7 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 1. A caller defines and reuses a `ConfigKey<T>`.
 2. `SetValue` serializes the typed value to a compact JSON token before taking the document mutation lock; null removes the entry.
 3. Reads copy the stored token under the lock and deserialize a new `T`, preventing mutable aliasing.
-   [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), and [`Transform`](../classes/Transform.md) use exact object converters instead of relying on incidental field/property reflection.
+   [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect`](../classes/Rect.md), [`Rect2i`](../classes/Rect2i.md), and [`Transform`](../classes/Transform.md) use exact object converters instead of relying on incidental field/property reflection.
 4. `Parse` and all load variants fully validate a temporary operation list before one locked merge.
 5. Save variants snapshot the encoded document, then write, flush, and move a same-directory temporary file over the destination.
 6. Encrypted loads authenticate/decrypt before UTF-8 decoding and parsing, so failed authentication cannot alter state.

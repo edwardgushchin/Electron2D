@@ -24,7 +24,7 @@ internal static partial class RenderingRuntimeTests
         using var unrelated = new Shader();
         Reject<ArgumentException>(() => display.CursorSetCustomImage(unrelated));
         Image? temporary = null;
-        using var custom = new CursorTexture(() => temporary = source.GetRegion(new RectI(0, 0, 2, 2)));
+        using var custom = new CursorTexture(() => temporary = source.GetRegion(new Rect2i(0, 0, 2, 2)));
         Reject<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(custom, hotspot: new Vector2(2, 0)));
         Check(temporary is { IsDisposed: true }, "A failed cursor conversion releases the custom texture's temporary image.");
         using var oversized = new CursorTexture(() => temporary = Image.CreateEmpty(257, 1, false, Image.Format.Rgba8));

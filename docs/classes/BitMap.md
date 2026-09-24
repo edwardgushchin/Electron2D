@@ -17,8 +17,8 @@ Last updated: 2026-09-23
 ```csharp
 using var mask = new BitMap();
 mask.Create(new Vector2i(8, 8));
-mask.SetBitRect(new RectI(2, 2, 4, 4), true);
-Vector2[][] outlines = mask.OpaqueToPolygons(new RectI(0, 0, 8, 8));
+mask.SetBitRect(new Rect2i(2, 2, 4, 4), true);
+Vector2[][] outlines = mask.OpaqueToPolygons(new Rect2i(0, 0, 8, 8));
 using Image preview = mask.ConvertToImage();
 ```
 
@@ -39,12 +39,12 @@ using Image preview = mask.ConvertToImage();
 | `public bool GetBitv(Vector2i position)` | Reads one bit by point. |
 | `public void SetBit(int x, int y, bool bit)` | Writes one bit. |
 | `public void SetBitv(Vector2i position, bool bit)` | Writes one bit by point. |
-| `public void SetBitRect(RectI rect, bool bit)` | Writes a clipped rectangle. |
+| `public void SetBitRect(Rect2i rect, bool bit)` | Writes a clipped rectangle. |
 | `public int GetTrueBitCount()` | Counts set bits. |
 | `public void Resize(Vector2i newSize)` | Nearest-neighbor resize. |
 | `public Image ConvertToImage()` | Creates independent L8 black/white pixels. |
-| `public void GrowMask(int pixels, RectI rect)` | Circular dilation or erosion within a rectangle. |
-| `public Vector2[][] OpaqueToPolygons(RectI rect, float epsilon = 2f)` | Extracts and reduces mask contours. |
+| `public void GrowMask(int pixels, Rect2i rect)` | Circular dilation or erosion within a rectangle. |
+| `public Vector2[][] OpaqueToPolygons(Rect2i rect, float epsilon = 2f)` | Extracts and reduces mask contours. |
 
 ## Protected extension points
 
