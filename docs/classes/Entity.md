@@ -14,9 +14,11 @@ Last updated: 2026-09-24
 
 A concrete spatial canvas item with engine-owned Vector2 and Transform values. Provides local/global position, rotation, scale and skew, spatial helpers and an identity default transform. It can be an empty spatial parent. Hierarchy, lifecycle and processing are inherited from Node; drawing, visibility, Z and materials come from CanvasItem. A neutral parent resets the canvas transform chain. [Control](Control.md) is a sibling under CanvasItem with its own rectangular placement model.
 
-The pinned `Node2D` scale and local-axis slice has managed Linux/.NET 8 behavioral coverage for five members. Setting local or global scale replaces components with magnitude below `1e-5` by positive `1e-5`; global scale preserves the directions of reflected basis axes before converting through the parent. Assigning a raw `Transform` can still store a singular basis. `MoveLocalX` and `MoveLocalY` normalize nonzero basis axes with representable squared length unless `scaled` is true; a zero axis still assigns the unchanged position and emits enabled local notification. The remaining `Node2D` rows retain their separate semantic audits.
+The pinned `Node2D` scale and local-axis slice has managed Linux/.NET 8 behavioral coverage for five members. Setting local or global scale replaces components with magnitude below `1e-5` by positive `1e-5`; global scale preserves the directions of reflected basis axes before converting through the parent. Assigning a raw `Transform` can still store a singular basis. `MoveLocalX` and `MoveLocalY` normalize nonzero basis axes with representable squared length unless `scaled` is true; a zero axis still assigns the unchanged position and emits enabled local notification. The coordinate and angle slices complete the declared spatial member audit.
 
-The coordinate slice audits nine more mapped members. `GlobalPosition` converts only the point through the direct canvas parent's inverse, preserving the local basis exactly; `GlobalTranslate` uses the same setter. Local `Translate` adds in parent coordinates. `Transform` and `GlobalTransform` retain raw finite matrices, including a singular local basis; `ToLocal` requires an invertible global basis. `GetRelativeTransformToParent` multiplies the uninterrupted spatial chain across `TopLevel`, with the typed invalid-ancestor boundary in ADR 0008. Attached reads enforce the scene owner thread. Nine member rows and the class row remain Partial.
+The coordinate slice audits nine more mapped members. `GlobalPosition` converts only the point through the direct canvas parent's inverse, preserving the local basis exactly; `GlobalTranslate` uses the same setter. Local `Translate` adds in parent coordinates. `Transform` and `GlobalTransform` retain raw finite matrices, including a singular local basis; `ToLocal` requires an invertible global basis. `GetRelativeTransformToParent` multiplies the uninterrupted spatial chain across `TopLevel`, with the typed invalid-ancestor boundary in ADR 0008. Attached reads enforce the scene owner thread. The angle slice closes the remaining members and the type row.
+
+The final angle slice preserves local scale, skew and position when setting global rotation, and preserves local rotation, scale and position when setting global skew under nonuniform or reflected parents. `GetAngleTo` inverse-transforms and scale-compensates a global target; `LookAt` adds that angle to local rotation, including a zero angle at the current origin. Signed degrees, singular and non-finite failures, owner-thread precedence, stored spatial state and zero warmed managed allocations are checked on Linux/.NET 8. Native ABI, other platforms and visual owner acceptance remain unverified.
 
 ## Examples
 
@@ -92,7 +94,7 @@ Gets or sets translation in hierarchy-global coordinates.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -105,9 +107,11 @@ Gets or sets hierarchy-global rotation in radians.
 
 **Value:** The canonical rotation decomposed from `Entity.GlobalTransform`.
 
+**Remarks:** With a canvas parent, setting this changes only local rotation after converting the rotated global basis through the parent; local scale, skew, and position stay unchanged.
+
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -122,7 +126,7 @@ Gets or sets hierarchy-global rotation in degrees.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -139,7 +143,7 @@ Gets or sets hierarchy-global scale.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -152,9 +156,11 @@ Gets or sets the hierarchy-global skew angle in radians.
 
 **Value:** The canonical skew decomposed from `Entity.GlobalTransform`.
 
+**Remarks:** With a canvas parent, setting this changes only local skew after converting the globally skewed basis through the parent; local rotation, scale, and position stay unchanged.
+
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -169,7 +175,7 @@ Gets or sets the affine transform in hierarchy-global coordinates.
 
 **System.ArgumentOutOfRangeException:** An assigned transform component is NaN or infinite.
 
-**System.InvalidOperationException:** The parent transform is singular, or an attached node is mutated off the owner thread.
+**System.InvalidOperationException:** The parent transform is singular, or an attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -199,7 +205,7 @@ Gets or sets local rotation in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -214,7 +220,7 @@ Gets or sets local rotation in degrees.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -231,7 +237,7 @@ Gets or sets local scale.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -246,7 +252,7 @@ Gets or sets the local skew angle in radians.
 
 **System.ArgumentOutOfRangeException:** The assigned angle is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -298,7 +304,7 @@ Computes the signed local angle toward a global point, compensating for local sc
 
 **Returns:** The angle of the inverse-transformed point multiplied by local scale, in radians.
 
-**System.InvalidOperationException:** The global transform is singular.
+**System.InvalidOperationException:** The global transform is singular, or an attached node is queried off the owner thread.
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
@@ -355,7 +361,7 @@ Rotates this node so its positive local X direction points at a global point.
 
 **Parameter `globalPoint`:** The finite target point in hierarchy-global coordinates.
 
-**Remarks:** A target equal to `Entity.GlobalPosition` leaves rotation unchanged.
+**Remarks:** A target equal to `Entity.GlobalPosition` adds a zero angle and leaves rotation unchanged, but still commits the transform and delivers enabled local notifications.
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
@@ -434,6 +440,8 @@ Transforms a point from this node's local coordinates to hierarchy-global coordi
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
+**System.InvalidOperationException:** An attached node is queried off the owner thread.
+
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
 <a id="m-electron2d-entity-tolocal-electron2d-vector2"></a>
@@ -447,7 +455,7 @@ Transforms a point from hierarchy-global coordinates to this node's local coordi
 
 **System.ArgumentOutOfRangeException:** A point component is NaN or infinite.
 
-**System.InvalidOperationException:** The global transform is singular.
+**System.InvalidOperationException:** The global transform is singular, or an attached node is queried off the owner thread.
 
 **System.ObjectDisposedException:** This node or an ancestor is disposing on another thread, or has finished disposing.
 
@@ -476,9 +484,9 @@ Spatial inputs must be finite. Operations that invert a singular transform fail 
 
 ## Verification and limits
 
-[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
+[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) passed focused mixed-tree pixel checks through GPU and compatibility backends on Linux/Wayland during the final angle audit. These pixels do not verify angular setter output, native ABI, other platforms or visual owner acceptance.
 
-The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
+All own `Node2D` mapped members and its type row are Implemented after managed behavioral audit. Inherited Node/CanvasItem gaps, native ABI, other platforms, missing GUI/rendering/editor systems and visual owner acceptance remain classified separately in [coverage](../coverage/index.md). No inert compatibility members are added.
 
 ## Relevant decisions
 

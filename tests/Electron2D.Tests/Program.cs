@@ -7967,6 +7967,13 @@ static void VerifyTranslations()
 
 static void VerifyNodeHierarchyAndTransforms()
 {
+    using var spatialDefault = new Entity();
+    Require(spatialDefault.Transform == Transform.Identity &&
+            spatialDefault.Position == Vector2.Zero && spatialDefault.Scale == Vector2.One &&
+            NearlyEqual(spatialDefault.Rotation, 0f) && NearlyEqual(spatialDefault.RotationDegrees, 0f) &&
+            NearlyEqual(spatialDefault.Skew, 0f) && NearlyEqual(spatialDefault.GlobalRotation, 0f) &&
+            NearlyEqual(spatialDefault.GlobalRotationDegrees, 0f) && NearlyEqual(spatialDefault.GlobalSkew, 0f),
+        "Entity starts with identity local/global rotation, scale, skew and position.");
     var root = new TransformNode
     {
         Name = "root",
@@ -8247,6 +8254,169 @@ static void VerifyNodeHierarchyAndTransforms()
         "A singular parent must reject global position assignment.");
     Require(singularChild.Transform == originalLocalTransform,
         "A failed global position assignment must preserve local state.");
+    Expect<InvalidOperationException>(() => singularChild.GlobalRotation = 0.4f,
+        "A singular parent rejects global rotation before local mutation.");
+    Expect<InvalidOperationException>(() => singularChild.GlobalSkew = 0.2f,
+        "A singular parent rejects global skew before local mutation.");
+    Require(singularChild.Transform == originalLocalTransform,
+        "Rejected global angle assignments preserve the local transform.");
+
+    using var angularParent = new Entity
+    {
+        Position = new Vector2(3f, -4f),
+        Rotation = 0.3f,
+        Scale = new Vector2(2f, 3f),
+        Skew = 0.2f,
+    };
+    var angularChild = new Entity
+    {
+        Position = new Vector2(5f, 7f),
+        Rotation = 0.4f,
+        Scale = new Vector2(1.5f, 0.8f),
+        Skew = -0.1f,
+    };
+    angularParent.AddChild(angularChild);
+    var preservedScale = angularChild.Scale;
+    var preservedSkew = angularChild.Skew;
+    var preservedPosition = angularChild.Position;
+    angularChild.GlobalRotation = 0.75f;
+    Require(VectorNearlyEqual(angularChild.Scale, preservedScale) &&
+            NearlyEqual(angularChild.Skew, preservedSkew) &&
+            angularChild.Position == preservedPosition,
+        "GlobalRotation modifies only the child's local rotation after parent conversion.");
+    var preservedRotation = angularChild.Rotation;
+    preservedScale = angularChild.Scale;
+    angularChild.GlobalSkew = -0.25f;
+    Require(NearlyEqual(angularChild.Rotation, preservedRotation) &&
+            VectorNearlyEqual(angularChild.Scale, preservedScale) &&
+            angularChild.Position == preservedPosition,
+        "GlobalSkew modifies only the child's local skew after parent conversion.");
+    var rotationBeforeRotate = angularChild.Rotation;
+    preservedScale = angularChild.Scale;
+    preservedSkew = angularChild.Skew;
+    angularChild.Rotate(0.2f);
+    Require(NearlyEqual(angularChild.Rotation, rotationBeforeRotate + 0.2f) &&
+            VectorNearlyEqual(angularChild.Scale, preservedScale) &&
+            NearlyEqual(angularChild.Skew, preservedSkew),
+        "Rotate adds radians while preserving local scale and skew.");
+    angularChild.RotationDegrees = -90f;
+    Require(NearlyEqual(angularChild.Rotation, -Mathf.Pi * 0.5f) &&
+            NearlyEqual(angularChild.RotationDegrees, -90f) &&
+            VectorNearlyEqual(angularChild.Scale, preservedScale) &&
+            NearlyEqual(angularChild.Skew, preservedSkew),
+        "RotationDegrees converts signed degrees while preserving local scale and skew.");
+    preservedRotation = angularChild.Rotation;
+    angularChild.Skew = 0.15f;
+    Require(NearlyEqual(angularChild.Rotation, preservedRotation) &&
+            NearlyEqual(angularChild.Skew, 0.15f) &&
+            VectorNearlyEqual(angularChild.Scale, preservedScale),
+        "Local Skew changes only the basis skew, preserving rotation and scale.");
+    var localYTarget = angularChild.ToGlobal(Vector2.Down);
+    Require(NearlyEqual(angularChild.GetAngleTo(localYTarget), Mathf.Pi * 0.5f),
+        "GetAngleTo compensates local scale through a transformed point under a skewed parent.");
+    preservedRotation = angularChild.Rotation;
+    angularChild.LookAt(localYTarget);
+    Require(NearlyEqual(angularChild.Rotation, preservedRotation + Mathf.Pi * 0.5f) &&
+            NearlyEqual(angularChild.Skew, 0.15f) &&
+            VectorNearlyEqual(angularChild.Scale, preservedScale),
+        "LookAt rotates by the compensated angle without changing local scale or skew.");
+    preservedRotation = angularChild.Rotation;
+    angularChild.LookAt(angularChild.GlobalPosition);
+    Require(NearlyEqual(angularChild.Rotation, preservedRotation),
+        "Looking at the current global origin adds a zero angle.");
+    preservedScale = angularChild.Scale;
+    preservedSkew = angularChild.Skew;
+    angularChild.GlobalRotationDegrees = 30f;
+    Require(VectorNearlyEqual(angularChild.Scale, preservedScale) &&
+            NearlyEqual(angularChild.Skew, preservedSkew) &&
+            NearlyEqual(angularChild.GlobalRotationDegrees, Mathf.RadToDeg(angularChild.GlobalRotation)),
+        "GlobalRotationDegrees delegates through global radians without altering local scale or skew.");
+    var beforeInvalidAngles = angularChild.Transform;
+    Expect<ArgumentOutOfRangeException>(() => angularChild.Rotation = float.NaN,
+        "Rotation rejects non-finite values.");
+    Expect<ArgumentOutOfRangeException>(() => angularChild.GlobalSkew = float.PositiveInfinity,
+        "GlobalSkew rejects non-finite values.");
+    Expect<ArgumentOutOfRangeException>(() => angularChild.GetAngleTo(new Vector2(float.NaN, 0f)),
+        "GetAngleTo rejects non-finite targets.");
+    Expect<ArgumentOutOfRangeException>(() => angularChild.LookAt(new Vector2(0f, float.NaN)),
+        "LookAt rejects non-finite targets before rotation.");
+    Require(angularChild.Transform == beforeInvalidAngles,
+        "Rejected angle operations preserve the local transform.");
+    using (var angularTree = new SceneTree(angularParent))
+    {
+        Expect<InvalidOperationException>(() => Task.Run(() => angularChild.Rotate(float.NaN)).GetAwaiter().GetResult(),
+            "An attached rotation checks the scene owner before invalid numeric input.");
+        Expect<InvalidOperationException>(() => Task.Run(() =>
+            angularChild.GetAngleTo(new Vector2(float.NaN, 0f))).GetAwaiter().GetResult(),
+            "An attached angle query checks the scene owner before invalid numeric input.");
+    }
+
+    using var reflectedAngleParent = new Entity { Scale = new Vector2(2f, -3f), Skew = 0.1f };
+    var reflectedAngleChild = new Entity { Rotation = 0.2f, Scale = new Vector2(1.5f, 0.75f) };
+    reflectedAngleParent.AddChild(reflectedAngleChild);
+    var reflectedLocalRotation = reflectedAngleChild.Rotation;
+    var reflectedLocalScale = reflectedAngleChild.Scale;
+    reflectedAngleChild.GlobalSkew = 0.4f;
+    Require(NearlyEqual(reflectedAngleChild.Rotation, reflectedLocalRotation) &&
+            VectorNearlyEqual(reflectedAngleChild.Scale, reflectedLocalScale),
+        "GlobalSkew preserves local rotation and scale under a reflected parent.");
+    using var reflectedDirection = new Entity { Transform = Transform.FlipY };
+    Require(NearlyEqual(reflectedDirection.GetAngleTo(reflectedDirection.ToGlobal(Vector2.Down)),
+            -Mathf.Pi * 0.5f),
+        "GetAngleTo retains the negative local scale sign after reflection.");
+    using var singularAngle = new Entity
+    {
+        Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero),
+    };
+    Expect<InvalidOperationException>(() => singularAngle.GetAngleTo(Vector2.Right),
+        "GetAngleTo rejects a singular global basis.");
+    Expect<InvalidOperationException>(() => singularAngle.LookAt(Vector2.Right),
+        "LookAt fails before rotation when the global basis is singular.");
+    Require(singularAngle.Transform.X == Vector2.Zero,
+        "Failed angular queries leave a singular raw matrix unchanged.");
+    using var coincidentNode = new Entity { NotifyLocalTransformChanges = true };
+    using (var coincidentTree = new SceneTree(coincidentNode))
+    {
+        var localNotifications = 0;
+        coincidentNode.LocalTransformChanged += _ => localNotifications++;
+        coincidentNode.LookAt(coincidentNode.GlobalPosition);
+        Require(NearlyEqual(coincidentNode.Rotation, 0f) && localNotifications == 1,
+            "Coincident LookAt commits a zero rotation and delivers enabled local notification.");
+    }
+
+    using var storedEntity = new Entity
+    {
+        Name = "Spatial",
+        Position = new Vector2(3f, 4f),
+        RotationDegrees = 30f,
+        Scale = new Vector2(2f, 3f),
+        Skew = 0.2f,
+    };
+    using var packedEntity = new PackedScene();
+    packedEntity.Pack(storedEntity);
+    using var copiedEntity = (Entity)packedEntity.Instantiate();
+    Require(TransformNearlyEqual(copiedEntity.Transform, storedEntity.Transform) &&
+            copiedEntity.Position == storedEntity.Position &&
+            NearlyEqual(copiedEntity.RotationDegrees, storedEntity.RotationDegrees) &&
+            VectorNearlyEqual(copiedEntity.Scale, storedEntity.Scale) &&
+            NearlyEqual(copiedEntity.Skew, storedEntity.Skew),
+        "PackedScene restores the stored spatial position, degree rotation, scale and skew.");
+    using var hotAngles = new Entity();
+    for (var index = 0; index < 32; index++)
+    {
+        hotAngles.Rotation = 0.2f;
+        hotAngles.Skew = 0.1f;
+        _ = hotAngles.GetAngleTo(new Vector2(3f, 4f));
+    }
+    var beforeAngleAllocations = GC.GetAllocatedBytesForCurrentThread();
+    for (var index = 0; index < 10_000; index++)
+    {
+        hotAngles.Rotation = 0.2f;
+        hotAngles.Skew = 0.1f;
+        _ = hotAngles.GetAngleTo(new Vector2(3f, 4f));
+    }
+    Require(GC.GetAllocatedBytesForCurrentThread() == beforeAngleAllocations,
+        "Warmed detached spatial angle setters and queries allocate no managed memory.");
 }
 
 static void VerifyProcessing()
