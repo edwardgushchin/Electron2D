@@ -22,7 +22,9 @@ Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the
 
 [`LayoutDirection`](LayoutDirection.md) adds explicit LTR/RTL mirroring after horizontal minimum/maximum resolution. Inherited controls follow the nearest Control in the same translation domain; `ApplicationLocale` and `SystemLocale` use the corresponding managed culture only when a matching catalog or configured fallback permits RTL. Direction changes notify the subtree before callers observe the resolved rectangles. `Position` and `Size` writes remain physical in RTL. Root and forced project direction settings, Window inheritance, exact locale aliases and automatic scene refresh after a process-wide culture change remain Partial.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+`SetPosition`, `SetSize` and `SetGlobalPosition` share the property setters' geometry path. By default they update stored offsets. With `keepOffsets: true`, they calculate anchors from the requested physical rectangle and existing offsets; both parent-area axes must be nonzero or the call fails before mutation. `SetSize` clamps finite requests through the effective minimum and then maximum, including negative requests; `ResetSize` requests zero through that same path. `GetBegin`/`SetBegin` and `GetEnd`/`SetEnd` read or update the corresponding offset pairs with one reflow per write. A global position edit first inverse-transforms through the direct canvas parent and retains the control's pivot/rotation/scale origin.
+
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -46,7 +48,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | Member | Contract |
 | --- | --- |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
-| `public Vector2 Size { get; set; }` | Local nonnegative layout size. |
+| `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
 | `public Vector2 CustomMinimumSize { get; set; }` | Finite caller-supplied minimum; combines with intrinsic size and zero. |
 | `public Vector2 CustomMaximumSize { get; set; }` | Finite caller-supplied maximum; negative components normalize to unbounded `-1`. |
 | `public bool PropagateMaximumSize { get; set; }` | Passes enabled maximum bounds to direct child controls unless they are top-level. |
@@ -82,6 +84,11 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public void SetOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = MinSize, int margin = 0)` | Places all edges without changing anchors; wide presets span the parent axis. |
 | `public void SetAnchorsAndOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = MinSize, int margin = 0)` | Applies anchors, then matching offsets. |
 | `public void SetAnchorAndOffset(Side side, float anchor, float offset, bool pushOppositeAnchor = false)` | Sets one anchor and explicit offset in sequence. |
+| `public void SetPosition(Vector2 position, bool keepOffsets = false)` / `SetSize(Vector2 size, bool keepOffsets = false)` | Writes offsets by default, or recalculates anchors under a nonzero parent area. |
+| `public void SetGlobalPosition(Vector2 position, bool keepOffsets = false)` | Converts through the direct canvas parent before local placement. |
+| `public void ResetSize()` | Resolves the effective minimum after all current bounds. |
+| `public Vector2 GetBegin()` / `GetEnd()` | Reads the leading or trailing stored offset pair. |
+| `public void SetBegin(Vector2 position)` / `SetEnd(Vector2 position)` | Writes one offset pair and reflows once. |
 | `public bool IsLayoutRTL()` | Reports the currently resolved horizontal layout direction. |
 | `public Vector2 GetMinimumSize()` / `GetCombinedMinimumSize()` | Returns intrinsic and effective componentwise minima. |
 | `public void UpdateMinimumSize()` | Coalesces a changed intrinsic minimum for deferred attached-tree reflow. |
@@ -233,6 +240,8 @@ When reflow changes position or size, the control commits both values, invalidat
 ## Verification and limits
 
 [ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus notification and event order, explicit viewport release, failure continuation, pointer release capture and temporary event ownership. [ControlFocusNavigationTests](../../tests/Electron2D.Tests/ControlFocusNavigationTests.cs) checks managed Tab/arrow/D-pad/left-stick routing, paths, wrapping, hidden targets and packed state. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
+
+The geometry-edit checks additionally cover offset-pair commits, anchor-preserving defaults, keep-offset anchor recomputation, later parent resize, transformed global placement, minimum/maximum clamping, negative finite size, RTL viewport origins, zero-area and nonfinite rollback.
 
 ### GUI input behavior
 
