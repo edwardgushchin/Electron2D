@@ -22,7 +22,7 @@ The domain currently contains fifteen active components:
 | [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | Applicable own API Implemented and verified under ADR 0018 |
 | [JSON documents](../components/json.md) | Document-scoped JSON parsing, diagnostics, formatting, and typed native conversion | Applicable own API Implemented and verified under ADR 0048 |
 | [File and directory access](../components/file-access.md) | Blocking file/directory I/O, scoped navigation, virtual paths, metadata, links, hashes, temporary ownership, compression, and encryption | Implemented and verified; documented codec/platform gaps |
-| [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Executable managed path; exact malformed-input parity partial |
+| [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Token identities and getters audited; Open/Read/Seek/SkipSection Partial |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
 | [Main loop](../components/main-loop.md) | Owner-thread application lifecycle, frame hooks, stop requests, and platform-notification endpoints | Implemented and verified |
 | [Engine runtime](../components/engine-runtime.md) | Process-wide loop coordination, fixed-step scheduling, time scaling, metrics, build information, and named singletons | Implemented and verified |

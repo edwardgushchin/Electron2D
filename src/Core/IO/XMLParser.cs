@@ -87,7 +87,6 @@ public sealed class XMLParser : ElectronObject
             _nodeType = NodeType.None;
             _nodeText = string.Empty;
             _empty = false;
-            _attributes.Clear();
 
             var textStart = _position;
             while (!AtEnd(data) && data[_position] != (byte)'<') Next(data);
@@ -158,13 +157,31 @@ public sealed class XMLParser : ElectronObject
     /// <returns>The current token identity, or None before reading.</returns>
     public NodeType GetNodeType() { lock (_gate) { ThrowIfDisposed(); return _nodeType; } }
 
-    /// <summary>Gets the current name or markup content; returns empty for text tokens.</summary>
-    /// <returns>The node name or content.</returns>
-    public string GetNodeName() { lock (_gate) { ThrowIfDisposed(); return _nodeType == NodeType.Text ? string.Empty : _nodeText; } }
+    /// <summary>Gets the current name or markup content; reports an error and returns empty for text tokens.</summary>
+    /// <returns>The node name or content, or empty text for a text token.</returns>
+    public string GetNodeName()
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            if (_nodeType != NodeType.Text) return _nodeText;
+        }
+        System.Diagnostics.Trace.TraceError("A text XML node has no node name.");
+        return string.Empty;
+    }
 
-    /// <summary>Gets the current text content; returns empty for other token types.</summary>
-    /// <returns>Decoded text, or an empty string.</returns>
-    public string GetNodeData() { lock (_gate) { ThrowIfDisposed(); return _nodeType == NodeType.Text ? _nodeText : string.Empty; } }
+    /// <summary>Gets the current text content; reports an error and returns empty for other token types.</summary>
+    /// <returns>Decoded text, or an empty string for another token type.</returns>
+    public string GetNodeData()
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            if (_nodeType == NodeType.Text) return _nodeText;
+        }
+        System.Diagnostics.Trace.TraceError("The current XML node is not text.");
+        return string.Empty;
+    }
 
     /// <summary>Gets the byte offset at which the current read started.</summary>
     /// <returns>A zero-based byte offset.</returns>
@@ -178,21 +195,38 @@ public sealed class XMLParser : ElectronObject
     /// <returns>True for a self-closing opening element.</returns>
     public bool IsEmpty() { lock (_gate) { ThrowIfDisposed(); return _empty; } }
 
-    /// <summary>Gets the number of attributes of the current opening element.</summary>
+    /// <summary>Gets the number of attributes of the current or last element.</summary>
     /// <returns>The attribute count.</returns>
+    /// <remarks>Text, comment, CDATA and unknown tokens retain the last element's attribute list until another element is read.</remarks>
     public int GetAttributeCount() { lock (_gate) { ThrowIfDisposed(); return _attributes.Count; } }
 
     /// <summary>Gets an attribute name by its order in the opening element.</summary>
     /// <param name="index">Zero-based attribute index.</param>
-    /// <returns>The attribute name.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The index is invalid.</exception>
-    public string GetAttributeName(int index) { lock (_gate) { ThrowIfDisposed(); return _attributes[index].Name; } }
+    /// <returns>The attribute name, or empty text with a trace diagnostic for an invalid index.</returns>
+    public string GetAttributeName(int index)
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            if ((uint)index < (uint)_attributes.Count) return _attributes[index].Name;
+        }
+        System.Diagnostics.Trace.TraceError("XML attribute index is out of range.");
+        return string.Empty;
+    }
 
     /// <summary>Gets an attribute value by its order in the opening element.</summary>
     /// <param name="index">Zero-based attribute index.</param>
-    /// <returns>The decoded attribute value.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The index is invalid.</exception>
-    public string GetAttributeValue(int index) { lock (_gate) { ThrowIfDisposed(); return _attributes[index].Value; } }
+    /// <returns>The decoded attribute value, or empty text with a trace diagnostic for an invalid index.</returns>
+    public string GetAttributeValue(int index)
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed();
+            if ((uint)index < (uint)_attributes.Count) return _attributes[index].Value;
+        }
+        System.Diagnostics.Trace.TraceError("XML attribute index is out of range.");
+        return string.Empty;
+    }
 
     /// <summary>Reports whether the current opening element contains an exact attribute name.</summary>
     /// <param name="name">Case-sensitive attribute name.</param>
@@ -203,10 +237,9 @@ public sealed class XMLParser : ElectronObject
         lock (_gate) { ThrowIfDisposed(); return _attributes.Any(attribute => attribute.Name == name); }
     }
 
-    /// <summary>Gets a named attribute, throwing when it is absent.</summary>
+    /// <summary>Gets a named attribute, reporting an error and returning empty when it is absent.</summary>
     /// <param name="name">Case-sensitive attribute name.</param>
-    /// <returns>The first value with the supplied name.</returns>
-    /// <exception cref="KeyNotFoundException">No such attribute exists.</exception>
+    /// <returns>The first value with the supplied name, or empty text with a trace diagnostic when absent.</returns>
     public string GetNamedAttributeValue(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -215,8 +248,9 @@ public sealed class XMLParser : ElectronObject
             ThrowIfDisposed();
             foreach (var attribute in _attributes)
                 if (attribute.Name == name) return attribute.Value;
-            throw new KeyNotFoundException($"XML attribute '{name}' was not found.");
         }
+        System.Diagnostics.Trace.TraceError($"XML attribute '{name}' was not found.");
+        return string.Empty;
     }
 
     /// <summary>Gets a named attribute, or empty text when it is absent.</summary>
@@ -271,6 +305,7 @@ public sealed class XMLParser : ElectronObject
     private void ReadEnd(byte[] data)
     {
         _nodeType = NodeType.ElementEnd;
+        _attributes.Clear();
         Next(data);
         var start = _position;
         while (!AtEnd(data) && data[_position] != (byte)'>') Next(data);
@@ -327,6 +362,7 @@ public sealed class XMLParser : ElectronObject
     private void ReadElement(byte[] data)
     {
         _nodeType = NodeType.Element;
+        _attributes.Clear();
         var nameStart = _position;
         while (!AtEnd(data) && data[_position] != (byte)'>' && !IsWhitespace(data[_position])) Next(data);
         var nameEnd = _position;

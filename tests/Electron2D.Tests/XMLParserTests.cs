@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Electron2D;
 
@@ -8,6 +9,13 @@ internal static class XMLParserTests
         const string source = "<?xml version='1.0'?><root a='one &amp; two' b=\"&#x1F600;\">\n<c/>é&amp;<![CDATA[x<y]]><!--note--><item k='v'>body</item></root>";
         var bytes = Encoding.UTF8.GetBytes(source);
         using var parser = new XMLParser();
+        Check(parser.GetNodeType() == XMLParser.NodeType.None && parser.GetNodeOffset() == 0 &&
+              parser.GetCurrentLine() == 0 && parser.GetAttributeCount() == 0 &&
+              (int)XMLParser.NodeType.None == 0 && (int)XMLParser.NodeType.Element == 1 &&
+              (int)XMLParser.NodeType.ElementEnd == 2 && (int)XMLParser.NodeType.Text == 3 &&
+              (int)XMLParser.NodeType.Comment == 4 && (int)XMLParser.NodeType.CDATA == 5 &&
+              (int)XMLParser.NodeType.Unknown == 6,
+            "Unopened state and all token identities must match the pinned type contract.");
         Reject<InvalidOperationException>(() => parser.Read());
         Reject<ArgumentException>(() => parser.OpenBuffer([]));
         parser.OpenBuffer(bytes);
@@ -18,10 +26,26 @@ internal static class XMLParserTests
         Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Element && parser.GetNodeName() == "root" &&
               parser.GetAttributeCount() == 2 && parser.GetAttributeName(0) == "a" && parser.GetAttributeValue(0) == "one & two" &&
               parser.GetNamedAttributeValue("b") == "😀" && parser.HasAttribute("a") && !parser.HasAttribute("A") &&
-              parser.GetNamedAttributeValueSafe("missing") == "" && parser.GetNodeOffset() == source.IndexOf("<root", StringComparison.Ordinal),
+              parser.GetNamedAttributeValueSafe("missing") == "" && !parser.IsEmpty() &&
+              parser.GetNodeOffset() == source.IndexOf("<root", StringComparison.Ordinal),
             "Opening tokens must preserve attribute order, unescape entities and report byte offsets.");
-        Reject<KeyNotFoundException>(() => parser.GetNamedAttributeValue("missing"));
-        Reject<ArgumentOutOfRangeException>(() => parser.GetAttributeName(2));
+        using (var diagnostics = new StringWriter())
+        using (var listener = new TextWriterTraceListener(diagnostics))
+        {
+            Trace.Listeners.Add(listener);
+            try
+            {
+                Check(parser.GetNamedAttributeValue("missing") == string.Empty &&
+                      parser.GetAttributeName(2) == string.Empty && parser.GetAttributeValue(-1) == string.Empty &&
+                      parser.GetNodeData() == string.Empty,
+                    "Missing or invalid attribute and token reads must return empty text.");
+                Trace.Flush();
+                Check(diagnostics.ToString().Contains("XML attribute", StringComparison.Ordinal) &&
+                      diagnostics.ToString().Contains("not text", StringComparison.Ordinal),
+                    "Invalid getter calls must emit managed diagnostics.");
+            }
+            finally { Trace.Listeners.Remove(listener); }
+        }
 
         Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Element && parser.GetNodeName() == "c" && parser.IsEmpty() && parser.GetCurrentLine() == 1,
             "A short whitespace run must be skipped and a self-closing element recognized.");
@@ -37,6 +61,8 @@ internal static class XMLParserTests
         Check(parser.GetNodeType() == XMLParser.NodeType.ElementEnd && parser.GetNodeName() == "item", "SkipSection must land on the matching closing element.");
         Check(parser.Read() && parser.GetNodeName() == "root" && parser.GetNodeType() == XMLParser.NodeType.ElementEnd && !parser.Read(),
             "Closing element and EOF must be distinct.");
+        Check(parser.GetNodeType() == XMLParser.NodeType.ElementEnd && parser.GetAttributeCount() == 0,
+            "EOF must retain the final closing token and its cleared attribute state.");
 
         var offset = Encoding.UTF8.GetByteCount(source[..source.IndexOf("<item", StringComparison.Ordinal)]);
         Check(parser.Seek(offset) && parser.GetNodeName() == "item" && parser.GetNodeOffset() == offset, "Seek must parse from a byte offset.");
@@ -54,6 +80,22 @@ internal static class XMLParserTests
             "SkipSection must account for nested and self-closing elements.");
         parser.OpenBuffer("<x>   </x>"u8.ToArray());
         Check(parser.Read() && parser.Read() && parser.GetNodeData() == "   ", "Long whitespace must be preserved as text.");
+
+        parser.OpenBuffer("<node x='1' x='2'>text<!--comment--><![CDATA[raw]]><?pi?></node>"u8.ToArray());
+        Check(parser.Read() && parser.GetAttributeCount() == 2 &&
+              parser.GetAttributeName(0) == "x" && parser.GetAttributeValue(1) == "2" &&
+              parser.GetNamedAttributeValue("x") == "1",
+            "Attributes retain source order and named lookup selects the first duplicate.");
+        foreach (var kind in new[] { XMLParser.NodeType.Text, XMLParser.NodeType.Comment,
+                     XMLParser.NodeType.CDATA, XMLParser.NodeType.Unknown })
+        {
+            Check(parser.Read() && parser.GetNodeType() == kind && parser.GetAttributeCount() == 2 &&
+                  parser.HasAttribute("x") && parser.GetNamedAttributeValueSafe("x") == "1",
+                "Non-element tokens must retain the last element's attribute list.");
+        }
+        Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.ElementEnd &&
+              parser.GetAttributeCount() == 0 && !parser.HasAttribute("x"),
+            "A closing element must clear the retained attribute list.");
 
         var path = System.IO.Path.GetTempFileName();
         try

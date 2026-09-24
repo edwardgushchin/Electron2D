@@ -1,6 +1,6 @@
 # XMLParser
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -46,16 +46,16 @@ while (parser.Read())
 | [`public bool Seek(long position)`](#seek) | Reads from a byte offset. |
 | [`public void SkipSection()`](#skipsection) | Reads to the matching closing token. |
 | [`public NodeType GetNodeType()`](#getnodetype) | Current token kind. |
-| [`public string GetNodeName()`](#getnodename) | Element name or markup content. |
-| [`public string GetNodeData()`](#getnodedata) | Current text content. |
+| [`public string GetNodeName()`](#getnodename) | Element name or markup content; text tokens return empty with a trace diagnostic. |
+| [`public string GetNodeData()`](#getnodedata) | Current text content; other token types return empty with a trace diagnostic. |
 | [`public long GetNodeOffset()`](#getnodeoffset) | Start offset of the current read. |
 | [`public int GetCurrentLine()`](#getcurrentline) | Count of consumed newlines. |
 | [`public bool IsEmpty()`](#isempty) | Whether the current element is self-closing. |
-| [`public int GetAttributeCount()`](#getattributecount) | Number of current attributes. |
-| [`public string GetAttributeName(int index)`](#getattributename) | Ordered name. |
-| [`public string GetAttributeValue(int index)`](#getattributevalue) | Ordered value. |
+| [`public int GetAttributeCount()`](#getattributecount) | Current or last element's attribute count. |
+| [`public string GetAttributeName(int index)`](#getattributename) | Ordered name, or empty with a trace diagnostic for an invalid index. |
+| [`public string GetAttributeValue(int index)`](#getattributevalue) | Ordered value, or empty with a trace diagnostic for an invalid index. |
 | [`public bool HasAttribute(string name)`](#hasattribute) | Exact name presence. |
-| [`public string GetNamedAttributeValue(string name)`](#getnamedattributevalue) | Required named value. |
+| [`public string GetNamedAttributeValue(string name)`](#getnamedattributevalue) | First named value, or empty with a trace diagnostic when absent. |
 | [`public string GetNamedAttributeValueSafe(string name)`](#getnamedattributevaluesafe) | Named value or empty text. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Releases the owned input buffer. |
 
@@ -87,11 +87,11 @@ Returns `None` before the first successful read or after reopening, otherwise th
 
 ### GetNodeName
 
-Returns the current element name, closing name, comment content, CDATA content or declaration content. It returns empty for text.
+Returns the current element name, closing name, comment content, CDATA content or declaration content. On text it reports a trace diagnostic and returns empty.
 
 ### GetNodeData
 
-Returns decoded content only for `Text`; other token kinds return empty.
+Returns decoded content only for `Text`; other token kinds report a trace diagnostic and return empty.
 
 ### GetNodeOffset
 
@@ -107,15 +107,15 @@ True only for a self-closing current opening element.
 
 ### GetAttributeCount
 
-Returns the number of attributes in the current opening element. Other tokens have zero attributes.
+Returns the number of attributes in the current or last element. Text, comment, CDATA and unknown tokens retain the previous element's attribute list; the next opening or closing element replaces or clears it.
 
 ### GetAttributeName
 
-Returns an attribute name by source order. Invalid indices throw `ArgumentOutOfRangeException`.
+Returns an attribute name by source order. Invalid indices report a trace diagnostic and return empty.
 
 ### GetAttributeValue
 
-Returns the decoded value at a source-order index. Invalid indices throw `ArgumentOutOfRangeException`.
+Returns the decoded value at a source-order index. Invalid indices report a trace diagnostic and return empty.
 
 ### HasAttribute
 
@@ -123,7 +123,7 @@ Uses exact, case-sensitive comparison. Null names throw `ArgumentNullException`.
 
 ### GetNamedAttributeValue
 
-Returns the first matching value; a missing name throws `KeyNotFoundException`, and null throws `ArgumentNullException`.
+Returns the first matching value; a missing name reports a trace diagnostic and returns empty. Null throws `ArgumentNullException`.
 
 ### GetNamedAttributeValueSafe
 
@@ -135,7 +135,7 @@ Deterministic disposal releases the copied input and rejects later operations th
 
 ## Verification and limitations
 
-[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers tokens, ordered attributes, entities, comments, CDATA, incomplete markup, byte offsets, seeking, section skipping, file reads, input copying, reopening and disposal. The managed implementation has not established exact behavior for every malformed byte sequence, declaration, entity or whitespace edge case of the pinned reference. It does not implement a DTD, an external-entity resolver, an XML document tree or streaming input. The [coverage register](../coverage/classes/XMLParser.md) keeps those semantic gaps Partial.
+[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers all seven token identities, getter values and invalid-call diagnostics, ordered/duplicate attributes, retained attributes across non-element tokens, byte offsets and lines, seeking, section skipping, file reads, input copying, reopening and disposal. Getter and enum rows are Implemented in [coverage](../coverage/classes/XMLParser.md). Open, Read, Seek, SkipSection and the class aggregate remain Partial until malformed byte, declaration, entity and cursor edges are compared. This type does not provide a DTD, external-entity resolver, document tree or streaming input.
 
 ## Decisions
 
