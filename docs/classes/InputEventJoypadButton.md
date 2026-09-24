@@ -20,7 +20,7 @@ Represents a game-controller button press or release.
 - Complete declared API: `ButtonIndex`, `Pressed`, `Pressure`; overrides `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All three values are stored typed descriptors.
 - Invariants/errors: the button index and pressure retain arbitrary caller values, including negative indexes and non-finite pressure; binding identity ignores pressure. `ButtonIndex` emits `Changed`, while `Pressed` and `Pressure` store without emitting it. Disposed access fails.
 - Text: `AsText` reports `Joypad Button n`, adds one of 21 known controller descriptions for indexes 0–20, and adds `Pressure: value` only when pressure is nonzero. All other signed IDs use a safe numeric fallback. The source template, known descriptions and pressure label use this event's translation domain; malformed translated templates fall back to source wording.
-- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, signed index extremes, non-finite pressure, copy/revert, all 21 defined text labels and change delivery are covered in managed tests. Device discovery/effects remain under the SDL gamepad trigger.
+- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, signed index extremes, non-finite pressure, copy/revert, all 21 defined text labels and change delivery are covered in managed tests. Virtual SDL gamepad/raw-joystick discovery, button delivery, rumble and LED callbacks pass on dummy and Linux Wayland; physical hardware remains unverified, and native event construction has a measured managed allocation gap.
 
 ## Examples
 

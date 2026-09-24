@@ -19,7 +19,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 
 ### Decision
 
-- `DisplayServer` is one process-owned, explicitly disposed `ElectronObject` in the runtime assembly. It owns SDL video initialization, one high-density resizable main window, cursor handles, and the native event pump. Public IDs use zero for the main window; native SDL handles stay private.
+- `DisplayServer` is one process-owned, explicitly disposed `ElectronObject` in the runtime assembly. It owns SDL video and gamepad initialization, one high-density resizable main window, cursor and controller handles, and the native event pump. Public IDs use zero for the main window; native SDL handles stay private.
 - `Open` is the explicit typed-C# library bootstrap for the reference display service; `Instance` exposes the active singleton. Normal application orchestration belongs to Engine.Run through Window; a consumer may explicitly embed the lower-level display and manual engine lifecycle. These entry points are limited to making the existing display and scene lifecycle usable from a separate assembly, under the semantic public-API boundary in ADR 0004.
 - `Open` and all instance operations, including disposal, require SDL's main thread and the managed opening thread. A singleton read may occur from another thread. Disposal is rejected during event dispatch.
 - A visible Wayland window commits a neutral blank surface at creation so the compositor maps it before the rendering vertical slice. Pixel-size and display-scale events refresh that surface until a renderer replaces it. Hidden windows do not present. The surface remains window-owned; a future renderer must release it before creating its rendering context.

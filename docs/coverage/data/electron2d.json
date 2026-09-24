@@ -1656,6 +1656,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.JoypadInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.JoypadInfo",
+    "name": "JoypadInfo",
+    "signature": "public struct Electron2D.JoypadInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Key",
     "kind": "type",
     "declaringType": "Electron2D.Key",
@@ -16281,6 +16294,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Input.JoyConnectionChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Input",
+    "name": "JoyConnectionChanged",
+    "signature": "public event System.Action\u003CSystem.Int32, System.Boolean\u003E JoyConnectionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32, System.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.InputMap.ProjectSettingsLoaded()",
     "kind": "event",
     "declaringType": "Electron2D.InputMap",
@@ -30096,6 +30122,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.AddJoyMapping(System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "AddJoyMapping",
+    "signature": "public System.Void AddJoyMapping(System.String mapping, System.Boolean updateExisting = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mapping",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "updateExisting",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.FlushBufferedEvents()",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -30181,6 +30231,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.GetConnectedJoypads()",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetConnectedJoypads",
+    "signature": "public System.Int32[] GetConnectedJoypads()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.GetCurrentCursorShape()",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -30215,6 +30278,120 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyGUID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyGUID",
+    "signature": "public System.String GetJoyGUID(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyInfo(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyInfo",
+    "signature": "public System.Nullable\u003CElectron2D.JoypadInfo\u003E GetJoyInfo(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.JoypadInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyName",
+    "signature": "public System.String GetJoyName(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyVibrationDuration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyVibrationDuration",
+    "signature": "public System.Single GetJoyVibrationDuration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyVibrationRemainingDuration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyVibrationRemainingDuration",
+    "signature": "public System.Single GetJoyVibrationRemainingDuration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.GetJoyVibrationStrength(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "GetJoyVibrationStrength",
+    "signature": "public Electron2D.Vector2 GetJoyVibrationStrength(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -30267,6 +30444,44 @@
       }
     ],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.HasJoyLight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "HasJoyLight",
+    "signature": "public System.Boolean HasJoyLight(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.HasJoyVibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "HasJoyVibration",
+    "signature": "public System.Boolean HasJoyVibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -30437,6 +30652,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.IsJoyKnown(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "IsJoyKnown",
+    "signature": "public System.Boolean IsJoyKnown(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.IsJoyVibrating(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "IsJoyVibrating",
+    "signature": "public System.Boolean IsJoyVibrating(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.IsKeyLabelPressed(Electron2D.Key)",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -30545,6 +30798,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Input.RemoveJoyMapping(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "RemoveJoyMapping",
+    "signature": "public System.Void RemoveJoyMapping(System.String guid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "guid",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Input.SetCustomMouseCursor(Electron2D.Resource,Electron2D.Input.CursorShape,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Input",
@@ -30587,6 +30859,107 @@
         "name": "shape",
         "type": "Electron2D.Input.CursorShape",
         "default": "Arrow"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.SetJoyLight(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "SetJoyLight",
+    "signature": "public System.Void SetJoyLight(System.Int32 device, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.ShouldIgnoreDevice(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "ShouldIgnoreDevice",
+    "signature": "public System.Boolean ShouldIgnoreDevice(System.Int32 vendorID, System.Int32 productID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vendorID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "productID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.StartJoyVibration(System.Int32,System.Single,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "StartJoyVibration",
+    "signature": "public System.Void StartJoyVibration(System.Int32 device, System.Single weakMagnitude, System.Single strongMagnitude, System.Single duration = 0f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "weakMagnitude",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "strongMagnitude",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Input.StopJoyVibration(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Input",
+    "name": "StopJoyVibration",
+    "signature": "public System.Void StopJoyVibration(System.Int32 device)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "device",
+        "type": "System.Int32",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -58541,6 +58914,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Input.IgnoreJoypadOnUnfocusedApplication()",
+    "kind": "property",
+    "declaringType": "Electron2D.Input",
+    "name": "IgnoreJoypadOnUnfocusedApplication",
+    "signature": "public System.Boolean IgnoreJoypadOnUnfocusedApplication { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Input.Instance()",
     "kind": "property",
     "declaringType": "Electron2D.Input",
@@ -59578,6 +59964,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Text.Json.Nodes.JsonNode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JoypadInfo.ProductID()",
+    "kind": "property",
+    "declaringType": "Electron2D.JoypadInfo",
+    "name": "ProductID",
+    "signature": "public System.UInt16 ProductID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt16",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JoypadInfo.RawName()",
+    "kind": "property",
+    "declaringType": "Electron2D.JoypadInfo",
+    "name": "RawName",
+    "signature": "public System.String RawName { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JoypadInfo.SerialNumber()",
+    "kind": "property",
+    "declaringType": "Electron2D.JoypadInfo",
+    "name": "SerialNumber",
+    "signature": "public System.String SerialNumber { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.JoypadInfo.VendorID()",
+    "kind": "property",
+    "declaringType": "Electron2D.JoypadInfo",
+    "name": "VendorID",
+    "signature": "public System.UInt16 VendorID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt16",
     "value": null
   },
   {
@@ -60839,6 +61277,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "IgnoreJoypadOnUnfocusedApplication",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E IgnoreJoypadOnUnfocusedApplication { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

@@ -42,12 +42,14 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly bool _linuxPortalThemeSupported;
     private readonly nint _gtkScreen;
     private readonly nint _gtkTitlebarProvider;
+    private readonly string? _previousGamepadBackgroundHint;
     private Rect2i _windowRect;
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
 
-    private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider)
+    private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider, string? previousGamepadBackgroundHint)
     {
+        _previousGamepadBackgroundHint = previousGamepadBackgroundHint;
         _gtkScreen = gtkScreen;
         _gtkTitlebarProvider = gtkTitlebarProvider;
         _ownerThreadId = Environment.CurrentManagedThreadId;
@@ -89,7 +91,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland.</param>
     /// <param name="hidden">Whether the window starts hidden.</param>
     /// <returns>The process's active display server.</returns>
-    /// <remarks>The caller owns and must dispose the returned server on the opening thread. The main window starts with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere, so smaller requested dimensions may be constrained by the native window manager. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
+    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. The main window starts with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere, so smaller requested dimensions may be constrained by the native window manager. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
@@ -117,15 +119,29 @@ public sealed partial class DisplayServer : ElectronObject
                     !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")));
             if (correctedGdkBackend)
                 SetGDKBackend("wayland");
+            var videoInitialized = false;
+            var gamepadInitialized = false;
+            var previousGamepadBackgroundHint = SDL.GetHint(SDL.Hints.JoystickAllowBackgroundEvents);
+            var gamepadHintSet = false;
             try
             {
                 if (!SDL.IsMainThread())
                     throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
                 if (!SDL.InitSubSystem(SDL.InitFlags.Video))
                     throw SDLFailure("initialize the video subsystem");
+                videoInitialized = true;
+                if (!SDL.SetHintWithPriority(SDL.Hints.JoystickAllowBackgroundEvents, "1", SDL.HintPriority.Override))
+                    throw SDLFailure("enable background gamepad events");
+                gamepadHintSet = true;
+                if (!SDL.InitSubSystem(SDL.InitFlags.Gamepad))
+                    throw SDLFailure("initialize the gamepad subsystem");
+                gamepadInitialized = true;
             }
             catch
             {
+                if (gamepadInitialized) SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
+                if (videoInitialized) SDL.QuitSubSystem(SDL.InitFlags.Video);
+                if (gamepadHintSet) RestoreGamepadBackgroundHint(previousGamepadBackgroundHint);
                 if (correctedGdkBackend)
                     SetGDKBackend(previousGdkBackend!);
                 throw;
@@ -148,6 +164,7 @@ public sealed partial class DisplayServer : ElectronObject
                 if (window == 0)
                     throw SDLFailure("create the main window");
 
+                DisplayServer? server = null;
                 try
                 {
                     var minimumSize = SDL.GetCurrentVideoDriver() == "wayland"
@@ -157,13 +174,21 @@ public sealed partial class DisplayServer : ElectronObject
                         throw SDLFailure("set the main window's minimum size");
                     if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
-                    _instance = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider);
-                    Input.Instance.SetNativeFlush(_instance.FlushBufferedInput);
-                    return _instance;
+                    server = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider, previousGamepadBackgroundHint);
+                    server.InitializeGamepads();
+                    Input.Instance.SetNativeFlush(server.FlushBufferedInput);
+                    _instance = server;
+                    return server;
                 }
                 catch
                 {
-                    SDL.DestroyWindow(window);
+                    Input.Instance.SetNativeFlush(null);
+                    if (server is null) SDL.DestroyWindow(window);
+                    else
+                    {
+                        try { server.CloseGamepads(); }
+                        finally { server._window.Dispose(); }
+                    }
                     throw;
                 }
             }
@@ -172,7 +197,9 @@ public sealed partial class DisplayServer : ElectronObject
                 RemoveGTKTitlebarStyle(gtkStyle.GtkScreen, gtkStyle.GtkProvider);
                 if (correctedGdkBackend)
                     SetGDKBackend(previousGdkBackend!);
+                SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
                 SDL.QuitSubSystem(SDL.InitFlags.Video);
+                RestoreGamepadBackgroundHint(previousGamepadBackgroundHint);
                 throw;
             }
         }
@@ -586,11 +613,14 @@ public sealed partial class DisplayServer : ElectronObject
             _pendingDroppedFiles = null;
             DisposeDialogs();
             ReleasePointer();
+            CloseGamepads();
             Input.Instance.SetNativeFlush(null);
             Input.Instance.ReleasePressedEvents();
             _window.Dispose();
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
+            SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
             SDL.QuitSubSystem(SDL.InitFlags.Video);
+            RestoreGamepadBackgroundHint(_previousGamepadBackgroundHint);
             if (ReferenceEquals(_instance, this))
                 _instance = null;
         }
@@ -603,6 +633,7 @@ public sealed partial class DisplayServer : ElectronObject
         var window = GetWindow(MainWindowId);
         if (!(visible ? SDL.ShowWindow(window) : SDL.HideWindow(window)))
             throw SDLFailure("change window visibility");
+        if (!visible) ApplyGamepadFocusPolicy();
         if (visible && _waylandWindowPosition && !_renderingAttached)
             PresentBlankWindowSurface(window);
     }
@@ -612,6 +643,12 @@ public sealed partial class DisplayServer : ElectronObject
         ThrowIfDisposed();
         if (Environment.CurrentManagedThreadId != _ownerThreadId)
             throw new InvalidOperationException("DisplayServer calls must run on the opening thread.");
+    }
+
+    private static void RestoreGamepadBackgroundHint(string? previous)
+    {
+        if (previous is null) SDL.ResetHint(SDL.Hints.JoystickAllowBackgroundEvents);
+        else SDL.SetHintWithPriority(SDL.Hints.JoystickAllowBackgroundEvents, previous, SDL.HintPriority.Override);
     }
 
     internal SafeHandle AcquireRenderingWindow()

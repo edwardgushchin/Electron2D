@@ -56,6 +56,7 @@ public sealed partial class Engine
         try
         {
             TranslationServer.LoadProjectLocalization();
+            Input.Instance.IgnoreJoypadOnUnfocusedApplication = ProjectSettings.Instance.GetWithOverride(ProjectSettings.IgnoreJoypadOnUnfocusedApplication);
             window.OpenNative();
             tree = new SceneTree(window, attachToEngine: true);
             Volatile.Write(ref _mainLoop, tree);

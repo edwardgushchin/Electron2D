@@ -89,7 +89,7 @@ display.FileDialogShow("Open image", "", "", false,
 | Signature | Contract |
 | --- | --- |
 | [`public bool HasFeature(Feature feature)`](#method-hasfeature) | Reports whether the current backend exposes an executable capability. |
-| [`public void ProcessEvents()`](#method-processevents) | Drains native events and commits typed keyboard, mouse, wheel, and touch state before game callbacks. |
+| [`public void ProcessEvents()`](#method-processevents) | Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks. |
 | [`public void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
 | [`public void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
 | [`public void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
@@ -299,7 +299,9 @@ Reports whether the current backend advertises an integrated display capability.
 <a id="method-processevents"></a>
 #### `public void ProcessEvents()`
 
-Drains native events and commits typed keyboard, mouse, wheel, and touch state before game callbacks.
+Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks.
+
+SDL joystick/gamepad additions and removals update [Input](Input.md) metadata before its connection callback. Standardized gamepad and raw joystick button/axis events enter the same typed action and SceneTree path. Already connected devices are available before the first pump and announced there. `ForceProcessAndDropEvents` drops controller input while retaining connection changes.
 
 **Remarks:** The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain. A key event excludes the pressed or released modifier key's own bit while preserving other held modifier bits. Malformed native pointer and touch values are rejected before tracked button, contact or timestamp state changes. Failures are collected while later queued events continue, then thrown together after the queue drains. Re-entry is rejected. No rendering or game frame is advanced here.
 

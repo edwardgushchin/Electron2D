@@ -68,11 +68,12 @@ public sealed partial class DisplayServer
     /// <remarks>Paths are copied from native event memory in arrival order. One completed drop produces one callback, even when it contains multiple files. The returned array belongs to the caller and remains valid after delivery.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped;
 
-    /// <summary>Drains native events and commits typed keyboard, mouse, wheel, and touch state before game callbacks.</summary>
+    /// <summary>Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks.</summary>
     /// <remarks>
     /// The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and
     /// disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain.
     /// Malformed native pointer and touch values are rejected before tracked button, contact or timestamp state changes.
+    /// Controller connections update Input metadata before its connection event; device input uses borrowed typed events.
     /// Callback failures are collected while later queued events continue, then thrown together after the queue drains.
     /// Re-entry is rejected. No rendering or game frame is advanced here.
     /// </remarks>
@@ -81,7 +82,7 @@ public sealed partial class DisplayServer
     /// <exception cref="AggregateException">One or more native pointer/touch values or game callbacks failed; later queued events still run.</exception>
     public void ProcessEvents() => ProcessEventsCore(dropInput: false);
 
-    /// <summary>Processes native window events while discarding pending keyboard, pointer, touch, and text input.</summary>
+    /// <summary>Processes native window and controller connection events while discarding pending keyboard, pointer, touch, text and controller input.</summary>
     /// <remarks>Tracked pressed state is released before draining the queue; window and quit callbacks still run.</remarks>
     /// <exception cref="InvalidOperationException">Called off the owner thread or re-entered.</exception>
     /// <exception cref="AggregateException">One or more delivered callbacks failed.</exception>
@@ -100,6 +101,7 @@ public sealed partial class DisplayServer
         List<Exception>? failures = null;
         try
         {
+            DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
             {
                 _hasPendingMouseMotion = false;
@@ -178,7 +180,9 @@ public sealed partial class DisplayServer
         SDL.EventType.KeyDown or SDL.EventType.KeyUp or SDL.EventType.TextInput or SDL.EventType.TextEditing or
         SDL.EventType.MouseMotion or SDL.EventType.MouseButtonDown or SDL.EventType.MouseButtonUp or
         SDL.EventType.MouseWheel or SDL.EventType.FingerDown or SDL.EventType.FingerUp or
-        SDL.EventType.FingerCanceled or SDL.EventType.FingerMotion;
+        SDL.EventType.FingerCanceled or SDL.EventType.FingerMotion or
+        SDL.EventType.GamepadButtonDown or SDL.EventType.GamepadButtonUp or SDL.EventType.GamepadAxisMotion or
+        SDL.EventType.JoystickButtonDown or SDL.EventType.JoystickButtonUp or SDL.EventType.JoystickAxisMotion;
 
     internal void FlushBufferedInput()
     {
@@ -209,6 +213,14 @@ public sealed partial class DisplayServer
     private void DispatchEvent(SDL.Event nativeEvent)
     {
         var type = (SDL.EventType)nativeEvent.Type;
+        if (type is SDL.EventType.GamepadAdded or SDL.EventType.GamepadRemoved or SDL.EventType.GamepadRemapped or
+            SDL.EventType.GamepadButtonDown or SDL.EventType.GamepadButtonUp or SDL.EventType.GamepadAxisMotion or
+            SDL.EventType.JoystickAdded or SDL.EventType.JoystickRemoved or
+            SDL.EventType.JoystickButtonDown or SDL.EventType.JoystickButtonUp or SDL.EventType.JoystickAxisMotion)
+        {
+            DispatchGamepadEvent(nativeEvent, type);
+            return;
+        }
         if (type == SDL.EventType.Quit)
         {
             QuitRequested?.Invoke();
@@ -303,7 +315,8 @@ public sealed partial class DisplayServer
                 _freeTouchIndexes.Clear();
                 _nextTouchIndex = 0;
                 _heldMouseButtons = MouseButtonMask.None;
-                DispatchFocusChanged(focused: false);
+                try { DispatchFocusChanged(focused: false); }
+                finally { ApplyGamepadFocusPolicy(); }
                 break;
             case SDL.EventType.KeyDown:
             case SDL.EventType.KeyUp:

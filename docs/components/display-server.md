@@ -68,6 +68,12 @@ On Wayland, `HasFeature(Ime)` and `HasFeature(NativeDialogFile)` currently ident
 
 `SetIcon` sets the current main window's default icon until a successful `WindowSetIcon` establishes a window-specific override. On Wayland, nonsquare images are rejected and `HasFeature(Icon)` becomes true only after a native icon request succeeds. Launcher icons and future-window default propagation are outside this one-window host.
 
+## Native controller ownership
+
+The display server owns SDL's gamepad subsystem and each opened gamepad/joystick handle for its own lifetime. It restores the previous SDL background-controller hint on close. Joystick and gamepad events share the ordered `ProcessEvents` pump; recognized devices use the standardized stream and raw joysticks use the joystick stream. Initial devices are registered before the first pump and announced there. Disconnect releases handles and the corresponding Input state; other devices remain active. `ForceProcessAndDropEvents` discards controller input while retaining connection changes. A failing connection subscriber is aggregated after other queued events.
+
+[InputGamepadNativeTests](../../tests/Electron2D.Tests/InputGamepadNativeTests.cs) exercises this ownership on dummy and Linux Wayland using virtual devices. Physical hardware, other platform hosts, Steam/XInput metadata and native allocation behavior remain unverified. Controller motion sensors have a separate prerequisite under [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers).
+
 ## Verification
 
 `env -u LD_LIBRARY_PATH ELECTRON2D_TEST_DISPLAY_WINDOW_EVENTS=1 SDL_VIDEODRIVER=wayland dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release --no-build` passed after a real compositor close request. The visible window remained alive until the test disposed it. The same session delivered two keyboard-focus gains, one loss, one pointer enter, and one exit through the public typed events. Synthetic dummy and Wayland checks separately cover close/focus/hover queue order, foreign-window filtering, effective hover transitions, pressed-input release after focus loss, and callback failures.

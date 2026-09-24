@@ -77,6 +77,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<string> PseudolocalizationPrefix { get; }`](#pseudolocalizationprefix) | Text prefix; `[` by default. |
 | [`public static ProjectSetting<string> PseudolocalizationSuffix { get; }`](#pseudolocalizationsuffix) | Text suffix; `]` by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; }`](#pseudolocalizationskipplaceholders) | Placeholder preservation; true by default. |
+| [`public static ProjectSetting<bool> IgnoreJoypadOnUnfocusedApplication { get; }`](#ignorejoypadonunfocusedapplication) | Initial native controller focus policy; false by default. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; }`](#inputuifocusnext) | Defines Tab focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIFocusPrev { get; }`](#inputuifocusprev) | Defines Shift+Tab focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUILeft { get; }`](#inputuileft) | Defines left-arrow, D-pad left and left-stick-left focus navigation. |
@@ -315,6 +316,11 @@ Defines `internationalization/pseudolocalization/suffix`, default `]`. Null valu
 ### `public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; }`
 
 Defines `internationalization/pseudolocalization/skip_placeholders`, default true. These eight transform settings are read on startup or by `TranslationServer.ReloadPseudolocalization`; setting them alone does not change a running domain.
+
+<a id="ignorejoypadonunfocusedapplication"></a>
+### `public static ProjectSetting<bool> IgnoreJoypadOnUnfocusedApplication { get; }`
+
+Defines `input_devices/joypads/ignore_joypad_on_unfocused_application`, false by default. `Engine.Run` samples the active project value before opening the SDL controller host. Runtime changes to [Input.IgnoreJoypadOnUnfocusedApplication](Input.md) take effect immediately; changing only this stored setting requires a later run to be sampled.
 
 <a id="inputuifocusnext"></a>
 ### `public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; }`

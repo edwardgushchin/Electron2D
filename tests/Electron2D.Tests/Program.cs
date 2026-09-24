@@ -42,6 +42,20 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GAMEPAD") == "1")
+{
+    InputGamepadNativeTests.Run();
+    InputGamepadNativeTests.RunSceneDelivery();
+    InputGamepadNativeTests.RunProjectSetting();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GAMEPAD_IGNORE") == "1")
+{
+    InputGamepadNativeTests.RunIgnoredDevice();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_MODIFIERS") == "1")
 {
     VerifyDisplayServerPointerModifiers();

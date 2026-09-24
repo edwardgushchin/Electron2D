@@ -6,7 +6,7 @@ Last updated: 2026-09-24
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Input/Input.cs`](../../src/Core/Input/Input.cs), [`src/Core/Input/Input.Pointer.cs`](../../src/Core/Input/Input.Pointer.cs)
+- **Source:** [`src/Core/Input/Input.cs`](../../src/Core/Input/Input.cs), [`src/Core/Input/Input.Pointer.cs`](../../src/Core/Input/Input.Pointer.cs), [`src/Core/Input/Input.Gamepads.cs`](../../src/Core/Input/Input.Gamepads.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class Input : ElectronObject`
 
@@ -26,6 +26,8 @@ are lock-serialized; event delivery is synchronous on the caller thread and an a
 requires its owner thread.
 
 Native pointer controls use the active `DisplayServer` for the current mouse mode and cursor shape. Input retains only the default cursor policy used when no Control overrides it. Native operations require a live display and its owner thread; the singleton itself remains available without a display for managed input state.
+
+The SDL controller host discovers mapped gamepads and raw joysticks, assigns stable logical IDs while connected, forwards typed button/axis events into the same action and scene path, and closes native handles on removal or display shutdown. `Input` owns lock-serialized metadata, mapping overrides and vibration requests; `DisplayServer` owns native handles. A removed device releases only its own pressed state and action contributions. [JoypadInfo](JoypadInfo.md) is the typed projection of platform information; Steam Input and XInput indices remain outside the current projection.
 
 ## Examples
 
@@ -49,6 +51,7 @@ if (input.IsActionPressed("jump"))
 | [`public Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
 | [`public Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
 | [`public MouseModeEnum MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
+| [`public bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
 
 ## Methods
 
@@ -60,6 +63,17 @@ if (input.IsActionPressed("jump"))
 | [`public bool IsMouseButtonPressed(MouseButton button)`](#m-electron2d-input-ismousebuttonpressed-electron2d-mousebutton) | Gets whether a non-wheel mouse button is currently held. |
 | [`public bool IsJoyButtonPressed(JoyButton button, int device = 0)`](#m-electron2d-input-isjoybuttonpressed-electron2d-joybutton-system-int32) | Gets whether a controller button is currently held. |
 | [`public float GetJoyAxis(JoyAxis axis, int device = 0)`](#m-electron2d-input-getjoyaxis-electron2d-joyaxis-system-int32) | Gets the latest controller-axis value. |
+| [`public int[] GetConnectedJoypads()`](#gamepad-getconnectedjoypads) | Snapshots connected logical controller IDs. |
+| [`public string GetJoyName(int device)`](#gamepad-getjoyname) / [`GetJoyGUID(int device)`](#gamepad-getjoyguid) | Queries mapped name or SDL-compatible GUID. |
+| [`public JoypadInfo? GetJoyInfo(int device)`](#gamepad-getjoyinfo) | Queries typed native controller information. |
+| [`public bool IsJoyKnown(int device)`](#gamepad-isjoyknown) | Distinguishes mapped gamepads from raw joysticks. |
+| [`public bool HasJoyVibration(int device)`](#gamepad-hasjoyvibration) / [`HasJoyLight(int device)`](#gamepad-hasjoylight) | Queries native effect capabilities. |
+| [`public bool ShouldIgnoreDevice(int vendorID, int productID)`](#gamepad-shouldignoredevice) | Checks the startup ignore list. |
+| [`public void AddJoyMapping(string mapping, bool updateExisting = false)`](#gamepad-addjoymapping) / [`RemoveJoyMapping(string guid)`](#gamepad-removejoymapping) | Manages process-wide SDL mapping overrides. |
+| [`public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`](#gamepad-startjoyvibration) / [`StopJoyVibration(int device)`](#gamepad-stopjoyvibration) | Starts or stops native rumble. |
+| [`public Vector2 GetJoyVibrationStrength(int device)`](#gamepad-getjoyvibrationstrength) / [`float GetJoyVibrationDuration(int device)`](#gamepad-getjoyvibrationduration) | Reads the retained rumble request. |
+| [`public float GetJoyVibrationRemainingDuration(int device)`](#gamepad-getjoyvibrationremainingduration) / [`bool IsJoyVibrating(int device)`](#gamepad-isjoyvibrating) | Estimates active rumble time. |
+| [`public void SetJoyLight(int device, Color color)`](#gamepad-setjoylight) | Sets a supported controller LED. |
 | [`public bool IsAnythingPressed()`](#m-electron2d-input-isanythingpressed) | Gets whether any key, mouse button, controller button, or action is currently pressed. |
 | [`public bool IsActionPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionpressed-system-string-system-boolean) | Gets whether an action is currently pressed. |
 | [`public bool IsActionJustPressed(string action, bool exactMatch = false)`](#m-electron2d-input-isactionjustpressed-system-string-system-boolean) | Gets whether an action transitioned from released to pressed since the current callback lane last completed. |
@@ -82,6 +96,12 @@ if (input.IsActionPressed("jump"))
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-input-getpropertydescriptors) | Returns the typed properties exposed to tooling before validation. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-input-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 
+## Events
+
+| Member | Description |
+| --- | --- |
+| [`public event Action<int, bool>? JoyConnectionChanged`](#gamepad-joyconnectionchanged) | Announces native connect/disconnect after metadata and pressed-state changes commit. |
+
 ## Constants
 
 | Member | Description |
@@ -100,6 +120,11 @@ if (input.IsActionPressed("jump"))
 ### `public MouseModeEnum MouseMode { get; set; }`
 
 Reads or applies the active display's pointer mode. The five selectable modes control native cursor visibility, relative capture and window confinement. `Max` is invalid. Native failures preserve the previous mode on a best-effort basis. Reading or writing without a display throws `InvalidOperationException`; the display owner thread is required.
+
+<a id="p-electron2d-input-ignorejoypadonunfocusedapplication"></a>
+### `public bool IgnoreJoypadOnUnfocusedApplication { get; set; }`
+
+False by default. `Engine.Run` samples [ProjectSettings.IgnoreJoypadOnUnfocusedApplication](ProjectSettings.md) before opening SDL. When true and the application is unfocused, native controller input and new rumble/LED requests are ignored; existing pressed state is released and rumble is stopped. A live display requires its owner thread for writes. This value can also be changed at runtime.
 
 <a id="p-electron2d-input-instance"></a>
 ### `public static Input Instance { get; }`
@@ -531,6 +556,102 @@ Copies pixels from a readable `Image` or `Texture` into the selected cursor slot
 
 Requests movement to finite client-area coordinates, truncating fractions to native integer pixels. Out-of-range coordinates fail before reaching the display. Wayland rejects the warp with `NotSupportedException`; movement and clipping on supported backends have not been natively verified.
 
+## Native controller methods
+
+All methods taking `device` reject a negative ID. Queries are lock-serialized; native effect and mapping changes require the active display's owner thread. A missing device returns an empty name/GUID, null info, false capability or zero active vibration. Strength and duration can retain a request for an absent ID; disconnect and the next connection clear that request.
+
+<a id="gamepad-getconnectedjoypads"></a>
+### `public int[] GetConnectedJoypads()`
+
+Returns a caller-owned sorted snapshot of logical IDs for connected SDL gamepads and raw joysticks. IDs remain stable while connected and may be reused after removal. Already connected controllers are available before the first native event pump.
+
+<a id="gamepad-getjoyname"></a>
+### `public string GetJoyName(int device)`
+
+Returns the mapped gamepad name, or the raw joystick name when no mapping is active. An absent device returns an empty string.
+
+<a id="gamepad-getjoyguid"></a>
+### `public string GetJoyGUID(int device)`
+
+Returns the 32-character SDL-compatible hexadecimal GUID, or an empty string for an absent device.
+
+<a id="gamepad-getjoyinfo"></a>
+### `public JoypadInfo? GetJoyInfo(int device)`
+
+Returns [typed native information](JoypadInfo.md) or null. Raw name, USB IDs and optional serial are available; Steam Input and XInput indices remain an audited gap.
+
+<a id="gamepad-isjoyknown"></a>
+### `public bool IsJoyKnown(int device)`
+
+True when the device currently has a standardized gamepad mapping. Raw joysticks remain connected and can deliver signed axis and button events while this is false.
+
+<a id="gamepad-hasjoyvibration"></a>
+### `public bool HasJoyVibration(int device)`
+
+Returns the native rumble capability for a connected device. False when absent or unsupported.
+
+<a id="gamepad-hasjoylight"></a>
+### `public bool HasJoyLight(int device)`
+
+Returns the native mono/RGB LED capability for a connected device. False when absent or unsupported.
+
+<a id="gamepad-shouldignoredevice"></a>
+### `public bool ShouldIgnoreDevice(int vendorID, int productID)`
+
+Checks vendor/product pairs parsed from `SDL_GAMECONTROLLER_IGNORE_DEVICES` when the process-wide Input instance initializes. Matching devices are omitted from native discovery. Entries use the pinned slash-separated hexadecimal byte order.
+
+<a id="gamepad-addjoymapping"></a>
+### `public void AddJoyMapping(string mapping, bool updateExisting = false)`
+
+Stores an SDL-style `GUID,name,bindings` mapping for later devices. `updateExisting: true` applies it to connected matching devices immediately without changing their logical IDs; false leaves them as they are until reconnect. The required GUID and name sections are checked by Electron2D; SDL validates binding syntax when the mapping is applied. Full parser diagnostics and platform database precedence remain Partial.
+
+<a id="gamepad-removejoymapping"></a>
+### `public void RemoveJoyMapping(string guid)`
+
+Removes a custom mapping and makes matching connected devices use raw joystick delivery without disconnecting them. The GUID is retained as a process-local removal override so future matching devices stay raw until another mapping is added. Global SDL mapping precedence remains Partial.
+
+<a id="gamepad-startjoyvibration"></a>
+### `public void StartJoyVibration(int device, float weakMagnitude, float strongMagnitude, float duration = 0)`
+
+Requests weak and strong motor strengths in `[0, 1]` for a nonnegative finite duration in seconds. Zero requests SDL's maximum interval, about 65.535 seconds. Invalid values throw before the request changes; an absent or unsupported device retains the requested values but has no native effect. The display owner thread is required while active.
+
+<a id="gamepad-stopjoyvibration"></a>
+### `public void StopJoyVibration(int device)`
+
+Stops native rumble and records zero strengths and duration. The display owner thread is required while active.
+
+<a id="gamepad-getjoyvibrationstrength"></a>
+### `public Vector2 GetJoyVibrationStrength(int device)`
+
+Returns the last requested weak and strong magnitudes. The values remain after a timed effect expires until `StopJoyVibration` is called.
+
+<a id="gamepad-getjoyvibrationduration"></a>
+### `public float GetJoyVibrationDuration(int device)`
+
+Returns the last requested duration, including zero for the maximum native interval. It remains after expiration until stopped.
+
+<a id="gamepad-getjoyvibrationremainingduration"></a>
+### `public float GetJoyVibrationRemainingDuration(int device)`
+
+Returns the nonnegative time remaining on a supported connected device, capped to SDL's maximum 65.535-second interval. Zero means absent, unsupported, stopped or expired.
+
+<a id="gamepad-isjoyvibrating"></a>
+### `public bool IsJoyVibrating(int device)`
+
+True while the estimated native interval remains positive.
+
+<a id="gamepad-setjoylight"></a>
+### `public void SetJoyLight(int device, Color color)`
+
+Clamps finite RGB channels to `[0, 1]` and requests the corresponding native LED bytes. Unsupported, absent or unfocused-ignored devices receive no effect. The backend does not retain a readable LED color.
+
+## Event descriptions
+
+<a id="gamepad-joyconnectionchanged"></a>
+### `public event Action<int, bool>? JoyConnectionChanged`
+
+The logical ID and connected flag are delivered after metadata and pressed-state changes commit. Initial devices notify on the first event pump; hotplug changes notify during their native event. A throwing subscriber does not roll the connection back; `DisplayServer.ProcessEvents` aggregates the failure after later queued events. Delivery is synchronous on the display owner thread, while the pinned signal defers main-thread delivery; exact cross-platform timing remains Partial.
+
 ## Constant Descriptions
 
 ## Inherited API
@@ -545,10 +666,10 @@ Each process/physics callback sees its own transition latch. That lane clears in
 
 ## Threading and invariants
 
-State/configuration queries are lock-serialized. Event parsing is serialized and callback delivery runs on the caller thread; an active MainLoop therefore requires its owner thread and rejects calls made inside another loop callback. Returned value snapshots need no lifetime management. The warmed non-emulated mapped parse/traversal path is allocation-free; generating a pointer event allocates a short-lived resource.
+State/configuration queries are lock-serialized. Event parsing is serialized and callback delivery runs on the caller thread; an active MainLoop therefore requires its owner thread and rejects calls made inside another loop callback. Returned value snapshots need no lifetime management. The warmed non-emulated mapped parse/traversal path is allocation-free; native pointer and controller adapters create short-lived typed event resources. A warmed dummy and Wayland virtual-button probe measured 28,672 managed bytes for 128 active native events (224 each) and zero for 128 idle event pumps; native driver allocations were not measured. The active native path remains an ADR 0014 allocation gap.
 
 ## Dependencies, verification, and limitations
 
-Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Controller discovery/effects, sensors, MIDI, shortcuts, action persistence, complete GUI routing and nested viewports have exact implementation triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers); physical pointer hardware and the full native-host matrix have not been exercised.
+Depends on InputMap, typed event classes, Engine/MainLoop, SceneTree, core math and, for native pointer controls, the active DisplayServer. Managed tests cover input state, emulation order, first-contact ownership, release pairing, failure/re-entry, non-emulated allocation and root viewport Control GUI delivery and hover. The optional SDL dummy-driver suite checks pointer modifier translation. Targeted Wayland native runs verify pointer modes, cursor shapes, a copied image, Control cursor precedence and cleanup. Native controller discovery, raw/mapped event delivery, vibration and LED requests now run through SDL. Controller motion sensors, MIDI, shortcuts, complete GUI routing and nested viewports retain their separate triggers in [ADR 0038](../decisions/input.md#deferred-coverage-and-exact-implementation-triggers). Physical controller hardware, optional platform info and the full native-host matrix have not been exercised; mapping syntax and connection timing remain Partial in coverage.
 
 A SceneTree with a Viewport root localizes window coordinates after Input commits raw state. Positional callback events can therefore be distinct short-lived copies: polling and by-event transition identity still refer to the original parsed input. Canvas/viewport conversion never rewrites raw polling coordinates. See [Viewport.PushInput](Viewport.md#pushinput).

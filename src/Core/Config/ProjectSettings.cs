@@ -254,6 +254,11 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<bool> PseudolocalizationSkipPlaceholders { get; } =
         new("internationalization/pseudolocalization/skip_placeholders", true);
 
+    /// <summary>Defines whether native controller input and effects are suppressed while the application is unfocused.</summary>
+    /// <value>The permanent typed project setting, false by default.</value>
+    public static ProjectSetting<bool> IgnoreJoypadOnUnfocusedApplication { get; } =
+        new("input_devices/joypads/ignore_joypad_on_unfocused_application", false);
+
     /// <summary>Defines the default Tab binding for moving GUI focus forward.</summary>
     /// <value>The permanent typed <c>input/ui_focus_next</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIFocusNext { get; } =
@@ -355,6 +360,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(PseudolocalizationPrefix, isBasic: false);
         RegisterInternal(PseudolocalizationSuffix, isBasic: false);
         RegisterInternal(PseudolocalizationSkipPlaceholders, isBasic: false);
+        RegisterInternal(IgnoreJoypadOnUnfocusedApplication, isBasic: false);
         RegisterInternal(InputUIFocusNext, isBasic: false);
         RegisterInternal(InputUIFocusPrev, isBasic: false);
         RegisterInternal(InputUILeft, isBasic: false);
@@ -1716,6 +1722,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, PseudolocalizationPrefix) ||
         ReferenceEquals(setting, PseudolocalizationSuffix) ||
         ReferenceEquals(setting, PseudolocalizationSkipPlaceholders) ||
+        ReferenceEquals(setting, IgnoreJoypadOnUnfocusedApplication) ||
         ReferenceEquals(setting, InputUIFocusNext) ||
         ReferenceEquals(setting, InputUIFocusPrev) ||
         ReferenceEquals(setting, InputUILeft) ||

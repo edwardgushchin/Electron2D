@@ -12,7 +12,7 @@ This log owns durable decisions for input events, action mapping, process-wide i
 
 ### Context
 
-Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; complete GUI routing, controller management, sensors, a MIDI product decision and shortcut resources remain absent.
+Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; complete GUI routing, controller motion sensors, a MIDI product decision and shortcut resources remain absent; native controller mapping and platform-info parity are still partial.
 
 An earlier statement that a missing feature was merely "deferred" was not sufficient for context-free continuation. Every gap needs a concrete prerequisite and a rule that tells a later agent whether work is actionable.
 
@@ -35,6 +35,7 @@ An earlier statement that a missing feature was merely "deferred" was not suffic
 - Node input participation is explicit and pause-aware through `InputEnabled`, `UnhandledKeyInputEnabled`, `UnhandledInputEnabled`, and `CanProcess()`.
 - Process and physics just-pressed/just-released windows are independent. Each lane clears its own transition state in `MainLoop` `finally`, including failed callbacks. Warmed non-emulated event matching and scene traversal reuse buffers and allocate no managed memory; generated pointer events and positional viewport-conversion copies allocate short-lived resources.
 - Typed C# exceptions replace numeric error codes. Dynamic `Variant` event payloads, string-based calls, and untyped metadata are permanently excluded by ADR 0001.
+- The SDL host now owns joystick/gamepad subsystem lifetime and native handles. Input owns typed identity and capability snapshots, mapping overrides, per-device pressed state, vibration requests and the unfocused policy; controller events follow ordinary InputMap and SceneTree delivery. The built-in typed project setting supplies the Engine.Run startup policy. Virtual devices passed initial/hotplug, mapped/raw input, remapping, rumble/LED, ignored vendor/product IDs, per-device isolation and scene/action delivery on Linux Wayland and dummy. The exact SDL2 mapping grammar, Steam/XInput info fields, deferred connection-signal timing and physical hardware behavior remain Partial in coverage. A warmed virtual-button probe measured 28,672 managed bytes for 128 active native events and zero for 128 idle event pumps on dummy and Wayland; active native event construction remains an ADR 0014 allocation gap.
 
 ### Deferred coverage and exact implementation triggers
 
@@ -42,7 +43,6 @@ The following items are **not actionable now** unless their trigger is present i
 
 | Deferred item | Exact missing dependency | Implementation trigger | When to implement |
 | --- | --- | --- | --- |
-| Controller discovery, names, GUID/info, mapping database changes, ignored-device policy, connection-change event, vibration, duration/strength queries, and controller lights | SDL gamepad backend and lifecycle ownership | The first accepted SDL gamepad backend slice can open/close devices and receive connection events | In that first SDL gamepad slice; do not simulate devices before it |
 | Accelerometer, gravity, gyroscope, magnetometer, and controller motion sensors | Mobile/gamepad sensor backend plus an accepted typed three-component sensor-value representation that does not introduce a 3D scene domain | Both the sensor-value ADR and a concrete SDL/mobile sensor adapter exist | In the first sensor slice after both prerequisites; not implied by ordinary gamepad work |
 | MIDI event type, device enumeration, and message delivery | Product approval for a MIDI domain plus a selected native host API | A user-approved MIDI ADR names scope, host API, ownership, and platform matrix | Only after that separate decision; MIDI is not automatically part of SDL input work |
 | Shortcut input event and shortcut matching | A concrete GUI/editor `Shortcut` resource and focus-routing component | The first accepted GUI shortcut vertical slice defines typed shortcut ownership | In that GUI slice; do not add an event with a null or inert shortcut |
