@@ -182,7 +182,7 @@ GetParentControl returns the direct parent only when it is a Control. GetParentA
 
 ### `GetRect()`, `GetGlobalRect()`, `GetTransform()`
 
-GetTransform composes layout position with pivot, rotation and scale. GetRect and GetGlobalRect use its local or global transformed origin and signed scale times Size; these rectangles are not rotated axis-aligned bounds. An attached global query requires the scene owner thread.
+GetTransform composes layout position with pivot, rotation and scale. GetRect and GetGlobalRect use its local or global transformed origin and signed scale times Size; these rectangles are not rotated axis-aligned bounds. Attached local and global transform queries require the scene owner thread.
 
 ### `Reparent(Node newParent, bool keepGlobalTransform = true)`
 

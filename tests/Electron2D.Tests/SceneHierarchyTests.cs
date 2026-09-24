@@ -39,6 +39,7 @@ internal static class SceneHierarchyTests
         using var tree = new SceneTree(root);
         Check(direct.GlobalPosition == new Vector2(32, 23) && independent.GlobalPosition == new Vector2(7, 8), "Neutral parent breaks transform chain.");
         Check(underCustom.GlobalPosition == new Vector2(5, 7), "Spatial child inherits abstract canvas transform.");
+        Reject<InvalidOperationException>(() => Task.Run(() => _ = custom.GetTransform()).GetAwaiter().GetResult());
         Check(direct.EffectiveZIndex == 6 && independent.EffectiveZIndex == 2, "Neutral parent breaks relative Z.");
         var independentNotifications = 0;
         independent.TransformChanged += _ => independentNotifications++;
@@ -250,7 +251,7 @@ internal static class SceneHierarchyTests
     private sealed class CustomCanvas : CanvasItem
     {
         private Transform _local = Transform.Identity;
-        public override Transform GetTransform() { ThrowIfDisposed(); return _local; }
+        public override Transform GetTransform() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _local; }
         internal void Move(Vector2 position) { EnsureMutable(); _local.Origin = position; NotifyLocalTransformChanged(); }
     }
 

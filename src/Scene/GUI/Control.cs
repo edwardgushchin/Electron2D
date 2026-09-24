@@ -203,6 +203,7 @@ public partial class Control : CanvasItem
     public override Transform GetTransform()
     {
         ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
         var transform = new Transform(_rotation, _scale, 0f, _pivotOffset);
         transform.Origin += _position - transform.BasisXform(_pivotOffset);
         return transform;

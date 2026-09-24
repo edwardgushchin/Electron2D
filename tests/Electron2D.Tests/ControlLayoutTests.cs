@@ -22,6 +22,8 @@ internal static class ControlLayoutTests
                 "Viewport and direct parent provide layout areas.");
             Check(child.Position == new Vector2(5, 6) && child.Size == new Vector2(90, 10), "Anchors resolve on attachment.");
             Check(sprite.GlobalPosition == new Vector2(17, 29), "Spatial children inherit a control transform.");
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = child.GetTransform()).GetAwaiter().GetResult());
+            Reject<InvalidOperationException>(() => Task.Run(() => _ = sprite.GetTransform()).GetAwaiter().GetResult());
             order.Clear();
             parent.Size = new(140, 80);
             Check(child.Size == new Vector2(130, 10) && order.SequenceEqual(new[] { "rect", "resized" }),

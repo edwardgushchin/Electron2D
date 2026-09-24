@@ -13,6 +13,7 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Returns the local transform supplied by this item's placement model.</summary>
     /// <returns>The transform relative to the direct canvas parent.</returns>
+    /// <exception cref="InvalidOperationException">An attached item is queried off its scene owner thread; concrete overrides enforce this guard.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public abstract Transform GetTransform();
 

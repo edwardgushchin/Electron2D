@@ -20,6 +20,8 @@ The Z and sibling-order audit closes `ZIndex`, `ZAsRelative` and `MoveToFront`. 
 
 The appearance audit closes `Material`, `Modulate`, `SelfModulate` and `UseParentMaterial`. Material assignments store a borrowed resource and emit `PropertyListChanged` even for an equal assignment; callback failure leaves the assignment committed. Parent modulation reaches direct canvas descendants, while self modulation affects only this item's drawing. Parent material inheritance stops at neutral and TopLevel boundaries; a child's own material remains stored while inheritance is enabled. Managed checks and focused live pixel readback pass on Linux/Wayland compatibility and GPU, with modulation also checked in dummy/software. Editor UI, other platforms and owner visual acceptance remain separate.
 
+`GetTransform` is the abstract local placement query; the production `Entity` and `Control` overrides enforce attached owner-thread reads. The draw-transform audit closes `DrawSetTransform` and `DrawSetTransformMatrix`: each records a replacement state for later commands, with the node transform multiplied on the left. Hidden animation intervals skip transform state, rejected finite input leaves earlier state intact, and each frame replays from identity. Managed affine/replay checks, Wayland compatibility/GPU/HLSL/GLSL timing pixels and dummy/software timing pixels pass. Other CanvasItem rows retain their own statuses.
+
 Canvas attachment is part of actual SceneTree membership. Entry delivers NotificationEnterCanvas before the tree-enter callback, then visibility delivery when initially visible. Exit delivers NotificationExitCanvas after the tree-exit callback, with children exiting first. Changing TopLevel emits an exit/entry pair for this item and schedules redraw; failures are aggregated after the transition. These notifications use ordinary C# override/base dispatch under the engine's notification contract. Manual tree notifications do not attach or detach a canvas.
 
 Local Visible changes notify the item, including while detached or below a hidden parent. Effective changes propagate only through locally visible direct canvas children; Hidden follows visibility delivery when becoming hidden in the tree. Tree exit does not emit Hidden. Visible entry and showing schedule redraw. A visibility notification delivered with Notify raises VisibilityChanged through the base handler without changing state.
@@ -733,6 +735,8 @@ Extends neutral descriptors with visibility, ordering, top-level state, modulati
 Returns the local transform supplied by this item's placement model.
 
 **Returns:** The transform relative to the direct canvas parent.
+
+**System.InvalidOperationException:** An attached item is queried off its scene owner thread; concrete overrides enforce this guard.
 
 **System.ObjectDisposedException:** The item is disposed.
 

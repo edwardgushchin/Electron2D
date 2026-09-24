@@ -23,6 +23,32 @@ internal static class CanvasTimingTests
         Replay(0); Check(vertices[0].Color == Colors.Green, "Positive modulo handles time before offset.");
         Replay(2.25); Check(vertices[0].Color == Colors.Red, "Period wraps without recording.");
         Check(node.Draws == 1, "Interval replay does not invoke OnDraw.");
+        Record(n =>
+        {
+            n.DrawSetTransform(new(4, 5), scale: new(2, 3));
+            n.DrawRect(new(0, 0, 2, 2), Colors.Red);
+            n.DrawSetTransformMatrix(new Transform(new(1f, .5f), new(-.25f, 1.5f), new(10f, 20f)));
+            Reject<ArgumentException>(() => n.DrawSetTransformMatrix(new Transform(
+                new(float.NaN, 0f), Vector2.Down, Vector2.Zero)));
+            Reject<ArgumentException>(() => n.DrawSetTransform(new(float.NaN, 0f)));
+            n.DrawRect(new(0, 0, 2, 2), Colors.Green);
+            n.DrawSetTransform(Vector2.Zero);
+            n.DrawRect(new(0, 0, 2, 2), Colors.Blue);
+            n.DrawSetTransform(Vector2.Zero, Mathf.Pi * .5f);
+            n.DrawRect(new(0, 0, 2, 2), Colors.Yellow);
+        });
+        Replay(transform: new Transform(0f, new(2f, 2f), 0f, new(7f, 11f)));
+        Check(vertices.Count == 24 &&
+            vertices.Take(6).Min(v => v.Position.X) == 15f &&
+            vertices.Take(6).Max(v => v.Position.Y) == 33f &&
+            vertices.Skip(6).Take(6).Min(v => v.Position.X) == 26f &&
+            vertices.Skip(6).Take(6).Max(v => v.Position.Y) == 59f &&
+            vertices.Skip(12).Take(6).Min(v => v.Position.X) == 7f &&
+            Mathf.IsEqualApprox(vertices.Skip(18).Min(v => v.Position.X), 3f),
+            "Draw transforms replace prior state, preserve it after rejected writes, and compose beneath the node matrix.");
+        Replay();
+        Check(vertices.Count == 24 && vertices[0].Position == new Vector2(4f, 5f),
+            "Each frame replays draw-transform commands from identity before applying new state.");
         Record(n => { n.DrawAnimationSlice(0, -1, 1); n.DrawRect(new(0, 0, 2, 2), Colors.Red); n.DrawEndAnimation(); n.DrawCircle(Vector2.Zero, 2, Colors.Blue); });
         Replay(); Check(vertices.Count == 192 && vertices.All(v => v.Color == Colors.Blue), "Zero period hides; end restores all command families.");
         Record(n => { n.DrawAnimationSlice(-2, -1, 0); n.DrawRect(new(0, 0, 2, 2), Colors.Green); });
