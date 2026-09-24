@@ -168,7 +168,7 @@
     {
       "electron2d": "event:Electron2D.DisplayServer.WindowRectChanged()",
       "godot": "DisplayServer::method:window_set_rect_changed_callback(Callable:,int:)",
-      "reason": "Typed main-window full RectI notification on effective move or resize; Wayland reports the reference zero-position convention. A native Wayland resize produced the matching pixel rectangle, and dummy checks cover movement, queue order, filtering, and callback failures (ADR 0044)."
+      "reason": "Typed main-window full Rect2i notification on effective move or resize; Wayland reports the reference zero-position convention. A native Wayland resize produced the matching pixel rectangle, and dummy checks cover movement, queue order, filtering, and callback failures (ADR 0044)."
     },
     {
       "electron2d": "event:Electron2D.DisplayServer.FilesDropped()",
@@ -911,7 +911,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Typed WindowRectChanged supplies a complete event-time RectI on effective move or resize; Wayland uses the documented zero-position convention. A native Wayland resize delivered the effective pixel rectangle; dummy-driver checks cover movement, unchanged and foreign-window suppression, queue order, and callback failure behavior. X11 compositor verification is outside the current Wayland release gate (ADR 0044).",
+      "reason": "Typed WindowRectChanged supplies a complete event-time Rect2i on effective move or resize; Wayland uses the documented zero-position convention. A native Wayland resize delivered the effective pixel rectangle; dummy-driver checks cover movement, unchanged and foreign-window suppression, queue order, and callback failure behavior. X11 compositor verification is outside the current Wayland release gate (ADR 0044).",
       "godot": [
         "DisplayServer::method:window_set_rect_changed_callback(Callable:,int:)"
       ]

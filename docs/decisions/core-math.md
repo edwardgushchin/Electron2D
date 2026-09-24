@@ -72,7 +72,7 @@ Last updated: 2026-09-23
 
 ### Status
 
-Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance. ADR 0035 supersedes the consumer-gated deferral and has delivered the complete `RectI` sibling.
+Accepted for rectangle semantics. The old `Rect2` name and external vector dependency are superseded by [ADR 0032](core-math.md#adr-0032) and [ADR 0033](core-math.md#adr-0033); the production type is now `Rect` over `Vector2`. ADR 0034 supersedes the historical `0.00001` approximate-comparison tolerance. ADR 0035 supersedes the consumer-gated deferral and has delivered the complete `Rect2i` sibling.
 
 ### Context
 
@@ -96,7 +96,7 @@ The following contracts are fixed:
 - numeric formatting is invariant-culture;
 - `ConfigFile` accepts only finite rectangles and persists exactly nested `Position.X/Y` and `Size.X/Y` fields, rejecting missing, duplicate, unknown, nonnumeric, or non-finite input;
 - typed property descriptors and packed scenes store/copy `Rect` directly because it contains no managed references;
-- `RectI` conversion and `Transform` multiplication are implemented under ADRs 0035 and 0029;
+- `Rect2i` conversion and `Transform` multiplication are implemented under ADRs 0035 and 0029;
 - language-specific boolean truth conversion is permanently excluded.
 
 No renderer, UI, physics, or platform abstraction is created by this decision.
@@ -107,7 +107,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 - Existing `Vector2` transforms and positions interoperate directly with rectangle positions, sizes, centers, support points, and query points.
 - Negative sizes remain representable and observable; callers must decide when normalization is appropriate.
 - Configuration persistence rejects non-finite values even though ordinary runtime geometry retains them.
-- `RectI` conversions and `Transform` multiplication use the same engine-owned value family without external numeric types.
+- `Rect2i` conversions and `Transform` multiplication use the same engine-owned value family without external numeric types.
 - Sequential layout is useful for predictable managed storage but does not promise native backend ABI equivalence.
 
 ### Rejected alternatives
@@ -116,7 +116,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 - **Create a custom `Vector2`:** rejected at the time because `System.Numerics.Vector2` supplied the immediate portable value contract and was established throughout the repository. ADR 0032 supersedes this rejection and requires an engine-owned `Vector` throughout the runtime.
 - **Use `System.Drawing.RectangleF`:** rejected because its API/semantics differ and the dependency is inappropriate for the runtime target matrix.
 - **Normalize on every construction:** rejected because it destroys intentional negative-size values and diverges from the audited contract.
-- **Add placeholder `Rect2I` or `Transform2D` types:** rejected because empty compatibility shells would violate the repository definition of done. ADR 0026 required a real standalone `Transform2D` vertical slice, now fulfilled by ADR 0029.
+- **Add placeholder integer-rectangle or `Transform2D` types:** rejected because empty compatibility shells would violate the repository definition of done. ADR 0026 required a real standalone `Transform2D` vertical slice, now fulfilled by ADR 0029.
 - **Serialize every public property automatically:** rejected because computed `End` and `Area` would create a redundant, unstable, ambiguous schema.
 
 ### Verification
@@ -415,17 +415,17 @@ Verification is Linux/.NET 8 only. It does not establish bit-identical transcend
 <a id="adr-0035"></a>
 ## ADR 0035: Foreseeable public type-family completeness
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 ### Status
 
-Accepted and fulfilled. This decision supersedes only ADR 0025's rule that the integer rectangle waits for a current consumer. `RectI`, its typed `Rect` conversions, persistence, packed-scene storage, documentation, and executable coverage are implemented.
+Accepted and fulfilled. This decision supersedes only ADR 0025's rule that the integer rectangle waits for a current consumer. `Rect2i`, its typed `Rect` conversions, persistence, packed-scene storage, documentation, and executable coverage are implemented.
 
 ### Context
 
 Some paired value types have distinct storage and behavior but form one predictable public vocabulary. Requiring an existing caller before implementing the sibling leaves a known hole that later domains must retrofit. Conversely, implementing every imaginable symmetric type would create speculative API. Electron2D therefore needs a narrower criterion based on an accepted future engine role.
 
-`RectI` has foreseeable 2D uses in pixel rectangles, texture and atlas regions, image buffers, tile/grid bounds, and integer viewport or UI regions. Those domains are not implemented yet, but they are within the accepted product direction. Absence of a current caller is therefore not a valid reason to omit `RectI` when completing the rectangle family.
+`Rect2i` has foreseeable 2D uses in pixel rectangles, texture and atlas regions, image buffers, tile/grid bounds, and integer viewport or UI regions. Those domains are not implemented yet, but they are within the accepted product direction. Absence of a current caller is therefore not a valid reason to omit `Rect2i` when completing the rectangle family.
 
 ### Decision
 
@@ -433,14 +433,15 @@ Some paired value types have distinct storage and behavior but form one predicta
 - A sibling is included in the same production-ready vertical slice when its future role is concrete and belongs to an accepted Electron2D domain, even if no current consumer exists.
 - The sibling receives its full own API, XML/living documentation, persistence and integration where supported, positive/negative/boundary tests, and post-implementation audit. Empty shells and compatibility aliases remain forbidden.
 - Pure symmetry is insufficient: speculative types, 3D families, and concepts outside the accepted architecture remain excluded.
-- `RectI` is the required integer sibling of `Rect`. Its complete implementation includes the audited integer-rectangle contract and typed conversions in both rectangle types.
+- `Rect2i` is the required integer sibling of `Rect`. Its complete implementation includes the audited integer-rectangle contract and typed conversions in both rectangle types.
+- The integer sibling retains the explicit two-dimensional `Rect2i` name. The floating-point rectangle remains `Rect` under ADR 0032. No alternate integer-rectangle type name or compatibility alias ships.
 - The delivered type uses `Vector2i`, explicit normalization, unchecked ordinary integer arithmetic, strict typed persistence, and direct reference-free packed-scene storage without adding an absent consumer domain.
 
 ### Consequences
 
 - Future `реализуй X` scopes can include a foreseeable sibling even without a current consumer.
-- Rectangle-family work includes `RectI`, so later image, atlas, grid, renderer, and UI work receives a stable integer geometry primitive instead of inventing one locally.
-- Current inventory and class/component/domain documents list both `Rect` and `RectI` as implemented while leaving their absent consumer domains explicit.
+- Rectangle-family work includes `Rect2i`, so later image, atlas, grid, renderer, and UI work receives a stable integer geometry primitive instead of inventing one locally.
+- Current inventory and class/component/domain documents list both `Rect` and `Rect2i` as implemented while leaving their absent consumer domains explicit.
 
 ### Rejected alternatives
 

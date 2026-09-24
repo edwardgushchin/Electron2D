@@ -198,8 +198,8 @@ internal static class TweenValue<TValue>
             return Cast((Rect from, Rect to, double weight) => new Rect(
                 from.Position.Lerp(to.Position, (float)weight),
                 from.Size.Lerp(to.Size, (float)weight)));
-        if (typeof(TValue) == typeof(RectI))
-            return Cast((RectI from, RectI to, double weight) => new RectI(
+        if (typeof(TValue) == typeof(Rect2i))
+            return Cast((Rect2i from, Rect2i to, double weight) => new Rect2i(
                 TweenValue<Vector2i>.Interpolate!(from.Position, to.Position, weight),
                 TweenValue<Vector2i>.Interpolate!(from.Size, to.Size, weight)));
         if (typeof(TValue) == typeof(Transform))
@@ -235,8 +235,8 @@ internal static class TweenValue<TValue>
             return Cast((Color left, Color right) => left + right);
         if (typeof(TValue) == typeof(Rect))
             return Cast((Rect left, Rect right) => new Rect(left.Position + right.Position, left.Size + right.Size));
-        if (typeof(TValue) == typeof(RectI))
-            return Cast((RectI left, RectI right) => new RectI(left.Position + right.Position, left.Size + right.Size));
+        if (typeof(TValue) == typeof(Rect2i))
+            return Cast((Rect2i left, Rect2i right) => new Rect2i(left.Position + right.Position, left.Size + right.Size));
         if (typeof(TValue) == typeof(Transform))
             return Cast((Transform left, Transform right) => left * right);
         return null;
@@ -270,8 +270,8 @@ internal static class TweenValue<TValue>
             return Cast((Color left, Color right) => left - right);
         if (typeof(TValue) == typeof(Rect))
             return Cast((Rect left, Rect right) => new Rect(left.Position - right.Position, left.Size - right.Size));
-        if (typeof(TValue) == typeof(RectI))
-            return Cast((RectI left, RectI right) => new RectI(left.Position - right.Position, left.Size - right.Size));
+        if (typeof(TValue) == typeof(Rect2i))
+            return Cast((Rect2i left, Rect2i right) => new Rect2i(left.Position - right.Position, left.Size - right.Size));
         if (typeof(TValue) == typeof(Transform))
             return Cast((Transform left, Transform right) => right.AffineInverse() * left);
         return null;

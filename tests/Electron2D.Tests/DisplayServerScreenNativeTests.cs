@@ -89,7 +89,7 @@ internal static class DisplayServerScreenNativeTests
             Check(display.ScreenGetPosition(index) == new Vector2i(bounds.X, bounds.Y) &&
                   display.ScreenGetSize(index) == physicalSize &&
                   display.ScreenGetUsableRect(index) ==
-                  new RectI(new Vector2i(bounds.X, bounds.Y), physicalSize),
+                  new Rect2i(new Vector2i(bounds.X, bounds.Y), physicalSize),
                 "Wayland screen position and physical size match the native output snapshot.");
             if (index == 0 && physicalSize.X > bounds.W)
                 Check(display.GetScreenFromRect(new Rect(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,

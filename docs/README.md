@@ -1,6 +1,6 @@
 # Electron2D documentation
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
@@ -26,7 +26,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
 - Engine-owned `Vector2`/`Vector2i` and `Vector4`/`Vector4i` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
 - Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
-- Integer `RectI` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge, typed `Rect` conversions, strict configuration serialization, and packed-scene storage: implemented for foreseeable pixel, atlas, image-region, and grid bounds without depending on those future consumers.
+- Integer `Rect2i` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge, typed `Rect` conversions, strict configuration serialization, and packed-scene storage: implemented for foreseeable pixel, atlas, image-region, and grid bounds without depending on those future consumers.
 - Engine-owned `Transform` is implemented with complete affine math, rectangle operators, strict finite configuration persistence, direct packed-scene storage, allocation-free numeric hot paths, and direct `Entity` local/global integration through `Vector2`.
 - Process-wide typed project settings, feature overrides, directory-backed `res://`/`user://`, blocking typed file access with metadata/hashes/temporary files/cross-platform extended attributes/compression/authenticated encryption, scoped directory navigation/listing/mutations/links/temporary ownership/filesystem identity, host-driven bounded fixed-step scheduling, scaled/original frame deltas, time scaling, frame metrics, named engine singletons, typed keyboard/mouse/touch/gesture/controller events, action mapping and frame-latched state, deterministic Node input propagation, typed sectioned configuration files with atomic persistence and authenticated encryption, separate Node, CanvasItem and spatial Entity layers, local/global transforms, hierarchy paths and groups, visibility and Z state, pause-aware public/internal process lanes, reusable Timer scene nodes, lightweight one-shot frame timers, typed Tween sequences and interpolation, exception-safe scene-tree lifecycle, typed group operations, queued deletion, typed deferred work and event connections, in-memory typed packed scenes with per-instance local resources, translations, notifications including the future-facing `ScriptChanged` hook, typed editor-property descriptors, and the typed resource base with graph duplication: implemented.
 - Managed CPU images implement raw pixel layouts, copied-buffer ownership, mip chains, format conversion, transforms, filters, compositing, channel/alpha inspection, normal-map helpers and metrics. PNG/JPEG/WebP/BMP/TGA file/buffer decoding and PNG/JPEG encoding execute through the native image integration. Further codecs and block compression/decompression remain incomplete under ADR 0039.
@@ -85,7 +85,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Struct: [Vector4](classes/Vector4.md)
 - Struct: [Vector4i](classes/Vector4i.md)
 - Struct: [Rect](classes/Rect.md)
-- Struct: [RectI](classes/RectI.md)
+- Struct: [Rect2i](classes/Rect2i.md)
 - Struct: [Transform](classes/Transform.md)
 - Enum: [Side](classes/Side.md)
 - Class: [ConfigKey&lt;T&gt;](classes/ConfigKey.Generic.md)
@@ -131,7 +131,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Class: [Resource](classes/Resource.md)
 - Enum: [DeepDuplicateMode](classes/DeepDuplicateMode.md)
 - Class: [Image](classes/Image.md)
-- Image enums: [Image.Format](classes/Image.Format.md), [Image.Interpolation](classes/Image.Interpolation.md), [Image.AlphaMode](classes/Image.AlphaMode.md), [Image.UsedChannels](classes/Image.UsedChannels.md), [Image.CompressSource](classes/Image.CompressSource.md), [Image.CompressMode](classes/Image.CompressMode.md), and [Image.AstcFormat](classes/Image.AstcFormat.md)
+- Image enums: [Image.Format](classes/Image.Format.md), [Image.Interpolation](classes/Image.Interpolation.md), [Image.AlphaMode](classes/Image.AlphaMode.md), [Image.UsedChannels](classes/Image.UsedChannels.md), [Image.CompressSource](classes/Image.CompressSource.md), [Image.CompressMode](classes/Image.CompressMode.md), and [Image.ASTCFormat](classes/Image.ASTCFormat.md)
 - Struct: [ImageMetrics](classes/ImageMetrics.md)
 - Enum: [ClockDirection](classes/ClockDirection.md)
 - Decisions: [routing index](decisions/index.md) with bounded logs for [Product architecture](decisions/product.md), [Core object/runtime](decisions/core-object-runtime.md), [Core data/I/O](decisions/core-data-io.md), [Core math](decisions/core-math.md), [Input](decisions/input.md), [Scene](decisions/scene.md), [Resources](decisions/resources.md), [Localization](decisions/localization.md), and [Rendering](decisions/rendering.md).

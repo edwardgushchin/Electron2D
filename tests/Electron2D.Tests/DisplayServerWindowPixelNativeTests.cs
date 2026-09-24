@@ -14,9 +14,9 @@ internal static class DisplayServerWindowPixelNativeTests
         var originalSize = display.WindowGetSize();
         var originalMinimum = display.WindowGetMinSize();
         var originalMaximum = display.WindowGetMaxSize();
-        var lastRect = default(RectI);
+        var lastRect = default(Rect2i);
         var rectChanged = false;
-        void OnRectChanged(RectI rectangle)
+        void OnRectChanged(Rect2i rectangle)
         {
             lastRect = rectangle;
             rectChanged = true;

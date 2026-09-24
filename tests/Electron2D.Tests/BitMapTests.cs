@@ -8,7 +8,7 @@ internal static class BitMapTests
         Check(mask.GetSize() == new Vector2i(0, 0) && mask.GetTrueBitCount() == 0, "Default mask must be empty.");
         Reject<ArgumentOutOfRangeException>(() => mask.Create(new Vector2i(0, 2)));
         mask.Create(new Vector2i(4, 3));
-        mask.SetBitRect(new RectI(-1, -1, 3, 3), true);
+        mask.SetBitRect(new Rect2i(-1, -1, 3, 3), true);
         Check(mask.GetTrueBitCount() == 4 && mask.GetBitv(new Vector2i(1, 1)) && !mask.GetBit(2, 2), "Clipped rectangular writes must preserve bit order.");
         mask.SetBitv(new Vector2i(1, 1), false);
         Check(mask.GetTrueBitCount() == 3, "Vector writes must clear the chosen bit.");
@@ -40,29 +40,29 @@ internal static class BitMapTests
 
         mask.Create(new Vector2i(5, 5));
         mask.SetBit(2, 2, true);
-        mask.GrowMask(1, new RectI(0, 0, 5, 5));
+        mask.GrowMask(1, new Rect2i(0, 0, 5, 5));
         Check(mask.GetTrueBitCount() == 5 && mask.GetBit(2, 1) && !mask.GetBit(1, 1), "Positive radius must use a circular neighborhood.");
-        mask.GrowMask(-1, new RectI(0, 0, 5, 5));
+        mask.GrowMask(-1, new Rect2i(0, 0, 5, 5));
         Check(mask.GetTrueBitCount() == 1 && mask.GetBit(2, 2), "Erosion must use the original snapshot.");
-        mask.SetBitRect(new RectI(0, 0, 5, 5), true);
-        mask.GrowMask(-1, new RectI(1, 1, 3, 3));
+        mask.SetBitRect(new Rect2i(0, 0, 5, 5), true);
+        mask.GrowMask(-1, new Rect2i(1, 1, 3, 3));
         Check(mask.GetBit(0, 0) && !mask.GetBit(1, 1) && mask.GetBit(2, 2), "Erosion must preserve outside-region pixels and treat its border as unset.");
 
         mask.Create(new Vector2i(4, 4));
-        mask.SetBitRect(new RectI(1, 1, 2, 2), true);
-        var polygons = mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), 0);
+        mask.SetBitRect(new Rect2i(1, 1, 2, 2), true);
+        var polygons = mask.OpaqueToPolygons(new Rect2i(0, 0, 4, 4), 0);
         Check(polygons.Length == 1 && polygons[0].Length == 4 &&
             polygons[0].Contains(new Vector2(1, 1)) && polygons[0].Contains(new Vector2(3, 3)),
             "A two-by-two island must trace one four-corner contour.");
-        var clipped = mask.OpaqueToPolygons(new RectI(2, 2, 2, 2), 0);
+        var clipped = mask.OpaqueToPolygons(new Rect2i(2, 2, 2, 2), 0);
         Check(clipped.Length == 1 && clipped[0].Contains(new Vector2(0, 0)), "Clipped contour coordinates must be relative to the inspected rectangle.");
-        Check(mask.OpaqueToPolygons(new RectI(10, 10, 2, 2)).Length == 0, "Disjoint regions must return no polygons.");
-        Reject<ArgumentOutOfRangeException>(() => mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), float.NaN));
+        Check(mask.OpaqueToPolygons(new Rect2i(10, 10, 2, 2)).Length == 0, "Disjoint regions must return no polygons.");
+        Reject<ArgumentOutOfRangeException>(() => mask.OpaqueToPolygons(new Rect2i(0, 0, 4, 4), float.NaN));
 
         mask.Create(new Vector2i(8, 8));
         mask.SetBit(1, 1, true);
         mask.SetBit(6, 6, true);
-        Check(mask.OpaqueToPolygons(new RectI(0, 0, 8, 8), 0).Length == 2, "Disconnected islands must produce separate polygons.");
+        Check(mask.OpaqueToPolygons(new Rect2i(0, 0, 8, 8), 0).Length == 2, "Disconnected islands must produce separate polygons.");
         mask.Resize(new Vector2i(16, 16));
         Check(mask.GetTrueBitCount() == 8 && mask.GetBit(2, 2) && !mask.GetBit(4, 4), "Nearest-neighbor upscaling must preserve independent islands.");
         mask.Resize(new Vector2i(8, 8));
@@ -72,14 +72,14 @@ internal static class BitMapTests
         mask.Create(new Vector2i(4, 4));
         mask.SetBit(1, 1, true);
         mask.SetBit(2, 2, true);
-        var diagonal = mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), 0);
+        var diagonal = mask.OpaqueToPolygons(new Rect2i(0, 0, 4, 4), 0);
         Check(diagonal.Length == 2 && diagonal.All(polygon => polygon.Length >= 3),
             "Diagonal contact must split at the ambiguous marching-squares crossing.");
 
         mask.Create(new Vector2i(8, 8));
-        mask.SetBitRect(new RectI(1, 1, 6, 6), true);
-        mask.SetBitRect(new RectI(3, 3, 2, 2), false);
-        var ring = mask.OpaqueToPolygons(new RectI(0, 0, 8, 8), 2);
+        mask.SetBitRect(new Rect2i(1, 1, 6, 6), true);
+        mask.SetBitRect(new Rect2i(3, 3, 2, 2), false);
+        var ring = mask.OpaqueToPolygons(new Rect2i(0, 0, 8, 8), 2);
         Check(ring.Length > 0 && ring.All(polygon => polygon.Length >= 3),
             "A ring and its reduced contour must terminate without degenerate polygons.");
 
@@ -88,7 +88,7 @@ internal static class BitMapTests
             mask.Create(new Vector2i(3, 3));
             for (var bit = 0; bit < 9; bit++)
                 if ((pattern & (1 << bit)) != 0) mask.SetBit(bit % 3, bit / 3, true);
-            var contours = mask.OpaqueToPolygons(new RectI(0, 0, 3, 3), 0);
+            var contours = mask.OpaqueToPolygons(new Rect2i(0, 0, 3, 3), 0);
             Check(contours.All(polygon => polygon.Length >= 3), "Every small-mask topology must return only valid contours.");
         }
 

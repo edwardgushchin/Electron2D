@@ -50,7 +50,7 @@ public sealed partial class DisplayServer
 
     /// <summary>Occurs when the main window's observed client rectangle changes.</summary>
     /// <remarks>Receives the full rectangle in pixel coordinates on Wayland and platform-native window coordinates elsewhere, after the changed position or size has been committed and in native event order during <see cref="ProcessEvents"/>. On Wayland, the position is conventionally zero because the compositor does not disclose a reliable global position. Unchanged rectangles and events from other windows do not notify. Delivery is confined to the opening thread; a failing handler does not prevent later queued events from being delivered.</remarks>
-    public event Action<RectI>? WindowRectChanged;
+    public event Action<Rect2i>? WindowRectChanged;
 
     /// <summary>Occurs when the main window gains or loses keyboard focus.</summary>
     /// <remarks>Delivery is synchronous for the main window during <see cref="ProcessEvents"/> or <see cref="ForceProcessAndDropEvents"/>. The window callback precedes the application notification. Losing focus releases tracked pressed input afterward, even when either callback fails; failures are reported after later queued events are delivered.</remarks>
@@ -272,7 +272,7 @@ public sealed partial class DisplayServer
             case SDL.EventType.WindowPixelSizeChanged when _waylandWindowPosition:
                 if (_waylandWindowPosition)
                     RefreshBlankWindowSurface();
-                var resizedRect = new RectI(_windowRect.Position,
+                var resizedRect = new Rect2i(_windowRect.Position,
                     new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2));
                 if (resizedRect != _windowRect)
                 {
@@ -283,7 +283,7 @@ public sealed partial class DisplayServer
             case SDL.EventType.WindowMoved:
                 if (_waylandWindowPosition)
                     break;
-                var movedRect = new RectI(new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2),
+                var movedRect = new Rect2i(new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2),
                     _windowRect.Size);
                 if (movedRect != _windowRect)
                 {

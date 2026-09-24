@@ -90,7 +90,7 @@ public class BitMap : Resource
     /// <summary>Sets all bits in the clipped half-open rectangle.</summary>
     /// <param name="rect">The requested region.</param>
     /// <param name="bit">The new value.</param>
-    public void SetBitRect(RectI rect, bool bit)
+    public void SetBitRect(Rect2i rect, bool bit)
     {
         bool changed = false;
         lock (_gate)
@@ -162,7 +162,7 @@ public class BitMap : Resource
     /// <summary>Dilates a mask for positive pixels or erodes it for negative pixels within a region.</summary>
     /// <param name="pixels">Signed Euclidean radius.</param>
     /// <param name="rect">Half-open affected region; pixels outside it stay unchanged and count as unset during erosion.</param>
-    public void GrowMask(int pixels, RectI rect)
+    public void GrowMask(int pixels, Rect2i rect)
     {
         if (pixels == 0) { ThrowIfDisposed(); return; }
         bool changed = false;
@@ -205,7 +205,7 @@ public class BitMap : Resource
     /// <param name="rect">The half-open region to inspect.</param>
     /// <param name="epsilon">Nonnegative Ramer-Douglas-Peucker reduction tolerance.</param>
     /// <returns>Polygons with points relative to the clipped rectangle's origin.</returns>
-    public Vector2[][] OpaqueToPolygons(RectI rect, float epsilon = 2f)
+    public Vector2[][] OpaqueToPolygons(Rect2i rect, float epsilon = 2f)
     {
         if (!float.IsFinite(epsilon) || epsilon < 0) throw new ArgumentOutOfRangeException(nameof(epsilon));
         lock (_gate)
@@ -344,7 +344,7 @@ public class BitMap : Resource
     private static bool Inside((int Left, int Top, int Right, int Bottom) area, int x, int y) =>
         x >= area.Left && x < area.Right && y >= area.Top && y < area.Bottom;
 
-    private (int Left, int Top, int Right, int Bottom) Clip(RectI rect)
+    private (int Left, int Top, int Right, int Bottom) Clip(Rect2i rect)
     {
         var left = (int)Math.Clamp((long)rect.Position.X, 0, _width);
         var top = (int)Math.Clamp((long)rect.Position.Y, 0, _height);

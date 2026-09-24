@@ -426,7 +426,7 @@ Tests whether either position or size differs under exact component equality.
 - Growth is algebraic and may create zero or negative size. No exception is raised for over-shrinking.
 - Geometry methods expose ordinary IEEE 754 propagation rather than throwing for NaN or infinity. `IsFinite()` is the explicit validation operation.
 - `GrowSide` mirrors the four known [`Side`](Side.md) values and treats an undefined value as a no-op.
-- Explicit conversion to [`RectI`](RectI.md) rejects a non-finite or out-of-range component with `ArgumentOutOfRangeException`.
+- Explicit conversion to [`Rect2i`](Rect2i.md) rejects a non-finite or out-of-range component with `ArgumentOutOfRangeException`.
 - The only intentionally exposed exception is `FormatException` when `ToString(string?)` receives an invalid numeric format.
 
 ## Lifecycle, threading, and allocation
@@ -437,13 +437,13 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`RectI`](RectI.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
 
 There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. The complete integer sibling and typed conversions are implemented without depending on their future pixel, atlas, image-region, or grid consumers. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 
 ## Verification and known limitations
 
-`tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area, normalization, enclosure, expansion, center/support mapping, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, exact/approximate/NaN/infinity behavior, hashing, both `RectI` conversions and invalid conversion, invariant formatting and failure, strict configuration serialization and malformed-input rollback, packed-scene storage, and zero warmed numeric allocation.
+`tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area, normalization, enclosure, expansion, center/support mapping, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, exact/approximate/NaN/infinity behavior, hashing, both `Rect2i` conversions and invalid conversion, invariant formatting and failure, strict configuration serialization and malformed-input rollback, packed-scene storage, and zero warmed numeric allocation.
 
 Execution is currently verified on Linux/.NET 8. Native backend interop and the full six-target matrix remain unverified.
 

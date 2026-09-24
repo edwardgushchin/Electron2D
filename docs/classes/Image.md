@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -27,7 +27,7 @@ Every state read and mutation is synchronized per instance. Bulk mutations prepa
 ```csharp
 using var image = Image.CreateEmpty(64, 32, useMipmaps: false, Image.Format.Rgba8);
 image.Fill(Colors.Transparent);
-image.FillRect(new RectI(8, 8, 16, 16), Colors.White);
+image.FillRect(new Rect2i(8, 8, 16, 16), Colors.White);
 image.GenerateMipmaps();
 
 Color center = image.GetPixel(16, 16);
@@ -72,14 +72,14 @@ byte[] ownedCopy = image.GetData();
 | [`public void SetPixel(Vector2i point, Color color)`](#setpixel-point) | Encodes one base-level pixel. |
 | [`public Image.AlphaMode DetectAlpha()`](#detectalpha) | Classifies base-level alpha use. |
 | [`public Image.UsedChannels DetectUsedChannels(Image.CompressSource source = Image.CompressSource.Generic)`](#detectusedchannels) | Detects the smallest meaningful channel set. |
-| [`public RectI GetUsedRect()`](#getusedrect) | Finds nontransparent base-level bounds. |
+| [`public Rect2i GetUsedRect()`](#getusedrect) | Finds nontransparent base-level bounds. |
 | [`public void Fill(Color color)`](#fill) | Fills all stored levels. |
-| [`public void FillRect(RectI rectangle, Color color)`](#fillrect) | Fills a clipped base-level rectangle. |
+| [`public void FillRect(Rect2i rectangle, Color color)`](#fillrect) | Fills a clipped base-level rectangle. |
 | [`public void ClearMipmaps()`](#clearmipmaps) | Removes lower-resolution levels. |
 | [`public void GenerateMipmaps(bool renormalize = false)`](#generatemipmaps) | Rebuilds a complete mip chain. |
 | [`public void Convert(Image.Format format)`](#convert) | Converts all stored levels to an uncompressed format. |
 | [`public void Crop(int width, int height)`](#crop) | Crops or expands from the top-left corner. |
-| [`public Image GetRegion(RectI region)`](#getregion) | Copies a clipped base-level region. |
+| [`public Image GetRegion(Rect2i region)`](#getregion) | Copies a clipped base-level region. |
 | [`public void FlipX()`](#flipx) | Flips all levels horizontally. |
 | [`public void FlipY()`](#flipy) | Flips all levels vertically. |
 | [`public void Rotate90(ClockDirection direction)`](#rotate90) | Rotates by 90 degrees. |
@@ -87,10 +87,10 @@ byte[] ownedCopy = image.GetData();
 | [`public void ShrinkX2()`](#shrinkx2) | Halves dimensions with bilinear filtering. |
 | [`public void Resize(int width, int height, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resize) | Resamples the base level. |
 | [`public void ResizeToPowerOfTwo(bool square = false, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resizetopot) | Resamples to power-of-two dimensions. |
-| [`public void BlitRect(Image source, RectI sourceRect, Vector2i destination)`](#blitrect) | Copies a clipped source rectangle. |
-| [`public void BlendRect(Image source, RectI sourceRect, Vector2i destination)`](#blendrect) | Alpha-composites a clipped source rectangle. |
-| [`public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`](#blitrectmask) | Copies source pixels selected by mask alpha. |
-| [`public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`](#blendrectmask) | Alpha-composites source pixels selected by mask alpha. |
+| [`public void BlitRect(Image source, Rect2i sourceRect, Vector2i destination)`](#blitrect) | Copies a clipped source rectangle. |
+| [`public void BlendRect(Image source, Rect2i sourceRect, Vector2i destination)`](#blendrect) | Alpha-composites a clipped source rectangle. |
+| [`public void BlitRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`](#blitrectmask) | Copies source pixels selected by mask alpha. |
+| [`public void BlendRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`](#blendrectmask) | Alpha-composites source pixels selected by mask alpha. |
 | [`public void AdjustBCS(float brightness, float contrast, float saturation)`](#adjustbcs) | Adjusts brightness, contrast, and saturation. |
 | [`public void FixAlphaEdges()`](#fixalphaedges) | Propagates nearby opaque RGB into low-alpha `Rgba8` pixels. |
 | [`public void PremultiplyAlpha()`](#premultiplyalpha) | Multiplies `Rgba8` RGB bytes by alpha. |
@@ -124,7 +124,7 @@ byte[] ownedCopy = image.GetData();
 | [`Image.UsedChannels`](Image.UsedChannels.md) | Minimal meaningful channel sets. |
 | [`Image.CompressSource`](Image.CompressSource.md) | Source semantics used during channel detection and future compression. |
 | [`Image.CompressMode`](Image.CompressMode.md) | Future block-compression family selection. |
-| [`Image.AstcFormat`](Image.AstcFormat.md) | Future ASTC block-footprint selection. |
+| [`Image.ASTCFormat`](Image.ASTCFormat.md) | Future ASTC block-footprint selection. |
 
 ## Constants
 
@@ -279,9 +279,9 @@ Returns `None` when no base pixel is transparent, `Bit` when alpha uses only ful
 Scans the base level and returns the smallest useful channel set. `Rgba16I` alpha is compared against 65,535; `Normal` always selects red/green; `Srgb` currently uses ordinary color detection. Invalid enum values are rejected.
 
 <a id="getusedrect"></a>
-### `public RectI GetUsedRect()`
+### `public Rect2i GetUsedRect()`
 
-Returns the smallest half-open base-level rectangle whose pixels have alpha greater than zero. An entirely transparent image returns `default(RectI)`; formats without alpha treat decoded pixels as opaque.
+Returns the smallest half-open base-level rectangle whose pixels have alpha greater than zero. An entirely transparent image returns `default(Rect2i)`; formats without alpha treat decoded pixels as opaque.
 
 <a id="fill"></a>
 ### `public void Fill(Color color)`
@@ -289,7 +289,7 @@ Returns the smallest half-open base-level rectangle whose pixels have alpha grea
 Encodes `color` into every pixel of every stored level. Quantization and omitted-channel defaults follow the current format.
 
 <a id="fillrect"></a>
-### `public void FillRect(RectI rectangle, Color color)`
+### `public void FillRect(Rect2i rectangle, Color color)`
 
 Clips the half-open rectangle to the base image. Nonpositive or disjoint rectangles change no pixels. When mipmaps exist, they are rebuilt from the resulting base level.
 
@@ -314,7 +314,7 @@ Decodes and re-encodes every stored pixel into an uncompressed destination. Comp
 Copies the top-left overlap into the requested positive size and fills newly exposed pixels with transparent black encoded in the current format. Existing mipmaps are regenerated.
 
 <a id="getregion"></a>
-### `public Image GetRegion(RectI region)`
+### `public Image GetRegion(Rect2i region)`
 
 Returns a new image containing the clipped base-level intersection without mipmaps. A disjoint or nonpositive region returns a new empty image.
 
@@ -354,22 +354,22 @@ Resamples the base level to positive validated dimensions with the selected filt
 Rounds each dimension upward to a power of two. When `square` is true, both use the larger result. The selected interpolation and normal resize limits apply.
 
 <a id="blitrect"></a>
-### `public void BlitRect(Image source, RectI sourceRect, Vector2i destination)`
+### `public void BlitRect(Image source, Rect2i sourceRect, Vector2i destination)`
 
 Copies the clipped source rectangle without alpha blending. Source and destination formats must match. Destination is aligned with `sourceRect.Position`, so source clipping preserves the corresponding destination offset.
 
 <a id="blendrect"></a>
-### `public void BlendRect(Image source, RectI sourceRect, Vector2i destination)`
+### `public void BlendRect(Image source, Rect2i sourceRect, Vector2i destination)`
 
 Composites straight-alpha source colors over the destination. Formats must match and both images must be readable. For `Rgba16I`, alpha is normalized from `0..65535` during blending and converted back to integer storage afterward.
 
 <a id="blitrectmask"></a>
-### `public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`
+### `public void BlitRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`
 
 Copies only pixels whose same-coordinate mask alpha is nonzero. Source and mask dimensions must match; source/destination formats must match; the mask must expose alpha.
 
 <a id="blendrectmask"></a>
-### `public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`
+### `public void BlendRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination)`
 
 Combines mask selection with straight-alpha compositing. Source, destination, and mask validation occurs before destination commit.
 
@@ -541,7 +541,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 ## Dependencies and interactions
 
-`Image` depends on `Resource`, `Color`, `Vector2i`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
+`Image` depends on `Resource`, `Color`, `Vector2i`, `Rect2i`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
 
 ## Verification
 

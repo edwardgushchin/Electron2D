@@ -1,6 +1,6 @@
-# Image.AstcFormat
+# Image.ASTCFormat
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** `System.Enum`
 
@@ -8,7 +8,7 @@ Last updated: 2026-09-21
 
 - **Source:** [`src/Core/IO/Image.cs`](../../src/Core/IO/Image.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum Image.AstcFormat`
+- **Declaration:** `public enum Image.ASTCFormat`
 
 > Selects the pixel-block footprint requested from a future ASTC encoder.
 
@@ -19,7 +19,7 @@ ASTC always stores 16 bytes per block. A 4×4 footprint favors quality; an 8×8 
 ## Examples
 
 ```csharp
-Image.AstcFormat footprint = Image.AstcFormat.Format4X4;
+Image.ASTCFormat footprint = Image.ASTCFormat.Format4X4;
 ```
 
 ## Enumeration values

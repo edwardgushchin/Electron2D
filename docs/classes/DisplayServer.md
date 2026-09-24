@@ -22,7 +22,7 @@ Owns one native SDL video connection and its main window.
 
 `WindowDpiChanged` forwards a native change of the main window's display content scale. It carries no numeric value and does not measure physical dots per inch. Query `ScreenGetScale()` with its default main-window selector after delivery; on Wayland an indexed screen scale is the separate integer output scale and can differ from the window's fractional scale.
 
-`WindowRectChanged` delivers a complete `RectI` for the main window's client area after a native move or size change. Its position uses the driver's desktop coordinates; on Wayland the position is conventionally `(0, 0)` because a reliable global top-level position is unavailable. Its size uses client pixels on Wayland and native window units on other drivers. Each callback receives the rectangle as it stood at that event in native queue order; duplicate rectangles and events for other windows are ignored. The Wayland convention does not make the global-position query or setter available.
+`WindowRectChanged` delivers a complete `Rect2i` for the main window's client area after a native move or size change. Its position uses the driver's desktop coordinates; on Wayland the position is conventionally `(0, 0)` because a reliable global top-level position is unavailable. Its size uses client pixels on Wayland and native window units on other drivers. Each callback receives the rectangle as it stood at that event in native queue order; duplicate rectangles and events for other windows are ignored. The Wayland convention does not make the global-position query or setter available.
 
 Native key events carry independent logical, physical, and unmodified layout-label identities. Left/right control, shift, alt, and GUI scancodes set the corresponding `InputEventKey.Location`; all other scancodes use `Unspecified`. The native adapter leaves `InputEventKey.Unicode` at zero while committed text is delivered separately. SDL key events contain no produced text scalar; text-input events may contain multiple scalars or an IME commit without identifying a corresponding key press. Populating native key-event Unicode requires a per-key Unicode source with verified IME/composition semantics in the first native keyboard/text adapter slice.
 
@@ -146,7 +146,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
 | [`public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
 | [`public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
-| [`public RectI ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
+| [`public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
 | [`public float ScreenGetScale(int screen = ScreenOfMainWindow)`](#method-screengetscale) | Gets the display content scale reported by the native video system. |
 | [`public void WindowSetTitle(string title, int windowId = MainWindowId)`](#method-windowsettitle) | Requests a new main-window title. |
 | [`public Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
@@ -169,7 +169,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public event Action? WindowMouseEntered`](#event-windowmouseentered) | Occurs when the pointer enters the main window. |
 | [`public event Action? WindowMouseExited`](#event-windowmouseexited) | Occurs when the pointer leaves the main window. |
 | [`public event Action? WindowDpiChanged`](#event-windowdpichanged) | Occurs when the main window's native display content scale changes. |
-| [`public event Action<RectI>? WindowRectChanged`](#event-windowrectchanged) | Occurs after a change to the main window's complete client rectangle. |
+| [`public event Action<Rect2i>? WindowRectChanged`](#event-windowrectchanged) | Occurs after a change to the main window's complete client rectangle. |
 | [`public event Action<bool>? WindowFocusChanged`](#event-windowfocuschanged) | Occurs when the main window gains or loses keyboard focus. |
 | [`public event Action<string>? TextInput`](#event-textinput) | Occurs when the platform commits text input, including text composed through an IME. |
 | [`public event Action<string, Vector2i>? TextEditing`](#event-textediting) | Occurs after the native input method updates its uncommitted composition. |
@@ -892,7 +892,7 @@ Gets the full size of a display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetusablerect"></a>
-#### `public RectI ScreenGetUsableRect(int screen = ScreenOfMainWindow)`
+#### `public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)`
 
 Gets the usable desktop rectangle of a display.
 
@@ -1085,9 +1085,9 @@ Occurs when SDL reports a display-content-scale change for the main window. The 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-windowrectchanged"></a>
-#### `public event Action<RectI>? WindowRectChanged`
+#### `public event Action<Rect2i>? WindowRectChanged`
 
-Occurs when a native move or resize changes the observed client rectangle of the main window. The `RectI` argument contains the complete position and size after that individual event: position is in the driver's desktop coordinates and size is in client pixels on Wayland or native window units elsewhere. On Wayland, the position is conventionally `(0, 0)` because the compositor does not disclose a reliable global top-level position.
+Occurs when a native move or resize changes the observed client rectangle of the main window. The `Rect2i` argument contains the complete position and size after that individual event: position is in the driver's desktop coordinates and size is in client pixels on Wayland or native window units elsewhere. On Wayland, the position is conventionally `(0, 0)` because the compositor does not disclose a reliable global top-level position.
 
 **Remarks:** The opening thread delivers callbacks synchronously during `ProcessEvents` or `ForceProcessAndDropEvents`, in native queue order. The server commits the changed rectangle before calling handlers, so a move followed by a resize produces successive full-rectangle snapshots. Unchanged rectangles and events for other native windows do not notify. A failing handler does not stop later native events; the pump reports callback failures in an `AggregateException` after draining the queue. `WindowGetPosition` and `WindowSetPosition` still reject Wayland.
 
@@ -1416,7 +1416,7 @@ The same Wayland screen probe returned precise refresh rates of 143.98, 143.997,
 
 The native Wayland handle probe compared the two public borrowed values with SDL's exact `wl_display` and `wl_surface` window properties; both matched and were nonzero.
 
-The dummy run also verifies successive full `RectI` snapshots for move and resize, order relative to quit, duplicate and foreign-window filtering, rejection of an off-thread pump without consuming its queue, and delivery after a failing rectangle handler with the failure aggregated. A native Wayland size request produced a real client-rectangle callback and pixel-size readback at density 1.25. A user-driven move/resize sequence and Wayland's zero-position convention remain unverified.
+The dummy run also verifies successive full `Rect2i` snapshots for move and resize, order relative to quit, duplicate and foreign-window filtering, rejection of an off-thread pump without consuming its queue, and delivery after a failing rectangle handler with the failure aggregated. A native Wayland size request produced a real client-rectangle callback and pixel-size readback at density 1.25. A user-driven move/resize sequence and Wayland's zero-position convention remain unverified.
 
 The X11 native smoke in `tests/Electron2D.Tests/DisplayServerNativeSmokeTests.cs` checked half-open client hit bounds and rejection of a point in the title bar or border when SDL reported nonzero border size. It also moved a normal window between two XWayland displays, checked the resulting screen, position within two units of the relative-offset formula, and preserved mode, then restored the original position. The dummy suite checked same-screen no-op and invalid screen/window rejection. Maximized, desktop fullscreen, and exclusive multi-display moves remain unverified on a real display. The dummy suite checked independent logical and scancode-derived label key state and release, non-Latin label conversion, and left/right/unspecified location for nine scancodes on press and release; a physical keyboard layout was not exercised.
 

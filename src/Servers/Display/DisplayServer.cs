@@ -42,7 +42,7 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly bool _linuxPortalThemeSupported;
     private readonly nint _gtkScreen;
     private readonly nint _gtkTitlebarProvider;
-    private RectI _windowRect;
+    private Rect2i _windowRect;
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
 
@@ -72,7 +72,7 @@ public sealed partial class DisplayServer : ElectronObject
                 throw SDLFailure("read the main window's initial position");
             position = new Vector2i(x, y);
         }
-        _windowRect = new RectI(position, width, height);
+        _windowRect = new Rect2i(position, width, height);
         _window = new SdlWindowHandle(window);
         GC.SuppressFinalize(_window);
     }
@@ -334,7 +334,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <summary>Gets the usable desktop rectangle of a display.</summary>
     /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
     /// <returns>The work area after platform-reserved bars are excluded; empty if the display is invalid. On Wayland, the full display position and physical pixel size are returned.</returns>
-    public RectI ScreenGetUsableRect(int screen = ScreenOfMainWindow)
+    public Rect2i ScreenGetUsableRect(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId))
@@ -347,7 +347,7 @@ public sealed partial class DisplayServer : ElectronObject
         var size = SDL.GetCurrentVideoDriver() == "wayland"
             ? WaylandPhysicalScreenSize(displayId, bounds)
             : new Vector2i(bounds.W, bounds.H);
-        return new RectI(new Vector2i(bounds.X, bounds.Y), size);
+        return new Rect2i(new Vector2i(bounds.X, bounds.Y), size);
     }
 
     private static Vector2i WaylandPhysicalScreenSize(uint displayId, SDL.Rect bounds)

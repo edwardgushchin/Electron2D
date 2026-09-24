@@ -80,7 +80,7 @@ public sealed class ConfigFile : ElectronObject
             new Vector3iJsonConverter(),
             new Vector4iJsonConverter(),
             new RectJsonConverter(),
-            new RectIJsonConverter(),
+            new Rect2iJsonConverter(),
             new TransformJsonConverter(),
         }
     };
@@ -1497,13 +1497,13 @@ internal sealed class RectJsonConverter : JsonConverter<Rect>
     }
 }
 
-internal sealed class RectIJsonConverter : JsonConverter<RectI>
+internal sealed class Rect2iJsonConverter : JsonConverter<Rect2i>
 {
     private const int Position = 1;
     private const int Size = 2;
     private const int Complete = Position | Size;
 
-    public override RectI Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Rect2i Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("An integer rectangle must be a JSON object.");
@@ -1519,8 +1519,8 @@ internal sealed class RectIJsonConverter : JsonConverter<RectI>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(RectI.Position) => Position,
-                nameof(RectI.Size) => Size,
+                nameof(Rect2i.Position) => Position,
+                nameof(Rect2i.Size) => Size,
                 _ => throw new JsonException($"An integer rectangle contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1540,15 +1540,15 @@ internal sealed class RectIJsonConverter : JsonConverter<RectI>
         if (fields != Complete)
             throw new JsonException("An integer rectangle must contain exactly Position and Size fields.");
 
-        return new RectI(position, size);
+        return new Rect2i(position, size);
     }
 
-    public override void Write(Utf8JsonWriter writer, RectI value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Rect2i value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WritePropertyName(nameof(RectI.Position));
+        writer.WritePropertyName(nameof(Rect2i.Position));
         JsonSerializer.Serialize(writer, value.Position, options);
-        writer.WritePropertyName(nameof(RectI.Size));
+        writer.WritePropertyName(nameof(Rect2i.Size));
         JsonSerializer.Serialize(writer, value.Size, options);
         writer.WriteEndObject();
     }

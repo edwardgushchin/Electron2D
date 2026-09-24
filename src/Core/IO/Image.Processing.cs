@@ -104,7 +104,7 @@ public sealed partial class Image
     /// <returns>An empty rectangle when no pixel is visible; otherwise half-open pixel bounds.</returns>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public RectI GetUsedRect()
+    public Rect2i GetUsedRect()
     {
         var state = RequireReadablePixels();
         var bytes = GetBytesPerPixel(state.Format);
@@ -126,7 +126,7 @@ public sealed partial class Image
             }
         }
 
-        return maxX < minX ? default : new RectI(minX, minY, (maxX - minX) + 1, (maxY - minY) + 1);
+        return maxX < minX ? default : new Rect2i(minX, minY, (maxX - minX) + 1, (maxY - minY) + 1);
     }
 
     /// <summary>Fills every pixel in every stored level with one color.</summary>
@@ -150,7 +150,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the fill commits.</exception>
-    public void FillRect(RectI rectangle, Color color) => Mutate(
+    public void FillRect(Rect2i rectangle, Color color) => Mutate(
         state =>
         {
             RequireReadablePixels(state);
@@ -216,7 +216,7 @@ public sealed partial class Image
     /// <returns>An empty image when the intersection has no area; otherwise an uncompressed image without mipmaps.</returns>
     /// <exception cref="InvalidOperationException">This image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">This image is disposing or disposed.</exception>
-    public Image GetRegion(RectI region)
+    public Image GetRegion(Rect2i region)
     {
         var state = RequireReadablePixels();
         var clipped = ClipRectangle(region, state.Width, state.Height);
@@ -330,7 +330,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">Either image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">Either image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the copy commits.</exception>
-    public void BlitRect(Image source, RectI sourceRect, Vector2i destination) =>
+    public void BlitRect(Image source, Rect2i sourceRect, Vector2i destination) =>
         Composite(source, null, sourceRect, destination, blend: false);
 
     /// <summary>Alpha-composites a clipped source rectangle over this image.</summary>
@@ -342,7 +342,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">Either image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">Either image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the blend commits.</exception>
-    public void BlendRect(Image source, RectI sourceRect, Vector2i destination) =>
+    public void BlendRect(Image source, Rect2i sourceRect, Vector2i destination) =>
         Composite(source, null, sourceRect, destination, blend: true);
 
     /// <summary>Copies source pixels whose corresponding mask alpha is nonzero.</summary>
@@ -355,7 +355,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">An image is empty or block-compressed, or the mask has no alpha channel.</exception>
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the copy commits.</exception>
-    public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination) =>
+    public void BlitRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination) =>
         Composite(source, mask, sourceRect, destination, blend: false);
 
     /// <summary>Alpha-composites source pixels whose corresponding mask alpha is nonzero.</summary>
@@ -368,7 +368,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">An image is empty or block-compressed, or source or mask lacks alpha.</exception>
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the blend commits.</exception>
-    public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination) =>
+    public void BlendRectMask(Image source, Image mask, Rect2i sourceRect, Vector2i destination) =>
         Composite(source, mask, sourceRect, destination, blend: true);
 
     /// <summary>Adjusts RGB brightness, contrast, and saturation in every stored level.</summary>
@@ -639,7 +639,7 @@ public sealed partial class Image
         return new ImageMetrics(maximum, mean, meanSquared, rootMeanSquared, peak);
     }
 
-    private void Composite(Image source, Image? mask, RectI sourceRect, Vector2i destination, bool blend)
+    private void Composite(Image source, Image? mask, Rect2i sourceRect, Vector2i destination, bool blend)
     {
         ArgumentNullException.ThrowIfNull(source);
         var sourceState = source.RequireReadablePixels();
@@ -1056,7 +1056,7 @@ public sealed partial class Image
         return new Color(0.5f + (x / length * 0.5f), 0.5f + (y / length * 0.5f), 0.5f + (z / length * 0.5f), color.A);
     }
 
-    private static RectI ClipRectangle(RectI rectangle, int width, int height)
+    private static Rect2i ClipRectangle(Rect2i rectangle, int width, int height)
     {
         if (!rectangle.HasArea())
             return default;
@@ -1066,7 +1066,7 @@ public sealed partial class Image
         var bottom = Math.Clamp((long)rectangle.Position.Y + rectangle.Size.Y, 0L, height);
         return right <= left || bottom <= top
             ? default
-            : new RectI(left, top, checked((int)right - left), checked((int)bottom - top));
+            : new Rect2i(left, top, checked((int)right - left), checked((int)bottom - top));
     }
 
     private static bool HasAlpha(Format format) => format is Format.La8 or Format.Rgba8 or Format.Rgba4444 or
