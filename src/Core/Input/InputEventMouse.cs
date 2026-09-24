@@ -93,21 +93,13 @@ public sealed class InputEventMouseButton : InputEventMouse
     private float _factor = 1f;
 
     /// <summary>Gets or sets the button or wheel direction.</summary>
-    /// <value><see cref="MouseButton.None"/> by default.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is not defined.</exception>
+    /// <value><see cref="MouseButton.None"/> by default; caller-supplied numeric values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public MouseButton ButtonIndex
     {
         get { ThrowIfDisposed(); return _buttonIndex; }
-        set
-        {
-            ThrowIfDisposed();
-            if (!Enum.IsDefined(value))
-                throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown mouse button.");
-            _buttonIndex = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _buttonIndex = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets whether the button is pressed.</summary>
@@ -141,21 +133,13 @@ public sealed class InputEventMouseButton : InputEventMouse
     }
 
     /// <summary>Gets or sets the platform-provided event amount.</summary>
-    /// <value>A finite non-negative value; high-precision wheel events use it as their scroll amount.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative, NaN, or infinite.</exception>
+    /// <value>The source amount; high-precision wheel events use it as their scroll amount. Zero and arbitrary values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float Factor
     {
         get { ThrowIfDisposed(); return _factor; }
-        set
-        {
-            ThrowIfDisposed();
-            if (!float.IsFinite(value) || value < 0f)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The event factor must be finite and non-negative.");
-            _factor = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _factor = value; EmitInputChanged(); }
     }
 
     /// <inheritdoc />
@@ -256,81 +240,66 @@ public sealed class InputEventMouseMotion : InputEventMouse
     }
 
     /// <summary>Gets or sets stylus pressure.</summary>
-    /// <value>A value from zero through one.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value is outside zero through one, NaN, or infinite.</exception>
+    /// <value>The source pressure, normally from zero through one; arbitrary values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float Pressure
     {
         get { ThrowIfDisposed(); return _pressure; }
-        set { ThrowIfDisposed(); ValidateUnit(value, nameof(value)); _pressure = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _pressure = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets local movement since the previous event.</summary>
-    /// <value>A finite, content-scaled delta in pixels.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source content-scaled delta in pixels.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Relative
     {
         get { ThrowIfDisposed(); return _relative; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _relative = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _relative = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets unscaled screen-space movement since the previous event.</summary>
-    /// <value>A finite delta in screen pixels that is not changed by <see cref="InputEvent.XformedBy"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source delta in screen pixels that is not changed by <see cref="InputEvent.XformedBy"/>.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 ScreenRelative
     {
         get { ThrowIfDisposed(); return _screenRelative; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _screenRelative = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _screenRelative = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets local pointer velocity.</summary>
-    /// <value>A finite content-scaled velocity in pixels per second.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source content-scaled velocity in pixels per second.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Velocity
     {
         get { ThrowIfDisposed(); return _velocity; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _velocity = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _velocity = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets unscaled screen-space pointer velocity.</summary>
-    /// <value>A finite velocity in screen pixels per second that is not transformed.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source velocity in screen pixels per second that is not transformed.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 ScreenVelocity
     {
         get { ThrowIfDisposed(); return _screenVelocity; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _screenVelocity = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _screenVelocity = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets stylus tilt.</summary>
-    /// <value>Finite X and Y components, each from minus one through one.</value>
-    /// <exception cref="ArgumentOutOfRangeException">A component is outside the documented range, NaN, or infinite.</exception>
+    /// <value>The source tilt components, normally from minus one through one; arbitrary values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Tilt
     {
         get { ThrowIfDisposed(); return _tilt; }
-        set
-        {
-            ThrowIfDisposed();
-            ValidateFinite(value, nameof(value));
-            if (Mathf.Abs(value.X) > 1f || Mathf.Abs(value.Y) > 1f)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "Stylus tilt components must be between -1 and 1.");
-            _tilt = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _tilt = value; EmitInputChanged(); }
     }
 
     /// <inheritdoc />
-    /// <exception cref="ArgumentOutOfRangeException">A summed relative vector contains NaN or infinity.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the complete accumulated state is assigned.</exception>
     public override bool Accumulate(InputEvent withEvent)
     {
@@ -345,8 +314,6 @@ public sealed class InputEventMouseMotion : InputEventMouse
 
         var relative = _relative + motion._relative;
         var screenRelative = _screenRelative + motion._screenRelative;
-        ValidateFinite(relative, nameof(Relative));
-        ValidateFinite(screenRelative, nameof(ScreenRelative));
         CopyAccumulatedPositionsFrom(motion);
         _velocity = motion._velocity;
         _screenVelocity = motion._screenVelocity;
@@ -402,9 +369,4 @@ public sealed class InputEventMouseMotion : InputEventMouse
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Concat(MotionProperties);
 
-    private static void ValidateUnit(float value, string parameterName)
-    {
-        if (!float.IsFinite(value) || value < 0f || value > 1f)
-            throw new ArgumentOutOfRangeException(parameterName, value, "The value must be finite and between 0 and 1.");
-    }
 }

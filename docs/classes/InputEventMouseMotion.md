@@ -1,6 +1,6 @@
 # InputEventMouseMotion
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventMouse](InputEventMouse.md)
 
@@ -17,10 +17,10 @@ Last updated: 2026-09-21
 Represents mouse or stylus motion.
 
 - Responsibility: mouse/stylus movement in local and unscaled screen coordinate spaces.
-- Complete declared API: `PenInverted`, unit `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, bounded `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All seven declared values are stored typed descriptors.
-- Accumulation: requires equal window, press/cancel, buttons, and modifiers; validates the summed deltas, atomically adopts newest positions/velocities and both sums, then emits one change notification.
+- Complete declared API: `PenInverted`, `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All seven declared values are stored typed descriptors.
+- Accumulation: requires equal window, press/cancel, buttons, and modifiers; retains arithmetic overflow, atomically adopts newest positions/velocities and both sums, then emits one change notification.
 - Transform: transforms local position/relative/velocity only, preserving global/screen values.
-- Errors/threading/verification: all vectors and transform inputs must be finite, pressure `[0,1]`, tilt components `[-1,1]`; disposed/invalid access fails. Accumulation validation, throwing-observer post-commit state, transform, copy, and Input velocity publication are covered.
+- Errors/threading/verification: source values are retained without range checks; positional transforms still require finite derived local coordinates. Disposed access fails. Managed tests cover defaults, non-finite copies, overflow accumulation and throwing-observer post-commit state; Wayland synthetic input checks pixel deltas, timed velocity, captured-mode zero velocity and rejection of malformed native input. Native pen pressure/eraser/tilt delivery remains absent.
 
 ## Examples
 
@@ -86,11 +86,10 @@ Gets or sets whether the eraser end of a stylus generated the event.
 
 Gets or sets stylus pressure.
 
-**Value:** A value from zero through one.
+**Value:** The source pressure, normally from zero through one; arbitrary values are retained.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is outside zero through one, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -99,11 +98,10 @@ Gets or sets stylus pressure.
 
 Gets or sets local movement since the previous event.
 
-**Value:** A finite, content-scaled delta in pixels.
+**Value:** The source content-scaled delta in pixels, retained without normalization.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -112,11 +110,10 @@ Gets or sets local movement since the previous event.
 
 Gets or sets unscaled screen-space movement since the previous event.
 
-**Value:** A finite delta in screen pixels that is not changed by [`InputEvent.XformedBy(Transform,Vector2)`](InputEvent.md#m-electron2d-inputevent-xformedby-electron2d-transform-electron2d-vector2).
+**Value:** The source delta in screen pixels that is not changed by [`InputEvent.XformedBy(Transform,Vector2)`](InputEvent.md#m-electron2d-inputevent-xformedby-electron2d-transform-electron2d-vector2).
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -125,11 +122,10 @@ Gets or sets unscaled screen-space movement since the previous event.
 
 Gets or sets local pointer velocity.
 
-**Value:** A finite content-scaled velocity in pixels per second.
+**Value:** The source content-scaled velocity in pixels per second.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -138,11 +134,10 @@ Gets or sets local pointer velocity.
 
 Gets or sets unscaled screen-space pointer velocity.
 
-**Value:** A finite velocity in screen pixels per second that is not transformed.
+**Value:** The source velocity in screen pixels per second that is not transformed. Captured native mode reports zero.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -151,11 +146,10 @@ Gets or sets unscaled screen-space pointer velocity.
 
 Gets or sets stylus tilt.
 
-**Value:** Finite X and Y components, each from minus one through one.
+**Value:** The source tilt components, normally from minus one through one; arbitrary values are retained.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: A component is outside the documented range, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

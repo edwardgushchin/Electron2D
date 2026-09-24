@@ -38,6 +38,8 @@ Desktop point hit testing ignores hidden/minimized windows. X11 uses half-open c
 
 Native key events exclude their own modifier family from the event mask while preserving other held families. The queued raw SDL modifier snapshot remains available for subsequent pointer events. Targeted synthetic SDL dummy and Wayland checks cover left and right Shift, Control, Alt, and GUI on press and release; physical keyboard delivery remains unverified.
 
+Mouse motion, button and wheel translation validates finite native coordinates, derived velocity and wheel amounts before updating tracked button/timestamp state. The pump reports malformed events after continuing to later queue entries. A focused Wayland pointer run checks invalid-event continuation, fractional wheel factor, timed velocity and captured-mode zero velocity at pixel density one; fractional density and physical pen hardware remain unverified.
+
 Screen selection for the current window is a no-op. On desktop drivers with global coordinates, changing screens preserves a floating window's relative offset with work-area clamping and preserves maximized or fullscreen intent through native mode-aware transitions. Wayland cannot request relocation of a top-level window to another display.
 
 On Wayland, output positions retain compositor coordinates and screen dimensions use physical pixels recovered from SDL mode pixel density. The screen rectangle can therefore combine a compositor position with a physical size, matching the native output contract rather than a uniform logical desktop rectangle.

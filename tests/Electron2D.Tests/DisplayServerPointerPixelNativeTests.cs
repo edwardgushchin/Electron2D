@@ -85,6 +85,96 @@ internal static class DisplayServerPointerPixelNativeTests
                   probe.Events[4] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: false } wheelUp &&
                   wheelUp.Position == expectedPosition && wheelUp.GlobalPosition == expectedPosition,
                 "Mouse motion, buttons, and both wheel phases use physical Wayland client pixels.");
+
+            probe.Clear();
+            var invalidMotion = motion;
+            invalidMotion.Motion.X = float.NaN;
+            var invalidPress = press;
+            invalidPress.Button.X = float.PositiveInfinity;
+            var invalidWheel = wheel;
+            invalidWheel.Wheel.Y = float.PositiveInfinity;
+            var validMotion = motion;
+            validMotion.Motion.X = 21f;
+            Check(SDL.PushEvent(ref invalidMotion) && SDL.PushEvent(ref invalidPress) &&
+                  SDL.PushEvent(ref invalidWheel) && SDL.PushEvent(ref validMotion) && SDL.PushEvent(ref wheel),
+                "SDL accepts malformed and valid pointer events in one queue.");
+            try
+            {
+                display.ProcessEvents();
+                throw new InvalidOperationException("Malformed native pointer values must fail.");
+            }
+            catch (AggregateException errors)
+            {
+                Check(errors.InnerExceptions.Count == 3 &&
+                      errors.InnerExceptions.All(error => error is ArgumentOutOfRangeException) &&
+                      probe.Events.Count == 3 &&
+                      probe.Events[0] is InputEventMouseMotion { ButtonMask: MouseButtonMask.None } valid &&
+                      valid.Position == new Vector2(21f * density, 60f * density) &&
+                      probe.Events[1] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: true, Factor: 1f } &&
+                      probe.Events[2] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: false, Factor: 1f },
+                    "Invalid native pointer values leave button state unchanged and later events continue in order.");
+            }
+
+            probe.Clear();
+            var preciseWheel = wheel;
+            preciseWheel.Wheel.Y = 1.25f;
+            Check(SDL.PushEvent(ref preciseWheel), "SDL accepts a fractional wheel amount.");
+            display.ProcessEvents();
+            Check(probe.Events.Count == 2 &&
+                  probe.Events[0] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: true, Factor: 1.25f } &&
+                  probe.Events[1] is InputEventMouseButton { ButtonIndex: MouseButton.WheelUp, Pressed: false, Factor: 1.25f },
+                "The native wheel adapter keeps a fractional factor on both phases.");
+
+            probe.Clear();
+            var doublePress = press;
+            doublePress.Button.Clicks = 2;
+            var doubleRelease = release;
+            doubleRelease.Button.Clicks = 2;
+            Check(SDL.PushEvent(ref doublePress) && SDL.PushEvent(ref doubleRelease),
+                "SDL accepts a double-click press and release.");
+            display.ProcessEvents();
+            Check(probe.Events.Count == 2 &&
+                  probe.Events[0] is InputEventMouseButton { DoubleClick: true, Pressed: true, ButtonMask: MouseButtonMask.Left } &&
+                  probe.Events[1] is InputEventMouseButton { DoubleClick: true, Pressed: false, ButtonMask: MouseButtonMask.None },
+                "The native click count and held-button transitions survive both phases.");
+
+            probe.Clear();
+            var timestampAnchor = motion;
+            timestampAnchor.Motion.Timestamp = SDL.GetTicksNS() + 10_000_000_000UL;
+            timestampAnchor.Motion.XRel = 0f;
+            timestampAnchor.Motion.YRel = 0f;
+            var timedMotion = motion;
+            timedMotion.Motion.Timestamp = timestampAnchor.Motion.Timestamp + 1_000_000_000UL;
+            Check(SDL.PushEvent(ref timestampAnchor) && SDL.PushEvent(ref timedMotion),
+                "SDL accepts consecutive pointer motions with explicit timestamps.");
+            display.ProcessEvents();
+            Check(probe.Events.Count == 2 && probe.Events[1] is InputEventMouseMotion timed &&
+                  timed.Velocity == new Vector2(4f * density, 8f * density) &&
+                  timed.ScreenVelocity == timed.Velocity,
+                "Native motion velocity uses the original timestamp interval and client pixel density.");
+
+            probe.Clear();
+            var previousMode = display.MouseGetMode();
+            try
+            {
+                display.MouseSetMode(DisplayServer.MouseMode.Captured);
+                display.ProcessEvents();
+                probe.Clear();
+                var capturedMotion = motion;
+                capturedMotion.Motion.Timestamp = timedMotion.Motion.Timestamp + 1_000_000_000UL;
+                capturedMotion.Motion.XRel = 5f;
+                capturedMotion.Motion.YRel = 3f;
+                Check(SDL.PushEvent(ref capturedMotion), "SDL accepts a captured pointer motion.");
+                display.ProcessEvents();
+                Check(probe.Events.Any(inputEvent => inputEvent is InputEventMouseMotion moved &&
+                    moved.ScreenRelative == new Vector2(5f * density, 3f * density) &&
+                    moved.Velocity == Vector2.Zero && moved.ScreenVelocity == Vector2.Zero),
+                    "Captured motion retains relative movement but reports zero cursor velocities.");
+            }
+            finally
+            {
+                display.MouseSetMode(previousMode);
+            }
             Console.WriteLine($"Wayland pointer pixel probe: density {density}; fractional path {(density % 1f == 0f ? "not exercised" : "exercised")}.");
         }
         finally

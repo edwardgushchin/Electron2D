@@ -72,12 +72,13 @@ public sealed partial class DisplayServer
     /// <remarks>
     /// The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and
     /// disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain.
+    /// Malformed native pointer values are rejected before mouse button or timestamp state changes.
     /// Callback failures are collected while later queued events continue, then thrown together after the queue drains.
     /// Re-entry is rejected. No rendering or game frame is advanced here.
     /// </remarks>
     /// <exception cref="ObjectDisposedException">The server has been disposed.</exception>
     /// <exception cref="InvalidOperationException">Called off the opening thread, re-entered, or called while the active main loop cannot accept input. Rejected calls leave the native queue untouched.</exception>
-    /// <exception cref="AggregateException">One or more game callbacks failed after event-state commits.</exception>
+    /// <exception cref="AggregateException">One or more native pointer values or game callbacks failed; later queued events still run.</exception>
     public void ProcessEvents() => ProcessEventsCore(dropInput: false);
 
     /// <summary>Processes native window events while discarding pending keyboard, pointer, touch, and text input.</summary>
@@ -441,6 +442,9 @@ public sealed partial class DisplayServer
         var relative = new Vector2(source.XRel * scale, source.YRel * scale);
         var dt = source.Timestamp > _lastMouseMotionTimestamp
             ? (source.Timestamp - _lastMouseMotionTimestamp) / 1_000_000_000f : 0f;
+        var velocity = _mouseMode != MouseMode.Captured && dt > 0f ? relative / dt : Vector2.Zero;
+        if (!position.IsFinite() || !relative.IsFinite() || !velocity.IsFinite())
+            throw new ArgumentOutOfRangeException(nameof(source), "Native mouse motion must have finite coordinates and velocity.");
         _lastMouseMotionTimestamp = source.Timestamp;
         using var @event = new InputEventMouseMotion
         {
@@ -450,8 +454,8 @@ public sealed partial class DisplayServer
             GlobalPosition = position,
             Relative = relative,
             ScreenRelative = relative,
-            Velocity = dt > 0f ? relative / dt : Vector2.Zero,
-            ScreenVelocity = dt > 0f ? relative / dt : Vector2.Zero,
+            Velocity = velocity,
+            ScreenVelocity = velocity,
         };
         SetPointerModifiers(@event);
         Input.Instance.ParseInputEvent(@event);
@@ -472,6 +476,8 @@ public sealed partial class DisplayServer
             return;
         var scale = GetMousePixelScale();
         var position = new Vector2(source.X * scale, source.Y * scale);
+        if (!position.IsFinite())
+            throw new ArgumentOutOfRangeException(nameof(source), "Native mouse-button coordinates must be finite.");
         var mask = ButtonMask(button);
         _heldMouseButtons = source.Down ? _heldMouseButtons | mask : _heldMouseButtons & ~mask;
         using var @event = new InputEventMouseButton
@@ -529,6 +535,8 @@ public sealed partial class DisplayServer
     {
         var scale = GetMousePixelScale();
         var position = new Vector2(x * scale, y * scale);
+        if (!position.IsFinite() || !float.IsFinite(factor) || factor < 0f)
+            throw new ArgumentOutOfRangeException(nameof(factor), "Native mouse-wheel coordinates and amount must be finite.");
         using var @event = new InputEventMouseButton
         {
             WindowID = MainWindowId,

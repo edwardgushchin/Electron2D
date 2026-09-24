@@ -21,6 +21,14 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_NATIVE") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINTER_PIXELS") == "1")
+{
+    using var display = DisplayServer.Open("Pointer pixel checks", new Vector2I(320, 240));
+    DisplayServerPointerPixelNativeTests.Run(display);
+    Console.WriteLine("Pointer pixel native checks passed.");
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
 {
     InputPointerNativeTests.Run();
@@ -4493,10 +4501,26 @@ static void VerifyInput()
             invalidKey.CommandOrControlAutoremap = true;
             Expect<InvalidOperationException>(() => invalidKey.ControlPressed = true,
                 "Portable command-or-control mode must reject direct control mutation.");
-            Expect<ArgumentOutOfRangeException>(() => invalidMotion.Pressure = 1.01f,
-                "Pointer pressure must remain in its unit interval.");
-            Expect<ArgumentOutOfRangeException>(() => invalidMotion.Tilt = new Vector2(0f, float.PositiveInfinity),
-                "Pointer tilt must reject non-finite components.");
+            Require(!invalidMotion.PenInverted && invalidMotion.Pressure == 0f &&
+                    invalidMotion.Relative == Vector2.Zero && invalidMotion.ScreenRelative == Vector2.Zero &&
+                    invalidMotion.Velocity == Vector2.Zero && invalidMotion.ScreenVelocity == Vector2.Zero &&
+                    invalidMotion.Tilt == Vector2.Zero,
+                "Mouse-motion values begin at the pinned zero defaults.");
+            invalidMotion.PenInverted = true;
+            invalidMotion.Pressure = 1.01f;
+            invalidMotion.Tilt = new Vector2(0f, float.PositiveInfinity);
+            invalidMotion.Relative = new Vector2(float.NaN, 2f);
+            invalidMotion.ScreenRelative = new Vector2(float.NegativeInfinity, 3f);
+            invalidMotion.Velocity = new Vector2(float.PositiveInfinity, 4f);
+            invalidMotion.ScreenVelocity = new Vector2(float.NaN, 5f);
+            using var copiedMotionValues = (InputEventMouseMotion)invalidMotion.Duplicate();
+            Require(copiedMotionValues.PenInverted && copiedMotionValues.Pressure == 1.01f &&
+                    float.IsPositiveInfinity(copiedMotionValues.Tilt.Y) &&
+                    float.IsNaN(copiedMotionValues.Relative.X) && float.IsNegativeInfinity(copiedMotionValues.ScreenRelative.X) &&
+                    float.IsPositiveInfinity(copiedMotionValues.Velocity.X) && float.IsNaN(copiedMotionValues.ScreenVelocity.X),
+                "Mouse motion retains source pressure, tilt, local and screen vectors without normalization.");
+            Expect<ArgumentOutOfRangeException>(() => invalidMotion.XformedBy(Transform.Identity),
+                "Non-finite local motion is rejected when a positional transform is requested.");
             using var signedDrag = new InputEventScreenDrag();
             Require(invalidTouch.Index == 0 && signedDrag.Index == 0,
                 "Touch and drag indexes must default to zero.");
@@ -4507,6 +4531,30 @@ static void VerifyInput()
             Require(invalidTouch.Index == int.MinValue && copiedTouch.Index == int.MinValue &&
                     signedDrag.Index == int.MinValue && copiedDrag.Index == int.MinValue,
                 "Touch and drag indexes must preserve signed values across duplication.");
+        }
+
+        using (var mouseButton = new InputEventMouseButton())
+        {
+            Require(mouseButton.ButtonIndex == MouseButton.None && mouseButton.Factor == 1f &&
+                    !mouseButton.Pressed && !mouseButton.Canceled && !mouseButton.DoubleClick,
+                "Mouse-button defaults match the pinned reference values.");
+            var observedFactor = 1f;
+            mouseButton.Changed += _ => observedFactor = mouseButton.Factor;
+            mouseButton.ButtonIndex = (MouseButton)int.MinValue;
+            mouseButton.Factor = -2f;
+            Require(observedFactor == -2f, "A negative source factor commits before change delivery.");
+            mouseButton.Factor = float.NaN;
+            mouseButton.DoubleClick = true;
+            mouseButton.Pressed = true;
+            mouseButton.Canceled = true;
+            using var copiedButton = (InputEventMouseButton)mouseButton.Duplicate();
+            Require(copiedButton.ButtonIndex == (MouseButton)int.MinValue && float.IsNaN(copiedButton.Factor) &&
+                    copiedButton.DoubleClick && copiedButton.Canceled && !copiedButton.Pressed &&
+                    !copiedButton.IsPressed() && !copiedButton.IsReleased(),
+                "Unknown button identity, arbitrary factor, double click and canceled press survive copying.");
+            mouseButton.Canceled = false;
+            Require(mouseButton.Pressed && mouseButton.IsPressed(),
+                "Clearing cancellation restores the stored press state.");
         }
 
         using (var magnify = new InputEventMagnifyGesture())
@@ -4884,6 +4932,23 @@ static void VerifyInput()
                 "A failed accumulation notification must not expose partially committed motion state.");
         }
 
+
+        using (var firstOverflowMotion = new InputEventMouseMotion
+        {
+            Relative = new Vector2(float.MaxValue, 0f),
+            ScreenRelative = new Vector2(float.MaxValue, 0f),
+        })
+        using (var secondOverflowMotion = new InputEventMouseMotion
+        {
+            Relative = new Vector2(float.MaxValue, 0f),
+            ScreenRelative = new Vector2(float.MaxValue, 0f),
+        })
+        {
+            Require(firstOverflowMotion.Accumulate(secondOverflowMotion) &&
+                    float.IsPositiveInfinity(firstOverflowMotion.Relative.X) &&
+                    float.IsPositiveInfinity(firstOverflowMotion.ScreenRelative.X),
+                "Accumulation retains source arithmetic overflow without altering the payload contract.");
+        }
 
         using (var firstDrag = new InputEventScreenDrag
         {

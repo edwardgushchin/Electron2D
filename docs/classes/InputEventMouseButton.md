@@ -1,6 +1,6 @@
 # InputEventMouseButton
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventMouse](InputEventMouse.md)
 
@@ -17,10 +17,10 @@ Last updated: 2026-09-21
 Represents a mouse button or wheel press and release.
 
 - Responsibility: non-wheel button or wheel-direction press/release.
-- Complete declared API: `ButtonIndex`, `Pressed`, `Canceled`, `DoubleClick`, finite non-negative `Factor`; overrides `IsMatch`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All five declared values are stored typed descriptors.
+- Complete declared API: `ButtonIndex`, `Pressed`, `Canceled`, `DoubleClick`, and source `Factor`; overrides `IsMatch`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All five declared values are stored typed descriptors.
 - Matching/state: binding identity is button plus optional exact modifiers. Canceled is neither press nor release. Wheel directions never enter the held-button mask.
 - Transform: returns an independent duplicate with transformed local position; global position is preserved.
-- Errors/threading/verification: unknown button, invalid factor, disposed access, and disposed peers fail; caller coordinates mutation. Matching, state, text, duplication, and transforms are covered.
+- Errors/threading/verification: caller-supplied numeric button IDs and factor values are retained, including negative and non-finite values. Disposed access and disposed peers fail. Managed tests cover defaults, cancellation, duplication and transforms; Wayland synthetic events cover fractional wheel factor and invalid native input recovery. Text/localization, Wear OS rotary mapping and other platforms remain separate gaps.
 
 ## Examples
 
@@ -72,11 +72,10 @@ Initializes a new InputEventMouseButton instance.
 
 Gets or sets the button or wheel direction.
 
-**Value:** [`MouseButton.None`](MouseButton.md#f-electron2d-mousebutton-none) by default.
+**Value:** [`MouseButton.None`](MouseButton.md#f-electron2d-mousebutton-none) by default; caller-supplied numeric IDs are retained without validation.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The assigned value is not defined.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -121,11 +120,10 @@ Gets or sets whether this press completed a double click.
 
 Gets or sets the platform-provided event amount.
 
-**Value:** A finite non-negative value; high-precision wheel events use it as their scroll amount.
+**Value:** The source amount, with one as the default. High-precision wheel events use it as their scroll amount; zero and arbitrary caller-supplied values are retained.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The assigned value is negative, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
