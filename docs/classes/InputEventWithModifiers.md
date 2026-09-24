@@ -1,6 +1,6 @@
 # InputEventWithModifiers
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventFromWindow](InputEventFromWindow.md)
 
@@ -16,11 +16,11 @@ Last updated: 2026-09-21
 
 Provides modifier-key state for keyboard, mouse, and gesture events.
 
-- Responsibility: stores Alt, Shift, Control, Meta, and portable command-or-control state; initializes `Device` to the primary keyboard.
+- Responsibility: stores Alt, Shift, Control, Meta, and portable command-or-control state; initializes inherited `Device` to the primary keyboard, with a typed revert default of 16. Mouse and gesture descendants use their own inherited device defaults.
 - Complete declared API: protected constructor; `AltPressed`, `ShiftPressed`, `ControlPressed`, `MetaPressed`, `CommandOrControlAutoremap`; `GetModifiersMask()`, `IsCommandOrControlPressed()`, `SetModifiersFromEvent(...)`; override `AsText()`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. All five modifier values are stored typed descriptors.
 - Invariants/errors: enabling autoremap chooses Meta on macOS and Control elsewhere; concrete Control/Meta assignment is rejected while enabled; disabling clears both. Disposed resources fail.
 - Threading: mutable caller-owned Resource, no internal synchronization.
-- Verification/limits: exact/non-exact modifier matching and copy/text paths are covered. Platform choice uses .NET OS detection and requires no native host.
+- Verification/limits: `VerifyInput` covers defaults, masks, autoremap transitions, typed copy and property-list notifications. SDL dummy and Wayland injection check all eight side-specific modifier keys: each key excludes its own modifier bit and retains other held bits. Platform choice uses .NET OS detection; native macOS delivery remains unverified.
 
 ## Examples
 
@@ -166,7 +166,7 @@ Copies modifier state from another event.
 
 - `ArgumentNullException`: `source` is `null`.
 - `ObjectDisposedException`: Either event is disposing or disposed.
-- `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after all modifier values are assigned.
+- `Exception`: A property-list or [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after all modifier values are assigned.
 
 <a id="m-electron2d-inputeventwithmodifiers-astext"></a>
 ### `public override string AsText()`

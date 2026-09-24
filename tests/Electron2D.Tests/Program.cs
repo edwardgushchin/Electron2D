@@ -27,6 +27,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_MODIFIERS") == "1")
+{
+    VerifyDisplayServerPointerModifiers();
+    Console.WriteLine("Input modifier native checks passed.");
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_HOVER") == "1")
 {
     ControlHoverNativeTests.Run();
@@ -4388,6 +4395,51 @@ static void VerifyInput()
                 inputEvent.Dispose();
         }
 
+        using (var modifiers = new InputEventKey())
+        using (var copiedModifiers = new InputEventMouseButton())
+        using (var gestureModifiers = new InputEventPanGesture())
+        {
+            Require(modifiers.Device == InputEvent.DeviceIdKeyboard &&
+                    copiedModifiers.Device == InputEvent.DeviceIdMouse && gestureModifiers.Device == 0 &&
+                    modifiers.GetModifiersMask() == 0 && !modifiers.IsCommandOrControlPressed(),
+                "Modifier-bearing events retain their distinct inherited device defaults and empty mask.");
+            var deviceProperty = modifiers.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEvent, int>>()
+                .Single(property => property.Name == nameof(InputEvent.Device));
+            modifiers.Device = 9;
+            modifiers.RevertProperty(deviceProperty);
+            Require(modifiers.Device == InputEvent.DeviceIdKeyboard,
+                "The inherited device descriptor reverts to the modifier-bearing keyboard default.");
+
+            modifiers.AltPressed = true;
+            modifiers.ShiftPressed = true;
+            modifiers.ControlPressed = true;
+            modifiers.MetaPressed = true;
+            Require(modifiers.GetModifiersMask() == (KeyModifierMask.Control | KeyModifierMask.Shift |
+                    KeyModifierMask.Alt | KeyModifierMask.Meta),
+                "The modifier mask includes each independently stored bit.");
+            var listChanges = 0;
+            copiedModifiers.PropertyListChanged += _ => listChanges++;
+            modifiers.CommandOrControlAutoremap = true;
+            copiedModifiers.SetModifiersFromEvent(modifiers);
+            Require(listChanges == 1 && copiedModifiers.CommandOrControlAutoremap &&
+                    copiedModifiers.GetModifiersMask() == modifiers.GetModifiersMask() &&
+                    copiedModifiers.IsCommandOrControlPressed() &&
+                    copiedModifiers.Device == InputEvent.DeviceIdMouse,
+                "Modifier copying commits autoremap, updates its property schema and preserves device identity.");
+            copiedModifiers.SetModifiersFromEvent(modifiers);
+            Require(listChanges == 1, "Copying an unchanged autoremap policy does not invalidate the property list.");
+            Expect<InvalidOperationException>(() => copiedModifiers.ControlPressed = false,
+                "Direct Control assignment is rejected while portable autoremap is enabled.");
+            Expect<InvalidOperationException>(() => copiedModifiers.MetaPressed = false,
+                "Direct Meta assignment is rejected while portable autoremap is enabled.");
+            modifiers.CommandOrControlAutoremap = false;
+            copiedModifiers.SetModifiersFromEvent(modifiers);
+            Require(listChanges == 2 && !copiedModifiers.IsCommandOrControlPressed() &&
+                    copiedModifiers.GetModifiersMask() == (KeyModifierMask.Alt | KeyModifierMask.Shift),
+                "Disabling autoremap clears concrete command/control bits and updates copied metadata.");
+        }
+
         using (var invalidAction = new InputEventAction())
         using (var invalidKey = new InputEventKey())
         using (var invalidMotion = new InputEventMouseMotion())
@@ -5171,6 +5223,49 @@ static void VerifyDisplayServerPointerModifiers()
                     probe.Events[2 * i + 1] is InputEventKey { Pressed: false } released &&
                     released.Location == keyLocations[i].Location,
                 "Key location follows the SDL physical modifier side on both press and release.");
+        }
+        probe.Clear();
+        var selfModifiers = new (SDL3.SDL.Scancode Scancode, SDL3.SDL.Keymod OwnNative,
+            SDL3.SDL.Keymod OtherNative, KeyModifierMask Own, KeyModifierMask Other)[]
+        {
+            (SDL3.SDL.Scancode.LShift, SDL3.SDL.Keymod.Shift, SDL3.SDL.Keymod.Ctrl, KeyModifierMask.Shift, KeyModifierMask.Control),
+            (SDL3.SDL.Scancode.RShift, SDL3.SDL.Keymod.Shift, SDL3.SDL.Keymod.Ctrl, KeyModifierMask.Shift, KeyModifierMask.Control),
+            (SDL3.SDL.Scancode.LCtrl, SDL3.SDL.Keymod.Ctrl, SDL3.SDL.Keymod.Alt, KeyModifierMask.Control, KeyModifierMask.Alt),
+            (SDL3.SDL.Scancode.RCtrl, SDL3.SDL.Keymod.Ctrl, SDL3.SDL.Keymod.Alt, KeyModifierMask.Control, KeyModifierMask.Alt),
+            (SDL3.SDL.Scancode.LAlt, SDL3.SDL.Keymod.Alt, SDL3.SDL.Keymod.GUI, KeyModifierMask.Alt, KeyModifierMask.Meta),
+            (SDL3.SDL.Scancode.RAlt, SDL3.SDL.Keymod.Alt, SDL3.SDL.Keymod.GUI, KeyModifierMask.Alt, KeyModifierMask.Meta),
+            (SDL3.SDL.Scancode.LGUI, SDL3.SDL.Keymod.GUI, SDL3.SDL.Keymod.Shift, KeyModifierMask.Meta, KeyModifierMask.Shift),
+            (SDL3.SDL.Scancode.RGUI, SDL3.SDL.Keymod.GUI, SDL3.SDL.Keymod.Shift, KeyModifierMask.Meta, KeyModifierMask.Shift),
+        };
+        foreach (var (scancode, ownNative, otherNative, _, _) in selfModifiers)
+        {
+            var modifierKey = new SDL3.SDL.Event
+            {
+                Key = new SDL3.SDL.KeyboardEvent
+                {
+                    Type = SDL3.SDL.EventType.KeyDown,
+                    WindowID = id,
+                    Key = SDL3.SDL.GetKeyFromScancode(scancode, SDL3.SDL.Keymod.None, false),
+                    Scancode = scancode,
+                    Mod = ownNative | otherNative,
+                    Down = true,
+                },
+            };
+            Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts a self-modifier press.");
+            modifierKey.Key.Type = SDL3.SDL.EventType.KeyUp;
+            modifierKey.Key.Down = false;
+            Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts a self-modifier release.");
+        }
+        display.ProcessEvents();
+        Require(probe.Events.Count == selfModifiers.Length * 2,
+            "Every self-modifier probe reaches both key callback phases.");
+        for (var i = 0; i < selfModifiers.Length * 2; i++)
+        {
+            var (_, _, _, own, other) = selfModifiers[i / 2];
+            Require(probe.Events[i] is InputEventKey keyEvent &&
+                    (keyEvent.GetModifiersMask() & own) == 0 &&
+                    (keyEvent.GetModifiersMask() & other) != 0,
+                "A modifier key never marks itself as its own modifier while preserving other held modifiers.");
         }
         probe.Clear();
         SDL3.SDL.SetModState(SDL3.SDL.Keymod.Shift | SDL3.SDL.Keymod.Ctrl);

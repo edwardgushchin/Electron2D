@@ -386,6 +386,7 @@ public abstract class InputEventFromWindow : InputEvent
 }
 
 /// <summary>Provides modifier-key state for keyboard, mouse, and gesture events.</summary>
+/// <remarks>Native key events omit the key's own modifier bit while retaining other held modifiers. The inherited device descriptor defaults to <see cref="InputEvent.DeviceIdKeyboard"/> except where a concrete event family overrides that value.</remarks>
 public abstract class InputEventWithModifiers : InputEventFromWindow
 {
     private static readonly IReadOnlyList<PropertyDescriptor> ModifierProperties =
@@ -515,18 +516,19 @@ public abstract class InputEventWithModifiers : InputEventFromWindow
     /// <param name="source">The source modifier event.</param>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">Either event is disposing or disposed.</exception>
-    /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after all modifier values are assigned.</exception>
+    /// <exception cref="Exception">A property-list or <see cref="Resource.Changed"/> handler throws after all modifier values are assigned.</exception>
     public void SetModifiersFromEvent(InputEventWithModifiers source)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(source);
         source.ThrowIfDisposed();
+        var propertyListChanged = _commandOrControlAutoremap != source._commandOrControlAutoremap;
         _altPressed = source._altPressed;
         _shiftPressed = source._shiftPressed;
         _controlPressed = source._controlPressed;
         _metaPressed = source._metaPressed;
         _commandOrControlAutoremap = source._commandOrControlAutoremap;
-        EmitInputChanged();
+        EmitInputChanged(propertyListChanged);
     }
 
     /// <inheritdoc />

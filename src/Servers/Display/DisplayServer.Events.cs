@@ -399,6 +399,15 @@ public sealed partial class DisplayServer
     {
         _eventKeyModifiers = source.Mod;
         _hasEventKeyModifiers = true;
+        var ownModifier = source.Scancode switch
+        {
+            SDL.Scancode.LShift or SDL.Scancode.RShift => SDL.Keymod.Shift,
+            SDL.Scancode.LCtrl or SDL.Scancode.RCtrl => SDL.Keymod.Ctrl,
+            SDL.Scancode.LAlt or SDL.Scancode.RAlt => SDL.Keymod.Alt,
+            SDL.Scancode.LGUI or SDL.Scancode.RGUI => SDL.Keymod.GUI,
+            _ => SDL.Keymod.None,
+        };
+        var modifiers = source.Mod & ~ownModifier;
         using var @event = new InputEventKey
         {
             WindowID = MainWindowId,
@@ -413,10 +422,10 @@ public sealed partial class DisplayServer
                 SDL.Scancode.RCtrl or SDL.Scancode.RShift or SDL.Scancode.RAlt or SDL.Scancode.RGUI => KeyLocation.Right,
                 _ => KeyLocation.Unspecified,
             },
-            ShiftPressed = (source.Mod & SDL.Keymod.Shift) != 0,
-            ControlPressed = (source.Mod & SDL.Keymod.Ctrl) != 0,
-            AltPressed = (source.Mod & SDL.Keymod.Alt) != 0,
-            MetaPressed = (source.Mod & SDL.Keymod.GUI) != 0,
+            ShiftPressed = (modifiers & SDL.Keymod.Shift) != 0,
+            ControlPressed = (modifiers & SDL.Keymod.Ctrl) != 0,
+            AltPressed = (modifiers & SDL.Keymod.Alt) != 0,
+            MetaPressed = (modifiers & SDL.Keymod.GUI) != 0,
         };
         Input.Instance.ParseInputEvent(@event);
     }

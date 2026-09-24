@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -301,7 +301,7 @@ Reports whether the current backend advertises an integrated display capability.
 
 Drains native events and commits typed keyboard, mouse, wheel, and touch state before game callbacks.
 
-**Remarks:** The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain. Callback failures are collected while later queued events continue, then thrown together after the queue drains. Re-entry is rejected. No rendering or game frame is advanced here.
+**Remarks:** The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain. A key event excludes the pressed or released modifier key's own bit while preserving other held modifier bits. Callback failures are collected while later queued events continue, then thrown together after the queue drains. Re-entry is rejected. No rendering or game frame is advanced here.
 
 **Errors:** `ObjectDisposedException` if the server is disposed; `InvalidOperationException` if called off the opening thread, re-entered, or the active main loop cannot accept input; `AggregateException` after one or more callbacks fail. Rejected calls leave the native queue untouched.
 

@@ -1,6 +1,6 @@
 # InputEventKey
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -20,12 +20,12 @@ Represents a keyboard key press, release, or operating-system repeat.
 - Complete declared API: `Pressed`, `Echo`, `Keycode`, `PhysicalKeycode`, `KeyLabel`, `Unicode`, `Location`; `GetKeycodeWithModifiers`, `GetPhysicalKeycodeWithModifiers`, `GetKeyLabelWithModifiers`; `AsTextKeycode`, `AsTextPhysicalKeycode`, `AsTextKeyLabel`, `AsTextLocation`; overrides `IsEcho`, `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All seven declared values are stored typed descriptors.
 - Matching: label-only bindings use labels; otherwise logical code wins over physical code. Physical bindings may require location. Non-exact presses allow extra modifiers; releases ignore required modifiers; exact matching requires equality.
 - Errors/threading: Unicode must be zero or a scalar, location must be defined, and disposed access fails. Mutable caller-owned state is not synchronized.
-- Verification: raw logical/physical/label state, modifiers, exactness, repeat policy, text, duplication, and release matching are covered; the SDL dummy suite checks label separation and all defined left/right modifier locations on press and release.
+- Verification: raw logical/physical/label state, modifiers, exactness, repeat policy, text, duplication, and release matching are covered; the SDL dummy suite checks label separation and left/right modifier locations; dummy and Wayland injection check self-modifier suppression on press and release.
 
 A caller-created event can supply logical, physical, label, and Unicode data. An action binding should generally set
 only one of [`InputEventKey.Keycode`](InputEventKey.md#p-electron2d-inputeventkey-keycode), [`InputEventKey.PhysicalKeycode`](InputEventKey.md#p-electron2d-inputeventkey-physicalkeycode), or [`InputEventKey.KeyLabel`](InputEventKey.md#p-electron2d-inputeventkey-keylabel).
 
-The current SDL display adapter supplies `Keycode` from the native key event, `PhysicalKeycode` from its scancode, and `KeyLabel` independently from the unmodified scancode under the active layout. A printable non-Latin label can therefore differ from the logical key. Left/right modifier scancodes set `Location` to the matching side; other scancodes use `Unspecified`. That adapter leaves `Unicode` at zero; committed text uses a separate text-input event. SDL key events contain no produced text scalar, and a text-input event may contain multiple scalars or an IME commit without identifying a corresponding key press. Native key-event Unicode needs a per-key Unicode source and verified IME/composition semantics in the first native keyboard/text adapter slice. Code constructing this type directly may assign a valid Unicode scalar.
+The current SDL display adapter supplies `Keycode` from the native key event, `PhysicalKeycode` from its scancode, and `KeyLabel` independently from the unmodified scancode under the active layout. A printable non-Latin label can therefore differ from the logical key. Left/right modifier scancodes set `Location` to the matching side; other scancodes use `Unspecified`. On a modifier key's own event, the adapter removes that modifier's bit from the event and retains other held modifiers. That adapter leaves `Unicode` at zero; committed text uses a separate text-input event. SDL key events contain no produced text scalar, and a text-input event may contain multiple scalars or an IME commit without identifying a corresponding key press. Native key-event Unicode needs a per-key Unicode source and verified IME/composition semantics in the first native keyboard/text adapter slice. Code constructing this type directly may assign a valid Unicode scalar.
 
 ## Examples
 

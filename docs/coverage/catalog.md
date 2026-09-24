@@ -398,7 +398,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | InputEventFromWindow | Partial | 9 |
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | InputEventFromWindow | Partial | 5 |
 | [InputEventShortcut](classes/InputEventShortcut.md) | InputEvent | Blocked | 1 |
-| [InputEventWithModifiers](classes/InputEventWithModifiers.md) | InputEventFromWindow | Partial | 8 |
+| [InputEventWithModifiers](classes/InputEventWithModifiers.md) | InputEventFromWindow | Implemented | 8 |
 | [InputMap](classes/InputMap.md) | Object | Partial | 15 |
 | [InstancePlaceholder](classes/InstancePlaceholder.md) | Node | Blocked | 3 |
 | [IntervalTweener](classes/IntervalTweener.md) | Tweener | Partial | 0 |

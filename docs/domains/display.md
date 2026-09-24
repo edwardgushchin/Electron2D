@@ -1,6 +1,6 @@
 # Display domain
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -35,6 +35,8 @@ Main-window display-content-scale notifications retain native queue order; event
 `WindowRectChanged` commits a complete client rectangle before calling handlers on the opening thread, preserving native move/resize queue order. The rectangle's size is in physical pixels on Wayland and platform-native client units elsewhere. Its position uses platform-native desktop coordinates, except that Wayland reports the conventional `(0, 0)` because no reliable global top-level position is available. Unchanged rectangles and foreign-window events do not notify; callback failures follow the pump's aggregate policy.
 
 Desktop point hit testing ignores hidden/minimized windows. X11 uses half-open client bounds, excluding title and border; other supported desktop drivers use decorated bounds. Wayland rejects the query because it has no reliable global window position. SDL keyboard events supply logical, physical, and unmodified layout-label identities independently. Physical brackets, grave/ISO positions, modifiers, and keypad scancodes use explicit reference-aligned identities. The eight left/right control, shift, alt, and GUI scancodes set the matching key `Location`; other keys use `Unspecified`. SDL's Wayland keypad lookup ignores Num Lock and Shift for these conversion methods, so a native keymap/state bridge is required for complete logical-key and label parity. Committed text is delivered separately. SDL key events contain no produced text scalar, and text-input events can carry multiple scalars or an IME commit without a key-event identifier. Populating key-event `Unicode` requires a native per-key Unicode source with verified IME/composition semantics in the first native keyboard/text adapter slice.
+
+Native key events exclude their own modifier family from the event mask while preserving other held families. The queued raw SDL modifier snapshot remains available for subsequent pointer events. Targeted synthetic SDL dummy and Wayland checks cover left and right Shift, Control, Alt, and GUI on press and release; physical keyboard delivery remains unverified.
 
 Screen selection for the current window is a no-op. On desktop drivers with global coordinates, changing screens preserves a floating window's relative offset with work-area clamping and preserves maximized or fullscreen intent through native mode-aware transitions. Wayland cannot request relocation of a top-level window to another display.
 
