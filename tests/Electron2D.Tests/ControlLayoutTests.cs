@@ -65,8 +65,52 @@ internal static class ControlLayoutTests
             Reject<ArgumentOutOfRangeException>(() => child.Size = new(-1, 0));
             Reject<InvalidOperationException>(() => Task.Run(() => child.Position = Vector2.Zero).GetAwaiter().GetResult());
         }
+        VerifyAnchorPresets();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
+    }
+
+    private static void VerifyAnchorPresets()
+    {
+        var expected = new (float Left, float Top, float Right, float Bottom)[]
+        {
+            (0, 0, 0, 0), (1, 0, 1, 0), (0, 1, 0, 1), (1, 1, 1, 1),
+            (0, .5f, 0, .5f), (.5f, 0, .5f, 0), (1, .5f, 1, .5f), (.5f, 1, .5f, 1),
+            (.5f, .5f, .5f, .5f), (0, 0, 0, 1), (0, 0, 1, 0), (1, 0, 1, 1),
+            (0, 1, 1, 1), (.5f, 0, .5f, 1), (0, .5f, 1, .5f), (0, 0, 1, 1)
+        };
+        using var viewport = new TestViewport();
+        var parent = new Control { Size = new(120, 80) };
+        viewport.AddChild(parent);
+        using var tree = new SceneTree(viewport);
+        for (var index = 0; index < expected.Length; index++)
+        {
+            var item = new Control { Name = $"preset{index}", Position = new(12, 18), Size = new(20, 10) };
+            parent.AddChild(item);
+            item.SetAnchorsPreset((ControlLayoutPreset)index);
+            var anchors = expected[index];
+            Check((item.AnchorLeft, item.AnchorTop, item.AnchorRight, item.AnchorBottom) == anchors,
+                $"Preset {index} must use the pinned four-anchor arrangement.");
+            Check(item.Position == new Vector2(12, 18) && item.Size == new Vector2(20, 10),
+                $"Preset {index} must preserve the current rectangle by default.");
+        }
+
+        var stretch = new Control { Name = "stretch", Position = new(12, 18), Size = new(20, 10) };
+        parent.AddChild(stretch);
+        stretch.SetAnchorsPreset(ControlLayoutPreset.FullRect, keepOffsets: true);
+        Check(stretch.OffsetLeft == 12 && stretch.OffsetTop == 18 && stretch.OffsetRight == 32 && stretch.OffsetBottom == 28,
+            "Keep-offset mode must preserve all four offsets.");
+        Check(stretch.Position == new Vector2(12, 18) && stretch.Size == new Vector2(140, 90),
+            "Full-rectangle anchors must resolve against the live parent area.");
+        parent.Size = new(150, 110);
+        Check(stretch.Size == new Vector2(170, 120), "Preset anchors must follow a later parent resize.");
+        stretch.SetAnchorsPreset(ControlLayoutPreset.TopLeft);
+        Check(stretch.Position == new Vector2(12, 18) && stretch.Size == new Vector2(170, 120),
+            "Changing an existing preset must preserve the current rectangle by default.");
+        var before = (stretch.AnchorLeft, stretch.AnchorTop, stretch.AnchorRight, stretch.AnchorBottom);
+        Reject<ArgumentOutOfRangeException>(() => stretch.SetAnchorsPreset((ControlLayoutPreset)16));
+        Check(before == (stretch.AnchorLeft, stretch.AnchorTop, stretch.AnchorRight, stretch.AnchorBottom),
+            "An invalid preset must not mutate any anchor.");
     }
 
     private sealed class TestViewport : Viewport

@@ -33,6 +33,7 @@
   "enums": {
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
     "Control.FocusMode": "ControlFocusMode",
+    "Control.LayoutPreset": "ControlLayoutPreset",
     "Control.MouseFilter": "ControlMouseFilter",
     "@GlobalScope.ClockDirection": "ClockDirection",
     "@GlobalScope.JoyAxis": "JoyAxis",

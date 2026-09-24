@@ -12,12 +12,15 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [CanvasItem](../classes/CanvasItem.md) | Node | Abstract drawing base, visibility, Z/Y order, behind-parent drawing, modulation/materials and transform queries/notifications. |
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
+| [ControlLayoutPreset](../classes/ControlLayoutPreset.md) | enum | Sixteen predefined four-anchor arrangements for Control. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
 [Sprite](../classes/Sprite.md) and [Parallax](../classes/Parallax.md) derive from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [CanvasLayer](../classes/CanvasLayer.md) derives directly from Node and establishes an independent canvas. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control has executable layout, transform, root viewport pointer routing, hover/cursor selection, keyboard focus and Tab/arrow navigation. The root Viewport exposes the focused Control, explicit release and a focus-change event; Control receives focus notifications before its focus events. Button will be reached through the absent BaseButton. Themes, containers and complete GUI routing remain unimplemented.
 
 [RemoteTransform](../classes/RemoteTransform.md) also derives from Entity. It weakly targets another spatial node by path, resolves the target on tree entry or an explicit cache refresh, and transfers selected transform components through the existing queued global or synchronous local notification path. It rejects hierarchy feedback and remote-target cycles; PackedScene stores the path and policy, not the live target.
+
+`Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and immediately reflows within the current parent area. All sixteen numeric arrangements, parent-resize propagation and invalid input rollback are checked in `ControlLayoutTests`. Offset presets remain dependent on minimum-size and layout-direction behavior.
 
 ## Runtime flow
 

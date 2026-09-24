@@ -156,6 +156,40 @@ public partial class Control : CanvasItem
         Reflow(); QueueRedraw();
     }
 
+    /// <summary>Arranges all four anchors in a standard layout preset.</summary>
+    /// <param name="preset">The arrangement to apply.</param>
+    /// <param name="keepOffsets">Keep each local offset instead of preserving the current rectangle edges.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The preset is not defined.</exception>
+    /// <remarks>Applies left, top, right, then bottom through <see cref="SetAnchor"/>; attached controls reflow after each side.</remarks>
+    public void SetAnchorsPreset(ControlLayoutPreset preset, bool keepOffsets = false)
+    {
+        EnsureMutable();
+        var (left, top, right, bottom) = preset switch
+        {
+            ControlLayoutPreset.TopLeft => (0f, 0f, 0f, 0f),
+            ControlLayoutPreset.TopRight => (1f, 0f, 1f, 0f),
+            ControlLayoutPreset.BottomLeft => (0f, 1f, 0f, 1f),
+            ControlLayoutPreset.BottomRight => (1f, 1f, 1f, 1f),
+            ControlLayoutPreset.CenterLeft => (0f, .5f, 0f, .5f),
+            ControlLayoutPreset.CenterTop => (.5f, 0f, .5f, 0f),
+            ControlLayoutPreset.CenterRight => (1f, .5f, 1f, .5f),
+            ControlLayoutPreset.CenterBottom => (.5f, 1f, .5f, 1f),
+            ControlLayoutPreset.Center => (.5f, .5f, .5f, .5f),
+            ControlLayoutPreset.LeftWide => (0f, 0f, 0f, 1f),
+            ControlLayoutPreset.TopWide => (0f, 0f, 1f, 0f),
+            ControlLayoutPreset.RightWide => (1f, 0f, 1f, 1f),
+            ControlLayoutPreset.BottomWide => (0f, 1f, 1f, 1f),
+            ControlLayoutPreset.VCenterWide => (.5f, 0f, .5f, 1f),
+            ControlLayoutPreset.HCenterWide => (0f, .5f, 1f, .5f),
+            ControlLayoutPreset.FullRect => (0f, 0f, 1f, 1f),
+            _ => throw new ArgumentOutOfRangeException(nameof(preset), preset, "Unknown layout preset.")
+        };
+        SetAnchor(Side.Left, left, keepOffsets);
+        SetAnchor(Side.Top, top, keepOffsets);
+        SetAnchor(Side.Right, right, keepOffsets);
+        SetAnchor(Side.Bottom, bottom, keepOffsets);
+    }
+
     /// <summary>Gets the offset for a rectangle side.</summary>
     /// <param name="side">The side to query.</param>
     /// <returns>The offset in local canvas units.</returns>

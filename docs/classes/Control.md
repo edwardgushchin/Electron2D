@@ -14,6 +14,8 @@ Last updated: 2026-09-24
 
 Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
 
+`SetAnchorsPreset` applies one of the sixteen [`ControlLayoutPreset`](ControlLayoutPreset.md) arrangements in left, top, right, bottom order. By default it changes offsets to keep the current rectangle in place; `keepOffsets: true` retains local offsets so the rectangle follows the new anchors immediately. The method works while detached or attached, and an invalid preset leaves all four anchors unchanged. Offset presets need minimum-size and layout-direction support, which remain separate coverage rows.
+
 The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
@@ -65,6 +67,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | --- | --- |
 | `public float GetAnchor(Side side)` | Reads one anchor fraction. |
 | `public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Updates one anchor and optionally the opposite anchor. |
+| `public void SetAnchorsPreset(ControlLayoutPreset preset, bool keepOffsets = false)` | Applies all four anchor fractions; preserves the current rectangle unless offsets are kept. |
 | `public float GetOffset(Side side)` | Reads one local offset. |
 | `public void SetOffset(Side side, float offset)` | Updates one offset and resolves the rectangle. |
 | `public Control? GetParentControl()` | Returns only a direct Control parent. |
