@@ -460,14 +460,15 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Appends a duration that changes no value.</summary>
-    /// <param name="time">Finite non-negative seconds.</param>
+    /// <param name="time">Finite seconds; a negative interval completes on its first positive step.</param>
     /// <returns>The appended tweener.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="time"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="time"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread, processing started, or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public IntervalTweener TweenInterval(double time)
     {
-        ValidateDuration(time, nameof(time));
+        if (!double.IsFinite(time))
+            throw new ArgumentOutOfRangeException(nameof(time), time, "Interval time must be finite.");
         return Append(new IntervalTweener(time));
     }
 

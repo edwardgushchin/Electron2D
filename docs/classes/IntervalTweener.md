@@ -1,6 +1,6 @@
 # IntervalTweener
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-21
 
 Consumes a fixed duration without invoking a callback or modifying a value.
 
-`IntervalTweener` is created only by `Tween.TweenInterval(double)` and consumes one finite non-negative duration without calling user code or modifying a value. It declares no public members beyond inherited [`Tweener.Finished`](Tweener.md) and `ElectronObject` lifetime API. It preserves overshoot for later steps, resets on each parent loop, and completes at an exact boundary.
+`IntervalTweener` is created only by `Tween.TweenInterval(double)` and consumes one finite duration without calling user code or modifying a value. A zero or negative interval completes on the first positive step; a zero-delta frame does not advance it. It declares no public members beyond inherited [`Tweener.Finished`](Tweener.md) and `ElectronObject` lifetime API. It preserves delivered-frame overshoot for later steps, resets on each parent loop, and completes at an exact boundary.
 
 ## Examples
 

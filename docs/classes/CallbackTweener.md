@@ -1,6 +1,6 @@
 # CallbackTweener
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-21
 
 Invokes a parameterless callback after an optional delay.
 
-`CallbackTweener` is created only by `Tween.TweenCallback(Action)` and invokes its callback once after its step begins and the optional delay expires. Its complete declared public API is `CallbackTweener SetDelay(double delay)`; `Finished` and object lifetime API are inherited from [`Tweener`](Tweener.md). Delay is finite, non-negative, speed-scaled, and zero by default. Any overshoot remains available to later sequential steps.
+`CallbackTweener` is created only by `Tween.TweenCallback(Action)` and invokes its callback once after its step begins and the optional delay expires. Its complete declared public API is `CallbackTweener SetDelay(double delay)`; `Finished` and object lifetime API are inherited from [`Tweener`](Tweener.md). Delay is finite, speed-scaled, and zero by default. A negative delay calls back on the first positive step. Remaining time passes to later sequential steps, capped by the frame delta at each step.
 
 If the delegate's direct target is a disposed `ElectronObject`, the task finishes without invocation. The callback runs synchronously on the parent owner thread. A callback or completion-event exception leaves the task/parent coherent, allows parallel siblings and later SceneTree phases to run, then invalidates the parent and is aggregated. Explicit disposal cancels the task and clears subscribers.
 
@@ -44,13 +44,13 @@ Sets the delay before callback invocation.
 
 **Parameters**
 
-- `delay`: Finite non-negative seconds.
+- `delay`: Finite seconds; a negative delay fires on the first positive step.
 
 **Returns:** This tweener.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `delay` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `delay` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tweener is disposing or disposed.
 

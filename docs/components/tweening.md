@@ -29,6 +29,8 @@ This Scene component owns frame-driven, typed interpolation sequences. It provid
 
 Property and method tweeners resolve interpolation once at creation. Built-in allocation-free interpolation covers `bool`, `float`, `double`, `int`, `long`, `Vector2`, `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, `Vector4I`, `Color`, `Rect`, `RectI`, and `Transform`; caller-supplied typed interpolation covers other values. Boolean values switch at the numeric half threshold. Integer components round midpoint values away from zero and throw on result overflow. Relative addition is arithmetic for scalar/vector/color/rectangle values, replacement by the configured delta for booleans, and parent-right affine composition for `Transform`. String and collection interpolation is not built in and instead requires an explicit typed interpolator. No dynamic value container, string property path, reflection lookup, or background scheduler is used.
 
+Callback and interval tasks accept finite signed delays or durations. Negative values complete on the first positive step, while the parent caps the time forwarded between steps at the delivered frame delta. A zero interval waits for positive frame time. `Tweener.Finished` fires before `StepFinished`, then `LoopFinished` for a non-final loop or `Tween.Finished` for the final loop. An unavailable direct callback target finishes without invocation; killing an unfinished task does not emit completion.
+
 Typed event waits reuse Core `EventConnection`. They subscribe on append, accept events from any thread through an atomic received flag, consume the active frame, and disconnect on tween completion, killing, or disposal. Nested tweens are removed from independent SceneTree processing and follow the parent timeline and final lifetime.
 
 ## Dependencies and invariants
@@ -51,7 +53,9 @@ The executable harness covers stable enum identities and every transition/ease e
 
 The policy audit additionally checks every enum value, persistent and one-shot parallel grouping, per-append curve defaults, remaining loop counts including negative infinite loops, detached binding and later attachment, all three tree-pause policies, zero, negative and changed speed, both frame lanes, time-scale bypass reset, and invalid enum/non-finite configuration values. These 16 declaration rows are Implemented in coverage.
 
-The lifecycle audit checks creation, pause/resume, stop/restart after a partial loop, overshoot time, signed manual deltas, `Finished` restart, finishing-frame validity, next-tree-frame removal and tweener clearing, immediate/idempotent invalidation by Kill with delayed registry cleanup, invalid-object calls and nested completion timing. Nine lifecycle/query rows are Implemented; the type and task/event rows retain their own status.
+The lifecycle audit checks creation, pause/resume, stop/restart after a partial loop, overshoot time, signed manual deltas, `Finished` restart, finishing-frame validity, next-tree-frame removal and tweener clearing, immediate/idempotent invalidation by Kill with delayed registry cleanup, invalid-object calls and nested completion timing. Nine lifecycle/query rows are Implemented; type and remaining task rows retain their own status.
+
+The callback/interval audit checks null and non-finite rollback, zero/exact/negative timing, live delay changes, owner-thread guards, disposed direct targets, cancellation, callback failure, per-loop completion and the full tweener/step/loop/final event order. The callback/interval types and their own methods plus shared completion-signal rows are Implemented; property, method, subtween and await builders retain separate Partial rows.
 
 ## Decisions
 

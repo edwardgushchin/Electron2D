@@ -145,7 +145,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CSGTorus3D](classes/CSGTorus3D.md) | CSGPrimitive3D | Excluded | 6 |
 | [CSharpScript](classes/CSharpScript.md) | Script | Blocked | 1 |
 | [Callable](classes/Callable.md) | — | Excluded | 26 |
-| [CallbackTweener](classes/CallbackTweener.md) | Tweener | Partial | 1 |
+| [CallbackTweener](classes/CallbackTweener.md) | Tweener | Implemented | 1 |
 | [Camera2D](classes/Camera2D.md) | Node2D | Partial | 46 |
 | [Camera3D](classes/Camera3D.md) | Node3D | Excluded | 45 |
 | [CameraAttributes](classes/CameraAttributes.md) | Resource | Excluded | 5 |
@@ -401,7 +401,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [InputEventWithModifiers](classes/InputEventWithModifiers.md) | InputEventFromWindow | Implemented | 8 |
 | [InputMap](classes/InputMap.md) | Object | Implemented | 15 |
 | [InstancePlaceholder](classes/InstancePlaceholder.md) | Node | Blocked | 3 |
-| [IntervalTweener](classes/IntervalTweener.md) | Tweener | Partial | 0 |
+| [IntervalTweener](classes/IntervalTweener.md) | Tweener | Implemented | 0 |
 | [ItemList](classes/ItemList.md) | Control | Blocked | 114 |
 | [IterateIK3D](classes/IterateIK3D.md) | ChainIK3D | Excluded | 19 |
 | [JNISingleton](classes/JNISingleton.md) | Object | Blocked | 1 |

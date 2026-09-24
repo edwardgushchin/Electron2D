@@ -1,6 +1,6 @@
 # Tweener
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -22,7 +22,7 @@ The parent assigns ownership and controls start, elapsed time, stepping, cancell
 
 User completion subscriber exceptions propagate into the parent step. Parallel siblings are still attempted; the parent tween is then invalidated and SceneTree aggregates the failure. Tweener instances cannot be constructed or attached independently, moved between parents, or processed on another thread.
 
-Dependencies are `ElectronObject` and `Tween`. Tests verify completion ordering, loops, invalid targets, parallel failure continuation, waits, nested cancellation, and owner-thread behavior. There is no public custom-Tweener extension point, serialization, reference-counted lifetime, or standalone scheduler.
+Dependencies are `ElectronObject` and `Tween`. `VerifyTweenCallbackIntervals` checks completion ordering, repeated loops, unavailable callback targets, cancellation and failure; the broader tween harness covers parallel failure continuation, waits, nested cancellation and owner-thread behavior. There is no public custom-Tweener extension point, serialization, reference-counted lifetime, or standalone scheduler.
 
 Tweeners are created only by the corresponding [`Tween`](Tween.md) append methods. They are owned by that tween,
 can run sequentially or in a parallel group, and use the same owner-thread contract.

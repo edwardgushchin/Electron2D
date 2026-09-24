@@ -225,6 +225,7 @@ VerifySceneTreeGroupsEventsAndTimers();
 SceneTreeTimerTests.Run();
 VerifyTimers();
 VerifyTweens();
+VerifyTweenCallbackIntervals();
 VerifySceneTreeFailureSafety();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
 {
@@ -9755,6 +9756,151 @@ static void VerifyTweens()
         $"A warmed active-tween frame path must not allocate managed memory; observed {allocated} bytes.");
 }
 
+static void VerifyTweenCallbackIntervals()
+{
+    using var tree = new SceneTree(new Entity());
+    var invalid = tree.CreateTween();
+    Expect<ArgumentNullException>(() => invalid.TweenCallback(null!), "A null callback must be rejected before append.");
+    Expect<ArgumentOutOfRangeException>(() => invalid.TweenInterval(double.NaN),
+        "An interval must reject a non-finite duration before append.");
+    Require(!invalid.HasTweeners(), "Rejected callback and interval appends must leave the tween empty.");
+    invalid.Kill();
+
+    var events = new List<string>();
+    var ordered = tree.CreateTween();
+    var delayed = ordered.TweenCallback(() => events.Add("callback"));
+    Require(ReferenceEquals(delayed.SetDelay(0.5d), delayed), "SetDelay must return the same callback tweener.");
+    Expect<ArgumentOutOfRangeException>(() => delayed.SetDelay(double.PositiveInfinity),
+        "A callback delay must reject non-finite values without changing its previous delay.");
+    Expect<InvalidOperationException>(() => Task.Run(() => delayed.SetDelay(0.1d)).GetAwaiter().GetResult(),
+        "A callback delay mutation must require the tween owner thread.");
+    delayed.Finished += sender =>
+    {
+        Require(ReferenceEquals(sender, delayed), "Tweener.Finished must pass the completing tweener.");
+        events.Add("tweener");
+    };
+    ordered.StepFinished += (_, step) => events.Add($"step:{step}");
+    ordered.Finished += _ => events.Add("finished");
+    ordered.TweenCallback(() => events.Add("next"));
+    tree.ProcessFrame(0d);
+    tree.ProcessFrame(0.49d);
+    Require(events.Count == 0, "A callback must wait through zero and sub-delay frames.");
+    tree.ProcessFrame(0.01d);
+    Require(events.SequenceEqual(["callback", "tweener", "step:0"]) && ordered.IsRunning(),
+        "A callback must fire at the exact delay boundary, before tweener and step completion events.");
+    tree.ProcessFrame(0.01d);
+    Require(events.SequenceEqual(["callback", "tweener", "step:0", "next", "step:1", "finished"]),
+        "An exact callback boundary must defer the next zero-duration step to later positive time.");
+
+    var signedCallbackEvents = new List<string>();
+    var signedCallback = tree.CreateTween();
+    signedCallback.TweenCallback(() => signedCallbackEvents.Add("callback")).SetDelay(-0.2d);
+    signedCallback.TweenInterval(0.25d).Finished += _ => signedCallbackEvents.Add("interval");
+    signedCallback.TweenCallback(() => signedCallbackEvents.Add("after"));
+    tree.ProcessFrame(0.1d);
+    Require(signedCallbackEvents.SequenceEqual(["callback"]) &&
+            DoubleNearlyEqual(signedCallback.GetTotalElapsedTime(), 0.1d),
+        "A negative callback delay must fire immediately without forwarding more than the delivered frame delta.");
+    tree.ProcessFrame(0.15d);
+    Require(signedCallbackEvents.SequenceEqual(["callback", "interval"]),
+        "The following interval must consume only actual delivered time and defer the next exact-boundary callback.");
+    tree.ProcessFrame(0.1d);
+    Require(signedCallbackEvents.SequenceEqual(["callback", "interval", "after"]),
+        "The final callback must run on a later positive frame after the interval boundary.");
+
+    var intervalEvents = new List<string>();
+    var negativeInterval = tree.CreateTween();
+    negativeInterval.TweenInterval(-0.2d).Finished += _ => intervalEvents.Add("interval");
+    negativeInterval.TweenCallback(() => intervalEvents.Add("after"));
+    tree.ProcessFrame(0.1d);
+    Require(intervalEvents.SequenceEqual(["interval", "after"]),
+        "A negative interval must finish on the first positive frame while the next task receives no more than that frame delta.");
+
+    var intervalFinishes = 0;
+    var exactInterval = tree.CreateTween();
+    exactInterval.TweenInterval(0.5d).Finished += _ => intervalFinishes++;
+    tree.ProcessFrame(0.25d);
+    Require(intervalFinishes == 0, "An interval must remain active below its duration.");
+    tree.ProcessFrame(0.25d);
+    Require(intervalFinishes == 1 && exactInterval.IsValid() && !exactInterval.IsRunning(),
+        "An interval must emit one completion at its exact duration boundary.");
+
+    var zeroIntervalEvents = new List<string>();
+    var zeroInterval = tree.CreateTween();
+    zeroInterval.TweenInterval(0d).Finished += _ => zeroIntervalEvents.Add("interval");
+    zeroInterval.TweenCallback(() => zeroIntervalEvents.Add("callback"));
+    tree.ProcessFrame(0d);
+    Require(zeroIntervalEvents.Count == 0, "A zero interval must still wait for a positive processing delta.");
+    tree.ProcessFrame(0.1d);
+    Require(zeroIntervalEvents.SequenceEqual(["interval", "callback"]),
+        "A zero interval must pass its full positive frame delta to the next step.");
+
+    var loopCallbacks = 0;
+    var loopTweenerFinishes = 0;
+    var loopEvents = new List<string>();
+    var looped = tree.CreateTween().SetLoops(3);
+    var repeating = looped.TweenCallback(() => loopCallbacks++).SetDelay(0.1d);
+    repeating.Finished += _ => { loopTweenerFinishes++; loopEvents.Add("tweener"); };
+    looped.StepFinished += (sender, step) =>
+    {
+        Require(ReferenceEquals(sender, looped), "StepFinished must pass the owning tween.");
+        loopEvents.Add($"step:{step}");
+    };
+    looped.LoopFinished += (sender, completed) =>
+    {
+        Require(ReferenceEquals(sender, looped), "LoopFinished must pass the owning tween.");
+        loopEvents.Add($"loop:{completed}");
+    };
+    looped.Finished += sender =>
+    {
+        Require(ReferenceEquals(sender, looped), "Finished must pass the owning tween.");
+        loopEvents.Add("finished");
+    };
+    tree.ProcessFrame(0.35d);
+    Require(loopCallbacks == 3 && loopTweenerFinishes == 3 && !looped.IsRunning() &&
+            loopEvents.SequenceEqual(["tweener", "step:0", "loop:1", "tweener", "step:0", "loop:2",
+                "tweener", "step:0", "finished"]),
+        "Tweener, step, loop and final events must fire in order with one-based loop counts on each execution.");
+
+    var liveDelayCalls = 0;
+    var liveDelay = tree.CreateTween();
+    var adjustable = liveDelay.TweenCallback(() => liveDelayCalls++).SetDelay(1d);
+    tree.ProcessFrame(0.25d);
+    Expect<ArgumentOutOfRangeException>(() => adjustable.SetDelay(double.NaN),
+        "Rejecting a live non-finite delay must preserve the previous threshold.");
+    adjustable.SetDelay(0.5d);
+    tree.ProcessFrame(0.25d);
+    Require(liveDelayCalls == 1, "Changing a callback delay during playback must affect its active threshold.");
+
+    var directTarget = new TweenEventSource();
+    var unavailableFinishes = 0;
+    var unavailable = tree.CreateTween();
+    unavailable.TweenCallback(directTarget.Emit).Finished += _ => unavailableFinishes++;
+    directTarget.Dispose();
+    tree.ProcessFrame(0.1d);
+    Require(directTarget.EmitCount == 0 && unavailableFinishes == 1 && !unavailable.IsRunning(),
+        "A disposed direct callback target must finish its tweener without invoking the target.");
+
+    var canceledCalls = 0;
+    var canceledFinishes = 0;
+    var canceled = tree.CreateTween();
+    canceled.TweenCallback(() => canceledCalls++).Finished += _ => canceledFinishes++;
+    canceled.Kill();
+    tree.ProcessFrame(0.1d);
+    Require(canceledCalls == 0 && canceledFinishes == 0 && !canceled.IsValid(),
+        "Killing an unstarted callback must neither call it nor emit tweener completion.");
+
+    var failedFinishes = 0;
+    var siblingRan = false;
+    var failing = tree.CreateTween();
+    failing.TweenCallback(() => throw new InvalidOperationException("expected callback failure"))
+        .Finished += _ => failedFinishes++;
+    tree.CreateTween().TweenCallback(() => siblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException &&
+            failedFinishes == 0 && siblingRan && !failing.IsValid(),
+        "A throwing callback must not emit tweener completion or prevent a later tween from running.");
+}
+
 static void VerifySceneTreeFailureSafety()
 {
     var enterRoot = new FailingLifecycleNode
@@ -12049,7 +12195,13 @@ sealed class TweenEventSource : ElectronObject
 {
     public event Action? Fired;
 
-    public void Emit() => Fired?.Invoke();
+    public int EmitCount { get; private set; }
+
+    public void Emit()
+    {
+        EmitCount++;
+        Fired?.Invoke();
+    }
 
     protected override void Dispose(bool disposing)
     {
