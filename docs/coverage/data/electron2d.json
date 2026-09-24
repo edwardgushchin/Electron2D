@@ -15702,6 +15702,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.MaximumSizeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "MaximumSizeChanged",
+    "signature": "public event System.Action MaximumSizeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Control.MinimumSizeChanged()",
     "kind": "event",
     "declaringType": "Electron2D.Control",
@@ -20783,6 +20796,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetBoundMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetBoundMinimumSize",
+    "signature": "public Electron2D.Vector2 GetBoundMinimumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetCombinedMaximumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetCombinedMaximumSize",
+    "signature": "public Electron2D.Vector2 GetCombinedMaximumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetCombinedMinimumSize()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -20844,6 +20883,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetMaximumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetMaximumSize",
+    "signature": "public Electron2D.Vector2 GetMaximumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -21039,6 +21091,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.OnGetMaximumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetMaximumSize",
+    "signature": "protected virtual Electron2D.Vector2 OnGetMaximumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.OnGetMinimumSize()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21210,6 +21275,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.UpdateMaximumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "UpdateMaximumSize",
+    "signature": "public System.Void UpdateMaximumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -55831,6 +55909,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.CustomMaximumSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "CustomMaximumSize",
+    "signature": "public Electron2D.Vector2 CustomMaximumSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.CustomMinimumSize()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -56088,6 +56179,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.PropagateMaximumSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "PropagateMaximumSize",
+    "signature": "public System.Boolean PropagateMaximumSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -8,7 +8,7 @@ Last updated: 2026-09-24
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum ControlGrowDirection`
 
-Controls how a [`Control`](Control.md) moves when its resolved size is smaller than its minimum size.
+Controls how a [`Control`](Control.md) moves when its resolved size is outside the minimum or maximum size bounds.
 
 | Value | Number | Behavior |
 | --- | ---: | --- |
@@ -16,4 +16,4 @@ Controls how a [`Control`](Control.md) moves when its resolved size is smaller t
 | `End` | 1 | Keeps the leading edge fixed; the default. |
 | `Both` | 2 | Moves both edges equally around the center. |
 
-Horizontal and vertical directions are independent. `ControlLayoutTests` verifies all three values against live minimum-size reflow. Maximum-size behavior remains a separate coverage gap.
+Horizontal and vertical directions are independent. `ControlLayoutTests` verifies all three values against live minimum-size growth and maximum-size shrinkage. RTL mirroring and complete container sizing remain separate coverage gaps.

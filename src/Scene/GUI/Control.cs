@@ -14,9 +14,13 @@ public partial class Control : CanvasItem
     private Vector2 _pivotOffset;
     private Vector2 _customMinimumSize;
     private Vector2 _lastMinimumSize;
+    private Vector2 _customMaximumSize = new(-1, -1);
+    private Vector2 _lastMaximumSize = new(-1, -1);
+    private bool _propagateMaximumSize;
     private ControlGrowDirection _growHorizontal = ControlGrowDirection.End;
     private ControlGrowDirection _growVertical = ControlGrowDirection.End;
     private bool _minimumSizeUpdatePending;
+    private bool _maximumSizeUpdatePending;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
 
@@ -31,6 +35,9 @@ public partial class Control : CanvasItem
 
     /// <summary>Occurs after a changed minimum size has been applied in the scene tree.</summary>
     public event Action? MinimumSizeChanged;
+
+    /// <summary>Occurs after a changed maximum size has been applied in the scene tree.</summary>
+    public event Action? MaximumSizeChanged;
 
     /// <summary>Gets or sets the local rectangle's upper-left point.</summary>
     /// <value>The position before pivot, rotation and scale.</value>
@@ -81,6 +88,27 @@ public partial class Control : CanvasItem
         }
     }
 
+    /// <summary>Gets or sets the finite caller-supplied maximum size; a negative component disables its bound.</summary>
+    public Vector2 CustomMaximumSize
+    {
+        get { ThrowIfDisposed(); return _customMaximumSize; }
+        set
+        {
+            EnsureMutable(); EnsureFinite(value, nameof(value));
+            var normalized = new Vector2(value.X < 0 ? -1 : value.X, value.Y < 0 ? -1 : value.Y);
+            if (_customMaximumSize == normalized) return;
+            _customMaximumSize = normalized;
+            UpdateMaximumSize();
+        }
+    }
+
+    /// <summary>Gets or sets whether this control's maximum size constrains direct child controls.</summary>
+    public bool PropagateMaximumSize
+    {
+        get { ThrowIfDisposed(); return _propagateMaximumSize; }
+        set { EnsureMutable(); if (_propagateMaximumSize == value) return; _propagateMaximumSize = value; UpdateMaximumSize(); }
+    }
+
     /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>
     public ControlGrowDirection GrowHorizontal
     {
@@ -114,6 +142,40 @@ public partial class Control : CanvasItem
             Mathf.Max(0, Mathf.Max(intrinsic.Y, _customMinimumSize.Y)));
     }
 
+    /// <summary>Gets the intrinsic maximum size, with negative components meaning unbounded.</summary>
+    public Vector2 GetMaximumSize()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        var size = OnGetMaximumSize();
+        EnsureFinite(size, nameof(size));
+        return size;
+    }
+
+    /// <summary>Gets the effective maximum from intrinsic, custom and propagated bounds.</summary>
+    public Vector2 GetCombinedMaximumSize()
+    {
+        ThrowIfDisposed();
+        var intrinsic = GetMaximumSize();
+        var maximum = new Vector2(CombineMaximum(intrinsic.X, _customMaximumSize.X),
+            CombineMaximum(intrinsic.Y, _customMaximumSize.Y));
+        if (!TopLevel && Parent is Control { PropagateMaximumSize: true } parent)
+        {
+            var inherited = parent.GetCombinedMaximumSize();
+            maximum = new(CombineMaximum(maximum.X, inherited.X), CombineMaximum(maximum.Y, inherited.Y));
+        }
+        return maximum;
+    }
+
+    /// <summary>Gets the combined minimum capped by each enabled maximum component.</summary>
+    public Vector2 GetBoundMinimumSize()
+    {
+        var minimum = GetCombinedMinimumSize();
+        var maximum = GetCombinedMaximumSize();
+        return new(maximum.X >= 0 ? Mathf.Min(minimum.X, maximum.X) : minimum.X,
+            maximum.Y >= 0 ? Mathf.Min(minimum.Y, maximum.Y) : minimum.Y);
+    }
+
     /// <summary>Requests a coalesced minimum-size update after an intrinsic minimum changes.</summary>
     public void UpdateMinimumSize()
     {
@@ -123,8 +185,22 @@ public partial class Control : CanvasItem
         Tree!.Defer(ApplyMinimumSizeUpdate);
     }
 
+    /// <summary>Requests a coalesced maximum-size update and refreshes direct child control bounds.</summary>
+    public void UpdateMaximumSize()
+    {
+        EnsureMutable();
+        foreach (var child in Children)
+            if (child is Control control && !control.TopLevel) control.UpdateMaximumSize();
+        if (!IsInsideTree || !IsVisibleInTree || _maximumSizeUpdatePending) return;
+        _maximumSizeUpdatePending = true;
+        Tree!.Defer(ApplyMaximumSizeUpdate);
+    }
+
     /// <summary>Supplies the intrinsic minimum size; the base control has none.</summary>
     protected virtual Vector2 OnGetMinimumSize() => Vector2.Zero;
+
+    /// <summary>Supplies the intrinsic maximum size; the base control is unbounded.</summary>
+    protected virtual Vector2 OnGetMaximumSize() => new(-1, -1);
 
     /// <summary>Gets or sets the local rotation in radians around PivotOffset.</summary>
     public float Rotation
@@ -352,10 +428,11 @@ public partial class Control : CanvasItem
             if (_layoutParent is not null) _layoutParent.ItemRectChanged += OnParentRectChanged;
             else if ((_layoutViewport = GetViewport()) is not null) _layoutViewport.SizeChanged += Reflow;
             _lastMinimumSize = GetCombinedMinimumSize();
+            _lastMaximumSize = GetCombinedMaximumSize();
             Reflow();
         }
         else if (what == NotificationExitCanvas) DisconnectLayoutSource();
-        else if (what == NotificationVisibilityChanged && IsVisibleInTree) UpdateMinimumSize();
+        else if (what == NotificationVisibilityChanged && IsVisibleInTree) { UpdateMinimumSize(); UpdateMaximumSize(); }
         else if (what == NotificationResized) Resized?.Invoke();
     }
 
@@ -368,7 +445,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
+        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
         base.Dispose(disposing);
     }
 
@@ -393,6 +470,17 @@ public partial class Control : CanvasItem
         MinimumSizeChanged?.Invoke();
     }
 
+    private void ApplyMaximumSizeUpdate()
+    {
+        _maximumSizeUpdatePending = false;
+        if (IsDisposed || !IsInsideTree || !IsVisibleInTree) return;
+        var maximum = GetCombinedMaximumSize();
+        if (maximum == _lastMaximumSize) return;
+        _lastMaximumSize = maximum;
+        Reflow();
+        MaximumSizeChanged?.Invoke();
+    }
+
     private void Reflow()
     {
         var area = GetParentAreaSize();
@@ -405,10 +493,21 @@ public partial class Control : CanvasItem
             position.X += (size.X - minimum.X) * GrowthShift(_growHorizontal);
             size.X = minimum.X;
         }
+        var maximum = GetCombinedMaximumSize();
+        if (maximum.X >= 0 && size.X > maximum.X)
+        {
+            position.X += (size.X - maximum.X) * GrowthShift(_growHorizontal);
+            size.X = maximum.X;
+        }
         if (size.Y < minimum.Y)
         {
             position.Y += (size.Y - minimum.Y) * GrowthShift(_growVertical);
             size.Y = minimum.Y;
+        }
+        if (maximum.Y >= 0 && size.Y > maximum.Y)
+        {
+            position.Y += (size.Y - maximum.Y) * GrowthShift(_growVertical);
+            size.Y = maximum.Y;
         }
         if (position == _position && size == _size) return;
         var sizeChanged = size != _size;
@@ -425,6 +524,7 @@ public partial class Control : CanvasItem
         ControlGrowDirection.Both => .5f,
         _ => 0f
     };
+    private static float CombineMaximum(float first, float second) => first < 0 ? second < 0 ? -1 : second : second < 0 ? first : Mathf.Min(first, second);
     private static void ValidateGrowDirection(ControlGrowDirection direction)
     {
         if (direction is < ControlGrowDirection.Begin or > ControlGrowDirection.Both)
@@ -441,6 +541,8 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, Vector2>(nameof(Scale), node => node.Scale, (node, value) => node.Scale = value, _ => Vector2.One, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(PivotOffset), node => node.PivotOffset, (node, value) => node.PivotOffset = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMinimumSize), node => node.CustomMinimumSize, (node, value) => node.CustomMinimumSize = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(CustomMaximumSize), node => node.CustomMaximumSize, (node, value) => node.CustomMaximumSize = value, _ => new Vector2(-1, -1), stored: true),
+        new PropertyDescriptor<Control, bool>(nameof(PropagateMaximumSize), node => node.PropagateMaximumSize, (node, value) => node.PropagateMaximumSize = value, _ => false, stored: true),
         new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowHorizontal), node => node.GrowHorizontal, (node, value) => node.GrowHorizontal = value, _ => ControlGrowDirection.End, stored: true),
         new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowVertical), node => node.GrowVertical, (node, value) => node.GrowVertical = value, _ => ControlGrowDirection.End, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorLeft), node => node.AnchorLeft, (node, value) => node.AnchorLeft = value, _ => 0f, stored: true),

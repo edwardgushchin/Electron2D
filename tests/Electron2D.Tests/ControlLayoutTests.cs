@@ -67,6 +67,7 @@ internal static class ControlLayoutTests
         }
         VerifyAnchorPresets();
         VerifyMinimumSize();
+        VerifyMaximumSize();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }
@@ -205,6 +206,126 @@ internal static class ControlLayoutTests
         private Vector2 _minimum;
         protected override Vector2 OnGetMinimumSize() => _minimum;
         internal void SetIntrinsicMinimum(Vector2 value) { _minimum = value; UpdateMinimumSize(); }
+    }
+
+    private static void VerifyMaximumSize()
+    {
+        using var viewport = new TestViewport();
+        var host = new Control { Name = "host", Size = new(100, 80) };
+        viewport.AddChild(host);
+        var child = new MaximumControl { Name = "maximum", Position = new(10, 12), Size = new(80, 50) };
+        host.AddChild(child);
+        using var tree = new SceneTree(viewport);
+        Check(child.GetMaximumSize() == new Vector2(-1, -1) && child.GetCombinedMaximumSize() == new Vector2(-1, -1),
+            "A base control is unbounded on both axes.");
+        var events = new List<string>();
+        child.Resized += () => events.Add("resized");
+        child.MaximumSizeChanged += () => events.Add("maximum");
+        child.CustomMaximumSize = new(30, 25);
+        Check(child.GetCombinedMaximumSize() == new Vector2(30, 25) && child.Size == new Vector2(80, 50),
+            "The new maximum is queryable before deferred reflow.");
+        tree.FlushDeferred();
+        Check(child.Position == new Vector2(10, 12) && child.Size == new Vector2(30, 25),
+            "Default growth policy keeps leading edges when the maximum shrinks the rectangle.");
+        Check(events.SequenceEqual(new[] { "resized", "maximum" }),
+            "Resize delivery precedes the maximum-size signal.");
+        events.Clear();
+        child.CustomMaximumSize = new(25, 20);
+        child.CustomMaximumSize = new(20, 15);
+        tree.FlushDeferred();
+        Check(child.Size == new Vector2(20, 15) && events.SequenceEqual(new[] { "resized", "maximum" }),
+            "Multiple maximum changes coalesce to one applied value and signal.");
+        child.CustomMaximumSize = new(20, 15);
+        child.UpdateMaximumSize();
+        events.Clear();
+        tree.FlushDeferred();
+        Check(events.Count == 0, "An unchanged maximum does not emit again.");
+        child.CustomMaximumSize = new(-8, 15);
+        tree.FlushDeferred();
+        Check(child.CustomMaximumSize == new Vector2(-1, 15) && child.Size == new Vector2(80, 15),
+            "Negative custom maximum components normalize to an unbounded axis.");
+        child.SetIntrinsicMaximum(new(35, -1));
+        tree.FlushDeferred();
+        Check(child.GetMaximumSize() == new Vector2(35, -1) && child.GetCombinedMaximumSize() == new Vector2(35, 15)
+            && child.Size == new Vector2(35, 15), "Intrinsic and custom bounds combine per component.");
+        Reject<ArgumentOutOfRangeException>(() => child.CustomMaximumSize = new(float.PositiveInfinity, 10));
+        Check(child.CustomMaximumSize == new Vector2(-1, 15), "Invalid maximum values preserve the prior bound.");
+        events.Clear();
+        child.Visible = false;
+        child.CustomMaximumSize = new(10, 10);
+        tree.FlushDeferred();
+        Check(child.Size == new Vector2(35, 15) && events.Count == 0,
+            "A hidden control defers maximum-size reflow and notifications.");
+        child.Visible = true;
+        tree.FlushDeferred();
+        Check(child.Size == new Vector2(10, 10) && events.SequenceEqual(new[] { "resized", "maximum" }),
+            "Showing the control applies its pending maximum-size change.");
+
+        var shifts = new[] { 1f, 0f, .5f };
+        for (var index = 0; index < shifts.Length; index++)
+        {
+            var direction = (ControlGrowDirection)index;
+            var item = new Control { Name = $"shrink{index}", Position = new(10, 12), Size = new(80, 50) };
+            host.AddChild(item);
+            item.GrowHorizontal = direction;
+            item.GrowVertical = direction;
+            item.CustomMaximumSize = new(30, 20);
+            tree.FlushDeferred();
+            Check(item.Size == new Vector2(30, 20) && item.Position == new Vector2(10 + 50 * shifts[index], 12 + 30 * shifts[index]),
+                $"Maximum-size growth direction {direction} must keep the selected edges fixed.");
+        }
+
+        var conflict = new Control { Name = "conflict", Size = new(80, 50) };
+        host.AddChild(conflict);
+        conflict.CustomMinimumSize = new(50, 40);
+        conflict.CustomMaximumSize = new(30, 25);
+        tree.FlushDeferred();
+        Check(conflict.GetBoundMinimumSize() == new Vector2(30, 25) && conflict.Size == new Vector2(30, 25),
+            "An enabled maximum wins after minimum-size growth when bounds conflict.");
+
+        var parent = new Control { Name = "bounded", Size = new(100, 80) };
+        viewport.AddChild(parent);
+        var nested = new Control { Name = "nested", Size = new(80, 50) };
+        parent.AddChild(nested);
+        parent.CustomMaximumSize = new(40, 30);
+        parent.PropagateMaximumSize = true;
+        tree.FlushDeferred();
+        Check(parent.Size == new Vector2(40, 30) && nested.GetCombinedMaximumSize() == new Vector2(40, 30)
+            && nested.Size == new Vector2(40, 30), "Parent propagation bounds a direct child control.");
+        nested.TopLevel = true;
+        Check(nested.GetCombinedMaximumSize() == new Vector2(-1, -1) && nested.Size == new Vector2(80, 50),
+            "A top-level child escapes the parent's propagated maximum.");
+        nested.TopLevel = false;
+        Check(nested.GetCombinedMaximumSize() == new Vector2(40, 30) && nested.Size == new Vector2(40, 30),
+            "Rejoining the parent canvas restores its propagated maximum.");
+        parent.PropagateMaximumSize = false;
+        tree.FlushDeferred();
+        Check(nested.GetCombinedMaximumSize() == new Vector2(-1, -1) && nested.Size == new Vector2(80, 50),
+            "Disabling propagation restores the child's unconstrained rectangle.");
+
+        var packable = new Control { Name = "packable", CustomMaximumSize = new(22, -5), PropagateMaximumSize = true };
+        host.AddChild(packable);
+        using var packed = new PackedScene();
+        packed.Pack(packable);
+        using var copy = (Control)packed.Instantiate();
+        Check(copy.CustomMaximumSize == new Vector2(22, -1) && copy.PropagateMaximumSize,
+            "Maximum-size settings survive packed-scene storage.");
+
+        var entering = new Control { Name = "entering", Size = new(10, 10) };
+        entering.SetAnchor(Side.Right, 1);
+        entering.SetOffset(Side.Right, -10);
+        entering.Resized += () => entering.CustomMaximumSize = new(20, 10);
+        host.AddChild(entering);
+        tree.FlushDeferred();
+        Check(entering.Size == new Vector2(20, 10),
+            "A maximum-size change during entry resize must survive the initial layout snapshot.");
+    }
+
+    private sealed class MaximumControl : Control
+    {
+        private Vector2 _maximum = new(-1, -1);
+        protected override Vector2 OnGetMaximumSize() => _maximum;
+        internal void SetIntrinsicMaximum(Vector2 value) { _maximum = value; UpdateMaximumSize(); }
     }
 
     private sealed class TestViewport : Viewport
