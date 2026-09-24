@@ -20,6 +20,8 @@ Provides the abstract base contract for all engine input events.
 
 The base stores a signed device ID (zero by default) and computes pressed, released and canceled queries from independent raw flags. Cancellation makes both raw press and release queries false. An action release query uses the mapped effective pressed state: a canceled matching button press can therefore report an action release even though `IsReleased()` is false. Map-based queries validate the requested registered name; the direct-action `IsAction` override compares its typed name without registration.
 
+Action matching uses the first compatible binding in registration order. Key and mouse-button releases ignore required modifiers unless exact matching is requested; controller axes can match the opposite direction as an effective release. A public `IsMatch` comparison follows each event type's rules: a synthetic action event can match a physical event through its named action. `InputMap` uses action-binding matching for exact binding lookup, so that cross-family comparison does not erase or deduplicate a physical binding.
+
 Events are mutable resources so action bindings can be configured in memory. A platform host creates concrete
 events and passes them to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent); this class has no dependency on a native backend.
 
@@ -59,7 +61,7 @@ Console.WriteLine(inputEvent.AsText());
 | [`public bool IsReleased()`](#m-electron2d-inputevent-isreleased) | Gets whether the event represents a non-canceled release. |
 | [`public virtual bool IsEcho()`](#m-electron2d-inputevent-isecho) | Gets whether this is an operating-system key-repeat event. |
 | [`public bool IsActionType()`](#m-electron2d-inputevent-isactiontype) | Gets whether this event type may be bound to an input action. |
-| [`public virtual bool IsMatch(InputEvent event, bool exactMatch = true)`](#m-electron2d-inputevent-ismatch-electron2d-inputevent-system-boolean) | Tests whether this event has the same binding configuration as another event. |
+| [`public virtual bool IsMatch(InputEvent event, bool exactMatch = true)`](#m-electron2d-inputevent-ismatch-electron2d-inputevent-system-boolean) | Compares another event under this event type's matching rules. |
 | [`public virtual bool Accumulate(InputEvent withEvent)`](#m-electron2d-inputevent-accumulate-electron2d-inputevent) | Attempts to merge a newer compatible motion event into this event. |
 | [`public virtual InputEvent XformedBy(Transform transform, Vector2 localOffset = default)`](#m-electron2d-inputevent-xformedby-electron2d-transform-electron2d-vector2) | Returns this event transformed into another local coordinate space. |
 | [`public abstract string AsText()`](#m-electron2d-inputevent-astext) | Returns a concise, human-readable representation of the event. |
@@ -250,14 +252,14 @@ Gets whether this event type may be bound to an input action.
 <a id="m-electron2d-inputevent-ismatch-electron2d-inputevent-system-boolean"></a>
 ### `public virtual bool IsMatch(InputEvent event, bool exactMatch = true)`
 
-Tests whether this event has the same binding configuration as another event.
+Tests whether this event matches another event under its event-type comparison rules.
 
 **Parameters**
 
 - `event`: The event to compare.
 - `exactMatch`: Whether modifiers and analog direction must match exactly.
 
-**Returns:** `true` when the binding configurations match.
+**Returns:** `true` when the event-type comparison succeeds. A synthetic action event may match a physical event through the action map; exact binding lookup in `InputMap` remains family-specific.
 
 **Exceptions**
 

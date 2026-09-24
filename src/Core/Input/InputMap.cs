@@ -211,7 +211,8 @@ public sealed class InputMap : ElectronObject
     /// <summary>Adds an event binding to an action.</summary>
     /// <param name="action">The registered action name.</param>
     /// <param name="event">A live action-compatible event describing the binding.</param>
-    /// <remarks>An equal exact binding is ignored. At most 32 bindings may belong to one action.</remarks>
+    /// <remarks>An equal exact action binding is ignored. At most 32 bindings may belong to one action.
+    /// Binding lookup uses action matching; a public <see cref="InputEvent.IsMatch"/> result may be broader for synthetic action events.</remarks>
     /// <exception cref="ArgumentException"><paramref name="action"/> is invalid or <paramref name="event"/> is not action-compatible.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The action already has 32 distinct bindings.</exception>
@@ -242,7 +243,7 @@ public sealed class InputMap : ElectronObject
     /// <summary>Gets whether an action contains an exact event binding.</summary>
     /// <param name="action">The registered action name.</param>
     /// <param name="event">The binding configuration to find.</param>
-    /// <returns><see langword="true"/> when an exact binding exists.</returns>
+    /// <returns><see langword="true"/> when an exact action binding exists.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
@@ -470,7 +471,7 @@ public sealed class InputMap : ElectronObject
             var candidate = definition.Events[index];
             candidate.EnsureUsable();
             if ((candidate.Device == AllDevices || candidate.Device == @event.Device) &&
-                candidate.IsMatch(@event, exactMatch))
+                candidate.TryMatchAction(@event, exactMatch, definition.Deadzone, out _))
                 return index;
         }
 

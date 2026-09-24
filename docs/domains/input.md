@@ -36,6 +36,7 @@ Input depends on Core object/resource lifecycle, math and typed ProjectSettings 
 - Raw and action state is committed before scene callbacks and is not rolled back when callbacks fail.
 - Emulated events use device ID `-1`, precede their source events, and do not recursively generate input. Their active press is paired with a release when the setting changes during contact.
 - Action names are ordinal; strengths/deadzones are finite and bounded.
+- Public event comparison and exact action-binding lookup have distinct rules for synthetic action events; the map never collapses a physical binding into a synthetic one solely because it triggers the named action.
 - Process and physics transition windows are independent and clear even after a frame callback fails.
 - Scene input is owner-thread, pause-aware, reverse depth-first for Node stages, and stoppable through handled state. Root viewport Control targeting uses geometry and focus between the Node stages.
 - Binding configuration and queries are lock-serialized. Registered binding resources remain live caller-owned references and cannot be disposed or mutated concurrently with matching.

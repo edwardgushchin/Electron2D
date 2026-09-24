@@ -332,8 +332,8 @@
     {
       "electron2d": "method:Electron2D.InputEvent.IsAction(System.String,System.Boolean)",
       "godot": "InputEvent::method:is_action(StringName:,bool:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "Map-based action lookup follows the pinned first-binding status path across five typed families; VerifyInputMapMatching and ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.IsEcho()",
@@ -344,8 +344,8 @@
     {
       "electron2d": "method:Electron2D.InputEvent.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "Base false and five derived comparison rules are checked by VerifyInputMapMatching, including synthetic-to-physical delegation; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEvent.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
@@ -362,14 +362,14 @@
     {
       "electron2d": "method:Electron2D.InputEventAction.IsAction(System.String,System.Boolean)",
       "godot": "InputEvent::method:is_action(StringName:,bool:)",
-      "state": "Partial",
-      "reason": "Typed derived input-event query/override; ADR 0038."
+      "state": "Implemented",
+      "reason": "Direct action-name comparison bypasses registration as in the pinned override; VerifyInputMapMatching; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventAction.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "state": "Implemented",
+      "reason": "Named-action comparison can match a physical source; exact binding lookup remains family-specific. VerifyInputMapMatching; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventJoypadButton.AsText()",
@@ -380,8 +380,8 @@
     {
       "electron2d": "method:Electron2D.InputEventJoypadButton.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "state": "Implemented",
+      "reason": "Button identity ignores device and press state; VerifyInputMapMatching and pinned source; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventJoypadMotion.AsText()",
@@ -392,8 +392,8 @@
     {
       "electron2d": "method:Electron2D.InputEventJoypadMotion.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "state": "Implemented",
+      "reason": "Axis identity and exact sign comparison match pinned source; VerifyInputMapMatching; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventKey.AsText()",
@@ -428,8 +428,8 @@
     {
       "electron2d": "method:Electron2D.InputEventKey.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "state": "Implemented",
+      "reason": "Logical/physical/label precedence, physical location and exact modifiers match pinned source; VerifyInputMapMatching; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventMagnifyGesture.AsText()",
@@ -452,8 +452,8 @@
     {
       "electron2d": "method:Electron2D.InputEventMouseButton.IsMatch(Electron2D.InputEvent,System.Boolean)",
       "godot": "InputEvent::method:is_match(InputEvent:,bool:)",
-      "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "state": "Implemented",
+      "reason": "Button identity and exact modifier comparison match pinned source; VerifyInputMapMatching; ADR 0038."
     },
     {
       "electron2d": "method:Electron2D.InputEventMouseButton.XformedBy(Electron2D.Transform,Electron2D.Vector2)",
@@ -2613,22 +2613,22 @@
     }
   ],
   "statusGroups": [
-    {"state": "Partial", "reason": "Action registration, deadzones, removal and snapshot collections are audited. Exact binding lookup and event matching still depend on the five concrete IsMatch/action_match families; descriptions need localized text and LoadFromProjectSettings retains its separately documented event-family/platform limits under ADR 0038.", "godot": ["class:InputMap"]},
+    {"state": "Partial", "reason": "Registration, deadzones, exact binding lookup, event action status and snapshot collections are audited. Localized action descriptions and LoadFromProjectSettings retain separately documented text, event-family and platform limits under ADR 0038.", "godot": ["class:InputMap"]},
     {"state": "Implemented", "reason": "VerifyInputMapConfiguration checks default 0.2 and explicit zero/one deadzones, ordinal names, duplicate/missing registration errors, immutable registration-order snapshots and action-state removal. Typed exception and ordered collection adaptations follow ADR 0038.", "godot": ["InputMap::method:add_action(StringName:,float:)", "InputMap::method:erase_action(StringName:)", "InputMap::method:get_actions()", "InputMap::method:has_action(StringName:)"]},
     {"state": "Implemented", "reason": "The finite [0,1] deadzone boundary, default value, rejected-change rollback and analog action effect are checked by VerifyInputMapConfiguration and VerifyInput; typed exceptions follow ADR 0038.", "godot": ["InputMap::method:action_get_deadzone(StringName:)", "InputMap::method:action_set_deadzone(StringName:,float:)"]},
     {"state": "Implemented", "reason": "ActionGetEvents returns an immutable ordered snapshot retaining borrowed event references after map changes. VerifyInputMapConfiguration checks duplicate collapse, snapshot immutability and retained references; InputActionSettingsTests checks loaded-event retention under ADR 0038.", "godot": ["InputMap::method:action_get_events(StringName:)"]},
     {"state": "Implemented", "reason": "ActionEraseEvents removes every binding and invalidates cached pressed contributions, including direct action state. VerifyInputMapConfiguration checks the resulting empty snapshot and release; missing actions throw a typed exception under ADR 0038.", "godot": ["InputMap::method:action_erase_events(StringName:)"]},
-    {"state": "Partial", "reason": "Duplicate collapse, 32-binding capacity and wildcard-device lookup execute, but exact add/has parity still depends on the five concrete IsMatch/action_match families under ADR 0038.", "godot": ["InputMap::method:action_add_event(StringName:,InputEvent:)", "InputMap::method:action_has_event(StringName:,InputEvent:)"]},
-    {"state": "Partial", "reason": "The return is now void as in the pinned declaration; exact no-op/removal state effects and retained snapshots are checked by VerifyInputMapConfiguration. Final exact-match parity depends on the five concrete IsMatch/action_match families and wildcard-device audit under ADR 0038.", "godot": ["InputMap::method:action_erase_event(StringName:,InputEvent:)"]},
-    {"state": "Partial", "reason": "The base device, state predicates, action-family classification, non-positional identity transform and motion/drag accumulation are audited. Action lookup/strength/release depends on remaining InputMap and derived binding parity; IsMatch and localized AsText require their descendant audits. Those are explicit member rows below; inherited Resource lifecycle remains separately classified.", "godot": ["class:InputEvent"]},
+    {"state": "Implemented", "reason": "VerifyInputMapConfiguration and VerifyInputMapMatching cover five bindable families, exact identity and direction, modifier release, wildcard devices, duplicate collapse, 32-binding capacity and typed validation. Exact map lookup now uses action matching instead of public IsMatch, preserving distinct physical and synthetic bindings under ADR 0038.", "godot": ["InputMap::method:action_add_event(StringName:,InputEvent:)", "InputMap::method:action_has_event(StringName:,InputEvent:)", "InputMap::method:action_erase_event(StringName:,InputEvent:)"]},
+    {"state": "Implemented", "reason": "The pinned first-match action status is reproduced for key, mouse button, controller button/axis and direct action events. VerifyInputMapMatching checks modifiers, canceled release, echo, physical location, label, wildcard devices, deadzone, axis direction, source order, strength and unknown-action errors under ADR 0038.", "godot": ["InputMap::method:event_is_action(InputEvent:,StringName:,bool:)"]},
+    {"state": "Partial", "reason": "Base device, state predicates, action classification, matching, action queries, transforms and accumulation are audited. Localized AsText remains Partial across descendants, and inherited Resource lifecycle remains separately classified.", "godot": ["class:InputEvent"]},
     {"state": "Implemented", "reason": "The base Device property stores signed identifiers directly, defaults to zero and emits Changed after assignment. VerifyInput checks int.MinValue duplication and descriptor revert; derived keyboard/mouse/gesture defaults remain on their own coverage rows.", "godot": ["InputEvent::property:device"]},
     {"state": "Implemented", "reason": "The pinned predicates read independent pressed/canceled flags: canceled events are neither raw pressed nor raw released. VerifyInput checks all four combinations on mouse-button events, and the other event families use the shared base path.", "godot": ["InputEvent::method:is_canceled()", "InputEvent::method:is_pressed()", "InputEvent::method:is_released()"]},
     {"state": "Implemented", "reason": "The exact five bindable event families match pinned XML and typed runtime classifications; VerifyInput checks positive and negative concrete cases without depending on a native host.", "godot": ["InputEvent::method:is_action_type()"]},
     {"state": "Implemented", "reason": "The base returns false and only InputEventKey overrides the repeat value. VerifyInput checks every concrete default and the key Echo transition; native SDL key events map Repeat through that same property. Physical keyboard repeat timing is platform-controlled.", "godot": ["InputEvent::method:is_echo()"]},
     {"state": "Implemented", "reason": "Base events return false; mouse motion and indexed screen drag override with the pinned compatibility checks and arithmetic merge. VerifyInput checks non-motion no-op, compatible/incompatible merges, observer failure after commitment and floating overflow; the pinned C++ source also supports drag accumulation despite XML's mouse-motion-only description.", "godot": ["InputEvent::method:accumulate(InputEvent:)"]},
     {"state": "Implemented", "reason": "Non-positional events return the same borrowed instance; six positional overrides copy and transform local values while preserving global/screen values. VerifyInput and CanvasCoordinateTests check identity, ownership, each sibling and derived-overflow rejection before copying under ADR 0038.", "godot": ["InputEvent::method:xformed_by(Transform2D:,Vector2:)"]},
-    {"state": "Partial", "reason": "Typed action lookup and strength are executable, including canceled matching release status and registered-name validation. Exact derived key/button/axis matching, deadzones, source ordering and errors remain to audit jointly with InputMap and the concrete bindable families under ADR 0038; do not claim parity from structural signatures.", "godot": ["InputEvent::method:is_action(StringName:,bool:)", "InputEvent::method:is_action_pressed(StringName:,bool:,bool:)", "InputEvent::method:is_action_released(StringName:,bool:)", "InputEvent::method:get_action_strength(StringName:,bool:)"]},
-    {"state": "Partial", "reason": "The base returns false, but five bindable descendants supply matching overrides. Audit exact key/location/modifier, button, axis and direct-action configuration semantics, including null/disposal, against pinned InputMap source and managed/native checks before an Implemented claim.", "godot": ["InputEvent::method:is_match(InputEvent:,bool:)"]},
+    {"state": "Implemented", "reason": "The pinned action-status path is checked by VerifyInputMapMatching across five bindable families: key/label/location and modifier release, mouse cancellation, controller wildcard and axis deadzone/direction, first-binding order, direct action strength, echo and unknown registration. Typed errors and direct-action IsAction adaptation follow ADR 0038.", "godot": ["InputEvent::method:is_action(StringName:,bool:)", "InputEvent::method:is_action_pressed(StringName:,bool:,bool:)", "InputEvent::method:is_action_released(StringName:,bool:)", "InputEvent::method:get_action_strength(StringName:,bool:)"]},
+    {"state": "Implemented", "reason": "The base returns false and five bindable descendants use the pinned public comparison rules. VerifyInputMapMatching checks exact/non-exact identities, key label/location/modifiers, axis sign, synthetic-to-physical action delegation, null/disposal and separation from map binding lookup under ADR 0038.", "godot": ["InputEvent::method:is_match(InputEvent:,bool:)"]},
     {"state": "Partial", "reason": "Every concrete event returns a typed English diagnostic, but pinned localized wording, key labels, unknown identities and format values remain unaudited across descendants. Trigger: complete the per-family text audit with localization behavior under ADR 0038.", "godot": ["InputEvent::method:as_text()"]},
     {"state": "Partial", "reason": "Managed touch storage, cancellation and viewport transforms execute; the focused Wayland SDL queue test checks signed native contact indexing, press/cancel/release, invalid-event recovery and index reuse. Native double-tap recognition is absent: trigger the first touch gesture/tap-classification integration with ordered contact history. Independently owned nested viewport input and ADR 0014 dispatch allocation remain on their owning slices.", "godot": ["class:InputEventScreenTouch"]},
     {"state": "Implemented", "reason": "The source stores pressed and canceled flags separately; effective IsPressed/IsReleased exclude cancellation. VerifyInput checks canceled press/copy/recovery and focused Wayland SDL input checks down, cancel and release after malformed events.", "godot": ["InputEventScreenTouch::property:pressed", "InputEventScreenTouch::property:canceled"]},

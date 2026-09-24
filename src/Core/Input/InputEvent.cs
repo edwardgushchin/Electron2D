@@ -178,10 +178,11 @@ public abstract class InputEvent : Resource
             InputEventJoypadButton or InputEventJoypadMotion;
     }
 
-    /// <summary>Tests whether this event has the same binding configuration as another event.</summary>
+    /// <summary>Tests whether this event matches another event under its event-type comparison rules.</summary>
     /// <param name="event">The event to compare.</param>
     /// <param name="exactMatch">Whether modifiers and analog direction must match exactly.</param>
-    /// <returns><see langword="true"/> when the binding configurations match.</returns>
+    /// <returns><see langword="true"/> when the event-type comparison succeeds.</returns>
+    /// <remarks>An action event can match a physical event through its named action. Exact action-map binding lookup uses action-binding matching instead of this comparison.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">Either event is disposing or disposed.</exception>
     public virtual bool IsMatch(InputEvent @event, bool exactMatch = true)

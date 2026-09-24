@@ -200,7 +200,7 @@ Adds an event binding to an action.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 - `ObjectDisposedException`: `event` is disposing or disposed.
 
-**Remarks:** An equal exact binding is ignored. At most 32 bindings may belong to one action.
+**Remarks:** An equal exact action binding is ignored. At most 32 bindings may belong to one action. Exact binding lookup uses action matching, so a synthetic action binding and a physical event stay distinct even when the synthetic event's public `IsMatch` returns `true` for that physical source.
 
 <a id="m-electron2d-inputmap-actionhasevent-system-string-electron2d-inputevent"></a>
 ### `public bool ActionHasEvent(string action, InputEvent event)`
@@ -212,7 +212,7 @@ Gets whether an action contains an exact event binding.
 - `action`: The registered action name.
 - `event`: The binding configuration to find.
 
-**Returns:** `true` when an exact binding exists.
+**Returns:** `true` when an exact action binding exists.
 
 **Exceptions**
 
@@ -273,7 +273,7 @@ Gets an action's bindings in registration order.
 <a id="m-electron2d-inputmap-eventisaction-electron2d-inputevent-system-string-system-boolean"></a>
 ### `public bool EventIsAction(InputEvent event, string action, bool exactMatch = false)`
 
-Tests whether an event belongs to an action.
+Tests whether an event belongs to a registered action. Bindings are checked in registration order; the first matching binding supplies the effective press and strength.
 
 **Parameters**
 

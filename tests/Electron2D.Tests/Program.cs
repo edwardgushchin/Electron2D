@@ -206,6 +206,7 @@ VerifyProjectSettings();
 VerifyResources();
 VerifyPackedScenes();
 VerifyInputMapConfiguration();
+VerifyInputMapMatching();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4380,6 +4381,174 @@ static void VerifyInputMapConfiguration()
         if (map.HasAction(action))
             map.EraseAction(action);
         input.ReleasePressedEvents();
+    }
+}
+
+static void VerifyInputMapMatching()
+{
+    const string inner = "tests.input.map.match.inner";
+    const string outer = "tests.input.map.match.outer";
+    var map = InputMap.Instance;
+    foreach (var action in new[] { inner, outer })
+        if (map.HasAction(action))
+            map.EraseAction(action);
+
+    using var key = new InputEventKey { Keycode = Key.F3 };
+    using var synthetic = new InputEventAction { Action = inner, Device = InputMap.AllDevices };
+    try
+    {
+        map.AddAction(inner);
+        map.ActionAddEvent(inner, key);
+        map.AddAction(outer);
+        map.ActionAddEvent(outer, synthetic);
+        Require(synthetic.IsMatch(key) && !map.ActionHasEvent(outer, key),
+            "A synthetic event may publicly match an action source without making that source an exact binding.");
+        map.ActionAddEvent(outer, key);
+        Require(map.ActionGetEvents(outer).Count == 2 && map.ActionHasEvent(outer, key),
+            "Exact binding lookup must keep physical and synthetic event families distinct.");
+        map.ActionEraseEvent(outer, key);
+        Require(map.ActionGetEvents(outer).Count == 1 && ReferenceEquals(map.ActionGetEvents(outer)[0], synthetic),
+            "Exact binding removal must retain the synthetic event when given a physical source.");
+        map.ActionEraseEvents(outer);
+
+        var cases = new (InputEvent Binding, InputEvent Same, InputEvent Different)[]
+        {
+            (new InputEventKey { Keycode = Key.F4 }, new InputEventKey { Keycode = Key.F4 }, new InputEventKey { Keycode = Key.F5 }),
+            (new InputEventMouseButton { ButtonIndex = MouseButton.Left }, new InputEventMouseButton { ButtonIndex = MouseButton.Left }, new InputEventMouseButton { ButtonIndex = MouseButton.Right }),
+            (new InputEventJoypadButton { ButtonIndex = JoyButton.A }, new InputEventJoypadButton { ButtonIndex = JoyButton.A }, new InputEventJoypadButton { ButtonIndex = JoyButton.B }),
+            (new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -1f }, new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -0.25f }, new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f }),
+            (new InputEventAction { Action = inner }, new InputEventAction { Action = inner }, new InputEventAction { Action = outer }),
+        };
+        try
+        {
+            foreach (var (binding, same, different) in cases)
+            {
+                Require(binding.IsMatch(same) && !binding.IsMatch(different),
+                    "Each bindable event family must distinguish exact identities and axis directions.");
+                map.ActionAddEvent(outer, binding);
+                Require(map.ActionHasEvent(outer, same) && !map.ActionHasEvent(outer, different),
+                    "Exact binding lookup must use each event family's action-match identity.");
+                map.ActionEraseEvent(outer, different);
+                Require(map.ActionGetEvents(outer).Count == 1,
+                    "An unrelated event must not remove an existing binding.");
+                map.ActionEraseEvent(outer, same);
+                Require(map.ActionGetEvents(outer).Count == 0,
+                    "An equivalent event must remove its exact binding.");
+            }
+            Require(cases[3].Binding.IsMatch(cases[3].Different, exactMatch: false),
+                "Non-exact controller-axis matching must ignore direction.");
+            using var extraModifier = new InputEventKey { Keycode = Key.F4, ControlPressed = true };
+            Require(cases[0].Binding.IsMatch(extraModifier, exactMatch: false) &&
+                    !cases[0].Binding.IsMatch(extraModifier),
+                "Non-exact key matching ignores extra modifiers while exact matching keeps them.");
+        }
+        finally
+        {
+            map.ActionEraseEvents(outer);
+            foreach (var (binding, same, different) in cases)
+            {
+                binding.Dispose();
+                same.Dispose();
+                different.Dispose();
+            }
+        }
+
+        using var requiredKey = new InputEventKey { Keycode = Key.F6, ControlPressed = true };
+        using var keyExtra = new InputEventKey { Keycode = Key.F6, ControlPressed = true, ShiftPressed = true, Pressed = true };
+        using var keyMissing = new InputEventKey { Keycode = Key.F6, Pressed = true };
+        using var keyRelease = new InputEventKey { Keycode = Key.F6 };
+        using var keyEcho = new InputEventKey { Keycode = Key.F6, ControlPressed = true, Pressed = true, Echo = true };
+        map.ActionAddEvent(outer, requiredKey);
+        Require(keyExtra.IsActionPressed(outer) && !keyExtra.IsActionPressed(outer, exactMatch: true) &&
+                !keyMissing.IsAction(outer) && keyRelease.IsActionReleased(outer) &&
+                !keyRelease.IsActionReleased(outer, exactMatch: true) &&
+                !keyEcho.IsActionPressed(outer) && keyEcho.IsActionPressed(outer, allowEcho: true),
+            "Key actions must handle extra, missing and released modifiers plus repeated presses.");
+        map.ActionEraseEvents(outer);
+
+        using var physical = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Left };
+        using var physicalLeft = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Left, Pressed = true };
+        using var physicalRight = new InputEventKey { PhysicalKeycode = Key.F7, Location = KeyLocation.Right, Pressed = true };
+        map.ActionAddEvent(outer, physical);
+        Require(physical.IsMatch(physicalLeft) && !physical.IsMatch(physicalRight) &&
+                map.EventIsAction(physicalLeft, outer) && !map.EventIsAction(physicalRight, outer),
+            "Physical-key actions must preserve left/right location identity.");
+        map.ActionEraseEvents(outer);
+
+        using var label = new InputEventKey { KeyLabel = Key.F8 };
+        using var labeledSource = new InputEventKey { Keycode = Key.F9, KeyLabel = Key.F8, Pressed = true };
+        map.ActionAddEvent(outer, label);
+        Require(map.EventIsAction(labeledSource, outer) && label.IsMatch(labeledSource),
+            "Label-only bindings must use the key label even when the logical code differs.");
+        map.ActionEraseEvents(outer);
+
+        using var mouse = new InputEventMouseButton { ButtonIndex = MouseButton.Left, ControlPressed = true };
+        using var mouseExtra = new InputEventMouseButton { ButtonIndex = MouseButton.Left, ControlPressed = true, ShiftPressed = true, Pressed = true };
+        using var mouseCanceled = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Canceled = true };
+        map.ActionAddEvent(outer, mouse);
+        Require(mouseExtra.IsActionPressed(outer) && !mouseExtra.IsActionPressed(outer, exactMatch: true) &&
+                mouseCanceled.IsActionReleased(outer) && !mouseCanceled.IsActionReleased(outer, exactMatch: true),
+            "Mouse-button actions must handle modifiers and canceled releases.");
+        map.ActionEraseEvents(outer);
+
+        using var button = new InputEventJoypadButton { Device = InputMap.AllDevices, ButtonIndex = JoyButton.B };
+        using var buttonSource = new InputEventJoypadButton { Device = 7, ButtonIndex = JoyButton.B, Pressed = true };
+        map.ActionAddEvent(outer, button);
+        Require(buttonSource.IsActionPressed(outer, exactMatch: true) &&
+                buttonSource.GetActionStrength(outer) == 1f,
+            "An all-device controller button must match a concrete device at full strength.");
+        button.Device = 3;
+        Require(!map.EventIsAction(buttonSource, outer),
+            "A concrete controller binding must reject events from another device.");
+        map.ActionEraseEvents(outer);
+
+        using var axis = new InputEventJoypadMotion { Device = InputMap.AllDevices, Axis = JoyAxis.LeftX, AxisValue = -1f };
+        using var axisSource = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = -0.6f };
+        using var axisOpposite = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = 0.6f };
+        using var axisBelowDeadzone = new InputEventJoypadMotion { Device = 7, Axis = JoyAxis.LeftX, AxisValue = -0.1f };
+        map.ActionAddEvent(outer, axis);
+        Require(axisSource.IsActionPressed(outer, exactMatch: true) &&
+                NearlyEqual(axisSource.GetActionStrength(outer), 0.5f) &&
+                map.EventIsAction(axisOpposite, outer) && axisOpposite.IsActionReleased(outer) &&
+                !axisOpposite.IsAction(outer, exactMatch: true) &&
+                axisOpposite.GetActionStrength(outer) == 0f &&
+                axisBelowDeadzone.IsActionReleased(outer),
+            "Controller-axis actions must apply direction and deadzone to effective press and strength.");
+        map.ActionAddEvent(outer, axisOpposite);
+        Require(axisOpposite.IsActionReleased(outer) && axisOpposite.GetActionStrength(outer) == 0f,
+            "Non-exact action queries must use the first matching axis binding in registration order.");
+        map.ActionEraseEvent(outer, axis);
+        Require(axisOpposite.IsActionPressed(outer) && NearlyEqual(axisOpposite.GetActionStrength(outer), 0.5f),
+            "Removing the earlier opposite-axis binding must expose the later matching direction.");
+        map.ActionEraseEvents(outer);
+
+        using var direct = new InputEventAction { Action = outer, Pressed = true, Strength = 0.3f };
+        Require(map.EventIsAction(direct, outer, exactMatch: true) &&
+                direct.IsActionPressed(outer) && NearlyEqual(direct.GetActionStrength(outer), 0.3f) &&
+                !direct.IsAction(inner) && !direct.IsAction(outer + ".missing"),
+            "A direct action event must match its registered name and preserve its configured strength.");
+        direct.Pressed = false;
+        Require(direct.IsActionReleased(outer) && direct.GetActionStrength(outer) == 0f,
+            "A direct action release must contribute zero strength.");
+        Expect<KeyNotFoundException>(() => map.EventIsAction(direct, outer + ".missing"),
+            "Action-map queries must validate registration even for direct events.");
+        using var motion = new InputEventMouseMotion();
+        Require(!motion.IsMatch(key), "Non-bindable events must retain the base non-match behavior.");
+        using var unnamed = new InputEventAction();
+        Require(!unnamed.IsMatch(key), "An unnamed synthetic event cannot match a physical source.");
+        Expect<ArgumentNullException>(() => key.IsMatch(null!),
+            "Binding comparison must reject a null event.");
+        using var disposed = new InputEventKey { Keycode = Key.F3 };
+        disposed.Dispose();
+        Expect<ObjectDisposedException>(() => key.IsMatch(disposed),
+            "Binding comparison must reject a disposed event.");
+    }
+    finally
+    {
+        if (map.HasAction(outer))
+            map.EraseAction(outer);
+        if (map.HasAction(inner))
+            map.EraseAction(inner);
     }
 }
 
