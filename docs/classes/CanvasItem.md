@@ -151,8 +151,8 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public bool NotifyTransformChanges { get; set; }`](#p-electron2d-canvasitem-notifytransformchanges) | Gets or sets whether global transform changes dispatch `CanvasItem.NotificationTransformChanged`. |
 | [`public Color SelfModulate { get; set; }`](#p-electron2d-canvasitem-selfmodulate) | Gets or sets the color multiplier applied only to this node's drawing. |
 | [`public bool ShowBehindParent { get; set; }`](#p-electron2d-canvasitem-showbehindparent) | Draws this canvas subtree before its parent at equal Z, unless the parent sorts it by Y. |
-| [`public TextureFilterEnum TextureFilter { get; set; }`](#texturefilter) | Selects inherited, nearest, linear or mip/anisotropic filtering. |
-| [`public TextureRepeatEnum TextureRepeat { get; set; }`](#texturerepeat) | Selects inherited, clamp, repeat or mirror addressing. |
+| [`public TextureFilter TextureFilter { get; set; }`](#texturefilter) | Selects inherited, nearest, linear or mip/anisotropic filtering. |
+| [`public TextureRepeat TextureRepeat { get; set; }`](#texturerepeat) | Selects inherited, clamp, repeat or mirror addressing. |
 | [`public bool TopLevel { get; set; }`](#p-electron2d-canvasitem-toplevel) | Gets or sets whether this node ignores its parent's transform. |
 | [`public bool UseParentMaterial { get; set; }`](#p-electron2d-canvasitem-useparentmaterial) | Gets or sets whether this node uses its parent's effective material. |
 | [`public bool Visible { get; set; }`](#p-electron2d-canvasitem-visible) | Gets or sets this node's local logical visibility. |
@@ -162,8 +162,8 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 
 ## Sampling enums
 
-- [TextureFilterEnum](CanvasItem.TextureFilterEnum.md): ParentNode = 0; Nearest = 1; Linear = 2; NearestWithMipmaps = 3; LinearWithMipmaps = 4; NearestWithMipmapsAnisotropic = 5; LinearWithMipmapsAnisotropic = 6; Max = 7.
-- [TextureRepeatEnum](CanvasItem.TextureRepeatEnum.md): ParentNode = 0; Disabled = 1; Enabled = 2; Mirror = 3; Max = 4.
+- [TextureFilter](TextureFilter.md): ParentNode = 0; Nearest = 1; Linear = 2; NearestWithMipmaps = 3; LinearWithMipmaps = 4; NearestWithMipmapsAnisotropic = 5; LinearWithMipmapsAnisotropic = 6; Max = 7.
+- [TextureRepeat](TextureRepeat.md): ParentNode = 0; Disabled = 1; Enabled = 2; Mirror = 3; Max = 4.
 
 ## Methods and extension points
 
@@ -394,7 +394,7 @@ Every valid assignment commits the Z value and then requests configuration-warni
 
 ### TextureFilter
 
-`public TextureFilterEnum TextureFilter { get; set; }`
+`public TextureFilter TextureFilter { get; set; }`
 
 ParentNode by default. Actual changes refresh attached inheriting descendants, request redraw, then raise PropertyListChanged on this item. Overrides and neutral parents stop propagation. Detached changes apply at entry; TopLevel and reparenting recompute inheritance. GPU supports all concrete modes; mipmaps/anisotropy fail on compatibility, and linear fails on software triangles. Base-level modes never sample stored lower mips. Anisotropy uses the viewport limit; mip interpolation uses the project startup setting. Missing image mips are not generated implicitly.
 
@@ -402,7 +402,7 @@ Invalid or Max values throw ArgumentOutOfRangeException before mutation. Invalid
 
 ### TextureRepeat
 
-`public TextureRepeatEnum TextureRepeat { get; set; }`
+`public TextureRepeat TextureRepeat { get; set; }`
 
 ParentNode by default. Disabled clamps to edges, Enabled repeats, Mirror reflects alternate tiles. GPU supports all; compatibility rejects Mirror and checks native non-power-of-two wrapping. A tiled rectangle command forces Enabled. Inheritance, redraw, PropertyListChanged, no-ops, storage and errors match TextureFilter. This setting does not change the texture resource or arbitrary material parameter samplers.
 

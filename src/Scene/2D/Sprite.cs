@@ -273,9 +273,9 @@ public class Sprite : Entity
         point = source.Position + point * source.Size.Abs();
         if (!point.IsFinite()) throw new InvalidOperationException("Sprite opacity coordinates overflowed finite values.");
         var repeat = TextureRepeatInTree;
-        if (repeat is TextureRepeatEnum.Enabled or TextureRepeatEnum.Mirror)
-            return texture.IsPixelOpaque(RepeatCoordinate(point.X, width, repeat == TextureRepeatEnum.Mirror),
-                RepeatCoordinate(point.Y, height, repeat == TextureRepeatEnum.Mirror));
+        if (repeat is TextureRepeat.Enabled or TextureRepeat.Mirror)
+            return texture.IsPixelOpaque(RepeatCoordinate(point.X, width, repeat == TextureRepeat.Mirror),
+                RepeatCoordinate(point.Y, height, repeat == TextureRepeat.Mirror));
         return texture.IsPixelOpaque((int)Math.Clamp(point.X, 0, width - 1), (int)Math.Clamp(point.Y, 0, height - 1));
     }
 

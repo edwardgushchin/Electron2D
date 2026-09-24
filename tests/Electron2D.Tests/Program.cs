@@ -4132,11 +4132,11 @@ static void VerifyConfigFiles()
 
 static void VerifyFileAccess()
 {
-    Expect<ArgumentNullException>(() => EngineFileAccess.Open(null!, FileAccessMode.Read),
+    Expect<ArgumentNullException>(() => EngineFileAccess.Open(null!, FileAccessModeFlags.Read),
         "File access must reject null paths.");
-    Expect<ArgumentException>(() => EngineFileAccess.Open(string.Empty, FileAccessMode.Read),
+    Expect<ArgumentException>(() => EngineFileAccess.Open(string.Empty, FileAccessModeFlags.Read),
         "File access must reject empty paths.");
-    Expect<ArgumentOutOfRangeException>(() => EngineFileAccess.Open("unused", (FileAccessMode)5),
+    Expect<ArgumentOutOfRangeException>(() => EngineFileAccess.Open("unused", (FileAccessModeFlags)5),
         "File access must reject unknown mode combinations.");
     Expect<NotSupportedException>(() => EngineFileAccess.FileExists("uid://123"),
         "Resource-identity paths must remain explicit until their resolver exists.");
@@ -4152,7 +4152,7 @@ static void VerifyFileAccess()
     try
     {
         var path = IOPath.Combine(directory, "data.bin");
-        Expect<FileNotFoundException>(() => EngineFileAccess.Open(path, FileAccessMode.Read),
+        Expect<FileNotFoundException>(() => EngineFileAccess.Open(path, FileAccessModeFlags.Read),
             "Read mode must require an existing file.");
         Expect<FileNotFoundException>(() => EngineFileAccess.GetSize(path),
             "Static size lookup must reject a missing file.");
@@ -4161,10 +4161,10 @@ static void VerifyFileAccess()
         Expect<FileNotFoundException>(() => EngineFileAccess.GetModifiedTime(path),
             "Static modification-time lookup must reject a missing file.");
         Expect<DirectoryNotFoundException>(() => EngineFileAccess.Open(
-                IOPath.Combine(directory, "missing", "data.bin"), FileAccessMode.Write),
+                IOPath.Combine(directory, "missing", "data.bin"), FileAccessModeFlags.Write),
             "Write mode must not create missing directories.");
 
-        using (var file = EngineFileAccess.Open(path, FileAccessMode.WriteRead))
+        using (var file = EngineFileAccess.Open(path, FileAccessModeFlags.WriteRead))
         {
             Require(file.IsOpen && file.Path == path && file.AbsolutePath == IOPath.GetFullPath(path) &&
                     file.Position == 0 && file.Length == 0 && !file.EOFReached && !file.BigEndian,
@@ -4228,14 +4228,14 @@ static void VerifyFileAccess()
             file.Resize(length);
         }
 
-        using (var writeOnly = EngineFileAccess.Open(path, FileAccessMode.Write))
+        using (var writeOnly = EngineFileAccess.Open(path, FileAccessModeFlags.Write))
         {
             Require(writeOnly.Length == 0, "Write mode must truncate an existing file.");
             Expect<InvalidOperationException>(() => writeOnly.ReadByte(),
                 "Write-only files must reject reads.");
             writeOnly.WriteString("abcdef");
         }
-        using (var readOnly = EngineFileAccess.Open(path, FileAccessMode.Read))
+        using (var readOnly = EngineFileAccess.Open(path, FileAccessModeFlags.Read))
         {
             Expect<InvalidOperationException>(() => readOnly.WriteByte(1),
                 "Read-only files must reject writes.");
@@ -4249,7 +4249,7 @@ static void VerifyFileAccess()
                 "Closed files must reject cursor operations.");
         }
 
-        using (var readWrite = EngineFileAccess.Open(path, FileAccessMode.ReadWrite))
+        using (var readWrite = EngineFileAccess.Open(path, FileAccessModeFlags.ReadWrite))
         {
             readWrite.WriteString("XY");
         }
@@ -4265,7 +4265,7 @@ static void VerifyFileAccess()
 
         var linePath = IOPath.Combine(directory, "lines.txt");
         File.WriteAllBytes(linePath, Encoding.UTF8.GetBytes("first\rsecond\0third\n"));
-        using (var lines = EngineFileAccess.Open(linePath, FileAccessMode.Read))
+        using (var lines = EngineFileAccess.Open(linePath, FileAccessModeFlags.Read))
         {
             Require(lines.ReadLine() == "first" && lines.ReadLine() == "second" && lines.ReadLine() == "third",
                 "Line reads must recognize CR, null, and LF terminators.");
@@ -4302,7 +4302,7 @@ static void VerifyFileAccess()
 
         if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() || OperatingSystem.IsWindows())
         {
-            using (var attributes = EngineFileAccess.Open(path, FileAccessMode.ReadWrite))
+            using (var attributes = EngineFileAccess.Open(path, FileAccessModeFlags.ReadWrite))
             {
                 if (OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsFreeBSD())
                     Require(attributes.ReadOnly == EngineFileAccess.IsReadOnly(path) &&
@@ -4330,7 +4330,7 @@ static void VerifyFileAccess()
 
         string temporaryPath;
         using (var readOnlyTemporary = EngineFileAccess.CreateTemp(
-                   FileAccessMode.Read, prefix: "electron2d", extension: ".dat"))
+                   FileAccessModeFlags.Read, prefix: "electron2d", extension: ".dat"))
         {
             temporaryPath = readOnlyTemporary.AbsolutePath;
             Require(temporaryPath.EndsWith(".dat", StringComparison.Ordinal) && readOnlyTemporary.Length == 0,
@@ -4359,7 +4359,7 @@ static void VerifyFileAccess()
                  })
         {
             var compressedPath = IOPath.Combine(directory, $"compressed-{compression}.bin");
-            using (var compressed = EngineFileAccess.OpenCompressed(compressedPath, FileAccessMode.WriteRead, compression))
+            using (var compressed = EngineFileAccess.OpenCompressed(compressedPath, FileAccessModeFlags.WriteRead, compression))
             {
                 compressed.WriteLine("compressible compressible compressible");
                 compressed.WriteUInt32(123456789);
@@ -4369,29 +4369,29 @@ static void VerifyFileAccess()
                         compressed.ReadUInt32() == 123456789,
                     $"{compression} data must remain readable after an intermediate commit.");
             }
-            using var decoded = EngineFileAccess.OpenCompressed(compressedPath, FileAccessMode.Read, compression);
+            using var decoded = EngineFileAccess.OpenCompressed(compressedPath, FileAccessModeFlags.Read, compression);
             Require(decoded.ReadLine() == "compressible compressible compressible" &&
                     decoded.ReadUInt32() == 123456789,
                 $"{compression} containers must round-trip across instances.");
         }
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(
-                IOPath.Combine(directory, "compressed-Deflate.bin"), FileAccessMode.Read, FileCompressionMode.Gzip),
+                IOPath.Combine(directory, "compressed-Deflate.bin"), FileAccessModeFlags.Read, FileCompressionMode.Gzip),
             "Compressed access must reject a container opened with the wrong codec.");
         Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                IOPath.Combine(directory, "fastlz.bin"), FileAccessMode.Write, FileCompressionMode.FastLz),
+                IOPath.Combine(directory, "fastlz.bin"), FileAccessModeFlags.Write, FileCompressionMode.FastLz),
             "Unavailable FastLZ support must fail explicitly.");
         Expect<NotSupportedException>(() => EngineFileAccess.OpenCompressed(
-                IOPath.Combine(directory, "zstd.bin"), FileAccessMode.Write, FileCompressionMode.Zstandard),
+                IOPath.Combine(directory, "zstd.bin"), FileAccessModeFlags.Write, FileCompressionMode.Zstandard),
             "Unavailable Zstandard support must fail explicitly.");
         var corruptCompressedPath = IOPath.Combine(directory, "corrupt-compressed.bin");
         File.WriteAllBytes(corruptCompressedPath, [1, 2, 3]);
         Expect<InvalidDataException>(() => EngineFileAccess.OpenCompressed(
-                corruptCompressedPath, FileAccessMode.Read, FileCompressionMode.Deflate),
+                corruptCompressedPath, FileAccessModeFlags.Read, FileCompressionMode.Deflate),
             "Malformed compressed envelopes must be rejected before exposure.");
 
         var encryptionKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
         var encryptedPath = IOPath.Combine(directory, "encrypted.bin");
-        using (var encrypted = EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessMode.WriteRead, encryptionKey))
+        using (var encrypted = EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessModeFlags.WriteRead, encryptionKey))
         {
             encrypted.WriteLine("secret text");
             encrypted.WriteUInt64(ulong.MaxValue);
@@ -4402,37 +4402,37 @@ static void VerifyFileAccess()
         }
         Require(File.ReadAllBytes(encryptedPath).AsSpan().IndexOf(Encoding.UTF8.GetBytes("secret text")) < 0,
             "Encrypted files must not contain plaintext payloads.");
-        using (var encrypted = EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessMode.Read, encryptionKey))
+        using (var encrypted = EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessModeFlags.Read, encryptionKey))
             Require(encrypted.ReadLine() == "secret text" && encrypted.ReadUInt64() == ulong.MaxValue,
                 "Raw-key encrypted files must authenticate and round-trip.");
-        Expect<ArgumentException>(() => EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessMode.Read, new byte[31]),
+        Expect<ArgumentException>(() => EngineFileAccess.OpenEncrypted(encryptedPath, FileAccessModeFlags.Read, new byte[31]),
             "Raw-key encryption must require exactly 256 key bits.");
         Expect<CryptographicException>(() => EngineFileAccess.OpenEncrypted(
-                encryptedPath, FileAccessMode.Read, Enumerable.Repeat((byte)0xff, 32).ToArray()),
+                encryptedPath, FileAccessModeFlags.Read, Enumerable.Repeat((byte)0xff, 32).ToArray()),
             "Encrypted files must reject a wrong raw key.");
         var tamperedEncryptedPath = IOPath.Combine(directory, "tampered-encrypted.bin");
         var tampered = File.ReadAllBytes(encryptedPath);
         tampered[^1] ^= 1;
         File.WriteAllBytes(tamperedEncryptedPath, tampered);
         Expect<CryptographicException>(() => EngineFileAccess.OpenEncrypted(
-                tamperedEncryptedPath, FileAccessMode.Read, encryptionKey),
+                tamperedEncryptedPath, FileAccessModeFlags.Read, encryptionKey),
             "Encrypted files must reject modified ciphertext.");
 
         var passwordPath = IOPath.Combine(directory, "password.bin");
         using (var encrypted = EngineFileAccess.OpenEncryptedWithPassword(
-                   passwordPath, FileAccessMode.Write, "correct horse battery staple"))
+                   passwordPath, FileAccessModeFlags.Write, "correct horse battery staple"))
             encrypted.WriteString("password secret");
         using (var encrypted = EngineFileAccess.OpenEncryptedWithPassword(
-                   passwordPath, FileAccessMode.Read, "correct horse battery staple"))
+                   passwordPath, FileAccessModeFlags.Read, "correct horse battery staple"))
             Require(encrypted.ReadAllText() == "password secret",
                 "Password-derived encrypted files must authenticate and round-trip.");
-        Expect<InvalidDataException>(() => EngineFileAccess.OpenEncrypted(passwordPath, FileAccessMode.Read, encryptionKey),
+        Expect<InvalidDataException>(() => EngineFileAccess.OpenEncrypted(passwordPath, FileAccessModeFlags.Read, encryptionKey),
             "Encrypted access must reject raw-key/password mode confusion.");
         Expect<CryptographicException>(() => EngineFileAccess.OpenEncryptedWithPassword(
-                passwordPath, FileAccessMode.Read, "wrong password"),
+                passwordPath, FileAccessModeFlags.Read, "wrong password"),
             "Password-derived encrypted files must reject a wrong password.");
         Expect<ArgumentException>(() => EngineFileAccess.OpenEncryptedWithPassword(
-                passwordPath, FileAccessMode.Read, string.Empty),
+                passwordPath, FileAccessModeFlags.Read, string.Empty),
             "Password encryption must reject an empty password.");
 
         var virtualName = $"electron2d-file-access-{Guid.NewGuid():N}.tmp";
@@ -4440,7 +4440,7 @@ static void VerifyFileAccess()
         var physicalVirtualPath = IOPath.Combine(ProjectSettings.Instance.ProjectRoot, virtualName);
         try
         {
-            using (var virtualFile = EngineFileAccess.Open(virtualPath, FileAccessMode.Write))
+            using (var virtualFile = EngineFileAccess.Open(virtualPath, FileAccessModeFlags.Write))
                 virtualFile.WriteString("virtual");
             Require(File.ReadAllText(physicalVirtualPath) == "virtual" && EngineFileAccess.FileExists(virtualPath),
                 "Directory-backed project paths must resolve for instance and static access.");
@@ -4457,7 +4457,7 @@ static void VerifyFileAccess()
         });
 
         var concurrentPath = IOPath.Combine(directory, "concurrent.bin");
-        using (var concurrent = EngineFileAccess.Open(concurrentPath, FileAccessMode.WriteRead))
+        using (var concurrent = EngineFileAccess.Open(concurrentPath, FileAccessModeFlags.WriteRead))
         {
             Parallel.For(0, 128, index => concurrent.WritePascalString(index.ToString("D3", CultureInfo.InvariantCulture)));
             Require(concurrent.Length == 128 * 7,
@@ -4471,7 +4471,7 @@ static void VerifyFileAccess()
         }
 
         var failedPath = IOPath.Combine(directory, "absent", "compressed.bin");
-        var failedCommit = EngineFileAccess.OpenCompressed(failedPath, FileAccessMode.Write, FileCompressionMode.Deflate);
+        var failedCommit = EngineFileAccess.OpenCompressed(failedPath, FileAccessModeFlags.Write, FileCompressionMode.Deflate);
         failedCommit.WriteString("pending");
         Expect<DirectoryNotFoundException>(failedCommit.Close,
             "A transformed commit must surface a missing destination directory.");
@@ -4479,7 +4479,7 @@ static void VerifyFileAccess()
             "A failed close must still release the transformed stream.");
         failedCommit.Dispose();
 
-        var disposed = EngineFileAccess.Open(path, FileAccessMode.Read);
+        var disposed = EngineFileAccess.Open(path, FileAccessModeFlags.Read);
         disposed.Dispose();
         Expect<ObjectDisposedException>(() => disposed.Close(),
             "Disposed file access must reject public operations.");
@@ -8662,7 +8662,7 @@ static void VerifyProcessing()
         PhysicsProcessEnabled = true,
         ProcessPriority = -10,
         PhysicsProcessPriority = 10,
-        ProcessMode = NodeProcessMode.Always
+        ProcessMode = ProcessMode.Always
     };
     var late = new ProcessingNode("late", log)
     {
@@ -8674,7 +8674,7 @@ static void VerifyProcessing()
     var pausedOnly = new ProcessingNode("paused", log)
     {
         ProcessEnabled = true,
-        ProcessMode = NodeProcessMode.WhenPaused
+        ProcessMode = ProcessMode.WhenPaused
     };
     var inheritedMode = new TransformNode { Name = "inherited-mode" };
 
@@ -8702,10 +8702,10 @@ static void VerifyProcessing()
     Expect<ArgumentOutOfRangeException>(() => tree.ProcessFrame(double.NaN), "Frame delta must be finite.");
 
     inheritedMode.Notifications.Clear();
-    root.ProcessMode = NodeProcessMode.Disabled;
+    root.ProcessMode = ProcessMode.Disabled;
     Require(inheritedMode.Notifications.Contains(Entity.NotificationDisabled) && !inheritedMode.CanProcess(),
         "Disabling an inherited process mode must notify and disable affected descendants.");
-    root.ProcessMode = NodeProcessMode.Inherit;
+    root.ProcessMode = ProcessMode.Inherit;
     Require(inheritedMode.Notifications.Contains(Entity.NotificationEnabled),
         "Restoring an inherited process mode must notify affected descendants.");
 }
@@ -9084,7 +9084,7 @@ static void VerifyTimers()
         tree.ProcessFrame(1d);
         Require(!timer.IsStopped() && DoubleNearlyEqual(timer.TimeLeft, 0.1d),
             "A Timer must honor inherited scene-tree pause policy.");
-        timer.ProcessMode = NodeProcessMode.Always;
+        timer.ProcessMode = ProcessMode.Always;
         tree.ProcessFrame(0.11d);
         Require(timer.IsStopped() && timeoutCount == 7,
             "Always-processing mode must allow a Timer to advance while the tree is paused.");
@@ -9625,7 +9625,7 @@ static void VerifyTweens()
     Require(DoubleNearlyEqual(stoppedValue, 0.5d), "Stop pause mode must resume after the tree unpauses.");
     stoppedByTree.Kill();
 
-    var alwaysNode = new Entity { ProcessMode = NodeProcessMode.Always };
+    var alwaysNode = new Entity { ProcessMode = ProcessMode.Always };
     root.AddChild(alwaysNode);
     var boundPauseValue = 0d;
     var boundPause = alwaysNode.CreateTween();

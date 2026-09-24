@@ -1,12 +1,12 @@
-# ControlLayoutPresetMode
+# LayoutPresetMode
 
 Last updated: 2026-09-24
 
 **Inherits:** —
 
-- **Source:** [`src/Scene/GUI/ControlLayoutPresetMode.cs`](../../src/Scene/GUI/ControlLayoutPresetMode.cs)
+- **Source:** [`src/Scene/GUI/LayoutPresetMode.cs`](../../src/Scene/GUI/LayoutPresetMode.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlLayoutPresetMode`
+- **Declaration:** `public enum LayoutPresetMode`
 
 Controls which dimensions [`Control.SetOffsetsPreset`](Control.md) and `SetAnchorsAndOffsetsPreset` preserve when placing a control.
 

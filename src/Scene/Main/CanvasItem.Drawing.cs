@@ -282,13 +282,13 @@ public abstract partial class CanvasItem
         var color = InheritedModulate * _selfModulate;
         var viewport = GetViewport();
         var filter = TextureFilterInTree;
-        if (filter == TextureFilterEnum.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilterEnum.Linear;
+        if (filter == TextureFilter.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilter.Linear;
         var inheritedRepeat = TextureRepeatInTree;
-        if (inheritedRepeat == TextureRepeatEnum.ParentNode) inheritedRepeat = viewport?.TextureRepeatInTree ?? TextureRepeatEnum.Disabled;
-        var anisotropy = filter >= TextureFilterEnum.NearestWithMipmapsAnisotropic
+        if (inheritedRepeat == TextureRepeat.ParentNode) inheritedRepeat = viewport?.TextureRepeatInTree ?? TextureRepeat.Disabled;
+        var anisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic
             ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;
-        var blend = CanvasItemMaterial.BlendModeEnum.Mix;
+        var blend = BlendMode.Mix;
         var capturedMaterial = false;
         var drawingTransform = Transform.Identity;
         var skipping = false;
@@ -305,10 +305,10 @@ public abstract partial class CanvasItem
             {
                 var canvasMaterial = CanvasMaterial;
                 material = canvasMaterial?.GetCanvasState();
-                blend = canvasMaterial?.GetCanvasBlendMode() ?? CanvasItemMaterial.BlendModeEnum.Mix;
+                blend = canvasMaterial?.GetCanvasBlendMode() ?? BlendMode.Mix;
                 capturedMaterial = true;
             }
-            var repeat = command.Tile ? TextureRepeatEnum.Enabled : inheritedRepeat;
+            var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend)
                 batches[^1] = last with { Count = last.Count + count };

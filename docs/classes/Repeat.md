@@ -1,15 +1,15 @@
-# GradientTexture.RepeatEnum
+# Repeat
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum GradientTexture.RepeatEnum`
+- Declaration: `public enum Repeat`
 - Source: [GradientTexture.cs](../../src/Scene/Resources/GradientTexture.cs)
-- Owner: [GradientTexture](GradientTexture.md)
+- Used by: [GradientTexture](GradientTexture.md)
 - Component: [Gradients](../components/gradients.md)
 
 ## Description
 
-Operates on generated offsets, independently of the canvas sampler. The Enum suffix avoids collision with the Repeat property.
+Operates on generated offsets, independently of the canvas sampler.
 
 ## Values
 

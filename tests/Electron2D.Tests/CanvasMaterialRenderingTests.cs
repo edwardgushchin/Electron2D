@@ -1,5 +1,5 @@
 using Electron2D;
-using Blend = Electron2D.CanvasItemMaterial.BlendModeEnum;
+using Blend = Electron2D.BlendMode;
 
 internal static partial class RenderingRuntimeTests
 {

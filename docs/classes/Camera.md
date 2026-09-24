@@ -38,7 +38,7 @@ window.AddChild(camera);
 
 ## Enums
 
-- [AnchorModeEnum](Camera.AnchorModeEnum.md): FixedTopLeft = 0, DragCenter = 1.
+- [AnchorMode](AnchorMode.md): FixedTopLeft = 0, DragCenter = 1.
 - [CameraProcessCallback](Camera.CameraProcessCallback.md): Physics = 0, Idle = 1.
 
 ## Constructors
@@ -53,7 +53,7 @@ window.AddChild(camera);
 | --- | --- |
 | [`public Vector2 Offset { get; set; }`](#offset) | Gets or sets the additional canvas offset. |
 | [`public Vector2 Zoom { get; set; }`](#zoom) | Gets or sets the canvas magnification. |
-| [`public AnchorModeEnum AnchorMode { get; set; }`](#anchormode) | Gets or sets the camera anchor mode. |
+| [`public AnchorMode AnchorMode { get; set; }`](#anchormode) | Gets or sets the camera anchor mode. |
 | [`public bool IgnoreRotation { get; set; }`](#ignorerotation) | Gets or sets whether view rotation ignores the node rotation. |
 | [`public bool Enabled { get; set; }`](#enabled) | Gets or sets whether this camera can become current. |
 | [`public CameraProcessCallback ProcessCallback { get; set; }`](#processcallback) | Gets or sets the internal frame lane for tracking. |
@@ -148,11 +148,11 @@ Gets or sets the canvas magnification.
 
 ### AnchorMode
 
-`public AnchorModeEnum AnchorMode { get; set; }`
+`public AnchorMode AnchorMode { get; set; }`
 
 Gets or sets the camera anchor mode.
 
-**Value:** AnchorModeEnum.DragCenter initially.
+**Value:** AnchorMode.DragCenter initially.
 
 **Remarks:** Selects centered tracking or a fixed top-left anchor. Changes update the current view.
 

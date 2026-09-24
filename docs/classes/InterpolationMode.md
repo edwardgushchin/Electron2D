@@ -1,15 +1,15 @@
-# Gradient.InterpolationModeEnum
+# InterpolationMode
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum Gradient.InterpolationModeEnum`
+- Declaration: `public enum InterpolationMode`
 - Source: [Gradient.cs](../../src/Scene/Resources/Gradient.cs)
-- Owner: [Gradient](Gradient.md)
+- Used by: [Gradient](Gradient.md)
 - Component: [Gradients](../components/gradients.md)
 
 ## Description
 
-The Enum suffix avoids a C# collision with InterpolationMode. Changing the property emits Changed then PropertyListChanged; equal assignment is silent.
+Changing the property emits Changed then PropertyListChanged; equal assignment is silent.
 
 ## Values
 

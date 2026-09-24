@@ -6,8 +6,8 @@ internal static class ControlInputTests
     {
         var root = new TestViewport();
         var parent = new Control { Name = "parent", Position = new(10, 10), Size = new(60, 50) };
-        var child = new Probe { Position = new(5, 5), Size = new(20, 20), MouseFilter = ControlMouseFilter.Pass, FocusMode = ControlFocusMode.Click, InputEnabled = true };
-        var overlay = new Control { Name = "overlay", Position = new(15, 15), Size = new(20, 20), MouseFilter = ControlMouseFilter.Ignore, ZIndex = 2 };
+        var child = new Probe { Position = new(5, 5), Size = new(20, 20), MouseFilter = MouseFilter.Pass, FocusMode = FocusMode.Click, InputEnabled = true };
+        var overlay = new Control { Name = "overlay", Position = new(15, 15), Size = new(20, 20), MouseFilter = MouseFilter.Ignore, ZIndex = 2 };
         var observer = new Probe { UnhandledInputEnabled = true };
         root.AddChild(parent); parent.AddChild(child); root.AddChild(overlay); root.AddChild(observer);
         using var tree = new SceneTree(root);
@@ -76,29 +76,29 @@ internal static class ControlInputTests
         Check(order.SequenceEqual(["input", "unhandled"]), "Hidden control receives no focused input.");
 
         order.Clear();
-        overlay.MouseFilter = ControlMouseFilter.Stop;
+        overlay.MouseFilter = MouseFilter.Stop;
         overlay.GUIInput += _ => order.Add("overlay");
         using var topPress = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = new(17, 18) };
         root.PushInput(topPress, inLocalCoordinates: true);
         Check(order.SequenceEqual(["input", "overlay"]), "Higher Z control wins hit testing.");
 
-        overlay.MouseFilter = ControlMouseFilter.Ignore;
+        overlay.MouseFilter = MouseFilter.Ignore;
         child.Visible = true;
         order.Clear();
         child.Fail = true;
         Reject<AggregateException>(() => root.PushInput(press, inLocalCoordinates: true));
         Check(order.Contains("parent") && borrowed!.IsDisposed, "A GUI callback failure does not skip parent delivery or leak local input.");
         child.Fail = false;
-        Reject<ArgumentOutOfRangeException>(() => child.MouseFilter = (ControlMouseFilter)9);
-        Reject<ArgumentOutOfRangeException>(() => child.FocusMode = (ControlFocusMode)3);
+        Reject<ArgumentOutOfRangeException>(() => child.MouseFilter = (MouseFilter)9);
+        Reject<ArgumentOutOfRangeException>(() => child.FocusMode = (FocusMode)3);
         using var settings = new Control { MouseForcePassScrollEvents = false };
-        var settingsChild = new Control { FocusMode = ControlFocusMode.Click };
+        var settingsChild = new Control { FocusMode = FocusMode.Click };
         settings.AddChild(settingsChild);
         settingsChild.Owner = settings;
         using var packed = new PackedScene();
         packed.Pack(settings);
         using var copy = (Control)packed.Instantiate();
-        Check(!copy.MouseForcePassScrollEvents && ((Control)copy.GetChild(0)).FocusMode == ControlFocusMode.Click,
+        Check(!copy.MouseForcePassScrollEvents && ((Control)copy.GetChild(0)).FocusMode == FocusMode.Click,
             "Packed controls retain GUI input and focus policy.");
         FocusContract();
         CanvasLayerMouseCoordinates();
@@ -148,7 +148,7 @@ internal static class ControlInputTests
         detached.ReleaseGUIFocus();
 
         var neutralRoot = new Node();
-        var neutralControl = new Control { FocusMode = ControlFocusMode.Click };
+        var neutralControl = new Control { FocusMode = FocusMode.Click };
         neutralRoot.AddChild(neutralControl);
         using (var neutralTree = new SceneTree(neutralRoot))
         {
@@ -158,8 +158,8 @@ internal static class ControlInputTests
 
         var root = new TestViewport();
         var order = new List<string>();
-        var first = new FocusProbe("first", order) { Name = "first", FocusMode = ControlFocusMode.Click };
-        var second = new FocusProbe("second", order) { Name = "second", FocusMode = ControlFocusMode.Click };
+        var first = new FocusProbe("first", order) { Name = "first", FocusMode = FocusMode.Click };
+        var second = new FocusProbe("second", order) { Name = "second", FocusMode = FocusMode.Click };
         root.AddChild(first);
         root.AddChild(second);
         using var tree = new SceneTree(root);
@@ -206,7 +206,7 @@ internal static class ControlInputTests
 
         var reentrantRoot = new TestViewport();
         var reentrantOrder = new List<string>();
-        var reentrant = new FocusProbe("reentrant", reentrantOrder) { FocusMode = ControlFocusMode.Click };
+        var reentrant = new FocusProbe("reentrant", reentrantOrder) { FocusMode = FocusMode.Click };
         reentrantRoot.AddChild(reentrant);
         using var reentrantTree = new SceneTree(reentrantRoot);
         reentrant.FocusEntered += () => reentrantOrder.Add("entered");

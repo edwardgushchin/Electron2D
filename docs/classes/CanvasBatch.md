@@ -15,14 +15,14 @@ A contiguous vertex range with one borrowed material state, command texture, fil
 
 | Declaration | Contract |
 | --- | --- |
-| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, CanvasItem.TextureFilterEnum Filter = CanvasItem.TextureFilterEnum.Nearest, CanvasItem.TextureRepeatEnum Repeat = CanvasItem.TextureRepeatEnum.Disabled, int MaxAnisotropy = 1)` | [Construction and values](#construction-and-values) |
+| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1)` | [Construction and values](#construction-and-values) |
 | `internal byte[]? ShaderCode { get; }` | [Shader code](#shader-code) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, CanvasItem.TextureFilterEnum Filter = CanvasItem.TextureFilterEnum.Nearest, CanvasItem.TextureRepeatEnum Repeat = CanvasItem.TextureRepeatEnum.Disabled, int MaxAnisotropy = 1)`
+`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1)`
 
 First and Count index the prepared triangle list. Material null selects the built-in program. Texture null means opaque white for the built-in command sampler. Filter, Repeat and MaxAnisotropy are resolved per item before batching; tiled commands force Enabled addressing. These values participate in batch equality. These arguments become record properties.
 

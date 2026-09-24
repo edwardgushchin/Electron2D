@@ -1,12 +1,12 @@
-# Window.ModeEnum
+# WindowMode
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 **Inherits:** System.Enum
 
 - **Source:** [`Window.Native.cs`](../../src/Scene/Main/Window.Native.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum Window.ModeEnum`
+- **Declaration:** `public enum WindowMode`
 
 ## Description
 
@@ -17,7 +17,7 @@ Wayland treats ExclusiveFullscreen as ordinary Fullscreen. Other platforms and e
 ## Examples
 
 ```csharp
-window.Mode = Window.ModeEnum.Fullscreen;
+window.Mode = WindowMode.Fullscreen;
 ```
 
 `window` is a caller-owned Window before Run, or the active scene root on its owner thread.

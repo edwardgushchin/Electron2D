@@ -32,7 +32,7 @@ public sealed class FileAccess : ElectronObject
     private readonly object _gate = new();
     private readonly string _path;
     private readonly string _absolutePath;
-    private readonly FileAccessMode _mode;
+    private readonly FileAccessModeFlags _mode;
     private Stream? _stream;
     private Func<byte[], byte[]>? _encoder;
     private byte[]? _encryptionKey;
@@ -44,7 +44,7 @@ public sealed class FileAccess : ElectronObject
     private FileAccess(
         string path,
         string absolutePath,
-        FileAccessMode mode,
+        FileAccessModeFlags mode,
         Stream stream,
         Func<byte[], byte[]>? encoder = null)
     {
@@ -249,7 +249,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">The file cannot be opened.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="NotSupportedException">The path uses an unsupported virtual scheme.</exception>
-    public static FileAccess Open(string path, FileAccessMode mode)
+    public static FileAccess Open(string path, FileAccessModeFlags mode)
     {
         var absolutePath = ResolvePath(path);
         ValidateMode(mode);
@@ -268,7 +268,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">A temporary file cannot be created.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks access to the temporary directory.</exception>
     public static FileAccess CreateTemp(
-        FileAccessMode mode = FileAccessMode.ReadWrite,
+        FileAccessModeFlags mode = FileAccessModeFlags.ReadWrite,
         string prefix = "",
         string extension = "",
         bool keep = false)
@@ -335,7 +335,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     public static FileAccess OpenCompressed(
         string path,
-        FileAccessMode mode,
+        FileAccessModeFlags mode,
         FileCompressionMode compressionMode = FileCompressionMode.FastLz)
     {
         ValidateCompressionMode(compressionMode);
@@ -343,7 +343,7 @@ public sealed class FileAccess : ElectronObject
         ValidateMode(mode);
         var data = Truncates(mode) ? [] : DecodeCompressed(File.ReadAllBytes(absolutePath), compressionMode);
         var stream = CreateMemoryStream(data);
-        if (mode == FileAccessMode.Read)
+        if (mode == FileAccessModeFlags.Read)
             return new FileAccess(path, absolutePath, mode, stream);
 
         return new FileAccess(path, absolutePath, mode, stream, bytes => EncodeCompressed(bytes, compressionMode));
@@ -362,7 +362,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
-    public static FileAccess OpenEncrypted(string path, FileAccessMode mode, ReadOnlySpan<byte> key)
+    public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)
     {
         ValidateEncryptionKey(key);
         EnsureEncryptionSupported();
@@ -371,7 +371,7 @@ public sealed class FileAccess : ElectronObject
         var data = Truncates(mode) ? [] : Decrypt(File.ReadAllBytes(absolutePath), key, RawKeyEncryption, out _);
         var stream = CreateMemoryStream(data);
         CryptographicOperations.ZeroMemory(data);
-        if (mode == FileAccessMode.Read)
+        if (mode == FileAccessModeFlags.Read)
             return new FileAccess(path, absolutePath, mode, stream);
 
         var keyCopy = key.ToArray();
@@ -398,7 +398,7 @@ public sealed class FileAccess : ElectronObject
     /// <exception cref="IOException">The physical file cannot be read or replaced.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller lacks filesystem access.</exception>
     /// <exception cref="PlatformNotSupportedException">AES-GCM is unavailable.</exception>
-    public static FileAccess OpenEncryptedWithPassword(string path, FileAccessMode mode, string password)
+    public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)
     {
         ArgumentNullException.ThrowIfNull(password);
         if (password.Length == 0)
@@ -432,7 +432,7 @@ public sealed class FileAccess : ElectronObject
 
         var stream = CreateMemoryStream(data);
         CryptographicOperations.ZeroMemory(data);
-        if (mode == FileAccessMode.Read)
+        if (mode == FileAccessModeFlags.Read)
         {
             CryptographicOperations.ZeroMemory(salt);
             return new FileAccess(path, absolutePath, mode, stream);
@@ -1306,11 +1306,11 @@ public sealed class FileAccess : ElectronObject
         }
     }
 
-    private static bool CanRead(FileAccessMode mode) => mode is FileAccessMode.Read or FileAccessMode.ReadWrite or FileAccessMode.WriteRead;
+    private static bool CanRead(FileAccessModeFlags mode) => mode is FileAccessModeFlags.Read or FileAccessModeFlags.ReadWrite or FileAccessModeFlags.WriteRead;
 
-    private static bool CanWrite(FileAccessMode mode) => mode is FileAccessMode.Write or FileAccessMode.ReadWrite or FileAccessMode.WriteRead;
+    private static bool CanWrite(FileAccessModeFlags mode) => mode is FileAccessModeFlags.Write or FileAccessModeFlags.ReadWrite or FileAccessModeFlags.WriteRead;
 
-    private static bool Truncates(FileAccessMode mode) => mode is FileAccessMode.Write or FileAccessMode.WriteRead;
+    private static bool Truncates(FileAccessModeFlags mode) => mode is FileAccessModeFlags.Write or FileAccessModeFlags.WriteRead;
 
     private static Stream CreateMemoryStream(ReadOnlySpan<byte> data)
     {
@@ -1505,12 +1505,12 @@ public sealed class FileAccess : ElectronObject
         }
     }
 
-    private static FileStream OpenPhysical(string path, FileAccessMode mode) => mode switch
+    private static FileStream OpenPhysical(string path, FileAccessModeFlags mode) => mode switch
     {
-        FileAccessMode.Read => new FileStream(path, FileMode.Open, IoFileAccess.Read, FileShare.Read),
-        FileAccessMode.Write => new FileStream(path, FileMode.Create, IoFileAccess.Write, FileShare.None),
-        FileAccessMode.ReadWrite => new FileStream(path, FileMode.Open, IoFileAccess.ReadWrite, FileShare.None),
-        FileAccessMode.WriteRead => new FileStream(path, FileMode.Create, IoFileAccess.ReadWrite, FileShare.None),
+        FileAccessModeFlags.Read => new FileStream(path, FileMode.Open, IoFileAccess.Read, FileShare.Read),
+        FileAccessModeFlags.Write => new FileStream(path, FileMode.Create, IoFileAccess.Write, FileShare.None),
+        FileAccessModeFlags.ReadWrite => new FileStream(path, FileMode.Open, IoFileAccess.ReadWrite, FileShare.None),
+        FileAccessModeFlags.WriteRead => new FileStream(path, FileMode.Create, IoFileAccess.ReadWrite, FileShare.None),
         _ => throw new ArgumentOutOfRangeException(nameof(mode))
     };
 
@@ -1761,9 +1761,9 @@ public sealed class FileAccess : ElectronObject
             throw new ArgumentException("An encryption key must contain exactly 32 bytes.", nameof(key));
     }
 
-    private static void ValidateMode(FileAccessMode mode)
+    private static void ValidateMode(FileAccessModeFlags mode)
     {
-        if (mode is not FileAccessMode.Read and not FileAccessMode.Write and not FileAccessMode.ReadWrite and not FileAccessMode.WriteRead)
+        if (mode is not FileAccessModeFlags.Read and not FileAccessModeFlags.Write and not FileAccessModeFlags.ReadWrite and not FileAccessModeFlags.WriteRead)
             throw new ArgumentOutOfRangeException(nameof(mode));
     }
 

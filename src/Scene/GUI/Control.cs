@@ -19,11 +19,11 @@ public partial class Control : CanvasItem
     private Vector2 _customMaximumSize = new(-1, -1);
     private Vector2 _lastMaximumSize = new(-1, -1);
     private bool _propagateMaximumSize;
-    private ControlGrowDirection _growHorizontal = ControlGrowDirection.End;
-    private ControlGrowDirection _growVertical = ControlGrowDirection.End;
+    private GrowDirection _growHorizontal = GrowDirection.End;
+    private GrowDirection _growVertical = GrowDirection.End;
     private bool _minimumSizeUpdatePending;
     private bool _maximumSizeUpdatePending;
-    private ControlLayoutDirection _layoutDirection;
+    private LayoutDirection _layoutDirection;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
 
@@ -122,13 +122,13 @@ public partial class Control : CanvasItem
 
     /// <summary>Gets or sets the horizontal layout direction policy.</summary>
     /// <remarks>Changes notify the subtree before the resulting rectangles are observed by callers.</remarks>
-    public ControlLayoutDirection LayoutDirection
+    public LayoutDirection LayoutDirection
     {
         get { ThrowIfDisposed(); return _layoutDirection; }
         set
         {
             EnsureMutable();
-            if (value is < ControlLayoutDirection.Inherited or >= ControlLayoutDirection.Max)
+            if (value is < LayoutDirection.Inherited or >= LayoutDirection.Max)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown layout direction.");
             if (_layoutDirection == value) return;
             _layoutDirection = value;
@@ -143,10 +143,10 @@ public partial class Control : CanvasItem
         Tree?.EnsureOwnerThread();
         return _layoutDirection switch
         {
-            ControlLayoutDirection.LTR => false,
-            ControlLayoutDirection.RTL => true,
-            ControlLayoutDirection.SystemLocale => IsLocaleRTL(CultureInfo.CurrentUICulture),
-            ControlLayoutDirection.ApplicationLocale => IsLocaleRTL(GetApplicationCulture()),
+            LayoutDirection.LTR => false,
+            LayoutDirection.RTL => true,
+            LayoutDirection.SystemLocale => IsLocaleRTL(CultureInfo.CurrentUICulture),
+            LayoutDirection.ApplicationLocale => IsLocaleRTL(GetApplicationCulture()),
             _ => InheritedLayoutRTL()
         };
     }
@@ -177,14 +177,14 @@ public partial class Control : CanvasItem
     }
 
     /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>
-    public ControlGrowDirection GrowHorizontal
+    public GrowDirection GrowHorizontal
     {
         get { ThrowIfDisposed(); return _growHorizontal; }
         set { EnsureMutable(); ValidateGrowDirection(value); if (_growHorizontal == value) return; _growHorizontal = value; Reflow(); }
     }
 
     /// <summary>Gets or sets which vertical edge stays fixed when the minimum height grows.</summary>
-    public ControlGrowDirection GrowVertical
+    public GrowDirection GrowVertical
     {
         get { ThrowIfDisposed(); return _growVertical; }
         set { EnsureMutable(); ValidateGrowDirection(value); if (_growVertical == value) return; _growVertical = value; Reflow(); }
@@ -371,7 +371,7 @@ public partial class Control : CanvasItem
     /// <param name="keepOffsets">Keep each local offset instead of preserving the current rectangle edges.</param>
     /// <exception cref="ArgumentOutOfRangeException">The preset is not defined.</exception>
     /// <remarks>Applies left, top, right, then bottom through <see cref="SetAnchor"/>; attached controls reflow after each side.</remarks>
-    public void SetAnchorsPreset(ControlLayoutPreset preset, bool keepOffsets = false)
+    public void SetAnchorsPreset(LayoutPreset preset, bool keepOffsets = false)
     {
         EnsureMutable();
         var (left, top, right, bottom) = GetPresetAnchors(preset);
@@ -401,15 +401,15 @@ public partial class Control : CanvasItem
     /// <param name="resizeMode">Which current size components to preserve.</param>
     /// <param name="margin">The signed gap from edges used by the preset.</param>
     /// <remarks>All four offsets are committed before one rectangle reflow. Wide presets span their selected parent axis regardless of resize mode.</remarks>
-    public void SetOffsetsPreset(ControlLayoutPreset preset, ControlLayoutPresetMode resizeMode = ControlLayoutPresetMode.MinSize, int margin = 0)
+    public void SetOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = LayoutPresetMode.MinSize, int margin = 0)
     {
         EnsureMutable();
         var (left, top, right, bottom) = GetPresetAnchors(preset);
-        if (resizeMode is < ControlLayoutPresetMode.MinSize or > ControlLayoutPresetMode.KeepSize)
+        if (resizeMode is < LayoutPresetMode.MinSize or > LayoutPresetMode.KeepSize)
             throw new ArgumentOutOfRangeException(nameof(resizeMode), resizeMode, "Unknown layout preset mode.");
         var minimum = GetMinimumSize();
-        var width = resizeMode is ControlLayoutPresetMode.MinSize or ControlLayoutPresetMode.KeepHeight ? minimum.X : _size.X;
-        var height = resizeMode is ControlLayoutPresetMode.MinSize or ControlLayoutPresetMode.KeepWidth ? minimum.Y : _size.Y;
+        var width = resizeMode is LayoutPresetMode.MinSize or LayoutPresetMode.KeepHeight ? minimum.X : _size.X;
+        var height = resizeMode is LayoutPresetMode.MinSize or LayoutPresetMode.KeepWidth ? minimum.Y : _size.Y;
         var parentRect = GetParentAnchorRect();
         var x = IsLayoutRTL() ? -width : parentRect.Size.X;
         var y = parentRect.Size.Y;
@@ -430,7 +430,7 @@ public partial class Control : CanvasItem
     /// <param name="resizeMode">Which current size components to preserve.</param>
     /// <param name="margin">The signed gap from edges used by the preset.</param>
     /// <remarks>The anchor step is retained if the following offset step rejects an invalid resize mode.</remarks>
-    public void SetAnchorsAndOffsetsPreset(ControlLayoutPreset preset, ControlLayoutPresetMode resizeMode = ControlLayoutPresetMode.MinSize, int margin = 0)
+    public void SetAnchorsAndOffsetsPreset(LayoutPreset preset, LayoutPresetMode resizeMode = LayoutPresetMode.MinSize, int margin = 0)
     {
         SetAnchorsPreset(preset);
         SetOffsetsPreset(preset, resizeMode, margin);
@@ -464,13 +464,13 @@ public partial class Control : CanvasItem
         return GetParentAnchorRect().Size;
     }
 
-    private Rect GetParentAnchorRect()
+    private Rect2 GetParentAnchorRect()
     {
         ThrowIfDisposed();
         if (!IsInsideTree) return default;
         return GetParentItem() switch
         {
-            Control parent => new Rect(Vector2.Zero, parent.Size),
+            Control parent => new Rect2(Vector2.Zero, parent.Size),
             null => GetViewport()?.GetVisibleRect() ?? default,
             _ => default
         };
@@ -628,26 +628,26 @@ public partial class Control : CanvasItem
         if (sizeChanged && IsInsideTree) DispatchNotification(NotificationResized);
     }
 
-    private static (float Left, float Top, float Right, float Bottom) GetPresetAnchors(ControlLayoutPreset preset)
+    private static (float Left, float Top, float Right, float Bottom) GetPresetAnchors(LayoutPreset preset)
     {
         return preset switch
         {
-            ControlLayoutPreset.TopLeft => (0f, 0f, 0f, 0f),
-            ControlLayoutPreset.TopRight => (1f, 0f, 1f, 0f),
-            ControlLayoutPreset.BottomLeft => (0f, 1f, 0f, 1f),
-            ControlLayoutPreset.BottomRight => (1f, 1f, 1f, 1f),
-            ControlLayoutPreset.CenterLeft => (0f, .5f, 0f, .5f),
-            ControlLayoutPreset.CenterTop => (.5f, 0f, .5f, 0f),
-            ControlLayoutPreset.CenterRight => (1f, .5f, 1f, .5f),
-            ControlLayoutPreset.CenterBottom => (.5f, 1f, .5f, 1f),
-            ControlLayoutPreset.Center => (.5f, .5f, .5f, .5f),
-            ControlLayoutPreset.LeftWide => (0f, 0f, 0f, 1f),
-            ControlLayoutPreset.TopWide => (0f, 0f, 1f, 0f),
-            ControlLayoutPreset.RightWide => (1f, 0f, 1f, 1f),
-            ControlLayoutPreset.BottomWide => (0f, 1f, 1f, 1f),
-            ControlLayoutPreset.VCenterWide => (.5f, 0f, .5f, 1f),
-            ControlLayoutPreset.HCenterWide => (0f, .5f, 1f, .5f),
-            ControlLayoutPreset.FullRect => (0f, 0f, 1f, 1f),
+            LayoutPreset.TopLeft => (0f, 0f, 0f, 0f),
+            LayoutPreset.TopRight => (1f, 0f, 1f, 0f),
+            LayoutPreset.BottomLeft => (0f, 1f, 0f, 1f),
+            LayoutPreset.BottomRight => (1f, 1f, 1f, 1f),
+            LayoutPreset.CenterLeft => (0f, .5f, 0f, .5f),
+            LayoutPreset.CenterTop => (.5f, 0f, .5f, 0f),
+            LayoutPreset.CenterRight => (1f, .5f, 1f, .5f),
+            LayoutPreset.CenterBottom => (.5f, 1f, .5f, 1f),
+            LayoutPreset.Center => (.5f, .5f, .5f, .5f),
+            LayoutPreset.LeftWide => (0f, 0f, 0f, 1f),
+            LayoutPreset.TopWide => (0f, 0f, 1f, 0f),
+            LayoutPreset.RightWide => (1f, 0f, 1f, 1f),
+            LayoutPreset.BottomWide => (0f, 1f, 1f, 1f),
+            LayoutPreset.VCenterWide => (.5f, 0f, .5f, 1f),
+            LayoutPreset.HCenterWide => (0f, .5f, 1f, .5f),
+            LayoutPreset.FullRect => (0f, 0f, 1f, 1f),
             _ => throw new ArgumentOutOfRangeException(nameof(preset), preset, "Unknown layout preset.")
         };
     }
@@ -661,16 +661,16 @@ public partial class Control : CanvasItem
     };
 
     private static int SideIndex(Side side) => side is >= Side.Left and <= Side.Bottom ? (int)side : throw new ArgumentOutOfRangeException(nameof(side));
-    private static float GrowthShift(ControlGrowDirection direction) => direction switch
+    private static float GrowthShift(GrowDirection direction) => direction switch
     {
-        ControlGrowDirection.Begin => 1f,
-        ControlGrowDirection.Both => .5f,
+        GrowDirection.Begin => 1f,
+        GrowDirection.Both => .5f,
         _ => 0f
     };
     private static float CombineMaximum(float first, float second) => first < 0 ? second < 0 ? -1 : second : second < 0 ? first : Mathf.Min(first, second);
-    private static void ValidateGrowDirection(ControlGrowDirection direction)
+    private static void ValidateGrowDirection(GrowDirection direction)
     {
-        if (direction is < ControlGrowDirection.Begin or > ControlGrowDirection.Both)
+        if (direction is < GrowDirection.Begin or > GrowDirection.Both)
             throw new ArgumentOutOfRangeException(nameof(direction));
     }
     private static void EnsureFinite(float value, string name) { if (!Mathf.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
@@ -686,9 +686,9 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMinimumSize), node => node.CustomMinimumSize, (node, value) => node.CustomMinimumSize = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMaximumSize), node => node.CustomMaximumSize, (node, value) => node.CustomMaximumSize = value, _ => new Vector2(-1, -1), stored: true),
         new PropertyDescriptor<Control, bool>(nameof(PropagateMaximumSize), node => node.PropagateMaximumSize, (node, value) => node.PropagateMaximumSize = value, _ => false, stored: true),
-        new PropertyDescriptor<Control, ControlLayoutDirection>(nameof(LayoutDirection), node => node.LayoutDirection, (node, value) => node.LayoutDirection = value, _ => ControlLayoutDirection.Inherited, stored: true),
-        new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowHorizontal), node => node.GrowHorizontal, (node, value) => node.GrowHorizontal = value, _ => ControlGrowDirection.End, stored: true),
-        new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowVertical), node => node.GrowVertical, (node, value) => node.GrowVertical = value, _ => ControlGrowDirection.End, stored: true),
+        new PropertyDescriptor<Control, LayoutDirection>(nameof(LayoutDirection), node => node.LayoutDirection, (node, value) => node.LayoutDirection = value, _ => LayoutDirection.Inherited, stored: true),
+        new PropertyDescriptor<Control, GrowDirection>(nameof(GrowHorizontal), node => node.GrowHorizontal, (node, value) => node.GrowHorizontal = value, _ => GrowDirection.End, stored: true),
+        new PropertyDescriptor<Control, GrowDirection>(nameof(GrowVertical), node => node.GrowVertical, (node, value) => node.GrowVertical = value, _ => GrowDirection.End, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorLeft), node => node.AnchorLeft, (node, value) => node.AnchorLeft = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorTop), node => node.AnchorTop, (node, value) => node.AnchorTop = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorRight), node => node.AnchorRight, (node, value) => node.AnchorRight = value, _ => 0f, stored: true),
@@ -697,9 +697,9 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(OffsetTop), node => node.OffsetTop, (node, value) => node.OffsetTop = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(OffsetRight), node => node.OffsetRight, (node, value) => node.OffsetRight = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(OffsetBottom), node => node.OffsetBottom, (node, value) => node.OffsetBottom = value, _ => 0f, stored: true),
-        new PropertyDescriptor<Control, ControlMouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => ControlMouseFilter.Stop, stored: true),
+        new PropertyDescriptor<Control, MouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => MouseFilter.Stop, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(MouseForcePassScrollEvents), node => node.MouseForcePassScrollEvents, (node, value) => node.MouseForcePassScrollEvents = value, _ => true, stored: true),
-        new PropertyDescriptor<Control, ControlFocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => ControlFocusMode.None, stored: true),
+        new PropertyDescriptor<Control, FocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => FocusMode.None, stored: true),
         new PropertyDescriptor<Control, CursorShape>(nameof(MouseDefaultCursorShape), node => node.MouseDefaultCursorShape, (node, value) => node.MouseDefaultCursorShape = value, _ => CursorShape.Arrow, stored: true)
     ];
 }

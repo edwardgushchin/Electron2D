@@ -1,10 +1,10 @@
-# CanvasItem.TextureFilterEnum
+# TextureFilter
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum CanvasItem.TextureFilterEnum`
+- Declaration: `public enum TextureFilter`
 - Source: [CanvasItem.Sampling.cs](../../src/Scene/Main/CanvasItem.Sampling.cs)
-- Owner: [CanvasItem](CanvasItem.md)
+- Used by: [CanvasItem](CanvasItem.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md#texture-sampling)
 
 ## Description
@@ -28,49 +28,49 @@ Typed sampling choices used by CanvasItem. Values are stored by PackedScene. Max
 
 ### ParentNode
 
-`CanvasItem.TextureFilterEnum.ParentNode = 0`
+`TextureFilter.ParentNode = 0`
 
 Inherits the direct canvas parent, or the containing viewport default.
 
 ### Nearest
 
-`CanvasItem.TextureFilterEnum.Nearest = 1`
+`TextureFilter.Nearest = 1`
 
 Samples the nearest base-level texel.
 
 ### Linear
 
-`CanvasItem.TextureFilterEnum.Linear = 2`
+`TextureFilter.Linear = 2`
 
 Interpolates neighboring base-level texels.
 
 ### NearestWithMipmaps
 
-`CanvasItem.TextureFilterEnum.NearestWithMipmaps = 3`
+`TextureFilter.NearestWithMipmaps = 3`
 
 Uses nearest texels with mip levels for minification.
 
 ### LinearWithMipmaps
 
-`CanvasItem.TextureFilterEnum.LinearWithMipmaps = 4`
+`TextureFilter.LinearWithMipmaps = 4`
 
 Uses linear texel filtering with mip levels for minification.
 
 ### NearestWithMipmapsAnisotropic
 
-`CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic = 5`
+`TextureFilter.NearestWithMipmapsAnisotropic = 5`
 
 Uses nearest texels, mip levels and viewport-controlled anisotropy.
 
 ### LinearWithMipmapsAnisotropic
 
-`CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic = 6`
+`TextureFilter.LinearWithMipmapsAnisotropic = 6`
 
 Uses linear texel filtering, mip levels and viewport-controlled anisotropy.
 
 ### Max
 
-`CanvasItem.TextureFilterEnum.Max = 7`
+`TextureFilter.Max = 7`
 
 Sentinel; not a valid filtering choice.
 

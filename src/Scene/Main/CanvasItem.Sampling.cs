@@ -1,51 +1,51 @@
 namespace Electron2D;
 
+/// <summary>Selects how canvas textures are filtered.</summary>
+public enum TextureFilter
+{
+    /// <summary>Inherits the direct canvas parent, or the containing viewport default.</summary>
+    ParentNode = 0,
+    /// <summary>Samples the nearest base-level texel.</summary>
+    Nearest = 1,
+    /// <summary>Interpolates neighboring base-level texels.</summary>
+    Linear = 2,
+    /// <summary>Uses nearest texels with mip levels for minification.</summary>
+    NearestWithMipmaps = 3,
+    /// <summary>Uses linear texel filtering with mip levels for minification.</summary>
+    LinearWithMipmaps = 4,
+    /// <summary>Uses nearest texels, mip levels and viewport-controlled anisotropy.</summary>
+    NearestWithMipmapsAnisotropic = 5,
+    /// <summary>Uses linear texel filtering, mip levels and viewport-controlled anisotropy.</summary>
+    LinearWithMipmapsAnisotropic = 6,
+    /// <summary>Sentinel; not a valid filtering choice.</summary>
+    Max = 7,
+}
+
+/// <summary>Selects addressing outside the texture's normalized rectangle.</summary>
+public enum TextureRepeat
+{
+    /// <summary>Inherits the direct canvas parent, or the containing viewport default.</summary>
+    ParentNode = 0,
+    /// <summary>Clamps sampling to the texture edge.</summary>
+    Disabled = 1,
+    /// <summary>Repeats the texture.</summary>
+    Enabled = 2,
+    /// <summary>Repeats, reflecting alternate tiles.</summary>
+    Mirror = 3,
+    /// <summary>Sentinel; not a valid repeat choice.</summary>
+    Max = 4,
+}
+
 public abstract partial class CanvasItem
 {
-    /// <summary>Selects how canvas textures are filtered.</summary>
-    public enum TextureFilterEnum
-    {
-        /// <summary>Inherits the direct canvas parent, or the containing viewport default.</summary>
-        ParentNode = 0,
-        /// <summary>Samples the nearest base-level texel.</summary>
-        Nearest = 1,
-        /// <summary>Interpolates neighboring base-level texels.</summary>
-        Linear = 2,
-        /// <summary>Uses nearest texels with mip levels for minification.</summary>
-        NearestWithMipmaps = 3,
-        /// <summary>Uses linear texel filtering with mip levels for minification.</summary>
-        LinearWithMipmaps = 4,
-        /// <summary>Uses nearest texels, mip levels and viewport-controlled anisotropy.</summary>
-        NearestWithMipmapsAnisotropic = 5,
-        /// <summary>Uses linear texel filtering, mip levels and viewport-controlled anisotropy.</summary>
-        LinearWithMipmapsAnisotropic = 6,
-        /// <summary>Sentinel; not a valid filtering choice.</summary>
-        Max = 7,
-    }
-
-    /// <summary>Selects addressing outside the texture's normalized rectangle.</summary>
-    public enum TextureRepeatEnum
-    {
-        /// <summary>Inherits the direct canvas parent, or the containing viewport default.</summary>
-        ParentNode = 0,
-        /// <summary>Clamps sampling to the texture edge.</summary>
-        Disabled = 1,
-        /// <summary>Repeats the texture.</summary>
-        Enabled = 2,
-        /// <summary>Repeats, reflecting alternate tiles.</summary>
-        Mirror = 3,
-        /// <summary>Sentinel; not a valid repeat choice.</summary>
-        Max = 4,
-    }
-
-    private TextureFilterEnum _textureFilter;
-    private TextureRepeatEnum _textureRepeat;
-    private TextureFilterEnum _textureFilterCache = TextureFilterEnum.Linear;
-    private TextureRepeatEnum _textureRepeatCache = TextureRepeatEnum.Disabled;
+    private TextureFilter _textureFilter;
+    private TextureRepeat _textureRepeat;
+    private TextureFilter _textureFilterCache = TextureFilter.Linear;
+    private TextureRepeat _textureRepeatCache = TextureRepeat.Disabled;
     private static readonly PropertyDescriptor[] SamplingProperties =
     [
-        new PropertyDescriptor<CanvasItem, TextureFilterEnum>(nameof(TextureFilter), n => n.TextureFilter, (n, v) => n.TextureFilter = v, _ => TextureFilterEnum.ParentNode, stored: true),
-        new PropertyDescriptor<CanvasItem, TextureRepeatEnum>(nameof(TextureRepeat), n => n.TextureRepeat, (n, v) => n.TextureRepeat = v, _ => TextureRepeatEnum.ParentNode, stored: true),
+        new PropertyDescriptor<CanvasItem, TextureFilter>(nameof(TextureFilter), n => n.TextureFilter, (n, v) => n.TextureFilter = v, _ => TextureFilter.ParentNode, stored: true),
+        new PropertyDescriptor<CanvasItem, TextureRepeat>(nameof(TextureRepeat), n => n.TextureRepeat, (n, v) => n.TextureRepeat = v, _ => TextureRepeat.ParentNode, stored: true),
     ];
 
     /// <summary>Gets or sets filtering for this item's built-in texture sampler.</summary>
@@ -57,13 +57,13 @@ public abstract partial class CanvasItem
     /// <exception cref="InvalidOperationException">An attached item is mutated off the owner thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the change is committed.</exception>
-    public TextureFilterEnum TextureFilter
+    public TextureFilter TextureFilter
     {
         get { ThrowIfDisposed(); return _textureFilter; }
         set
         {
             EnsureMutable();
-            if ((uint)value >= (uint)TextureFilterEnum.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            if ((uint)value >= (uint)TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureFilter == value) return;
             _textureFilter = value;
             UpdateTextureSampling(filter: true);
@@ -79,13 +79,13 @@ public abstract partial class CanvasItem
     /// <exception cref="InvalidOperationException">An attached item is mutated off the owner thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the change is committed.</exception>
-    public TextureRepeatEnum TextureRepeat
+    public TextureRepeat TextureRepeat
     {
         get { ThrowIfDisposed(); return _textureRepeat; }
         set
         {
             EnsureMutable();
-            if ((uint)value >= (uint)TextureRepeatEnum.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            if ((uint)value >= (uint)TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureRepeat == value) return;
             _textureRepeat = value;
             UpdateTextureSampling(filter: false);
@@ -93,22 +93,22 @@ public abstract partial class CanvasItem
         }
     }
 
-    internal TextureFilterEnum TextureFilterInTree
+    internal TextureFilter TextureFilterInTree
     {
         get
         {
-            if (IsInsideTree) _textureFilterCache = _textureFilter == TextureFilterEnum.ParentNode
-                ? GetParentItem()?.TextureFilterInTree ?? TextureFilterEnum.ParentNode : _textureFilter;
+            if (IsInsideTree) _textureFilterCache = _textureFilter == TextureFilter.ParentNode
+                ? GetParentItem()?.TextureFilterInTree ?? TextureFilter.ParentNode : _textureFilter;
             return _textureFilterCache;
         }
     }
 
-    internal TextureRepeatEnum TextureRepeatInTree
+    internal TextureRepeat TextureRepeatInTree
     {
         get
         {
-            if (IsInsideTree) _textureRepeatCache = _textureRepeat == TextureRepeatEnum.ParentNode
-                ? GetParentItem()?.TextureRepeatInTree ?? TextureRepeatEnum.ParentNode : _textureRepeat;
+            if (IsInsideTree) _textureRepeatCache = _textureRepeat == TextureRepeat.ParentNode
+                ? GetParentItem()?.TextureRepeatInTree ?? TextureRepeat.ParentNode : _textureRepeat;
             return _textureRepeatCache;
         }
     }
@@ -125,7 +125,7 @@ public abstract partial class CanvasItem
     {
         foreach (var child in parent.Children)
         {
-            if (child is CanvasItem item && (filter ? item._textureFilter == TextureFilterEnum.ParentNode : item._textureRepeat == TextureRepeatEnum.ParentNode))
+            if (child is CanvasItem item && (filter ? item._textureFilter == TextureFilter.ParentNode : item._textureRepeat == TextureRepeat.ParentNode))
                 item.UpdateTextureSampling(filter);
             else if (child is Viewport viewport && (filter
                 ? viewport.CanvasItemDefaultTextureFilter == Viewport.DefaultCanvasItemTextureFilter.ParentNode

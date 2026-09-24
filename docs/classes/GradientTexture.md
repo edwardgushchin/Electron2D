@@ -38,7 +38,7 @@ No window is needed for construction or GetImage. Canvas drawing, Sprite and Sha
 | `FillEnum Fill { get; set; }` | Default Linear. Linear, Radial, Square or Conic mapping. |
 | `Vector2 FillFrom { get; set; }` | Default (0, 0). Finite start in UV coordinates; values outside the unit square are valid. |
 | `Vector2 FillTo { get; set; }` | Default (1, 0). Finite end in UV coordinates; equal endpoints sample offset zero. |
-| `RepeatEnum Repeat { get; set; }` | Default None. None clamps; Repeat wraps; Mirror reflects alternating intervals. Independent of canvas sampler repetition. |
+| `Repeat Repeat { get; set; }` | Default None. None clamps; Repeat wraps; Mirror reflects alternating intervals. Independent of canvas sampler repetition. |
 | `override int GetWidth()` | Logical Width. |
 | `override int GetHeight()` | Logical Height. |
 | `override Vector2 GetSize()` | Logical size under one lock. |
@@ -109,7 +109,7 @@ For zero or one gradient point, generation uses a solid Image.Fill: empty is opa
 
 ## Enumeration descriptions
 
-See [GradientTexture.FillEnum](GradientTexture.FillEnum.md) and [GradientTexture.RepeatEnum](GradientTexture.RepeatEnum.md).
+See [FillEnum](FillEnum.md) and [Repeat](Repeat.md).
 
 ## Protected hooks and lifecycle
 

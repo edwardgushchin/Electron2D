@@ -5,25 +5,25 @@ internal static class FastNoiseLiteTests
     internal static void Run()
     {
         using var noise = new FastNoiseLite();
-        Check(noise.NoiseType == FastNoiseLite.NoiseTypeEnum.SimplexSmooth && noise.Seed == 0 && noise.Frequency == 0.01f &&
-              noise.FractalType == FastNoiseLite.FractalTypeEnum.FBM && noise.FractalOctaves == 5 &&
-              noise.CellularDistanceFunction == FastNoiseLite.CellularDistanceFunctionEnum.Euclidean &&
-              noise.DomainWarpFractalType == FastNoiseLite.DomainWarpFractalTypeEnum.Progressive,
+        Check(noise.NoiseType == NoiseType.SimplexSmooth && noise.Seed == 0 && noise.Frequency == 0.01f &&
+              noise.FractalType == FractalType.FBM && noise.FractalOctaves == 5 &&
+              noise.CellularDistanceFunction == CellularDistanceFunction.Euclidean &&
+              noise.DomainWarpFractalType == DomainWarpFractalType.Progressive,
             "The default wrapper configures both backend generators.");
         Near(noise.GetNoise2D(12.5f, -7.25f), -0.236460894f, "Default OpenSimplex2S/FBM sample matches the pinned native algorithm.");
         var changes = 0; var lists = 0;
         noise.Changed += _ => changes++; noise.PropertyListChanged += _ => lists++;
         noise.Seed = 0; Check(changes == 1 && lists == 0, "Equal seed assignment still emits Changed.");
-        noise.FractalType = FastNoiseLite.FractalTypeEnum.None;
+        noise.FractalType = FractalType.None;
         var expected = new[] { -0.292454004f, -0.191824034f, -0.575321615f, -0.0862276554f, 0.0118474429f, 0.00951066613f };
         for (var i = 0; i < expected.Length; i++)
         {
-            noise.NoiseType = (FastNoiseLite.NoiseTypeEnum)i;
+            noise.NoiseType = (NoiseType)i;
             Near(noise.GetNoise2D(12.5f, -7.25f), expected[i], $"Noise type {i} matches the pinned native algorithm.");
         }
         Check(lists == 7, "Fractal and noise type changes notify the property list.");
-        noise.NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth;
-        noise.FractalType = FastNoiseLite.FractalTypeEnum.FBM;
+        noise.NoiseType = NoiseType.SimplexSmooth;
+        noise.FractalType = FractalType.FBM;
         noise.DomainWarpEnabled = true;
         Near(noise.GetNoise2D(12.5f, -7.25f), -0.0896649063f, "Progressive domain warp matches the pinned native algorithm.");
         var before = changes; noise.DomainWarpEnabled = true;
@@ -32,17 +32,17 @@ internal static class FastNoiseLiteTests
         var fractalSamples = new[] { 0.645866394f, 0.273189276f, -0.0137654115f, 0.425243765f };
         for (var i = 0; i < fractalSamples.Length; i++)
         {
-            noise.FractalType = (FastNoiseLite.FractalTypeEnum)i;
+            noise.FractalType = (FractalType)i;
             Near(noise.GetNoise2D(31.75f, 45.125f), fractalSamples[i], $"Fractal mode {i} matches the pinned native algorithm.");
         }
-        noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Cellular;
-        noise.FractalType = FastNoiseLite.FractalTypeEnum.None;
-        noise.CellularDistanceFunction = FastNoiseLite.CellularDistanceFunctionEnum.Hybrid;
-        noise.CellularReturnType = FastNoiseLite.CellularReturnTypeEnum.Distance2Div;
+        noise.NoiseType = NoiseType.Cellular;
+        noise.FractalType = FractalType.None;
+        noise.CellularDistanceFunction = CellularDistanceFunction.Hybrid;
+        noise.CellularReturnType = CellularReturnType.Distance2Div;
         noise.CellularJitter = 0.75f;
         Near(noise.GetNoise2D(31.75f, 45.125f), -0.0654041171f, "Cellular distance, return and jitter match the pinned native algorithm.");
-        noise.NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth;
-        noise.FractalType = FastNoiseLite.FractalTypeEnum.FBM;
+        noise.NoiseType = NoiseType.SimplexSmooth;
+        noise.FractalType = FractalType.FBM;
         noise.DomainWarpEnabled = true;
         var warpSamples = new[]
         {
@@ -53,8 +53,8 @@ internal static class FastNoiseLiteTests
         for (var type = 0; type < 3; type++)
             for (var fractal = 0; fractal < 3; fractal++)
             {
-                noise.DomainWarpType = (FastNoiseLite.DomainWarpTypeEnum)type;
-                noise.DomainWarpFractalType = (FastNoiseLite.DomainWarpFractalTypeEnum)fractal;
+                noise.DomainWarpType = (DomainWarpType)type;
+                noise.DomainWarpFractalType = (DomainWarpFractalType)fractal;
                 Near(noise.GetNoise2D(31.75f, 45.125f), warpSamples[type * 3 + fractal],
                     $"Warp mode {type}/{fractal} matches the pinned native algorithm.");
             }
@@ -77,7 +77,7 @@ internal static class FastNoiseLiteTests
         Check(changed is not null && !changed.GetData().SequenceEqual(image!.GetData()), "Generator changes invalidate the borrowed texture.");
         Reject<ArgumentOutOfRangeException>(() => noise.Frequency = float.NaN);
         Reject<ArgumentOutOfRangeException>(() => noise.FractalOctaves = 0);
-        Reject<ArgumentOutOfRangeException>(() => noise.NoiseType = (FastNoiseLite.NoiseTypeEnum)99);
+        Reject<ArgumentOutOfRangeException>(() => noise.NoiseType = (NoiseType)99);
         noise.Dispose();
         Reject<ObjectDisposedException>(() => noise.GetNoise2D(1, 2));
         Console.WriteLine("FastNoiseLite vectors, state, copying and texture integration passed.");

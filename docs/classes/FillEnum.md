@@ -1,15 +1,15 @@
-# GradientTexture.FillEnum
+# FillEnum
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum GradientTexture.FillEnum`
+- Declaration: `public enum FillEnum`
 - Source: [GradientTexture.cs](../../src/Scene/Resources/GradientTexture.cs)
-- Owner: [GradientTexture](GradientTexture.md)
+- Used by: [GradientTexture](GradientTexture.md)
 - Component: [Gradients](../components/gradients.md)
 
 ## Description
 
-UV axes normalize independently. Equal endpoints sample zero; a near-zero Linear line also samples zero. The Enum suffix avoids collision with the Fill property.
+UV axes normalize independently. Equal endpoints sample zero; a near-zero Linear line also samples zero. The namespace-level FillEnum type is selected by the Fill property.
 
 ## Values
 

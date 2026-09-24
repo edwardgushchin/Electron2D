@@ -1,12 +1,12 @@
-# ControlGrowDirection
+# GrowDirection
 
 Last updated: 2026-09-24
 
 **Inherits:** —
 
-- **Source:** [`src/Scene/GUI/ControlGrowDirection.cs`](../../src/Scene/GUI/ControlGrowDirection.cs)
+- **Source:** [`src/Scene/GUI/GrowDirection.cs`](../../src/Scene/GUI/GrowDirection.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlGrowDirection`
+- **Declaration:** `public enum GrowDirection`
 
 Controls how a [`Control`](Control.md) moves when its resolved size is outside the minimum or maximum size bounds.
 

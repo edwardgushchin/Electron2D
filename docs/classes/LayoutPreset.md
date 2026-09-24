@@ -1,12 +1,12 @@
-# ControlLayoutPreset
+# LayoutPreset
 
 Last updated: 2026-09-24
 
 **Inherits:** —
 
-- **Source:** [`src/Scene/GUI/ControlLayoutPreset.cs`](../../src/Scene/GUI/ControlLayoutPreset.cs)
+- **Source:** [`src/Scene/GUI/LayoutPreset.cs`](../../src/Scene/GUI/LayoutPreset.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlLayoutPreset`
+- **Declaration:** `public enum LayoutPreset`
 
 The sixteen numeric values identify the arrangement applied by [`Control.SetAnchorsPreset`](Control.md), `SetOffsetsPreset` and `SetAnchorsAndOffsetsPreset`. Corner and center values place all four anchors at one point. `LeftWide`, `RightWide` and `VCenterWide` span the parent's height; `TopWide`, `BottomWide` and `HCenterWide` span its width. `FullRect` anchors to all four parent edges.
 

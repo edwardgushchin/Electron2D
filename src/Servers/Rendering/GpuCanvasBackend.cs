@@ -9,14 +9,14 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private readonly nint _window;
     private readonly RenderHandle _vertexShader;
     private readonly byte[] _defaultFragment;
-    private readonly Dictionary<(byte[] Code, CanvasItemMaterial.BlendModeEnum Blend), RenderHandle> _pipelines = [];
-    private readonly HashSet<(byte[] Code, CanvasItemMaterial.BlendModeEnum Blend)> _usedPrograms = [];
+    private readonly Dictionary<(byte[] Code, BlendMode Blend), RenderHandle> _pipelines = [];
+    private readonly HashSet<(byte[] Code, BlendMode Blend)> _usedPrograms = [];
     private readonly Dictionary<Texture, GpuTexture> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
     private readonly HashSet<MaterialState> _usedMaterials = [];
     private readonly Texture?[] _textureScratch = new Texture?[16];
-    private readonly Dictionary<(CanvasItem.TextureFilterEnum, CanvasItem.TextureRepeatEnum, int, bool), RenderHandle> _samplers = [];
+    private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
     private readonly bool _nearestMipmaps = ProjectSettings.Instance.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
     private ImageTexture? _whiteTexture;
     private RenderHandle? _target;
@@ -44,7 +44,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             vertex = CreateShader(BuiltInShaders.Vertex, fragment: false);
             _vertexShader = vertex;
             _defaultFragment = BuiltInShaders.Fragment;
-            _pipelines.Add((_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix), CreatePipeline(_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix));
+            _pipelines.Add((_defaultFragment, BlendMode.Mix), CreatePipeline(_defaultFragment, BlendMode.Mix));
         }
         catch
         {
@@ -66,7 +66,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment), h => SDL.ReleaseGPUShader(Device, h), _device);
     }
 
-    private RenderHandle CreatePipeline(byte[] code, CanvasItemMaterial.BlendModeEnum blend)
+    private RenderHandle CreatePipeline(byte[] code, BlendMode blend)
     {
         using var fragment = CreateShader(code, fragment: true);
         var buffer = new SDL.GPUVertexBufferDescription { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
@@ -76,11 +76,11 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         attributes[2] = new() { Location = 2, Format = SDL.GPUVertexElementFormat.Float2, Offset = 24 };
         var blendState = blend switch
         {
-            CanvasItemMaterial.BlendModeEnum.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
-            CanvasItemMaterial.BlendModeEnum.Add => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.Add),
-            CanvasItemMaterial.BlendModeEnum.Sub => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.ReverseSubtract),
-            CanvasItemMaterial.BlendModeEnum.Mul => (SDL.GPUBlendFactor.DstColor, SDL.GPUBlendFactor.Zero, SDL.GPUBlendFactor.DstAlpha, SDL.GPUBlendFactor.Zero, SDL.GPUBlendOp.Add),
-            CanvasItemMaterial.BlendModeEnum.PremultAlpha => (SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
+            BlendMode.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
+            BlendMode.Add => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.Add),
+            BlendMode.Sub => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendOp.ReverseSubtract),
+            BlendMode.Mul => (SDL.GPUBlendFactor.DstColor, SDL.GPUBlendFactor.Zero, SDL.GPUBlendFactor.DstAlpha, SDL.GPUBlendFactor.Zero, SDL.GPUBlendOp.Add),
+            BlendMode.PremultAlpha => (SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
             _ => throw new ArgumentOutOfRangeException(nameof(blend)),
         };
         var color = new SDL.GPUColorTargetDescription
@@ -113,7 +113,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         var size = GetPixelSize();
         if (size.X <= 0 || size.Y <= 0) return;
         _usedPrograms.Clear();
-        _usedPrograms.Add((_defaultFragment, CanvasItemMaterial.BlendModeEnum.Mix));
+        _usedPrograms.Add((_defaultFragment, BlendMode.Mix));
         _usedTextures.Clear(); _usedMaterials.Clear();
         foreach (var batch in batches)
         {
@@ -222,17 +222,17 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         }
     }
 
-    private nint Sampler(CanvasItem.TextureFilterEnum filter, CanvasItem.TextureRepeatEnum repeat, int anisotropy = 1)
+    private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1)
     {
-        var anisotropic = filter >= CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic && anisotropy > 1;
+        var anisotropic = filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1;
         var key = (filter, repeat, anisotropic ? anisotropy : 1, _nearestMipmaps);
         if (!_samplers.TryGetValue(key, out var sampler))
         {
-            var linear = filter is CanvasItem.TextureFilterEnum.Linear or CanvasItem.TextureFilterEnum.LinearWithMipmaps or CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic;
+            var linear = filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic;
             var address = repeat switch
             {
-                CanvasItem.TextureRepeatEnum.Enabled => SDL.GPUSamplerAddressMode.Repeat,
-                CanvasItem.TextureRepeatEnum.Mirror => SDL.GPUSamplerAddressMode.MirroredRepeat,
+                TextureRepeat.Enabled => SDL.GPUSamplerAddressMode.Repeat,
+                TextureRepeat.Mirror => SDL.GPUSamplerAddressMode.MirroredRepeat,
                 _ => SDL.GPUSamplerAddressMode.ClampToEdge,
             };
             var info = new SDL.GPUSamplerCreateInfo
@@ -243,7 +243,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
                 AddressModeU = address,
                 AddressModeV = address,
                 AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge,
-                MaxLod = filter >= CanvasItem.TextureFilterEnum.NearestWithMipmaps ? 1000 : 0,
+                MaxLod = filter >= TextureFilter.NearestWithMipmaps ? 1000 : 0,
                 EnableAnisotropy = anisotropic,
                 MaxAnisotropy = anisotropic ? anisotropy : 1,
             };
@@ -299,7 +299,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 if (material.Program.Textures[i].IsCanvasTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(CanvasItem.TextureFilterEnum.Linear, CanvasItem.TextureRepeatEnum.Disabled) };
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
             }
         }
         finally { Array.Clear(_textureScratch); }

@@ -1,5 +1,29 @@
 namespace Electron2D;
 
+/// <summary>Selects how UV positions map to gradient offsets.</summary>
+public enum FillEnum
+{
+    /// <summary>Signed projection onto the start-to-end line.</summary>
+    Linear = 0,
+    /// <summary>Distance from the start relative to the start-to-end radius.</summary>
+    Radial = 1,
+    /// <summary>Maximum axis distance relative to the maximum start-to-end axis distance.</summary>
+    Square = 2,
+    /// <summary>Signed angle wrapped into one full turn.</summary>
+    Conic = 3,
+}
+
+/// <summary>Selects how fill offsets outside the unit interval repeat.</summary>
+public enum Repeat
+{
+    /// <summary>Clamp to the endpoint colors.</summary>
+    None = 0,
+    /// <summary>Repeat the same unit interval in both directions.</summary>
+    Repeat = 1,
+    /// <summary>Reflect alternating unit intervals.</summary>
+    Mirror = 2,
+}
+
 /// <summary>A color gradient texture with linear, radial, square or conic fill.</summary>
 /// <remarks>Pixel work is coalesced until image access or renderer use. Source edits invalidate pixels without
 /// emitting this texture's Changed event. Texture setting notifications are synchronous after mutation.
@@ -7,29 +31,6 @@ namespace Electron2D;
 /// require backend support. Coordinate multi-call edits, resource copying and disposal across threads.</remarks>
 public sealed class GradientTexture : Texture
 {
-    /// <summary>Selects how UV positions map to gradient offsets.</summary>
-    public enum FillEnum
-    {
-        /// <summary>Signed projection onto the start-to-end line.</summary>
-        Linear = 0,
-        /// <summary>Distance from the start relative to the start-to-end radius.</summary>
-        Radial = 1,
-        /// <summary>Maximum axis distance relative to the maximum start-to-end axis distance.</summary>
-        Square = 2,
-        /// <summary>Signed angle wrapped into one full turn.</summary>
-        Conic = 3,
-    }
-    /// <summary>Selects how fill offsets outside the unit interval repeat.</summary>
-    public enum RepeatEnum
-    {
-        /// <summary>Clamp to the endpoint colors.</summary>
-        None = 0,
-        /// <summary>Repeat the same unit interval in both directions.</summary>
-        Repeat = 1,
-        /// <summary>Reflect alternating unit intervals.</summary>
-        Mirror = 2,
-    }
-
     private readonly GradientTextureData _data;
 
     /// <summary>Creates an uninitialized 64-by-64 linear gradient texture with a null source and UseHDR false.</summary>
@@ -79,7 +80,7 @@ public sealed class GradientTexture : Texture
     /// <value>None by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
-    public RepeatEnum Repeat { get => _data.Repeat; set => _data.Repeat = value; }
+    public Repeat Repeat { get => _data.Repeat; set => _data.Repeat = value; }
 
     /// <inheritdoc />
     public override int GetWidth() => Width;
@@ -106,7 +107,7 @@ public sealed class GradientTexture : Texture
         new PropertyDescriptor<GradientTexture, FillEnum>(nameof(Fill), t => t.Fill, (t, v) => t.Fill = v, _ => FillEnum.Linear),
         new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillFrom), t => t.FillFrom, (t, v) => t.FillFrom = v, _ => new Vector2(0, 0)),
         new PropertyDescriptor<GradientTexture, Vector2>(nameof(FillTo), t => t.FillTo, (t, v) => t.FillTo = v, _ => new Vector2(1, 0)),
-        new PropertyDescriptor<GradientTexture, RepeatEnum>(nameof(Repeat), t => t.Repeat, (t, v) => t.Repeat = v, _ => RepeatEnum.None),
+        new PropertyDescriptor<GradientTexture, Repeat>(nameof(Repeat), t => t.Repeat, (t, v) => t.Repeat = v, _ => Repeat.None),
     ]);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new GradientTexture();

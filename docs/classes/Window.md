@@ -45,7 +45,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
 | [`public bool Visible { get; set; }`](#visible) | Gets or sets the root window's native visibility. |
-| [`public ModeEnum Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
+| [`public WindowMode Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
 | [`public bool Unresizable { get; set; }`](#unresizable) | Gets or sets the policy preventing user border resizing. |
 | [`public bool Borderless { get; set; }`](#borderless) | Gets or sets the policy removing native window borders and title bar. |
@@ -97,7 +97,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 
 | Type | Contract |
 | --- | --- |
-| [ModeEnum](Window.ModeEnum.md) | Five native presentation requests, with observed-mode queries. |
+| [WindowMode](WindowMode.md) | Five native presentation requests, with observed-mode queries. |
 | [Flags](Window.Flags.md) | Individual policy indices, not a bit mask; four executable policies. |
 
 ## Constructor Descriptions
@@ -198,7 +198,7 @@ An active Window shows or hides its native surface before committing managed vis
 **AggregateException:** Window or canvas visibility callbacks fail after the change commits; later canvas roots are still attempted.
 
 <a id="mode"></a>
-### `public ModeEnum Mode { get; set; }`
+### `public WindowMode Mode { get; set; }`
 
 Gets the observed native mode, or configures a presentation-mode request.
 

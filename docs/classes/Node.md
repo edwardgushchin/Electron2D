@@ -49,7 +49,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public int PhysicsProcessPriority { get; set; }`](#p-electron2d-node-physicsprocesspriority) | Gets or sets this node's ascending physics-process order key. |
 | [`public double ProcessDeltaTime { get; }`](#p-electron2d-node-processdeltatime) | Gets the delta from the most recent SceneTree-managed process frame delivered to this node. |
 | [`public bool ProcessEnabled { get; set; }`](#p-electron2d-node-processenabled) | Gets or sets whether this node participates in host-driven process frames. |
-| [`public NodeProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
+| [`public ProcessMode ProcessMode { get; set; }`](#p-electron2d-node-processmode) | Gets or sets the pause policy used by both process callback lanes. |
 | [`public int ProcessPriority { get; set; }`](#p-electron2d-node-processpriority) | Gets or sets this node's ascending process-frame order key. |
 | [`public string SceneFilePath { get; }`](#p-electron2d-node-scenefilepath) | Gets the external resource path from which this scene root was instantiated. |
 | [`public SceneTree? Tree { get; }`](#p-electron2d-node-tree) | Gets the active scene tree containing this node. |
@@ -334,11 +334,11 @@ Gets or sets whether this node participates in host-driven process frames.
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
 <a id="p-electron2d-node-processmode"></a>
-### `public NodeProcessMode ProcessMode { get; set; }`
+### `public ProcessMode ProcessMode { get; set; }`
 
 Gets or sets the pause policy used by both process callback lanes.
 
-**Value:** `NodeProcessMode.Inherit` by default.
+**Value:** `ProcessMode.Inherit` by default.
 
 **Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
 

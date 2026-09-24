@@ -33,7 +33,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode { Name = "outside", DrawAction = n => n.DrawRect(new(152, 0, 8, 8), Colors.Magenta) });
         var probe = new CanvasTimeProbe
         {
-            ProcessMode = NodeProcessMode.Always,
+            ProcessMode = ProcessMode.Always,
             Tick = step =>
         {
             ticks++; lastStep = step;

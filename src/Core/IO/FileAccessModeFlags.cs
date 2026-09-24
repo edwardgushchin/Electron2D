@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Specifies the operations permitted by an opened <see cref="FileAccess"/>.</summary>
 [Flags]
-public enum FileAccessMode
+public enum FileAccessModeFlags
 {
     /// <summary>Opens an existing file for reading from its beginning.</summary>
     Read = 1,

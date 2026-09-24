@@ -12,11 +12,11 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [CanvasItem](../classes/CanvasItem.md) | Node | Abstract drawing base, visibility, Z/Y order, behind-parent drawing, modulation/materials and transform queries/notifications. |
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
-| [ControlLayoutPreset](../classes/ControlLayoutPreset.md) | enum | Sixteen predefined four-anchor arrangements for Control. |
-| [ControlGrowDirection](../classes/ControlGrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
-| [ControlLayoutDirection](../classes/ControlLayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
-| [ControlLayoutPresetMode](../classes/ControlLayoutPresetMode.md) | enum | Intrinsic-minimum or retained width/height policy for offset presets. |
-| [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
+| [LayoutPreset](../classes/LayoutPreset.md) | enum | Sixteen predefined four-anchor arrangements for Control. |
+| [GrowDirection](../classes/GrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
+| [LayoutDirection](../classes/LayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
+| [LayoutPresetMode](../classes/LayoutPresetMode.md) | enum | Intrinsic-minimum or retained width/height policy for offset presets. |
+| [ProcessMode](../classes/ProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
 [Sprite](../classes/Sprite.md) and [Parallax](../classes/Parallax.md) derive from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [CanvasLayer](../classes/CanvasLayer.md) derives directly from Node and establishes an independent canvas. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control has executable layout, transform, root viewport pointer routing, hover/cursor selection, keyboard focus and Tab/arrow navigation. The root Viewport exposes the focused Control, explicit release and a focus-change event; Control receives focus notifications before its focus events. Button will be reached through the absent BaseButton. Themes, containers and complete GUI routing remain unimplemented.

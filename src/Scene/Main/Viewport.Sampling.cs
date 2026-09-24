@@ -54,8 +54,8 @@ public abstract partial class Viewport
     private DefaultCanvasItemTextureFilter _canvasFilter = DefaultCanvasItemTextureFilter.Linear;
     private DefaultCanvasItemTextureRepeat _canvasRepeat;
     private AnisotropicFiltering _anisotropy = (AnisotropicFiltering)ProjectSettings.Instance.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel);
-    private CanvasItem.TextureFilterEnum _filterCache = CanvasItem.TextureFilterEnum.Linear;
-    private CanvasItem.TextureRepeatEnum _repeatCache = CanvasItem.TextureRepeatEnum.Disabled;
+    private TextureFilter _filterCache = TextureFilter.Linear;
+    private TextureRepeat _repeatCache = TextureRepeat.Disabled;
     private static readonly PropertyDescriptor[] ViewportSamplingProperties =
     [
         new PropertyDescriptor<Viewport, DefaultCanvasItemTextureFilter>(nameof(CanvasItemDefaultTextureFilter), n => n.CanvasItemDefaultTextureFilter, (n, v) => n.CanvasItemDefaultTextureFilter = v, _ => DefaultCanvasItemTextureFilter.Linear, stored: true),
@@ -120,42 +120,42 @@ public abstract partial class Viewport
         }
     }
 
-    internal CanvasItem.TextureFilterEnum TextureFilterInTree
+    internal TextureFilter TextureFilterInTree
     {
         get
         {
             if (IsInsideTree) _filterCache = _canvasFilter switch
             {
-                DefaultCanvasItemTextureFilter.Nearest => CanvasItem.TextureFilterEnum.Nearest,
-                DefaultCanvasItemTextureFilter.LinearWithMipmaps => CanvasItem.TextureFilterEnum.LinearWithMipmaps,
-                DefaultCanvasItemTextureFilter.NearestWithMipmaps => CanvasItem.TextureFilterEnum.NearestWithMipmaps,
+                DefaultCanvasItemTextureFilter.Nearest => TextureFilter.Nearest,
+                DefaultCanvasItemTextureFilter.LinearWithMipmaps => TextureFilter.LinearWithMipmaps,
+                DefaultCanvasItemTextureFilter.NearestWithMipmaps => TextureFilter.NearestWithMipmaps,
                 DefaultCanvasItemTextureFilter.ParentNode => Parent switch
                 {
-                    CanvasItem item when item.TextureFilterInTree != CanvasItem.TextureFilterEnum.ParentNode => item.TextureFilterInTree,
+                    CanvasItem item when item.TextureFilterInTree != TextureFilter.ParentNode => item.TextureFilterInTree,
                     Viewport viewport => viewport.TextureFilterInTree,
-                    _ => CanvasItem.TextureFilterEnum.Linear,
+                    _ => TextureFilter.Linear,
                 },
-                _ => CanvasItem.TextureFilterEnum.Linear,
+                _ => TextureFilter.Linear,
             };
             return _filterCache;
         }
     }
 
-    internal CanvasItem.TextureRepeatEnum TextureRepeatInTree
+    internal TextureRepeat TextureRepeatInTree
     {
         get
         {
             if (IsInsideTree) _repeatCache = _canvasRepeat switch
             {
-                DefaultCanvasItemTextureRepeat.Enabled => CanvasItem.TextureRepeatEnum.Enabled,
-                DefaultCanvasItemTextureRepeat.Mirror => CanvasItem.TextureRepeatEnum.Mirror,
+                DefaultCanvasItemTextureRepeat.Enabled => TextureRepeat.Enabled,
+                DefaultCanvasItemTextureRepeat.Mirror => TextureRepeat.Mirror,
                 DefaultCanvasItemTextureRepeat.ParentNode => Parent switch
                 {
-                    CanvasItem item when item.TextureRepeatInTree != CanvasItem.TextureRepeatEnum.ParentNode => item.TextureRepeatInTree,
+                    CanvasItem item when item.TextureRepeatInTree != TextureRepeat.ParentNode => item.TextureRepeatInTree,
                     Viewport viewport => viewport.TextureRepeatInTree,
-                    _ => CanvasItem.TextureRepeatEnum.Disabled,
+                    _ => TextureRepeat.Disabled,
                 },
-                _ => CanvasItem.TextureRepeatEnum.Disabled,
+                _ => TextureRepeat.Disabled,
             };
             return _repeatCache;
         }

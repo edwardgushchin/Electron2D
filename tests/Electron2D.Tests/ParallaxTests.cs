@@ -24,7 +24,7 @@ internal static class ParallaxTests
         }
 
         var root = new TestViewport();
-        var camera = new Camera { AnchorMode = Camera.AnchorModeEnum.FixedTopLeft, LimitEnabled = false, Position = new(20, 0) };
+        var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false, Position = new(20, 0) };
         var parallax = new Parallax { ScrollScale = new(.5f, 1) };
         root.AddChild(camera); root.AddChild(parallax);
         using (var tree = new SceneTree(root))
@@ -52,7 +52,7 @@ internal static class ParallaxTests
             root.AddChild(parallax); camera.ForceUpdateScroll(); Near(parallax.ScreenOffset, new(45, 0));
         }
         var failureRoot = new TestViewport();
-        var failureCamera = new Camera { AnchorMode = Camera.AnchorModeEnum.FixedTopLeft, LimitEnabled = false };
+        var failureCamera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false };
         var failing = new Parallax { Name = "Failing", NotifyLocalTransformChanges = true };
         var succeeding = new Parallax { Name = "Succeeding" };
         failureRoot.AddChild(failureCamera); failureRoot.AddChild(failing); failureRoot.AddChild(succeeding);
@@ -77,7 +77,7 @@ internal static partial class RenderingRuntimeTests
     private static void VerifyParallax(string backend)
     {
         var window = new Window { Size = new(64, 32) };
-        var camera = new Camera { AnchorMode = Camera.AnchorModeEnum.FixedTopLeft, LimitEnabled = false, Position = new(4, 0) };
+        var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false, Position = new(4, 0) };
         var parallax = new Parallax { RepeatSize = new(16, 0), ScrollScale = Vector2.Zero };
         var mark = new CanvasNode { DrawAction = node => node.DrawRect(new(0, 0, 3, 3), Colors.Red) };
         var nested = new Parallax { RepeatSize = new(8, 0), ScrollScale = Vector2.Zero, IgnoreCameraScroll = true, FollowViewport = false };

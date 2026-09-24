@@ -7,8 +7,8 @@ internal sealed class GradientTextureData(Texture owner, bool ramp)
     private int _width = ramp ? 256 : 64, _height = ramp ? 1 : 64;
     private bool _hdr, _dirty = true;
     private Gradient? _gradient;
-    private GradientTexture.FillEnum _fill;
-    private GradientTexture.RepeatEnum _repeat;
+    private FillEnum _fill;
+    private Repeat _repeat;
     private Vector2 _from, _to = new(1, 0);
     private TexturePixels? _pixels;
 
@@ -41,12 +41,12 @@ internal sealed class GradientTextureData(Texture owner, bool ramp)
             owner.EmitChanged();
         }
     }
-    internal GradientTexture.FillEnum Fill
+    internal FillEnum Fill
     {
         get { lock (_gate) { CheckAlive(); return _fill; } }
         set { lock (_gate) { CheckAlive(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _fill = value; _dirty = true; } owner.EmitChanged(); }
     }
-    internal GradientTexture.RepeatEnum Repeat
+    internal Repeat Repeat
     {
         get { lock (_gate) { CheckAlive(); return _repeat; } }
         set { lock (_gate) { CheckAlive(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _repeat = value; _dirty = true; } owner.EmitChanged(); }
@@ -84,18 +84,18 @@ internal sealed class GradientTextureData(Texture owner, bool ramp)
         px -= _from.X; py -= _from.Y;
         var offset = _fill switch
         {
-            GradientTexture.FillEnum.Linear => dx * dx + dy * dy < 1e-20 ? 0 : (px * dx + py * dy) / (dx * dx + dy * dy),
-            GradientTexture.FillEnum.Radial => Math.Sqrt(px * px + py * py) / Math.Sqrt(dx * dx + dy * dy),
-            GradientTexture.FillEnum.Square => Math.Max(Math.Abs(px), Math.Abs(py)) / Math.Max(Math.Abs(dx), Math.Abs(dy)),
+            FillEnum.Linear => dx * dx + dy * dy < 1e-20 ? 0 : (px * dx + py * dy) / (dx * dx + dy * dy),
+            FillEnum.Radial => Math.Sqrt(px * px + py * py) / Math.Sqrt(dx * dx + dy * dy),
+            FillEnum.Square => Math.Max(Math.Abs(px), Math.Abs(py)) / Math.Max(Math.Abs(dx), Math.Abs(dy)),
             _ => ((Math.Atan2(dx * py - dy * px, dx * px + dy * py) % Math.Tau + Math.Tau) % Math.Tau) / Math.Tau,
         };
         offset = _repeat switch
         {
-            GradientTexture.RepeatEnum.None => Math.Clamp(offset, 0, 1),
-            GradientTexture.RepeatEnum.Repeat => (offset % 1 + 1) % 1,
+            Repeat.None => Math.Clamp(offset, 0, 1),
+            Repeat.Repeat => (offset % 1 + 1) % 1,
             _ => Math.Abs(offset) % 2,
         };
-        if (_repeat == GradientTexture.RepeatEnum.Mirror && offset > 1) offset = 2 - offset;
+        if (_repeat == Repeat.Mirror && offset > 1) offset = 2 - offset;
         return (float)offset;
     }
 
@@ -110,7 +110,7 @@ internal sealed class GradientTextureData(Texture owner, bool ramp)
 
     internal void CopyTo(GradientTextureData target, bool deep, Func<Resource?, Resource?> duplicate)
     {
-        int width, height; bool hdr; Gradient? gradient; GradientTexture.FillEnum fill; GradientTexture.RepeatEnum repeat; Vector2 from, to; TexturePixels? pixels;
+        int width, height; bool hdr; Gradient? gradient; FillEnum fill; Repeat repeat; Vector2 from, to; TexturePixels? pixels;
         lock (_gate) { CheckAlive(); width = _width; height = _height; hdr = _hdr; gradient = _gradient; fill = _fill; repeat = _repeat; from = _from; to = _to; pixels = _pixels; }
         if (deep) gradient = (Gradient?)duplicate(gradient);
         lock (target._gate)

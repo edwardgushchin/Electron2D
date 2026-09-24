@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Chooses the horizontal direction used to resolve a control's layout rectangle.</summary>
-public enum ControlLayoutDirection
+public enum LayoutDirection
 {
     /// <summary>Inherit from the nearest control in the same translation domain.</summary>
     Inherited = 0,

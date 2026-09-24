@@ -1,6 +1,6 @@
 {
   "mappings": [
-    {"godot": "Control::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE", "electron2d": "enumValue:Electron2D.ControlLayoutDirection.ApplicationLocale()", "reason": "Typed canonical name retains numeric identity 1; the deprecated Locale alias remains a distinct enum declaration."},
+    {"godot": "Control::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE", "electron2d": "enumValue:Electron2D.LayoutDirection.ApplicationLocale()", "reason": "Typed canonical name retains numeric identity 1; the deprecated Locale alias remains a distinct enum declaration."},
     {"godot": "Control::method:_get_maximum_size()", "electron2d": "method:Electron2D.Control.OnGetMaximumSize()", "reason": "Protected typed virtual hook supplies the intrinsic maximum; the base returns unbounded components."},
     {"godot": "Control::method:get_maximum_size()", "electron2d": "method:Electron2D.Control.GetMaximumSize()", "reason": "Public query validates and returns the intrinsic virtual maximum."},
     {"godot": "Control::method:get_combined_maximum_size()", "electron2d": "method:Electron2D.Control.GetCombinedMaximumSize()", "reason": "Componentwise minimum of enabled intrinsic, custom and propagated parent bounds."},
@@ -1088,7 +1088,7 @@
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "T:Electron2D.Window.ModeEnum",
+      "electron2d": "T:Electron2D.WindowMode",
       "godot": "Window::enum:Mode",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
@@ -1178,31 +1178,31 @@
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.ModeEnum.ExclusiveFullscreen()",
+      "electron2d": "enumValue:Electron2D.WindowMode.ExclusiveFullscreen()",
       "godot": "Window::enum_value:Mode.MODE_EXCLUSIVE_FULLSCREEN",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Fullscreen()",
+      "electron2d": "enumValue:Electron2D.WindowMode.Fullscreen()",
       "godot": "Window::enum_value:Mode.MODE_FULLSCREEN",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Maximized()",
+      "electron2d": "enumValue:Electron2D.WindowMode.Maximized()",
       "godot": "Window::enum_value:Mode.MODE_MAXIMIZED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Minimized()",
+      "electron2d": "enumValue:Electron2D.WindowMode.Minimized()",
       "godot": "Window::enum_value:Mode.MODE_MINIMIZED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.ModeEnum.Windowed()",
+      "electron2d": "enumValue:Electron2D.WindowMode.Windowed()",
       "godot": "Window::enum_value:Mode.MODE_WINDOWED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
@@ -1370,77 +1370,77 @@
       "reason": "Typed CanvasItem.ItemRectChanged projects item_rect_changed with publisher identity under ADR 0009. SpriteTests audits pinned canvas_item.h/.cpp and sprite_2d.cpp behavior: synchronous detached/hidden/local delivery, committed geometry, exact setter order/no-ops, sizeChanged redraw option, owner-thread guards, callback failures/reentry/disposal. Entity transforms and Sprite texture-content notifications do not emit it; resource workers only invalidate redraw. Control and other absent subclasses must connect their geometry in their first slices (ADR 0008)."
     },
     {
-      "electron2d": "T:Electron2D.CanvasItem.TextureFilterEnum",
+      "electron2d": "T:Electron2D.TextureFilter",
       "godot": "CanvasItem::enum:TextureFilter",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.Linear()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Linear()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_LINEAR",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.LinearWithMipmaps()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.LinearWithMipmaps()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.LinearWithMipmapsAnisotropic()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.Max()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Max()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_MAX",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.Nearest()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.Nearest()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_NEAREST",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.NearestWithMipmaps()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.NearestWithMipmaps()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.NearestWithMipmapsAnisotropic()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureFilterEnum.ParentNode()",
+      "electron2d": "enumValue:Electron2D.TextureFilter.ParentNode()",
       "godot": "CanvasItem::enum_value:TextureFilter.TEXTURE_FILTER_PARENT_NODE",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "T:Electron2D.CanvasItem.TextureRepeatEnum",
+      "electron2d": "T:Electron2D.TextureRepeat",
       "godot": "CanvasItem::enum:TextureRepeat",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureRepeatEnum.Disabled()",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Disabled()",
       "godot": "CanvasItem::enum_value:TextureRepeat.TEXTURE_REPEAT_DISABLED",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureRepeatEnum.Enabled()",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Enabled()",
       "godot": "CanvasItem::enum_value:TextureRepeat.TEXTURE_REPEAT_ENABLED",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureRepeatEnum.Max()",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Max()",
       "godot": "CanvasItem::enum_value:TextureRepeat.TEXTURE_REPEAT_MAX",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureRepeatEnum.Mirror()",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.Mirror()",
       "godot": "CanvasItem::enum_value:TextureRepeat.TEXTURE_REPEAT_MIRROR",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "enumValue:Electron2D.CanvasItem.TextureRepeatEnum.ParentNode()",
+      "electron2d": "enumValue:Electron2D.TextureRepeat.ParentNode()",
       "godot": "CanvasItem::enum_value:TextureRepeat.TEXTURE_REPEAT_PARENT_NODE",
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
@@ -2910,7 +2910,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "The three nested enums and all nine numeric values match the pinned source. Exact rendering behavior is tracked on the corresponding property rows.",
+      "reason": "The three namespace-level enums and all nine numeric values match the pinned source. Exact rendering behavior is tracked on the corresponding property rows.",
       "godot": ["Line2D::enum:LineCapMode", "Line2D::enum:LineJointMode", "Line2D::enum:LineTextureMode"]
     },
     {

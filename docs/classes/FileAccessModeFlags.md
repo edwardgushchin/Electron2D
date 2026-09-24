@@ -1,14 +1,14 @@
-# FileAccessMode
+# FileAccessModeFlags
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** —
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/IO/FileAccessMode.cs`](../../src/Core/IO/FileAccessMode.cs)
+- **Source:** [`src/Core/IO/FileAccessModeFlags.cs`](../../src/Core/IO/FileAccessModeFlags.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum FileAccessMode`
+- **Declaration:** `public enum FileAccessModeFlags`
 
 > Specifies the operations permitted by an opened [`FileAccess`](FileAccess.md).
 
@@ -16,43 +16,43 @@ Last updated: 2026-09-21
 
 Specifies the operations permitted by an opened [`FileAccess`](FileAccess.md).
 
-`FileAccessMode` defines creation, truncation, read, and write behavior for one `FileAccess` instance.
+`FileAccessModeFlags` defines creation, truncation, read, and write behavior for one `FileAccess` instance.
 
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var value = FileAccessMode.Read;
+var value = FileAccessModeFlags.Read;
 ```
 
 ## Constants
 
 | Member | Description |
 | --- | --- |
-| [`Read = 1`](#f-electron2d-fileaccessmode-read) | Opens an existing file for reading from its beginning. |
-| [`Write = 2`](#f-electron2d-fileaccessmode-write) | Creates or truncates a file and opens it for writing from its beginning. |
-| [`ReadWrite = 3`](#f-electron2d-fileaccessmode-readwrite) | Opens an existing file for reading and writing without truncating it. |
-| [`WriteRead = 7`](#f-electron2d-fileaccessmode-writeread) | Creates or truncates a file and opens it for reading and writing. |
+| [`Read = 1`](#f-electron2d-fileaccessmodeflags-read) | Opens an existing file for reading from its beginning. |
+| [`Write = 2`](#f-electron2d-fileaccessmodeflags-write) | Creates or truncates a file and opens it for writing from its beginning. |
+| [`ReadWrite = 3`](#f-electron2d-fileaccessmodeflags-readwrite) | Opens an existing file for reading and writing without truncating it. |
+| [`WriteRead = 7`](#f-electron2d-fileaccessmodeflags-writeread) | Creates or truncates a file and opens it for reading and writing. |
 
 ## Constant Descriptions
 
-<a id="f-electron2d-fileaccessmode-read"></a>
+<a id="f-electron2d-fileaccessmodeflags-read"></a>
 ### `Read = 1`
 
 Opens an existing file for reading from its beginning.
 
-<a id="f-electron2d-fileaccessmode-write"></a>
+<a id="f-electron2d-fileaccessmodeflags-write"></a>
 ### `Write = 2`
 
 Creates or truncates a file and opens it for writing from its beginning.
 
-<a id="f-electron2d-fileaccessmode-readwrite"></a>
+<a id="f-electron2d-fileaccessmodeflags-readwrite"></a>
 ### `ReadWrite = 3`
 
 Opens an existing file for reading and writing without truncating it.
 
-<a id="f-electron2d-fileaccessmode-writeread"></a>
+<a id="f-electron2d-fileaccessmodeflags-writeread"></a>
 ### `WriteRead = 7`
 
 Creates or truncates a file and opens it for reading and writing.

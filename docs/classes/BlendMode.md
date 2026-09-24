@@ -1,11 +1,11 @@
-# CanvasItemMaterial.BlendModeEnum
+# BlendMode
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum CanvasItemMaterial.BlendModeEnum`
+- Declaration: `public enum BlendMode`
 - Source: [CanvasItemMaterial.cs](../../src/Scene/Resources/CanvasItemMaterial.cs)
 - Inherits: `System.Enum`
-- Owner: [CanvasItemMaterial](CanvasItemMaterial.md)
+- Used by: [CanvasItemMaterial](CanvasItemMaterial.md)
 
 ## Description
 
@@ -14,7 +14,7 @@ Fixed canvas blend equations. `S` is source, `D` is destination and `A` is the s
 ## Example
 
 ```csharp
-material.BlendMode = CanvasItemMaterial.BlendModeEnum.Mul;
+material.BlendMode = BlendMode.Mul;
 ```
 
 ## Values

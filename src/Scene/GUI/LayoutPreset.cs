@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Identifies a standard arrangement of a control's four anchors.</summary>
-public enum ControlLayoutPreset
+public enum LayoutPreset
 {
     /// <summary>All anchors at the upper-left corner.</summary>
     TopLeft = 0,

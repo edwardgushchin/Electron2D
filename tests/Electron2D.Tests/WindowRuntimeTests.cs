@@ -249,7 +249,7 @@ internal static class WindowRuntimeTests
         var buffers = new List<nint>();
         try
         {
-            using (var template = new Window { Borderless = true, Unresizable = true, Mode = Window.ModeEnum.Maximized })
+            using (var template = new Window { Borderless = true, Unresizable = true, Mode = WindowMode.Maximized })
             {
                 Check(!template.IsMaximizeAllowed() && template.GetFlag(Window.Flags.Borderless), "Detached policies are executable configuration.");
                 foreach (var flag in Enum.GetValues<Window.Flags>())
@@ -263,7 +263,7 @@ internal static class WindowRuntimeTests
                     }
                 }
                 Reject<ArgumentOutOfRangeException>(() => template.SetFlag((Window.Flags)(-1), true));
-                Reject<ArgumentOutOfRangeException>(() => template.Mode = (Window.ModeEnum)99);
+                Reject<ArgumentOutOfRangeException>(() => template.Mode = (WindowMode)99);
                 Reject<ArgumentOutOfRangeException>(() => template.CurrentScreen = -1);
                 Reject<InvalidOperationException>(template.MoveToCenter);
                 Reject<InvalidOperationException>(() => template.SetIMEActive(true));
@@ -281,7 +281,7 @@ internal static class WindowRuntimeTests
             window.Visible = false;
             window.Borderless = window.Unresizable = true;
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
-                window.Mode = Window.ModeEnum.ExclusiveFullscreen;
+                window.Mode = WindowMode.ExclusiveFullscreen;
             var events = new List<string>();
             IReadOnlyList<string>? files = null;
             window.MouseEntered += () => events.Add("enter");
@@ -316,7 +316,7 @@ internal static class WindowRuntimeTests
                     Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressState((DisplayServer.ProgressState)99));
                     if (SDL.GetCurrentVideoDriver() == "wayland")
                     {
-                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Fullscreen,
+                        Check(SDL.SyncWindow(native) && window.Mode == WindowMode.Fullscreen,
                             "Preconfigured mode reaches the native window before ready.");
                         Reject<NotSupportedException>(() => window.AlwaysOnTop = true);
                         Reject<NotSupportedException>(() => window.Unfocusable = true);
@@ -326,11 +326,11 @@ internal static class WindowRuntimeTests
                         Reject<NotSupportedException>(window.MoveToCenter);
                         Reject<NotSupportedException>(() => window.GetPositionWithDecorations());
                         Reject<NotSupportedException>(() => window.SetTaskbarProgressValue(0.5f));
-                        window.Mode = Window.ModeEnum.ExclusiveFullscreen;
-                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Fullscreen,
+                        window.Mode = WindowMode.ExclusiveFullscreen;
+                        Check(SDL.SyncWindow(native) && window.Mode == WindowMode.Fullscreen,
                             "The high-level exclusive request reports Wayland's actual fullscreen adaptation.");
-                        window.Mode = Window.ModeEnum.Windowed;
-                        Check(SDL.SyncWindow(native) && window.Mode == Window.ModeEnum.Windowed, "Leaving fullscreen restores the observed window mode.");
+                        window.Mode = WindowMode.Windowed;
+                        Check(SDL.SyncWindow(native) && window.Mode == WindowMode.Windowed, "Leaving fullscreen restores the observed window mode.");
                     }
                     PushWindowEvent(SDL.EventType.WindowMouseLeave);
                     PushWindowEvent(SDL.EventType.WindowMouseEnter);

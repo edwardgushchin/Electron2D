@@ -41,10 +41,10 @@ internal static class ControlHoverNativeTests
             Input.Instance.SetDefaultCursorShape(Input.CursorShape.IBeam);
             Check(Input.Instance.GetCurrentCursorShape() == Input.CursorShape.Help,
                 "A hovered control overrides the changed viewport default.");
-            control.MouseFilter = ControlMouseFilter.Ignore;
+            control.MouseFilter = MouseFilter.Ignore;
             Check(Input.Instance.GetCurrentCursorShape() == Input.CursorShape.IBeam,
                 "Ignoring the control exposes the retained viewport default.");
-            control.MouseFilter = ControlMouseFilter.Stop;
+            control.MouseFilter = MouseFilter.Stop;
             Check(Input.Instance.GetCurrentCursorShape() == Input.CursorShape.Help,
                 "Restoring hit testing refreshes the native cursor without pointer motion.");
             control.MouseDefaultCursorShape = Control.CursorShape.PointingHand;

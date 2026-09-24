@@ -1,6 +1,6 @@
 using Electron2D;
-using Filter = Electron2D.CanvasItem.TextureFilterEnum;
-using Repeat = Electron2D.CanvasItem.TextureRepeatEnum;
+using Filter = Electron2D.TextureFilter;
+using Repeat = Electron2D.TextureRepeat;
 
 internal static partial class RenderingRuntimeTests
 {

@@ -5,9 +5,9 @@ using SDL3;
 namespace Electron2D;
 
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
-    CanvasItem.TextureFilterEnum Filter = CanvasItem.TextureFilterEnum.Nearest,
-    CanvasItem.TextureRepeatEnum Repeat = CanvasItem.TextureRepeatEnum.Disabled, int MaxAnisotropy = 1,
-    CanvasItemMaterial.BlendModeEnum Blend = CanvasItemMaterial.BlendModeEnum.Mix)
+    TextureFilter Filter = TextureFilter.Nearest,
+    TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
+    BlendMode Blend = BlendMode.Mix)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }

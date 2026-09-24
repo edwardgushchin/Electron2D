@@ -5,7 +5,7 @@ namespace Electron2D;
 /// The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
 /// lanes. They do not control rendering, audio, or a physics server.
 /// </remarks>
-public enum NodeProcessMode
+public enum ProcessMode
 {
     /// <summary>Uses the nearest ancestor's resolved mode; hierarchy roots resolve to <see cref="Pausable"/>.</summary>
     Inherit = 0,

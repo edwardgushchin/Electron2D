@@ -14,7 +14,7 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
-        new PropertyDescriptor<Window, ModeEnum>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => ModeEnum.Windowed, stored: true),
+        new PropertyDescriptor<Window, WindowMode>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => WindowMode.Windowed, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
@@ -250,7 +250,7 @@ public partial class Window : Viewport
             _display.WindowSetCurrentScreen(screen);
         if (_screenPosition is { } position)
             _display.WindowSetPosition(position);
-        if (_mode != ModeEnum.Windowed)
+        if (_mode != WindowMode.Windowed)
             _display.WindowSetMode((DisplayServer.WindowMode)_mode);
         _size = _display.WindowGetSize();
         _display.CloseRequested += HandleClose;

@@ -4,7 +4,7 @@ Last updated: 2026-09-24
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
-Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), [0012](#adr-0012), [0017](#adr-0017), [0021](#adr-0021), [0027](#adr-0027), [0030](#adr-0030), [0045](#adr-0045).
+Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), [0012](#adr-0012), [0017](#adr-0017), [0021](#adr-0021), [0027](#adr-0027), [0030](#adr-0030), [0045](#adr-0045), [0051](#adr-0051).
 
 <a id="adr-0001"></a>
 ## ADR 0001: Use typed C# without Variant
@@ -457,3 +457,32 @@ The migration can change public source and binary compatibility and must be reco
 ### Verification boundary
 
 The decision, routing index and maintenance instructions establish the rule. Build, call-site and coverage checks accompany each code migration; a documentation-only adoption does not prove that all existing identifiers comply.
+
+<a id="adr-0051"></a>
+## ADR 0051: Project selected enum families to explicit public type names
+
+Last updated: 2026-09-24
+
+### Status
+
+Accepted.
+
+### Context
+
+Reference enum names are scoped by their owner, while C# properties can have the same short name. Earlier Electron2D slices mixed nested `Enum` suffixes, owner-prefixed namespace types, and unchanged nested types. A single implicit collision rule cannot express the selected public names. ADR 0004 still requires each applicable enum value and behavior; placement is a C# API naming choice.
+
+### Decision
+
+The following names are exact public type identities. All listed targets are top-level in the flat `Electron2D` namespace except `Camera.CameraProcessCallback`, which remains nested:
+
+- `CanvasItemMaterial.BlendMode` → `BlendMode`; `CanvasItem.TextureFilter` → `TextureFilter`; `CanvasItem.TextureRepeat` → `TextureRepeat`; `Window.Mode` → `WindowMode`.
+- `Control.FocusMode` → `FocusMode`; `Control.LayoutPreset` → `LayoutPreset`; `Control.GrowDirection` → `GrowDirection`; `Control.LayoutDirection` → `LayoutDirection`; `Control.LayoutPresetMode` → `LayoutPresetMode`; `Control.MouseFilter` → `MouseFilter`.
+- `FileAccess.CompressionMode` → `FileCompressionMode`; `FileAccess.ModeFlags` → `FileAccessModeFlags`; `FileAccess.UnixPermissionFlags` → `UnixPermissionFlags`; `Node.ProcessMode` → `ProcessMode`; `PackedScene.GenEditState` → `PackedSceneEditState`; `Resource.DeepDuplicateMode` → `DeepDuplicateMode`; `SceneTree.GroupCallFlags` → `GroupCallFlags`; `Timer.TimerProcessCallback` → `TimerProcessCallback`.
+- `Gradient.InterpolationMode` → `InterpolationMode`; `GradientTexture2D.Fill` → `FillEnum`; `GradientTexture2D.Repeat` → `Repeat`; `Camera2D.AnchorMode` → `AnchorMode`; `Camera2D.Camera2DProcessCallback` → `Camera.CameraProcessCallback`; `Line2D.LineCapMode` → `LineCapMode`; `Line2D.LineJointMode` → `LineJointMode`; `Line2D.LineTextureMode` → `LineTextureMode`.
+- `FastNoiseLite.NoiseType` → `NoiseType`; `FastNoiseLite.FractalType` → `FractalType`; `FastNoiseLite.CellularDistanceFunction` → `CellularDistanceFunction`; `FastNoiseLite.CellularReturnType` → `CellularReturnType`; `FastNoiseLite.DomainWarpType` → `DomainWarpType`; `FastNoiseLite.DomainWarpFractalType` → `DomainWarpFractalType`.
+
+The owning class keeps its applicable property names. The enum's numeric values and observable behavior do not change with its location. Unlisted enum families retain their current placement; a future public name collision requires an explicit decision update. Do not ship former type spellings, compatibility aliases, or duplicate public enum types. Keep the bidirectional coverage mappings, source XML, consumers, and class pages synchronized with these identities.
+
+### Consequences
+
+The migration breaks source and binary compatibility for the moved or renamed enum types. The selected spellings are explicit exceptions, not a new automatic naming rule for every future enum. ADR 0045 continues to govern acronyms in function, method, and property names, not enum type names.

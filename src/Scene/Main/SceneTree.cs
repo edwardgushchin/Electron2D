@@ -569,7 +569,7 @@ public sealed partial class SceneTree : MainLoop
     {
         EnsureOwnerThread();
         if (Root is not Viewport viewport || !ReferenceEquals(control.GetViewport(), viewport) ||
-            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.FocusMode == ControlFocusMode.None)
+            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.FocusMode == FocusMode.None)
             return;
         if (ReferenceEquals(_guiFocus, control))
         {
@@ -1378,7 +1378,7 @@ public sealed partial class SceneTree : MainLoop
         if (inputEvent is InputEventMouse mouse)
         {
             var captured = _guiMouseCapture;
-            if (captured is not null && (!ReferenceEquals(captured.Tree, this) || !captured.IsVisibleInTree || captured.MouseFilter == ControlMouseFilter.Ignore))
+            if (captured is not null && (!ReferenceEquals(captured.Tree, this) || !captured.IsVisibleInTree || captured.MouseFilter == MouseFilter.Ignore))
                 captured = _guiMouseCapture = null;
 
             var release = mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false };
@@ -1388,14 +1388,14 @@ public sealed partial class SceneTree : MainLoop
             if (press) _guiMouseCapture = target;
             if (release) _guiMouseCapture = null;
             if (target is null) return;
-            if (press && target.FocusMode != ControlFocusMode.None)
+            if (press && target.FocusMode != FocusMode.None)
                 try { SetGUIFocus(target, hideFocus: true); } catch (Exception error) { CollectException(ref errors, error); }
 
             for (Control? current = target; current is not null && !_inputHandled;)
             {
                 if (current.IsDisposed || !ReferenceEquals(current.Tree, this) || !ReferenceEquals(current.GetViewport(), viewport)) break;
                 var next = current.TopLevel ? null : current.Parent as Control;
-                if (current.MouseFilter != ControlMouseFilter.Ignore && current.IsVisibleInTree)
+                if (current.MouseFilter != MouseFilter.Ignore && current.IsVisibleInTree)
                 {
                     var filter = current.MouseFilter;
                     var forcePassWheel = current.MouseForcePassScrollEvents;
@@ -1412,7 +1412,7 @@ public sealed partial class SceneTree : MainLoop
                     }
                     catch (Exception error) { CollectException(ref errors, error); }
                     var wheel = mouse is InputEventMouseButton { ButtonIndex: >= MouseButton.WheelUp and <= MouseButton.WheelRight };
-                    if (filter == ControlMouseFilter.Stop && (!wheel || !forcePassWheel) && !_inputHandled)
+                    if (filter == MouseFilter.Stop && (!wheel || !forcePassWheel) && !_inputHandled)
                         SetInputAsHandled();
                 }
                 current = next;
@@ -1422,7 +1422,7 @@ public sealed partial class SceneTree : MainLoop
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
         var focused = _guiFocus;
-        if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.FocusMode == ControlFocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport)))
+        if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.FocusMode == FocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport)))
         {
             try { ReleaseGUIFocus(focused); } catch (Exception error) { CollectException(ref errors, error); }
             focused = null;
@@ -1441,7 +1441,7 @@ public sealed partial class SceneTree : MainLoop
         for (var index = _inputTraversal.Count - 1; index >= 0; index--)
         {
             if (_inputTraversal[index] is not Control control || control.IsDisposed || !ReferenceEquals(control.Tree, this) ||
-                !control.IsVisibleInTree || control.MouseFilter == ControlMouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
+                !control.IsVisibleInTree || control.MouseFilter == MouseFilter.Ignore || !ReferenceEquals(control.GetViewport(), viewport)) continue;
             try
             {
                 if (!control.HitTest(point)) continue;

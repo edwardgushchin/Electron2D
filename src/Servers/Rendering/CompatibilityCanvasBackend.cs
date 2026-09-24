@@ -120,7 +120,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 throw new NotSupportedException("The compatibility renderer does not execute shader materials.");
         if (Driver == "software")
             foreach (var batch in batches)
-                if (batch.Blend != CanvasItemMaterial.BlendModeEnum.Mix)
+                if (batch.Blend != BlendMode.Mix)
                     throw new NotSupportedException($"The software compatibility renderer cannot execute {batch.Blend} canvas blending.");
         var renderer = _renderer.DangerousGetHandle();
         var size = GetPixelSize();
@@ -129,15 +129,15 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         foreach (var batch in batches)
             if (batch.Texture is { } texture)
             {
-                if (Driver == "software" && batch.Filter == CanvasItem.TextureFilterEnum.Linear)
+                if (Driver == "software" && batch.Filter == TextureFilter.Linear)
                     throw new NotSupportedException("The software compatibility driver cannot linearly filter canvas triangles; select Nearest or a hardware renderer.");
-                if (batch.Filter >= CanvasItem.TextureFilterEnum.NearestWithMipmaps)
+                if (batch.Filter >= TextureFilter.NearestWithMipmaps)
                     throw new NotSupportedException("The compatibility renderer cannot sample texture mipmaps or use anisotropic filtering.");
-                if (batch.Repeat == CanvasItem.TextureRepeatEnum.Mirror)
+                if (batch.Repeat == TextureRepeat.Mirror)
                     throw new NotSupportedException("The compatibility renderer cannot use mirrored texture repeat.");
                 if (_usedTextures.Add(texture)) PrepareTexture(texture);
                 var image = _textures[texture].Pixels.Source;
-                if (batch.Repeat == CanvasItem.TextureRepeatEnum.Enabled && ((image.Width & (image.Width - 1)) != 0 || (image.Height & (image.Height - 1)) != 0) &&
+                if (batch.Repeat == TextureRepeat.Enabled && ((image.Width & (image.Width - 1)) != 0 || (image.Height & (image.Height - 1)) != 0) &&
                     !SDL.GetBooleanProperty(SDL.GetRendererProperties(renderer), SDL.Props.RendererTextureWrappingBoolean, false))
                     throw new NotSupportedException("This compatibility driver cannot repeat textures whose dimensions are not powers of two.");
             }
@@ -171,14 +171,14 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
             }
             foreach (var batch in batches)
             {
-                var mode = batch.Repeat == CanvasItem.TextureRepeatEnum.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
+                var mode = batch.Repeat == TextureRepeat.Enabled ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp;
                 Check(SDL.SetRenderTextureAddressMode(renderer, mode, mode), "set texture addressing");
                 var texture = batch.Texture is null ? 0 : _textures[batch.Texture].Handle.DangerousGetHandle();
                 var blend = CanvasBlend(batch.Blend);
                 if (texture == 0) Check(SDL.SetRenderDrawBlendMode(renderer, blend), "set canvas geometry blending");
                 else Check(SDL.SetTextureBlendMode(texture, blend), "set canvas texture blending");
                 if (texture != 0) Check(SDL.SetTextureScaleMode(texture,
-                    batch.Filter == CanvasItem.TextureFilterEnum.Linear ? SDL.ScaleMode.Linear : SDL.ScaleMode.Nearest), "set canvas texture filtering");
+                    batch.Filter == TextureFilter.Linear ? SDL.ScaleMode.Linear : SDL.ScaleMode.Nearest), "set canvas texture filtering");
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
                 var step = Driver == "software" && texture != 0 ? 3 : batch.Count;
                 for (var first = batch.First; first < batch.First + batch.Count; first += step)
@@ -192,19 +192,19 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         Check(SDL.RenderPresent(renderer), "present canvas");
     }
 
-    private static SDL.BlendMode CanvasBlend(CanvasItemMaterial.BlendModeEnum blend)
+    private static SDL.BlendMode CanvasBlend(BlendMode blend)
     {
-        if (blend == CanvasItemMaterial.BlendModeEnum.Mix) return SDL.BlendMode.Blend;
-        if (blend == CanvasItemMaterial.BlendModeEnum.PremultAlpha) return SDL.BlendMode.BlendPremultiplied;
-        var srcColor = blend == CanvasItemMaterial.BlendModeEnum.Mul ? SDL.BlendFactor.DstColor :
-            blend == CanvasItemMaterial.BlendModeEnum.PremultAlpha ? SDL.BlendFactor.One : SDL.BlendFactor.SrcAlpha;
-        var dstColor = blend == CanvasItemMaterial.BlendModeEnum.Mul ? SDL.BlendFactor.Zero :
-            blend == CanvasItemMaterial.BlendModeEnum.PremultAlpha ? SDL.BlendFactor.OneMinusSrcAlpha : SDL.BlendFactor.One;
-        var srcAlpha = blend == CanvasItemMaterial.BlendModeEnum.Mul ? SDL.BlendFactor.DstAlpha :
-            blend == CanvasItemMaterial.BlendModeEnum.PremultAlpha ? SDL.BlendFactor.One : SDL.BlendFactor.SrcAlpha;
-        var dstAlpha = blend == CanvasItemMaterial.BlendModeEnum.Mul ? SDL.BlendFactor.Zero :
-            blend == CanvasItemMaterial.BlendModeEnum.PremultAlpha ? SDL.BlendFactor.OneMinusSrcAlpha : SDL.BlendFactor.One;
-        var operation = blend == CanvasItemMaterial.BlendModeEnum.Sub ? SDL.BlendOperation.RevSubtract : SDL.BlendOperation.Add;
+        if (blend == BlendMode.Mix) return SDL.BlendMode.Blend;
+        if (blend == BlendMode.PremultAlpha) return SDL.BlendMode.BlendPremultiplied;
+        var srcColor = blend == BlendMode.Mul ? SDL.BlendFactor.DstColor :
+            blend == BlendMode.PremultAlpha ? SDL.BlendFactor.One : SDL.BlendFactor.SrcAlpha;
+        var dstColor = blend == BlendMode.Mul ? SDL.BlendFactor.Zero :
+            blend == BlendMode.PremultAlpha ? SDL.BlendFactor.OneMinusSrcAlpha : SDL.BlendFactor.One;
+        var srcAlpha = blend == BlendMode.Mul ? SDL.BlendFactor.DstAlpha :
+            blend == BlendMode.PremultAlpha ? SDL.BlendFactor.One : SDL.BlendFactor.SrcAlpha;
+        var dstAlpha = blend == BlendMode.Mul ? SDL.BlendFactor.Zero :
+            blend == BlendMode.PremultAlpha ? SDL.BlendFactor.OneMinusSrcAlpha : SDL.BlendFactor.One;
+        var operation = blend == BlendMode.Sub ? SDL.BlendOperation.RevSubtract : SDL.BlendOperation.Add;
         return SDL.ComposeCustomBlendMode(srcColor, dstColor, operation, srcAlpha, dstAlpha, operation);
     }
 

@@ -1,23 +1,23 @@
 namespace Electron2D;
 
+/// <summary>Identifies a native window's presentation mode.</summary>
+public enum WindowMode
+{
+    /// <summary>A floating window with its configured decorations.</summary>
+    Windowed = 0,
+    /// <summary>A window minimized by the window manager.</summary>
+    Minimized = 1,
+    /// <summary>A window expanded to its screen's work area.</summary>
+    Maximized = 2,
+    /// <summary>A borderless window covering its screen.</summary>
+    Fullscreen = 3,
+    /// <summary>A fullscreen window requesting a dedicated video mode where supported.</summary>
+    /// <remarks>Wayland uses ordinary fullscreen and reports <see cref="Fullscreen"/>.</remarks>
+    ExclusiveFullscreen = 4,
+}
+
 public partial class Window
 {
-    /// <summary>Identifies a native window's presentation mode.</summary>
-    public enum ModeEnum
-    {
-        /// <summary>A floating window with its configured decorations.</summary>
-        Windowed = 0,
-        /// <summary>A window minimized by the window manager.</summary>
-        Minimized = 1,
-        /// <summary>A window expanded to its screen's work area.</summary>
-        Maximized = 2,
-        /// <summary>A borderless window covering its screen.</summary>
-        Fullscreen = 3,
-        /// <summary>A fullscreen window requesting a dedicated video mode where supported.</summary>
-        /// <remarks>Wayland uses ordinary fullscreen and reports <see cref="Fullscreen"/>.</remarks>
-        ExclusiveFullscreen = 4,
-    }
-
     /// <summary>Identifies individual window policies; values are indices, not a bit mask.</summary>
     /// <remarks>Only ResizeDisabled, Borderless, AlwaysOnTop and NoFocus have executable integration.
     /// Other defined policies throw NotSupportedException from GetFlag and SetFlag.</remarks>
@@ -53,7 +53,7 @@ public partial class Window
         Max = 13,
     }
 
-    private ModeEnum _mode;
+    private WindowMode _mode;
     private uint _flags;
     private int? _currentScreen;
 
@@ -64,9 +64,9 @@ public partial class Window
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public ModeEnum Mode
+    public WindowMode Mode
     {
-        get { ThrowIfDisposed(); return _display is null ? _mode : (ModeEnum)_display.WindowGetMode(); }
+        get { ThrowIfDisposed(); return _display is null ? _mode : (WindowMode)_display.WindowGetMode(); }
         set
         {
             EnsureMutable();

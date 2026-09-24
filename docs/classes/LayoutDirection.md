@@ -1,12 +1,12 @@
-# ControlLayoutDirection
+# LayoutDirection
 
 Last updated: 2026-09-24
 
 **Inherits:** —
 
-- **Source:** [`src/Scene/GUI/ControlLayoutDirection.cs`](../../src/Scene/GUI/ControlLayoutDirection.cs)
+- **Source:** [`src/Scene/GUI/LayoutDirection.cs`](../../src/Scene/GUI/LayoutDirection.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlLayoutDirection`
+- **Declaration:** `public enum LayoutDirection`
 
 The direction policy for [`Control`](Control.md) rectangle layout. The numeric values match the reference API.
 

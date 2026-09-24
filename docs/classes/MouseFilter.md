@@ -1,9 +1,9 @@
-# ControlMouseFilter
+# MouseFilter
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlMouseFilter`
+- **Declaration:** `public enum MouseFilter`
 - **Source:** [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs)
 - **Used by:** [Control.MouseFilter](Control.md)
 
@@ -17,6 +17,6 @@ Controls pointer targeting and bubbling in a root viewport. The enum is stored b
 | `Pass` | 1 | Receives pointer input and bubbles it through direct Control ancestors until handled. |
 | `Ignore` | 2 | Receives no pointer events and does not obstruct lower controls. |
 
-For example, set `overlay.MouseFilter = ControlMouseFilter.Ignore` to let a control underneath receive a click. This example assumes `overlay` is an attached Control.
+For example, set `overlay.MouseFilter = MouseFilter.Ignore` to let a control underneath receive a click. This example assumes `overlay` is an attached Control.
 
 Root viewport dispatch is covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs). Hover, clipping, exact renderer order and nested viewport behavior remain incomplete; see [Control coverage](../coverage/classes/Control.md).

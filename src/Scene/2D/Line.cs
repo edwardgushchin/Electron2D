@@ -2,42 +2,44 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
+/// <summary>Selects the shape of an open line's endpoint.</summary>
+public enum LineCapMode
+{
+    /// <summary>No cap.</summary>
+    None = 0,
+    /// <summary>A square cap.</summary>
+    Box = 1,
+    /// <summary>A semicircular cap.</summary>
+    Round = 2,
+}
+
+/// <summary>Selects the shape of a line joint.</summary>
+public enum LineJointMode
+{
+    /// <summary>A miter joint, limited by SharpLimit.</summary>
+    Sharp = 0,
+    /// <summary>A beveled joint.</summary>
+    Bevel = 1,
+    /// <summary>A rounded joint.</summary>
+    Round = 2,
+}
+
+/// <summary>Selects how a line texture is placed along its length.</summary>
+public enum LineTextureMode
+{
+    /// <summary>Samples the first texture column along the line.</summary>
+    None = 0,
+    /// <summary>Tiles the texture along the line when repeat sampling is enabled.</summary>
+    Tile = 1,
+    /// <summary>Stretches the texture along the full length.</summary>
+    Stretch = 2,
+}
+
 /// <summary>Draws a thick, optionally colored and textured polyline in local canvas coordinates.</summary>
 /// <remarks>Points are caller-owned values. Gradient, width curve and texture are borrowed resources; changes
 /// invalidate retained drawing. The node owns only its event subscriptions, not those resources.</remarks>
 public class Line : Entity
 {
-    /// <summary>Selects the shape of an open line's endpoint.</summary>
-    public enum LineCapMode
-    {
-        /// <summary>No cap.</summary>
-        None = 0,
-        /// <summary>A square cap.</summary>
-        Box = 1,
-        /// <summary>A semicircular cap.</summary>
-        Round = 2,
-    }
-    /// <summary>Selects the shape of a line joint.</summary>
-    public enum LineJointMode
-    {
-        /// <summary>A miter joint, limited by SharpLimit.</summary>
-        Sharp = 0,
-        /// <summary>A beveled joint.</summary>
-        Bevel = 1,
-        /// <summary>A rounded joint.</summary>
-        Round = 2,
-    }
-    /// <summary>Selects how a line texture is placed along its length.</summary>
-    public enum LineTextureMode
-    {
-        /// <summary>Samples the first texture column along the line.</summary>
-        None = 0,
-        /// <summary>Tiles the texture along the line when repeat sampling is enabled.</summary>
-        Tile = 1,
-        /// <summary>Stretches the texture along the full length.</summary>
-        Stretch = 2,
-    }
-
     private static readonly PropertyDescriptor[] LineProperties =
     [
         new PropertyDescriptor<Line, Vector2[]>(nameof(Points), n => n.Points, (n, v) => n.Points = v, _ => [], stored: true),

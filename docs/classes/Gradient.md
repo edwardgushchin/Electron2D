@@ -35,7 +35,7 @@ Construction, sampling and image access require no active window or native backe
 | `Gradient()` | Black-to-white, Linear, SRGB. |
 | `float[] Offsets { get; set; }` | Copied positions in current storage order; resizes points. |
 | `Color[] Colors { get; set; }` | Copied colors in current storage order; resizes points. |
-| `InterpolationModeEnum InterpolationMode { get; set; }` | Linear (0), Constant (1), Cubic (2). |
+| `InterpolationMode InterpolationMode { get; set; }` | Linear (0), Constant (1), Cubic (2). |
 | `ColorSpace InterpolationColorSpace { get; set; }` | SRGB (0), LinearSRGB (1), OKLAB (2). |
 | `void AddPoint(float offset, Color color)` | Append, invalidate sort, notify. |
 | `void RemovePoint(int point)` | Remove current storage index; cannot remove the final point. |
@@ -105,7 +105,7 @@ Validates a finite position, sorts once and binary-searches neighboring points. 
 
 ## Enumeration descriptions
 
-See [Gradient.InterpolationModeEnum](Gradient.InterpolationModeEnum.md) and [Gradient.ColorSpace](Gradient.ColorSpace.md).
+See [InterpolationMode](InterpolationMode.md) and [Gradient.ColorSpace](Gradient.ColorSpace.md).
 
 ## Protected hooks and lifecycle
 

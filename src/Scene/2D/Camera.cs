@@ -1,5 +1,14 @@
 namespace Electron2D;
 
+/// <summary>Chooses the point of the visible area anchored to the tracked position.</summary>
+public enum AnchorMode
+{
+    /// <summary>Anchors the top-left corner at the tracked position.</summary>
+    FixedTopLeft = 0,
+    /// <summary>Centers the visible area and applies drag margins and offsets.</summary>
+    DragCenter = 1,
+}
+
 /// <summary>Moves a viewport's default canvas to follow a spatial scene node.</summary>
 /// <remarks>One camera is current per viewport. The first enabled camera becomes current on entry. Tracking
 /// uses internal process/physics notifications and the inherited pause policy. Camera state does not change
@@ -7,15 +16,6 @@ namespace Electron2D;
 /// Editor overlays, physics interpolation and independent offscreen viewports are not implemented.</remarks>
 public partial class Camera : Entity
 {
-    /// <summary>Chooses the point of the visible area anchored to the tracked position.</summary>
-    public enum AnchorModeEnum
-    {
-        /// <summary>Anchors the top-left corner at the tracked position.</summary>
-        FixedTopLeft = 0,
-        /// <summary>Centers the visible area and applies drag margins and offsets.</summary>
-        DragCenter = 1,
-    }
-
     /// <summary>Selects the internal frame lane that updates the camera.</summary>
     public enum CameraProcessCallback
     {
@@ -27,7 +27,7 @@ public partial class Camera : Entity
 
     private Vector2 _offset = Vector2.Zero;
     private Vector2 _zoom = Vector2.One;
-    private AnchorModeEnum _anchorMode = AnchorModeEnum.DragCenter;
+    private AnchorMode _anchorMode = AnchorMode.DragCenter;
     private bool _ignoreRotation = true;
     private bool _enabled = true;
     private CameraProcessCallback _processCallback = CameraProcessCallback.Idle;
@@ -77,15 +77,15 @@ public partial class Camera : Entity
     }
 
     /// <summary>Gets or sets the camera anchor mode.</summary>
-    /// <value>AnchorModeEnum.DragCenter initially.</value>
+    /// <value>AnchorMode.DragCenter initially.</value>
     /// <remarks>Selects centered tracking or a fixed top-left anchor. Changes update the current view.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside the documented contract.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner, during capture, or tracking arithmetic overflows.</exception>
     /// <exception cref="ObjectDisposedException">The camera is disposed.</exception>
-    public AnchorModeEnum AnchorMode
+    public AnchorMode AnchorMode
     {
         get { CheckQuery(); return _anchorMode; }
-        set { EnsureMutable(); if (value is not (AnchorModeEnum.FixedTopLeft or AnchorModeEnum.DragCenter)) throw new ArgumentOutOfRangeException(nameof(value)); if (_anchorMode == value) return; _anchorMode = value; UpdateScroll(); }
+        set { EnsureMutable(); if (value is not (AnchorMode.FixedTopLeft or AnchorMode.DragCenter)) throw new ArgumentOutOfRangeException(nameof(value)); if (_anchorMode == value) return; _anchorMode = value; UpdateScroll(); }
     }
 
     /// <summary>Gets or sets whether view rotation ignores the node rotation.</summary>
@@ -387,7 +387,7 @@ public partial class Camera : Entity
     {
         EnsureMutable(); if (_viewport is null) throw new InvalidOperationException("Alignment requires an active viewport.");
         var halfSize = _viewport.GetVisibleRect().Size * 0.5f;
-        var target = GlobalPosition + (_anchorMode == AnchorModeEnum.DragCenter ? DragOffset(halfSize) : Vector2.Zero);
+        var target = GlobalPosition + (_anchorMode == AnchorMode.DragCenter ? DragOffset(halfSize) : Vector2.Zero);
         if (!target.IsFinite()) throw new InvalidOperationException("Camera alignment overflowed finite coordinates.");
         var previous = _targetPosition; _targetPosition = target;
         try { UpdateScroll(); }
@@ -433,7 +433,7 @@ public partial class Camera : Entity
     [
         new PropertyDescriptor<Camera, Vector2>(nameof(Offset), c => c.Offset, (c, v) => c.Offset = v, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Camera, Vector2>(nameof(Zoom), c => c.Zoom, (c, v) => c.Zoom = v, _ => Vector2.One, stored: true),
-        new PropertyDescriptor<Camera, AnchorModeEnum>(nameof(AnchorMode), c => c.AnchorMode, (c, v) => c.AnchorMode = v, _ => AnchorModeEnum.DragCenter, stored: true),
+        new PropertyDescriptor<Camera, AnchorMode>(nameof(AnchorMode), c => c.AnchorMode, (c, v) => c.AnchorMode = v, _ => AnchorMode.DragCenter, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(IgnoreRotation), c => c.IgnoreRotation, (c, v) => c.IgnoreRotation = v, _ => true, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(Enabled), c => c.Enabled, (c, v) => c.Enabled = v, _ => true, stored: true),
         new PropertyDescriptor<Camera, CameraProcessCallback>(nameof(ProcessCallback), c => c.ProcessCallback, (c, v) => c.ProcessCallback = v, _ => CameraProcessCallback.Idle, stored: true),

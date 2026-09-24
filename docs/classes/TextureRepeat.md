@@ -1,10 +1,10 @@
-# CanvasItem.TextureRepeatEnum
+# TextureRepeat
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum CanvasItem.TextureRepeatEnum`
+- Declaration: `public enum TextureRepeat`
 - Source: [CanvasItem.Sampling.cs](../../src/Scene/Main/CanvasItem.Sampling.cs)
-- Owner: [CanvasItem](CanvasItem.md)
+- Used by: [CanvasItem](CanvasItem.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md#texture-sampling)
 
 ## Description
@@ -25,31 +25,31 @@ Typed sampling choices used by CanvasItem. Values are stored by PackedScene. Max
 
 ### ParentNode
 
-`CanvasItem.TextureRepeatEnum.ParentNode = 0`
+`TextureRepeat.ParentNode = 0`
 
 Inherits the direct canvas parent, or the containing viewport default.
 
 ### Disabled
 
-`CanvasItem.TextureRepeatEnum.Disabled = 1`
+`TextureRepeat.Disabled = 1`
 
 Clamps sampling to the texture edge.
 
 ### Enabled
 
-`CanvasItem.TextureRepeatEnum.Enabled = 2`
+`TextureRepeat.Enabled = 2`
 
 Repeats the texture.
 
 ### Mirror
 
-`CanvasItem.TextureRepeatEnum.Mirror = 3`
+`TextureRepeat.Mirror = 3`
 
 Repeats, reflecting alternate tiles.
 
 ### Max
 
-`CanvasItem.TextureRepeatEnum.Max = 4`
+`TextureRepeat.Max = 4`
 
 Sentinel; not a valid repeat choice.
 

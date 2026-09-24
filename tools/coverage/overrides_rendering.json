@@ -2,8 +2,8 @@
   "mappings": [
     {
       "godot": "CanvasItemMaterial::enum:BlendMode",
-      "electron2d": "T:Electron2D.CanvasItemMaterial.BlendModeEnum",
-      "reason": "The C# nested enum uses an Enum suffix because the public property retains the BlendMode name. Its five numeric values and frame behavior are audited by CanvasMaterialRenderingTests."
+      "electron2d": "T:Electron2D.BlendMode",
+      "reason": "The namespace-level BlendMode enum retains the public property name and its five numeric values; frame behavior is audited by CanvasMaterialRenderingTests."
     },
     {
       "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
@@ -517,7 +517,7 @@
     },
     {
       "godot": "Gradient::enum:InterpolationMode",
-      "electron2d": "T:Electron2D.Gradient.InterpolationModeEnum",
+      "electron2d": "T:Electron2D.InterpolationMode",
       "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
     },
     {
@@ -537,17 +537,17 @@
     },
     {
       "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CONSTANT",
-      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Constant()",
+      "electron2d": "enumValue:Electron2D.InterpolationMode.Constant()",
       "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
     },
     {
       "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_CUBIC",
-      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Cubic()",
+      "electron2d": "enumValue:Electron2D.InterpolationMode.Cubic()",
       "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
     },
     {
       "godot": "Gradient::enum_value:InterpolationMode.GRADIENT_INTERPOLATE_LINEAR",
-      "electron2d": "enumValue:Electron2D.Gradient.InterpolationModeEnum.Linear()",
+      "electron2d": "enumValue:Electron2D.InterpolationMode.Linear()",
       "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
     },
     {
@@ -637,47 +637,47 @@
     },
     {
       "godot": "GradientTexture2D::enum:Fill",
-      "electron2d": "T:Electron2D.GradientTexture.FillEnum",
+      "electron2d": "T:Electron2D.FillEnum",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum:Repeat",
-      "electron2d": "T:Electron2D.GradientTexture.RepeatEnum",
+      "electron2d": "T:Electron2D.Repeat",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Fill.FILL_CONIC",
-      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Conic()",
+      "electron2d": "enumValue:Electron2D.FillEnum.Conic()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Fill.FILL_LINEAR",
-      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Linear()",
+      "electron2d": "enumValue:Electron2D.FillEnum.Linear()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Fill.FILL_RADIAL",
-      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Radial()",
+      "electron2d": "enumValue:Electron2D.FillEnum.Radial()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Fill.FILL_SQUARE",
-      "electron2d": "enumValue:Electron2D.GradientTexture.FillEnum.Square()",
+      "electron2d": "enumValue:Electron2D.FillEnum.Square()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Repeat.REPEAT",
-      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.Repeat()",
+      "electron2d": "enumValue:Electron2D.Repeat.Repeat()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Repeat.REPEAT_MIRROR",
-      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.Mirror()",
+      "electron2d": "enumValue:Electron2D.Repeat.Mirror()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
       "godot": "GradientTexture2D::enum_value:Repeat.REPEAT_NONE",
-      "electron2d": "enumValue:Electron2D.GradientTexture.RepeatEnum.None()",
+      "electron2d": "enumValue:Electron2D.Repeat.None()",
       "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
     },
     {
@@ -812,7 +812,7 @@
       "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028)."
     },
     {
-      "electron2d": "T:Electron2D.Camera.AnchorModeEnum",
+      "electron2d": "T:Electron2D.AnchorMode",
       "godot": "Camera2D::enum:AnchorMode",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
@@ -824,13 +824,13 @@
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
     },
     {
-      "electron2d": "enumValue:Electron2D.Camera.AnchorModeEnum.DragCenter()",
+      "electron2d": "enumValue:Electron2D.AnchorMode.DragCenter()",
       "godot": "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_DRAG_CENTER",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
     },
     {
-      "electron2d": "enumValue:Electron2D.Camera.AnchorModeEnum.FixedTopLeft()",
+      "electron2d": "enumValue:Electron2D.AnchorMode.FixedTopLeft()",
       "godot": "Camera2D::enum_value:AnchorMode.ANCHOR_MODE_FIXED_TOP_LEFT",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."

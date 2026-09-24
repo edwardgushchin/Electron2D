@@ -6,8 +6,8 @@ internal static class ControlHoverTests
     {
         var root = new TestViewport();
         var parent = new Probe("parent") { Name = "parent", Position = new(10, 10), Size = new(60, 50) };
-        var left = new Probe("left") { Name = "left", Size = new(20, 20), MouseFilter = ControlMouseFilter.Pass };
-        var right = new Probe("right") { Name = "right", Position = new(25, 0), Size = new(20, 20), MouseFilter = ControlMouseFilter.Pass };
+        var left = new Probe("left") { Name = "left", Size = new(20, 20), MouseFilter = MouseFilter.Pass };
+        var right = new Probe("right") { Name = "right", Position = new(25, 0), Size = new(20, 20), MouseFilter = MouseFilter.Pass };
         root.AddChild(parent); parent.AddChild(left); parent.AddChild(right);
         using var tree = new SceneTree(root);
         var signals = new List<string>();
@@ -31,7 +31,7 @@ internal static class ControlHoverTests
             "Moving between siblings keeps the shared parent hovered.");
 
         signals.Clear();
-        right.MouseFilter = ControlMouseFilter.Ignore;
+        right.MouseFilter = MouseFilter.Ignore;
         Check(signals.SequenceEqual(["right-"]) && parent.Notifications.Last() == Control.NotificationMouseEnterSelf,
             "Ignoring a hovered control immediately exposes its parent.");
 
@@ -62,7 +62,7 @@ internal static class ControlHoverTests
 
         var failureRoot = new TestViewport();
         var failureParent = new Probe("failureParent") { Name = "failureParent", Size = new(50, 50) };
-        var failureChild = new Probe("failureChild") { Name = "failureChild", Size = new(25, 25), MouseFilter = ControlMouseFilter.Pass };
+        var failureChild = new Probe("failureChild") { Name = "failureChild", Size = new(25, 25), MouseFilter = MouseFilter.Pass };
         failureRoot.AddChild(failureParent);
         failureParent.AddChild(failureChild);
         using var failureTree = new SceneTree(failureRoot);

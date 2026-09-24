@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope and owned types
 
-[Gradient](../classes/Gradient.md), [Gradient.InterpolationModeEnum](../classes/Gradient.InterpolationModeEnum.md), [Gradient.ColorSpace](../classes/Gradient.ColorSpace.md), [GradientRampTexture](../classes/GradientRampTexture.md), [GradientTexture](../classes/GradientTexture.md), [GradientTexture.FillEnum](../classes/GradientTexture.FillEnum.md), [GradientTexture.RepeatEnum](../classes/GradientTexture.RepeatEnum.md), and internal [GradientTextureData](../classes/GradientTextureData.md). Sources live in `src/Scene/Resources/`, within Resources and the single Electron2D.dll.
+[Gradient](../classes/Gradient.md), [InterpolationMode](../classes/InterpolationMode.md), [Gradient.ColorSpace](../classes/Gradient.ColorSpace.md), [GradientRampTexture](../classes/GradientRampTexture.md), [GradientTexture](../classes/GradientTexture.md), [FillEnum](../classes/FillEnum.md), [Repeat](../classes/Repeat.md), and internal [GradientTextureData](../classes/GradientTextureData.md). Sources live in `src/Scene/Resources/`, within Resources and the single Electron2D.dll.
 
 ## Runtime flow and dependencies
 
@@ -22,7 +22,7 @@ Events run on the editing thread after mutation and outside state locks. Callbac
 
 ## Correspondence and boundaries
 
-Gradient retains its applicable reference API. GradientTexture1D maps to GradientRampTexture and GradientTexture2D maps to GradientTexture: distinct resource roles without dimensional suffixes. The enum suffixes resolve C# member-name collisions; acronym spelling follows ADR 0045. The reference private update_now helper is not a public method and is not exported. Width-one ramp sampling explicitly uses offset zero; widened arithmetic avoids finite coordinate overflow, under [ADR 0013](../decisions/resources.md#adr-0013) and ADR 0034.
+Gradient retains its applicable reference API. GradientTexture1D maps to GradientRampTexture and GradientTexture2D maps to GradientTexture: distinct resource roles without dimensional suffixes. The selected mode enums are namespace-level under ADR 0051; resource properties retain their names. Acronym spelling for methods and properties follows ADR 0045. The reference private update_now helper is not a public method and is not exported. Width-one ramp sampling explicitly uses offset zero; widened arithmetic avoids finite coordinate overflow, under [ADR 0013](../decisions/resources.md#adr-0013) and ADR 0034.
 
 Shared Resource/Texture integration gaps remain Partial on their own rows. Native placeholder IDs, further backend formats, import/disk serialization and editor authoring are absent or deferred to those first concrete slices; no inert APIs are added. The first editor inspector must hide interpolation color space when Constant is selected. Cross-resource automatic serialization remains deferred to the typed asset-format slice.
 

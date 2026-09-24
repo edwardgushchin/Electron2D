@@ -18,8 +18,8 @@ Shared composition used by GradientRampTexture and GradientTexture, without a ne
 | `int Width { get; set; }`, `int Height { get; set; }` | Validate 1..16384 and always invalidate/notify. Row owners never change Height. |
 | `bool UseHDR { get; set; }` | Actual changes invalidate/notify. |
 | `Gradient? Gradient { get; set; }` | Borrowed live source, identity no-op, changed reference invalidates/notifies. |
-| `GradientTexture.FillEnum Fill { get; set; }` | Validated fill; always invalidate/notify. |
-| `GradientTexture.RepeatEnum Repeat { get; set; }` | Validated repeat; always invalidate/notify. |
+| `FillEnum Fill { get; set; }` | Validated fill; always invalidate/notify. |
+| `Repeat Repeat { get; set; }` | Validated repeat; always invalidate/notify. |
 | `Vector2 FillFrom { get; set; }`, `Vector2 FillTo { get; set; }` | Finite UV endpoints; always invalidate/notify. |
 | `Vector2 GetSize()` | Atomic logical dimensions without baking. |
 | `TexturePixels? CapturePixels()` | Coalesce pending work, publish complete new pixels or retain frozen pixels; no notification. |

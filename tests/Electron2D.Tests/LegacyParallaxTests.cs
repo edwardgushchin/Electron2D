@@ -21,7 +21,7 @@ internal static class LegacyParallaxTests
         }
 
         var root = new TestViewport();
-        var camera = new Camera { AnchorMode = Camera.AnchorModeEnum.FixedTopLeft, LimitEnabled = false, Position = new(20, 0) };
+        var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false, Position = new(20, 0) };
         var background = new ParallaxBackground();
         var layerNode = new ParallaxLayer { Position = new(4, 6), Scale = new(2, 1), MotionScale = new(.5f, 1), MotionOffset = new(3, 0) };
         background.AddChild(layerNode); layerNode.Owner = background; root.AddChild(camera); root.AddChild(background);
@@ -74,7 +74,7 @@ internal static partial class RenderingRuntimeTests
     private static void VerifyLegacyParallax(string backend)
     {
         var window = new Window { Size = new(64, 32) };
-        var camera = new Camera { AnchorMode = Camera.AnchorModeEnum.FixedTopLeft, LimitEnabled = false, Position = new(4, 0) };
+        var camera = new Camera { AnchorMode = AnchorMode.FixedTopLeft, LimitEnabled = false, Position = new(4, 0) };
         var background = new ParallaxBackground();
         var layer = new ParallaxLayer { MotionMirroring = new(16, 0) };
         var mark = new CanvasNode { DrawAction = node => node.DrawRect(new(0, 0, 3, 3), Colors.Red) };

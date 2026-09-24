@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Selects which existing size components an offset preset preserves.</summary>
-public enum ControlLayoutPresetMode
+public enum LayoutPresetMode
 {
     /// <summary>Use intrinsic minimum width and height.</summary>
     MinSize = 0,

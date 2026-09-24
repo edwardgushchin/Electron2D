@@ -216,7 +216,7 @@ internal static class SpriteTests
             sprite.PrepareCanvas(); Check(sprite.Draws == draws + 1, "Size rectangle reports request redraw.");
             Expect(() =>
             {
-                sprite.Visible = false; sprite.ProcessMode = NodeProcessMode.Disabled;
+                sprite.Visible = false; sprite.ProcessMode = ProcessMode.Disabled;
                 sprite.Offset = new(8, 9);
             }, "rect");
             Check(childEvents == 0, "Rectangle events stay local, even while hidden or not processing.");

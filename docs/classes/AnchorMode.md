@@ -1,14 +1,14 @@
-# Camera.AnchorModeEnum
+# AnchorMode
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
-- Declaration: `public enum Camera.AnchorModeEnum`
+- Declaration: `public enum AnchorMode`
 - Source: [Camera.cs](../../src/Scene/2D/Camera.cs)
-- Owner: [Camera](Camera.md)
+- Used by: [Camera](Camera.md)
 
 ## Description
 
-The Enum suffix avoids the C# name collision with Camera.AnchorMode.
+The namespace-level AnchorMode type is selected by Camera.AnchorMode.
 
 ## Values
 

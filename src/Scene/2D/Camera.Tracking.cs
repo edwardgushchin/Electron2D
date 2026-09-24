@@ -62,7 +62,7 @@ public partial class Camera
         if (_first) target = smoothed = position;
         else
         {
-            if (_anchorMode == AnchorModeEnum.FixedTopLeft) target = position;
+            if (_anchorMode == AnchorMode.FixedTopLeft) target = position;
             else
             {
                 var bias = DragOffset(halfSize);
@@ -76,12 +76,12 @@ public partial class Camera
             }
             if (_limitEnabled && _limitSmoothed)
             {
-                var anchor = _anchorMode == AnchorModeEnum.DragCenter ? halfSize * scale : Vector2.Zero;
+                var anchor = _anchorMode == AnchorMode.DragCenter ? halfSize * scale : Vector2.Zero;
                 target = LimitOrigin(target - anchor, size * scale) + anchor;
             }
             smoothed = _positionSmoothingEnabled ? smoothed + (target - smoothed) * (_positionSmoothingSpeed * delta) : target;
         }
-        var screenOffset = _anchorMode == AnchorModeEnum.DragCenter ? halfSize * scale : Vector2.Zero;
+        var screenOffset = _anchorMode == AnchorMode.DragCenter ? halfSize * scale : Vector2.Zero;
         if (!_ignoreRotation)
         {
             angle = _rotationSmoothingEnabled ? Mathf.LerpAngle(angle, GlobalRotation, _rotationSmoothingSpeed * delta) : GlobalRotation;
@@ -101,7 +101,7 @@ public partial class Camera
         _targetPosition = target; _smoothedPosition = smoothed; _screenRotation = angle; _screenCenter = center;
         _horizontalOffsetChanged = horizontalChanged; _verticalOffsetChanged = verticalChanged; _first = false;
         viewport.NotifyParallaxCameraMoved(center - halfSize * scale, canvas,
-            _anchorMode == AnchorModeEnum.DragCenter ? halfSize : Vector2.Zero);
+            _anchorMode == AnchorMode.DragCenter ? halfSize : Vector2.Zero);
     }
 
     private Vector2 LimitOrigin(Vector2 origin, Vector2 extent) => new(

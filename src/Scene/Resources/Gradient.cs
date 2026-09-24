@@ -1,21 +1,22 @@
 namespace Electron2D;
 
+/// <summary>Selects the algorithm between adjacent points.</summary>
+public enum InterpolationMode
+{
+    /// <summary>Linear interpolation between adjacent colors.</summary>
+    Linear = 0,
+    /// <summary>Holds the preceding point's color until the next point.</summary>
+    Constant = 1,
+    /// <summary>Cubic interpolation using neighboring colors; may overshoot.</summary>
+    Cubic = 2,
+}
+
 /// <summary>An ordered color transition with linear, constant or cubic interpolation.</summary>
 /// <remarks>Points are sorted lazily by indexed color/offset operations, Reverse and Sample. Bulk array queries
 /// and RemovePoint use the current storage order. Arrays are copied. State operations are serialized; synchronous
 /// events run after mutation outside the lock. Coordinate multi-call edits, copying and disposal across threads.</remarks>
 public sealed class Gradient : Resource
 {
-    /// <summary>Selects the algorithm between adjacent points.</summary>
-    public enum InterpolationModeEnum
-    {
-        /// <summary>Linear interpolation between adjacent colors.</summary>
-        Linear = 0,
-        /// <summary>Holds the preceding point's color until the next point.</summary>
-        Constant = 1,
-        /// <summary>Cubic interpolation using neighboring colors; may overshoot.</summary>
-        Cubic = 2,
-    }
     /// <summary>Selects the space in which colors are interpolated; output remains nonlinear sRGB.</summary>
     public enum ColorSpace
     {
@@ -31,7 +32,7 @@ public sealed class Gradient : Resource
     private readonly object _gate = new();
     private (float Offset, Color Color)[] _points = [(0, Electron2D.Colors.Black), (1, Electron2D.Colors.White)];
     private bool _sorted = true;
-    private InterpolationModeEnum _mode;
+    private InterpolationMode _mode;
     private ColorSpace _colorSpace;
 
     /// <summary>Creates the default black-to-white transition at offsets zero and one.</summary>
@@ -78,7 +79,7 @@ public sealed class Gradient : Resource
     /// <remarks>Actual changes emit Changed followed by PropertyListChanged. Equal assignments are silent.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is undefined.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
-    public InterpolationModeEnum InterpolationMode
+    public InterpolationMode InterpolationMode
     {
         get { lock (_gate) { ThrowIfDisposed(); return _mode; } }
         set
@@ -188,11 +189,11 @@ public sealed class Gradient : Resource
         if (high < 0) return _points[0].Color;
         if (low >= _points.Length) return _points[^1].Color;
         var a = _points[high]; var b = _points[low];
-        if (_mode == InterpolationModeEnum.Constant) return a.Color;
+        if (_mode == InterpolationMode.Constant) return a.Color;
         var weight = (float)(((double)offset - a.Offset) / ((double)b.Offset - a.Offset));
         var first = Transform(a.Color); var second = Transform(b.Color);
         var color = first.Lerp(second, weight);
-        if (_mode == InterpolationModeEnum.Cubic)
+        if (_mode == InterpolationMode.Cubic)
         {
             var before = Transform(_points[Math.Max(high - 1, 0)].Color); var after = Transform(_points[Math.Min(low + 1, _points.Length - 1)].Color);
             color = new(Mathf.CubicInterpolate(first.R, second.R, before.R, after.R, weight), Mathf.CubicInterpolate(first.G, second.G, before.G, after.G, weight),
@@ -246,7 +247,7 @@ public sealed class Gradient : Resource
     [
         new PropertyDescriptor<Gradient, float[]>(nameof(Offsets), g => g.Offsets, (g, v) => g.Offsets = v, _ => [0, 1]),
         new PropertyDescriptor<Gradient, Color[]>(nameof(Colors), g => g.Colors, (g, v) => g.Colors = v, _ => [Electron2D.Colors.Black, Electron2D.Colors.White]),
-        new PropertyDescriptor<Gradient, InterpolationModeEnum>(nameof(InterpolationMode), g => g.InterpolationMode, (g, v) => g.InterpolationMode = v, _ => InterpolationModeEnum.Linear),
+        new PropertyDescriptor<Gradient, InterpolationMode>(nameof(InterpolationMode), g => g.InterpolationMode, (g, v) => g.InterpolationMode = v, _ => InterpolationMode.Linear),
         new PropertyDescriptor<Gradient, ColorSpace>(nameof(InterpolationColorSpace), g => g.InterpolationColorSpace, (g, v) => g.InterpolationColorSpace = v, _ => ColorSpace.SRGB),
     ]);
     /// <inheritdoc />
@@ -254,7 +255,7 @@ public sealed class Gradient : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        (float Offset, Color Color)[] points; bool sorted; InterpolationModeEnum mode; ColorSpace space;
+        (float Offset, Color Color)[] points; bool sorted; InterpolationMode mode; ColorSpace space;
         lock (_gate) { ThrowIfDisposed(); points = ((float Offset, Color Color)[])_points.Clone(); sorted = _sorted; mode = _mode; space = _colorSpace; }
         var copy = (Gradient)target;
         lock (copy._gate) { copy.ThrowIfDisposed(); copy._points = points; copy._sorted = sorted; copy._mode = mode; copy._colorSpace = space; }

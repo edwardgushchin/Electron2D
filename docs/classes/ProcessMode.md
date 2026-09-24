@@ -1,14 +1,14 @@
-# NodeProcessMode
+# ProcessMode
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
 **Inherited By:** —
 
-- **Source:** [`src/Scene/Main/NodeProcessMode.cs`](../../src/Scene/Main/NodeProcessMode.cs)
+- **Source:** [`src/Scene/Main/ProcessMode.cs`](../../src/Scene/Main/ProcessMode.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum NodeProcessMode`
+- **Declaration:** `public enum ProcessMode`
 
 > Controls when a node receives process and physics-process callbacks.
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 Controls when a node receives process and physics-process callbacks.
 
-`NodeProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
+`ProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
 The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
 lanes. They do not control rendering, audio, or a physics server.
@@ -26,42 +26,42 @@ lanes. They do not control rendering, audio, or a physics server.
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var value = NodeProcessMode.Inherit;
+var value = ProcessMode.Inherit;
 ```
 
 ## Constants
 
 | Member | Description |
 | --- | --- |
-| [`Inherit = 0`](#f-electron2d-nodeprocessmode-inherit) | Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`NodeProcessMode.Pausable`](NodeProcessMode.md#f-electron2d-nodeprocessmode-pausable). |
-| [`Pausable = 1`](#f-electron2d-nodeprocessmode-pausable) | Runs only while the scene tree is not paused. |
-| [`WhenPaused = 2`](#f-electron2d-nodeprocessmode-whenpaused) | Runs only while the scene tree is paused. |
-| [`Always = 3`](#f-electron2d-nodeprocessmode-always) | Runs regardless of the scene tree pause state. |
-| [`Disabled = 4`](#f-electron2d-nodeprocessmode-disabled) | Never runs and disables descendants that inherit this mode. |
+| [`Inherit = 0`](#f-electron2d-processmode-inherit) | Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable). |
+| [`Pausable = 1`](#f-electron2d-processmode-pausable) | Runs only while the scene tree is not paused. |
+| [`WhenPaused = 2`](#f-electron2d-processmode-whenpaused) | Runs only while the scene tree is paused. |
+| [`Always = 3`](#f-electron2d-processmode-always) | Runs regardless of the scene tree pause state. |
+| [`Disabled = 4`](#f-electron2d-processmode-disabled) | Never runs and disables descendants that inherit this mode. |
 
 ## Constant Descriptions
 
-<a id="f-electron2d-nodeprocessmode-inherit"></a>
+<a id="f-electron2d-processmode-inherit"></a>
 ### `Inherit = 0`
 
-Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`NodeProcessMode.Pausable`](NodeProcessMode.md#f-electron2d-nodeprocessmode-pausable).
+Uses the nearest ancestor's resolved mode; hierarchy roots resolve to [`ProcessMode.Pausable`](ProcessMode.md#f-electron2d-processmode-pausable).
 
-<a id="f-electron2d-nodeprocessmode-pausable"></a>
+<a id="f-electron2d-processmode-pausable"></a>
 ### `Pausable = 1`
 
 Runs only while the scene tree is not paused.
 
-<a id="f-electron2d-nodeprocessmode-whenpaused"></a>
+<a id="f-electron2d-processmode-whenpaused"></a>
 ### `WhenPaused = 2`
 
 Runs only while the scene tree is paused.
 
-<a id="f-electron2d-nodeprocessmode-always"></a>
+<a id="f-electron2d-processmode-always"></a>
 ### `Always = 3`
 
 Runs regardless of the scene tree pause state.
 
-<a id="f-electron2d-nodeprocessmode-disabled"></a>
+<a id="f-electron2d-processmode-disabled"></a>
 ### `Disabled = 4`
 
 Never runs and disables descendants that inherit this mode.

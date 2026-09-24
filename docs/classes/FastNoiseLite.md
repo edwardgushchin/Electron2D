@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 ## Constructor and modes
 
-`public FastNoiseLite()` configures the defaults below. Six nested enums select the algorithms: [NoiseTypeEnum](FastNoiseLite.NoiseTypeEnum.md), [FractalTypeEnum](FastNoiseLite.FractalTypeEnum.md), [CellularDistanceFunctionEnum](FastNoiseLite.CellularDistanceFunctionEnum.md), [CellularReturnTypeEnum](FastNoiseLite.CellularReturnTypeEnum.md), [DomainWarpTypeEnum](FastNoiseLite.DomainWarpTypeEnum.md), and [DomainWarpFractalTypeEnum](FastNoiseLite.DomainWarpFractalTypeEnum.md). Their numeric values match the pinned 2D source contract. `Enum` suffixes avoid C# name collisions with properties.
+`public FastNoiseLite()` configures the defaults below. Six namespace-level enums select the algorithms: [NoiseType](NoiseType.md), [FractalType](FractalType.md), [CellularDistanceFunction](CellularDistanceFunction.md), [CellularReturnType](CellularReturnType.md), [DomainWarpType](DomainWarpType.md), and [DomainWarpFractalType](DomainWarpFractalType.md). Their numeric values match the pinned 2D source contract.
 
 ## Properties
 

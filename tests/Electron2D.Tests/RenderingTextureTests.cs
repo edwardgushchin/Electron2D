@@ -300,12 +300,12 @@ internal static partial class RenderingRuntimeTests
         using var copy = (ShaderMaterial)material.Duplicate();
         copy.SetShaderParameter("colorMap", texture);
         var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.NearestWithMipmaps, CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Mirror };
-        var parent = new Entity { TextureFilter = CanvasItem.TextureFilterEnum.Nearest, TextureRepeat = CanvasItem.TextureRepeatEnum.Enabled };
+        var parent = new Entity { TextureFilter = TextureFilter.Nearest, TextureRepeat = TextureRepeat.Enabled };
         window.AddChild(parent);
         var nodes = new[]
         {
             new CanvasNode { Name = "first", Material = material },
-            new CanvasNode { Name = "copy", Material = copy, Position = new(0, 16), TextureFilter = CanvasItem.TextureFilterEnum.LinearWithMipmapsAnisotropic, TextureRepeat = CanvasItem.TextureRepeatEnum.Mirror },
+            new CanvasNode { Name = "copy", Material = copy, Position = new(0, 16), TextureFilter = TextureFilter.LinearWithMipmapsAnisotropic, TextureRepeat = TextureRepeat.Mirror },
             new CanvasNode { Name = "shared", Material = material, Position = new(0, 32) }
         };
         foreach (var node in nodes) { node.DrawAction = n => n.DrawRect(new(0, 0, 96, 12), Colors.White); parent.AddChild(node); }
@@ -329,7 +329,7 @@ internal static partial class RenderingRuntimeTests
                 if (frames == 1)
                 {
                     material.SetShaderParameter("lod", 2f); copy.SetShaderParameter("lod", 2f);
-                    parent.TextureFilter = CanvasItem.TextureFilterEnum.NearestWithMipmapsAnisotropic;
+                    parent.TextureFilter = TextureFilter.NearestWithMipmapsAnisotropic;
                     window.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.LinearWithMipmaps;
                     window.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Enabled;
                     settings.Set(ProjectSettings.UseNearestMipmapFilter, !nearestMip);

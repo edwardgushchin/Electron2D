@@ -22,7 +22,7 @@ public sealed partial class Image
     {
         ThrowIfDisposed();
         var codec = CodecFromPath(path);
-        using var file = FileAccess.Open(path, FileAccessMode.Read);
+        using var file = FileAccess.Open(path, FileAccessModeFlags.Read);
         var length = file.Length;
         if (length is <= 0 or > MaximumEncodedBytes) throw new InvalidDataException("Encoded images must contain between 1 byte and 64 MiB.");
         var bytes = file.ReadBytes((int)length);

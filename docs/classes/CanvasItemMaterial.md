@@ -18,7 +18,7 @@ The resource does not contain a shader or native handle. GPU pipelines are cache
 ```csharp
 using var material = new CanvasItemMaterial
 {
-    BlendMode = CanvasItemMaterial.BlendModeEnum.Add
+    BlendMode = BlendMode.Add
 };
 sprite.Material = material;
 ```
@@ -30,8 +30,8 @@ The caller keeps `material` alive while the sprite uses it.
 | Declaration | Contract |
 | --- | --- |
 | `CanvasItemMaterial()` | Creates a material in Mix mode. |
-| [`BlendModeEnum`](CanvasItemMaterial.BlendModeEnum.md) | Five numeric blend identities. |
-| `BlendModeEnum BlendMode { get; set; }` | Reads or changes the mode used by later frames. |
+| [`BlendMode`](BlendMode.md) | Five numeric blend identities. |
+| `BlendMode BlendMode { get; set; }` | Reads or changes the mode used by later frames. |
 
 ## Property descriptions
 

@@ -12,7 +12,7 @@ This Core component owns blocking seekable file I/O, scoped directory access, di
 | --- | --- |
 | [`FileAccess`](../classes/FileAccess.md) | Stream ownership and complete file API |
 | [`DirAccess`](../classes/DirAccess.md) | Current-directory ownership, enumeration, mutations, links, temporary directories, and filesystem queries |
-| [`FileAccessMode`](../classes/FileAccessMode.md) | Exact open/create/truncate permissions |
+| [`FileAccessModeFlags`](../classes/FileAccessModeFlags.md) | Exact open/create/truncate permissions |
 | [`FileCompressionMode`](../classes/FileCompressionMode.md) | Container codec identity |
 | [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md) | Typed Unix mode bits |
 

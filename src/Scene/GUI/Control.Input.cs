@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Controls whether a rectangular control receives and consumes pointer input.</summary>
-public enum ControlMouseFilter
+public enum MouseFilter
 {
     /// <summary>Receive pointer input and mark it handled.</summary>
     Stop = 0,
@@ -12,7 +12,7 @@ public enum ControlMouseFilter
 }
 
 /// <summary>Controls how a control can become the keyboard input target.</summary>
-public enum ControlFocusMode
+public enum FocusMode
 {
     /// <summary>Cannot receive focus.</summary>
     None = 0,
@@ -76,8 +76,8 @@ public partial class Control
     /// <summary>This control stopped being the directly hovered control.</summary>
     public const int NotificationMouseExitSelf = 61;
 
-    private ControlMouseFilter _mouseFilter;
-    private ControlFocusMode _focusMode;
+    private MouseFilter _mouseFilter;
+    private FocusMode _focusMode;
     private bool _mouseForcePassScrollEvents = true;
     private CursorShape _mouseDefaultCursorShape;
 
@@ -101,8 +101,8 @@ public partial class Control
     public event Action? MouseExited;
 
     /// <summary>Gets or sets how pointer input reaches this control.</summary>
-    /// <value><see cref="ControlMouseFilter.Stop"/> by default.</value>
-    public ControlMouseFilter MouseFilter
+    /// <value><see cref="MouseFilter.Stop"/> by default.</value>
+    public MouseFilter MouseFilter
     {
         get { ThrowIfDisposed(); return _mouseFilter; }
         set
@@ -141,8 +141,8 @@ public partial class Control
     }
 
     /// <summary>Gets or sets whether this control can become the keyboard input target.</summary>
-    /// <value><see cref="ControlFocusMode.None"/> by default.</value>
-    public ControlFocusMode FocusMode
+    /// <value><see cref="FocusMode.None"/> by default.</value>
+    public FocusMode FocusMode
     {
         get { ThrowIfDisposed(); return _focusMode; }
         set
@@ -150,7 +150,7 @@ public partial class Control
             EnsureMutable();
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             _focusMode = value;
-            if (value == ControlFocusMode.None) Tree?.ReleaseGUIFocus(this);
+            if (value == FocusMode.None) Tree?.ReleaseGUIFocus(this);
         }
     }
 

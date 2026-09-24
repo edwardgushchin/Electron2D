@@ -17,11 +17,11 @@ public class Node : ElectronObject
             node => node.ClassName,
             (_, value) => IsValidNodeName(value),
             stored: true),
-        new PropertyDescriptor<Node, NodeProcessMode>(
+        new PropertyDescriptor<Node, ProcessMode>(
             nameof(ProcessMode),
             node => node.ProcessMode,
             (node, value) => node.ProcessMode = value,
-            _ => NodeProcessMode.Inherit,
+            _ => ProcessMode.Inherit,
             (_, value) => Enum.IsDefined(value),
             stored: true),
         new PropertyDescriptor<Node, NodeAutoTranslateMode>(
@@ -164,7 +164,7 @@ public class Node : ElectronObject
 
     private int _physicsProcessPriority;
 
-    private NodeProcessMode _processMode;
+    private ProcessMode _processMode;
 
     private NodeAutoTranslateMode _autoTranslateMode;
 
@@ -505,13 +505,13 @@ public class Node : ElectronObject
     public Window? GetWindow() => GetViewport() as Window;
 
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
-    /// <value><see cref="NodeProcessMode.Inherit"/> by default.</value>
+    /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
     /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled or disabled notification callback throws after the mode changes.</exception>
-    public NodeProcessMode ProcessMode
+    public ProcessMode ProcessMode
     {
         get
         {
@@ -528,12 +528,12 @@ public class Node : ElectronObject
             if (_processMode == value)
                 return;
 
-            var disabledStates = EnumerateDepthFirst().ToDictionary(node => node, node => node.ResolveProcessMode() == NodeProcessMode.Disabled);
+            var disabledStates = EnumerateDepthFirst().ToDictionary(node => node, node => node.ResolveProcessMode() == ProcessMode.Disabled);
             _processMode = value;
 
             foreach (var (node, wasDisabled) in disabledStates)
             {
-                var isDisabled = node.ResolveProcessMode() == NodeProcessMode.Disabled;
+                var isDisabled = node.ResolveProcessMode() == ProcessMode.Disabled;
                 if (wasDisabled != isDisabled)
                     node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled);
             }
@@ -1298,10 +1298,10 @@ public class Node : ElectronObject
 
         return ResolveProcessMode() switch
         {
-            NodeProcessMode.Pausable => !Tree.Paused,
-            NodeProcessMode.WhenPaused => Tree.Paused,
-            NodeProcessMode.Always => true,
-            NodeProcessMode.Disabled => false,
+            ProcessMode.Pausable => !Tree.Paused,
+            ProcessMode.WhenPaused => Tree.Paused,
+            ProcessMode.Always => true,
+            ProcessMode.Disabled => false,
             _ => throw new InvalidOperationException("An inherited process mode was not resolved.")
         };
     }
@@ -2411,12 +2411,12 @@ public class Node : ElectronObject
         return root;
     }
 
-    private NodeProcessMode ResolveProcessMode()
+    private ProcessMode ResolveProcessMode()
     {
-        if (ProcessMode != NodeProcessMode.Inherit)
+        if (ProcessMode != ProcessMode.Inherit)
             return ProcessMode;
 
-        return Parent?.ResolveProcessMode() ?? NodeProcessMode.Pausable;
+        return Parent?.ResolveProcessMode() ?? ProcessMode.Pausable;
     }
 
     internal static void CollectException(ref List<Exception>? errors, Exception error)

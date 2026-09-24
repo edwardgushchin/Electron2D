@@ -10,7 +10,7 @@ public abstract class Material : Resource
 {
     private protected Material() { }
     internal abstract MaterialState? GetCanvasState();
-    internal virtual CanvasItemMaterial.BlendModeEnum GetCanvasBlendMode() => CanvasItemMaterial.BlendModeEnum.Mix;
+    internal virtual BlendMode GetCanvasBlendMode() => BlendMode.Mix;
 }
 
 /// <summary>Applies a programmable fragment shader to a node's canvas commands.</summary>

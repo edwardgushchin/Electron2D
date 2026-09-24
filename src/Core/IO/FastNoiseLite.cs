@@ -2,115 +2,115 @@ using Backend = Electron2D.Internal.FastNoiseLite;
 
 namespace Electron2D;
 
+/// <summary>Selects the base noise algorithm.</summary>
+public enum NoiseType
+{
+    /// <summary>Simplex mode.</summary>
+    Simplex = 0,
+    /// <summary>SimplexSmooth mode.</summary>
+    SimplexSmooth = 1,
+    /// <summary>Cellular mode.</summary>
+    Cellular = 2,
+    /// <summary>Perlin mode.</summary>
+    Perlin = 3,
+    /// <summary>ValueCubic mode.</summary>
+    ValueCubic = 4,
+    /// <summary>Value mode.</summary>
+    Value = 5,
+}
+
+/// <summary>Selects the fractal algorithm.</summary>
+public enum FractalType
+{
+    /// <summary>None mode.</summary>
+    None = 0,
+    /// <summary>FBM mode.</summary>
+    FBM = 1,
+    /// <summary>Ridged mode.</summary>
+    Ridged = 2,
+    /// <summary>PingPong mode.</summary>
+    PingPong = 3,
+}
+
+/// <summary>Selects the cellular distance metric.</summary>
+public enum CellularDistanceFunction
+{
+    /// <summary>Euclidean mode.</summary>
+    Euclidean = 0,
+    /// <summary>EuclideanSquared mode.</summary>
+    EuclideanSquared = 1,
+    /// <summary>Manhattan mode.</summary>
+    Manhattan = 2,
+    /// <summary>Hybrid mode.</summary>
+    Hybrid = 3,
+}
+
+/// <summary>Selects the cellular return value.</summary>
+public enum CellularReturnType
+{
+    /// <summary>CellValue mode.</summary>
+    CellValue = 0,
+    /// <summary>Distance mode.</summary>
+    Distance = 1,
+    /// <summary>Distance2 mode.</summary>
+    Distance2 = 2,
+    /// <summary>Distance2Add mode.</summary>
+    Distance2Add = 3,
+    /// <summary>Distance2Sub mode.</summary>
+    Distance2Sub = 4,
+    /// <summary>Distance2Mul mode.</summary>
+    Distance2Mul = 5,
+    /// <summary>Distance2Div mode.</summary>
+    Distance2Div = 6,
+}
+
+/// <summary>Selects domain warp type behavior.</summary>
+public enum DomainWarpType
+{
+    /// <summary>Simplex mode.</summary>
+    Simplex = 0,
+    /// <summary>SimplexReduced mode.</summary>
+    SimplexReduced = 1,
+    /// <summary>BasicGrid mode.</summary>
+    BasicGrid = 2,
+}
+
+/// <summary>Selects the domain warp fractal algorithm.</summary>
+public enum DomainWarpFractalType
+{
+    /// <summary>None mode.</summary>
+    None = 0,
+    /// <summary>Progressive mode.</summary>
+    Progressive = 1,
+    /// <summary>Independent mode.</summary>
+    Independent = 2,
+}
+
 /// <summary>Generates repeatable one- and two-dimensional procedural noise.</summary>
 /// <remarks>Sampling uses an internal managed algorithm. Coordinate changes and copying require caller coordination.
 /// A noise texture may borrow this resource and refreshes after Changed.</remarks>
 public sealed class FastNoiseLite : Noise
 {
-    /// <summary>Selects the base noise algorithm.</summary>
-    public enum NoiseTypeEnum
-    {
-        /// <summary>Simplex mode.</summary>
-        Simplex = 0,
-        /// <summary>SimplexSmooth mode.</summary>
-        SimplexSmooth = 1,
-        /// <summary>Cellular mode.</summary>
-        Cellular = 2,
-        /// <summary>Perlin mode.</summary>
-        Perlin = 3,
-        /// <summary>ValueCubic mode.</summary>
-        ValueCubic = 4,
-        /// <summary>Value mode.</summary>
-        Value = 5,
-    }
-
-    /// <summary>Selects the fractal algorithm.</summary>
-    public enum FractalTypeEnum
-    {
-        /// <summary>None mode.</summary>
-        None = 0,
-        /// <summary>FBM mode.</summary>
-        FBM = 1,
-        /// <summary>Ridged mode.</summary>
-        Ridged = 2,
-        /// <summary>PingPong mode.</summary>
-        PingPong = 3,
-    }
-
-    /// <summary>Selects the cellular distance metric.</summary>
-    public enum CellularDistanceFunctionEnum
-    {
-        /// <summary>Euclidean mode.</summary>
-        Euclidean = 0,
-        /// <summary>EuclideanSquared mode.</summary>
-        EuclideanSquared = 1,
-        /// <summary>Manhattan mode.</summary>
-        Manhattan = 2,
-        /// <summary>Hybrid mode.</summary>
-        Hybrid = 3,
-    }
-
-    /// <summary>Selects the cellular return value.</summary>
-    public enum CellularReturnTypeEnum
-    {
-        /// <summary>CellValue mode.</summary>
-        CellValue = 0,
-        /// <summary>Distance mode.</summary>
-        Distance = 1,
-        /// <summary>Distance2 mode.</summary>
-        Distance2 = 2,
-        /// <summary>Distance2Add mode.</summary>
-        Distance2Add = 3,
-        /// <summary>Distance2Sub mode.</summary>
-        Distance2Sub = 4,
-        /// <summary>Distance2Mul mode.</summary>
-        Distance2Mul = 5,
-        /// <summary>Distance2Div mode.</summary>
-        Distance2Div = 6,
-    }
-
-    /// <summary>Selects domain warp type behavior.</summary>
-    public enum DomainWarpTypeEnum
-    {
-        /// <summary>Simplex mode.</summary>
-        Simplex = 0,
-        /// <summary>SimplexReduced mode.</summary>
-        SimplexReduced = 1,
-        /// <summary>BasicGrid mode.</summary>
-        BasicGrid = 2,
-    }
-
-    /// <summary>Selects the domain warp fractal algorithm.</summary>
-    public enum DomainWarpFractalTypeEnum
-    {
-        /// <summary>None mode.</summary>
-        None = 0,
-        /// <summary>Progressive mode.</summary>
-        Progressive = 1,
-        /// <summary>Independent mode.</summary>
-        Independent = 2,
-    }
-
     private readonly Backend _noise = new();
     private readonly Backend _warp = new();
-    private NoiseTypeEnum _noiseType = NoiseTypeEnum.SimplexSmooth;
+    private NoiseType _noiseType = NoiseType.SimplexSmooth;
     private int _seed = 0;
     private float _frequency = 0.01f;
     private Vector2 _offset = Vector2.Zero;
-    private FractalTypeEnum _fractalType = FractalTypeEnum.FBM;
+    private FractalType _fractalType = FractalType.FBM;
     private int _fractalOctaves = 5;
     private float _fractalLacunarity = 2f;
     private float _fractalGain = 0.5f;
     private float _fractalWeightedStrength = 0f;
     private float _fractalPingPongStrength = 2f;
-    private CellularDistanceFunctionEnum _cellularDistanceFunction = CellularDistanceFunctionEnum.Euclidean;
-    private CellularReturnTypeEnum _cellularReturnType = CellularReturnTypeEnum.Distance;
+    private CellularDistanceFunction _cellularDistanceFunction = CellularDistanceFunction.Euclidean;
+    private CellularReturnType _cellularReturnType = CellularReturnType.Distance;
     private float _cellularJitter = 1f;
     private bool _domainWarpEnabled = false;
-    private DomainWarpTypeEnum _domainWarpType = DomainWarpTypeEnum.Simplex;
+    private DomainWarpType _domainWarpType = DomainWarpType.Simplex;
     private float _domainWarpAmplitude = 30f;
     private float _domainWarpFrequency = 0.05f;
-    private DomainWarpFractalTypeEnum _domainWarpFractalType = DomainWarpFractalTypeEnum.Progressive;
+    private DomainWarpFractalType _domainWarpFractalType = DomainWarpFractalType.Progressive;
     private int _domainWarpFractalOctaves = 5;
     private float _domainWarpFractalLacunarity = 6f;
     private float _domainWarpFractalGain = 0.5f;
@@ -119,8 +119,8 @@ public sealed class FastNoiseLite : Noise
     public FastNoiseLite() => Configure();
 
     /// <summary>Gets or sets the noise algorithm.</summary>
-    /// <value>NoiseTypeEnum.SimplexSmooth by default.</value>
-    public NoiseTypeEnum NoiseType
+    /// <value>NoiseType.SimplexSmooth by default.</value>
+    public NoiseType NoiseType
     {
         get { ThrowIfDisposed(); return _noiseType; }
         set
@@ -166,8 +166,8 @@ public sealed class FastNoiseLite : Noise
     }
 
     /// <summary>Gets or sets fractal type.</summary>
-    /// <value>FractalTypeEnum.FBM by default.</value>
-    public FractalTypeEnum FractalType
+    /// <value>FractalType.FBM by default.</value>
+    public FractalType FractalType
     {
         get { ThrowIfDisposed(); return _fractalType; }
         set
@@ -238,8 +238,8 @@ public sealed class FastNoiseLite : Noise
     }
 
     /// <summary>Gets or sets the cellular distance function.</summary>
-    /// <value>CellularDistanceFunctionEnum.Euclidean by default.</value>
-    public CellularDistanceFunctionEnum CellularDistanceFunction
+    /// <value>CellularDistanceFunction.Euclidean by default.</value>
+    public CellularDistanceFunction CellularDistanceFunction
     {
         get { ThrowIfDisposed(); return _cellularDistanceFunction; }
         set
@@ -250,8 +250,8 @@ public sealed class FastNoiseLite : Noise
     }
 
     /// <summary>Gets or sets the cellular return mode.</summary>
-    /// <value>CellularReturnTypeEnum.Distance by default.</value>
-    public CellularReturnTypeEnum CellularReturnType
+    /// <value>CellularReturnType.Distance by default.</value>
+    public CellularReturnType CellularReturnType
     {
         get { ThrowIfDisposed(); return _cellularReturnType; }
         set
@@ -286,8 +286,8 @@ public sealed class FastNoiseLite : Noise
     }
 
     /// <summary>Gets or sets domain warp type.</summary>
-    /// <value>DomainWarpTypeEnum.Simplex by default.</value>
-    public DomainWarpTypeEnum DomainWarpType
+    /// <value>DomainWarpType.Simplex by default.</value>
+    public DomainWarpType DomainWarpType
     {
         get { ThrowIfDisposed(); return _domainWarpType; }
         set
@@ -322,14 +322,14 @@ public sealed class FastNoiseLite : Noise
     }
 
     /// <summary>Gets or sets domain warp fractal type.</summary>
-    /// <value>DomainWarpFractalTypeEnum.Progressive by default.</value>
-    public DomainWarpFractalTypeEnum DomainWarpFractalType
+    /// <value>DomainWarpFractalType.Progressive by default.</value>
+    public DomainWarpFractalType DomainWarpFractalType
     {
         get { ThrowIfDisposed(); return _domainWarpFractalType; }
         set
         {
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
-            Set(ref _domainWarpFractalType, value, v => _warp.SetFractalType(v switch { DomainWarpFractalTypeEnum.None => Backend.FractalType.None, DomainWarpFractalTypeEnum.Progressive => Backend.FractalType.DomainWarpProgressive, _ => Backend.FractalType.DomainWarpIndependent }));
+            Set(ref _domainWarpFractalType, value, v => _warp.SetFractalType(v switch { DomainWarpFractalType.None => Backend.FractalType.None, DomainWarpFractalType.Progressive => Backend.FractalType.DomainWarpProgressive, _ => Backend.FractalType.DomainWarpIndependent }));
         }
     }
 
@@ -397,24 +397,24 @@ public sealed class FastNoiseLite : Noise
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<FastNoiseLite, NoiseTypeEnum>(nameof(NoiseType), n => n.NoiseType, (n, v) => n.NoiseType = v, _ => NoiseTypeEnum.SimplexSmooth),
+        new PropertyDescriptor<FastNoiseLite, NoiseType>(nameof(NoiseType), n => n.NoiseType, (n, v) => n.NoiseType = v, _ => NoiseType.SimplexSmooth),
         new PropertyDescriptor<FastNoiseLite, int>(nameof(Seed), n => n.Seed, (n, v) => n.Seed = v, _ => 0),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(Frequency), n => n.Frequency, (n, v) => n.Frequency = v, _ => 0.01f),
         new PropertyDescriptor<FastNoiseLite, Vector2>(nameof(Offset), n => n.Offset, (n, v) => n.Offset = v, _ => Vector2.Zero),
-        new PropertyDescriptor<FastNoiseLite, FractalTypeEnum>(nameof(FractalType), n => n.FractalType, (n, v) => n.FractalType = v, _ => FractalTypeEnum.FBM),
+        new PropertyDescriptor<FastNoiseLite, FractalType>(nameof(FractalType), n => n.FractalType, (n, v) => n.FractalType = v, _ => FractalType.FBM),
         new PropertyDescriptor<FastNoiseLite, int>(nameof(FractalOctaves), n => n.FractalOctaves, (n, v) => n.FractalOctaves = v, _ => 5),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(FractalLacunarity), n => n.FractalLacunarity, (n, v) => n.FractalLacunarity = v, _ => 2f),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(FractalGain), n => n.FractalGain, (n, v) => n.FractalGain = v, _ => 0.5f),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(FractalWeightedStrength), n => n.FractalWeightedStrength, (n, v) => n.FractalWeightedStrength = v, _ => 0f),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(FractalPingPongStrength), n => n.FractalPingPongStrength, (n, v) => n.FractalPingPongStrength = v, _ => 2f),
-        new PropertyDescriptor<FastNoiseLite, CellularDistanceFunctionEnum>(nameof(CellularDistanceFunction), n => n.CellularDistanceFunction, (n, v) => n.CellularDistanceFunction = v, _ => CellularDistanceFunctionEnum.Euclidean),
-        new PropertyDescriptor<FastNoiseLite, CellularReturnTypeEnum>(nameof(CellularReturnType), n => n.CellularReturnType, (n, v) => n.CellularReturnType = v, _ => CellularReturnTypeEnum.Distance),
+        new PropertyDescriptor<FastNoiseLite, CellularDistanceFunction>(nameof(CellularDistanceFunction), n => n.CellularDistanceFunction, (n, v) => n.CellularDistanceFunction = v, _ => CellularDistanceFunction.Euclidean),
+        new PropertyDescriptor<FastNoiseLite, CellularReturnType>(nameof(CellularReturnType), n => n.CellularReturnType, (n, v) => n.CellularReturnType = v, _ => CellularReturnType.Distance),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(CellularJitter), n => n.CellularJitter, (n, v) => n.CellularJitter = v, _ => 1f),
         new PropertyDescriptor<FastNoiseLite, bool>(nameof(DomainWarpEnabled), n => n.DomainWarpEnabled, (n, v) => n.DomainWarpEnabled = v, _ => false),
-        new PropertyDescriptor<FastNoiseLite, DomainWarpTypeEnum>(nameof(DomainWarpType), n => n.DomainWarpType, (n, v) => n.DomainWarpType = v, _ => DomainWarpTypeEnum.Simplex),
+        new PropertyDescriptor<FastNoiseLite, DomainWarpType>(nameof(DomainWarpType), n => n.DomainWarpType, (n, v) => n.DomainWarpType = v, _ => DomainWarpType.Simplex),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(DomainWarpAmplitude), n => n.DomainWarpAmplitude, (n, v) => n.DomainWarpAmplitude = v, _ => 30f),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(DomainWarpFrequency), n => n.DomainWarpFrequency, (n, v) => n.DomainWarpFrequency = v, _ => 0.05f),
-        new PropertyDescriptor<FastNoiseLite, DomainWarpFractalTypeEnum>(nameof(DomainWarpFractalType), n => n.DomainWarpFractalType, (n, v) => n.DomainWarpFractalType = v, _ => DomainWarpFractalTypeEnum.Progressive),
+        new PropertyDescriptor<FastNoiseLite, DomainWarpFractalType>(nameof(DomainWarpFractalType), n => n.DomainWarpFractalType, (n, v) => n.DomainWarpFractalType = v, _ => DomainWarpFractalType.Progressive),
         new PropertyDescriptor<FastNoiseLite, int>(nameof(DomainWarpFractalOctaves), n => n.DomainWarpFractalOctaves, (n, v) => n.DomainWarpFractalOctaves = v, _ => 5),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(DomainWarpFractalLacunarity), n => n.DomainWarpFractalLacunarity, (n, v) => n.DomainWarpFractalLacunarity = v, _ => 6f),
         new PropertyDescriptor<FastNoiseLite, float>(nameof(DomainWarpFractalGain), n => n.DomainWarpFractalGain, (n, v) => n.DomainWarpFractalGain = v, _ => 0.5f),
@@ -479,7 +479,7 @@ public sealed class FastNoiseLite : Noise
         _warp.SetDomainWarpType((Backend.DomainWarpType)_domainWarpType);
         _warp.SetDomainWarpAmp(_domainWarpAmplitude);
         _warp.SetFrequency(_domainWarpFrequency);
-        _warp.SetFractalType(_domainWarpFractalType switch { DomainWarpFractalTypeEnum.None => Backend.FractalType.None, DomainWarpFractalTypeEnum.Progressive => Backend.FractalType.DomainWarpProgressive, _ => Backend.FractalType.DomainWarpIndependent });
+        _warp.SetFractalType(_domainWarpFractalType switch { DomainWarpFractalType.None => Backend.FractalType.None, DomainWarpFractalType.Progressive => Backend.FractalType.DomainWarpProgressive, _ => Backend.FractalType.DomainWarpIndependent });
         _warp.SetFractalOctaves(_domainWarpFractalOctaves);
         _warp.SetFractalLacunarity(_domainWarpFractalLacunarity);
         _warp.SetFractalGain(_domainWarpFractalGain);

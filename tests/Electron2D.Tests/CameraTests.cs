@@ -12,14 +12,14 @@ internal static class CameraTests
     private static void DefaultsAndPacking()
     {
         using var camera = new Camera();
-        Check(camera.Enabled && camera.IgnoreRotation && camera.NotifyTransformChanges && camera.AnchorMode == Camera.AnchorModeEnum.DragCenter && camera.ProcessCallback == Camera.CameraProcessCallback.Idle, "Default camera policies.");
+        Check(camera.Enabled && camera.IgnoreRotation && camera.NotifyTransformChanges && camera.AnchorMode == AnchorMode.DragCenter && camera.ProcessCallback == Camera.CameraProcessCallback.Idle, "Default camera policies.");
         Check(camera.Zoom == Vector2.One && camera.Offset == Vector2.Zero && camera.LimitEnabled && !camera.LimitSmoothed && !camera.PositionSmoothingEnabled && !camera.RotationSmoothingEnabled && camera.PositionSmoothingSpeed == 5 && camera.RotationSmoothingSpeed == 5, "Default tracking and smoothing.");
         foreach (var side in Enum.GetValues<Side>()) Check(camera.GetDragMargin(side) == .2f && camera.GetLimit(side) == (side <= Side.Top ? -10_000_000 : 10_000_000), "Default indexed properties.");
         Check(camera.GetTargetPosition() == Vector2.Zero && camera.GetScreenCenterPosition() == Vector2.Zero && camera.GetScreenRotation() == 0 && !camera.IsCurrent(), "Detached queries.");
         camera.ForceUpdateScroll(); camera.ResetSmoothing(); Reject<InvalidOperationException>(camera.Align); Reject<InvalidOperationException>(camera.MakeCurrent);
         Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(0, 1)); Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(Mathf.Epsilon / 2, 1));
         Reject<ArgumentOutOfRangeException>(() => camera.Offset = new(float.NaN, 0)); Reject<ArgumentOutOfRangeException>(() => camera.PositionSmoothingSpeed = float.PositiveInfinity);
-        Reject<ArgumentOutOfRangeException>(() => camera.AnchorMode = (Camera.AnchorModeEnum)4); Reject<ArgumentOutOfRangeException>(() => camera.ProcessCallback = (Camera.CameraProcessCallback)4);
+        Reject<ArgumentOutOfRangeException>(() => camera.AnchorMode = (AnchorMode)4); Reject<ArgumentOutOfRangeException>(() => camera.ProcessCallback = (Camera.CameraProcessCallback)4);
         Reject<ArgumentOutOfRangeException>(() => camera.SetLimit((Side)4, 0)); Reject<ArgumentOutOfRangeException>(() => camera.GetDragMargin((Side)(-1)));
         Reject<ArgumentOutOfRangeException>(() => camera.SetDragMargin(Side.Top, float.NaN));
         camera.PositionSmoothingSpeed = -2; camera.RotationSmoothingSpeed = -3; Check(camera.PositionSmoothingSpeed == 0 && camera.RotationSmoothingSpeed == 0, "Negative finite smoothing speeds clamp to zero.");
@@ -43,10 +43,10 @@ internal static class CameraTests
         camera.IgnoreRotation = true; Check(camera.GetScreenRotation() == 0, "Ignored rotation resets the cached angle.");
         camera.Zoom = new(-2, 4); Near(root.CanvasTransform * new Vector2(21, 31), new(48, 44));
         camera.Rotation = 0; camera.ForceUpdateTransform(); camera.IgnoreRotation = false; Near(camera.GetScreenCenterPosition(), new(70, 10)); camera.IgnoreRotation = true;
-        camera.Zoom = Vector2.One; camera.AnchorMode = Camera.AnchorModeEnum.FixedTopLeft; Near(root.CanvasTransform * camera.Position, Vector2.Zero); Near(camera.GetScreenCenterPosition(), new(70, 70));
+        camera.Zoom = Vector2.One; camera.AnchorMode = AnchorMode.FixedTopLeft; Near(root.CanvasTransform * camera.Position, Vector2.Zero); Near(camera.GetScreenCenterPosition(), new(70, 70));
         camera.LimitLeft = 0; camera.LimitTop = 0; camera.LimitRight = 40; camera.LimitBottom = 20; camera.LimitEnabled = true;
         Near(camera.GetScreenCenterPosition(), new(70, 60));
-        camera.AnchorMode = Camera.AnchorModeEnum.DragCenter; Near(camera.GetScreenCenterPosition(), new(20, 10));
+        camera.AnchorMode = AnchorMode.DragCenter; Near(camera.GetScreenCenterPosition(), new(20, 10));
         camera.Offset = new(3, 4); Near(camera.GetScreenCenterPosition(), new(23, 14));
         camera.LimitLeft = 40; camera.LimitRight = -40; Near(camera.GetScreenCenterPosition(), new(3, 14));
         root.GlobalCanvasTransform = new(0, new(6, 7)); camera.ForceUpdateScroll(); Check(root.GlobalCanvasTransform.Origin == new Vector2(6, 7), "Camera only changes the default canvas transform.");

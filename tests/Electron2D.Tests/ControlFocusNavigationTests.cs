@@ -9,10 +9,10 @@ internal static class ControlFocusNavigationTests
             map.ActionGetEvents("ui_focus_next").Count != 0, "GUI navigation actions are registered by default.");
 
         var root = new TestViewport();
-        var first = new Control { Name = "first", Position = new(0, 0), Size = new(10, 10), FocusMode = ControlFocusMode.All };
+        var first = new Control { Name = "first", Position = new(0, 0), Size = new(10, 10), FocusMode = FocusMode.All };
         var skipped = new Control { Name = "skipped", Position = new(20, 0), Size = new(10, 10) };
-        var second = new Control { Name = "second", Position = new(40, 0), Size = new(10, 10), FocusMode = ControlFocusMode.All };
-        var click = new Control { Name = "click", Position = new(60, 0), Size = new(10, 10), FocusMode = ControlFocusMode.Click };
+        var second = new Control { Name = "second", Position = new(40, 0), Size = new(10, 10), FocusMode = FocusMode.All };
+        var click = new Control { Name = "click", Position = new(60, 0), Size = new(10, 10), FocusMode = FocusMode.Click };
         root.AddChild(first); root.AddChild(skipped); root.AddChild(second); root.AddChild(click);
         using var tree = new SceneTree(root);
 
@@ -68,10 +68,10 @@ internal static class ControlFocusNavigationTests
         Reject<ArgumentNullException>(() => first.FocusNext = null!);
 
         using var packed = new PackedScene();
-        var detached = new Control { FocusMode = ControlFocusMode.All, FocusNext = "../next", FocusNeighborBottom = "../below" };
+        var detached = new Control { FocusMode = FocusMode.All, FocusNext = "../next", FocusNeighborBottom = "../below" };
         packed.Pack(detached);
         using var copy = (Control)packed.Instantiate();
-        Check(copy.FocusMode == ControlFocusMode.All && copy.FocusNext == "../next" && copy.FocusNeighborBottom == "../below",
+        Check(copy.FocusMode == FocusMode.All && copy.FocusNext == "../next" && copy.FocusNeighborBottom == "../below",
             "Focus policy and paths survive typed scene capture.");
         detached.Dispose();
 

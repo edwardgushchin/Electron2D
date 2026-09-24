@@ -16,8 +16,8 @@ internal static partial class RenderingRuntimeTests
             Points = [new(12, 12), new(52, 12)],
             Width = 8,
             DefaultColor = Colors.Red,
-            BeginCapMode = Line.LineCapMode.Round,
-            EndCapMode = Line.LineCapMode.Round,
+            BeginCapMode = LineCapMode.Round,
+            EndCapMode = LineCapMode.Round,
             Material = material,
         };
         var bent = new Line
@@ -26,7 +26,7 @@ internal static partial class RenderingRuntimeTests
             Points = [new(12, 32), new(52, 32), new(52, 54)],
             Width = 8,
             DefaultColor = Colors.Green,
-            JointMode = Line.LineJointMode.Bevel,
+            JointMode = LineJointMode.Bevel,
         };
         var textured = new Line
         {
@@ -34,7 +34,7 @@ internal static partial class RenderingRuntimeTests
             Points = [new(12, 68), new(52, 68)],
             Width = 8,
             Texture = texture,
-            TextureMode = Line.LineTextureMode.Stretch,
+            TextureMode = LineTextureMode.Stretch,
         };
         window.AddChild(capped); window.AddChild(bent); window.AddChild(textured);
         var frames = 0;

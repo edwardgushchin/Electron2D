@@ -27,7 +27,7 @@ callbacks. Compressed and encrypted files are authenticated or decoded completel
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-using FileAccess file = FileAccess.Open("user://save.dat", FileAccessMode.Write);
+using FileAccess file = FileAccess.Open("user://save.dat", FileAccessModeFlags.Write);
 file.WriteString("ready");
 ```
 
@@ -50,11 +50,11 @@ file.WriteString("ready");
 
 | Member | Description |
 | --- | --- |
-| [`public static FileAccess Open(string path, FileAccessMode mode)`](#m-electron2d-fileaccess-open-system-string-electron2d-fileaccessmode) | Opens a file with the requested access mode. |
-| [`public static FileAccess CreateTemp(FileAccessMode mode = FileAccessMode.ReadWrite, string prefix = "", string extension = "", bool keep = false)`](#m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean) | Creates a uniquely named temporary file and opens it. |
-| [`public static FileAccess OpenCompressed(string path, FileAccessMode mode, FileCompressionMode compressionMode = FileCompressionMode.FastLz)`](#m-electron2d-fileaccess-opencompressed-system-string-electron2d-fileaccessmode-electron2d-filecompressionmode) | Opens a whole-file compressed container. |
-| [`public static FileAccess OpenEncrypted(string path, FileAccessMode mode, ReadOnlySpan<byte> key)`](#m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte) | Opens a whole-file container protected by a 256-bit key and authenticated encryption. |
-| [`public static FileAccess OpenEncryptedWithPassword(string path, FileAccessMode mode, string password)`](#m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string) | Opens a whole-file container protected by a password and authenticated encryption. |
+| [`public static FileAccess Open(string path, FileAccessModeFlags mode)`](#m-electron2d-fileaccess-open-system-string-electron2d-fileaccessmode) | Opens a file with the requested access mode. |
+| [`public static FileAccess CreateTemp(FileAccessModeFlags mode = FileAccessModeFlags.ReadWrite, string prefix = "", string extension = "", bool keep = false)`](#m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean) | Creates a uniquely named temporary file and opens it. |
+| [`public static FileAccess OpenCompressed(string path, FileAccessModeFlags mode, FileCompressionMode compressionMode = FileCompressionMode.FastLz)`](#m-electron2d-fileaccess-opencompressed-system-string-electron2d-fileaccessmode-electron2d-filecompressionmode) | Opens a whole-file compressed container. |
+| [`public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`](#m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte) | Opens a whole-file container protected by a 256-bit key and authenticated encryption. |
+| [`public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`](#m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string) | Opens a whole-file container protected by a password and authenticated encryption. |
 | [`public void Close()`](#m-electron2d-fileaccess-close) | Closes the file, committing buffered transformed data when necessary. |
 | [`public void Flush()`](#m-electron2d-fileaccess-flush) | Flushes pending data to the physical file. |
 | [`public void Seek(long position)`](#m-electron2d-fileaccess-seek-system-int64) | Moves the cursor to an absolute byte offset. |
@@ -233,7 +233,7 @@ Gets or sets Unix permission and special-mode bits for the physical file.
 ## Method Descriptions
 
 <a id="m-electron2d-fileaccess-open-system-string-electron2d-fileaccessmode"></a>
-### `public static FileAccess Open(string path, FileAccessMode mode)`
+### `public static FileAccess Open(string path, FileAccessModeFlags mode)`
 
 Opens a file with the requested access mode.
 
@@ -253,7 +253,7 @@ Opens a file with the requested access mode.
 - `NotSupportedException`: The path uses an unsupported virtual scheme.
 
 <a id="m-electron2d-fileaccess-createtemp-electron2d-fileaccessmode-system-string-system-string-system-boolean"></a>
-### `public static FileAccess CreateTemp(FileAccessMode mode = FileAccessMode.ReadWrite, string prefix = "", string extension = "", bool keep = false)`
+### `public static FileAccess CreateTemp(FileAccessModeFlags mode = FileAccessModeFlags.ReadWrite, string prefix = "", string extension = "", bool keep = false)`
 
 Creates a uniquely named temporary file and opens it.
 
@@ -274,7 +274,7 @@ Creates a uniquely named temporary file and opens it.
 - `UnauthorizedAccessException`: The caller lacks access to the temporary directory.
 
 <a id="m-electron2d-fileaccess-opencompressed-system-string-electron2d-fileaccessmode-electron2d-filecompressionmode"></a>
-### `public static FileAccess OpenCompressed(string path, FileAccessMode mode, FileCompressionMode compressionMode = FileCompressionMode.FastLz)`
+### `public static FileAccess OpenCompressed(string path, FileAccessModeFlags mode, FileCompressionMode compressionMode = FileCompressionMode.FastLz)`
 
 Opens a whole-file compressed container.
 
@@ -299,7 +299,7 @@ Opens a whole-file compressed container.
 **Remarks:** Changes are atomically encoded to the destination by [`FileAccess.Flush`](FileAccess.md#m-electron2d-fileaccess-flush) or [`FileAccess.Close`](FileAccess.md#m-electron2d-fileaccess-close).
 
 <a id="m-electron2d-fileaccess-openencrypted-system-string-electron2d-fileaccessmode-system-readonlyspan-system-byte"></a>
-### `public static FileAccess OpenEncrypted(string path, FileAccessMode mode, ReadOnlySpan<byte> key)`
+### `public static FileAccess OpenEncrypted(string path, FileAccessModeFlags mode, ReadOnlySpan<byte> key)`
 
 Opens a whole-file container protected by a 256-bit key and authenticated encryption.
 
@@ -324,7 +324,7 @@ Opens a whole-file container protected by a 256-bit key and authenticated encryp
 **Remarks:** Writing uses a fresh random nonce for every atomic commit.
 
 <a id="m-electron2d-fileaccess-openencryptedwithpassword-system-string-electron2d-fileaccessmode-system-string"></a>
-### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessMode mode, string password)`
+### `public static FileAccess OpenEncryptedWithPassword(string path, FileAccessModeFlags mode, string password)`
 
 Opens a whole-file container protected by a password and authenticated encryption.
 
@@ -1243,7 +1243,7 @@ Closed instances retain path diagnostics and reject stream operations with `Inva
 
 ## Invariants and error behavior
 
-- Only the four exact `FileAccessMode` values are accepted.
+- Only the four exact `FileAccessModeFlags` values are accepted.
 - Read and write permissions are enforced independently of the underlying in-memory stream's technical capabilities.
 - Write modes truncate; read-write mode requires and preserves an existing file.
 - No destination directory is implicitly created.
