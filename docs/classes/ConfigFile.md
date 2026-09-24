@@ -263,8 +263,7 @@ Loads and merges an unencrypted configuration document from an operating-system 
 - `FormatException`: The document is malformed.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** Parsing is completed before mutation. Existing entries not present in the loaded document are retained, and
-matching entries are replaced atomically as one merge. Virtual resource paths are not resolved.
+**Remarks:** Strict UTF-8, an optional BOM and ordinary line endings are accepted. Parsing completes before mutation; unmentioned entries survive and matching entries are replaced as one merge. Virtual paths are not resolved.
 
 <a id="m-electron2d-configfile-loadencrypted-system-string-system-readonlyspan-system-byte"></a>
 ### `public void LoadEncrypted(string path, ReadOnlySpan<byte> key)`
@@ -349,8 +348,7 @@ Saves the current document to an unencrypted operating-system path.
 - `UnauthorizedAccessException`: The caller cannot write the destination.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** A snapshot is written to a uniquely named file in the destination directory, flushed, and moved over the target.
-The destination directory must already exist. Virtual resource paths are not resolved.
+**Remarks:** A strict UTF-8 snapshot without a BOM is written to a uniquely named file in the destination directory, flushed, and moved over the target. The directory must already exist. Virtual paths are not resolved.
 
 <a id="m-electron2d-configfile-saveencrypted-system-string-system-readonlyspan-system-byte"></a>
 ### `public void SaveEncrypted(string path, ReadOnlySpan<byte> key)`
@@ -513,7 +511,7 @@ The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/floating-rectangle/integer-rectangle/transform round trips, exact schemas for all six vector types and both rectangle types, malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
 
-The in-memory state audit also checks empty entry names, quoted-text round trips, replacement without reordering, stable enumeration snapshots, last-key section removal, sectionless priority, reinsertion order and caller-owned fallback values. The text audit checks quoted complex names, BOM/CRLF/comments, duplicate-section merge, stable encoding and rollback after malformed lines. Those eleven own state/text members are Implemented in [coverage](../coverage/classes/ConfigFile.md); the class aggregate and file members retain separate Partial audits.
+The in-memory state audit also checks empty entry names, quoted-text round trips, replacement without reordering, stable enumeration snapshots, last-key section removal, sectionless priority, reinsertion order and caller-owned fallback values. The text audit checks quoted complex names, BOM/CRLF/comments, duplicate-section merge, stable encoding and rollback after malformed lines. Plain file checks cover BOM/CRLF load, strict UTF-8, merge, malformed/missing-file rollback, empty and replacing saves, missing directories and temporary cleanup. Those thirteen own state/text/plain-file members are Implemented in [coverage](../coverage/classes/ConfigFile.md); the class aggregate and encrypted file methods retain separate Partial audits.
 
 There is no comment preservation, direct virtual path resolution, asynchronous or streaming I/O, external binary-envelope compatibility, or custom public serializer registry. Feature overrides and virtual paths belong to `ProjectSettings`. JSON models must be supported by the built-in serializer and should be stable data contracts rather than live engine types.
 

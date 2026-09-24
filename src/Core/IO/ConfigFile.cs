@@ -277,8 +277,8 @@ public sealed class ConfigFile : ElectronObject
     /// <summary>Loads and merges an unencrypted configuration document from an operating-system path.</summary>
     /// <param name="path">The nonempty file path.</param>
     /// <remarks>
-    /// Parsing is completed before mutation. Existing entries not present in the loaded document are retained, and
-    /// matching entries are replaced atomically as one merge. Virtual resource paths are not resolved.
+    /// Strict UTF-8, an optional BOM and ordinary line endings are accepted. Parsing is completed before mutation;
+    /// existing unmentioned entries survive and matching entries are replaced as one merge. Virtual paths are not resolved.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>
@@ -396,8 +396,8 @@ public sealed class ConfigFile : ElectronObject
     /// <summary>Saves the current document to an unencrypted operating-system path.</summary>
     /// <param name="path">The nonempty destination path.</param>
     /// <remarks>
-    /// A snapshot is written to a uniquely named file in the destination directory, flushed, and moved over the target.
-    /// The destination directory must already exist. Virtual resource paths are not resolved.
+    /// A strict UTF-8 snapshot without a BOM is written to a uniquely named file in the destination directory,
+    /// flushed, and moved over the target. The directory must already exist. Virtual paths are not resolved.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid.</exception>

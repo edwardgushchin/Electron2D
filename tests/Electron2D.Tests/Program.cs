@@ -3869,6 +3869,36 @@ static void VerifyConfigFiles()
         Require(config.EncodeToText() == beforeInvalidLoad,
             "A failed plain load must preserve existing state.");
 
+        var bomPath = IOPath.Combine(directory, "bom-crlf.cfg");
+        File.WriteAllText(bomPath, "\uFEFF; comment\r\nloaded=7\r\n", new UTF8Encoding(false));
+        using (var loaded = new ConfigFile())
+        {
+            loaded.SetValue(answerKey, 99);
+            loaded.Load(bomPath);
+            Require(loaded.GetValue(new ConfigKey<int>(string.Empty, "loaded")) == 7 &&
+                    loaded.GetValue(answerKey) == 99 &&
+                    loaded.EncodeToText() == "loaded=7\n\n[gameplay]\n\nanswer=99\n",
+                "Plain load must accept a UTF-8 BOM and CRLF while merging prior entries and normalizing text.");
+        }
+
+        var malformedPath = IOPath.Combine(directory, "malformed.cfg");
+        File.WriteAllText(malformedPath, "fresh=1\nnot-an-assignment", new UTF8Encoding(false));
+        Expect<FormatException>(() => config.Load(malformedPath),
+            "A malformed plain file must fail after UTF-8 decoding.");
+        Expect<FileNotFoundException>(() => config.Load(IOPath.Combine(directory, "absent.cfg")),
+            "Plain load must report a missing operating-system file.");
+        Require(config.EncodeToText() == beforeInvalidLoad &&
+                !config.HasSectionKey(new ConfigKey<int>(string.Empty, "fresh")),
+            "Malformed and missing files must leave all prior entries unchanged.");
+
+        using (var empty = new ConfigFile())
+        {
+            var emptyPath = IOPath.Combine(directory, "empty.cfg");
+            empty.Save(emptyPath);
+            Require(File.ReadAllBytes(emptyPath).Length == 0,
+                "Saving an empty document must create an empty UTF-8 file.");
+        }
+
         Expect<DirectoryNotFoundException>(() => config.Save(IOPath.Combine(directory, "missing", "settings.cfg")),
             "Saving must not create an absent destination directory implicitly.");
         var directoryTarget = IOPath.Combine(directory, "directory-target");

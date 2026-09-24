@@ -53,7 +53,7 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 
 ## Current implementation status
 
-The in-memory section/key and text parse/encode surfaces are implemented and audited under ADR 0018. Text tests cover quoted complex/empty names, JSON values, stable LF output, BOM/CRLF and comment handling, repeated-section merge, ordering, empty input and rollback after malformed lines. Plain/encrypted file methods remain executable but retain Partial coverage until their error and integration behavior is audited. Error-return APIs are adapted to normal C# exceptions, universal values to `ConfigKey<T>`, and reference-counted lifetime to `ElectronObject`/managed memory.
+The in-memory section/key, text parse/encode and plain file surfaces are implemented and audited under ADR 0018. Text tests cover quoted complex/empty names, JSON values, stable LF output, BOM/CRLF and comment handling, repeated-section merge, ordering, empty input and rollback after malformed lines. Plain file tests cover strict UTF-8, BOM/CRLF, merge/rollback, overwrite, empty output, directory errors and temporary cleanup. Encrypted file methods remain executable but retain Partial coverage until their envelope and error behavior is audited. Error-return APIs are adapted to normal C# exceptions, universal values to `ConfigKey<T>`, and reference-counted lifetime to `ElectronObject`/managed memory.
 
 ## Exclusions and deferred integration
 
