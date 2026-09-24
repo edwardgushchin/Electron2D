@@ -4403,6 +4403,44 @@ static void VerifyInput()
                 "The direct touch subclass retains the same inherited window identity on duplication.");
             Require(describedKey.IsActionType() && !propertyCases[3].Event.IsActionType(),
                 "Only the sealed key, button, axis, and direct-action event families may be action bindings.");
+            foreach (var (inputEvent, _) in propertyCases)
+            {
+                var bindable = inputEvent is InputEventAction or InputEventKey or InputEventMouseButton or
+                    InputEventJoypadButton or InputEventJoypadMotion;
+                Require(inputEvent.IsActionType() == bindable && !inputEvent.IsEcho(),
+                    $"{inputEvent.GetType().Name} reports its pinned action-family and echo defaults.");
+            }
+            describedKey.Echo = true;
+            Require(describedKey.IsEcho() &&
+                    !describedKey.Accumulate(propertyCases[0].Event) &&
+                    ReferenceEquals(describedKey.XformedBy(Transform.Identity), describedKey),
+                "Only key repeat overrides echo; a non-positional key keeps the base merge and transform results.");
+            var directAction = (InputEventAction)propertyCases[0].Event;
+            var deviceProperty = directAction.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEvent, int>>()
+                .Single(property => property.Name == nameof(InputEvent.Device));
+            Require(directAction.Device == 0 && !directAction.PropertyCanRevert(deviceProperty),
+                "The base input event device defaults to zero in the typed descriptor.");
+            directAction.Device = int.MinValue;
+            using var copiedDirectAction = (InputEventAction)directAction.Duplicate();
+            Require(copiedDirectAction.Device == int.MinValue && directAction.PropertyCanRevert(deviceProperty),
+                "Device IDs retain their signed range across event copies.");
+            directAction.RevertProperty(deviceProperty);
+            Require(directAction.Device == 0 && ReferenceEquals(directAction.XformedBy(Transform.Identity), directAction),
+                "Device revert and non-positional action transforms retain the source event.");
+            var stateButton = (InputEventMouseButton)propertyCases[2].Event;
+            foreach (var pressed in new[] { false, true })
+            {
+                foreach (var canceled in new[] { false, true })
+                {
+                    stateButton.Pressed = pressed;
+                    stateButton.Canceled = canceled;
+                    Require(stateButton.IsCanceled() == canceled &&
+                            stateButton.IsPressed() == (pressed && !canceled) &&
+                            stateButton.IsReleased() == (!pressed && !canceled),
+                        "Base event state queries use the complete pressed/canceled truth table.");
+                }
+            }
         }
         finally
         {
@@ -5093,6 +5131,19 @@ static void VerifyInputEmulation()
         ButtonIndex = MouseButton.Left,
     };
     map.ActionAddEvent(click, binding);
+    using (var canceledButton = new InputEventMouseButton
+    {
+        ButtonIndex = MouseButton.Left,
+        Pressed = true,
+        Canceled = true,
+    })
+    {
+        Require(canceledButton.IsAction(click) && !canceledButton.IsActionPressed(click) &&
+                canceledButton.IsActionReleased(click) && !canceledButton.IsPressed() && !canceledButton.IsReleased(),
+            "A canceled matching press has a released action status while neither raw press nor release is active.");
+        Expect<KeyNotFoundException>(() => canceledButton.IsActionReleased(click + ".missing"),
+            "A canceled event still validates the requested action name through the shared map.");
+    }
     var probe = new InputEmulationProbeNode { InputEnabled = true };
     using var tree = new SceneTree(probe);
     Engine.Instance.Start(tree);

@@ -92,7 +92,7 @@ public abstract class InputEvent : Resource
     /// <summary>Gets whether this event releases a registered action.</summary>
     /// <param name="action">The nonblank, case-sensitive action name.</param>
     /// <param name="exactMatch">Whether modifiers and analog direction must match exactly.</param>
-    /// <returns><see langword="true"/> when the event matches and is a non-canceled release.</returns>
+    /// <returns><see langword="true"/> when the event matches and its effective pressed state is false, including cancellation.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
@@ -100,8 +100,7 @@ public abstract class InputEvent : Resource
     public bool IsActionReleased(string action, bool exactMatch = false)
     {
         ThrowIfDisposed();
-        return !IsCanceled() &&
-            InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) &&
+        return InputMap.Instance.TryGetActionStatus(this, action, exactMatch, out var status) &&
             !status.Pressed;
     }
 

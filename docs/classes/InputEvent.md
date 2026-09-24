@@ -1,6 +1,6 @@
 # InputEvent
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md)
 
@@ -17,6 +17,8 @@ Last updated: 2026-09-21
 Provides the abstract base contract for all engine input events.
 
 `InputEvent` is the mutable, duplicable Resource base for caller-owned input payloads and action bindings. It has no native handle.
+
+The base stores a signed device ID (zero by default) and computes pressed, released and canceled queries from independent raw flags. Cancellation makes both raw press and release queries false. An action release query uses the mapped effective pressed state: a canceled matching button press can therefore report an action release even though `IsReleased()` is false. Map-based queries validate the requested registered name; the direct-action `IsAction` override compares its typed name without registration.
 
 Events are mutable resources so action bindings can be configured in memory. A platform host creates concrete
 events and passes them to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent); this class has no dependency on a native backend.
@@ -162,7 +164,7 @@ Gets whether this event releases a registered action.
 - `action`: The nonblank, case-sensitive action name.
 - `exactMatch`: Whether modifiers and analog direction must match exactly.
 
-**Returns:** `true` when the event matches and is a non-canceled release.
+**Returns:** `true` when the event matches and its effective pressed state is false, including a canceled matching press.
 
 **Exceptions**
 
