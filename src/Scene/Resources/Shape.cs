@@ -15,7 +15,8 @@ public abstract class Shape : Resource
     /// <returns>The tight local-axis bounds; a shape need not be centered on its origin.</returns>
     public abstract Rect2 GetRect();
 
-    internal abstract B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition);
+    internal abstract void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
+        in B2ShapeDef definition, List<B2ShapeId> fixtures);
 
     internal ulong GeometryRevision => _revision;
 
@@ -55,11 +56,12 @@ public sealed class CircleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_radius, -_radius, 2 * _radius, 2 * _radius); }
 
-    internal override B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition)
+    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
+        in B2ShapeDef definition, List<B2ShapeId> fixtures)
     {
         ThrowIfDisposed();
         var circle = new B2Circle { center = ToBackend(localPosition), radius = _radius * PhysicsSpace.MetersPerUnit };
-        return b2CreateCircleShape(bodyID, definition, circle);
+        fixtures.Add(b2CreateCircleShape(bodyID, definition, circle));
     }
 
     /// <inheritdoc />
@@ -143,18 +145,22 @@ public sealed class CapsuleShape : Shape
         return new(-_radius, -_height * 0.5f, 2 * _radius, _height);
     }
 
-    internal override B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition)
+    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
+        in B2ShapeDef definition, List<B2ShapeId> fixtures)
     {
         ThrowIfDisposed();
         var midHeight = (_height - 2 * _radius) * PhysicsSpace.MetersPerUnit;
         var circle = new B2Circle { center = ToBackend(localPosition), radius = _radius * PhysicsSpace.MetersPerUnit };
         if (midHeight <= B2_LINEAR_SLOP)
-            return b2CreateCircleShape(bodyID, definition, circle);
+        {
+            fixtures.Add(b2CreateCircleShape(bodyID, definition, circle));
+            return;
+        }
         var offset = new Vector2(0, (_height - 2 * _radius) * 0.5f).Rotated(localRotation);
         var capsule = new B2Capsule(ToBackend(localPosition - offset), ToBackend(localPosition + offset),
             _radius * PhysicsSpace.MetersPerUnit);
         var id = b2CreateCapsuleShape(bodyID, definition, capsule);
-        return id.index1 == 0 ? b2CreateCircleShape(bodyID, definition, circle) : id;
+        fixtures.Add(id.index1 == 0 ? b2CreateCircleShape(bodyID, definition, circle) : id);
     }
 
     /// <inheritdoc />
@@ -219,7 +225,8 @@ public sealed class SegmentShape : Shape
             MathF.Abs(_b.X - _a.X), MathF.Abs(_b.Y - _a.Y));
     }
 
-    internal override B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition)
+    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
+        in B2ShapeDef definition, List<B2ShapeId> fixtures)
     {
         ThrowIfDisposed();
         var pointA = ToBackend(localPosition + _a.Rotated(localRotation));
@@ -228,9 +235,10 @@ public sealed class SegmentShape : Shape
         {
             var center = new B2Vec2(pointA.X + (pointB.X - pointA.X) * 0.5f,
                 pointA.Y + (pointB.Y - pointA.Y) * 0.5f);
-            return b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 });
+            fixtures.Add(b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 }));
+            return;
         }
-        return b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB));
+        fixtures.Add(b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB)));
     }
 
     /// <inheritdoc />
@@ -277,12 +285,13 @@ public sealed class RectangleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_size.X / 2, -_size.Y / 2, _size.X, _size.Y); }
 
-    internal override B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition)
+    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
+        in B2ShapeDef definition, List<B2ShapeId> fixtures)
     {
         ThrowIfDisposed();
         var polygon = b2MakeOffsetBox(_size.X * PhysicsSpace.MetersPerUnit / 2,
             _size.Y * PhysicsSpace.MetersPerUnit / 2, ToBackend(localPosition), B2MathFunction.b2MakeRot(localRotation));
-        return b2CreatePolygonShape(bodyID, definition, polygon);
+        fixtures.Add(b2CreatePolygonShape(bodyID, definition, polygon));
     }
 
     /// <inheritdoc />

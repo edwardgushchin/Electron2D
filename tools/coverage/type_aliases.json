@@ -29,6 +29,7 @@
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",
     "SegmentShape2D": "SegmentShape",
+    "ConvexPolygonShape2D": "ConvexPolygonShape",
     "RectangleShape2D": "RectangleShape",
     "CollisionShape2D": "CollisionShape",
     "CollisionObject2D": "CollisionObject",

@@ -303,7 +303,7 @@ public sealed partial class Area : CollisionObject
         foreach (var node in _shapes)
         {
             if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
-            _backendShapes.Add(shape.AddToBody(_bodyID, node.Position, node.Rotation, definition));
+            shape.AppendToBody(_bodyID, node.Position, node.Rotation, definition, _backendShapes);
         }
         _appliedShapeRevisions.Clear();
         foreach (var node in _shapes) _appliedShapeRevisions.Add(node.GeometryRevision);
