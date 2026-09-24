@@ -166,7 +166,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
 | [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the root viewport's borrowed focused control, or null. |
-| [`public abstract Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
+| [`public abstract Rect2 GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
 | [`public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
 | [`public void ReleaseGUIFocus()`](#releaseguifocus) | Releases this viewport's focused control, if any. |
@@ -193,7 +193,7 @@ Extends Node descriptors with three typed stored sampling properties, two stored
 Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown.
 
 <a id="getvisiblerect"></a>
-### `public abstract Rect GetVisibleRect()`
+### `public abstract Rect2 GetVisibleRect()`
 
 Returns the client rectangle in viewport coordinates.
 

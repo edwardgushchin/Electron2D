@@ -49,7 +49,7 @@ The texture must outlive its use by the scene. `Engine.Instance.Run(window)` own
 | `public bool FlipH { get; set; }` | false | [Flips](#fliph-and-flipv) |
 | `public bool FlipV { get; set; }` | false | [Flips](#fliph-and-flipv) |
 | `public bool RegionEnabled { get; set; }` | false | [Region](#regionenabled-and-regionrect) |
-| `public Rect RegionRect { get; set; }` | zero rectangle | [Region](#regionenabled-and-regionrect) |
+| `public Rect2 RegionRect { get; set; }` | zero rectangle | [Region](#regionenabled-and-regionrect) |
 | `public bool RegionFilterClipEnabled { get; set; }` | false | [Clipping](#regionfilterclipenabled) |
 | `public int HFrames { get; set; }` | 1 | [Grid](#hframes-and-vframes) |
 | `public int VFrames { get; set; }` | 1 | [Grid](#hframes-and-vframes) |
@@ -60,7 +60,7 @@ The texture must outlive its use by the scene. `Engine.Instance.Run(window)` own
 
 | Declaration | Description |
 | --- | --- |
-| `public Rect GetRect()` | [Inspection bounds](#getrect) |
+| `public Rect2 GetRect()` | [Inspection bounds](#getrect) |
 | `public bool IsPixelOpaque(Vector2 position)` | [Source opacity](#ispixelopaque) |
 | `public event Action? FrameChanged` | [Frame event](#framechanged) |
 | `public event Action? TextureChanged` | [Texture event](#texturechanged) |

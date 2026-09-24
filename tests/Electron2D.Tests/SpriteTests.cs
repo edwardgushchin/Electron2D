@@ -12,14 +12,14 @@ internal static class SpriteTests
         Check(sprite.Centered && !sprite.FlipH && !sprite.FlipV && !sprite.RegionEnabled && !sprite.RegionFilterClipEnabled &&
             sprite.Texture is null && sprite.Offset == Vector2.Zero && sprite.Frame == 0 && sprite.FrameCoords == Vector2i.Zero &&
             sprite.HFrames == 1 && sprite.VFrames == 1 && sprite.RegionRect == default, "Sprite defaults.");
-        Check(sprite.GetRect() == new Rect(0, 0, 1, 1) && !sprite.IsPixelOpaque(Vector2.Zero), "Empty sprite bounds and opacity.");
+        Check(sprite.GetRect() == new Rect2(0, 0, 1, 1) && !sprite.IsPixelOpaque(Vector2.Zero), "Empty sprite bounds and opacity.");
         var frames = 0; var textures = 0; var lists = 0;
         sprite.FrameChanged += () => frames++;
         sprite.TextureChanged += () => textures++;
         sprite.PropertyListChanged += _ => lists++;
         sprite.Texture = texture; sprite.Texture = texture; texture.EmitChanged();
         Check(textures == 1 && ReferenceEquals(sprite.Texture, texture), "Texture identity changes only.");
-        Check(sprite.GetRect() == new Rect(-1, -1, 2, 2), "Centered bounds.");
+        Check(sprite.GetRect() == new Rect2(-1, -1, 2, 2), "Centered bounds.");
         Check(!sprite.IsPixelOpaque(new(-0.5f, -0.5f)) && sprite.IsPixelOpaque(new(0.5f, -0.5f)) &&
             !sprite.IsPixelOpaque(new(1, 0)) && !sprite.IsPixelOpaque(new(-1.001f, 0)), "Half-open bounds and alpha.");
         sprite.FlipH = true;
@@ -51,9 +51,9 @@ internal static class SpriteTests
         Reject<ArgumentException>(() => sprite.IsPixelOpaque(new(float.NaN, 0)));
         sprite.HFrames = 2; sprite.VFrames = 1; sprite.Frame = 0;
         sprite.RegionEnabled = true; sprite.RegionRect = new(0, 0, 5.9f, 3.9f); sprite.Offset = new(2, 3);
-        Check(sprite.GetRect() == new Rect(1, 1.5f, 2, 3), "Bounds truncate the region and then frame size.");
+        Check(sprite.GetRect() == new Rect2(1, 1.5f, 2, 3), "Bounds truncate the region and then frame size.");
         sprite.RegionRect = default;
-        Check(sprite.GetRect() == new Rect(2, 3, 1, 1) && !sprite.IsPixelOpaque(new(2, 3)), "Zero region has inspection fallback but no opaque pixels.");
+        Check(sprite.GetRect() == new Rect2(2, 3, 1, 1) && !sprite.IsPixelOpaque(new(2, 3)), "Zero region has inspection fallback but no opaque pixels.");
         sprite.Centered = false; sprite.Offset = Vector2.Zero; sprite.RegionRect = new(0, 0, -2, -2); sprite.HFrames = 1;
         Check(!sprite.IsPixelOpaque(new(0.5f, 0.5f)) && sprite.IsPixelOpaque(new(1.5f, 1.5f)), "Negative source/destination flips cancel consistently with drawing.");
         sprite.RegionRect = new(-100, -100, 2, 2);
@@ -154,7 +154,7 @@ internal static class SpriteTests
     {
         using var sprite = new CountedSprite();
         var trace = new List<string>();
-        Rect observed = default;
+        Rect2 observed = default;
         sprite.ItemRectChanged += sender =>
         {
             Check(ReferenceEquals(sender, sprite), "Rectangle event sender.");
@@ -273,7 +273,7 @@ internal static class SpriteTests
             RegionFilterClipEnabled = true,
         };
         sprite.PrepareCanvas();
-        Check(texture.Destination == new Rect(0, 0, 4, 4) && texture.Source == new Rect(8, 6, 4, 4) && texture.Clip,
+        Check(texture.Destination == new Rect2(0, 0, 4, 4) && texture.Source == new Rect2(8, 6, 4, 4) && texture.Clip,
             "Sprite dispatches the selected frame through the texture's virtual region drawing hook.");
         texture.LogicalWidth = -1;
         Reject<InvalidOperationException>(() => sprite.IsPixelOpaque(Vector2.One));
@@ -289,11 +289,11 @@ internal static class SpriteTests
     private sealed class RegionTexture : Texture
     {
         internal int LogicalWidth = 2;
-        internal Rect Destination, Source;
+        internal Rect2 Destination, Source;
         internal bool Clip;
         public override int GetWidth() => LogicalWidth;
         public override int GetHeight() => 2;
-        public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+        public override void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         {
             Destination = rect; Source = sourceRect; Clip = clipUV;
             canvasItem.DrawRect(rect, Colors.Magenta);

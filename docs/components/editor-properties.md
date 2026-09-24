@@ -30,7 +30,7 @@ The component depends on Core's `ElectronObject` and `Resource` plus .NET delega
 3. `GetPropertyList()` verifies owner compatibility and unique ordinal names.
 4. Tooling uses the generic descriptor for typed reads and writes.
 5. Revert behavior is supplied by a typed factory and invoked through either the descriptor or `ElectronObject.RevertProperty()`.
-6. A writable descriptor explicitly constructed with `stored: true` may capture/restore a node property for `PackedScene`; storage accepts strings, resources, and reference-free value types such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect`](../classes/Rect.md), [`Rect2i`](../classes/Rect2i.md), and [`Transform`](../classes/Transform.md).
+6. A writable descriptor explicitly constructed with `stored: true` may capture/restore a node property for `PackedScene`; storage accepts strings, resources, and reference-free value types such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), and [`Transform`](../classes/Transform.md).
 
 The base object exposes `InstanceID`, `ClassName`, `IsDisposed`, `CanTranslateMessages`, and `TranslationDomain`. The two translation properties are stored. `Node` adds stored name, process/input enablement and priority properties. `CanvasItem` adds stored visibility, Z order, top-level state, modulation and borrowed material properties. Spatial `Entity` adds stored Position, RotationDegrees, Scale and Skew. Neutral nodes have no canvas or spatial descriptors. Identity/lifetime entries are not stored. [`Timer`](../classes/Timer.md) adds stored process lane, wait, one-shot, autostart, and ignore-time-scale configuration plus runtime-only local pause and read-only remaining time. Global/derived state and notification switches are deliberately runtime API rather than tooling properties.
 
@@ -52,4 +52,4 @@ No editor UI, reflection scanner, attributes, file-serialization schema, categor
 
 ## Verification
 
-The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all six vector values, `Rect`, `Rect2i`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.
+The executable test verifies discovery, storage metadata, typed reads and writes, validation, typed revert-value retrieval, object-level revert, property-list change notification, packed capture/restore including `Color`, all six vector values, `Rect2`, `Rect2i`, `Transform`, and Timer configuration, resource remapping, and unsupported stored-shape rejection.

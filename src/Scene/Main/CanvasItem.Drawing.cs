@@ -92,7 +92,7 @@ public abstract partial class CanvasItem
     /// <exception cref="ArgumentException">Geometry, color or width is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)
+    public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)
     {
         EnsureDrawing();
         if (!rect.IsFinite() || !float.IsFinite(width)) throw new ArgumentException("Drawing geometry must be finite.");
@@ -129,7 +129,7 @@ public abstract partial class CanvasItem
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
     public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)
     {
-        ValidateTextureDraw(texture, new Rect(position, Vector2.Zero), modulate ?? Colors.White);
+        ValidateTextureDraw(texture, new Rect2(position, Vector2.Zero), modulate ?? Colors.White);
         texture.Draw(this, position, modulate);
     }
 
@@ -143,7 +143,7 @@ public abstract partial class CanvasItem
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
-    public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
+    public void DrawTextureRect(Texture texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)
     {
         ValidateTextureDraw(texture, rect, modulate ?? Colors.White);
         texture.DrawRect(this, rect, tile, modulate, transpose);
@@ -160,14 +160,14 @@ public abstract partial class CanvasItem
     /// <exception cref="ArgumentException">Geometry or modulation is not finite.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node or texture is disposed.</exception>
-    public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+    public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
     {
         ValidateTextureDraw(texture, rect, modulate ?? Colors.White);
         if (!sourceRect.IsFinite()) throw new ArgumentException("The texture region must be finite.", nameof(sourceRect));
         texture.DrawRectRegion(this, rect, sourceRect, modulate, transpose, clipUV);
     }
 
-    internal void ValidateTextureDraw(Texture texture, Rect rect, Color color)
+    internal void ValidateTextureDraw(Texture texture, Rect2 rect, Color color)
     {
         EnsureDrawing(); ArgumentNullException.ThrowIfNull(texture);
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(texture));
@@ -175,15 +175,15 @@ public abstract partial class CanvasItem
         ValidateCanvasColor(color);
     }
 
-    internal void RecordTexture(Texture texture, Rect rect, Rect? source, Color color, bool tile, bool transpose, bool clipUV)
+    internal void RecordTexture(Texture texture, Rect2 rect, Rect2? source, Color color, bool tile, bool transpose, bool clipUV)
     {
         ValidateTextureDraw(texture, rect, color);
         if (source is { } region && !region.IsFinite()) throw new ArgumentException("The texture region must be finite.", nameof(source));
         var size = texture.GetSize();
         if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Texture dimensions must be finite and nonnegative.");
         if (size.X == 0 || size.Y == 0) return;
-        var src = source ?? new Rect(Vector2.Zero, tile ? rect.Size.Abs() : size);
-        src = new Rect(src.Position / size, src.Size / size);
+        var src = source ?? new Rect2(Vector2.Zero, tile ? rect.Size.Abs() : size);
+        src = new Rect2(src.Position / size, src.Size / size);
         if (!src.IsFinite()) throw new ArgumentException("Texture coordinates overflowed.", nameof(source));
         (_canvasCommands ??= []).Add(new CanvasCommand(false, rect.Position, rect.Size, color, 0, false,
             Transform.Identity, texture, src, transpose, clipUV, tile));

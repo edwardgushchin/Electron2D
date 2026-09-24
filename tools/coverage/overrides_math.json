@@ -876,7 +876,7 @@
       "reason": "Typed float/double/int/decimal overload of the same global scalar operation; exact numeric behavior remains for semantic audit (ADR 0034)."
     },
     {
-      "electron2d": "method:Electron2D.Rect.GetCenter()",
+      "electron2d": "method:Electron2D.Rect2.GetCenter()",
       "godot": "Rect2::method:get_center()",
       "reason": "PascalCase C# spelling of the rectangle center query (ADRs 0025/0035)."
     },
@@ -1041,7 +1041,7 @@
       "reason": "Typed C# spelling of the same Color operator (ADR 0024)."
     },
     {
-      "electron2d": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect)",
+      "electron2d": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect2)",
       "godot": "Rect2i::constructor:Rect2i(Rect2:)",
       "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
     },
@@ -1051,12 +1051,12 @@
       "reason": "C# conversion operator for the upstream rectangle conversion constructor (ADR 0035)."
     },
     {
-      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Rect,Electron2D.Transform)",
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Rect2,Electron2D.Transform)",
       "godot": "Rect2::operator:operator *(Transform2D:)",
       "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
     },
     {
-      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Rect)",
+      "electron2d": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Rect2)",
       "godot": "Transform2D::operator:operator *(Rect2:)",
       "reason": "Operand-directed typed C# affine multiplication (ADR 0029)."
     },
@@ -1963,12 +1963,12 @@
       "adr": "resources.md#adr-0039"
     },
     {
-      "electron2d": "constructor:Electron2D.Rect..ctor(Electron2D.Vector2,System.Single,System.Single)",
+      "electron2d": "constructor:Electron2D.Rect2..ctor(Electron2D.Vector2,System.Single,System.Single)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "constructor:Electron2D.Rect..ctor(System.Single,System.Single,Electron2D.Vector2)",
+      "electron2d": "constructor:Electron2D.Rect2..ctor(System.Single,System.Single,Electron2D.Vector2)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
@@ -2083,27 +2083,27 @@
       "adr": "core-math.md#adr-0034"
     },
     {
-      "electron2d": "method:Electron2D.Rect.Equals(Electron2D.Rect)",
+      "electron2d": "method:Electron2D.Rect2.Equals(Electron2D.Rect2)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.Rect.Equals(System.Object)",
+      "electron2d": "method:Electron2D.Rect2.Equals(System.Object)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.Rect.GetHashCode()",
+      "electron2d": "method:Electron2D.Rect2.GetHashCode()",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.Rect.ToString()",
+      "electron2d": "method:Electron2D.Rect2.ToString()",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "method:Electron2D.Rect.ToString(System.String)",
+      "electron2d": "method:Electron2D.Rect2.ToString(System.String)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },

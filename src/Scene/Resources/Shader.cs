@@ -71,7 +71,7 @@ public sealed class Shader : Resource
 
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
-    /// material access also accepts Color and Rect. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
+    /// material access also accepts Color and Rect2. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
     /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed arrays use array-valued descriptors; sampled images use Texture descriptors.
     /// The built-in command TEXTURE and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and

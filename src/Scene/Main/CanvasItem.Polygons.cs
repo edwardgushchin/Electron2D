@@ -48,7 +48,7 @@ public abstract partial class CanvasItem
     internal void DrawTriangleArray(ReadOnlySpan<CanvasVertex> triangles, Texture? texture)
     {
         EnsureDrawing();
-        Rect? uvMapping = null;
+        Rect2? uvMapping = null;
         if (texture is AtlasTexture view) texture = view.ResolvePolygonTexture(true, out uvMapping);
         EnsureDrawing();
         if (triangles.Length == 0 || triangles.Length % 3 != 0) throw new ArgumentException("Triangle vertices must form complete triangles.", nameof(triangles));
@@ -70,7 +70,7 @@ public abstract partial class CanvasItem
     private void RecordPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture, bool primitive)
     {
         EnsureDrawing();
-        Rect? uvMapping = null;
+        Rect2? uvMapping = null;
         if (texture is AtlasTexture view) texture = view.ResolvePolygonTexture(!primitive && !uvs.IsEmpty, out uvMapping);
         // A custom texture size query can invoke scene code. Validate after that callback before choosing pooled storage.
         EnsureDrawing();

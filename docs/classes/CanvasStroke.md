@@ -15,7 +15,7 @@ Item-owned retained geometry for polylines, independent pairs, dashes, sampled a
 | Member | Contract |
 | --- | --- |
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)` | Copies thin points/colors or bakes joined/independent local triangles into reusable lists. Counts and finite inputs are validated by CanvasItem. |
-| `void SetRect(Rect rect, Color color, bool filled, float width, bool antialiased)` | Normalizes dimensions, uses the existing closed strip for ordinary outlines, or bakes a fill with compensated local side/corner feathers. |
+| `void SetRect(Rect2 rect, Color color, bool filled, float width, bool antialiased)` | Normalizes dimensions, uses the existing closed strip for ordinary outlines, or bakes a fill with compensated local side/corner feathers. |
 | `void SetEllipse(Vector2 center, float major, float minor, Color color, bool antialiased)` | Bakes a 64-segment fan and optional local alpha ring. |
 | `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Transforms/modulates retained triangles; expands thin lines to one framebuffer pixel on replay. |
 | `static void AppendLine(List<CanvasVertex> output, Vector2 from, Vector2 to, Color color, float width, bool antialiased, Transform transform, bool snap)` | Shared direct DrawLine and positive-width independent-segment tessellation. |

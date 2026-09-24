@@ -376,7 +376,7 @@ internal static partial class RenderingRuntimeTests
         using var copy = (Entity)packed.Instantiate();
         Check(copy.Material == material && copy.Modulate == root.Modulate && copy.SelfModulate == root.SelfModulate,
             "PackedScene stores canvas properties and borrows nonlocal materials.");
-        Reject<InvalidOperationException>(() => root.DrawRect(new Rect(0, 0, 8, 8), Colors.White));
+        Reject<InvalidOperationException>(() => root.DrawRect(new Rect2(0, 0, 8, 8), Colors.White));
         root.ZIndex = 4096;
         Reject<ArgumentOutOfRangeException>(() => root.ZIndex = 4097);
     }
@@ -384,10 +384,10 @@ internal static partial class RenderingRuntimeTests
     private static void VerifyFrame(string expectedBackend)
     {
         var window = new Window { Title = "Electron2D canvas verification", Size = new Vector2i(128, 96) };
-        var red = new CanvasNode { Name = "red", DrawAction = n => n.DrawRect(new Rect(8, 8, 64, 40), Colors.Red) };
-        var green = new CanvasNode { Name = "green", ZIndex = 1, DrawAction = n => n.DrawRect(new Rect(24, 16, 32, 24), new Color(0, 1, 0, 0.5f)) };
-        var blue = new CanvasNode { Name = "blue", Position = new Vector2(88, 8), Scale = new Vector2(2, 2), DrawAction = n => n.DrawRect(new Rect(0, 0, 8, 8), Colors.Blue) };
-        var hidden = new CanvasNode { Name = "hidden", Visible = false, ZIndex = 10, DrawAction = n => n.DrawRect(new Rect(0, 0, 128, 96), Colors.White) };
+        var red = new CanvasNode { Name = "red", DrawAction = n => n.DrawRect(new Rect2(8, 8, 64, 40), Colors.Red) };
+        var green = new CanvasNode { Name = "green", ZIndex = 1, DrawAction = n => n.DrawRect(new Rect2(24, 16, 32, 24), new Color(0, 1, 0, 0.5f)) };
+        var blue = new CanvasNode { Name = "blue", Position = new Vector2(88, 8), Scale = new Vector2(2, 2), DrawAction = n => n.DrawRect(new Rect2(0, 0, 8, 8), Colors.Blue) };
+        var hidden = new CanvasNode { Name = "hidden", Visible = false, ZIndex = 10, DrawAction = n => n.DrawRect(new Rect2(0, 0, 128, 96), Colors.White) };
         var line = new CanvasNode { Name = "line", DrawAction = n => n.DrawLine(new Vector2(8, 64), new Vector2(72, 64), Colors.Yellow, 2) };
         window.AddChild(green); window.AddChild(red); window.AddChild(blue); window.AddChild(hidden); window.AddChild(line);
         var frames = 0;
@@ -487,8 +487,8 @@ internal static partial class RenderingRuntimeTests
                 Material = backend == "gpu" ? (i % 3 == 0 ? first : i % 3 == 1 ? second : null) : null,
                 DrawAction = n =>
                 {
-                    n.DrawRect(new Rect(0, 0, 8, 8), Colors.Red);
-                    n.DrawTextureRect(texture, new Rect(0, 12, 8, 8), false);
+                    n.DrawRect(new Rect2(0, 0, 8, 8), Colors.Red);
+                    n.DrawTextureRect(texture, new Rect2(0, 12, 8, 8), false);
                 }
             });
         var frames = 0;
@@ -523,7 +523,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode
         {
             Material = material,
-            DrawAction = n => n.DrawRect(new Rect(0, 0, 48, 48), Colors.Red),
+            DrawAction = n => n.DrawRect(new Rect2(0, 0, 48, 48), Colors.Red),
             ReadyAction = n =>
         {
             RenderingServer.Instance!.FramePostDraw += () =>
@@ -632,8 +632,8 @@ internal static partial class RenderingRuntimeTests
         first.SetShaderParameter("shift", new Vector2i(2, 0));
         var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2i(96, 80) };
         var frames = 0;
-        var left = new CanvasNode { Name = "left", Material = first, DrawAction = n => n.DrawRect(new Rect(0, 0, 40, 48), Colors.White) };
-        var right = new CanvasNode { Name = "right", Material = second, DrawAction = n => n.DrawRect(new Rect(48, 0, 40, 48), Colors.White) };
+        var left = new CanvasNode { Name = "left", Material = first, DrawAction = n => n.DrawRect(new Rect2(0, 0, 40, 48), Colors.White) };
+        var right = new CanvasNode { Name = "right", Material = second, DrawAction = n => n.DrawRect(new Rect2(48, 0, 40, 48), Colors.White) };
         left.ReadyAction = n =>
         {
             RenderingServer.Instance!.SetDefaultClearColor(Colors.Black);

@@ -362,7 +362,7 @@ public class AnimatedSprite : Entity
         if (!size.IsFinite() || size.X < 0 || size.Y < 0) throw new InvalidOperationException("Animation texture dimensions must be finite and nonnegative.");
         var offset = _centered ? _offset - size / 2 : _offset;
         if (IsInsideTree && GetViewport()?.SnapTransformsToPixel == true) offset = CanvasGeometry.Snap(offset);
-        DrawTextureRectRegion(texture, new Rect(offset, new Vector2(_flipH ? -size.X : size.X, _flipV ? -size.Y : size.Y)), new Rect(Vector2.Zero, size));
+        DrawTextureRectRegion(texture, new Rect2(offset, new Vector2(_flipH ? -size.X : size.X, _flipV ? -size.Y : size.Y)), new Rect2(Vector2.Zero, size));
     }
 
     /// <inheritdoc />

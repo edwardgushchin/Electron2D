@@ -112,7 +112,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public bool IsTouchscreenAvailable()`](#method-istouchscreenavailable) | Gets whether touch input is available from a device or mouse emulation. |
 | [`public int WindowGetCurrentScreen(int windowId = MainWindowId)`](#method-windowgetcurrentscreen) | Gets the current screen index containing the main window. |
 | [`public int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
-| [`public int GetScreenFromRect(Rect rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
+| [`public int GetScreenFromRect(Rect2 rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
 | [`public int[] GetWindowList()`](#method-getwindowlist) | Gets a snapshot of the engine-owned native window IDs. |
 | [`public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display, window or graphics-context identity. |
 | [`public int GetWindowAtScreenPosition(Vector2i position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
@@ -539,7 +539,7 @@ Gets the index of the display with keyboard focus.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getscreenfromrect"></a>
-#### `public int GetScreenFromRect(Rect rectangle)`
+#### `public int GetScreenFromRect(Rect2 rectangle)`
 
 Gets the display containing the largest portion of a desktop rectangle.
 

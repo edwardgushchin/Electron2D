@@ -87,7 +87,7 @@ internal static class CanvasLayerTests
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warm layer coordinates allocate zero managed bytes.");
     }
 
-    private sealed class TestViewport : Viewport { internal Vector2 Size = new(100, 80); public override Rect GetVisibleRect() => new(Vector2.Zero, Size); }
+    private sealed class TestViewport : Viewport { internal Vector2 Size = new(100, 80); public override Rect2 GetVisibleRect() => new(Vector2.Zero, Size); }
     private sealed class FaultItem : Entity { protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationExitCanvas) throw new ApplicationException("layer exit"); } }
     private static void Near(Vector2 actual, Vector2 expected) => Check(actual.IsEqualApprox(expected), $"Expected {expected}, got {actual}.");
     private static void Near(float actual, float expected) => Check(Mathf.IsEqualApprox(actual, expected), $"Expected {expected}, got {actual}.");

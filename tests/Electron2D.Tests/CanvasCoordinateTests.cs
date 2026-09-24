@@ -21,7 +21,7 @@ internal static class CanvasCoordinateTests
         Check(item.GetGlobalTransformWithCanvas() == item.GetGlobalTransform(), "Detached item ignores even a viewport ancestor's canvas transform.");
         Reject<InvalidOperationException>(() => item.GetCanvasTransform()); Reject<InvalidOperationException>(() => item.GetViewportTransform());
         using var tree = new SceneTree(root);
-        Check(item.GetViewportRect() == new Rect(0, 0, 96, 80), "Viewport bounds ignore canvas transforms.");
+        Check(item.GetViewportRect() == new Rect2(0, 0, 96, 80), "Viewport bounds ignore canvas transforms.");
         Near(item.GetGlobalTransformWithCanvas() * Vector2.Zero, new(22, 47));
         Near(item.GetViewportTransform() * item.GetGlobalTransform() * Vector2.Zero, new(122, 247));
         Near(item.GetScreenTransform() * Vector2.Zero, new(122, 247));
@@ -99,7 +99,7 @@ internal static class CanvasCoordinateTests
         }
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 96, 80); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 96, 80); }
     private sealed class Probe : Entity { internal Action<InputEvent>? InputAction; protected override void OnInput(InputEvent e) => InputAction?.Invoke(e); }
     private static void Near(Vector2 a, Vector2 b) => Check(a.IsEqualApprox(b), $"Expected {b}, got {a}.");
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

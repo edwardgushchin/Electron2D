@@ -42,7 +42,7 @@ internal sealed class CanvasPolygon
             throw new ArgumentException("The polygon cannot be triangulated.", nameof(points));
     }
 
-    internal void RemapUV(Rect mapping)
+    internal void RemapUV(Rect2 mapping)
     {
         for (var i = 0; i < VertexCount; i++)
         {

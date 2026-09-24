@@ -428,7 +428,7 @@ internal static class ControlLayoutTests
     private sealed class TestViewport : Viewport
     {
         internal Vector2 VisibleSize = new(200, 150);
-        public override Rect GetVisibleRect() => new(Vector2.Zero, VisibleSize);
+        public override Rect2 GetVisibleRect() => new(Vector2.Zero, VisibleSize);
     }
 
     private static void Near(Vector2 actual, Vector2 expected) => Check(actual.IsEqualApprox(expected), $"Expected {expected}, got {actual}.");

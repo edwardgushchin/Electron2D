@@ -194,8 +194,8 @@ internal static class TweenValue<TValue>
                 RoundToInt(from.W + ((to.W - (double)from.W) * weight))));
         if (typeof(TValue) == typeof(Color))
             return Cast((Color from, Color to, double weight) => from.Lerp(to, (float)weight));
-        if (typeof(TValue) == typeof(Rect))
-            return Cast((Rect from, Rect to, double weight) => new Rect(
+        if (typeof(TValue) == typeof(Rect2))
+            return Cast((Rect2 from, Rect2 to, double weight) => new Rect2(
                 from.Position.Lerp(to.Position, (float)weight),
                 from.Size.Lerp(to.Size, (float)weight)));
         if (typeof(TValue) == typeof(Rect2i))
@@ -233,8 +233,8 @@ internal static class TweenValue<TValue>
             return Cast((Vector4i left, Vector4i right) => left + right);
         if (typeof(TValue) == typeof(Color))
             return Cast((Color left, Color right) => left + right);
-        if (typeof(TValue) == typeof(Rect))
-            return Cast((Rect left, Rect right) => new Rect(left.Position + right.Position, left.Size + right.Size));
+        if (typeof(TValue) == typeof(Rect2))
+            return Cast((Rect2 left, Rect2 right) => new Rect2(left.Position + right.Position, left.Size + right.Size));
         if (typeof(TValue) == typeof(Rect2i))
             return Cast((Rect2i left, Rect2i right) => new Rect2i(left.Position + right.Position, left.Size + right.Size));
         if (typeof(TValue) == typeof(Transform))
@@ -268,8 +268,8 @@ internal static class TweenValue<TValue>
             return Cast((Vector4i left, Vector4i right) => left - right);
         if (typeof(TValue) == typeof(Color))
             return Cast((Color left, Color right) => left - right);
-        if (typeof(TValue) == typeof(Rect))
-            return Cast((Rect left, Rect right) => new Rect(left.Position - right.Position, left.Size - right.Size));
+        if (typeof(TValue) == typeof(Rect2))
+            return Cast((Rect2 left, Rect2 right) => new Rect2(left.Position - right.Position, left.Size - right.Size));
         if (typeof(TValue) == typeof(Rect2i))
             return Cast((Rect2i left, Rect2i right) => new Rect2i(left.Position - right.Position, left.Size - right.Size));
         if (typeof(TValue) == typeof(Transform))

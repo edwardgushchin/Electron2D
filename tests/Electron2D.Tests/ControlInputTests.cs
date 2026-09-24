@@ -230,7 +230,7 @@ internal static class ControlInputTests
             "Reentrant notification release prevents a stale focus-enter event.");
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 100); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 100); }
     private sealed class FocusProbe(string name, List<string> order) : Control
     {
         internal bool FailExitNotification;

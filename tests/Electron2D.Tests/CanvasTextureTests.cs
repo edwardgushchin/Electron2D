@@ -30,28 +30,28 @@ internal static partial class RenderingRuntimeTests
         {
             Reject<ArgumentNullException>(() => n.DrawTexture(null!, Vector2.Zero));
             Reject<ArgumentException>(() => n.DrawTexture(texture, new Vector2(float.NaN, 0)));
-            Reject<ArgumentException>(() => n.DrawTextureRect(texture, new Rect(0, 0, 2, float.PositiveInfinity), false));
-            Reject<ArgumentException>(() => n.DrawTextureRectRegion(texture, new Rect(0, 0, 2, 2), new Rect(float.NaN, 0, 1, 1)));
+            Reject<ArgumentException>(() => n.DrawTextureRect(texture, new Rect2(0, 0, 2, float.PositiveInfinity), false));
+            Reject<ArgumentException>(() => n.DrawTextureRectRegion(texture, new Rect2(0, 0, 2, 2), new Rect2(float.NaN, 0, 1, 1)));
             Reject<ArgumentException>(() => n.DrawTexture(texture, Vector2.Zero, new Color(float.NaN, 1, 1, 1)));
             n.DrawTexture(empty, Vector2.Zero);
-            n.DrawTextureRect(texture, new Rect(0, 0, 0, 5), false);
+            n.DrawTextureRect(texture, new Rect2(0, 0, 0, 5), false);
             n.DrawTexture(texture, new Vector2(4, 4));
-            n.DrawTextureRect(texture, new Rect(8, 8, 16, 16), false);
-            texture.DrawRect(n, new Rect(28, 8, -16, 16), false);
-            n.DrawTextureRect(texture, new Rect(48, 8, 16, -16), false);
-            n.DrawTextureRect(texture, new Rect(68, 8, 16, 8), false, transpose: true);
-            n.DrawTextureRectRegion(texture, new Rect(8, 32, 16, 16), new Rect(1, 0, 1, 1));
-            texture.DrawRectRegion(n, new Rect(28, 32, -16, 16), new Rect(0, 0, -2, 2));
-            n.DrawTextureRect(texture, new Rect(48, 32, 16, 16), true);
-            n.DrawTextureRectRegion(texture, new Rect(68, 32, 16, 16), new Rect(-2, -2, 1, 1), clipUV: false);
+            n.DrawTextureRect(texture, new Rect2(8, 8, 16, 16), false);
+            texture.DrawRect(n, new Rect2(28, 8, -16, 16), false);
+            n.DrawTextureRect(texture, new Rect2(48, 8, 16, -16), false);
+            n.DrawTextureRect(texture, new Rect2(68, 8, 16, 8), false, transpose: true);
+            n.DrawTextureRectRegion(texture, new Rect2(8, 32, 16, 16), new Rect2(1, 0, 1, 1));
+            texture.DrawRectRegion(n, new Rect2(28, 32, -16, 16), new Rect2(0, 0, -2, 2));
+            n.DrawTextureRect(texture, new Rect2(48, 32, 16, 16), true);
+            n.DrawTextureRectRegion(texture, new Rect2(68, 32, 16, 16), new Rect2(-2, -2, 1, 1), clipUV: false);
             texture.Draw(n, new Vector2(8, 64), transpose: true);
             n.DrawSetTransform(new Vector2(28, 64), scale: new Vector2(4, 4));
             n.DrawTexture(texture, Vector2.Zero, new Color(0.5f, 0.5f, 0.5f, 0.5f));
             n.DrawSetTransform(Vector2.Zero);
             n.DrawTexture(custom, new Vector2(96, 8));
-            n.DrawTextureRect(custom, new Rect(96, 20, 4, 4), false);
-            n.DrawTextureRectRegion(custom, new Rect(96, 32, 4, 4), new Rect(0, 0, 1, 1));
-            n.DrawRect(new Rect(96, 48, 4, 4), Colors.White);
+            n.DrawTextureRect(custom, new Rect2(96, 20, 4, 4), false);
+            n.DrawTextureRectRegion(custom, new Rect2(96, 32, 4, 4), new Rect2(0, 0, 1, 1));
+            n.DrawRect(new Rect2(96, 48, 4, 4), Colors.White);
         }
         };
         node.ReadyAction = n =>
@@ -124,8 +124,8 @@ internal static partial class RenderingRuntimeTests
             Material = material,
             DrawAction = n =>
             {
-                n.DrawTextureRectRegion(texture, new Rect(0, 0, 32, 8), new Rect(0, 0, 8, 2));
-                n.DrawTextureRectRegion(texture, new Rect(0, 16, 32, 8), new Rect(0, 0, 8, 2), clipUV: false);
+                n.DrawTextureRectRegion(texture, new Rect2(0, 0, 32, 8), new Rect2(0, 0, 8, 2));
+                n.DrawTextureRectRegion(texture, new Rect2(0, 16, 32, 8), new Rect2(0, 0, 8, 2), clipUV: false);
             },
             ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
             {
@@ -148,7 +148,7 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2i(96, 80) };
         window.AddChild(new CanvasNode
         {
-            DrawAction = n => n.DrawTextureRect(texture, new Rect(0, 0, 16, 16), false, new Color(0.25f, 1, 1, 1)),
+            DrawAction = n => n.DrawTextureRect(texture, new Rect2(0, 0, 16, 16), false, new Color(0.25f, 1, 1, 1)),
             ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
             {
                 using var frame = RenderingServer.Instance.Readback();
@@ -166,7 +166,7 @@ internal static partial class RenderingRuntimeTests
     {
         using var source = Image.CreateEmpty(4, 4, false, Image.Format.Rgba8);
         using var texture = ImageTexture.CreateFromImage(source);
-        using var node = new CanvasNode { DrawAction = n => n.DrawTextureRectRegion(texture, new Rect(0, 0, 64, 64), new Rect(0, 0, 4, 4)) };
+        using var node = new CanvasNode { DrawAction = n => n.DrawTextureRectRegion(texture, new Rect2(0, 0, 64, 64), new Rect2(0, 0, 4, 4)) };
         var vertices = new List<CanvasVertex>();
         var batches = new List<CanvasBatch>();
         node.PrepareCanvas();
@@ -203,10 +203,10 @@ internal static partial class RenderingRuntimeTests
         public override int GetWidth() => 4;
         public override int GetHeight() => 4;
         public override void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)
-        { Draws++; canvasItem.DrawRect(new Rect(position, GetSize()), Colors.Magenta); }
-        public override void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
+        { Draws++; canvasItem.DrawRect(new Rect2(position, GetSize()), Colors.Magenta); }
+        public override void DrawRect(CanvasItem canvasItem, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)
         { Draws++; canvasItem.DrawRect(rect, Colors.Magenta); }
-        public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+        public override void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         { Draws++; canvasItem.DrawRect(rect, Colors.Magenta); }
     }
 }

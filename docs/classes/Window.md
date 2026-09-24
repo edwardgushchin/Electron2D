@@ -61,7 +61,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`protected override Func<Node> CreateSceneInstanceFactory()`](#createsceneinstancefactory) | Returns a static factory for an exact Window. Derived types must supply their own factory. PackedScene stores title, size, size limits, mode, supported policies and inherited stored Node properties; Position and CurrentScreen are not stored. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors. |
-| [`public override Rect GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
+| [`public override Rect2 GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public void Show()`](#show) | Shows this window; detached use only configures startup visibility. |
 | [`public void Hide()`](#hide) | Hides this window without disposing it or its scene. |
 | [`public int GetWindowID()`](#getwindowid) | Gets the native window identity while running. |
@@ -295,7 +295,7 @@ Clears this class's subscribers, then disposes inherited state. Overrides must c
 Appends typed title, size, minimum/maximum size, mode and supported policy descriptors to inherited Node descriptors.
 
 <a id="getvisiblerect"></a>
-### `public override Rect GetVisibleRect()`
+### `public override Rect2 GetVisibleRect()`
 
 Returns the client rectangle in viewport coordinates.
 

@@ -10,7 +10,7 @@ public abstract partial class Viewport : Node
     /// <summary>Returns the client rectangle in viewport coordinates.</summary>
     /// <returns>A zero-origin rectangle in client units, independent of desktop and node position.</returns>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
-    public abstract Rect GetVisibleRect();
+    public abstract Rect2 GetVisibleRect();
 
     /// <summary>Occurs after the client size changes, before subsequent frame callbacks.</summary>
     /// <remarks>Subscribers run synchronously on the scene owner thread. Desktop movement does not notify.</remarks>

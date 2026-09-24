@@ -204,7 +204,7 @@ internal static partial class RenderingRuntimeTests
         material.SetShaderParameter("tint", Colors.White);
         var window = new Window { Size = new Vector2i(96, 80) };
         var frames = 0;
-        var node = new CanvasNode { DrawAction = n => n.DrawRect(new Rect(0, 0, 64, 64), Colors.White), Material = material };
+        var node = new CanvasNode { DrawAction = n => n.DrawRect(new Rect2(0, 0, 64, 64), Colors.White), Material = material };
         node.ReadyAction = n =>
         {
             var server = RenderingServer.Instance!;
@@ -372,7 +372,7 @@ internal static partial class RenderingRuntimeTests
         using var shader = LoadShader("TextureGlsl");
         using var material = new ShaderMaterial { Shader = shader };
         var window = new Window();
-        window.AddChild(new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect(0, 0, 10, 10), Colors.White) });
+        window.AddChild(new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect2(0, 0, 10, 10), Colors.White) });
         if (backend == "compatibility") Reject<NotSupportedException>(() => Engine.Instance.Run(window));
         else Reject<InvalidOperationException>(() => Engine.Instance.Run(window));
         Released(window);

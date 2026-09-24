@@ -41,7 +41,7 @@ Returns max(1, ArrayLength).
 
 `internal bool Accepts<T>() where T : unmanaged`
 
-Accepts the reflected C# type, plus Color and Rect as aliases for Vector4. Float3 uses Vector3 and also accepts Color. Logical booleans accept bool or int masks according to width; arrays use the same element mapping. Integer vectors carry signed/unsigned component bits without conversion. Float2x2 accepts Transform, storing only X/Y. Does not imply arbitrary unmanaged types are supported.
+Accepts the reflected C# type, plus Color and Rect2 as aliases for Vector4. Float3 uses Vector3 and also accepts Color. Logical booleans accept bool or int masks according to width; arrays use the same element mapping. Integer vectors carry signed/unsigned component bits without conversion. Float2x2 accepts Transform, storing only X/Y. Does not imply arbitrary unmanaged types are supported.
 
 ### Migration compatibility
 

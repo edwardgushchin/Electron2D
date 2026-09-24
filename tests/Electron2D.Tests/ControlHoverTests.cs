@@ -81,7 +81,7 @@ internal static class ControlHoverTests
         viewport.PushInput(motion, inLocalCoordinates: true);
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 100); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 100); }
 
     private sealed class Probe(string label) : Control
     {

@@ -18,7 +18,7 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 | `int[] Indices`, `int IndexCount` | Filled triangle indices, with reusable capacity. |
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive)` | Copies validated attributes; triangulates a contour through shared Geometry logic or creates fixed triangle/quad indices. |
 | `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)` | Copies validated triangle vertices from internal scene drawing and writes sequential indices without contour triangulation. |
-| `void RemapUV(Rect mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
+| `void RemapUV(Rect2 mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
 | `void Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap)` | Appends transformed/modulated triangles, or one-pixel point/line geometry. |
 
 ## Runtime behavior

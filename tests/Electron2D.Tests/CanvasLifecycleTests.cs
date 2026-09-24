@@ -109,9 +109,9 @@ internal static class CanvasLifecycleTests
         root.AddChild(detached); detached.PrepareCanvas();
         Check(detachedDraws == 2, "Attachment requests fresh recording.");
         var log = new List<int>();
-        node.Notified = id => { if (id == CanvasItem.NotificationDraw) { log.Add(1); node.DrawRect(new Rect(0, 0, 8, 8), Colors.Red); } };
-        node.Draw += n => { log.Add(2); n.DrawRect(new Rect(8, 0, 8, 8), Colors.Green); n.QueueRedraw(); };
-        node.Drawing = () => { log.Add(3); node.DrawRect(new Rect(16, 0, 8, 8), Colors.Blue); };
+        node.Notified = id => { if (id == CanvasItem.NotificationDraw) { log.Add(1); node.DrawRect(new Rect2(0, 0, 8, 8), Colors.Red); } };
+        node.Draw += n => { log.Add(2); n.DrawRect(new Rect2(8, 0, 8, 8), Colors.Green); n.QueueRedraw(); };
+        node.Drawing = () => { log.Add(3); node.DrawRect(new Rect2(16, 0, 8, 8), Colors.Blue); };
         node.PrepareCanvas(); node.PrepareCanvas();
         Check(log.SequenceEqual(new[] { 1, 2, 3 }), "Notification, signal and override share one drawing scope; in-scope QueueRedraw coalesces.");
         Reject<InvalidOperationException>(() => node.DrawRect(default, Colors.White));
@@ -121,7 +121,7 @@ internal static class CanvasLifecycleTests
         {
             var failing = new Probe { Name = "failing" }; root.AddChild(failing);
             var fail = true;
-            Action record = () => { failing.DrawRect(new Rect(0, 0, 8, 8), Colors.White); if (fail) throw new InvalidOperationException("draw"); };
+            Action record = () => { failing.DrawRect(new Rect2(0, 0, 8, 8), Colors.White); if (fail) throw new InvalidOperationException("draw"); };
             failing.Notified = id => { if (id == CanvasItem.NotificationDraw && stage == 0) record(); };
             failing.Draw += _ => { if (stage == 1) record(); };
             failing.Drawing = () => { if (stage == 2) record(); };
@@ -163,9 +163,9 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(neutral); neutral.AddChild(independent);
         var draws = 0; var frames = 0; var hidden = 0;
         node.Hidden += _ => hidden++;
-        node.Notified = id => { if (id == CanvasItem.NotificationDraw) node.DrawRect(new Rect(0, 0, 8, 8), Colors.Red); };
-        node.Draw += n => n.DrawRect(new Rect(8, 0, 8, 8), Colors.Green);
-        node.Drawing = () => { draws++; node.DrawRect(new Rect(16, 0, 8, 8), Colors.Blue); node.QueueRedraw(); };
+        node.Notified = id => { if (id == CanvasItem.NotificationDraw) node.DrawRect(new Rect2(0, 0, 8, 8), Colors.Red); };
+        node.Draw += n => n.DrawRect(new Rect2(8, 0, 8, 8), Colors.Green);
+        node.Drawing = () => { draws++; node.DrawRect(new Rect2(16, 0, 8, 8), Colors.Blue); node.QueueRedraw(); };
         window.Ready += _ =>
         {
             var renderer = RenderingServer.Instance!;

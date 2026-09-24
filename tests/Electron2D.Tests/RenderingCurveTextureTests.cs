@@ -14,7 +14,7 @@ internal static partial class RenderingRuntimeTests
         shader.SetDefaultTextureParameter("colorMap", single); material.SetShaderParameter("detailMap", detail);
         material.SetShaderParameter("tint", new Color(.25f, .25f, .25f, 1));
         var window = new Window { Size = new Vector2i(96, 80) }; var stage = 0;
-        var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect(0, 0, 64, 64), Colors.White) };
+        var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect2(0, 0, 64, 64), Colors.White) };
         node.ReadyAction = n =>
         {
             var server = RenderingServer.Instance!; server.SetDefaultClearColor(Colors.Black);
@@ -57,7 +57,7 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         window.AddChild(new CanvasNode
         {
-            DrawAction = n => { n.DrawTextureRect(single, new Rect(0, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); n.DrawTextureRect(xyz, new Rect(24, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); },
+            DrawAction = n => { n.DrawTextureRect(single, new Rect2(0, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); n.DrawTextureRect(xyz, new Rect2(24, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); },
             ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
             {
                 using var image = RenderingServer.Instance.Readback(); Pixel(image, 8, 8, new Color(.5f, .5f, .5f, 1)); Pixel(image, 32, 8, new Color(0, .5f, 0, 1)); n.Tree!.Quit();

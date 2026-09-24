@@ -64,7 +64,7 @@ internal sealed class CanvasStroke
         }
     }
 
-    internal void SetRect(Rect rect, Color color, bool filled, float width, bool antialiased)
+    internal void SetRect(Rect2 rect, Color color, bool filled, float width, bool antialiased)
     {
         rect = rect.Abs();
         if (!rect.IsFinite() || !rect.End.IsFinite()) throw new ArgumentException("Rectangle coordinates overflowed.");

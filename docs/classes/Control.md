@@ -89,8 +89,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public void SetOffset(Side side, float offset)` | Updates one offset and resolves the rectangle. |
 | `public Control? GetParentControl()` | Returns only a direct Control parent. |
 | `public Vector2 GetParentAreaSize()` | Returns the active anchor area size or zero while detached. |
-| `public Rect GetRect()` | Returns transformed local origin and scale times layout size; not an axis-aligned rotated bound. |
-| `public Rect GetGlobalRect()` | Returns transformed global origin and scale times layout size; not an axis-aligned rotated bound. |
+| `public Rect2 GetRect()` | Returns transformed local origin and scale times layout size; not an axis-aligned rotated bound. |
+| `public Rect2 GetGlobalRect()` | Returns transformed global origin and scale times layout size; not an axis-aligned rotated bound. |
 | `public override Transform GetTransform()` | Returns translation composed with pivot, rotation and scale. |
 | `public override void Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves in the neutral tree; preserves global origin by default, validating a canvas inverse before mutation. |
 | `public void AcceptEvent()` | Marks current scene input handled. |

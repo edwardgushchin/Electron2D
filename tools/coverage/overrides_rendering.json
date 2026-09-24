@@ -12,12 +12,12 @@
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
@@ -27,12 +27,12 @@
     },
     {
       "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
@@ -42,12 +42,12 @@
     },
     {
       "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "electron2d": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
       "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "electron2d": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
       "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. CanvasItem/Viewport sampling inheritance is integrated with explicit backend limits. AtlasTexture supplies nested views; further texture kinds and full canvas integration remain pending under ADR 0028."
     },
     {
@@ -238,17 +238,17 @@
     {
       "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
       "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameter(System.String)",
-      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect2 float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
     },
     {
       "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
       "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameter`1(System.String)",
-      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect2 float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
     },
     {
       "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
       "electron2d": "method:Electron2D.ShaderMaterial.GetShaderParameterArray`1(System.String)",
-      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect2 float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028)."
     },
     {
       "godot": "Sprite2D::method:get_rect()",
@@ -272,22 +272,22 @@
     },
     {
       "godot": "Texture2D::method:draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:_draw_rect(RID:,Rect2:,bool:,Color:,bool:)",
-      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
       "godot": "Texture2D::method:_draw_rect_region(RID:,Rect2:,Rect2:,Color:,bool:,bool:)",
-      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "electron2d": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
       "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
     },
     {
@@ -1588,14 +1588,14 @@
     },
     {
       "state": "Partial",
-      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028).",
+      "reason": "Typed scalar/vector, copied fixed-array and borrowed Texture getters replace Variant. Vector3 float3, RGB Color, Rect2 float4 aliases, signed/unsigned Vector3i triples and Vector2i/Vector4i, Transform float2x2, bool and boolean-vector int masks support values and typed arrays. Names and type/shape are validated; stored defaults are identity for float2x2 Transform and zero otherwise (float3 Color alpha is one) and an absent texture override returns null. Reflected Shader defaults resolve at draw time. Other matrix shapes, further uniform types, authored value defaults and complete material integration remain pending (ADRs 0001/0005/0028).",
       "godot": [
         "ShaderMaterial::method:get_shader_parameter(StringName:)"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Typed ShaderMaterial supports copied scalar/vector/array values, borrowed texture overrides, shared shaders, reload migration and graph duplication; mutations notify Changed in the C# Resource model. ShaderVectorRenderingTests and ShaderMatrixRenderingTests cover numeric float3/int3/uint3, RGB/Rect aliases, unsigned vectors and Transform float2x2, descriptors/defaults, scalar/array copies, signedness resets, matrix order/stride migration and HLSL/GLSL pixels with zero warm allocation. RenderingTextureTests verifies named linear/base-level/clamp defaults across reload and live canvas policies. ShaderBooleanRenderingTests covers scalar bool, bvec2/3/4 int masks and typed fixed arrays, normalization/defaults, copies, logical type resets, invalid metadata and HLSL/GLSL pixels with zero warm allocation. Both importers preserve logical types in validated SPIR-V OpString metadata; external producers enter the same contract. Arrays use one typed value per logical element under ADR 0005. Further uniform types/defaults, instance uniforms, sampler configuration and full backend behavior remain pending (ADRs 0001/0014/0028).",
+      "reason": "Typed ShaderMaterial supports copied scalar/vector/array values, borrowed texture overrides, shared shaders, reload migration and graph duplication; mutations notify Changed in the C# Resource model. ShaderVectorRenderingTests and ShaderMatrixRenderingTests cover numeric float3/int3/uint3, RGB/Rect2 aliases, unsigned vectors and Transform float2x2, descriptors/defaults, scalar/array copies, signedness resets, matrix order/stride migration and HLSL/GLSL pixels with zero warm allocation. RenderingTextureTests verifies named linear/base-level/clamp defaults across reload and live canvas policies. ShaderBooleanRenderingTests covers scalar bool, bvec2/3/4 int masks and typed fixed arrays, normalization/defaults, copies, logical type resets, invalid metadata and HLSL/GLSL pixels with zero warm allocation. Both importers preserve logical types in validated SPIR-V OpString metadata; external producers enter the same contract. Arrays use one typed value per logical element under ADR 0005. Further uniform types/defaults, instance uniforms, sampler configuration and full backend behavior remain pending (ADRs 0001/0014/0028).",
       "godot": [
         "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
         "ShaderMaterial::property:shader",

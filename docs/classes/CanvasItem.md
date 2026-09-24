@@ -39,7 +39,7 @@ The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree o
 ```csharp
 class PaintedNode : Entity
 {
-    protected override void OnDraw() => DrawRect(new Rect(0, 0, 32, 16), Colors.Cyan);
+    protected override void OnDraw() => DrawRect(new Rect2(0, 0, 32, 16), Colors.Cyan);
 }
 ```
 
@@ -50,7 +50,7 @@ Source: [CanvasItem.Coordinates.cs](../../src/Scene/Main/CanvasItem.Coordinates.
 | Declaration | Contract |
 | --- | --- |
 | `public CanvasLayer? GetCanvasLayerNode()` | [Borrowed associated layer](#getcanvaslayernode) |
-| `public Rect GetViewportRect()` | [Visible viewport rectangle](#getviewportrect) |
+| `public Rect2 GetViewportRect()` | [Visible viewport rectangle](#getviewportrect) |
 | `public Transform GetCanvasTransform()` | [Canvas-to-viewport transform](#getcanvastransform) |
 | `public Transform GetGlobalTransformWithCanvas()` | [Local-to-viewport transform](#getglobaltransformwithcanvas) |
 | `public Transform GetViewportTransform()` | [Canvas-to-client transform](#getviewporttransform) |
@@ -78,7 +78,7 @@ Returns the borrowed layer associated with actual canvas membership, or null whi
 
 ### GetViewportRect
 
-`public Rect GetViewportRect()`
+`public Rect2 GetViewportRect()`
 
 Returns the active containing viewport's GetVisibleRect, in viewport coordinates. Canvas/node transforms do not change its bounds.
 
@@ -185,12 +185,12 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawPolygon(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs = default, Texture? texture = null)`](#drawpolygon) | Triangulated contour with interpolated colors and UVs. |
 | [`public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null)`](#drawprimitive) | Point, line, triangle or quad. |
 | [`public void DrawLine(Vector2 from, Vector2 to, Color color, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawline-electron2d-vector2-electron2d-vector2-electron2d-color-system-single-system-boolean) | Records a straight line during canvas recording. |
-| [`public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
+| [`public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect2-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
 | [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Records an additional transform for subsequent commands. It executes only when its animation interval is visible; each replay starts with identity. |
 | [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Records the full additional transform for subsequent commands. It executes only when its animation interval is visible; DrawEndAnimation retains the last executed transform. |
 | [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
-| [`public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
-| [`public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
+| [`public void DrawTextureRect(Texture texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect2-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
+| [`public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
 | [`public void ForceUpdateTransform()`](#forceupdatetransform) | Immediately delivers this item's pending global notification. |
 | [`public Transform GetGlobalTransform()`](#m-electron2d-canvasitem-getglobaltransform) | Returns the transform composed through the direct canvas-parent chain. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-canvasitem-getpropertydescriptors) | Extends neutral descriptors with visibility, ordering, top-level state, modulation and borrowed materials. |
@@ -593,8 +593,8 @@ Records a straight line during canvas recording.
 
 **System.ObjectDisposedException:** The node is disposed.
 
-<a id="m-electron2d-canvasitem-drawrect-electron2d-rect-electron2d-color-system-boolean-system-single-system-boolean"></a>
-### `public void DrawRect(Rect rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`
+<a id="m-electron2d-canvasitem-drawrect-electron2d-rect2-electron2d-color-system-boolean-system-single-system-boolean"></a>
+### `public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`
 
 Records a filled rectangle or a centered rectangular outline during canvas recording.
 
@@ -667,8 +667,8 @@ Draws a borrowed texture at its logical size during this item's canvas recording
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
-<a id="m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect-system-boolean-system-nullable-electron2d-color-system-boolean"></a>
-### `public void DrawTextureRect(Texture texture, Rect rect, bool tile, Color? modulate = null, bool transpose = false)`
+<a id="m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect2-system-boolean-system-nullable-electron2d-color-system-boolean"></a>
+### `public void DrawTextureRect(Texture texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`
 
 Stretches or repeats a borrowed texture over a local rectangle during canvas recording.
 
@@ -690,8 +690,8 @@ Stretches or repeats a borrowed texture over a local rectangle during canvas rec
 
 **System.ObjectDisposedException:** The node or texture is disposed.
 
-<a id="m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect-electron2d-rect-system-nullable-electron2d-color-system-boolean-system-boolean"></a>
-### `public void DrawTextureRectRegion(Texture texture, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`
+<a id="m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean"></a>
+### `public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`
 
 Stretches a source region of a borrowed texture over a local rectangle during canvas recording.
 

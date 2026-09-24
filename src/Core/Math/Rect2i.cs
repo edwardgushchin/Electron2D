@@ -218,13 +218,13 @@ public struct Rect2i : IEquatable<Rect2i>
     /// <param name="value">The integer rectangle to convert.</param>
     /// <returns>A floating-point rectangle with corresponding position and size components.</returns>
     /// <remarks>Large integer components can lose low-order precision.</remarks>
-    public static implicit operator Rect(Rect2i value) => new(value._position, value._size);
+    public static implicit operator Rect2(Rect2i value) => new(value._position, value._size);
 
     /// <summary>Converts a floating-point rectangle by truncating each position and size component toward zero.</summary>
     /// <param name="value">The floating-point rectangle to convert.</param>
     /// <returns>The truncated integer rectangle.</returns>
     /// <exception cref="ArgumentOutOfRangeException">A component is not finite or is outside the 32-bit signed integer range.</exception>
-    public static explicit operator Rect2i(Rect value) => new((Vector2i)value.Position, (Vector2i)value.Size);
+    public static explicit operator Rect2i(Rect2 value) => new((Vector2i)value.Position, (Vector2i)value.Size);
 
     /// <summary>Tests whether another object is an equal integer rectangle.</summary>
     /// <param name="obj">The object to compare.</param>

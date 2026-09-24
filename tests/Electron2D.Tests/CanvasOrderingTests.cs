@@ -83,13 +83,13 @@ internal static partial class RenderingRuntimeTests
         protected override void OnDraw()
         {
             DuringDraw?.Invoke();
-            DrawRect(new Rect(-1000, -1000, 2000, 2000), color);
+            DrawRect(new Rect2(-1000, -1000, 2000, 2000), color);
         }
     }
 
     private sealed class OrderingCanvas : CanvasItem
     {
         public override Transform GetTransform() => new(0, new Vector2(0, 30));
-        protected override void OnDraw() => DrawRect(new Rect(-1000, -1000, 2000, 2000), Colors.Cyan);
+        protected override void OnDraw() => DrawRect(new Rect2(-1000, -1000, 2000, 2000), Colors.Cyan);
     }
 }

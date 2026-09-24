@@ -134,7 +134,7 @@ internal static class CanvasSamplingTests
 
     private sealed class TestViewport : Viewport
     {
-        public override Rect GetVisibleRect() => new(0, 0, 64, 64);
+        public override Rect2 GetVisibleRect() => new(0, 0, 64, 64);
     }
 
     private sealed class Probe(Texture texture) : Entity

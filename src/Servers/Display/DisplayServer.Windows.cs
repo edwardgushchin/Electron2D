@@ -115,7 +115,7 @@ public sealed partial class DisplayServer
     /// <param name="rectangle">Desktop rectangle in platform-native coordinates.</param>
     /// <returns>The zero-based index of the screen with the greatest whole-pixel overlap area, or <see cref="InvalidScreen"/> when no overlap reaches one pixel.</returns>
     /// <remarks>On Wayland, SDL output origins may be in logical desktop coordinates while the public output sizes use physical pixels; cross-output selection can therefore be ambiguous at mixed scales.</remarks>
-    public int GetScreenFromRect(Rect rectangle)
+    public int GetScreenFromRect(Rect2 rectangle)
     {
         EnsureOwner();
         if (!rectangle.IsFinite() || !rectangle.HasArea())

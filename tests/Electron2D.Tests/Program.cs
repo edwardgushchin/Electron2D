@@ -361,12 +361,12 @@ static void VerifyDisplayServer()
                 display.ScreenGetRefreshRate(int.MaxValue) == -1f,
             "Invalid screen queries return their documented fallbacks.");
         var screenPosition = display.ScreenGetPosition();
-        Require(display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 1, 1)) == mainScreen &&
-                display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 0.5f, 0.5f)) ==
+        Require(display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 1, 1)) == mainScreen &&
+                display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0.5f, 0.5f)) ==
                 DisplayServer.InvalidScreen &&
-                display.GetScreenFromRect(new Rect(screenPosition.X, screenPosition.Y, 0, 1)) ==
+                display.GetScreenFromRect(new Rect2(screenPosition.X, screenPosition.Y, 0, 1)) ==
                 DisplayServer.InvalidScreen &&
-                display.GetScreenFromRect(new Rect(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
+                display.GetScreenFromRect(new Rect2(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
             "Screen overlap requires at least one whole pixel of finite intersection.");
         Require(display.WindowGetTitle() == "Initial" && display.WindowGetSize() == new Vector2i(320, 240),
             "The native window exposes its initial title and logical size.");
@@ -1159,7 +1159,7 @@ static void VerifyMathF()
             new Vector2(Mathf.Epsilon * 0.5f, 0f).IsZeroApprox() &&
             !new Vector4(Mathf.Epsilon, 0f, 0f, 0f).IsZeroApprox() &&
             !default(Color).IsEqualApprox(new Color(Mathf.Epsilon, 0f, 0f, 0f)) &&
-            !default(Rect).IsEqualApprox(new Rect(Mathf.Epsilon, 0f, 0f, 0f)) &&
+            !default(Rect2).IsEqualApprox(new Rect2(Mathf.Epsilon, 0f, 0f, 0f)) &&
             !default(Transform).IsEqualApprox(new Transform(Mathf.Epsilon, 0f, 0f, 0f, 0f, 0f)),
         "Migrated geometry must use the authoritative Mathf epsilon boundary.");
 
@@ -2967,69 +2967,69 @@ static void VerifyInvariantString(Func<string> valueFactory, string expected, st
 
 static void VerifyRectangles()
 {
-    Require(Marshal.SizeOf<Rect>() == 16 && typeof(Rect).IsDefined(typeof(SerializableAttribute), inherit: false) &&
-            typeof(Rect).StructLayoutAttribute?.Value == LayoutKind.Sequential,
-        "Rect must be a serializable sequential four-float value type.");
-    Require(default(Rect) == new Rect(Vector2.Zero, Vector2.Zero) &&
-            new Rect(new Vector2(1f, 2f), new Vector2(3f, 4f)) == new Rect(1f, 2f, 3f, 4f) &&
-            new Rect(new Vector2(1f, 2f), 3f, 4f) == new Rect(1f, 2f, new Vector2(3f, 4f)),
+    Require(Marshal.SizeOf<Rect2>() == 16 && typeof(Rect2).IsDefined(typeof(SerializableAttribute), inherit: false) &&
+            typeof(Rect2).StructLayoutAttribute?.Value == LayoutKind.Sequential,
+        "Rect2 must be a serializable sequential four-float value type.");
+    Require(default(Rect2) == new Rect2(Vector2.Zero, Vector2.Zero) &&
+            new Rect2(new Vector2(1f, 2f), new Vector2(3f, 4f)) == new Rect2(1f, 2f, 3f, 4f) &&
+            new Rect2(new Vector2(1f, 2f), 3f, 4f) == new Rect2(1f, 2f, new Vector2(3f, 4f)),
         "Zero initialization and every typed constructor must preserve position and size.");
     Require((int)Side.Left == 0 && (int)Side.Top == 1 && (int)Side.Right == 2 && (int)Side.Bottom == 3,
         "Side numeric values must remain stable.");
 
-    var mutable = new Rect(new Vector2(1f, 2f), new Vector2(3f, 4f));
+    var mutable = new Rect2(new Vector2(1f, 2f), new Vector2(3f, 4f));
     var independentCopy = mutable;
     mutable.Position = new Vector2(2f, 3f);
     mutable.Size = new Vector2(5f, 6f);
-    Require(mutable.End == new Vector2(7f, 9f) && independentCopy == new Rect(1f, 2f, 3f, 4f),
+    Require(mutable.End == new Vector2(7f, 9f) && independentCopy == new Rect2(1f, 2f, 3f, 4f),
         "Position and Size mutation must update the computed end.");
     mutable.End = new Vector2(10f, 12f);
     Require(mutable.Position == new Vector2(2f, 3f) && mutable.Size == new Vector2(8f, 9f),
         "Assigning End must preserve Position and derive Size.");
-    Require(new Rect(0f, 0f, 3f, 4f).Area == 12f &&
-            new Rect(0f, 0f, -3f, -4f).Area == 12f &&
-            !new Rect(0f, 0f, -3f, -4f).HasArea(),
+    Require(new Rect2(0f, 0f, 3f, 4f).Area == 12f &&
+            new Rect2(0f, 0f, -3f, -4f).Area == 12f &&
+            !new Rect2(0f, 0f, -3f, -4f).HasArea(),
         "Area must remain a signed product while HasArea requires two positive components.");
 
-    var normalized = new Rect(25f, 25f, -100f, -50f).Abs();
-    Require(normalized == new Rect(-75f, -25f, 100f, 50f),
+    var normalized = new Rect2(25f, 25f, -100f, -50f).Abs();
+    Require(normalized == new Rect2(-75f, -25f, 100f, 50f),
         "Abs must move the origin and normalize both size components.");
-    Require(new Rect(float.NegativeInfinity, 0f, float.PositiveInfinity, 1f).Abs().Position.X ==
+    Require(new Rect2(float.NegativeInfinity, 0f, float.PositiveInfinity, 1f).Abs().Position.X ==
                 float.NegativeInfinity,
         "Abs must select the size contribution before adding it to the position.");
-    var outer = new Rect(0f, 0f, 10f, 10f);
-    Require(outer.Encloses(new Rect(0f, 0f, 10f, 10f)) &&
-            outer.Encloses(new Rect(2f, 3f, 4f, 5f)) &&
-            !outer.Encloses(new Rect(-1f, 3f, 4f, 5f)),
+    var outer = new Rect2(0f, 0f, 10f, 10f);
+    Require(outer.Encloses(new Rect2(0f, 0f, 10f, 10f)) &&
+            outer.Encloses(new Rect2(2f, 3f, 4f, 5f)) &&
+            !outer.Encloses(new Rect2(-1f, 3f, 4f, 5f)),
         "Encloses must accept coincident edges and reject an escaped edge.");
-    Require(new Rect(0f, 0f, 5f, 5f).Expand(new Vector2(-2f, 7f)) == new Rect(-2f, 0f, 7f, 7f) &&
+    Require(new Rect2(0f, 0f, 5f, 5f).Expand(new Vector2(-2f, 7f)) == new Rect2(-2f, 0f, 7f, 7f) &&
             outer.Expand(new Vector2(10f, 10f)) == outer,
         "Expand must grow only the edges needed to include a point.");
-    Require(new Rect(1f, 2f, 3f, 4f).GetCenter() == new Vector2(2.5f, 4f) &&
-            new Rect(1f, 2f, 3f, 4f).GetSupport(new Vector2(1f, -1f)) == new Vector2(4f, 2f) &&
-            new Rect(1f, 2f, 3f, 4f).GetSupport(Vector2.Zero) == new Vector2(1f, 2f),
+    Require(new Rect2(1f, 2f, 3f, 4f).GetCenter() == new Vector2(2.5f, 4f) &&
+            new Rect2(1f, 2f, 3f, 4f).GetSupport(new Vector2(1f, -1f)) == new Vector2(4f, 2f) &&
+            new Rect2(1f, 2f, 3f, 4f).GetSupport(Vector2.Zero) == new Vector2(1f, 2f),
         "Center and support mapping must use the documented edges.");
 
-    var baseRect = new Rect(1f, 2f, 3f, 4f);
-    Require(baseRect.Grow(2f) == new Rect(-1f, 0f, 7f, 8f) &&
-            baseRect.Grow(-1f) == new Rect(2f, 3f, 1f, 2f) &&
-            baseRect.Grow(-3f) == new Rect(4f, 5f, -3f, -2f) &&
-            baseRect.GrowIndividual(1f, 2f, 3f, 4f) == new Rect(0f, 0f, 7f, 10f),
+    var baseRect = new Rect2(1f, 2f, 3f, 4f);
+    Require(baseRect.Grow(2f) == new Rect2(-1f, 0f, 7f, 8f) &&
+            baseRect.Grow(-1f) == new Rect2(2f, 3f, 1f, 2f) &&
+            baseRect.Grow(-3f) == new Rect2(4f, 5f, -3f, -2f) &&
+            baseRect.GrowIndividual(1f, 2f, 3f, 4f) == new Rect2(0f, 0f, 7f, 10f),
         "Grow operations must move origins and add the matching side amounts.");
-    Require(float.IsPositiveInfinity(new Rect(0f, 0f, -float.MaxValue, 1f).Grow(float.MaxValue).Size.X) &&
-            new Rect(0f, 0f, float.MaxValue, float.MaxValue)
+    Require(float.IsPositiveInfinity(new Rect2(0f, 0f, -float.MaxValue, 1f).Grow(float.MaxValue).Size.X) &&
+            new Rect2(0f, 0f, float.MaxValue, float.MaxValue)
                 .GrowIndividual(float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue).Size ==
                 new Vector2(float.MaxValue, float.MaxValue),
         "Grow doubles a shared amount before adding it; individual sides combine before size addition.");
-    Require(baseRect.GrowSide(Side.Left, 1f) == new Rect(0f, 2f, 4f, 4f) &&
-            baseRect.GrowSide(Side.Top, 1f) == new Rect(1f, 1f, 3f, 5f) &&
-            baseRect.GrowSide(Side.Right, 1f) == new Rect(1f, 2f, 4f, 4f) &&
-            baseRect.GrowSide(Side.Bottom, 1f) == new Rect(1f, 2f, 3f, 5f) &&
+    Require(baseRect.GrowSide(Side.Left, 1f) == new Rect2(0f, 2f, 4f, 4f) &&
+            baseRect.GrowSide(Side.Top, 1f) == new Rect2(1f, 1f, 3f, 5f) &&
+            baseRect.GrowSide(Side.Right, 1f) == new Rect2(1f, 2f, 4f, 4f) &&
+            baseRect.GrowSide(Side.Bottom, 1f) == new Rect2(1f, 2f, 3f, 5f) &&
             baseRect.GrowSide((Side)99, 1f) == baseRect,
         "GrowSide must cover every side and leave undefined values unchanged.");
 
-    Require(outer.HasArea() && !new Rect(0f, 0f, 0f, 1f).HasArea() &&
-            !new Rect(0f, 0f, 1f, -1f).HasArea(),
+    Require(outer.HasArea() && !new Rect2(0f, 0f, 0f, 1f).HasArea() &&
+            !new Rect2(0f, 0f, 1f, -1f).HasArea(),
         "HasArea must reject zero and negative size components.");
     Require(outer.HasPoint(Vector2.Zero) && outer.HasPoint(new Vector2(9.999f, 9.999f)) &&
             !outer.HasPoint(new Vector2(10f, 5f)) && !outer.HasPoint(new Vector2(5f, 10f)) &&
@@ -3040,61 +3040,61 @@ static void VerifyRectangles()
             !outer.HasPoint(new Vector2(float.NaN, 11f)),
         "HasPoint retains the ordered rejection behavior for NaN coordinates.");
 
-    var overlap = new Rect(8f, 4f, 5f, 8f);
-    var touching = new Rect(10f, 2f, 4f, 3f);
-    var containedEmpty = new Rect(5f, 6f, 0f, 0f);
-    Require(outer.Intersects(overlap) && outer.Intersection(overlap) == new Rect(8f, 4f, 2f, 6f) &&
+    var overlap = new Rect2(8f, 4f, 5f, 8f);
+    var touching = new Rect2(10f, 2f, 4f, 3f);
+    var containedEmpty = new Rect2(5f, 6f, 0f, 0f);
+    Require(outer.Intersects(overlap) && outer.Intersection(overlap) == new Rect2(8f, 4f, 2f, 6f) &&
             !outer.Intersects(touching) && outer.Intersects(touching, includeBorders: true) &&
-            outer.Intersection(touching) == default && !outer.Intersects(new Rect(11f, 0f, 1f, 1f)) &&
+            outer.Intersection(touching) == default && !outer.Intersects(new Rect2(11f, 0f, 1f, 1f)) &&
             outer.Intersects(containedEmpty) && outer.Intersection(containedEmpty) == containedEmpty,
         "Intersection tests must distinguish positive overlap, touching borders, and separation.");
-    Require(outer.Intersects(new Rect(float.NaN, 2f, 1f, 1f)) &&
-            outer.Intersects(new Rect(float.NaN, 2f, 1f, 1f), includeBorders: true) &&
-            !outer.Intersects(new Rect(float.NaN, 11f, 1f, 1f)),
+    Require(outer.Intersects(new Rect2(float.NaN, 2f, 1f, 1f)) &&
+            outer.Intersects(new Rect2(float.NaN, 2f, 1f, 1f), includeBorders: true) &&
+            !outer.Intersects(new Rect2(float.NaN, 11f, 1f, 1f)),
         "Intersects retains the ordered rejection behavior for NaN rectangle coordinates.");
-    Require(outer.Merge(overlap) == new Rect(0f, 0f, 13f, 12f),
+    Require(outer.Merge(overlap) == new Rect2(0f, 0f, 13f, 12f),
         "Merge must return the smallest enclosing rectangle.");
-    var exact = new Rect(1f, 2f, 3f, 4f);
-    var nanRect = new Rect(float.NaN, 2f, 3f, 4f);
-    Require(exact == new Rect(1f, 2f, 3f, 4f) && exact != new Rect(1f, 2f, 3f, 5f) &&
-            exact.Equals((object)new Rect(1f, 2f, 3f, 4f)) &&
-            exact.GetHashCode() == new Rect(1f, 2f, 3f, 4f).GetHashCode() &&
-            exact.IsEqualApprox(new Rect(1.000001f, 2f, 3f, 4f)) &&
-            new Rect(float.PositiveInfinity, 0f, 1f, 1f).IsEqualApprox(
-                new Rect(float.PositiveInfinity, 0f, 1f, 1f)) &&
-            nanRect != new Rect(float.NaN, 2f, 3f, 4f) && !nanRect.IsEqualApprox(nanRect),
+    var exact = new Rect2(1f, 2f, 3f, 4f);
+    var nanRect = new Rect2(float.NaN, 2f, 3f, 4f);
+    Require(exact == new Rect2(1f, 2f, 3f, 4f) && exact != new Rect2(1f, 2f, 3f, 5f) &&
+            exact.Equals((object)new Rect2(1f, 2f, 3f, 4f)) &&
+            exact.GetHashCode() == new Rect2(1f, 2f, 3f, 4f).GetHashCode() &&
+            exact.IsEqualApprox(new Rect2(1.000001f, 2f, 3f, 4f)) &&
+            new Rect2(float.PositiveInfinity, 0f, 1f, 1f).IsEqualApprox(
+                new Rect2(float.PositiveInfinity, 0f, 1f, 1f)) &&
+            nanRect != new Rect2(float.NaN, 2f, 3f, 4f) && !nanRect.IsEqualApprox(nanRect),
         "Exact and approximate equality must define finite, infinity, and NaN behavior.");
     Require(exact.IsFinite() && !nanRect.IsFinite() &&
-            !new Rect(0f, 0f, float.NegativeInfinity, 1f).IsFinite() &&
-            !new Rect(0f, float.NaN, 1f, 1f).IsFinite() &&
-            !new Rect(0f, 0f, 1f, float.PositiveInfinity).IsFinite(),
+            !new Rect2(0f, 0f, float.NegativeInfinity, 1f).IsFinite() &&
+            !new Rect2(0f, float.NaN, 1f, 1f).IsFinite() &&
+            !new Rect2(0f, 0f, 1f, float.PositiveInfinity).IsFinite(),
         "IsFinite must inspect every position and size component.");
 
     var previousCulture = CultureInfo.CurrentCulture;
     try
     {
         CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
-        Require(new Rect(1.5f, 2.5f, 3.5f, 4.5f).ToString() == "(1.5, 2.5), (3.5, 4.5)" &&
-                new Rect(1.5f, 2.5f, 3.5f, 4.5f).ToString("F1") == "(1.5, 2.5), (3.5, 4.5)",
-            "Rect formatting must use invariant culture.");
-        Expect<FormatException>(() => _ = new Rect(1f, 2f, 3f, 4f).ToString("Q"),
-            "Rect formatting must surface invalid numeric formats.");
+        Require(new Rect2(1.5f, 2.5f, 3.5f, 4.5f).ToString() == "(1.5, 2.5), (3.5, 4.5)" &&
+                new Rect2(1.5f, 2.5f, 3.5f, 4.5f).ToString("F1") == "(1.5, 2.5), (3.5, 4.5)",
+            "Rect2 formatting must use invariant culture.");
+        Expect<FormatException>(() => _ = new Rect2(1f, 2f, 3f, 4f).ToString("Q"),
+            "Rect2 formatting must surface invalid numeric formats.");
     }
     finally
     {
         CultureInfo.CurrentCulture = previousCulture;
     }
 
-    var rectangleKey = new ConfigKey<Rect>("geometry", "bounds");
+    var rectangleKey = new ConfigKey<Rect2>("geometry", "bounds");
     using (var config = new ConfigFile())
     {
-        var stored = new Rect(1f, 2f, 3f, 4f);
+        var stored = new Rect2(1f, 2f, 3f, 4f);
         config.SetValue(rectangleKey, stored);
         Require(config.EncodeToText() ==
                 "[geometry]\n\nbounds={\"Position\":{\"X\":1,\"Y\":2},\"Size\":{\"X\":3,\"Y\":4}}\n" &&
                 config.GetValue(rectangleKey) == stored,
             "ConfigFile must use the stable finite Position/Size rectangle schema.");
-        Expect<JsonException>(() => config.SetValue(rectangleKey, new Rect(float.NaN, 0f, 1f, 1f)),
+        Expect<JsonException>(() => config.SetValue(rectangleKey, new Rect2(float.NaN, 0f, 1f, 1f)),
             "ConfigFile must reject non-finite rectangle components before mutation.");
         Require(config.GetValue(rectangleKey) == stored,
             "Failed rectangle serialization must preserve the prior configuration token.");
@@ -3127,13 +3127,13 @@ static void VerifyRectangles()
         var source = new ColorPackedNode
         {
             Name = "GeometryRoot",
-            Bounds = new Rect(-2f, -3f, 8f, 9f),
+            Bounds = new Rect2(-2f, -3f, 8f, 9f),
         };
         scene.Pack(source);
         source.Dispose();
         using var instance = (ColorPackedNode)scene.Instantiate();
-        Require(instance.Bounds == new Rect(-2f, -3f, 8f, 9f),
-            "PackedScene must preserve stored Rect properties.");
+        Require(instance.Bounds == new Rect2(-2f, -3f, 8f, 9f),
+            "PackedScene must preserve stored Rect2 properties.");
     }
 
     _ = ExerciseRectHotPath(32);
@@ -3144,14 +3144,14 @@ static void VerifyRectangles()
         "Warmed rectangle geometry operations must not allocate managed memory.");
 }
 
-static Rect ExerciseRectHotPath(int iterations)
+static Rect2 ExerciseRectHotPath(int iterations)
 {
-    var value = new Rect(1f, 2f, 3f, 4f);
-    var bounds = new Rect(-100f, -100f, 200f, 200f);
+    var value = new Rect2(1f, 2f, 3f, 4f);
+    var bounds = new Rect2(-100f, -100f, 200f, 200f);
     for (var index = 0; index < iterations; index++)
     {
         value = value.Grow(0.0001f).Intersection(bounds);
-        value = value.Merge(new Rect(1f, 2f, 3f, 4f));
+        value = value.Merge(new Rect2(1f, 2f, 3f, 4f));
     }
 
     return value;
@@ -3244,16 +3244,16 @@ static void VerifyIntegerRectangles()
             exact.Equals((object)new Rect2i(1, 2, 3, 4)) && exact.Equals(new Rect2i(1, 2, 3, 4)) &&
             exact.GetHashCode() == new Rect2i(1, 2, 3, 4).GetHashCode(),
         "Rect2i exact equality and hashing must use position and size.");
-    Require((Rect)exact == new Rect(1f, 2f, 3f, 4f) &&
-            (Rect2i)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new Rect2i(1, -2, 3, -4) &&
-            (Rect2i)new Rect(int.MinValue, 0f, 1f, 1f) == new Rect2i(int.MinValue, 0, 1, 1) &&
-            (Rect)new Rect2i(16_777_217, 0, int.MaxValue, 1) ==
-                new Rect(16_777_216f, 0f, 2_147_483_648f, 1f),
-        "Rect and Rect2i conversions must widen implicitly and truncate explicitly.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect(float.NaN, 0f, 1f, 1f),
-        "Rect to Rect2i conversion must reject non-finite components.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect(2147483648f, 0f, 1f, 1f),
-        "Rect to Rect2i conversion must reject out-of-range components.");
+    Require((Rect2)exact == new Rect2(1f, 2f, 3f, 4f) &&
+            (Rect2i)new Rect2(1.9f, -2.9f, 3.9f, -4.9f) == new Rect2i(1, -2, 3, -4) &&
+            (Rect2i)new Rect2(int.MinValue, 0f, 1f, 1f) == new Rect2i(int.MinValue, 0, 1, 1) &&
+            (Rect2)new Rect2i(16_777_217, 0, int.MaxValue, 1) ==
+                new Rect2(16_777_216f, 0f, 2_147_483_648f, 1f),
+        "Rect2 and Rect2i conversions must widen implicitly and truncate explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect2(float.NaN, 0f, 1f, 1f),
+        "Rect2 to Rect2i conversion must reject non-finite components.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Rect2i)new Rect2(2147483648f, 0f, 1f, 1f),
+        "Rect2 to Rect2i conversion must reject out-of-range components.");
     VerifyInvariantString(() => new Rect2i(1, 2, 3, 4).ToString("D2"), "(01, 02), (03, 04)", "Rect2i");
     Expect<FormatException>(() => _ = exact.ToString("Q"),
         "Rect2i formatting must surface invalid numeric formats.");
@@ -3387,14 +3387,14 @@ static void VerifyTransforms()
     Require(VectorNearlyEqual(orthonormalInverse * (quarterTurn * point), point) &&
             VectorNearlyEqual((quarterTurn * point) * quarterTurn, point),
         "Inverse and reverse point multiplication must invert an orthonormal transform.");
-    var rectangle = new Rect(1f, 2f, 3f, 4f);
+    var rectangle = new Rect2(1f, 2f, 3f, 4f);
     var transformedRectangle = quarterTurn * rectangle;
     var scaledRectangle = new Transform(new Vector2(2f, 0f), new Vector2(0f, 3f),
         new Vector2(5f, -4f)) * rectangle;
-    Require(transformedRectangle.IsEqualApprox(new Rect(-3f, 5f, 4f, 3f)) &&
+    Require(transformedRectangle.IsEqualApprox(new Rect2(-3f, 5f, 4f, 3f)) &&
             (transformedRectangle * quarterTurn).IsEqualApprox(rectangle) &&
-            Transform.Identity * new Rect(4f, 6f, -3f, -4f) == rectangle &&
-            scaledRectangle == new Rect(7f, 2f, 6f, 12f),
+            Transform.Identity * new Rect2(4f, 6f, -3f, -4f) == rectangle &&
+            scaledRectangle == new Rect2(7f, 2f, 6f, 12f),
         "Rectangle operators must transform all corners, support orthonormal reversal, and normalize negative sizes.");
 
     var parent = new Transform(0.6f, new Vector2(4f, 5f));
@@ -10096,8 +10096,8 @@ static void VerifyTweenInterpolation()
                 new Color(1f, 0.2f, -0.2f, 0f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In)
             .IsEqualApprox(new Color(0.5f, 0.3f, 0.3f, 1f)) &&
-            Tween.InterpolateValue(new Rect(0f, 0f, 2f, 4f), new Rect(4f, 6f, 2f, 2f), 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect(2f, 3f, 3f, 5f) &&
+            Tween.InterpolateValue(new Rect2(0f, 0f, 2f, 4f), new Rect2(4f, 6f, 2f, 2f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect2(2f, 3f, 3f, 5f) &&
             Tween.InterpolateValue(new Rect2i(0, 0, 2, 4), new Rect2i(3, 5, 3, 5), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect2i(2, 3, 4, 7) &&
             Tween.InterpolateValue(Transform.Identity, new Transform(0f, new Vector2(4f, 6f)), 0.5d, 1d,
@@ -12272,7 +12272,7 @@ sealed class ColorPackedNode : Entity
         (node, value) => node.Tint = value,
         _ => Colors.White,
         stored: true);
-    private static readonly PropertyDescriptor<ColorPackedNode, Rect> BoundsProperty = new(
+    private static readonly PropertyDescriptor<ColorPackedNode, Rect2> BoundsProperty = new(
         nameof(Bounds),
         node => node.Bounds,
         (node, value) => node.Bounds = value,
@@ -12322,7 +12322,7 @@ sealed class ColorPackedNode : Entity
         stored: true);
 
     private Color _tint = Colors.White;
-    private Rect _bounds;
+    private Rect2 _bounds;
     private Rect2i _boundsI;
     private Transform _transform = Transform.Identity;
     private Vector2 _vector2;
@@ -12342,7 +12342,7 @@ sealed class ColorPackedNode : Entity
         }
     }
 
-    public Rect Bounds
+    public Rect2 Bounds
     {
         get => _bounds;
         set

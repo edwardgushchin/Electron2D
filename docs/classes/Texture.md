@@ -44,8 +44,8 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | `virtual int MipmapCount { get; }` | Number of levels after the base level; zero when absent. |
 | `virtual Image? GetImage()` | Independent caller-owned pixels, or null when unreadable/uninitialized. |
 | `virtual void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draws at logical size during the target node's OnDraw. |
-| `virtual void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretches or repeats over a local rectangle. |
-| `virtual void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Draws a source region in logical texture pixels. |
+| `virtual void DrawRect(CanvasItem canvasItem, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretches or repeats over a local rectangle. |
+| `virtual void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Draws a source region in logical texture pixels. |
 | `virtual bool IsPixelOpaque(int x, int y)` | Tests alpha above 0.1 at clamped logical coordinates. |
 
 ## Property descriptions

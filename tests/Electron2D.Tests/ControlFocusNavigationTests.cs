@@ -106,5 +106,5 @@ internal static class ControlFocusNavigationTests
         throw new InvalidOperationException($"Expected {typeof(T).Name}.");
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 100); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 100); }
 }

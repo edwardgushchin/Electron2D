@@ -4,7 +4,6 @@
     "Node2D": "Entity",
     "WeakRef": "WeakRef<T>",
     "Object": "ElectronObject",
-    "Rect2": "Rect",
     "Transform2D": "Transform",
     "Texture2D": "Texture",
     "MethodTweener": "MethodTweener<TValue>",

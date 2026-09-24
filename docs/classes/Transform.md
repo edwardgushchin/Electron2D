@@ -98,9 +98,9 @@ Vector2 worldPoint = transform * localPoint;
 | --- | --- |
 | [`public static Transform operator *(Transform left, Transform right)`](#m-electron2d-transform-op-multiply-electron2d-transform-electron2d-transform) | Composes a parent transform with a child transform. |
 | [`public static Vector2 operator *(Transform transform, Vector2 point)`](#m-electron2d-transform-op-multiply-electron2d-transform-electron2d-vector2) | Transforms a point by the basis and translation. |
-| [`public static Rect operator *(Transform transform, Rect rectangle)`](#m-electron2d-transform-op-multiply-electron2d-transform-electron2d-rect) | Transforms a rectangle and returns the axis-aligned bounds of its four transformed corners. |
+| [`public static Rect2 operator *(Transform transform, Rect2 rectangle)`](#m-electron2d-transform-op-multiply-electron2d-transform-electron2d-rect2) | Transforms a rectangle and returns the axis-aligned bounds of its four transformed corners. |
 | [`public static Vector2 operator *(Vector2 point, Transform transform)`](#m-electron2d-transform-op-multiply-electron2d-vector2-electron2d-transform) | Applies the inverse orthonormal transform to a point. |
-| [`public static Rect operator *(Rect rectangle, Transform transform)`](#m-electron2d-transform-op-multiply-electron2d-rect-electron2d-transform) | Inverse-transforms a rectangle under an orthonormal-basis precondition. |
+| [`public static Rect2 operator *(Rect2 rectangle, Transform transform)`](#m-electron2d-transform-op-multiply-electron2d-rect2-electron2d-transform) | Inverse-transforms a rectangle under an orthonormal-basis precondition. |
 | [`public static Vector2[] operator *(Transform transform, Vector2[] points)`](#m-electron2d-transform-op-multiply-electron2d-transform-electron2d-vector2-array) | Transforms every point into a newly allocated array. |
 | [`public static Vector2[] operator *(Vector2[] points, Transform transform)`](#m-electron2d-transform-op-multiply-electron2d-vector2-array-electron2d-transform) | Inverse-transforms every point by an orthonormal transform into a newly allocated array. |
 | [`public static Transform operator *(Transform transform, float scalar)`](#m-electron2d-transform-op-multiply-electron2d-transform-system-single) | Multiplies every matrix component, including translation, by a scalar. |
@@ -516,8 +516,8 @@ Transforms a point by the basis and translation.
 
 **Returns:** The transformed point.
 
-<a id="m-electron2d-transform-op-multiply-electron2d-transform-electron2d-rect"></a>
-### `public static Rect operator *(Transform transform, Rect rectangle)`
+<a id="m-electron2d-transform-op-multiply-electron2d-transform-electron2d-rect2"></a>
+### `public static Rect2 operator *(Transform transform, Rect2 rectangle)`
 
 Transforms a rectangle and returns the axis-aligned bounds of its four transformed corners.
 
@@ -545,8 +545,8 @@ Applies the inverse orthonormal transform to a point.
 
 **Remarks:** For scale or skew, multiply the point by [`Transform.AffineInverse`](Transform.md#m-electron2d-transform-affineinverse) instead.
 
-<a id="m-electron2d-transform-op-multiply-electron2d-rect-electron2d-transform"></a>
-### `public static Rect operator *(Rect rectangle, Transform transform)`
+<a id="m-electron2d-transform-op-multiply-electron2d-rect2-electron2d-transform"></a>
+### `public static Rect2 operator *(Rect2 rectangle, Transform transform)`
 
 Inverse-transforms a rectangle under an orthonormal-basis precondition.
 
@@ -671,7 +671,7 @@ Constructors, scalar math, decomposition, composition, point transformation, inv
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect`](Rect.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect2`](Rect2.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores finite transforms using exact nested `X.X/Y`, `Y.X/Y`, and `Origin.X/Y` fields. Typed property descriptors and [`PackedScene`](PackedScene.md) preserve the reference-free value directly.
 
 `Entity.Transform`, `Entity.GlobalTransform`, point conversion, reparenting, and relative transforms use this value directly. There is no public implicit or explicit conversion to another numerics library; native or package adapters must remain localized at their future integration boundary.
 

@@ -2266,15 +2266,15 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Rect",
+    "id": "T:Electron2D.Rect2",
     "kind": "type",
-    "declaringType": "Electron2D.Rect",
-    "name": "Rect",
-    "signature": "public struct Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
+    "name": "Rect2",
+    "signature": "public struct Electron2D.Rect2",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [
-      "System.IEquatable\u003CElectron2D.Rect\u003E"
+      "System.IEquatable\u003CElectron2D.Rect2\u003E"
     ],
     "parameters": null,
     "returnType": null,
@@ -5288,11 +5288,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Rect..ctor(Electron2D.Vector2,Electron2D.Vector2)",
+    "id": "constructor:Electron2D.Rect2..ctor(Electron2D.Vector2,Electron2D.Vector2)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": ".ctor",
-    "signature": "public Rect(Electron2D.Vector2 position, Electron2D.Vector2 size)",
+    "signature": "public Rect2(Electron2D.Vector2 position, Electron2D.Vector2 size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5312,11 +5312,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Rect..ctor(Electron2D.Vector2,System.Single,System.Single)",
+    "id": "constructor:Electron2D.Rect2..ctor(Electron2D.Vector2,System.Single,System.Single)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": ".ctor",
-    "signature": "public Rect(Electron2D.Vector2 position, System.Single width, System.Single height)",
+    "signature": "public Rect2(Electron2D.Vector2 position, System.Single width, System.Single height)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5341,11 +5341,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Rect..ctor(System.Single,System.Single,Electron2D.Vector2)",
+    "id": "constructor:Electron2D.Rect2..ctor(System.Single,System.Single,Electron2D.Vector2)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": ".ctor",
-    "signature": "public Rect(System.Single x, System.Single y, Electron2D.Vector2 size)",
+    "signature": "public Rect2(System.Single x, System.Single y, Electron2D.Vector2 size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5370,11 +5370,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Rect..ctor(System.Single,System.Single,System.Single,System.Single)",
+    "id": "constructor:Electron2D.Rect2..ctor(System.Single,System.Single,System.Single,System.Single)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": ".ctor",
-    "signature": "public Rect(System.Single x, System.Single y, System.Single width, System.Single height)",
+    "signature": "public Rect2(System.Single x, System.Single y, System.Single width, System.Single height)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17741,11 +17741,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "id": "method:Electron2D.AtlasTexture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AtlasTexture",
     "name": "DrawRect",
-    "signature": "public override System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "signature": "public override System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17757,7 +17757,7 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -17780,11 +17780,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "id": "method:Electron2D.AtlasTexture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AtlasTexture",
     "name": "DrawRectRegion",
-    "signature": "public override System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "signature": "public override System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17796,12 +17796,12 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -19143,18 +19143,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CanvasItem.DrawRect(Electron2D.Rect,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
+    "id": "method:Electron2D.CanvasItem.DrawRect(Electron2D.Rect2,Electron2D.Color,System.Boolean,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
     "name": "DrawRect",
-    "signature": "public System.Void DrawRect(Electron2D.Rect rect, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
+    "signature": "public System.Void DrawRect(Electron2D.Rect2 rect, Electron2D.Color color, System.Boolean filled = true, System.Single width = -1f, System.Boolean antialiased = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -19259,11 +19259,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "id": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.Texture,Electron2D.Rect2,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
     "name": "DrawTextureRect",
-    "signature": "public System.Void DrawTextureRect(Electron2D.Texture texture, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "signature": "public System.Void DrawTextureRect(Electron2D.Texture texture, Electron2D.Rect2 rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -19275,7 +19275,7 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -19298,11 +19298,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "id": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.Texture,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
     "name": "DrawTextureRectRegion",
-    "signature": "public System.Void DrawTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "signature": "public System.Void DrawTextureRectRegion(Electron2D.Texture texture, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -19314,12 +19314,12 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -19476,12 +19476,12 @@
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
     "name": "GetViewportRect",
-    "signature": "public Electron2D.Rect GetViewportRect()",
+    "signature": "public Electron2D.Rect2 GetViewportRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -20999,12 +20999,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Control",
     "name": "GetGlobalRect",
-    "signature": "public Electron2D.Rect GetGlobalRect()",
+    "signature": "public Electron2D.Rect2 GetGlobalRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -21096,12 +21096,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Control",
     "name": "GetRect",
-    "signature": "public Electron2D.Rect GetRect()",
+    "signature": "public Electron2D.Rect2 GetRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -23200,18 +23200,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.GetScreenFromRect(Electron2D.Rect)",
+    "id": "method:Electron2D.DisplayServer.GetScreenFromRect(Electron2D.Rect2)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "GetScreenFromRect",
-    "signature": "public System.Int32 GetScreenFromRect(Electron2D.Rect rectangle)",
+    "signature": "public System.Int32 GetScreenFromRect(Electron2D.Rect2 rectangle)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rectangle",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -38832,31 +38832,31 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Abs()",
+    "id": "method:Electron2D.Rect2.Abs()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Abs",
-    "signature": "public Electron2D.Rect Abs()",
+    "signature": "public Electron2D.Rect2 Abs()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Encloses(Electron2D.Rect)",
+    "id": "method:Electron2D.Rect2.Encloses(Electron2D.Rect2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Encloses",
-    "signature": "public System.Boolean Encloses(Electron2D.Rect other)",
+    "signature": "public System.Boolean Encloses(Electron2D.Rect2 other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -38864,18 +38864,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Equals(Electron2D.Rect)",
+    "id": "method:Electron2D.Rect2.Equals(Electron2D.Rect2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Equals",
-    "signature": "public virtual System.Boolean Equals(Electron2D.Rect other)",
+    "signature": "public virtual System.Boolean Equals(Electron2D.Rect2 other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -38883,9 +38883,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Equals(System.Object)",
+    "id": "method:Electron2D.Rect2.Equals(System.Object)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Equals",
     "signature": "public override System.Boolean Equals(System.Object obj)",
     "visibility": "public",
@@ -38902,11 +38902,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Expand(Electron2D.Vector2)",
+    "id": "method:Electron2D.Rect2.Expand(Electron2D.Vector2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Expand",
-    "signature": "public Electron2D.Rect Expand(Electron2D.Vector2 point)",
+    "signature": "public Electron2D.Rect2 Expand(Electron2D.Vector2 point)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -38917,13 +38917,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.GetCenter()",
+    "id": "method:Electron2D.Rect2.GetCenter()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "GetCenter",
     "signature": "public Electron2D.Vector2 GetCenter()",
     "visibility": "public",
@@ -38934,9 +38934,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.GetHashCode()",
+    "id": "method:Electron2D.Rect2.GetHashCode()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "GetHashCode",
     "signature": "public override System.Int32 GetHashCode()",
     "visibility": "public",
@@ -38947,9 +38947,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.GetSupport(Electron2D.Vector2)",
+    "id": "method:Electron2D.Rect2.GetSupport(Electron2D.Vector2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "GetSupport",
     "signature": "public Electron2D.Vector2 GetSupport(Electron2D.Vector2 direction)",
     "visibility": "public",
@@ -38966,11 +38966,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Grow(System.Single)",
+    "id": "method:Electron2D.Rect2.Grow(System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Grow",
-    "signature": "public Electron2D.Rect Grow(System.Single amount)",
+    "signature": "public Electron2D.Rect2 Grow(System.Single amount)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -38981,15 +38981,15 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.GrowIndividual(System.Single,System.Single,System.Single,System.Single)",
+    "id": "method:Electron2D.Rect2.GrowIndividual(System.Single,System.Single,System.Single,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "GrowIndividual",
-    "signature": "public Electron2D.Rect GrowIndividual(System.Single left, System.Single top, System.Single right, System.Single bottom)",
+    "signature": "public Electron2D.Rect2 GrowIndividual(System.Single left, System.Single top, System.Single right, System.Single bottom)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39015,15 +39015,15 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.GrowSide(Electron2D.Side,System.Single)",
+    "id": "method:Electron2D.Rect2.GrowSide(Electron2D.Side,System.Single)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "GrowSide",
-    "signature": "public Electron2D.Rect GrowSide(Electron2D.Side side, System.Single amount)",
+    "signature": "public Electron2D.Rect2 GrowSide(Electron2D.Side side, System.Single amount)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -39039,13 +39039,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.HasArea()",
+    "id": "method:Electron2D.Rect2.HasArea()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "HasArea",
     "signature": "public System.Boolean HasArea()",
     "visibility": "public",
@@ -39056,9 +39056,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.HasPoint(Electron2D.Vector2)",
+    "id": "method:Electron2D.Rect2.HasPoint(Electron2D.Vector2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "HasPoint",
     "signature": "public System.Boolean HasPoint(Electron2D.Vector2 point)",
     "visibility": "public",
@@ -39075,37 +39075,37 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Intersection(Electron2D.Rect)",
+    "id": "method:Electron2D.Rect2.Intersection(Electron2D.Rect2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Intersection",
-    "signature": "public Electron2D.Rect Intersection(Electron2D.Rect other)",
+    "signature": "public Electron2D.Rect2 Intersection(Electron2D.Rect2 other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Intersects(Electron2D.Rect,System.Boolean)",
+    "id": "method:Electron2D.Rect2.Intersects(Electron2D.Rect2,System.Boolean)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Intersects",
-    "signature": "public System.Boolean Intersects(Electron2D.Rect other, System.Boolean includeBorders = false)",
+    "signature": "public System.Boolean Intersects(Electron2D.Rect2 other, System.Boolean includeBorders = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -39118,18 +39118,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.IsEqualApprox(Electron2D.Rect)",
+    "id": "method:Electron2D.Rect2.IsEqualApprox(Electron2D.Rect2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "IsEqualApprox",
-    "signature": "public System.Boolean IsEqualApprox(Electron2D.Rect other)",
+    "signature": "public System.Boolean IsEqualApprox(Electron2D.Rect2 other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -39137,9 +39137,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.IsFinite()",
+    "id": "method:Electron2D.Rect2.IsFinite()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "IsFinite",
     "signature": "public System.Boolean IsFinite()",
     "visibility": "public",
@@ -39150,28 +39150,28 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.Merge(Electron2D.Rect)",
+    "id": "method:Electron2D.Rect2.Merge(Electron2D.Rect2)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Merge",
-    "signature": "public Electron2D.Rect Merge(Electron2D.Rect other)",
+    "signature": "public Electron2D.Rect2 Merge(Electron2D.Rect2 other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.ToString()",
+    "id": "method:Electron2D.Rect2.ToString()",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "ToString",
     "signature": "public override System.String ToString()",
     "visibility": "public",
@@ -39182,9 +39182,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Rect.ToString(System.String)",
+    "id": "method:Electron2D.Rect2.ToString(System.String)",
     "kind": "method",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "ToString",
     "signature": "public System.String ToString(System.String format)",
     "visibility": "public",
@@ -41620,12 +41620,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
     "name": "GetRect",
-    "signature": "public Electron2D.Rect GetRect()",
+    "signature": "public Electron2D.Rect2 GetRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -42242,11 +42242,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
+    "id": "method:Electron2D.Texture.DrawRect(Electron2D.CanvasItem,Electron2D.Rect2,System.Boolean,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
     "name": "DrawRect",
-    "signature": "public virtual System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
+    "signature": "public virtual System.Void DrawRect(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, System.Boolean tile, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -42258,7 +42258,7 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -42281,11 +42281,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect,Electron2D.Rect,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
+    "id": "method:Electron2D.Texture.DrawRectRegion(Electron2D.CanvasItem,Electron2D.Rect2,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Texture",
     "name": "DrawRectRegion",
-    "signature": "public virtual System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect rect, Electron2D.Rect sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
+    "signature": "public virtual System.Void DrawRectRegion(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect, Electron2D.Rect2 sourceRect, System.Nullable\u003CElectron2D.Color\u003E modulate = null, System.Boolean transpose = false, System.Boolean clipUV = true)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -42297,12 +42297,12 @@
       },
       {
         "name": "rect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
         "name": "sourceRect",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -48674,12 +48674,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
     "name": "GetVisibleRect",
-    "signature": "public abstract Electron2D.Rect GetVisibleRect()",
+    "signature": "public abstract Electron2D.Rect2 GetVisibleRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -48896,12 +48896,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Window",
     "name": "GetVisibleRect",
-    "signature": "public override Electron2D.Rect GetVisibleRect()",
+    "signature": "public override Electron2D.Rect2 GetVisibleRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -49795,23 +49795,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Rect.op_Equality(Electron2D.Rect,Electron2D.Rect)",
+    "id": "operator:Electron2D.Rect2.op_Equality(Electron2D.Rect2,Electron2D.Rect2)",
     "kind": "operator",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "op_Equality",
-    "signature": "public static System.Boolean op_Equality(Electron2D.Rect left, Electron2D.Rect right)",
+    "signature": "public static System.Boolean op_Equality(Electron2D.Rect2 left, Electron2D.Rect2 right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -49819,23 +49819,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Rect.op_Inequality(Electron2D.Rect,Electron2D.Rect)",
+    "id": "operator:Electron2D.Rect2.op_Inequality(Electron2D.Rect2,Electron2D.Rect2)",
     "kind": "operator",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "op_Inequality",
-    "signature": "public static System.Boolean op_Inequality(Electron2D.Rect left, Electron2D.Rect right)",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.Rect2 left, Electron2D.Rect2 right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -49867,18 +49867,18 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect)",
+    "id": "operator:Electron2D.Rect2i.op_Explicit(Electron2D.Rect2)",
     "kind": "operator",
     "declaringType": "Electron2D.Rect2i",
     "name": "op_Explicit",
-    "signature": "public static Electron2D.Rect2i op_Explicit(Electron2D.Rect value)",
+    "signature": "public static Electron2D.Rect2i op_Explicit(Electron2D.Rect2 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -49890,7 +49890,7 @@
     "kind": "operator",
     "declaringType": "Electron2D.Rect2i",
     "name": "op_Implicit",
-    "signature": "public static Electron2D.Rect op_Implicit(Electron2D.Rect2i value)",
+    "signature": "public static Electron2D.Rect2 op_Implicit(Electron2D.Rect2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49901,7 +49901,7 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -50001,18 +50001,18 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Transform.op_Multiply(Electron2D.Rect,Electron2D.Transform)",
+    "id": "operator:Electron2D.Transform.op_Multiply(Electron2D.Rect2,Electron2D.Transform)",
     "kind": "operator",
     "declaringType": "Electron2D.Transform",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Rect op_Multiply(Electron2D.Rect rectangle, Electron2D.Transform transform)",
+    "signature": "public static Electron2D.Rect2 op_Multiply(Electron2D.Rect2 rectangle, Electron2D.Transform transform)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "rectangle",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       },
       {
@@ -50021,15 +50021,15 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Rect)",
+    "id": "operator:Electron2D.Transform.op_Multiply(Electron2D.Transform,Electron2D.Rect2)",
     "kind": "operator",
     "declaringType": "Electron2D.Transform",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Rect op_Multiply(Electron2D.Transform transform, Electron2D.Rect rectangle)",
+    "signature": "public static Electron2D.Rect2 op_Multiply(Electron2D.Transform transform, Electron2D.Rect2 rectangle)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -50041,11 +50041,11 @@
       },
       {
         "name": "rectangle",
-        "type": "Electron2D.Rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -53214,12 +53214,12 @@
     "kind": "property",
     "declaringType": "Electron2D.AtlasTexture",
     "name": "Margin",
-    "signature": "public Electron2D.Rect Margin { get; set; }",
+    "signature": "public Electron2D.Rect2 Margin { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -53253,12 +53253,12 @@
     "kind": "property",
     "declaringType": "Electron2D.AtlasTexture",
     "name": "Region",
-    "signature": "public Electron2D.Rect Region { get; set; }",
+    "signature": "public Electron2D.Rect2 Region { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -60737,9 +60737,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Rect.Area()",
+    "id": "property:Electron2D.Rect2.Area()",
     "kind": "property",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Area",
     "signature": "public System.Single Area { get;  }",
     "visibility": "public",
@@ -60750,9 +60750,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Rect.End()",
+    "id": "property:Electron2D.Rect2.End()",
     "kind": "property",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "End",
     "signature": "public Electron2D.Vector2 End { get; set; }",
     "visibility": "public",
@@ -60763,9 +60763,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Rect.Position()",
+    "id": "property:Electron2D.Rect2.Position()",
     "kind": "property",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Position",
     "signature": "public Electron2D.Vector2 Position { get; set; }",
     "visibility": "public",
@@ -60776,9 +60776,9 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Rect.Size()",
+    "id": "property:Electron2D.Rect2.Size()",
     "kind": "property",
-    "declaringType": "Electron2D.Rect",
+    "declaringType": "Electron2D.Rect2",
     "name": "Size",
     "signature": "public Electron2D.Vector2 Size { get; set; }",
     "visibility": "public",
@@ -61326,12 +61326,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Sprite",
     "name": "RegionRect",
-    "signature": "public Electron2D.Rect RegionRect { get; set; }",
+    "signature": "public Electron2D.Rect2 RegionRect { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Rect",
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {

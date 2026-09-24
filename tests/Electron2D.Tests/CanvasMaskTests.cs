@@ -51,7 +51,7 @@ internal static class CanvasMaskTests
         Console.WriteLine("Canvas masks, storage, ownership and logical visibility passed.");
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 80); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 80); }
     private static void Check(bool ok, string message) { if (!ok) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
 }

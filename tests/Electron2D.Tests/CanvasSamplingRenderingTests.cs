@@ -126,8 +126,8 @@ internal static partial class RenderingRuntimeTests
                     TextureFilter = Filter.Nearest,
                     DrawAction = n =>
                     {
-                        n.DrawTextureRect(texture, new Rect(4, 4, 2, 2), false);
-                        n.DrawTextureRect(texture, new Rect(12, 4, 3, 3), false);
+                        n.DrawTextureRect(texture, new Rect2(4, 4, 2, 2), false);
+                        n.DrawTextureRect(texture, new Rect2(12, 4, 3, 3), false);
                     },
                 };
                 var frames = 0;
@@ -172,7 +172,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(new CanvasNode
         {
             TextureFilter = Filter.LinearWithMipmapsAnisotropic,
-            DrawAction = n => n.DrawTextureRect(texture, new Rect(4, 4, 64, 4), false),
+            DrawAction = n => n.DrawTextureRect(texture, new Rect2(4, 4, 64, 4), false),
             ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
             {
                 using var frame = RenderingServer.Instance.Readback();

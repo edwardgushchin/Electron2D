@@ -12,7 +12,7 @@ internal static class CanvasPixelSnapTests
         root.SnapTransformsToPixel = true;
         var sprite = new Sprite { Texture = texture };
         root.AddChild(sprite);
-        Check(sprite.GetRect() == new Rect(-1.5f, -0.5f, 3, 1), "Detached sprite has no active viewport policy.");
+        Check(sprite.GetRect() == new Rect2(-1.5f, -0.5f, 3, 1), "Detached sprite has no active viewport policy.");
         using (var tree = new SceneTree(root))
         {
             var draws = 0; var rectEvents = 0;
@@ -23,10 +23,10 @@ internal static class CanvasPixelSnapTests
                 sprite.PrepareCanvas(); vertices.Clear(); batches.Clear(); sprite.AppendCanvas(vertices, batches, sprite.GetGlobalTransform());
                 return vertices[0].Position;
             }
-            Check(sprite.GetRect() == new Rect(-1, 0, 3, 1) && !sprite.IsPixelOpaque(new(-0.4f, 0.2f)), "Attached snapping adjusts bounds and source alpha origin.");
+            Check(sprite.GetRect() == new Rect2(-1, 0, 3, 1) && !sprite.IsPixelOpaque(new(-0.4f, 0.2f)), "Attached snapping adjusts bounds and source alpha origin.");
             Check(First() == new Vector2(-1, 0), "Sprite records the snapped local offset.");
             root.SnapTransformsToPixel = false;
-            Check(sprite.GetRect() == new Rect(-1.5f, -0.5f, 3, 1) && sprite.IsPixelOpaque(new(-0.4f, 0.2f)), "Live queries use the current policy.");
+            Check(sprite.GetRect() == new Rect2(-1.5f, -0.5f, 3, 1) && sprite.IsPixelOpaque(new(-0.4f, 0.2f)), "Live queries use the current policy.");
             Check(First() == new Vector2(-1, 0) && draws == 1 && rectEvents == 0, "Viewport policy does not silently invalidate retained commands or emit rectangle events.");
             sprite.QueueRedraw(); Check(First() == new Vector2(-1.5f, -0.5f) && draws == 2, "Explicit redraw refreshes the offset.");
             root.SnapVerticesToPixel = true;
@@ -105,7 +105,7 @@ internal static class CanvasPixelSnapTests
         }
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 64, 64); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 64, 64); }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception
     {

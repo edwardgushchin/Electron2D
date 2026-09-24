@@ -182,7 +182,7 @@ internal static class AnimatedSpriteTests
         var sprite = new CountedSprite { SpriteFrames = frames, Centered = false, FlipH = true, FlipV = true };
         var window = new TestViewport { SnapTransformsToPixel = true }; window.AddChild(sprite); using var tree = new SceneTree(window);
         sprite.Offset = new(.6f, -.6f); sprite.PrepareCanvas(); sprite.PrepareCanvas();
-        Check(sprite.Draws == 1 && texture.Destination == new Rect(1, -1, -2, -2) && texture.Source == new Rect(0, 0, 2, 2) && texture.Clip, "Virtual frame draw, flips and local pixel snap.");
+        Check(sprite.Draws == 1 && texture.Destination == new Rect2(1, -1, -2, -2) && texture.Source == new Rect2(0, 0, 2, 2) && texture.Clip, "Virtual frame draw, flips and local pixel snap.");
         sprite.Frame = 1; sprite.PrepareCanvas(); var drawCount = sprite.Draws;
         var owner = Environment.CurrentManagedThreadId; sprite.PropertyListChanged += _ => Check(Environment.CurrentManagedThreadId == owner, "Scene notifications stay on owner thread.");
         Task.Run(() => frames.RemoveFrame("default", 1)).GetAwaiter().GetResult();
@@ -226,7 +226,7 @@ internal static class AnimatedSpriteTests
 
     private sealed class TestViewport : Viewport
     {
-        public override Rect GetVisibleRect() => new(0, 0, 100, 100);
+        public override Rect2 GetVisibleRect() => new(0, 0, 100, 100);
     }
     private sealed class CountedSprite : AnimatedSprite
     {
@@ -235,10 +235,10 @@ internal static class AnimatedSpriteTests
     }
     private sealed class RegionTexture : Texture
     {
-        internal Rect Destination, Source; internal bool Clip;
+        internal Rect2 Destination, Source; internal bool Clip;
         public override int GetWidth() => 2;
         public override int GetHeight() => 2;
-        public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+        public override void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
         { Destination = rect; Source = sourceRect; Clip = clipUV; canvasItem.DrawRect(rect, Colors.Red); }
     }
     private static void State(AnimatedSprite sprite, int frame, float progress, bool playing) =>

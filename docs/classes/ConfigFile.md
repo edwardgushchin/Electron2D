@@ -16,7 +16,7 @@ Last updated: 2026-09-24
 
 Stores strongly typed values in a sectioned text configuration and loads or saves them as one document.
 
-`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect`](Rect.md), [`Rect2i`](Rect2i.md), and [`Transform`](Transform.md) use stable exact schemas rather than incidental public-member serialization.
+`ConfigFile` owns one in-memory, insertion-ordered, case-sensitive configuration document. Values are addressed only through [`ConfigKey<T>`](ConfigKey.Generic.md) and are stored immediately as independent compact JSON snapshots. It owns no live object references and exposes no universal value container. [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), and [`Transform`](Transform.md) use stable exact schemas rather than incidental public-member serialization.
 
 The text format is section-oriented. Sectionless assignments precede named sections, named headers use `[section]`, assignments use `key=json`, and unsafe identifiers are JSON-quoted. Blank lines and full comment lines beginning with `;` are accepted. Comments are not retained when encoding.
 

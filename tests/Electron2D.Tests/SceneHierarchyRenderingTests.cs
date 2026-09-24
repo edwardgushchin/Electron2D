@@ -50,6 +50,6 @@ internal static partial class RenderingRuntimeTests
     private sealed class DirectCanvas(Texture texture) : CanvasItem
     {
         public override Transform GetTransform() => new(0f, new Vector2(8, 40));
-        protected override void OnDraw() => texture.DrawRect(this, new Rect(0, 0, 8, 8), false, Colors.Cyan);
+        protected override void OnDraw() => texture.DrawRect(this, new Rect2(0, 0, 8, 8), false, Colors.Cyan);
     }
 }

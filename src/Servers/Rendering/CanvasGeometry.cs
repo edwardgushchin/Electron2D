@@ -6,7 +6,7 @@ namespace Electron2D;
 internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vector2 UV = default);
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color,
-    float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect Source = default,
+    float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect2 Source = default,
     bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null);
 
 internal readonly record struct CanvasAnimationSlice(double Length, double Begin, double End, double Offset)
@@ -37,7 +37,7 @@ internal static class CanvasGeometry
     {
         var pixels = command.Texture!.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
         var size = command.B.Abs();
-        var source = new Rect(command.Source.Position, command.Source.Size.Abs());
+        var source = new Rect2(command.Source.Position, command.Source.Size.Abs());
         if (size.X == 0 || size.Y == 0 || !source.HasArea()) return;
         if (command.Transpose) size = new Vector2(size.Y, size.X);
         var flipX = (command.B.X < 0) != (command.Source.Size.X < 0);
@@ -78,7 +78,7 @@ internal static class CanvasGeometry
     }
 
     private static void AppendSnappedTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform,
-        Color color, Rect source, Vector2 size, Vector2 halfPixel, bool flipX, bool flipY, ReadOnlySpan<float> xs, ReadOnlySpan<float> ys)
+        Color color, Rect2 source, Vector2 size, Vector2 halfPixel, bool flipX, bool flipY, ReadOnlySpan<float> xs, ReadOnlySpan<float> ys)
     {
         Span<Vector2> corners = stackalloc Vector2[4];
         for (var i = 0; i < 4; i++)

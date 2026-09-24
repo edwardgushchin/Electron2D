@@ -79,7 +79,7 @@ public sealed class ConfigFile : ElectronObject
             new Vector4JsonConverter(),
             new Vector3iJsonConverter(),
             new Vector4iJsonConverter(),
-            new RectJsonConverter(),
+            new Rect2JsonConverter(),
             new Rect2iJsonConverter(),
             new TransformJsonConverter(),
         }
@@ -1439,13 +1439,13 @@ internal sealed class Vector4iJsonConverter : JsonConverter<Vector4i>
     }
 }
 
-internal sealed class RectJsonConverter : JsonConverter<Rect>
+internal sealed class Rect2JsonConverter : JsonConverter<Rect2>
 {
     private const int Position = 1;
     private const int Size = 2;
     private const int Complete = Position | Size;
 
-    public override Rect Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Rect2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("A rectangle must be a JSON object.");
@@ -1461,8 +1461,8 @@ internal sealed class RectJsonConverter : JsonConverter<Rect>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Rect.Position) => Position,
-                nameof(Rect.Size) => Size,
+                nameof(Rect2.Position) => Position,
+                nameof(Rect2.Size) => Size,
                 _ => throw new JsonException($"A rectangle contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1482,17 +1482,17 @@ internal sealed class RectJsonConverter : JsonConverter<Rect>
         if (fields != Complete)
             throw new JsonException("A rectangle must contain exactly Position and Size fields.");
 
-        return new Rect(position, size);
+        return new Rect2(position, size);
     }
 
-    public override void Write(Utf8JsonWriter writer, Rect value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Rect2 value, JsonSerializerOptions options)
     {
         if (!value.IsFinite())
             throw new JsonException("Configuration rectangles require finite components.");
 
         writer.WriteStartObject();
-        Vector2JsonFields.Write(writer, nameof(Rect.Position), value.Position);
-        Vector2JsonFields.Write(writer, nameof(Rect.Size), value.Size);
+        Vector2JsonFields.Write(writer, nameof(Rect2.Position), value.Position);
+        Vector2JsonFields.Write(writer, nameof(Rect2.Size), value.Size);
         writer.WriteEndObject();
     }
 }

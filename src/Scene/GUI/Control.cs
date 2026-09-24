@@ -435,11 +435,11 @@ public partial class Control : CanvasItem
 
     /// <summary>Returns the unrotated local rectangle after pivot and scale.</summary>
     /// <returns>The transformed origin and scaled size.</returns>
-    public Rect GetRect() { var transform = GetTransform(); return new(transform.Origin, transform.Scale * _size); }
+    public Rect2 GetRect() { var transform = GetTransform(); return new(transform.Origin, transform.Scale * _size); }
 
     /// <summary>Returns the unrotated global rectangle after pivot and scale.</summary>
     /// <returns>The global transformed origin and scaled size.</returns>
-    public Rect GetGlobalRect() { var transform = GetGlobalTransform(); return new(transform.Origin, transform.Scale * _size); }
+    public Rect2 GetGlobalRect() { var transform = GetGlobalTransform(); return new(transform.Origin, transform.Scale * _size); }
 
     /// <inheritdoc />
     public override Transform GetTransform()

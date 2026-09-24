@@ -92,7 +92,7 @@ internal static class DisplayServerScreenNativeTests
                   new Rect2i(new Vector2i(bounds.X, bounds.Y), physicalSize),
                 "Wayland screen position and physical size match the native output snapshot.");
             if (index == 0 && physicalSize.X > bounds.W)
-                Check(display.GetScreenFromRect(new Rect(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,
+                Check(display.GetScreenFromRect(new Rect2(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,
                     "Screen overlap uses the physical width of the fractionally scaled first display.");
 
             var nativeScale = SDL.GetDisplayContentScale(displayId);

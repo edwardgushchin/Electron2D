@@ -10,9 +10,9 @@ public sealed class AtlasTexture : Texture
     // ponytail: one graph lock serializes atlas traversal/mutation; use immutable graph snapshots if contention matters.
     private static readonly object GraphGate = new();
     private Texture? _atlas;
-    private Rect _region;
-    private Rect _roundedRegion;
-    private Rect _margin;
+    private Rect2 _region;
+    private Rect2 _roundedRegion;
+    private Rect2 _margin;
     private bool _filterClip;
 
     /// <summary>Creates an empty view with a logical size of one pixel on each axis.</summary>
@@ -51,7 +51,7 @@ public sealed class AtlasTexture : Texture
     /// <remarks>The stored rectangle retains fractions; calculations floor only its size, not its position.</remarks>
     /// <exception cref="ArgumentException">The rectangle is not finite.</exception>
     /// <exception cref="ObjectDisposedException">This view is disposed.</exception>
-    public Rect Region
+    public Rect2 Region
     {
         get { lock (GraphGate) { ThrowIfDisposed(); return _region; } }
         set
@@ -60,7 +60,7 @@ public sealed class AtlasTexture : Texture
             {
                 ThrowIfDisposed(); ValidateRectangle(value);
                 if (_region == value) return;
-                _region = value; _roundedRegion = new Rect(value.Position, value.Size.Floor());
+                _region = value; _roundedRegion = new Rect2(value.Position, value.Size.Floor());
             }
             EmitChanged();
         }
@@ -71,7 +71,7 @@ public sealed class AtlasTexture : Texture
     /// <remarks>Margins do not add pixels to GetImage. A zero region axis uses the source size without adding margin.</remarks>
     /// <exception cref="ArgumentException">The rectangle is not finite.</exception>
     /// <exception cref="ObjectDisposedException">This view is disposed.</exception>
-    public Rect Margin
+    public Rect2 Margin
     {
         get { lock (GraphGate) { ThrowIfDisposed(); return _margin; } }
         set
@@ -161,11 +161,11 @@ public sealed class AtlasTexture : Texture
     {
         lock (GraphGate)
         {
-            ValidateDraw(canvasItem, new Rect(position, Vector2.Zero), modulate);
+            ValidateDraw(canvasItem, new Rect2(position, Vector2.Zero), modulate);
             var atlas = _atlas; var region = _roundedRegion; var margin = _margin; var clip = _filterClip;
             if (atlas is null) return;
             region = EffectiveRegion(atlas, region);
-            var destination = new Rect(position + margin.Position, region.Size);
+            var destination = new Rect2(position + margin.Position, region.Size);
             ValidateRectangle(destination);
             atlas.DrawRectRegion(canvasItem, destination, region, modulate, transpose, clip);
         }
@@ -173,7 +173,7 @@ public sealed class AtlasTexture : Texture
 
     /// <inheritdoc />
     /// <remarks>Scales the region and margins into the destination. Atlas views ignore tile and always stretch.</remarks>
-    public override void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)
+    public override void DrawRect(CanvasItem canvasItem, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)
     {
         lock (GraphGate)
         {
@@ -186,7 +186,7 @@ public sealed class AtlasTexture : Texture
     /// <remarks>Clips geometry to the effective region after translating source coordinates by region position
     /// minus margin position. Both zero source dimensions select the rounded region size, then the atlas size
     /// if both remain zero. A remaining zero axis draws nothing. FilterClip overrides clipUV.</remarks>
-    public override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
+    public override void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)
     {
         lock (GraphGate)
         {
@@ -195,10 +195,10 @@ public sealed class AtlasTexture : Texture
         }
     }
 
-    private void DrawRegion(CanvasItem canvasItem, Rect rect, Rect? requestedSource, Color? modulate, bool transpose)
+    private void DrawRegion(CanvasItem canvasItem, Rect2 rect, Rect2? requestedSource, Color? modulate, bool transpose)
     {
         var atlas = _atlas!; var region = _roundedRegion; var margin = _margin; var clip = _filterClip;
-        var source = requestedSource ?? new Rect(Vector2.Zero, LogicalSize(atlas, region, margin));
+        var source = requestedSource ?? new Rect2(Vector2.Zero, LogicalSize(atlas, region, margin));
         if (source.Size == Vector2.Zero) source.Size = region.Size;
         if (source.Size == Vector2.Zero) source.Size = atlas.GetSize();
         if (source.Size.X == 0 || source.Size.Y == 0) return;
@@ -211,26 +211,26 @@ public sealed class AtlasTexture : Texture
         var offset = clipped.Position - source.Position;
         if (scale.X < 0) offset.X += clipped.Size.X - source.Size.X;
         if (scale.Y < 0) offset.Y += clipped.Size.Y - source.Size.Y;
-        var destination = new Rect(rect.Position + offset * scale, clipped.Size * scale);
+        var destination = new Rect2(rect.Position + offset * scale, clipped.Size * scale);
         ValidateRectangle(destination); ValidateRectangle(clipped);
         atlas.DrawRectRegion(canvasItem, destination, clipped, modulate, transpose, clip);
     }
 
-    private static Rect EffectiveRegion(Texture? atlas, Rect region) => new(region.Position, new Vector2(
+    private static Rect2 EffectiveRegion(Texture? atlas, Rect2 region) => new(region.Position, new Vector2(
         region.Size.X == 0 ? atlas?.GetWidth() ?? 0 : region.Size.X,
         region.Size.Y == 0 ? atlas?.GetHeight() ?? 0 : region.Size.Y));
 
-    private static Vector2 LogicalSize(Texture? atlas, Rect region, Rect margin) => new(
+    private static Vector2 LogicalSize(Texture? atlas, Rect2 region, Rect2 margin) => new(
         region.Size.X == 0 ? atlas?.GetWidth() ?? 1 : checked((int)(region.Size.X + margin.Size.X)),
         region.Size.Y == 0 ? atlas?.GetHeight() ?? 1 : checked((int)(region.Size.Y + margin.Size.Y)));
 
-    private void ValidateDraw(CanvasItem canvasItem, Rect rect, Color? modulate)
+    private void ValidateDraw(CanvasItem canvasItem, Rect2 rect, Color? modulate)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(canvasItem);
         canvasItem.ValidateTextureDraw(this, rect, modulate ?? Colors.White);
     }
 
-    private static void ValidateRectangle(Rect rect)
+    private static void ValidateRectangle(Rect2 rect)
     {
         if (!rect.IsFinite()) throw new ArgumentException("Texture rectangles must be finite.", nameof(rect));
     }
@@ -254,7 +254,7 @@ public sealed class AtlasTexture : Texture
         }
     }
 
-    internal Texture? ResolvePolygonTexture(bool remap, out Rect? uvMapping)
+    internal Texture? ResolvePolygonTexture(bool remap, out Rect2? uvMapping)
     {
         lock (GraphGate)
         {
@@ -264,7 +264,7 @@ public sealed class AtlasTexture : Texture
             if (remap && atlas is not null)
             {
                 var size = atlas.GetSize();
-                var mapping = new Rect(region.Position / size, region.Size / size);
+                var mapping = new Rect2(region.Position / size, region.Size / size);
                 if (!mapping.IsFinite()) throw new ArgumentException("Atlas texture coordinates overflowed.");
                 uvMapping = mapping;
             }
@@ -281,7 +281,7 @@ public sealed class AtlasTexture : Texture
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
-        Texture? atlas; Rect region, margin; bool filterClip;
+        Texture? atlas; Rect2 region, margin; bool filterClip;
         lock (GraphGate) { ThrowIfDisposed(); atlas = _atlas; region = _region; margin = _margin; filterClip = _filterClip; }
         var copy = (AtlasTexture)target;
         copy.Atlas = deep ? (Texture?)duplicateSubresource(atlas) : atlas;
@@ -292,8 +292,8 @@ public sealed class AtlasTexture : Texture
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
         new PropertyDescriptor<AtlasTexture, Texture?>(nameof(Atlas), t => t.Atlas, (t, v) => t.Atlas = v, _ => null, stored: true),
-        new PropertyDescriptor<AtlasTexture, Rect>(nameof(Region), t => t.Region, (t, v) => t.Region = v, _ => default, stored: true),
-        new PropertyDescriptor<AtlasTexture, Rect>(nameof(Margin), t => t.Margin, (t, v) => t.Margin = v, _ => default, stored: true),
+        new PropertyDescriptor<AtlasTexture, Rect2>(nameof(Region), t => t.Region, (t, v) => t.Region = v, _ => default, stored: true),
+        new PropertyDescriptor<AtlasTexture, Rect2>(nameof(Margin), t => t.Margin, (t, v) => t.Margin = v, _ => default, stored: true),
         new PropertyDescriptor<AtlasTexture, bool>(nameof(FilterClip), t => t.FilterClip, (t, v) => t.FilterClip = v, _ => false, stored: true),
     ]);
 

@@ -295,4 +295,4 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
                                  capture_output=True, text=True)
             assert run.returncode == 1 and diagnostic in run.stderr, run.stderr
             assert output.read_bytes() == previous, 'A broken toolchain replaced the last usable artifact'
-print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect/unsigned-vector/mat2 mappings, boolean source/artifact metadata, reserved TIME and unused resources.')
+print('Shader import checks passed: HLSL 2021/SM6.0, GLSL 450/Vulkan1.0, SPIR-V, diagnostics, atomic replacement, embedded programs, material buffers, texture/sampler bindings, RGB/Rect2/unsigned-vector/mat2 mappings, boolean source/artifact metadata, reserved TIME and unused resources.')

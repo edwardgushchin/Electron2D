@@ -22,7 +22,7 @@ The value owns no resources, identity, handles, callbacks, or managed references
 
 The rectangle is defined by a position and size and is commonly used for pixel, image-region,
 atlas, and grid bounds. Most geometric operations assume non-negative size components. Call
-[`Rect2i.Abs`](Rect2i.md#m-electron2d-recti-abs) before those operations when a rectangle may have a negative width or height.
+[`Rect2i.Abs`](Rect2i.md#m-electron2d-rect2i-abs) before those operations when a rectangle may have a negative width or height.
 Integer arithmetic uses unchecked 32-bit wraparound except where a documented managed operation throws.
 
 All 23 mapped members and the type row have a pinned-source, ADR 0033/0035 and Linux/.NET 8 managed audit. `Abs` adds the negative part of each size component before taking its magnitude, preserving wrapped positions even if a positive component makes `End` wrap. A size of `int.MinValue` raises `OverflowException` under the accepted managed boundary. `VerifyIntegerRectangles` covers copy/mutation, wrapped area/end/growth, signed center rounding, half-open edges, empty intersection, typed conversion and failures, strict persistence, packed-scene copying and warmed allocation behavior. Native ABI and other platforms remain unverified.
@@ -40,54 +40,54 @@ var clipped = region.Intersection(availableRegion);
 
 | Member | Description |
 | --- | --- |
-| [`public Rect2i(Vector2i position, Vector2i size)`](#m-electron2d-recti-ctor-electron2d-vector2i-electron2d-vector2i) | Initializes an integer rectangle from a position and size. |
-| [`public Rect2i(Vector2i position, int width, int height)`](#m-electron2d-recti-ctor-electron2d-vector2i-system-int32-system-int32) | Initializes an integer rectangle from a position, width, and height. |
-| [`public Rect2i(int x, int y, Vector2i size)`](#m-electron2d-recti-ctor-system-int32-system-int32-electron2d-vector2i) | Initializes an integer rectangle from position coordinates and a size. |
-| [`public Rect2i(int x, int y, int width, int height)`](#m-electron2d-recti-ctor-system-int32-system-int32-system-int32-system-int32) | Initializes an integer rectangle from position coordinates, width, and height. |
+| [`public Rect2i(Vector2i position, Vector2i size)`](#m-electron2d-rect2i-ctor-electron2d-vector2i-electron2d-vector2i) | Initializes an integer rectangle from a position and size. |
+| [`public Rect2i(Vector2i position, int width, int height)`](#m-electron2d-rect2i-ctor-electron2d-vector2i-system-int32-system-int32) | Initializes an integer rectangle from a position, width, and height. |
+| [`public Rect2i(int x, int y, Vector2i size)`](#m-electron2d-rect2i-ctor-system-int32-system-int32-electron2d-vector2i) | Initializes an integer rectangle from position coordinates and a size. |
+| [`public Rect2i(int x, int y, int width, int height)`](#m-electron2d-rect2i-ctor-system-int32-system-int32-system-int32-system-int32) | Initializes an integer rectangle from position coordinates, width, and height. |
 
 ## Properties
 
 | Member | Description |
 | --- | --- |
-| [`public Vector2i Position { get; set; }`](#p-electron2d-recti-position) | Gets or sets the beginning corner, usually the top-left integer point. |
-| [`public Vector2i Size { get; set; }`](#p-electron2d-recti-size) | Gets or sets the integer width and height measured from [`Rect2i.Position`](Rect2i.md#p-electron2d-recti-position). |
-| [`public Vector2i End { get; set; }`](#p-electron2d-recti-end) | Gets or sets the ending corner. |
-| [`public int Area { get; }`](#p-electron2d-recti-area) | Gets the signed integer rectangle area. |
+| [`public Vector2i Position { get; set; }`](#p-electron2d-rect2i-position) | Gets or sets the beginning corner, usually the top-left integer point. |
+| [`public Vector2i Size { get; set; }`](#p-electron2d-rect2i-size) | Gets or sets the integer width and height measured from [`Rect2i.Position`](Rect2i.md#p-electron2d-rect2i-position). |
+| [`public Vector2i End { get; set; }`](#p-electron2d-rect2i-end) | Gets or sets the ending corner. |
+| [`public int Area { get; }`](#p-electron2d-rect2i-area) | Gets the signed integer rectangle area. |
 
 ## Methods
 
 | Member | Description |
 | --- | --- |
-| [`public Rect2i Abs()`](#m-electron2d-recti-abs) | Returns an equivalent integer rectangle with a non-negative size and top-left position. |
-| [`public bool Encloses(Rect2i other)`](#m-electron2d-recti-encloses-electron2d-recti) | Tests whether this integer rectangle completely encloses another rectangle. |
-| [`public Rect2i Expand(Vector2i point)`](#m-electron2d-recti-expand-electron2d-vector2i) | Expands the integer rectangle's edges when necessary to include a point. |
-| [`public Vector2i GetCenter()`](#m-electron2d-recti-getcenter) | Gets the integer center point. |
-| [`public Rect2i Grow(int amount)`](#m-electron2d-recti-grow-system-int32) | Returns a copy extended equally on every side. |
-| [`public Rect2i GrowIndividual(int left, int top, int right, int bottom)`](#m-electron2d-recti-growindividual-system-int32-system-int32-system-int32-system-int32) | Returns a copy extended independently on each side. |
-| [`public Rect2i GrowSide(Side side, int amount)`](#m-electron2d-recti-growside-electron2d-side-system-int32) | Returns a copy extended on one side. |
-| [`public bool HasArea()`](#m-electron2d-recti-hasarea) | Tests whether both size components are strictly positive. |
-| [`public bool HasPoint(Vector2i point)`](#m-electron2d-recti-haspoint-electron2d-vector2i) | Tests whether an integer point lies in the rectangle's half-open area. |
-| [`public Rect2i Intersection(Rect2i other)`](#m-electron2d-recti-intersection-electron2d-recti) | Returns the intersection with another integer rectangle. |
-| [`public bool Intersects(Rect2i other)`](#m-electron2d-recti-intersects-electron2d-recti) | Tests whether this integer rectangle overlaps another rectangle. |
-| [`public Rect2i Merge(Rect2i other)`](#m-electron2d-recti-merge-electron2d-recti) | Returns the smallest axis-aligned integer rectangle enclosing this rectangle and another. |
-| [`public override bool Equals(object obj)`](#m-electron2d-recti-equals-system-object) | Tests whether another object is an equal integer rectangle. |
-| [`public bool Equals(Rect2i other)`](#m-electron2d-recti-equals-electron2d-recti) | Tests position and size for exact component equality. |
-| [`public override int GetHashCode()`](#m-electron2d-recti-gethashcode) | Returns a hash code based on position and size. |
-| [`public override string ToString()`](#m-electron2d-recti-tostring) | Formats position and size using invariant culture. |
-| [`public string ToString(string format)`](#m-electron2d-recti-tostring-system-string) | Formats position and size with an integer numeric format and invariant culture. |
+| [`public Rect2i Abs()`](#m-electron2d-rect2i-abs) | Returns an equivalent integer rectangle with a non-negative size and top-left position. |
+| [`public bool Encloses(Rect2i other)`](#m-electron2d-rect2i-encloses-electron2d-rect2i) | Tests whether this integer rectangle completely encloses another rectangle. |
+| [`public Rect2i Expand(Vector2i point)`](#m-electron2d-rect2i-expand-electron2d-vector2i) | Expands the integer rectangle's edges when necessary to include a point. |
+| [`public Vector2i GetCenter()`](#m-electron2d-rect2i-getcenter) | Gets the integer center point. |
+| [`public Rect2i Grow(int amount)`](#m-electron2d-rect2i-grow-system-int32) | Returns a copy extended equally on every side. |
+| [`public Rect2i GrowIndividual(int left, int top, int right, int bottom)`](#m-electron2d-rect2i-growindividual-system-int32-system-int32-system-int32-system-int32) | Returns a copy extended independently on each side. |
+| [`public Rect2i GrowSide(Side side, int amount)`](#m-electron2d-rect2i-growside-electron2d-side-system-int32) | Returns a copy extended on one side. |
+| [`public bool HasArea()`](#m-electron2d-rect2i-hasarea) | Tests whether both size components are strictly positive. |
+| [`public bool HasPoint(Vector2i point)`](#m-electron2d-rect2i-haspoint-electron2d-vector2i) | Tests whether an integer point lies in the rectangle's half-open area. |
+| [`public Rect2i Intersection(Rect2i other)`](#m-electron2d-rect2i-intersection-electron2d-rect2i) | Returns the intersection with another integer rectangle. |
+| [`public bool Intersects(Rect2i other)`](#m-electron2d-rect2i-intersects-electron2d-rect2i) | Tests whether this integer rectangle overlaps another rectangle. |
+| [`public Rect2i Merge(Rect2i other)`](#m-electron2d-rect2i-merge-electron2d-rect2i) | Returns the smallest axis-aligned integer rectangle enclosing this rectangle and another. |
+| [`public override bool Equals(object obj)`](#m-electron2d-rect2i-equals-system-object) | Tests whether another object is an equal integer rectangle. |
+| [`public bool Equals(Rect2i other)`](#m-electron2d-rect2i-equals-electron2d-rect2i) | Tests position and size for exact component equality. |
+| [`public override int GetHashCode()`](#m-electron2d-rect2i-gethashcode) | Returns a hash code based on position and size. |
+| [`public override string ToString()`](#m-electron2d-rect2i-tostring) | Formats position and size using invariant culture. |
+| [`public string ToString(string format)`](#m-electron2d-rect2i-tostring-system-string) | Formats position and size with an integer numeric format and invariant culture. |
 
 ## Operators
 
 | Member | Description |
 | --- | --- |
-| [`public static bool operator ==(Rect2i left, Rect2i right)`](#m-electron2d-recti-op-equality-electron2d-recti-electron2d-recti) | Tests both position and size for exact component equality. |
-| [`public static bool operator !=(Rect2i left, Rect2i right)`](#m-electron2d-recti-op-inequality-electron2d-recti-electron2d-recti) | Tests whether either position or size differs. |
-| [`public static Rect operator implicit(Rect2i value)`](#m-electron2d-recti-op-implicit-electron2d-recti-electron2d-rect) | Converts an integer rectangle to a floating-point rectangle. |
-| [`public static Rect2i operator explicit(Rect value)`](#m-electron2d-recti-op-explicit-electron2d-rect-electron2d-recti) | Converts a floating-point rectangle by truncating each position and size component toward zero. |
+| [`public static bool operator ==(Rect2i left, Rect2i right)`](#m-electron2d-rect2i-op-equality-electron2d-rect2i-electron2d-rect2i) | Tests both position and size for exact component equality. |
+| [`public static bool operator !=(Rect2i left, Rect2i right)`](#m-electron2d-rect2i-op-inequality-electron2d-rect2i-electron2d-rect2i) | Tests whether either position or size differs. |
+| [`public static Rect2 operator implicit(Rect2i value)`](#m-electron2d-rect2i-op-implicit-electron2d-rect2i-electron2d-rect2) | Converts an integer rectangle to a floating-point rectangle. |
+| [`public static Rect2i operator explicit(Rect2 value)`](#m-electron2d-rect2i-op-explicit-electron2d-rect2-electron2d-rect2i) | Converts a floating-point rectangle by truncating each position and size component toward zero. |
 
 ## Constructor Descriptions
 
-<a id="m-electron2d-recti-ctor-electron2d-vector2i-electron2d-vector2i"></a>
+<a id="m-electron2d-rect2i-ctor-electron2d-vector2i-electron2d-vector2i"></a>
 ### `public Rect2i(Vector2i position, Vector2i size)`
 
 Initializes an integer rectangle from a position and size.
@@ -97,7 +97,7 @@ Initializes an integer rectangle from a position and size.
 - `position`: The beginning corner.
 - `size`: The integer width and height.
 
-<a id="m-electron2d-recti-ctor-electron2d-vector2i-system-int32-system-int32"></a>
+<a id="m-electron2d-rect2i-ctor-electron2d-vector2i-system-int32-system-int32"></a>
 ### `public Rect2i(Vector2i position, int width, int height)`
 
 Initializes an integer rectangle from a position, width, and height.
@@ -108,7 +108,7 @@ Initializes an integer rectangle from a position, width, and height.
 - `width`: The integer width.
 - `height`: The integer height.
 
-<a id="m-electron2d-recti-ctor-system-int32-system-int32-electron2d-vector2i"></a>
+<a id="m-electron2d-rect2i-ctor-system-int32-system-int32-electron2d-vector2i"></a>
 ### `public Rect2i(int x, int y, Vector2i size)`
 
 Initializes an integer rectangle from position coordinates and a size.
@@ -119,7 +119,7 @@ Initializes an integer rectangle from position coordinates and a size.
 - `y`: The vertical position.
 - `size`: The integer width and height.
 
-<a id="m-electron2d-recti-ctor-system-int32-system-int32-system-int32-system-int32"></a>
+<a id="m-electron2d-rect2i-ctor-system-int32-system-int32-system-int32-system-int32"></a>
 ### `public Rect2i(int x, int y, int width, int height)`
 
 Initializes an integer rectangle from position coordinates, width, and height.
@@ -133,43 +133,43 @@ Initializes an integer rectangle from position coordinates, width, and height.
 
 ## Property Descriptions
 
-<a id="p-electron2d-recti-position"></a>
+<a id="p-electron2d-rect2i-position"></a>
 ### `public Vector2i Position { get; set; }`
 
 Gets or sets the beginning corner, usually the top-left integer point.
 
-**Value:** The rectangle origin. It is normally componentwise less than or equal to [`Rect2i.End`](Rect2i.md#p-electron2d-recti-end).
+**Value:** The rectangle origin. It is normally componentwise less than or equal to [`Rect2i.End`](Rect2i.md#p-electron2d-rect2i-end).
 
-<a id="p-electron2d-recti-size"></a>
+<a id="p-electron2d-rect2i-size"></a>
 ### `public Vector2i Size { get; set; }`
 
-Gets or sets the integer width and height measured from [`Rect2i.Position`](Rect2i.md#p-electron2d-recti-position).
+Gets or sets the integer width and height measured from [`Rect2i.Position`](Rect2i.md#p-electron2d-rect2i-position).
 
 **Value:** The rectangle size. Non-negative components are required by most geometric operations.
 
-**Remarks:** Assignment changes [`Rect2i.End`](Rect2i.md#p-electron2d-recti-end) because the end is computed from position plus size.
+**Remarks:** Assignment changes [`Rect2i.End`](Rect2i.md#p-electron2d-rect2i-end) because the end is computed from position plus size.
 
-<a id="p-electron2d-recti-end"></a>
+<a id="p-electron2d-rect2i-end"></a>
 ### `public Vector2i End { get; set; }`
 
 Gets or sets the ending corner.
 
-**Value:** [`Rect2i.Position`](Rect2i.md#p-electron2d-recti-position) plus [`Rect2i.Size`](Rect2i.md#p-electron2d-recti-size) using unchecked integer arithmetic.
+**Value:** [`Rect2i.Position`](Rect2i.md#p-electron2d-rect2i-position) plus [`Rect2i.Size`](Rect2i.md#p-electron2d-rect2i-size) using unchecked integer arithmetic.
 
-**Remarks:** Assignment changes [`Rect2i.Size`](Rect2i.md#p-electron2d-recti-size) while preserving [`Rect2i.Position`](Rect2i.md#p-electron2d-recti-position).
+**Remarks:** Assignment changes [`Rect2i.Size`](Rect2i.md#p-electron2d-rect2i-size) while preserving [`Rect2i.Position`](Rect2i.md#p-electron2d-rect2i-position).
 
-<a id="p-electron2d-recti-area"></a>
+<a id="p-electron2d-rect2i-area"></a>
 ### `public int Area { get; }`
 
 Gets the signed integer rectangle area.
 
 **Value:** `Size.X * Size.Y` using unchecked 32-bit arithmetic.
 
-**Remarks:** A positive product does not replace [`Rect2i.HasArea`](Rect2i.md#m-electron2d-recti-hasarea) because two negative components also have a positive product.
+**Remarks:** A positive product does not replace [`Rect2i.HasArea`](Rect2i.md#m-electron2d-rect2i-hasarea) because two negative components also have a positive product.
 
 ## Method Descriptions
 
-<a id="m-electron2d-recti-abs"></a>
+<a id="m-electron2d-rect2i-abs"></a>
 ### `public Rect2i Abs()`
 
 Returns an equivalent integer rectangle with a non-negative size and top-left position.
@@ -180,7 +180,7 @@ Returns an equivalent integer rectangle with a non-negative size and top-left po
 
 - `OverflowException`: A size component is `Int32.MinValue`.
 
-<a id="m-electron2d-recti-encloses-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-encloses-electron2d-rect2i"></a>
 ### `public bool Encloses(Rect2i other)`
 
 Tests whether this integer rectangle completely encloses another rectangle.
@@ -191,9 +191,9 @@ Tests whether this integer rectangle completely encloses another rectangle.
 
 **Returns:** `true` when both edges of `other` lie within or on this rectangle.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-recti-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-rect2i-abs) first.
 
-<a id="m-electron2d-recti-expand-electron2d-vector2i"></a>
+<a id="m-electron2d-rect2i-expand-electron2d-vector2i"></a>
 ### `public Rect2i Expand(Vector2i point)`
 
 Expands the integer rectangle's edges when necessary to include a point.
@@ -206,16 +206,16 @@ Expands the integer rectangle's edges when necessary to include a point.
 
 **Remarks:** A point exactly on an existing edge does not change the rectangle.
 
-<a id="m-electron2d-recti-getcenter"></a>
+<a id="m-electron2d-rect2i-getcenter"></a>
 ### `public Vector2i GetCenter()`
 
 Gets the integer center point.
 
 **Returns:** `Position + Size / 2`.
 
-**Remarks:** Odd size components round toward [`Rect2i.Position`](Rect2i.md#p-electron2d-recti-position).
+**Remarks:** Odd size components round toward [`Rect2i.Position`](Rect2i.md#p-electron2d-rect2i-position).
 
-<a id="m-electron2d-recti-grow-system-int32"></a>
+<a id="m-electron2d-rect2i-grow-system-int32"></a>
 ### `public Rect2i Grow(int amount)`
 
 Returns a copy extended equally on every side.
@@ -226,7 +226,7 @@ Returns a copy extended equally on every side.
 
 **Returns:** The grown or shrunk rectangle.
 
-<a id="m-electron2d-recti-growindividual-system-int32-system-int32-system-int32-system-int32"></a>
+<a id="m-electron2d-rect2i-growindividual-system-int32-system-int32-system-int32-system-int32"></a>
 ### `public Rect2i GrowIndividual(int left, int top, int right, int bottom)`
 
 Returns a copy extended independently on each side.
@@ -240,7 +240,7 @@ Returns a copy extended independently on each side.
 
 **Returns:** The grown or shrunk rectangle.
 
-<a id="m-electron2d-recti-growside-electron2d-side-system-int32"></a>
+<a id="m-electron2d-rect2i-growside-electron2d-side-system-int32"></a>
 ### `public Rect2i GrowSide(Side side, int amount)`
 
 Returns a copy extended on one side.
@@ -252,14 +252,14 @@ Returns a copy extended on one side.
 
 **Returns:** The grown or shrunk rectangle. An undefined `side` leaves the rectangle unchanged.
 
-<a id="m-electron2d-recti-hasarea"></a>
+<a id="m-electron2d-rect2i-hasarea"></a>
 ### `public bool HasArea()`
 
 Tests whether both size components are strictly positive.
 
 **Returns:** `true` when width and height are greater than zero.
 
-<a id="m-electron2d-recti-haspoint-electron2d-vector2i"></a>
+<a id="m-electron2d-rect2i-haspoint-electron2d-vector2i"></a>
 ### `public bool HasPoint(Vector2i point)`
 
 Tests whether an integer point lies in the rectangle's half-open area.
@@ -270,9 +270,9 @@ Tests whether an integer point lies in the rectangle's half-open area.
 
 **Returns:** `true` when the point is on or after the left/top edges and before the right/bottom edges.
 
-**Remarks:** Negative size components are unsupported; normalize with [`Rect2i.Abs`](Rect2i.md#m-electron2d-recti-abs) first.
+**Remarks:** Negative size components are unsupported; normalize with [`Rect2i.Abs`](Rect2i.md#m-electron2d-rect2i-abs) first.
 
-<a id="m-electron2d-recti-intersection-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-intersection-electron2d-rect2i"></a>
 ### `public Rect2i Intersection(Rect2i other)`
 
 Returns the intersection with another integer rectangle.
@@ -287,7 +287,7 @@ Returns the intersection with another integer rectangle.
 rectangle is considered intersecting and produces a zero-size result at its own position. Negative size
 components are unsupported.
 
-<a id="m-electron2d-recti-intersects-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-intersects-electron2d-rect2i"></a>
 ### `public bool Intersects(Rect2i other)`
 
 Tests whether this integer rectangle overlaps another rectangle.
@@ -298,9 +298,9 @@ Tests whether this integer rectangle overlaps another rectangle.
 
 **Returns:** `true` when the interiors overlap; touching outer borders are excluded.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-recti-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-rect2i-abs) first.
 
-<a id="m-electron2d-recti-merge-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-merge-electron2d-rect2i"></a>
 ### `public Rect2i Merge(Rect2i other)`
 
 Returns the smallest axis-aligned integer rectangle enclosing this rectangle and another.
@@ -311,9 +311,9 @@ Returns the smallest axis-aligned integer rectangle enclosing this rectangle and
 
 **Returns:** The merged rectangle.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-recti-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2i.Abs`](Rect2i.md#m-electron2d-rect2i-abs) first.
 
-<a id="m-electron2d-recti-equals-system-object"></a>
+<a id="m-electron2d-rect2i-equals-system-object"></a>
 ### `public override bool Equals(object obj)`
 
 Tests whether another object is an equal integer rectangle.
@@ -324,7 +324,7 @@ Tests whether another object is an equal integer rectangle.
 
 **Returns:** `true` when `obj` is an integer rectangle with equal components.
 
-<a id="m-electron2d-recti-equals-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-equals-electron2d-rect2i"></a>
 ### `public bool Equals(Rect2i other)`
 
 Tests position and size for exact component equality.
@@ -335,21 +335,21 @@ Tests position and size for exact component equality.
 
 **Returns:** `true` when all four components are equal.
 
-<a id="m-electron2d-recti-gethashcode"></a>
+<a id="m-electron2d-rect2i-gethashcode"></a>
 ### `public override int GetHashCode()`
 
 Returns a hash code based on position and size.
 
 **Returns:** The component hash code.
 
-<a id="m-electron2d-recti-tostring"></a>
+<a id="m-electron2d-rect2i-tostring"></a>
 ### `public override string ToString()`
 
 Formats position and size using invariant culture.
 
 **Returns:** A string containing the position followed by the size.
 
-<a id="m-electron2d-recti-tostring-system-string"></a>
+<a id="m-electron2d-rect2i-tostring-system-string"></a>
 ### `public string ToString(string format)`
 
 Formats position and size with an integer numeric format and invariant culture.
@@ -366,7 +366,7 @@ Formats position and size with an integer numeric format and invariant culture.
 
 ## Operator Descriptions
 
-<a id="m-electron2d-recti-op-equality-electron2d-recti-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-op-equality-electron2d-rect2i-electron2d-rect2i"></a>
 ### `public static bool operator ==(Rect2i left, Rect2i right)`
 
 Tests both position and size for exact component equality.
@@ -378,7 +378,7 @@ Tests both position and size for exact component equality.
 
 **Returns:** `true` when all four components are equal.
 
-<a id="m-electron2d-recti-op-inequality-electron2d-recti-electron2d-recti"></a>
+<a id="m-electron2d-rect2i-op-inequality-electron2d-rect2i-electron2d-rect2i"></a>
 ### `public static bool operator !=(Rect2i left, Rect2i right)`
 
 Tests whether either position or size differs.
@@ -390,8 +390,8 @@ Tests whether either position or size differs.
 
 **Returns:** `true` when at least one component differs.
 
-<a id="m-electron2d-recti-op-implicit-electron2d-recti-electron2d-rect"></a>
-### `public static Rect operator implicit(Rect2i value)`
+<a id="m-electron2d-rect2i-op-implicit-electron2d-rect2i-electron2d-rect2"></a>
+### `public static Rect2 operator implicit(Rect2i value)`
 
 Converts an integer rectangle to a floating-point rectangle.
 
@@ -403,8 +403,8 @@ Converts an integer rectangle to a floating-point rectangle.
 
 **Remarks:** Large integer components can lose low-order precision.
 
-<a id="m-electron2d-recti-op-explicit-electron2d-rect-electron2d-recti"></a>
-### `public static Rect2i operator explicit(Rect value)`
+<a id="m-electron2d-rect2i-op-explicit-electron2d-rect2-electron2d-rect2i"></a>
+### `public static Rect2i operator explicit(Rect2 value)`
 
 Converts a floating-point rectangle by truncating each position and size component toward zero.
 
@@ -426,7 +426,7 @@ Converts a floating-point rectangle by truncating each position and size compone
 - Point containment is half-open, so adjacent positive rectangles do not share their right or bottom edge.
 - Border-only rectangle contact is excluded. A zero-size rectangle strictly inside another still passes the edge-order intersection test and produces a zero-size intersection at its position.
 - Growth is algebraic and may create zero or negative size. `GrowSide` treats an undefined [`Side`](Side.md) value as a no-op.
-- Explicit conversion from [`Rect`](Rect.md) delegates to the checked floating-to-integer vector conversion and rejects non-finite or out-of-range components.
+- Explicit conversion from [`Rect2`](Rect2.md) delegates to the checked floating-to-integer vector conversion and rejects non-finite or out-of-range components.
 - `ToString(string?)` exposes `FormatException` for an invalid integer format.
 
 ## Lifecycle, threading, and allocation
@@ -437,7 +437,7 @@ Construction, geometry, conversion, comparison, and hashing are value-only and a
 
 ## Dependencies and integration
 
-The public type depends on [`Vector2i`](Vector2i.md), [`Rect`](Rect.md), [`Side`](Side.md), invariant formatting, and interop metadata. [`ConfigFile`](ConfigFile.md) stores every integer component through the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect2i` directly as a reference-free value.
+The public type depends on [`Vector2i`](Vector2i.md), [`Rect2`](Rect2.md), [`Side`](Side.md), invariant formatting, and interop metadata. [`ConfigFile`](ConfigFile.md) stores every integer component through the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect2i` directly as a reference-free value.
 
 There is no dependency on Scene geometry, rendering, SDL, input, audio, physics, resources, scripting, or an editor. Support mapping, approximate comparison, finite checks, transform operators, and optional border-inclusive intersection belong only to floating-point rectangle behavior and are not part of this integer contract. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 

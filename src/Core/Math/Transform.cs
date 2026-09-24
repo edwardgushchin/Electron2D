@@ -332,7 +332,7 @@ public struct Transform : IEquatable<Transform>
     /// Rotation, reflection, non-uniform scale, skew, zero size, and negative size are supported. The result is
     /// normalized even when <paramref name="rectangle"/> has a negative size.
     /// </remarks>
-    public static Rect operator *(Transform transform, Rect rectangle)
+    public static Rect2 operator *(Transform transform, Rect2 rectangle)
     {
         var origin = transform * rectangle.Position;
         var xEdge = transform.X * rectangle.Size.X;
@@ -340,7 +340,7 @@ public struct Transform : IEquatable<Transform>
         var opposite = origin + xEdge + yEdge;
         var minimum = origin.Min(origin + xEdge).Min((origin + yEdge).Min(opposite));
         var maximum = origin.Max(origin + xEdge).Max((origin + yEdge).Max(opposite));
-        return new Rect(minimum, maximum - minimum);
+        return new Rect2(minimum, maximum - minimum);
     }
 
     /// <summary>Applies the inverse orthonormal transform to a point.</summary>
@@ -358,7 +358,7 @@ public struct Transform : IEquatable<Transform>
     /// This operator is equivalent to <c>transform.Inverse() * rectangle</c>. For scale or skew, use
     /// <c>transform.AffineInverse() * rectangle</c> instead.
     /// </remarks>
-    public static Rect operator *(Rect rectangle, Transform transform) => transform.Inverse() * rectangle;
+    public static Rect2 operator *(Rect2 rectangle, Transform transform) => transform.Inverse() * rectangle;
 
     /// <summary>Transforms every point into a newly allocated array.</summary>
     /// <param name="transform">The transform to apply.</param>

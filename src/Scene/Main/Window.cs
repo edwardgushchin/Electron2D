@@ -204,10 +204,10 @@ public partial class Window : Viewport
     public void RequestAttention() => GetDisplay().WindowRequestAttention();
 
     /// <inheritdoc />
-    public override Rect GetVisibleRect()
+    public override Rect2 GetVisibleRect()
     {
         var size = Size;
-        return new Rect(Vector2.Zero, new Vector2(size.X, size.Y));
+        return new Rect2(Vector2.Zero, new Vector2(size.X, size.Y));
     }
 
     /// <inheritdoc />

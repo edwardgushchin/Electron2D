@@ -22,7 +22,7 @@ using var sheet = ImageTexture.CreateFromImage(image);
 using var tile = new AtlasTexture
 {
     Atlas = sheet,
-    Region = new Rect(16, 0, 16, 16),
+    Region = new Rect2(16, 0, 16, 16),
     FilterClip = true,
 };
 using var sprite = new Sprite { Texture = tile };
@@ -36,8 +36,8 @@ This constructs resources and a detached node; scene attachment uses the normal 
 | --- | --- |
 | `AtlasTexture()` | No source, empty region/margin, FilterClip false, logical size `(1, 1)`. |
 | `Texture? Atlas { get; set; }` | Borrowed source, initially null. |
-| `Rect Region { get; set; }` | Stored source rectangle; calculations floor only its size. |
-| `Rect Margin { get; set; }` | Drawing offset and total extra size. |
+| `Rect2 Region { get; set; }` | Stored source rectangle; calculations floor only its size. |
+| `Rect2 Margin { get; set; }` | Drawing offset and total extra size. |
 | `bool FilterClip { get; set; }` | Restrict sampling to the selected region's texel centers. |
 | `override int GetWidth()` | Effective logical width including applicable margin. |
 | `override int GetHeight()` | Effective logical height including applicable margin. |
@@ -49,8 +49,8 @@ This constructs resources and a detached node; scene attachment uses the normal 
 | `override Image? GetImage()` | Independent cropped image without margin padding. |
 | `override bool IsPixelOpaque(int x, int y)` | Translated alpha query within full source bounds. |
 | `override void Draw(CanvasItem canvasItem, Vector2 position, Color? modulate = null, bool transpose = false)` | Draw at effective region size with margin offset. |
-| `override void DrawRect(CanvasItem canvasItem, Rect rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretch with proportional margins; tile is ignored. |
-| `override void DrawRectRegion(CanvasItem canvasItem, Rect rect, Rect sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Translate and clip source/destination geometry; FilterClip overrides clipUV. |
+| `override void DrawRect(CanvasItem canvasItem, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)` | Stretch with proportional margins; tile is ignored. |
+| `override void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Translate and clip source/destination geometry; FilterClip overrides clipUV. |
 
 ## Property descriptions
 

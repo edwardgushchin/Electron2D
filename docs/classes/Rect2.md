@@ -1,4 +1,4 @@
-# Rect
+# Rect2
 
 Last updated: 2026-09-24
 
@@ -6,9 +6,9 @@ Last updated: 2026-09-24
 
 **Inherited By:** —
 
-- **Source:** [`src/Core/Math/Rect.cs`](../../src/Core/Math/Rect.cs)
+- **Source:** [`src/Core/Math/Rect2.cs`](../../src/Core/Math/Rect2.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public struct Rect`
+- **Declaration:** `public struct Rect2`
 
 > Represents a floating-point two-dimensional axis-aligned rectangle.
 
@@ -16,12 +16,12 @@ Last updated: 2026-09-24
 
 Represents a floating-point two-dimensional axis-aligned rectangle.
 
-`Rect` is a mutable 16-byte axis-aligned floating-point rectangle composed of two sequential `Electron2D.Vector2` values: `Position` and `Size`. It provides backend-independent containment, overlap, intersection, enclosure, expansion, growth, merge, support mapping, finite-value checks, and exact or approximate comparison.
+`Rect2` is a mutable 16-byte axis-aligned floating-point rectangle composed of two sequential `Electron2D.Vector2` values: `Position` and `Size`. It provides backend-independent containment, overlap, intersection, enclosure, expansion, growth, merge, support mapping, finite-value checks, and exact or approximate comparison.
 
 The value owns no resources, identity, handles, callbacks, or managed references and does not derive from `ElectronObject`. Zero initialization is the empty rectangle at the origin. Ordinary construction and mutation retain negative, zero, NaN, and infinite components; callers normalize negative sizes explicitly with `Abs()` when an operation requires non-negative size.
 
 The rectangle is defined by a position and size and is commonly used for fast overlap tests.
-Most geometric operations assume non-negative size components. Call [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) before those
+Most geometric operations assume non-negative size components. Call [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) before those
 operations when a rectangle may have a negative width or height.
 
 All 27 mapped members and the type row have a pinned-source, ADR 0025/0029/0034 and Linux/.NET 8 managed audit. `Abs` adds the negative part of size before taking its magnitude; `Grow` doubles its amount before size addition, while `GrowIndividual` sums opposite side amounts first. `HasPoint` and `Intersects` reject positions beyond each edge, so a NaN component alone does not reject a point or rectangle. `VerifyRectangles`, `VerifyIntegerRectangles` and `VerifyTransforms` cover layout, copies, edge rules, IEEE boundaries, typed conversion, affine bounds, strict persistence and packed-scene storage. Native ABI and other platforms remain unverified.
@@ -31,7 +31,7 @@ All 27 mapped members and the type row have a pinned-source, ADR 0025/0029/0034 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var bounds = new Rect(new Vector2(10f, 20f), new Vector2(80f, 40f));
+var bounds = new Rect2(new Vector2(10f, 20f), new Vector2(80f, 40f));
 if (bounds.HasPoint(pointerPosition))
     HandlePointer();
 ```
@@ -40,56 +40,56 @@ if (bounds.HasPoint(pointerPosition))
 
 | Member | Description |
 | --- | --- |
-| [`public Rect(Vector2 position, Vector2 size)`](#m-electron2d-rect-ctor-electron2d-vector2-electron2d-vector2) | Initializes a rectangle from a position and size. |
-| [`public Rect(Vector2 position, float width, float height)`](#m-electron2d-rect-ctor-electron2d-vector2-system-single-system-single) | Initializes a rectangle from a position, width, and height. |
-| [`public Rect(float x, float y, Vector2 size)`](#m-electron2d-rect-ctor-system-single-system-single-electron2d-vector2) | Initializes a rectangle from position coordinates and a size. |
-| [`public Rect(float x, float y, float width, float height)`](#m-electron2d-rect-ctor-system-single-system-single-system-single-system-single) | Initializes a rectangle from position coordinates, width, and height. |
+| [`public Rect2(Vector2 position, Vector2 size)`](#m-electron2d-rect2-ctor-electron2d-vector2-electron2d-vector2) | Initializes a rectangle from a position and size. |
+| [`public Rect2(Vector2 position, float width, float height)`](#m-electron2d-rect2-ctor-electron2d-vector2-system-single-system-single) | Initializes a rectangle from a position, width, and height. |
+| [`public Rect2(float x, float y, Vector2 size)`](#m-electron2d-rect2-ctor-system-single-system-single-electron2d-vector2) | Initializes a rectangle from position coordinates and a size. |
+| [`public Rect2(float x, float y, float width, float height)`](#m-electron2d-rect2-ctor-system-single-system-single-system-single-system-single) | Initializes a rectangle from position coordinates, width, and height. |
 
 ## Properties
 
 | Member | Description |
 | --- | --- |
-| [`public Vector2 Position { get; set; }`](#p-electron2d-rect-position) | Gets or sets the beginning corner, usually the top-left point. |
-| [`public Vector2 Size { get; set; }`](#p-electron2d-rect-size) | Gets or sets the width and height measured from [`Rect.Position`](Rect.md#p-electron2d-rect-position). |
-| [`public Vector2 End { get; set; }`](#p-electron2d-rect-end) | Gets or sets the ending corner. |
-| [`public float Area { get; }`](#p-electron2d-rect-area) | Gets the signed rectangle area. |
+| [`public Vector2 Position { get; set; }`](#p-electron2d-rect2-position) | Gets or sets the beginning corner, usually the top-left point. |
+| [`public Vector2 Size { get; set; }`](#p-electron2d-rect2-size) | Gets or sets the width and height measured from [`Rect2.Position`](Rect2.md#p-electron2d-rect2-position). |
+| [`public Vector2 End { get; set; }`](#p-electron2d-rect2-end) | Gets or sets the ending corner. |
+| [`public float Area { get; }`](#p-electron2d-rect2-area) | Gets the signed rectangle area. |
 
 ## Methods
 
 | Member | Description |
 | --- | --- |
-| [`public Rect Abs()`](#m-electron2d-rect-abs) | Returns an equivalent rectangle with a non-negative size and top-left position. |
-| [`public bool Encloses(Rect other)`](#m-electron2d-rect-encloses-electron2d-rect) | Tests whether this rectangle completely encloses another rectangle. |
-| [`public Rect Expand(Vector2 point)`](#m-electron2d-rect-expand-electron2d-vector2) | Expands the rectangle's edges when necessary to include a point. |
-| [`public Vector2 GetCenter()`](#m-electron2d-rect-getcenter) | Gets the center point. |
-| [`public Vector2 GetSupport(Vector2 direction)`](#m-electron2d-rect-getsupport-electron2d-vector2) | Gets the rectangle vertex farthest along a direction. |
-| [`public Rect Grow(float amount)`](#m-electron2d-rect-grow-system-single) | Returns a copy extended equally on every side. |
-| [`public Rect GrowIndividual(float left, float top, float right, float bottom)`](#m-electron2d-rect-growindividual-system-single-system-single-system-single-system-single) | Returns a copy extended independently on each side. |
-| [`public Rect GrowSide(Side side, float amount)`](#m-electron2d-rect-growside-electron2d-side-system-single) | Returns a copy extended on one side. |
-| [`public bool HasArea()`](#m-electron2d-rect-hasarea) | Tests whether both size components are strictly positive. |
-| [`public bool HasPoint(Vector2 point)`](#m-electron2d-rect-haspoint-electron2d-vector2) | Tests whether a point lies in the rectangle's half-open area. |
-| [`public Rect Intersection(Rect other)`](#m-electron2d-rect-intersection-electron2d-rect) | Returns the intersection with another rectangle. |
-| [`public bool Intersects(Rect other, bool includeBorders = false)`](#m-electron2d-rect-intersects-electron2d-rect-system-boolean) | Tests whether this rectangle overlaps another rectangle. |
-| [`public bool IsFinite()`](#m-electron2d-rect-isfinite) | Tests whether all position and size components are finite. |
-| [`public bool IsEqualApprox(Rect other)`](#m-electron2d-rect-isequalapprox-electron2d-rect) | Tests position and size for scale-aware approximate equality. |
-| [`public Rect Merge(Rect other)`](#m-electron2d-rect-merge-electron2d-rect) | Returns the smallest edge-aligned rectangle enclosing this rectangle and another. |
-| [`public override bool Equals(object obj)`](#m-electron2d-rect-equals-system-object) | Tests whether another object is an exactly equal rectangle. |
-| [`public bool Equals(Rect other)`](#m-electron2d-rect-equals-electron2d-rect) | Tests position and size for exact component equality. |
-| [`public override int GetHashCode()`](#m-electron2d-rect-gethashcode) | Returns a hash code based on position and size. |
-| [`public override string ToString()`](#m-electron2d-rect-tostring) | Formats position and size using invariant culture. |
-| [`public string ToString(string format)`](#m-electron2d-rect-tostring-system-string) | Formats position and size with a numeric format and invariant culture. |
+| [`public Rect2 Abs()`](#m-electron2d-rect2-abs) | Returns an equivalent rectangle with a non-negative size and top-left position. |
+| [`public bool Encloses(Rect2 other)`](#m-electron2d-rect2-encloses-electron2d-rect2) | Tests whether this rectangle completely encloses another rectangle. |
+| [`public Rect2 Expand(Vector2 point)`](#m-electron2d-rect2-expand-electron2d-vector2) | Expands the rectangle's edges when necessary to include a point. |
+| [`public Vector2 GetCenter()`](#m-electron2d-rect2-getcenter) | Gets the center point. |
+| [`public Vector2 GetSupport(Vector2 direction)`](#m-electron2d-rect2-getsupport-electron2d-vector2) | Gets the rectangle vertex farthest along a direction. |
+| [`public Rect2 Grow(float amount)`](#m-electron2d-rect2-grow-system-single) | Returns a copy extended equally on every side. |
+| [`public Rect2 GrowIndividual(float left, float top, float right, float bottom)`](#m-electron2d-rect2-growindividual-system-single-system-single-system-single-system-single) | Returns a copy extended independently on each side. |
+| [`public Rect2 GrowSide(Side side, float amount)`](#m-electron2d-rect2-growside-electron2d-side-system-single) | Returns a copy extended on one side. |
+| [`public bool HasArea()`](#m-electron2d-rect2-hasarea) | Tests whether both size components are strictly positive. |
+| [`public bool HasPoint(Vector2 point)`](#m-electron2d-rect2-haspoint-electron2d-vector2) | Tests whether a point lies in the rectangle's half-open area. |
+| [`public Rect2 Intersection(Rect2 other)`](#m-electron2d-rect2-intersection-electron2d-rect2) | Returns the intersection with another rectangle. |
+| [`public bool Intersects(Rect2 other, bool includeBorders = false)`](#m-electron2d-rect2-intersects-electron2d-rect2-system-boolean) | Tests whether this rectangle overlaps another rectangle. |
+| [`public bool IsFinite()`](#m-electron2d-rect2-isfinite) | Tests whether all position and size components are finite. |
+| [`public bool IsEqualApprox(Rect2 other)`](#m-electron2d-rect2-isequalapprox-electron2d-rect2) | Tests position and size for scale-aware approximate equality. |
+| [`public Rect2 Merge(Rect2 other)`](#m-electron2d-rect2-merge-electron2d-rect2) | Returns the smallest edge-aligned rectangle enclosing this rectangle and another. |
+| [`public override bool Equals(object obj)`](#m-electron2d-rect2-equals-system-object) | Tests whether another object is an exactly equal rectangle. |
+| [`public bool Equals(Rect2 other)`](#m-electron2d-rect2-equals-electron2d-rect2) | Tests position and size for exact component equality. |
+| [`public override int GetHashCode()`](#m-electron2d-rect2-gethashcode) | Returns a hash code based on position and size. |
+| [`public override string ToString()`](#m-electron2d-rect2-tostring) | Formats position and size using invariant culture. |
+| [`public string ToString(string format)`](#m-electron2d-rect2-tostring-system-string) | Formats position and size with a numeric format and invariant culture. |
 
 ## Operators
 
 | Member | Description |
 | --- | --- |
-| [`public static bool operator ==(Rect left, Rect right)`](#m-electron2d-rect-op-equality-electron2d-rect-electron2d-rect) | Tests both position and size for exact component equality. |
-| [`public static bool operator !=(Rect left, Rect right)`](#m-electron2d-rect-op-inequality-electron2d-rect-electron2d-rect) | Tests whether either position or size differs under exact component equality. |
+| [`public static bool operator ==(Rect2 left, Rect2 right)`](#m-electron2d-rect2-op-equality-electron2d-rect2-electron2d-rect2) | Tests both position and size for exact component equality. |
+| [`public static bool operator !=(Rect2 left, Rect2 right)`](#m-electron2d-rect2-op-inequality-electron2d-rect2-electron2d-rect2) | Tests whether either position or size differs under exact component equality. |
 
 ## Constructor Descriptions
 
-<a id="m-electron2d-rect-ctor-electron2d-vector2-electron2d-vector2"></a>
-### `public Rect(Vector2 position, Vector2 size)`
+<a id="m-electron2d-rect2-ctor-electron2d-vector2-electron2d-vector2"></a>
+### `public Rect2(Vector2 position, Vector2 size)`
 
 Initializes a rectangle from a position and size.
 
@@ -98,8 +98,8 @@ Initializes a rectangle from a position and size.
 - `position`: The beginning corner.
 - `size`: The width and height.
 
-<a id="m-electron2d-rect-ctor-electron2d-vector2-system-single-system-single"></a>
-### `public Rect(Vector2 position, float width, float height)`
+<a id="m-electron2d-rect2-ctor-electron2d-vector2-system-single-system-single"></a>
+### `public Rect2(Vector2 position, float width, float height)`
 
 Initializes a rectangle from a position, width, and height.
 
@@ -109,8 +109,8 @@ Initializes a rectangle from a position, width, and height.
 - `width`: The width.
 - `height`: The height.
 
-<a id="m-electron2d-rect-ctor-system-single-system-single-electron2d-vector2"></a>
-### `public Rect(float x, float y, Vector2 size)`
+<a id="m-electron2d-rect2-ctor-system-single-system-single-electron2d-vector2"></a>
+### `public Rect2(float x, float y, Vector2 size)`
 
 Initializes a rectangle from position coordinates and a size.
 
@@ -120,8 +120,8 @@ Initializes a rectangle from position coordinates and a size.
 - `y`: The vertical position.
 - `size`: The width and height.
 
-<a id="m-electron2d-rect-ctor-system-single-system-single-system-single-system-single"></a>
-### `public Rect(float x, float y, float width, float height)`
+<a id="m-electron2d-rect2-ctor-system-single-system-single-system-single-system-single"></a>
+### `public Rect2(float x, float y, float width, float height)`
 
 Initializes a rectangle from position coordinates, width, and height.
 
@@ -134,51 +134,51 @@ Initializes a rectangle from position coordinates, width, and height.
 
 ## Property Descriptions
 
-<a id="p-electron2d-rect-position"></a>
+<a id="p-electron2d-rect2-position"></a>
 ### `public Vector2 Position { get; set; }`
 
 Gets or sets the beginning corner, usually the top-left point.
 
-**Value:** The rectangle origin. It is normally componentwise less than or equal to [`Rect.End`](Rect.md#p-electron2d-rect-end).
+**Value:** The rectangle origin. It is normally componentwise less than or equal to [`Rect2.End`](Rect2.md#p-electron2d-rect2-end).
 
-<a id="p-electron2d-rect-size"></a>
+<a id="p-electron2d-rect2-size"></a>
 ### `public Vector2 Size { get; set; }`
 
-Gets or sets the width and height measured from [`Rect.Position`](Rect.md#p-electron2d-rect-position).
+Gets or sets the width and height measured from [`Rect2.Position`](Rect2.md#p-electron2d-rect2-position).
 
 **Value:** The rectangle size. Non-negative components are required by most geometric operations.
 
-**Remarks:** Assignment changes [`Rect.End`](Rect.md#p-electron2d-rect-end) because the end is computed from position plus size.
+**Remarks:** Assignment changes [`Rect2.End`](Rect2.md#p-electron2d-rect2-end) because the end is computed from position plus size.
 
-<a id="p-electron2d-rect-end"></a>
+<a id="p-electron2d-rect2-end"></a>
 ### `public Vector2 End { get; set; }`
 
 Gets or sets the ending corner.
 
-**Value:** [`Rect.Position`](Rect.md#p-electron2d-rect-position) plus [`Rect.Size`](Rect.md#p-electron2d-rect-size).
+**Value:** [`Rect2.Position`](Rect2.md#p-electron2d-rect2-position) plus [`Rect2.Size`](Rect2.md#p-electron2d-rect2-size).
 
-**Remarks:** Assignment changes [`Rect.Size`](Rect.md#p-electron2d-rect-size) while preserving [`Rect.Position`](Rect.md#p-electron2d-rect-position).
+**Remarks:** Assignment changes [`Rect2.Size`](Rect2.md#p-electron2d-rect2-size) while preserving [`Rect2.Position`](Rect2.md#p-electron2d-rect2-position).
 
-<a id="p-electron2d-rect-area"></a>
+<a id="p-electron2d-rect2-area"></a>
 ### `public float Area { get; }`
 
 Gets the signed rectangle area.
 
 **Value:** `Size.X * Size.Y`.
 
-**Remarks:** A positive product does not replace [`Rect.HasArea`](Rect.md#m-electron2d-rect-hasarea) because two negative components also have a positive product.
+**Remarks:** A positive product does not replace [`Rect2.HasArea`](Rect2.md#m-electron2d-rect2-hasarea) because two negative components also have a positive product.
 
 ## Method Descriptions
 
-<a id="m-electron2d-rect-abs"></a>
-### `public Rect Abs()`
+<a id="m-electron2d-rect2-abs"></a>
+### `public Rect2 Abs()`
 
 Returns an equivalent rectangle with a non-negative size and top-left position.
 
 **Returns:** The normalized rectangle.
 
-<a id="m-electron2d-rect-encloses-electron2d-rect"></a>
-### `public bool Encloses(Rect other)`
+<a id="m-electron2d-rect2-encloses-electron2d-rect2"></a>
+### `public bool Encloses(Rect2 other)`
 
 Tests whether this rectangle completely encloses another rectangle.
 
@@ -188,10 +188,10 @@ Tests whether this rectangle completely encloses another rectangle.
 
 **Returns:** `true` when both edges of `other` lie within or on this rectangle.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) first.
 
-<a id="m-electron2d-rect-expand-electron2d-vector2"></a>
-### `public Rect Expand(Vector2 point)`
+<a id="m-electron2d-rect2-expand-electron2d-vector2"></a>
+### `public Rect2 Expand(Vector2 point)`
 
 Expands the rectangle's edges when necessary to include a point.
 
@@ -203,14 +203,14 @@ Expands the rectangle's edges when necessary to include a point.
 
 **Remarks:** A point exactly on an existing edge does not change the rectangle.
 
-<a id="m-electron2d-rect-getcenter"></a>
+<a id="m-electron2d-rect2-getcenter"></a>
 ### `public Vector2 GetCenter()`
 
 Gets the center point.
 
 **Returns:** `Position + Size / 2`.
 
-<a id="m-electron2d-rect-getsupport-electron2d-vector2"></a>
+<a id="m-electron2d-rect2-getsupport-electron2d-vector2"></a>
 ### `public Vector2 GetSupport(Vector2 direction)`
 
 Gets the rectangle vertex farthest along a direction.
@@ -223,8 +223,8 @@ Gets the rectangle vertex farthest along a direction.
 
 **Remarks:** This support mapping is suitable for collision-detection algorithms and assumes a non-negative size.
 
-<a id="m-electron2d-rect-grow-system-single"></a>
-### `public Rect Grow(float amount)`
+<a id="m-electron2d-rect2-grow-system-single"></a>
+### `public Rect2 Grow(float amount)`
 
 Returns a copy extended equally on every side.
 
@@ -234,8 +234,8 @@ Returns a copy extended equally on every side.
 
 **Returns:** The grown or shrunk rectangle.
 
-<a id="m-electron2d-rect-growindividual-system-single-system-single-system-single-system-single"></a>
-### `public Rect GrowIndividual(float left, float top, float right, float bottom)`
+<a id="m-electron2d-rect2-growindividual-system-single-system-single-system-single-system-single"></a>
+### `public Rect2 GrowIndividual(float left, float top, float right, float bottom)`
 
 Returns a copy extended independently on each side.
 
@@ -248,8 +248,8 @@ Returns a copy extended independently on each side.
 
 **Returns:** The grown or shrunk rectangle.
 
-<a id="m-electron2d-rect-growside-electron2d-side-system-single"></a>
-### `public Rect GrowSide(Side side, float amount)`
+<a id="m-electron2d-rect2-growside-electron2d-side-system-single"></a>
+### `public Rect2 GrowSide(Side side, float amount)`
 
 Returns a copy extended on one side.
 
@@ -260,14 +260,14 @@ Returns a copy extended on one side.
 
 **Returns:** The grown or shrunk rectangle. An undefined `side` leaves the rectangle unchanged.
 
-<a id="m-electron2d-rect-hasarea"></a>
+<a id="m-electron2d-rect2-hasarea"></a>
 ### `public bool HasArea()`
 
 Tests whether both size components are strictly positive.
 
 **Returns:** `true` when width and height are greater than zero.
 
-<a id="m-electron2d-rect-haspoint-electron2d-vector2"></a>
+<a id="m-electron2d-rect2-haspoint-electron2d-vector2"></a>
 ### `public bool HasPoint(Vector2 point)`
 
 Tests whether a point lies in the rectangle's half-open area.
@@ -278,10 +278,10 @@ Tests whether a point lies in the rectangle's half-open area.
 
 **Returns:** `true` when the point is on or after the left/top edges and strictly before the right/bottom edges.
 
-**Remarks:** Negative size components are unsupported; normalize with [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) first.
+**Remarks:** Negative size components are unsupported; normalize with [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) first.
 
-<a id="m-electron2d-rect-intersection-electron2d-rect"></a>
-### `public Rect Intersection(Rect other)`
+<a id="m-electron2d-rect2-intersection-electron2d-rect2"></a>
+### `public Rect2 Intersection(Rect2 other)`
 
 Returns the intersection with another rectangle.
 
@@ -295,8 +295,8 @@ Returns the intersection with another rectangle.
 rectangle is considered intersecting and produces a zero-size result at its own position. Negative size
 components are unsupported.
 
-<a id="m-electron2d-rect-intersects-electron2d-rect-system-boolean"></a>
-### `public bool Intersects(Rect other, bool includeBorders = false)`
+<a id="m-electron2d-rect2-intersects-electron2d-rect2-system-boolean"></a>
+### `public bool Intersects(Rect2 other, bool includeBorders = false)`
 
 Tests whether this rectangle overlaps another rectangle.
 
@@ -307,17 +307,17 @@ Tests whether this rectangle overlaps another rectangle.
 
 **Returns:** `true` when the rectangles overlap under the selected border rule.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) first.
 
-<a id="m-electron2d-rect-isfinite"></a>
+<a id="m-electron2d-rect2-isfinite"></a>
 ### `public bool IsFinite()`
 
 Tests whether all position and size components are finite.
 
 **Returns:** `true` when no component is NaN or infinity.
 
-<a id="m-electron2d-rect-isequalapprox-electron2d-rect"></a>
-### `public bool IsEqualApprox(Rect other)`
+<a id="m-electron2d-rect2-isequalapprox-electron2d-rect2"></a>
+### `public bool IsEqualApprox(Rect2 other)`
 
 Tests position and size for scale-aware approximate equality.
 
@@ -327,8 +327,8 @@ Tests position and size for scale-aware approximate equality.
 
 **Returns:** `true` when every component is approximately equal.
 
-<a id="m-electron2d-rect-merge-electron2d-rect"></a>
-### `public Rect Merge(Rect other)`
+<a id="m-electron2d-rect2-merge-electron2d-rect2"></a>
+### `public Rect2 Merge(Rect2 other)`
 
 Returns the smallest edge-aligned rectangle enclosing this rectangle and another.
 
@@ -338,9 +338,9 @@ Returns the smallest edge-aligned rectangle enclosing this rectangle and another
 
 **Returns:** The merged rectangle.
 
-**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) first.
+**Remarks:** Negative size components are unsupported; normalize either rectangle with [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) first.
 
-<a id="m-electron2d-rect-equals-system-object"></a>
+<a id="m-electron2d-rect2-equals-system-object"></a>
 ### `public override bool Equals(object obj)`
 
 Tests whether another object is an exactly equal rectangle.
@@ -351,8 +351,8 @@ Tests whether another object is an exactly equal rectangle.
 
 **Returns:** `true` when `obj` is a rectangle with exactly equal components.
 
-<a id="m-electron2d-rect-equals-electron2d-rect"></a>
-### `public bool Equals(Rect other)`
+<a id="m-electron2d-rect2-equals-electron2d-rect2"></a>
+### `public bool Equals(Rect2 other)`
 
 Tests position and size for exact component equality.
 
@@ -362,21 +362,21 @@ Tests position and size for exact component equality.
 
 **Returns:** `true` when all four components are exactly equal.
 
-<a id="m-electron2d-rect-gethashcode"></a>
+<a id="m-electron2d-rect2-gethashcode"></a>
 ### `public override int GetHashCode()`
 
 Returns a hash code based on position and size.
 
 **Returns:** The component hash code.
 
-<a id="m-electron2d-rect-tostring"></a>
+<a id="m-electron2d-rect2-tostring"></a>
 ### `public override string ToString()`
 
 Formats position and size using invariant culture.
 
 **Returns:** A string containing the position followed by the size.
 
-<a id="m-electron2d-rect-tostring-system-string"></a>
+<a id="m-electron2d-rect2-tostring-system-string"></a>
 ### `public string ToString(string format)`
 
 Formats position and size with a numeric format and invariant culture.
@@ -393,8 +393,8 @@ Formats position and size with a numeric format and invariant culture.
 
 ## Operator Descriptions
 
-<a id="m-electron2d-rect-op-equality-electron2d-rect-electron2d-rect"></a>
-### `public static bool operator ==(Rect left, Rect right)`
+<a id="m-electron2d-rect2-op-equality-electron2d-rect2-electron2d-rect2"></a>
+### `public static bool operator ==(Rect2 left, Rect2 right)`
 
 Tests both position and size for exact component equality.
 
@@ -405,8 +405,8 @@ Tests both position and size for exact component equality.
 
 **Returns:** `true` when all four components are exactly equal.
 
-<a id="m-electron2d-rect-op-inequality-electron2d-rect-electron2d-rect"></a>
-### `public static bool operator !=(Rect left, Rect right)`
+<a id="m-electron2d-rect2-op-inequality-electron2d-rect2-electron2d-rect2"></a>
+### `public static bool operator !=(Rect2 left, Rect2 right)`
 
 Tests whether either position or size differs under exact component equality.
 
@@ -437,7 +437,7 @@ Construction, geometry, comparison, and hashing are value-only and allocate no m
 
 ## Dependencies and integration
 
-The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect` directly as a reference-free value.
+The public type depends on canonical scalar [`Mathf`](Mathf.md), [`Vector2`](Vector2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), [`Side`](Side.md), globalization, and interop metadata. [`ConfigFile`](ConfigFile.md) stores only finite rectangles using the exact nested `Position.X/Y` and `Size.X/Y` schema. Stored typed property descriptors and [`PackedScene`](PackedScene.md) preserve `Rect2` directly as a reference-free value.
 
 There is no dependency on Scene, rendering, SDL, input, audio, physics, resources, scripting, or an editor. The complete integer sibling and typed conversions are implemented without depending on their future pixel, atlas, image-region, or grid consumers. Language-specific boolean truth conversion is permanently excluded from the typed C# surface.
 

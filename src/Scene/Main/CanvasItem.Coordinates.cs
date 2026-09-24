@@ -6,7 +6,7 @@ public abstract partial class CanvasItem
     /// <returns>A rectangle in viewport coordinates, independent of canvas and node transforms.</returns>
     /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
-    public Rect GetViewportRect() => RequireCanvasViewport().GetVisibleRect();
+    public Rect2 GetViewportRect() => RequireCanvasViewport().GetVisibleRect();
 
     /// <summary>Returns the transform from this item's canvas to viewport coordinates.</summary>
     /// <returns>The associated CanvasLayer.GetFinalTransform, or the containing viewport's CanvasTransform.</returns>

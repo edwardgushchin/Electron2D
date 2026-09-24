@@ -125,7 +125,7 @@ internal static class CameraTests
         using var unattached = new Camera(); Reject<AggregateException>(() => new SceneTree(unattached)); Check(!unattached.IsDisposed && unattached.Tree is null, "Viewport-less activation rolls back caller ownership.");
     }
 
-    private sealed class TestViewport : Viewport { public override Rect GetVisibleRect() => new(0, 0, 100, 80); }
+    private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 80); }
     private sealed class FaultCamera : Camera { internal bool FailExit; protected override void OnExitTree() { base.OnExitTree(); if (FailExit) throw new ApplicationException("camera exit"); } }
     private static void Near(Vector2 a, Vector2 b) => Check(a.IsEqualApprox(b), $"Expected {b}, got {a}.");
     private static void Near(float a, float b) => Check(Mathf.IsEqualApprox(a, b), $"Expected {b}, got {a}.");

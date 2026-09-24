@@ -43,8 +43,8 @@ internal static partial class RenderingRuntimeTests
             Material = material,
             DrawAction = n =>
             {
-                n.DrawRect(new Rect(4, 4, 16, 16), new Color(.8f, .2f, .1f, .5f));
-                n.DrawTextureRect(texture, new Rect(28, 4, 16, 16), false);
+                n.DrawRect(new Rect2(4, 4, 16, 16), new Color(.8f, .2f, .1f, .5f));
+                n.DrawTextureRect(texture, new Rect2(28, 4, 16, 16), false);
             },
         };
         var frames = 0;
@@ -84,7 +84,7 @@ internal static partial class RenderingRuntimeTests
         {
             using var unsupported = new CanvasItemMaterial { BlendMode = Blend.Add };
             var rejected = new Window { Size = new(32, 32) };
-            rejected.AddChild(new CanvasNode { Material = unsupported, DrawAction = n => n.DrawRect(new Rect(0, 0, 8, 8), Colors.Red) });
+            rejected.AddChild(new CanvasNode { Material = unsupported, DrawAction = n => n.DrawRect(new Rect2(0, 0, 8, 8), Colors.Red) });
             Reject<NotSupportedException>(() => Engine.Instance.Run(rejected));
             Released(rejected);
         }
@@ -102,7 +102,7 @@ internal static partial class RenderingRuntimeTests
             Name = "Inherited",
             Material = own,
             UseParentMaterial = true,
-            DrawAction = n => n.DrawRect(new Rect(4, 4, 16, 16), new Color(.8f, .2f, .1f, .5f)),
+            DrawAction = n => n.DrawRect(new Rect2(4, 4, 16, 16), new Color(.8f, .2f, .1f, .5f)),
         };
         parent.AddChild(child);
         window.AddChild(parent);
@@ -148,20 +148,20 @@ internal static partial class RenderingRuntimeTests
         {
             Modulate = new Color(.5f, .75f, 1f, 1f),
             SelfModulate = new Color(1f, .5f, 1f, 1f),
-            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+            DrawAction = n => n.DrawRect(new Rect2(4, 4, 8, 8), Colors.White),
         };
         var child = new CanvasNode
         {
             Name = "TintChild",
             Position = new Vector2(20f, 0f),
-            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+            DrawAction = n => n.DrawRect(new Rect2(4, 4, 8, 8), Colors.White),
         };
         var neutral = new Node { Name = "Neutral" };
         var separate = new CanvasNode
         {
             Name = "Separate",
             Position = new Vector2(40f, 0f),
-            DrawAction = n => n.DrawRect(new Rect(4, 4, 8, 8), Colors.White),
+            DrawAction = n => n.DrawRect(new Rect2(4, 4, 8, 8), Colors.White),
         };
         parent.AddChild(child);
         parent.AddChild(neutral);

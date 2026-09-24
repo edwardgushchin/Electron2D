@@ -16,7 +16,7 @@ public class Sprite : Entity
         new PropertyDescriptor<Sprite, bool>(nameof(FlipH), s => s.FlipH, (s, v) => s.FlipH = v, _ => false, stored: true),
         new PropertyDescriptor<Sprite, bool>(nameof(FlipV), s => s.FlipV, (s, v) => s.FlipV = v, _ => false, stored: true),
         new PropertyDescriptor<Sprite, bool>(nameof(RegionEnabled), s => s.RegionEnabled, (s, v) => s.RegionEnabled = v, _ => false, stored: true),
-        new PropertyDescriptor<Sprite, Rect>(nameof(RegionRect), s => s.RegionRect, (s, v) => s.RegionRect = v, _ => default, stored: true),
+        new PropertyDescriptor<Sprite, Rect2>(nameof(RegionRect), s => s.RegionRect, (s, v) => s.RegionRect = v, _ => default, stored: true),
         new PropertyDescriptor<Sprite, bool>(nameof(RegionFilterClipEnabled), s => s.RegionFilterClipEnabled, (s, v) => s.RegionFilterClipEnabled = v, _ => false, stored: true),
         // Restore both dimensions before restoring the frame. FrameCoords is a nonstored alias.
         new PropertyDescriptor<Sprite, int>(nameof(HFrames), s => s.HFrames, (s, v) => s.HFrames = v, _ => 1, stored: true),
@@ -28,7 +28,7 @@ public class Sprite : Entity
     private Texture? _texture;
     private bool _centered = true, _flipH, _flipV, _regionEnabled, _regionFilterClipEnabled;
     private Vector2 _offset;
-    private Rect _regionRect;
+    private Rect2 _regionRect;
     private int _hframes = 1, _vframes = 1, _frame;
 
     /// <summary>Creates a centered sprite with no texture and a one-by-one frame grid.</summary>
@@ -127,7 +127,7 @@ public class Sprite : Entity
     /// <exception cref="ArgumentException">The rectangle is not finite.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
-    public Rect RegionRect
+    public Rect2 RegionRect
     {
         get { ThrowIfDisposed(); return _regionRect; }
         set
@@ -233,7 +233,7 @@ public class Sprite : Entity
     /// An attached viewport with SnapTransformsToPixel rounds the local origin using floor(value + 0.5).</remarks>
     /// <exception cref="ObjectDisposedException">The sprite or its texture is disposed.</exception>
     /// <exception cref="InvalidOperationException">Texture dimensions or derived geometry are invalid.</exception>
-    public Rect GetRect()
+    public Rect2 GetRect()
     {
         ThrowIfDisposed();
         if (_texture is null) return new(0, 0, 1, 1);
@@ -265,7 +265,7 @@ public class Sprite : Entity
         if (width < 0 || height < 0) throw new InvalidOperationException("Sprite texture dimensions must be nonnegative.");
         if (width == 0 || height == 0) return false;
         GetDrawRects(texture, out var source, out var destination);
-        var bounds = new Rect(destination.Position, destination.Size.Abs());
+        var bounds = new Rect2(destination.Position, destination.Size.Abs());
         if (!bounds.HasPoint(position)) return false;
         var point = (position - bounds.Position) / bounds.Size;
         if ((destination.Size.X < 0) != (source.Size.X < 0)) point.X = 1 - point.X;
@@ -332,10 +332,10 @@ public class Sprite : Entity
         return (int)coordinate;
     }
 
-    private Rect BaseRegion(Texture texture)
+    private Rect2 BaseRegion(Texture texture)
     {
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(Texture));
-        var region = _regionEnabled ? _regionRect : new Rect(Vector2.Zero, texture.GetSize());
+        var region = _regionEnabled ? _regionRect : new Rect2(Vector2.Zero, texture.GetSize());
         if (!region.IsFinite() || !_regionEnabled && (region.Size.X < 0 || region.Size.Y < 0))
             throw new InvalidOperationException("Sprite texture dimensions must be finite and nonnegative.");
         return region;
@@ -347,7 +347,7 @@ public class Sprite : Entity
         return IsInsideTree && GetViewport()?.SnapTransformsToPixel == true ? CanvasGeometry.Snap(offset) : offset;
     }
 
-    private void GetDrawRects(Texture texture, out Rect source, out Rect destination)
+    private void GetDrawRects(Texture texture, out Rect2 source, out Rect2 destination)
     {
         var area = BaseRegion(texture);
         var size = area.Size / new Vector2(_hframes, _vframes);
