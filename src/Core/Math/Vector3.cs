@@ -9,6 +9,7 @@ namespace Electron2D;
 /// Ordinary arithmetic preserves IEEE 754 NaN and infinity values. The zero-initialized value is <see cref="Zero"/>.
 /// Equality and lexicographic ordering compare components directly: NaN is unordered and signed zeros compare equal.
 /// Integer scalar expressions convert to float before using the scalar operators.
+/// Componentwise scalar methods follow <see cref="Mathf"/> rounding, NaN and typed-error behavior.
 /// Numeric operations do not allocate managed memory; string formatting allocates a string.
 /// </remarks>
 [Serializable]
@@ -331,20 +332,12 @@ public struct Vector3 : IEquatable<Vector3>
 
     /// <summary>Returns the axis containing the least component.</summary>
     /// <returns><see cref="Axis.Z"/> when all components are equal; otherwise the last least axis.</returns>
+    /// <remarks>NaN components follow the fixed X/Y/Z comparison branches, which may select an unordered axis.</remarks>
     public readonly Axis MinAxisIndex()
     {
-        var index = Axis.X;
-        var value = X;
-        for (var current = 1; current < 3; current++)
-        {
-            if (this[current] <= value)
-            {
-                index = (Axis)current;
-                value = this[current];
-            }
-        }
-
-        return index;
+        if (X < Y)
+            return X < Z ? Axis.X : Axis.Z;
+        return Y < Z ? Axis.Y : Axis.Z;
     }
 
     /// <summary>Moves toward another vector by a signed distance without passing it.</summary>

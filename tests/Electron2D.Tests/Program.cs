@@ -2161,6 +2161,7 @@ static void VerifyVector2IValues()
 static void VerifyVector3Values()
 {
     VerifyVector3CoreValues();
+    VerifyVector3ComponentMethods();
     Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3I>() == 12 &&
             Vector3.Zero == default && Vector3I.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
             Vector3I.Forward == new Vector3I(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
@@ -2287,6 +2288,73 @@ static void VerifyVector3CoreValues()
             !(notOrdered < low) && !(notOrdered > low) &&
             !(notOrdered <= low) && !(notOrdered >= low),
         "Vector3 comparisons use X/Y/Z lexicographic ordering and IEEE NaN/zero equality.");
+}
+
+static void VerifyVector3ComponentMethods()
+{
+    var signed = new Vector3(-0f, -2f, float.NaN).Abs();
+    Require(BitConverter.SingleToInt32Bits(signed.X) == 0 && signed.Y == 2f && float.IsNaN(signed.Z) &&
+            new Vector3(-1.5f, 1.5f, 2.5f).Floor() == new Vector3(-2f, 1f, 2f) &&
+            new Vector3(-1.5f, 1.5f, 2.5f).Ceil() == new Vector3(-1f, 2f, 3f) &&
+            new Vector3(-1.5f, 1.5f, 2.5f).Round() == new Vector3(-2f, 2f, 2f) &&
+            new Vector3(-2f, 0f, 3f).Sign() == new Vector3(-1f, 0f, 1f),
+        "Componentwise absolute, floor, ceiling, midpoint-to-even rounding and sign retain scalar behavior.");
+    Expect<ArithmeticException>(() => new Vector3(1f, float.NaN, 0f).Sign(),
+        "Sign follows the canonical scalar NaN error contract.");
+
+    var value = new Vector3(-2f, .5f, 5f);
+    Require(value.Clamp(new Vector3(-1f, 0f, 1f), new Vector3(1f, 1f, 4f)) ==
+                new Vector3(-1f, .5f, 4f) &&
+            value.Clamp(0f, 2f) == new Vector3(0f, .5f, 2f) &&
+            value.Max(new Vector3(0f, -1f, 4f)) == new Vector3(0f, .5f, 5f) &&
+            value.Min(new Vector3(0f, -1f, 4f)) == new Vector3(-2f, -1f, 4f) &&
+            value.Max(2f) == new Vector3(2f, 2f, 5f) &&
+            value.Min(2f) == new Vector3(-2f, .5f, 2f) &&
+            float.IsNaN(new Vector3(float.NaN, 0f, 0f).Max(Vector3.One).X),
+        "Vector and scalar clamp/min/max act independently on X, Y and Z, including scalar NaN policy.");
+    Expect<ArgumentException>(() => value.Clamp(2f, 1f), "Reversed scalar clamp bounds fail explicitly.");
+    Expect<ArgumentException>(() => value.Clamp(new Vector3(0f, 2f, 0f), Vector3.One),
+        "A reversed bound on any vector component fails explicitly.");
+
+    Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z &&
+            Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
+            new Vector3(0f, 2f, 2f).MaxAxisIndex() == Vector3.Axis.Y &&
+            new Vector3(float.NaN, 1f, 2f).MinAxisIndex() == Vector3.Axis.Y &&
+            new Vector3(1f, float.NaN, 2f).MinAxisIndex() == Vector3.Axis.Z &&
+            new Vector3(1f, 2f, float.NaN).MinAxisIndex() == Vector3.Axis.Z &&
+            new Vector3(float.NaN, 1f, 2f).MaxAxisIndex() == Vector3.Axis.X &&
+            new Vector3(1f, float.NaN, 2f).MaxAxisIndex() == Vector3.Axis.Z,
+        "Axis ties and unordered NaN comparisons follow the pinned X/Y/Z branch order.");
+
+    var reciprocal = new Vector3(2f, -4f, -0f).Inverse();
+    Require(reciprocal.X == .5f && reciprocal.Y == -.25f &&
+            float.IsNegativeInfinity(reciprocal.Z) &&
+            Vector3.One.IsFinite() && !new Vector3(0f, float.NaN, 0f).IsFinite() &&
+            !new Vector3(0f, 0f, float.PositiveInfinity).IsFinite() &&
+            Vector3.Right.IsNormalized() &&
+            new Vector3(MathF.Sqrt(1.0005f), 0f, 0f).IsNormalized() &&
+            !new Vector3(MathF.Sqrt(1.002f), 0f, 0f).IsNormalized(),
+        "Reciprocal, finite and unit predicates preserve IEEE and the separate unit tolerance.");
+    Require(new Vector3(.5e-6f, 0f, -.5e-6f).IsZeroApprox() &&
+            !new Vector3(1e-6f, 0f, 0f).IsZeroApprox() &&
+            Vector3.One.IsEqualApprox(new Vector3(1f + .5e-6f, 1f, 1f)) &&
+            !Vector3.One.IsEqualApprox(new Vector3(1f + 2e-6f, 1f, 1f)) &&
+            Vector3.Inf.IsEqualApprox(Vector3.Inf) &&
+            !new Vector3(float.NaN, 0f, 0f).IsEqualApprox(new Vector3(float.NaN, 0f, 0f)),
+        "Approximate vector predicates use canonical strict component tolerance and exact infinity identity.");
+
+    Require(new Vector3(-1f, 7f, -7f).PosMod(4f) == new Vector3(3f, 3f, 1f) &&
+            new Vector3(-1f, 7f, -7f).PosMod(new Vector3(4f, -4f, 3f)) ==
+                new Vector3(3f, -1f, 2f) &&
+            float.IsNaN(Vector3.One.PosMod(0f).X) &&
+            new Vector3(1.25f, -1.25f, 2.6f).Snapped(.5f) == new Vector3(1.5f, -1f, 2.5f) &&
+            new Vector3(1.25f, -1.25f, 2.6f).Snapped(new Vector3(.5f, 0f, 2f)) ==
+                new Vector3(1.5f, -1.25f, 2f),
+        "Positive modulus and scalar/vector snapping honor signed divisors, zero and midpoint rules.");
+    var unchanged = new Vector3(float.NaN, 1f, -0f).Snapped(0f);
+    Require(float.IsNaN(unchanged.X) && unchanged.Y == 1f &&
+            BitConverter.SingleToInt32Bits(unchanged.Z) == int.MinValue,
+        "Zero-step snapping retains source NaN and signed-zero components.");
 }
 
 static void VerifyVector4Values()

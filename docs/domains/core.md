@@ -59,7 +59,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Colors`: immutable 146-entry named color surface and lookup catalog.
 - `Geometry`: twenty-four stateless grid-line, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset operations.
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
-- `Vector3` and `Vector3I`: three-component numeric tuples without 3D scene semantics; core values/operators plus length/movement and octahedral packing have focused audits, while other structural rows remain Partial.
+- `Vector3` and `Vector3I`: three-component numeric tuples without 3D scene semantics; core values/operators, componentwise scalar behavior, length/movement and octahedral packing have focused audits, while 18 other Vector3 member rows remain Partial.
 - `Vector4` and `Vector4I`: four-component floating-point/integer numeric tuples without 3D scene semantics; structural coverage rows still require semantic audits.
 - `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators.
 - `Transform`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector/rectangle transforms.

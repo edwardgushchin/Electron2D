@@ -3248,7 +3248,46 @@
     {
       "godot": ["class:Vector3"],
       "state": "Partial",
-      "reason": "The complete three-component numeric declaration exists under ADR 0033. Constants, constructors, fields, indexing, arithmetic, ordering, normalization, direction and four geometric methods have focused pinned-source audits; remaining interpolation/geometry/scalar rows still require behavior, edge and value verification before whole-type parity."
+      "reason": "The complete three-component numeric declaration exists under ADR 0033. Core values/operators, componentwise scalar operations, normalization, direction and four geometric methods have focused pinned-source/Mathf audits; remaining interpolation and geometry rows still require behavior, edge and value verification before whole-type parity."
+    },
+    {
+      "godot": [
+        "Vector3::method:abs()", "Vector3::method:ceil()", "Vector3::method:floor()",
+        "Vector3::method:round()", "Vector3::method:sign()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h applies independent scalar operations to X/Y/Z. VerifyVector3ComponentMethods checks signed-zero Abs, negative floor/ceil, midpoint-to-even Round and signed/NaN Sign through canonical Mathf under ADR 0034 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3::method:clamp(Vector3:,Vector3:)", "Vector3::method:clampf(float:,float:)",
+        "Vector3::method:max(Vector3:)", "Vector3::method:maxf(float:)",
+        "Vector3::method:min(Vector3:)", "Vector3::method:minf(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Each component delegates to the audited Mathf scalar contract under ADR 0034. VerifyVector3ComponentMethods checks vector/scalar bounds, reversed-bound typed failures, min/max values and the accepted .NET NaN policy on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector3::method:max_axis_index()", "Vector3::method:min_axis_index()"],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h chooses first maximum and last minimum on ties. MinAxisIndex now follows its exact nested X/Y/Z branches for unordered NaN components; VerifyVector3ComponentMethods checks finite ties and NaN in every axis on Linux/.NET 8. Vector4's separate loop was audited and unchanged."
+    },
+    {
+      "godot": [
+        "Vector3::method:inverse()", "Vector3::method:is_equal_approx(Vector3:)",
+        "Vector3::method:is_finite()", "Vector3::method:is_normalized()",
+        "Vector3::method:is_zero_approx()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned reciprocal and finiteness are componentwise; ADR 0034 defines exact-first scale-aware 1e-6 approximate predicates and the separate 0.001 unit-vector tolerance. VerifyVector3ComponentMethods checks signed-zero reciprocal, NaN/infinity, strict epsilon and near-unit boundaries on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3::method:posmod(float:)", "Vector3::method:posmodv(Vector3:)",
+        "Vector3::method:snapped(Vector3:)", "Vector3::method:snappedf(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.cpp applies independent scalar positive-modulus and snapping operations; Mathf supplies the accepted C# behavior under ADR 0034. VerifyVector3ComponentMethods checks mixed-sign divisors, zero-divisor NaN, scalar/vector steps, midpoint rules, zero-step NaN and signed-zero retention on Linux/.NET 8."
     },
     {
       "godot": [
