@@ -46,7 +46,7 @@ Console.WriteLine(inputEvent.AsText());
 | Member | Description |
 | --- | --- |
 | [`public int Device { get; set; }`](#p-electron2d-inputevent-device) | Gets or sets the source device identifier. |
-| [`protected bool PressedState { get; set; }`](#p-electron2d-inputevent-pressedstate) | Gets or sets the raw press state used by concrete button-like events. |
+| [`protected bool PressedState { get; set; }`](#p-electron2d-inputevent-pressedstate) | Gets or sets the raw press state used by concrete events, including controller-axis motion. |
 | [`protected bool CanceledState { get; set; }`](#p-electron2d-inputevent-canceledstate) | Gets or sets the raw cancellation state used by concrete cancelable events. |
 
 ## Methods
@@ -109,7 +109,7 @@ Gets or sets the source device identifier.
 <a id="p-electron2d-inputevent-pressedstate"></a>
 ### `protected bool PressedState { get; set; }`
 
-Gets or sets the raw press state used by concrete button-like events.
+Gets or sets the raw press state used by concrete events, including controller-axis motion.
 
 <a id="p-electron2d-inputevent-canceledstate"></a>
 ### `protected bool CanceledState { get; set; }`

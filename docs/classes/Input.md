@@ -1,6 +1,6 @@
 # Input
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -17,6 +17,7 @@ Last updated: 2026-09-23
 Owns process-wide input state and translates typed events into named actions.
 
 `Input` is the non-disposable process-wide owner of raw keyboard/mouse/controller state, mapped action contributions, and independent process/physics transition windows. It never owns submitted events or native devices.
+Controller button and axis queries retain signed raw IDs from submitted events and isolate values by device; a missing ID returns false or zero. Querying a negative physical device ID raises a typed argument error.
 
 A platform host submits events through [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent). State is committed before scene delivery,
 so callbacks observe the new state. Optional touch-to-mouse and mouse-to-touch emulation sends a generated event
@@ -208,14 +209,14 @@ Gets whether a controller button is currently held.
 
 **Parameters**
 
-- `button`: The standardized or raw button index.
+- `button`: Any signed standardized or raw button index.
 - `device`: The non-negative controller identifier.
 
 **Returns:** `true` when held.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `button` or `device` is outside its supported range.
+- `ArgumentOutOfRangeException`: `device` is negative.
 
 <a id="m-electron2d-input-getjoyaxis-electron2d-joyaxis-system-int32"></a>
 ### `public float GetJoyAxis(JoyAxis axis, int device = 0)`
@@ -224,14 +225,14 @@ Gets the latest controller-axis value.
 
 **Parameters**
 
-- `axis`: The standardized or raw axis index.
+- `axis`: Any signed standardized or raw axis index.
 - `device`: The non-negative controller identifier.
 
-**Returns:** A value from minus one through one; zero before the first event.
+**Returns:** The last stored source value, or zero before the first event.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `axis` or `device` is outside its supported range.
+- `ArgumentOutOfRangeException`: `device` is negative.
 
 <a id="m-electron2d-input-isanythingpressed"></a>
 ### `public bool IsAnythingPressed()`

@@ -170,26 +170,24 @@ public sealed partial class Input : ElectronObject
     }
 
     /// <summary>Gets whether a controller button is currently held.</summary>
-    /// <param name="button">The standardized or raw button index.</param>
+    /// <param name="button">Any signed standardized or raw button index.</param>
     /// <param name="device">The non-negative controller identifier.</param>
     /// <returns><see langword="true"/> when held.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="button"/> or <paramref name="device"/> is outside its supported range.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="device"/> is negative.</exception>
     public bool IsJoyButtonPressed(JoyButton button, int device = 0)
     {
-        ValidateJoyButton(button);
         ValidateDevice(device);
         lock (_gate)
             return _joyButtonsPressed.Contains(new JoyButtonState(device, button));
     }
 
     /// <summary>Gets the latest controller-axis value.</summary>
-    /// <param name="axis">The standardized or raw axis index.</param>
+    /// <param name="axis">Any signed standardized or raw axis index.</param>
     /// <param name="device">The non-negative controller identifier.</param>
-    /// <returns>A value from minus one through one; zero before the first event.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="axis"/> or <paramref name="device"/> is outside its supported range.</exception>
+    /// <returns>The last stored source value, or zero before the first event.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="device"/> is negative.</exception>
     public float GetJoyAxis(JoyAxis axis, int device = 0)
     {
-        ValidateJoyAxis(axis);
         ValidateDevice(device);
         lock (_gate)
             return _joyAxes.GetValueOrDefault(new JoyAxisState(device, axis));
@@ -863,18 +861,6 @@ public sealed partial class Input : ElectronObject
     {
         if (device < 0)
             throw new ArgumentOutOfRangeException(nameof(device), device, "A controller device identifier cannot be negative.");
-    }
-
-    private static void ValidateJoyButton(JoyButton button)
-    {
-        if ((int)button < 0 || (int)button >= (int)JoyButton.Max)
-            throw new ArgumentOutOfRangeException(nameof(button), button, "A controller button must be between 0 and 127.");
-    }
-
-    private static void ValidateJoyAxis(JoyAxis axis)
-    {
-        if ((int)axis < 0 || (int)axis >= (int)JoyAxis.Max)
-            throw new ArgumentOutOfRangeException(nameof(axis), axis, "A controller axis must be between 0 and 9.");
     }
 
     private static readonly ActionSource SyntheticSource = new(InputEvent.DeviceIdInternal, MaxEventsPerAction);

@@ -1,6 +1,6 @@
 # JoyAxis
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -41,7 +41,7 @@ var value = JoyAxis.Invalid;
 | [`TriggerLeft = 4`](#f-electron2d-joyaxis-triggerleft) | Identifies the left trigger axis. |
 | [`TriggerRight = 5`](#f-electron2d-joyaxis-triggerright) | Identifies the right trigger axis. |
 | [`SdlMax = 6`](#f-electron2d-joyaxis-sdlmax) | Marks the count of standardized SDL controller axes. |
-| [`Max = 10`](#f-electron2d-joyaxis-max) | Marks the maximum supported raw axis count. |
+| [`Max = 10`](#f-electron2d-joyaxis-max) | Marks the conventional raw axis count and an accepted event-axis sentinel. |
 
 ## Constant Descriptions
 
@@ -88,4 +88,4 @@ Marks the count of standardized SDL controller axes.
 <a id="f-electron2d-joyaxis-max"></a>
 ### `Max = 10`
 
-Marks the maximum supported raw axis count.
+Marks the conventional raw axis count and an accepted event-axis sentinel. Version-one project bindings stop at axis `9`.

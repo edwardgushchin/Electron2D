@@ -30,8 +30,8 @@ public sealed class InputEventJoypadMotion : InputEvent
     private float _axisValue;
 
     /// <summary>Gets or sets the controller axis.</summary>
-    /// <value>An axis index from zero through nine.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The numeric value is outside the supported raw-axis range.</exception>
+    /// <value>An axis index from <see cref="JoyAxis.Invalid"/> through <see cref="JoyAxis.Max"/>.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The numeric value is below <see cref="JoyAxis.Invalid"/> or above <see cref="JoyAxis.Max"/>.</exception>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public JoyAxis Axis
@@ -40,16 +40,16 @@ public sealed class InputEventJoypadMotion : InputEvent
         set
         {
             ThrowIfDisposed();
-            if ((int)value < 0 || (int)value >= (int)JoyAxis.Max)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "A controller axis must be between 0 and 9.");
+            if ((int)value < (int)JoyAxis.Invalid || (int)value > (int)JoyAxis.Max)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "A controller axis must be between -1 and 10.");
             _axis = value;
             EmitInputChanged();
         }
     }
 
     /// <summary>Gets or sets the current signed axis position.</summary>
-    /// <value>A finite value from minus one through one; zero is the resting position.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value is outside minus one through one, NaN, or infinite.</exception>
+    /// <value>The source value without range or finiteness validation; zero is the resting position.</value>
+    /// <remarks>Magnitude at least 0.5 marks the event pressed, independently of an action's configured deadzone.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float AxisValue
@@ -58,9 +58,8 @@ public sealed class InputEventJoypadMotion : InputEvent
         set
         {
             ThrowIfDisposed();
-            if (!float.IsFinite(value) || value < -1f || value > 1f)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "An axis value must be finite and between -1 and 1.");
             _axisValue = value;
+            PressedState = MathF.Abs(value) >= 0.5f;
             EmitInputChanged();
         }
     }
@@ -76,7 +75,7 @@ public sealed class InputEventJoypadMotion : InputEvent
     }
 
     /// <summary>Gets the localized axis description and signed value.</summary>
-    /// <returns>The axis number, its known control description, and a value with two decimals.</returns>
+    /// <returns>The axis number, a known or unknown control description, and a value with two decimals or non-finite source text.</returns>
     /// <remarks>The description uses this event's translation domain. A translated template with invalid placeholders falls back to the source sentence.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
@@ -85,8 +84,17 @@ public sealed class InputEventJoypadMotion : InputEvent
         const string source = "Joypad Motion on Axis %d (%s) with Value %.2f";
         return FormatTextTemplate(Tr(source), source,
             ((int)_axis).ToString(CultureInfo.InvariantCulture),
-            Tr(AxisDescriptions[(int)_axis]),
-            _axisValue.ToString("F2", CultureInfo.InvariantCulture));
+            Tr((int)_axis >= 0 && (int)_axis < AxisDescriptions.Length ?
+                AxisDescriptions[(int)_axis] : "Unknown Joypad Axis"),
+            FormatAxisValue(_axisValue));
+    }
+
+    private static string FormatAxisValue(float value)
+    {
+        if (float.IsNaN(value)) return BitConverter.SingleToInt32Bits(value) < 0 ? "-nan" : "nan";
+        if (float.IsPositiveInfinity(value)) return "inf";
+        if (float.IsNegativeInfinity(value)) return "-inf";
+        return value.ToString("F2", CultureInfo.InvariantCulture);
     }
 
     /// <inheritdoc />
@@ -161,8 +169,7 @@ public sealed class InputEventJoypadButton : InputEvent
     private float _pressure;
 
     /// <summary>Gets or sets the controller button.</summary>
-    /// <value>A standardized or raw button index from zero through 127.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The numeric value is outside the supported raw-button range.</exception>
+    /// <value>A standardized or arbitrary signed raw button index.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public JoyButton ButtonIndex
@@ -171,8 +178,6 @@ public sealed class InputEventJoypadButton : InputEvent
         set
         {
             ThrowIfDisposed();
-            if ((int)value < 0 || (int)value >= (int)JoyButton.Max)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "A controller button must be between 0 and 127.");
             _buttonIndex = value;
             EmitInputChanged();
         }
@@ -181,28 +186,22 @@ public sealed class InputEventJoypadButton : InputEvent
     /// <summary>Gets or sets whether the controller button is pressed.</summary>
     /// <value><see langword="false"/> for a release; <see langword="true"/> for a press.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
-    /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public bool Pressed
     {
         get => IsPressed();
-        set { ThrowIfDisposed(); PressedState = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); PressedState = value; }
     }
 
     /// <summary>Gets or sets analog pressure reported for the button.</summary>
-    /// <value>A finite value from zero through one. Most hosts report zero and use <see cref="Pressed"/>.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value is outside zero through one, NaN, or infinite.</exception>
+    /// <value>The source value without range or finiteness validation. Most hosts report zero and use <see cref="Pressed"/>.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
-    /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float Pressure
     {
         get { ThrowIfDisposed(); return _pressure; }
         set
         {
             ThrowIfDisposed();
-            if (!float.IsFinite(value) || value < 0f || value > 1f)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "Button pressure must be finite and between 0 and 1.");
             _pressure = value;
-            EmitInputChanged();
         }
     }
 
@@ -217,7 +216,7 @@ public sealed class InputEventJoypadButton : InputEvent
 
     /// <summary>Gets the localized button number, known description, and nonzero pressure.</summary>
     /// <returns>A numbered button with an optional known control description and pressure suffix.</returns>
-    /// <remarks>Built-in descriptions cover IDs zero through 20; extended IDs use the numeric fallback. Pressure uses the full real-value text of the stored float.</remarks>
+    /// <remarks>Built-in descriptions cover IDs zero through 20; all other signed IDs use the numeric fallback. Pressure uses the full real-value text of the stored float.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
@@ -225,7 +224,7 @@ public sealed class InputEventJoypadButton : InputEvent
         const string source = "Joypad Button %d";
         var index = (int)_buttonIndex;
         var text = FormatTextTemplate(Tr(source), source, index.ToString(CultureInfo.InvariantCulture));
-        if (index < ButtonDescriptions.Length)
+        if (index >= 0 && index < ButtonDescriptions.Length)
             text = string.Concat(text, " (", Tr(ButtonDescriptions[index]), ")");
         if (_pressure != 0f)
             text = string.Concat(text, ", ", Tr("Pressure:"), " ", FormatTextFloatAsDouble(_pressure));

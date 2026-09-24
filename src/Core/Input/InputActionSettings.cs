@@ -92,15 +92,15 @@ public sealed class InputBindingSettings
     public MouseButton MouseButtonIndex { get; init; }
 
     /// <summary>Gets the controller button.</summary>
-    /// <value>A controller button.</value>
+    /// <value>A raw button from zero through 127 in a version-one project binding.</value>
     public JoyButton JoyButtonIndex { get; init; }
 
     /// <summary>Gets the controller axis.</summary>
-    /// <value>A controller axis.</value>
+    /// <value>A raw axis from zero through nine in a version-one project binding.</value>
     public JoyAxis JoyAxis { get; init; }
 
     /// <summary>Gets the signed controller-axis direction; a nonzero value is required.</summary>
-    /// <value>The signed axis direction.</value>
+    /// <value>A finite, nonzero direction from minus one through one in a version-one project binding.</value>
     public float AxisValue { get; init; }
 
     /// <summary>Gets the name of a synthetic action binding.</summary>
@@ -160,10 +160,14 @@ public sealed class InputBindingSettings
                     ApplyModifiers(mouse);
                     break;
                 case InputEventJoypadButton button:
+                    if ((int)JoyButtonIndex < 0 || (int)JoyButtonIndex >= (int)JoyButton.Max)
+                        throw new InvalidDataException("A project controller button must be between 0 and 127.");
                     button.ButtonIndex = JoyButtonIndex;
                     break;
                 case InputEventJoypadMotion motion:
-                    if (AxisValue == 0f) throw new InvalidDataException("A controller-axis binding needs a signed direction.");
+                    if ((int)JoyAxis < 0 || (int)JoyAxis >= (int)JoyAxis.Max ||
+                        !float.IsFinite(AxisValue) || AxisValue < -1f || AxisValue > 1f || AxisValue == 0f)
+                        throw new InvalidDataException("A project controller-axis binding needs a valid axis and signed direction in [-1, 1].");
                     motion.Axis = JoyAxis;
                     motion.AxisValue = AxisValue;
                     break;

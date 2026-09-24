@@ -492,7 +492,7 @@ public enum JoyAxis
     TriggerRight = 5,
     /// <summary>Marks the count of standardized SDL controller axes.</summary>
     SdlMax = 6,
-    /// <summary>Marks the maximum supported raw axis count.</summary>
+    /// <summary>Marks the conventional raw axis count and an accepted event-axis sentinel.</summary>
     Max = 10,
 }
 
@@ -555,6 +555,6 @@ public enum JoyButton
     Misc6 = 25,
     /// <summary>Marks the count of standardized SDL controller buttons.</summary>
     SdlMax = 26,
-    /// <summary>Marks the maximum supported raw button count.</summary>
+    /// <summary>Marks the conventional raw button count; event values can exceed it.</summary>
     Max = 128,
 }

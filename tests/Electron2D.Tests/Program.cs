@@ -209,6 +209,7 @@ VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
 VerifyInputText();
+VerifyControllerValues();
 VerifyControllerText();
 VerifyTouchGestureText();
 VerifyInput();
@@ -4836,6 +4837,89 @@ static void VerifyInputText()
     }
 }
 
+static void VerifyControllerValues()
+{
+    using var motion = new InputEventJoypadMotion();
+    using var button = new InputEventJoypadButton();
+    Require(motion.Axis == JoyAxis.LeftX && motion.AxisValue == 0f && motion.IsReleased() &&
+            button.ButtonIndex == JoyButton.A && button.Pressure == 0f && button.IsReleased(),
+        "Controller events retain their constructor and raw press defaults.");
+
+    var motionChanges = 0;
+    motion.Changed += _ => motionChanges++;
+    motion.Axis = JoyAxis.Invalid;
+    Require(motion.AsText() == "Joypad Motion on Axis -1 (Unknown Joypad Axis) with Value 0.00",
+        "The accepted invalid-axis sentinel must have a safe numeric description.");
+    motion.Axis = JoyAxis.Max;
+    Require(motion.AsText() == "Joypad Motion on Axis 10 (Unknown Joypad Axis) with Value 0.00",
+        "The accepted maximum-axis sentinel must have a safe numeric description.");
+    Expect<ArgumentOutOfRangeException>(() => motion.Axis = (JoyAxis)(-2),
+        "Axis values below the invalid sentinel must fail before mutation.");
+    Expect<ArgumentOutOfRangeException>(() => motion.Axis = (JoyAxis)11,
+        "Axis values above the maximum sentinel must fail before mutation.");
+    Require(motion.Axis == JoyAxis.Max && motionChanges == 2,
+        "Rejected axes leave the stored value and change count intact.");
+
+    motion.Axis = JoyAxis.LeftX;
+    motion.AxisValue = 0.499f;
+    Require(motion.IsReleased(), "Axis motion below the fixed toggle threshold is released.");
+    motion.AxisValue = 0.5f;
+    Require(motion.IsPressed(), "Axis motion at the fixed toggle threshold is pressed.");
+    motion.AxisValue = -0.5f;
+    Require(motion.IsPressed(), "The toggle threshold uses absolute axis magnitude.");
+    motion.AxisValue = BitConverter.Int32BitsToSingle(0x7fc00000);
+    Require(float.IsNaN(motion.AxisValue) && motion.IsReleased() && motion.AsText().EndsWith("Value nan", StringComparison.Ordinal),
+        "Positive NaN is stored, releases the toggle state and uses source numeric text.");
+    motion.AxisValue = BitConverter.Int32BitsToSingle(unchecked((int)0xffc00000));
+    Require(motion.AsText().EndsWith("Value -nan", StringComparison.Ordinal),
+        "Negative NaN retains its sign in fixed-decimal source text.");
+    motion.AxisValue = float.NegativeInfinity;
+    Require(float.IsNegativeInfinity(motion.AxisValue) && motion.IsPressed() &&
+            motion.AsText().EndsWith("Value -inf", StringComparison.Ordinal),
+        "Infinite axis motion is stored, presses the toggle state and uses source numeric text.");
+    motion.AxisValue = -1.5f;
+    using var copiedMotion = (InputEventJoypadMotion)motion.Duplicate();
+    Require(copiedMotion.AxisValue == -1.5f && copiedMotion.IsPressed(),
+        "Out-of-range source motion and derived press state survive duplication.");
+    var axisValueProperty = motion.GetPropertyList().OfType<PropertyDescriptor<InputEventJoypadMotion, float>>()
+        .Single(property => property.Name == nameof(InputEventJoypadMotion.AxisValue));
+    motion.RevertProperty(axisValueProperty);
+    Require(motion.AxisValue == 0f && motion.IsReleased(),
+        "Axis-value descriptor revert recomputes the raw press state.");
+
+    var buttonChanges = 0;
+    button.Changed += _ => buttonChanges++;
+    button.ButtonIndex = (JoyButton)int.MinValue;
+    Require(button.AsText() == "Joypad Button -2147483648" && buttonChanges == 1,
+        "The button setter retains arbitrary signed identities without indexing descriptions.");
+    button.ButtonIndex = (JoyButton)int.MaxValue;
+    button.Pressed = true;
+    button.Pressure = -1.25f;
+    Require(button.IsPressed() && button.Pressure == -1.25f && buttonChanges == 2 &&
+            button.AsText() == "Joypad Button 2147483647, Pressure: -1.25",
+        "Button pressure and press state retain source values without content-change emission.");
+    button.Pressure = float.NaN;
+    Require(float.IsNaN(button.Pressure) && button.AsText().EndsWith("Pressure: nan", StringComparison.Ordinal),
+        "NaN pressure is retained and formatted safely.");
+    button.Pressure = float.PositiveInfinity;
+    using var copiedButton = (InputEventJoypadButton)button.Duplicate();
+    Require(float.IsPositiveInfinity(copiedButton.Pressure) && copiedButton.IsPressed() &&
+            copiedButton.ButtonIndex == (JoyButton)int.MaxValue && buttonChanges == 2,
+        "Arbitrary pressure and button state survive duplication without new change notifications.");
+    var pressureProperty = button.GetPropertyList().OfType<PropertyDescriptor<InputEventJoypadButton, float>>()
+        .Single(property => property.Name == nameof(InputEventJoypadButton.Pressure));
+    button.RevertProperty(pressureProperty);
+    Require(button.Pressure == 0f && buttonChanges == 2,
+        "Pressure descriptor revert restores zero without content-change emission.");
+
+    void ThrowOnChange(Resource _) => throw new InvalidOperationException("expected controller observer failure");
+    motion.Changed += ThrowOnChange;
+    Expect<InvalidOperationException>(() => motion.AxisValue = 0.5f,
+        "A throwing axis observer must see a committed value and raw press state.");
+    Require(motion.AxisValue == 0.5f && motion.IsPressed(),
+        "The axis value and raw press state remain committed after an observer failure.");
+}
+
 static void VerifyControllerText()
 {
     using var button = new InputEventJoypadButton { ButtonIndex = JoyButton.A };
@@ -4847,6 +4931,7 @@ static void VerifyControllerText()
     using var tinyPressure = new InputEventJoypadButton { ButtonIndex = JoyButton.A, Pressure = float.Epsilon };
     using var axis = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -0.257f };
     using var rawAxis = new InputEventJoypadMotion { Axis = (JoyAxis)9 };
+    using var unknownAxis = new InputEventJoypadMotion { Axis = JoyAxis.Max };
     using var axisOne = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f };
     using var axisNegativeOne = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -1f };
     using var axisMidpoint = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 0.125f };
@@ -4876,10 +4961,12 @@ static void VerifyControllerText()
         TranslationServer.AddTranslation(french, "", "Pressure:", "Pression :");
         TranslationServer.AddTranslation(french, "", "Joypad Motion on Axis %d (%s) with Value %.2f", "Axe %d (%s) : %.2f");
         TranslationServer.AddTranslation(french, "", "Left Stick X-Axis, Joystick 0 X-Axis", "Axe X gauche");
+        TranslationServer.AddTranslation(french, "", "Unknown Joypad Axis", "Axe inconnu");
         Require(button.AsText() == "Bouton de manette 0 (Bouton inférieur)" &&
                 pressure.AsText() == "Bouton de manette 0 (Bouton inférieur), Pression : 0.10000000149012" &&
-                axis.AsText() == "Axe 0 (Axe X gauche) : -0.26",
-            "Controller descriptions must resolve translated templates and known labels.");
+                axis.AsText() == "Axe 0 (Axe X gauche) : -0.26" &&
+                unknownAxis.AsText() == "Axe 10 (Axe inconnu) : 0.00",
+            "Controller descriptions must resolve translated templates, known labels and unknown-axis fallback.");
         TranslationServer.AddTranslation(french, "", "Joypad Button %d", "Bouton sans index");
         TranslationServer.AddTranslation(french, "", "Joypad Motion on Axis %d (%s) with Value %.2f", "Axe sans valeurs");
         Require(button.AsText() == "Joypad Button 0 (Bouton inférieur)" &&
@@ -5675,13 +5762,37 @@ static void VerifyInput()
 
         using (var button = new InputEventJoypadButton { Device = 2, ButtonIndex = JoyButton.A, Pressed = true })
         using (var axis = new InputEventJoypadMotion { Device = 2, Axis = JoyAxis.LeftX, AxisValue = -0.7f })
+        using (var rawButton = new InputEventJoypadButton { Device = 2, ButtonIndex = (JoyButton)int.MinValue, Pressed = true })
+        using (var rawAxis = new InputEventJoypadMotion { Device = 2, Axis = JoyAxis.Max, AxisValue = 1.5f })
         {
             input.ParseInputEvent(button);
             input.ParseInputEvent(axis);
+            input.ParseInputEvent(rawButton);
+            input.ParseInputEvent(rawAxis);
             Require(input.IsJoyButtonPressed(JoyButton.A, 2) && NearlyEqual(input.GetJoyAxis(JoyAxis.LeftX, 2), -0.7f),
                 "Controller events must retain per-device button and axis state.");
-            Expect<ArgumentOutOfRangeException>(() => input.GetJoyAxis(JoyAxis.Invalid, 2),
-                "Controller queries must reject invalid axes.");
+            Require(input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
+                    input.GetJoyAxis(JoyAxis.Max, 2) == 1.5f &&
+                    !input.IsJoyButtonPressed(JoyButton.Invalid, 2) &&
+                    input.GetJoyAxis(JoyAxis.Invalid, 2) == 0f &&
+                    !input.IsJoyButtonPressed((JoyButton)int.MinValue, 3) &&
+                    input.GetJoyAxis(JoyAxis.Max, 3) == 0f,
+                "Controller queries retain arbitrary signed raw identities and source values.");
+            Expect<ArgumentOutOfRangeException>(() => input.IsJoyButtonPressed(JoyButton.A, -1),
+                "Controller button queries reject negative physical device IDs.");
+            Expect<ArgumentOutOfRangeException>(() => input.GetJoyAxis(JoyAxis.LeftX, -1),
+                "Controller axis queries reject negative physical device IDs.");
+            rawButton.Pressed = false;
+            rawAxis.AxisValue = float.PositiveInfinity;
+            input.ParseInputEvent(rawButton);
+            input.ParseInputEvent(rawAxis);
+            Require(!input.IsJoyButtonPressed((JoyButton)int.MinValue, 2) &&
+                    float.IsPositiveInfinity(input.GetJoyAxis(JoyAxis.Max, 2)),
+                "Raw controller queries reflect button release and non-finite axis updates.");
+            rawAxis.AxisValue = 0f;
+            input.ParseInputEvent(rawAxis);
+            Require(input.GetJoyAxis(JoyAxis.Max, 2) == 0f,
+                "A later resting axis event replaces the prior raw value.");
         }
 
         var vectorBinding = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 1f };
@@ -5691,11 +5802,11 @@ static void VerifyInput()
         using (var vectorAxis = new InputEventJoypadMotion { Axis = JoyAxis.RightX, AxisValue = 0.75f })
         {
             input.ParseInputEvent(vectorAxis);
-            Require(!vectorAxis.IsPressed() &&
+            Require(vectorAxis.IsPressed() &&
                     NearlyEqual(input.GetActionStrength(right), 0.5f) &&
                     NearlyEqual(input.GetActionRawStrength(right), 0.75f) &&
                     VectorNearlyEqual(input.GetVector(left, right, up, down, 0f), new Vector2(0.75f, 0f)),
-                "Axis events must derive action presses from each action's deadzone, and vectors must use raw strengths.");
+                "Axis raw presses use the fixed toggle threshold while actions use their own deadzone and vectors use raw strengths.");
         }
 
         using (var firstMotion = new InputEventMouseMotion

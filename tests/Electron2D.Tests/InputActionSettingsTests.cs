@@ -123,6 +123,45 @@ internal static class InputActionSettingsTests
                     Input.Instance.IsActionPressed("jump"),
                     "An invalid binding leaves the live map and pressed state unchanged.");
 
+                using (var lastButton = (InputEventJoypadButton)new InputBindingSettings
+                {
+                    Kind = InputBindingKind.JoypadButton,
+                    JoyButtonIndex = (JoyButton)127,
+                }.CreateEvent())
+                using (var lastAxis = (InputEventJoypadMotion)new InputBindingSettings
+                {
+                    Kind = InputBindingKind.JoypadMotion,
+                    JoyAxis = (JoyAxis)9,
+                    AxisValue = -1f,
+                }.CreateEvent())
+                    Check(lastButton.ButtonIndex == (JoyButton)127 && lastAxis.Axis == (JoyAxis)9 &&
+                        lastAxis.AxisValue == -1f,
+                        "The last version-one raw controller IDs and signed direction remain valid.");
+
+                foreach (var invalid in new[]
+                {
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.Invalid },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.Max },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.Invalid, AxisValue = 1f },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.Max, AxisValue = 1f },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.LeftX, AxisValue = float.NaN },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.LeftX, AxisValue = float.PositiveInfinity },
+                    new InputBindingSettings { Kind = InputBindingKind.JoypadMotion, JoyAxis = JoyAxis.LeftX, AxisValue = 1.01f },
+                })
+                    Reject<InvalidDataException>(() => { using var _ = invalid.CreateEvent(); });
+                loaded.Set(actionSetting, new InputActionSettings
+                {
+                    Bindings =
+                    [
+                        new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space },
+                        new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.Max },
+                    ],
+                });
+                Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
+                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
+                    Input.Instance.IsActionPressed("jump"),
+                    "A late invalid controller binding must preserve the live map and pressed state.");
+
                 loaded.Set(actionSetting, new InputActionSettings
                 {
                     Bindings =

@@ -16,11 +16,11 @@ Last updated: 2026-09-21
 
 Represents a game-controller button press or release.
 
-- Responsibility: one standardized/raw controller button press/release and optional pressure.
+- Responsibility: one standardized or raw signed controller button press/release and optional pressure.
 - Complete declared API: `ButtonIndex`, `Pressed`, `Pressure`; overrides `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All three values are stored typed descriptors.
-- Invariants/errors: button is `0..127`, pressure finite `[0,1]`; binding identity ignores pressure; disposed access fails.
-- Text: `AsText` reports `Joypad Button n`, adds one of 21 known controller descriptions for indexes 0–20, and adds `Pressure: value` only when pressure is nonzero. Extended standardized IDs 21–25 and raw IDs use a safe numeric fallback. The source template, known descriptions and pressure label use this event's translation domain; malformed translated templates fall back to source wording.
-- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, boundaries, copy, all 21 defined text labels and selected pressure values are covered. Device discovery/effects remain under the SDL gamepad trigger.
+- Invariants/errors: the button index and pressure retain arbitrary caller values, including negative indexes and non-finite pressure; binding identity ignores pressure. `ButtonIndex` emits `Changed`, while `Pressed` and `Pressure` store without emitting it. Disposed access fails.
+- Text: `AsText` reports `Joypad Button n`, adds one of 21 known controller descriptions for indexes 0–20, and adds `Pressure: value` only when pressure is nonzero. All other signed IDs use a safe numeric fallback. The source template, known descriptions and pressure label use this event's translation domain; malformed translated templates fall back to source wording.
+- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, signed index extremes, non-finite pressure, copy/revert, all 21 defined text labels and change delivery are covered in managed tests. Device discovery/effects remain under the SDL gamepad trigger.
 
 ## Examples
 
@@ -68,11 +68,10 @@ Initializes a new InputEventJoypadButton instance.
 
 Gets or sets the controller button.
 
-**Value:** A standardized or raw button index from zero through 127.
+**Value:** A standardized or arbitrary signed raw button index.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The numeric value is outside the supported raw-button range.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -86,20 +85,17 @@ Gets or sets whether the controller button is pressed.
 **Exceptions**
 
 - `ObjectDisposedException`: The event is disposing or disposed.
-- `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
 <a id="p-electron2d-inputeventjoypadbutton-pressure"></a>
 ### `public float Pressure { get; set; }`
 
 Gets or sets analog pressure reported for the button.
 
-**Value:** A finite value from zero through one. Most hosts report zero and use [`InputEventJoypadButton.Pressed`](InputEventJoypadButton.md#p-electron2d-inputeventjoypadbutton-pressed).
+**Value:** The source value without range or finiteness validation. Most hosts report zero and use [`InputEventJoypadButton.Pressed`](InputEventJoypadButton.md#p-electron2d-inputeventjoypadbutton-pressed).
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is outside zero through one, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
-- `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
 ## Method Descriptions
 

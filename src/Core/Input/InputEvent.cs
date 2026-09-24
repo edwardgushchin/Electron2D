@@ -226,7 +226,7 @@ public abstract class InputEvent : Resource
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public abstract string AsText();
 
-    /// <summary>Gets or sets the raw press state used by concrete button-like events.</summary>
+    /// <summary>Gets or sets the raw press state used by concrete events, including controller-axis motion.</summary>
     protected bool PressedState { get; set; }
 
     /// <summary>Gets or sets the raw cancellation state used by concrete cancelable events.</summary>

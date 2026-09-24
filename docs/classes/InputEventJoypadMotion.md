@@ -18,9 +18,9 @@ Represents motion on one game-controller axis.
 
 - Responsibility: signed motion on one standardized/raw controller axis.
 - Complete declared API: `Axis`, `AxisValue`; overrides `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. Both values are stored typed descriptors.
-- Matching/state: axis identity plus direction for exact matching. The event itself is not a button-like press; action matching derives pressed state from that action's deadzone. Action raw strength is absolute magnitude in the binding direction, and adjusted strength remaps the remaining range to `[0,1]`.
-- Invariants/errors: axis `0..9`, finite value `[-1,1]`; disposed access fails.
-- Text/verification: `AsText` reports the axis index, one of ten known controller descriptions and a signed value with exactly two decimals. The source template and known description use this event's translation domain; malformed translated templates fall back to source wording. Managed checks cover all ten labels, representative signed numeric edges, per-device state, direction/exactness, deadzone boundaries and copies. Native gamepad delivery remains on its own backend trigger.
+- Matching/state: axis identity plus direction for exact matching. Raw `IsPressed` uses a fixed absolute threshold of `0.5`; action matching uses that action's separate deadzone. Action raw strength is absolute magnitude in the binding direction, and adjusted strength remaps the remaining range to `[0,1]`.
+- Invariants/errors: axis accepts the `Invalid` (`-1`) and `Max` (`10`) sentinels and rejects values outside them; `AxisValue` retains arbitrary floats, including NaN and infinity. Disposed access fails.
+- Text/verification: `AsText` reports the axis index, one of ten known controller descriptions or a safe unknown fallback, and a signed value with two decimals or non-finite source text. The source template and description use this event's translation domain; malformed translated templates fall back to source wording. Managed checks cover labels, sentinel text, the fixed raw-press threshold, action deadzones, non-finite values, observer failure after commit and copies/revert. Native gamepad delivery remains on its own backend trigger.
 
 ## Examples
 
@@ -67,11 +67,11 @@ Initializes a new InputEventJoypadMotion instance.
 
 Gets or sets the controller axis.
 
-**Value:** An axis index from zero through nine.
+**Value:** An axis index from `JoyAxis.Invalid` (`-1`) through `JoyAxis.Max` (`10`).
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The numeric value is outside the supported raw-axis range.
+- `ArgumentOutOfRangeException`: The numeric value is below `-1` or above `10`.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -80,11 +80,10 @@ Gets or sets the controller axis.
 
 Gets or sets the current signed axis position.
 
-**Value:** A finite value from minus one through one; zero is the resting position.
+**Value:** The source value without range or finiteness validation; zero is the resting position. Magnitude at least `0.5` marks the raw event pressed.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is outside minus one through one, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -110,9 +109,9 @@ Tests whether this event has the same binding configuration as another event.
 <a id="m-electron2d-inputeventjoypadmotion-astext"></a>
 ### `public override string AsText()`
 
-Returns the localized axis number, known control description and signed value with two decimals.
+Returns the localized axis number, a known or unknown control description and signed value with two decimals or non-finite source text.
 
-**Returns:** The axis text with a two-decimal value.
+**Returns:** The axis text with a two-decimal or non-finite value.
 
 **Exceptions**
 

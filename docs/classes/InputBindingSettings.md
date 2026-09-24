@@ -14,7 +14,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-A serializable, typed event identity within [`InputActionSettings`](InputActionSettings.md). `Kind` selects exactly one family of fields. Only identifying fields are stored; pressed state and callback state are not. `ProjectSettings` snapshots the value and [`InputMap.LoadFromProjectSettings`](InputMap.md#m-electron2d-inputmap-loadfromprojectsettings) validates every binding before replacing the live map. Unknown JSON members, invalid combinations, and invalid event values fail rather than being ignored.
+A serializable, typed event identity within [`InputActionSettings`](InputActionSettings.md). `Kind` selects exactly one family of fields. Only identifying fields are stored; pressed state and callback state are not. `ProjectSettings` snapshots the value and [`InputMap.LoadFromProjectSettings`](InputMap.md#m-electron2d-inputmap-loadfromprojectsettings) validates every binding before replacing the live map. Unknown JSON members, invalid combinations, and invalid event values fail rather than being ignored. Version-one controller bindings keep button IDs `0..127`, axis IDs `0..9`, and finite nonzero axis directions in `[-1,1]`; caller-created controller events can retain broader raw values.
 
 ## Example
 
@@ -101,17 +101,17 @@ Button or wheel direction for `MouseButton`; `None` fails load.
 <a id="joybuttonindex"></a>
 ### `public JoyButton JoyButtonIndex { get; init; }`
 
-Controller button for `JoypadButton`; `A` is a valid default.
+Controller button for `JoypadButton`; `A` is a valid default. Version-one loading accepts raw IDs `0..127`.
 
 <a id="joyaxis"></a>
 ### `public JoyAxis JoyAxis { get; init; }`
 
-Controller axis for `JoypadMotion`.
+Controller axis for `JoypadMotion`; version-one loading accepts raw IDs `0..9`.
 
 <a id="axisvalue"></a>
 ### `public float AxisValue { get; init; }`
 
-Nonzero signed direction for `JoypadMotion`; the event validates its numeric range.
+Finite nonzero signed direction in `[-1,1]` for `JoypadMotion`; version-one loading validates this separately from the event's broader raw-value storage.
 
 <a id="action"></a>
 ### `public string Action { get; init; }`

@@ -1,6 +1,6 @@
 # JoyButton
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -61,7 +61,7 @@ var value = JoyButton.Invalid;
 | [`Misc5 = 24`](#f-electron2d-joybutton-misc5) | Identifies the fifth miscellaneous controller button. |
 | [`Misc6 = 25`](#f-electron2d-joybutton-misc6) | Identifies the sixth miscellaneous controller button. |
 | [`SdlMax = 26`](#f-electron2d-joybutton-sdlmax) | Marks the count of standardized SDL controller buttons. |
-| [`Max = 128`](#f-electron2d-joybutton-max) | Marks the maximum supported raw button count. |
+| [`Max = 128`](#f-electron2d-joybutton-max) | Marks the conventional raw button count; event values can exceed it. |
 
 ## Constant Descriptions
 
@@ -208,4 +208,4 @@ Marks the count of standardized SDL controller buttons.
 <a id="f-electron2d-joybutton-max"></a>
 ### `Max = 128`
 
-Marks the maximum supported raw button count.
+Marks the conventional raw button count; event values can exceed it. Version-one project bindings stop at button `127`.
