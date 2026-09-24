@@ -18,7 +18,9 @@ public sealed class RigidBody : PhysicsBody
         new PropertyDescriptor<RigidBody, float>(nameof(LinearDamp), body => body.LinearDamp, (body, value) => body.LinearDamp = value, _ => 0f, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(AngularDamp), body => body.AngularDamp, (body, value) => body.AngularDamp = value, _ => 0f, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(Freeze), body => body.Freeze, (body, value) => body.Freeze = value, _ => false, stored: true),
-        new PropertyDescriptor<RigidBody, bool>(nameof(LockRotation), body => body.LockRotation, (body, value) => body.LockRotation = value, _ => false, stored: true)
+        new PropertyDescriptor<RigidBody, bool>(nameof(LockRotation), body => body.LockRotation, (body, value) => body.LockRotation = value, _ => false, stored: true),
+        new PropertyDescriptor<RigidBody, PhysicsMaterial?>(nameof(PhysicsMaterialOverride), body => body.PhysicsMaterialOverride,
+            (body, value) => body.PhysicsMaterialOverride = value, _ => null, stored: true)
     ];
 
     private float _mass = 1f;
@@ -34,6 +36,16 @@ public sealed class RigidBody : PhysicsBody
 
     /// <summary>Creates a detached dynamic body with one-unit mass and ordinary gravity.</summary>
     public RigidBody() { }
+
+    /// <summary>Gets or sets a borrowed surface material for every child collision shape.</summary>
+    /// <value>Null by default, which uses friction one and bounce zero.</value>
+    /// <remarks>Property edits rebuild fixtures before the next physics step. The caller owns the material.</remarks>
+    /// <exception cref="ObjectDisposedException">The assigned material or body has been disposed.</exception>
+    public PhysicsMaterial? PhysicsMaterialOverride
+    {
+        get { ThrowIfDisposed(); return MaterialOverride; }
+        set => SetMaterialOverride(value);
+    }
 
     /// <summary>Gets or sets positive finite body mass in kilograms.</summary>
     /// <value>One by default.</value>

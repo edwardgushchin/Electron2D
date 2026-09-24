@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, local pose and collision-filter changes are applied before the next physics step. The body owns backend fixtures and never owns a borrowed Shape resource. Its public surface currently adds no separate methods to inherited CollisionObject and Entity; concrete dynamic/static behavior lives on RigidBody and StaticBody.
+The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, local pose and collision-filter changes are applied before the next physics step. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. Its public surface currently adds no separate methods to inherited CollisionObject and Entity.
 
 ## API summary
 

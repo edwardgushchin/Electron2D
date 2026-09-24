@@ -35,6 +35,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public bool Sleeping { get; set; }` | false | Reads or changes current awake state. |
 | `public bool Freeze { get; set; }` | false | Uses a static backend mode while true; unfreezing resumes dynamic motion. |
 | `public bool LockRotation { get; set; }` | false | Locks angular movement in the solver. |
+| `public PhysicsMaterial? PhysicsMaterialOverride { get; set; }` | null | Borrows a surface material for every child fixture. |
 
 ## Methods and extension points
 
@@ -73,8 +74,13 @@ CanSleep changes backend sleep eligibility. Sleeping reads the live solver state
 
 Both take finite scene-unit vectors and wake the attached body. Force is time dependent and should be supplied during each desired physics step; impulse is instantaneous and independent of frame rate. A detached body throws `InvalidOperationException`; an invalid vector throws before backend mutation. Position-offset forces, torque, constant forces and axis-velocity methods remain separate Unimplemented rows.
 
+<a id="physicsmaterialoverride"></a>
+### `PhysicsMaterialOverride`
+
+The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) sets friction, bounce and their mixing modifiers for every child fixture. Without an override, friction is one and bounce is zero. Assigning a disposed material throws before changing the current override; disposing the borrowed material resets the property to null. Assignment or a resource edit rebuilds fixtures before the next fixed step. The caller owns the resource.
+
 ## Ownership, limits and verification
 
 SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs).
 
-Contact monitor events, `PhysicsDirectBodyState`, other force/torque methods, continuous collision modes, material, area damping and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADR 0054](../decisions/physics.md#adr-0054) records the backend and platform boundary.
+Contact monitor events, `PhysicsDirectBodyState`, other force/torque methods, continuous collision modes, area damping and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADR 0054](../decisions/physics.md#adr-0054) records the backend and platform boundary.

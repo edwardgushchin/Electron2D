@@ -188,6 +188,7 @@ NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
+PhysicsMaterialTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

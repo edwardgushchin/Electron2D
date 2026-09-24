@@ -8,6 +8,8 @@ internal sealed class PhysicsSpace : IDisposable
 {
     internal const float MetersPerUnit = 0.01f;
     internal const float UnitsPerMeter = 100f;
+    private const ulong RoughMaterial = 1;
+    private const ulong AbsorbentMaterial = 2;
 
     private readonly List<PhysicsBody> _bodies = [];
     private readonly B2WorldId _worldID;
@@ -18,6 +20,9 @@ internal sealed class PhysicsSpace : IDisposable
     {
         var definition = b2DefaultWorldDef();
         definition.gravity = new B2Vec2(0, 9.8f);
+        definition.restitutionThreshold = 0;
+        definition.frictionCallback = CombineFriction;
+        definition.restitutionCallback = CombineBounce;
         _worldID = b2CreateWorld(definition);
     }
 
@@ -69,4 +74,22 @@ internal sealed class PhysicsSpace : IDisposable
         b2DestroyWorld(_worldID);
         _disposed = true;
     }
+
+    internal static void SetMaterial(ref B2ShapeDef definition, PhysicsMaterial? material)
+    {
+        var friction = material?.ComputedFriction ?? 1f;
+        var bounce = material?.ComputedBounce ?? 0f;
+        definition.material.friction = MathF.Abs(friction);
+        definition.material.restitution = MathF.Abs(bounce);
+        definition.material.userMaterialId = (friction < 0 ? RoughMaterial : 0) |
+            (bounce < 0 ? AbsorbentMaterial : 0);
+    }
+
+    private static float CombineFriction(float a, ulong aFlags, float b, ulong bFlags) =>
+        MathF.Abs(MathF.Min((aFlags & RoughMaterial) != 0 ? -a : a,
+            (bFlags & RoughMaterial) != 0 ? -b : b));
+
+    private static float CombineBounce(float a, ulong aFlags, float b, ulong bFlags) =>
+        Math.Clamp(((aFlags & AbsorbentMaterial) != 0 ? -a : a) +
+            ((bFlags & AbsorbentMaterial) != 0 ? -b : b), 0f, 1f);
 }

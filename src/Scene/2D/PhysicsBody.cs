@@ -16,6 +16,8 @@ public abstract class PhysicsBody : CollisionObject
     private Vector2 _lastPosition;
     private float _lastRotation;
     private volatile bool _shapesDirty = true;
+    private PhysicsMaterial? _materialOverride;
+    private ulong _appliedMaterialRevision;
 
     /// <summary>Creates a detached body with no collision shapes.</summary>
     protected PhysicsBody() { }
@@ -36,6 +38,27 @@ public abstract class PhysicsBody : CollisionObject
     }
 
     internal void MarkShapesDirty() => _shapesDirty = true;
+
+    internal PhysicsMaterial? MaterialOverride => _materialOverride is { IsDisposed: true } ? null : _materialOverride;
+
+    internal void SetMaterialOverride(PhysicsMaterial? material)
+    {
+        EnsureMutable();
+        if (material?.IsDisposed == true) throw new ObjectDisposedException(nameof(material));
+        if (ReferenceEquals(material, _materialOverride)) return;
+        if (_materialOverride is { } old)
+        {
+            old.Changed -= OnMaterialChanged;
+            old.Disposed -= OnMaterialDisposed;
+        }
+        _materialOverride = material;
+        if (material is not null)
+        {
+            material.Changed += OnMaterialChanged;
+            material.Disposed += OnMaterialDisposed;
+        }
+        MarkShapesDirty();
+    }
 
     internal void AttachBackend(PhysicsSpace space)
     {
@@ -66,6 +89,12 @@ public abstract class PhysicsBody : CollisionObject
     {
         if (_space is null) return;
         ValidatePhysicsTransform();
+        if (_materialOverride is { IsDisposed: true })
+        {
+            _materialOverride = null;
+            MarkShapesDirty();
+        }
+        if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision) MarkShapesDirty();
         if (_shapesDirty) RebuildShapes();
         var position = GlobalPosition;
         var rotation = GlobalRotation;
@@ -119,6 +148,12 @@ public abstract class PhysicsBody : CollisionObject
         {
             _space?.Remove(this);
             _shapes.Clear();
+            if (_materialOverride is { } material)
+            {
+                material.Changed -= OnMaterialChanged;
+                material.Disposed -= OnMaterialDisposed;
+                _materialOverride = null;
+            }
         }
         base.Dispose(disposing);
     }
@@ -139,6 +174,7 @@ public abstract class PhysicsBody : CollisionObject
         definition.filter.categoryBits = CollisionLayer;
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
+        PhysicsSpace.SetMaterial(ref definition, _materialOverride);
         foreach (var node in _shapes)
         {
             if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
@@ -146,6 +182,7 @@ public abstract class PhysicsBody : CollisionObject
         }
 
         OnShapesRebuilt();
+        _appliedMaterialRevision = _materialOverride?.Revision ?? 0;
         _shapesDirty = false;
     }
 
@@ -154,5 +191,13 @@ public abstract class PhysicsBody : CollisionObject
         var transform = GlobalTransform;
         if (!transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
+    }
+
+    private void OnMaterialChanged(Resource _) => MarkShapesDirty();
+
+    private void OnMaterialDisposed(ElectronObject _)
+    {
+        _materialOverride = null;
+        MarkShapesDirty();
     }
 }

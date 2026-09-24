@@ -141,6 +141,26 @@
       "electron2d": "method:Electron2D.StaticBody.CreateSceneInstanceFactory()",
       "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsMaterial..ctor()",
+      "reason": "Managed C# construction and resource-copy hook for the executable PhysicsMaterial surface resource.",
+      "adr": "ADRs 0003, 0013, 0014; material slice"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMaterial.CreateDuplicateInstance()",
+      "reason": "Managed C# construction and resource-copy hook for the executable PhysicsMaterial surface resource.",
+      "adr": "ADRs 0003, 0013, 0014; material slice"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Managed C# construction and resource-copy hook for the executable PhysicsMaterial surface resource.",
+      "adr": "ADRs 0003, 0013, 0014; material slice"
+    },
+    {
+      "electron2d": "method:Electron2D.StaticBody.GetPropertyDescriptors()",
+      "reason": "Typed PackedScene property descriptor for the borrowed material override.",
+      "adr": "ADRs 0005, 0008, 0013; material slice"
     }
   ],
   "statusGroups": [
@@ -337,25 +357,11 @@
     },
     {
       "godot": [
-        "StaticBody2D::property:physics_material_override"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: PhysicsMaterial resource with friction/restitution transfer into Box2D shape materials."
-    },
-    {
-      "godot": [
         "RigidBody2D::method:_integrate_forces(PhysicsDirectBodyState2D:)",
         "RigidBody2D::property:custom_integrator"
       ],
       "state": "Blocked",
       "reason": "Trigger: PhysicsDirectBodyState2D typed solver state and callback timing contract."
-    },
-    {
-      "godot": [
-        "RigidBody2D::property:physics_material_override"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: PhysicsMaterial resource with friction/restitution transfer into Box2D shape materials."
     },
     {
       "godot": [
@@ -395,6 +401,25 @@
       ],
       "state": "Unimplemented",
       "reason": "Trigger: next force/torque and axis-velocity slice on the existing Box2D body, with world-point and center-of-mass semantics."
+    },
+    {
+      "godot": [
+        "class:PhysicsMaterial",
+        "PhysicsMaterial::property:absorbent",
+        "PhysicsMaterial::property:bounce",
+        "PhysicsMaterial::property:friction",
+        "PhysicsMaterial::property:rough"
+      ],
+      "state": "Implemented",
+      "reason": "Complete own surface contract: defaults, changes, duplication and signed friction/bounce mixing verified by PhysicsMaterialTests."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:physics_material_override",
+        "StaticBody2D::property:physics_material_override"
+      ],
+      "state": "Implemented",
+      "reason": "Borrowed material transfers to Box2D fixtures; live edits, packing, disposal and surface mixing verified by PhysicsMaterialTests."
     }
   ]
 }
