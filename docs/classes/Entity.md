@@ -1,6 +1,6 @@
 # Entity
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
@@ -13,6 +13,8 @@ Last updated: 2026-09-23
 ## Description
 
 A concrete spatial canvas item with engine-owned Vector2 and Transform values. Provides local/global position, rotation, scale and skew, spatial helpers and an identity default transform. It can be an empty spatial parent. Hierarchy, lifecycle and processing are inherited from Node; drawing, visibility, Z and materials come from CanvasItem. A neutral parent resets the canvas transform chain. [Control](Control.md) is a sibling under CanvasItem with its own rectangular placement model.
+
+The pinned `Node2D` scale and local-axis slice has managed Linux/.NET 8 behavioral coverage for five members. Setting local or global scale replaces components with magnitude below `1e-5` by positive `1e-5`; global scale preserves the directions of reflected basis axes before converting through the parent. Assigning a raw `Transform` can still store a singular basis. `MoveLocalX` and `MoveLocalY` normalize nonzero basis axes with representable squared length unless `scaled` is true; a zero axis still assigns the unchanged position and emits enabled local notification. The remaining `Node2D` rows retain their separate semantic audits.
 
 ## Examples
 
@@ -129,7 +131,7 @@ Gets or sets hierarchy-global scale.
 
 **Value:** The canonical scale decomposed from `Entity.GlobalTransform`.
 
-**Remarks:** Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
+**Remarks:** The desired global basis keeps each axis direction, including reflection, while replacing its length; it is then converted through the parent and the resulting local scale uses the same near-zero replacement as `Entity.Scale`. Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
@@ -221,7 +223,7 @@ Gets or sets local scale.
 
 **Value:** The canonical scale decomposed from `Entity.Transform`.
 
-**Remarks:** Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
+**Remarks:** Components with magnitude below 0.00001 are replaced by positive 0.00001. Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
@@ -366,7 +368,7 @@ Moves this node along its local X basis axis.
 
 **Parameter `scaled`:** Whether scale magnitude is retained. By default the axis is normalized.
 
-**Remarks:** A near-zero normalized axis causes no movement.
+**Remarks:** An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.
 
 **System.ArgumentOutOfRangeException:** `delta` is NaN or infinite.
 
@@ -385,7 +387,7 @@ Moves this node along its local Y basis axis.
 
 **Parameter `scaled`:** Whether scale magnitude is retained. By default the axis is normalized.
 
-**Remarks:** A near-zero normalized axis causes no movement.
+**Remarks:** An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.
 
 **System.ArgumentOutOfRangeException:** `delta` is NaN or infinite.
 

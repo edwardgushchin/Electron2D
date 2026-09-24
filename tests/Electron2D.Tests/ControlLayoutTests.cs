@@ -54,7 +54,7 @@ internal static class ControlLayoutTests
             var beforeMove = movable.GlobalPosition;
             movable.Reparent(destination);
             Near(movable.GlobalPosition, beforeMove);
-            using var singular = new Entity { Scale = Vector2.Zero };
+            using var singular = new Entity { Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero) };
             viewport.AddChild(singular);
             Reject<InvalidOperationException>(() => movable.Reparent(singular));
             Check(movable.Parent == destination, "Singular destination rejects before hierarchy mutation.");

@@ -60,7 +60,7 @@ internal static class SceneHierarchyTests
         neutralView.Reparent(custom);
         Check(direct.GlobalTransform.IsEqualApprox(before), "Reparent under another canvas model preserves spatial state.");
         Reject<ArgumentException>(() => direct.GetRelativeTransformToParent(root));
-        using var singular = new Entity { Scale = Vector2.Zero };
+        using var singular = new Entity { Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero) };
         Reject<InvalidOperationException>(() => direct.Reparent(singular));
         Check(direct.Parent == custom && direct.GlobalTransform.IsEqualApprox(before), "Singular destination rejects before mutation.");
         var timer = new EngineTimer { Name = "timer", OneShot = true };

@@ -73,7 +73,7 @@ public class Entity : CanvasItem
             stored: true)
     ];
 
-    private const float TransformEpsilon = 0.000001f;
+    private const float MinimumScale = 0.00001f;
 
     private Transform _transform = Transform.Identity;
 
@@ -231,7 +231,8 @@ public class Entity : CanvasItem
 
     /// <summary>Gets or sets local scale.</summary>
     /// <value>The canonical scale decomposed from <see cref="Transform"/>.</value>
-    /// <remarks>Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
+    /// <remarks>Components with magnitude below 0.00001 are replaced by positive 0.00001. Equivalent reflected
+    /// matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -243,13 +244,19 @@ public class Entity : CanvasItem
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
+            value = new Vector2(
+                Mathf.Abs(value.X) < MinimumScale ? MinimumScale : value.X,
+                Mathf.Abs(value.Y) < MinimumScale ? MinimumScale : value.Y);
             SetTransform(new Transform(_transform.Rotation, value, _transform.Skew, _transform.Origin));
         }
     }
 
     /// <summary>Gets or sets hierarchy-global scale.</summary>
     /// <value>The canonical scale decomposed from <see cref="GlobalTransform"/>.</value>
-    /// <remarks>Equivalent reflected matrices can decompose to a different but equivalent rotation, scale, and skew tuple.</remarks>
+    /// <remarks>The desired global basis keeps each axis direction, including reflection, while replacing its length;
+    /// it is then converted through the parent and the resulting local scale uses the same near-zero replacement
+    /// as <see cref="Scale"/>. Equivalent reflected matrices can decompose to a
+    /// different but equivalent rotation, scale, and skew tuple.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
@@ -261,8 +268,17 @@ public class Entity : CanvasItem
         {
             EnsureMutable();
             EnsureFinite(value, nameof(value));
-            var transform = GlobalTransform;
-            GlobalTransform = new Transform(transform.Rotation, value, transform.Skew, transform.Origin);
+            if (GetParentItem() is not { } parent)
+            {
+                Scale = value;
+                return;
+            }
+
+            var parentGlobal = parent.GetGlobalTransform();
+            var desired = parentGlobal * _transform;
+            desired.X = desired.X.Normalized() * value.X;
+            desired.Y = desired.Y.Normalized() * value.Y;
+            Scale = (parentGlobal.AffineInverse() * desired).Scale;
         }
     }
 
@@ -353,7 +369,7 @@ public class Entity : CanvasItem
     /// <summary>Moves this node along its local X basis axis.</summary>
     /// <param name="delta">The finite signed distance.</param>
     /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
-    /// <remarks>A near-zero normalized axis causes no movement.</remarks>
+    /// <remarks>An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
@@ -363,7 +379,7 @@ public class Entity : CanvasItem
     /// <summary>Moves this node along its local Y basis axis.</summary>
     /// <param name="delta">The finite signed distance.</param>
     /// <param name="scaled">Whether scale magnitude is retained. By default the axis is normalized.</param>
-    /// <remarks>A near-zero normalized axis causes no movement.</remarks>
+    /// <remarks>An exactly zero or underflowed normalized axis causes no displacement, but still assigns Position.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
@@ -488,12 +504,7 @@ public class Entity : CanvasItem
         var axis = useXAxis ? _transform.X : _transform.Y;
 
         if (!scaled)
-        {
-            if (axis.LengthSquared() <= TransformEpsilon * TransformEpsilon)
-                return;
-
             axis = axis.Normalized();
-        }
 
         Position += axis * delta;
     }

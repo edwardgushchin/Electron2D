@@ -8087,11 +8087,71 @@ static void VerifyNodeHierarchyAndTransforms()
         "Local movement, rotation, translation, and scaling helpers must compose.");
     motion.LookAt(new Vector2(4f, 11f));
     Require(NearlyEqual(motion.GlobalRotation, System.MathF.PI / 2f), "LookAt must point the local +X axis at a global point.");
-    motion.Scale = new Vector2(0f, 1f);
+    var singularMotion = motion.Transform;
+    singularMotion.X = Vector2.Zero;
+    motion.Transform = singularMotion;
     Expect<InvalidOperationException>(() => motion.ToLocal(Vector2.Zero), "A singular transform cannot convert a global point to local space.");
     motion.Dispose();
 
-    using var singularParent = new Entity { Scale = new Vector2(0f, 1f) };
+    using var scaleNode = new Entity { Scale = new Vector2(0f, -0.000001f) };
+    Require(scaleNode.Scale == new Vector2(0.00001f, 0.00001f),
+        "Near-zero scale components must receive the reference positive minimum.");
+    scaleNode.ApplyScale(Vector2.Zero);
+    Require(scaleNode.Scale == new Vector2(0.00001f, 0.00001f),
+        "ApplyScale must use the same scale boundary.");
+    var originalScale = scaleNode.Transform;
+    Expect<ArgumentOutOfRangeException>(() => scaleNode.Scale = new Vector2(float.NaN, 1f),
+        "Scale rejects non-finite components before changing the transform.");
+    Require(scaleNode.Transform == originalScale, "Rejected Scale assignments preserve state.");
+    scaleNode.GlobalScale = Vector2.Zero;
+    Require(scaleNode.Scale == new Vector2(0.00001f, 0.00001f),
+        "GlobalScale without a canvas parent applies the local scale boundary.");
+    using var scaleParent = new Entity { Scale = new Vector2(2f, 3f) };
+    var scaleChild = new Entity();
+    scaleParent.AddChild(scaleChild);
+    scaleChild.GlobalScale = Vector2.Zero;
+    Require(scaleChild.Scale == new Vector2(0.00001f, 0.00001f),
+        "GlobalScale must apply the local setter's minimum after parent conversion.");
+    using var reflectedParent = new Entity { Scale = new Vector2(2f, -3f) };
+    var reflectedChild = new Entity();
+    reflectedParent.AddChild(reflectedChild);
+    reflectedChild.GlobalScale = Vector2.One;
+    Require(VectorNearlyEqual(reflectedChild.Scale, new Vector2(0.5f, 1f / 3f)) &&
+            VectorNearlyEqual(reflectedChild.GlobalScale, new Vector2(1f, -1f)),
+        "GlobalScale preserves reflected global basis directions before local decomposition.");
+
+    using var tinyAxis = new Entity
+    {
+        Transform = new Transform(new Vector2(0.0000001f, 0f), Vector2.Down, Vector2.Zero),
+    };
+    tinyAxis.MoveLocalX(2f);
+    tinyAxis.MoveLocalY(3f);
+    Require(tinyAxis.Position == new Vector2(2f, 3f),
+        "MoveLocalX and MoveLocalY normalize nonzero basis axes, including a very small one.");
+    Expect<ArgumentOutOfRangeException>(() => tinyAxis.MoveLocalY(float.NaN),
+        "Local movement rejects an invalid delta before changing position.");
+    Require(tinyAxis.Position == new Vector2(2f, 3f), "Rejected local movement preserves position.");
+    using var scaledMotion = new Entity { Scale = new Vector2(2f, 3f) };
+    scaledMotion.MoveLocalX(1f, scaled: true);
+    scaledMotion.MoveLocalY(1f);
+    scaledMotion.MoveLocalY(1f, scaled: true);
+    Require(scaledMotion.Position == new Vector2(2f, 4f),
+        "Scaled local movement retains basis length while the default normalizes it.");
+    using var zeroAxis = new Entity
+    {
+        Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero),
+    };
+    using (var zeroTree = new SceneTree(zeroAxis))
+    {
+        zeroAxis.NotifyLocalTransformChanges = true;
+        var notifications = 0;
+        zeroAxis.LocalTransformChanged += _ => notifications++;
+        zeroAxis.MoveLocalX(5f);
+        Require(zeroAxis.Position == Vector2.Zero && notifications == 1,
+            "An exactly zero axis still commits the unchanged position and emits its local notification.");
+    }
+
+    using var singularParent = new Entity { Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero) };
     var singularChild = new Entity { Position = new Vector2(2f, 3f) };
     singularParent.AddChild(singularChild);
     var originalLocalTransform = singularChild.Transform;

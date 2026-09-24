@@ -32,7 +32,7 @@ internal static partial class RenderingRuntimeTests
             ("nested independent group", () => Branch(Box(Colors.Red, sort: true), Branch(Box(Colors.Blue, y: 20), Branch(Box(Colors.Yellow, y: -30, sort: true), Box(Colors.Cyan, y: 10))), Box(Colors.Green, y: 5)), Colors.Cyan),
             ("Y uses local coordinates", () => Branch(new OrderingBox(Colors.Red) { YSortEnabled = true, Rotation = Mathf.Pi, Scale = new(2, 3) }, Box(Colors.Green, y: 20), Box(Colors.Blue, y: -20)), Colors.Green),
             ("nested basis composition", () => Branch(Box(Colors.Red, sort: true), Branch(new OrderingBox(Colors.Blue) { Position = new(0, 20), Rotation = Mathf.Pi / 2, YSortEnabled = true }, new OrderingBox(Colors.Yellow) { Position = new(10, 0) }), Box(Colors.Green, y: 25)), Colors.Yellow),
-            ("singular Y root", () => Branch(new Entity { YSortEnabled = true, Scale = new(1, 0) }, new OrderingBox(Colors.Green) { TopLevel = true }), Colors.Green),
+            ("singular Y root", () => Branch(new Entity { YSortEnabled = true, Transform = new Transform(Vector2.Right, Vector2.Zero, Vector2.Zero) }, new OrderingBox(Colors.Green) { TopLevel = true }), Colors.Green),
             ("neutral root escapes Y group", () => Branch(Box(Colors.Red, sort: true), Branch(new Node(), Box(Colors.Blue, y: -20)), Box(Colors.Green, y: 20)), Colors.Blue),
             ("top-level escapes Y group", () => Branch(Box(Colors.Red, sort: true), Box(Colors.Blue, y: -20, top: true), Box(Colors.Green, y: 20)), Colors.Blue),
             ("abstract canvas Y query", () => Branch(Box(Colors.Red, sort: true), new OrderingCanvas(), Box(Colors.Blue, y: 20)), Colors.Cyan),
