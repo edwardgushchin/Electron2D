@@ -19,6 +19,16 @@
       "godot": "PhysicsBody2D::method:get_gravity()",
       "electron2d": "method:Electron2D.PhysicsBody.GetGravity()",
       "reason": "Typed last-step gravity vector from resolved world and area fields, zero for detached or static bodies."
+    },
+    {
+      "godot": "RigidBody2D::method:get_colliding_bodies()",
+      "electron2d": "method:Electron2D.RigidBody.GetCollidingBodies()",
+      "reason": "Caller-owned Entity array follows the Node2D-to-Entity mapping for scene physics bodies."
+    },
+    {
+      "godot": "RigidBody2D::method:get_contact_count()",
+      "electron2d": "method:Electron2D.RigidBody.GetContactCount()",
+      "reason": "Typed last-step contact-point count is independent of object-level monitoring."
     }
   ],
   "extras": [
@@ -402,17 +412,35 @@
     {
       "godot": [
         "RigidBody2D::method:get_colliding_bodies()",
-        "RigidBody2D::method:get_contact_count()",
-        "RigidBody2D::property:contact_monitor",
-        "RigidBody2D::property:max_contacts_reported",
         "RigidBody2D::signal:body_entered(Node:)",
-        "RigidBody2D::signal:body_exited(Node:)",
-        "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
-        "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)",
+        "RigidBody2D::signal:body_exited(Node:)"
+      ],
+      "state": "Partial",
+      "reason": "Current scene-body snapshots and deduplicated transitions execute; tile-map virtual collision bodies and reference selection among simultaneous contacts above the cap remain to be integrated and audited."
+    },
+    {
+      "godot": [
+        "RigidBody2D::method:get_contact_count()",
+        "RigidBody2D::property:max_contacts_reported"
+      ],
+      "state": "Partial",
+      "reason": "Current manifold points are counted up to the configured cap; exact reference point-selection priority and the reference upper bound remain to be audited."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:contact_monitor",
         "RigidBody2D::signal:sleeping_state_changed()"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: next body contact/sleep event slice using Box2D step events with typed node/shape ownership and notification order."
+      "state": "Implemented",
+      "reason": "Opt-in monitoring and solver sleep transitions execute with pinned defaults and callback policy; RigidBodyContactTests covers sleep/wake, direct assignment, packing, owner thread and callback mutation."
+    },
+    {
+      "godot": [
+        "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
+        "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: public typed physics RID identity and stable collision shape-owner indices across fixture rebuilds, plus tile-map virtual collision body integration for full signal payloads (ADR 0058)."
     },
     {
       "godot": [

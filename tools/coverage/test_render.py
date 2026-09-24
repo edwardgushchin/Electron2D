@@ -87,6 +87,17 @@ def main():
     assert "../../classes/RigidBody.DampMode.md" in body_rows
     assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                        if row.startswith("| [`property int linear_damp_mode"))
+    for prefix, status in (("method get_colliding_bodies", "Partial"),
+                           ("method get_contact_count", "Partial"),
+                           ("property bool contact_monitor", "Implemented"),
+                           ("property int max_contacts_reported", "Partial"),
+                           ("signal body_entered", "Partial"),
+                           ("signal body_exited", "Partial"),
+                           ("signal body_shape_entered", "Blocked"),
+                           ("signal body_shape_exited", "Blocked"),
+                           ("signal sleeping_state_changed", "Implemented")):
+        assert f" | {status} | " in next(row for row in body_rows.splitlines()
+                                       if row.startswith(f"| [`{prefix}"))
     for prefix in ("method add_constant_central_force(", "method add_constant_force(",
                    "method add_constant_torque(", "method apply_force(", "method apply_impulse(",
                    "method apply_torque(", "method apply_torque_impulse(", "method set_axis_velocity(",

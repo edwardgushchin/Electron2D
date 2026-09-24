@@ -202,8 +202,8 @@ public sealed partial class RigidBody
 
     private void WakeForPersistentForce()
     {
-        _sleeping = false;
         if (HasBackend && !_freeze) b2Body_SetAwake(BackendID, true);
+        else _sleeping = false;
     }
 
     private static void ValidateForceAndPosition(Vector2 force, Vector2 position)

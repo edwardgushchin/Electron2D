@@ -188,7 +188,7 @@ public sealed partial class RigidBody : PhysicsBody
     public bool Sleeping
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasBackend ? !b2Body_IsAwake(BackendID) : _sleeping; }
-        set { EnsureMutable(); _sleeping = value; if (HasBackend) b2Body_SetAwake(BackendID, !value); }
+        set { EnsureMutable(); _sleeping = value; _sleepChangePending = false; if (HasBackend) b2Body_SetAwake(BackendID, !value); }
     }
 
     /// <summary>Applies a finite force at the center of mass during the current physics step.</summary>
@@ -243,7 +243,9 @@ public sealed partial class RigidBody : PhysicsBody
         var velocity = b2Body_GetLinearVelocity(BackendID);
         _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter, velocity.Y * PhysicsSpace.UnitsPerMeter);
         _angularVelocity = b2Body_GetAngularVelocity(BackendID);
-        _sleeping = !b2Body_IsAwake(BackendID);
+        var sleeping = !b2Body_IsAwake(BackendID);
+        if (sleeping != _sleeping) _sleepChangePending = true;
+        _sleeping = sleeping;
     }
 
     internal void ApplyAreaFields(Vector2 gravity, float linearDamp, float angularDamp,
@@ -287,7 +289,7 @@ public sealed partial class RigidBody : PhysicsBody
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(BodyProperties).Concat(ForceProperties);
+        base.GetPropertyDescriptors().Concat(BodyProperties).Concat(ForceProperties).Concat(ContactProperties);
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(RigidBody)

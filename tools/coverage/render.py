@@ -582,6 +582,8 @@ def render():
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
         updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "CompressedTexture2D", "Font", "FontFile", "FontVariation", "ImageFormatLoader", "ImageFormatLoaderExtension", "PortableCompressedTexture2D", "ResourceFormatLoader", "ResourceLoader", "ResourceSaver", "SystemFont", "VideoStream", "VideoStreamPlayback", "VideoStreamTheora", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or name in PHYSICS_AUDITED_TYPES or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        if name == "RigidBody2D":
+            updated = "2026-09-25"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
@@ -692,7 +694,7 @@ def render():
     engine_only = [entry for entry in engine if entry["id"] not in used_engine]
     if len(used_engine) + len(engine_only) != len(engine):
         raise ValueError("Electron2D accounting mismatch")
-    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-24", "",
+    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-09-25", "",
              "These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.", "",
              "| Godot API | Electron2D API | State | Reason / next action |", "| --- | --- | --- | --- |"]
     for entry in engine_only:
@@ -701,7 +703,7 @@ def render():
         reason = f"Electron2D-specific: {extra['reason']} ({extra.get('adr', 'class reference')})." if extra else "Audit the corresponding type family; document a typed-C# rationale or link the exact upstream row."
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
-    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-24", "",
+    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-09-25", "",
                f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
@@ -711,7 +713,7 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Start with the independent " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " class slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-09-24", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-09-25", "",
             "The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Review {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",

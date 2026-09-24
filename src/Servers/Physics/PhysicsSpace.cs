@@ -19,15 +19,19 @@ internal sealed class PhysicsSpace : IDisposable
     private readonly List<Area> _areas = [];
     private readonly List<Area> _fieldAreas = [];
     private readonly List<OverlapEvent> _overlapEvents = [];
+    private readonly List<ContactEvent> _contactEvents = [];
+    private readonly List<RigidBody> _sleepEvents = [];
     private readonly B2WorldId _worldID;
     private readonly Vector2 _defaultGravity;
     private readonly float _defaultLinearDamp;
     private readonly float _defaultAngularDamp;
     private bool _stepping;
     private bool _dispatching;
+    private bool _dispatchingContacts;
     private bool _disposed;
 
     internal readonly record struct OverlapEvent(Area Area, CollisionObject Other, bool Entered);
+    internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsBody Other, bool Entered);
 
     internal PhysicsSpace()
     {
@@ -61,9 +65,13 @@ internal sealed class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
         if (!_bodies.Remove(body)) return;
+        if (body is RigidBody departing) departing.CaptureBackendSleep();
         body.DetachBackend();
+        if (body is RigidBody removed) removed.ClearContactState();
+        foreach (var other in _bodies)
+            if (other is RigidBody rigid) rigid.ForgetContact(body, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
-        DispatchOverlapEvents();
+        DispatchEvents();
     }
 
     internal void Add(Area area)
@@ -83,7 +91,7 @@ internal sealed class PhysicsSpace : IDisposable
         area.DetachBackend();
         area.ClearOverlaps();
         foreach (var other in _areas) other.Forget(area, _overlapEvents);
-        DispatchOverlapEvents();
+        DispatchEvents();
     }
 
     internal void Step(double delta)
@@ -106,11 +114,17 @@ internal sealed class PhysicsSpace : IDisposable
                 try { body.CompleteBackend(); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
+            foreach (var body in _bodies)
+            {
+                if (body is not RigidBody rigid) continue;
+                if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
+                rigid.CollectContacts(this, _contactEvents);
+            }
             ScanAreas();
         }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally { _stepping = false; }
-        try { DispatchOverlapEvents(); }
+        try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
     }
@@ -119,12 +133,19 @@ internal sealed class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
-        foreach (var body in _bodies) body.DetachBackend();
+        foreach (var body in _bodies)
+        {
+            if (body is RigidBody departing) departing.CaptureBackendSleep();
+            body.DetachBackend();
+            if (body is RigidBody rigid) rigid.ClearContactState();
+        }
         foreach (var area in _areas) { area.DetachBackend(); area.ClearOverlaps(); }
         _bodies.Clear();
         _areas.Clear();
         _fieldAreas.Clear();
         _overlapEvents.Clear();
+        _contactEvents.Clear();
+        _sleepEvents.Clear();
         b2DestroyWorld(_worldID);
         _disposed = true;
     }
@@ -246,6 +267,56 @@ internal sealed class PhysicsSpace : IDisposable
             }
         }
         return false;
+    }
+
+    internal PhysicsBody? FindBody(B2BodyId id)
+    {
+        // ponytail: Linear lookup is sufficient for small scenes; index body IDs if contact-heavy worlds show a measured cost.
+        foreach (var body in _bodies)
+            if (body.BackendID == id) return body;
+        return null;
+    }
+
+    private void DispatchEvents()
+    {
+        List<Exception>? errors = null;
+        try { DispatchContactEvents(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        try { DispatchOverlapEvents(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        if (errors is not null) throw new AggregateException("Physics callbacks failed.", errors);
+    }
+
+    private void DispatchContactEvents()
+    {
+        if (_dispatchingContacts || (_sleepEvents.Count == 0 && _contactEvents.Count == 0)) return;
+        _dispatchingContacts = true;
+        List<Exception>? errors = null;
+        try
+        {
+            foreach (var body in _sleepEvents)
+            {
+                if (!body.IsInsideTree) continue;
+                try { body.RaiseSleepingStateChanged(); }
+                catch (Exception error) { (errors ??= []).Add(error); }
+            }
+            _sleepEvents.Clear();
+            for (var index = 0; index < _contactEvents.Count; index++)
+            {
+                var change = _contactEvents[index];
+                if (!change.Receiver.IsInsideTree || !change.Receiver.ContactMonitor ||
+                    (change.Entered && !change.Receiver.ContainsContact(change.Other))) continue;
+                try { change.Receiver.RaiseContact(change.Other, change.Entered); }
+                catch (Exception error) { (errors ??= []).Add(error); }
+            }
+        }
+        finally
+        {
+            _sleepEvents.Clear();
+            _contactEvents.Clear();
+            _dispatchingContacts = false;
+        }
+        if (errors is not null) throw new AggregateException("Rigid-body contact callbacks failed.", errors);
     }
 
     private void DispatchOverlapEvents()

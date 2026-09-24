@@ -1,16 +1,16 @@
 # RigidBody
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
-- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs)
+- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
 - **Declaration:** `public sealed partial class RigidBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
 ## Description
 
-A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms and velocities return to the scene before timers, tweens and interpolation capture.
+A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms, velocities and contact snapshots return to the scene before contact, sleep and area callbacks, timers, tweens and interpolation capture.
 
 ## Example
 
@@ -40,6 +40,8 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public PhysicsMaterial? PhysicsMaterialOverride { get; set; }` | null | Borrows a surface material for every child fixture. |
 | `public Vector2 ConstantForce { get; set; }` | (0, 0) | Persistent center force in scene units times kilograms/s². |
 | `public float ConstantTorque { get; set; }` | 0 | Persistent torque in kilograms times squared scene units/s². |
+| `public bool ContactMonitor { get; set; }` | false | Enables body entry/exit reports when the contact cap is positive. |
+| `public int MaxContactsReported { get; set; }` | 0 | Bounds reported contact points per fixed step. |
 
 ## Methods and extension points
 
@@ -57,6 +59,10 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public void AddConstantForce(Vector2 force, Vector2 position = default)` | Accumulates force and its current offset moment across later steps. |
 | `public void AddConstantTorque(float torque)` | Accumulates persistent torque. |
 | `public void SetAxisVelocity(Vector2 axisVelocity)` | Replaces only the velocity component along the supplied axis. |
+| `public int GetContactCount()` | Returns reported contact points from the last step. |
+| `public Entity[] GetCollidingBodies()` | Returns a caller-owned array of currently reported scene bodies. |
+| `public event Action<Node>? BodyEntered` / `BodyExited` | Reports object-level contact transitions after the solver step. |
+| `public event Action<RigidBody>? SleepingStateChanged` | Reports a solver-driven sleep-state transition. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored body motion, material and persistent-force state to scene descriptors. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Recreates the exact body type for PackedScene. |
 
@@ -116,8 +122,27 @@ The supplied vector gives both axis direction and replacement speed. The method 
 
 The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) sets friction, bounce and their mixing modifiers for every child fixture. Without an override, friction is one and bounce is zero. Assigning a disposed material throws before changing the current override; disposing the borrowed material resets the property to null. Assignment or a resource edit rebuilds fixtures before the next fixed step. The caller owns the resource.
 
+<a id="contactmonitor"></a>
+<a id="maxcontactsreported"></a>
+<a id="getcontactcount"></a>
+<a id="getcollidingbodies"></a>
+### Contact monitoring and queries
+
+`MaxContactsReported=0` is the default and reports no points. A positive value caps the sum of current touching manifold points. `GetContactCount()` reads that last fixed-step count even when `ContactMonitor=false`; `GetCollidingBodies()` and body entry/exit events additionally require monitoring. Body results deduplicate multiple contacting shape pairs. Enabling monitoring while already touching reports a new entry on the next step; disabling it clears the object snapshot immediately without synthesizing exits. A negative cap rejects before mutation. Attached queries and setters require the scene owner thread. The current typed body array covers `PhysicsBody` scene nodes; tile-map virtual collision bodies and exact reference contact selection when over the cap remain Partial coverage gaps.
+
+<a id="bodyentered"></a>
+<a id="bodyexited"></a>
+### `BodyEntered` and `BodyExited`
+
+Callbacks run after the backend step and after the object snapshot commits, before area-monitor events and timers. The argument is the other `Node`. An event fires once per other body even if multiple shapes touch. Disabling `ContactMonitor` inside a contact callback throws without changing it; the callback may remove a collider, which clears the snapshot and queues one exit without another step. Exceptions from one callback are aggregated after later queued events are attempted. The current event payload does not represent absent tile-map virtual collision bodies; per-shape RID/index events require a separate typed identity slice.
+
+<a id="sleepingstatechanged"></a>
+### `SleepingStateChanged`
+
+The event carries this RigidBody and fires when the solver changes its sleep state. Assigning `Sleeping` directly does not emit it. Solver sleep transitions are queued before object-level contact transitions; a throwing handler does not prevent later queued contact and area callbacks.
+
 ## Ownership, limits and verification
 
-SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state, repeated rotation and 64 warmed active force/torque frames with zero managed allocations on Linux/.NET 8.
+SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
 
-Contact monitor events, `PhysicsDirectBodyState`, custom center of mass/inertia, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADR 0057](../decisions/physics.md#adr-0057) records the force boundary.
+Shape-index contact events, tile-map virtual body reporting, exact capped-contact selection, `PhysicsDirectBodyState`, custom center of mass/inertia, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.

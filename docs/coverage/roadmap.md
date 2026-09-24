@@ -1,11 +1,11 @@
 # Coverage roadmap
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1254 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 982 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatableBody2D](classes/AnimatableBody2D.md), [CapsuleShape2D](classes/CapsuleShape2D.md), [CharacterBody2D](classes/CharacterBody2D.md), [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md), [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [SegmentShape2D](classes/SegmentShape2D.md), [SeparationRayShape2D](classes/SeparationRayShape2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) class slices.
+1. Review 1259 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 973 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatableBody2D](classes/AnimatableBody2D.md), [CapsuleShape2D](classes/CapsuleShape2D.md), [CharacterBody2D](classes/CharacterBody2D.md), [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md), [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [SegmentShape2D](classes/SegmentShape2D.md), [SeparationRayShape2D](classes/SeparationRayShape2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -20,8 +20,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [Control](classes/Control.md) | 35 | 60 |
 | [Object](classes/Object.md) | 34 | 22 |
 | [CollisionObject2D](classes/CollisionObject2D.md) | 27 | 0 |
-| [RigidBody2D](classes/RigidBody2D.md) | 24 | 0 |
 | [Engine](classes/Engine.md) | 16 | 18 |
+| [RigidBody2D](classes/RigidBody2D.md) | 15 | 5 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
 | [SceneState](classes/SceneState.md) | 12 | 16 |

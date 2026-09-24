@@ -471,7 +471,7 @@ public sealed partial class SceneTree : MainLoop
     /// <summary>Runs one host-driven physics-process frame, scene simulation and area monitoring, physics timers, physics tweens, and one deferred safe point.</summary>
     /// <param name="delta">Elapsed physics-step time in seconds; it must be finite and non-negative.</param>
     /// <remarks>Attached bodies and areas use the internal physics world after node callbacks. Current area field overlaps
-    /// resolve gravity and damping, then persistent body force and torque apply before solver stepping; area monitoring snapshots and events follow body synchronization
+    /// resolve gravity and damping, then persistent body force and torque apply before solver stepping; body contact/sleep reports and area monitoring follow body synchronization
     /// and precede timers, tweens and interpolation end capture. Zero delta does not advance either path.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The method is called off the owner thread, re-entered, called before initialization or after finalization, or called during node lifecycle or pause delivery.</exception>

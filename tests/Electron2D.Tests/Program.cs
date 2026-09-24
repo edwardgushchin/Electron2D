@@ -192,6 +192,7 @@ PhysicsMaterialTests.Run();
 AreaTests.Run();
 PhysicsAreaFieldTests.Run();
 RigidBodyForceTests.Run();
+RigidBodyContactTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

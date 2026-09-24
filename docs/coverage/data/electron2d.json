@@ -17458,6 +17458,45 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.RigidBody.BodyEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "BodyEntered",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E BodyEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RigidBody.BodyExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "BodyExited",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E BodyExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RigidBody.SleepingStateChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "SleepingStateChanged",
+    "signature": "public event System.Action\u003CElectron2D.RigidBody\u003E SleepingStateChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RigidBody\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.SceneTree.NodeAdded()",
     "kind": "event",
     "declaringType": "Electron2D.SceneTree",
@@ -43966,6 +44005,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RigidBody.GetCollidingBodies()",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "GetCollidingBodies",
+    "signature": "public Electron2D.Entity[] GetCollidingBodies()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Entity[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.GetContactCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "GetContactCount",
+    "signature": "public System.Int32 GetContactCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RigidBody.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RigidBody",
@@ -65705,6 +65770,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RigidBody.ContactMonitor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ContactMonitor",
+    "signature": "public System.Boolean ContactMonitor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RigidBody.Freeze()",
     "kind": "property",
     "declaringType": "Electron2D.RigidBody",
@@ -65793,6 +65871,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.MaxContactsReported()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "MaxContactsReported",
+    "signature": "public System.Int32 MaxContactsReported { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
