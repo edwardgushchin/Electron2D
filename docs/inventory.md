@@ -9,6 +9,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
 | [Core](domains/core.md) | [Object lifecycle](components/object-lifecycle.md) | [`ElectronObject`](classes/ElectronObject.md) | [`ElectronObject.cs`](../src/Core/Object/ElectronObject.cs) | Current | Implemented and verified |
+| [Core](domains/core.md) | [Object lifecycle](components/object-lifecycle.md) | [`WeakRef<T>`](classes/WeakRef.Generic.md) | [`WeakRef.cs`](../src/Core/Object/WeakRef.cs) | Current | Implemented and managed-verified |
 | [Core](domains/core.md) | [Typed event connections](components/event-connections.md) | [`EventConnection`](classes/EventConnection.md) | [`EventConnection.cs`](../src/Core/Object/EventConnection.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Typed editor properties](components/editor-properties.md) | [`PropertyDescriptor`](classes/PropertyDescriptor.md) | [`PropertyDescriptor.cs`](../src/Core/Object/PropertyDescriptor.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Typed editor properties](components/editor-properties.md) | [`PropertyDescriptor<TOwner, TValue>`](classes/PropertyDescriptor.Generic.md) | [`PropertyDescriptor.cs`](../src/Core/Object/PropertyDescriptor.cs) | Current | Implemented and verified |

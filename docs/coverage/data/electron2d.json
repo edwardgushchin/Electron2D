@@ -2984,6 +2984,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.WeakRef\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.WeakRef\u003CT\u003E",
+    "name": "WeakRef\u00601",
+    "signature": "public sealed class Electron2D.WeakRef\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Window",
     "kind": "type",
     "declaringType": "Electron2D.Window",
@@ -6044,6 +6059,25 @@
       {
         "name": "w",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WeakRef\u003CT\u003E..ctor(T)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WeakRef\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public WeakRef\u00601(T target)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "T",
         "default": null
       }
     ],
@@ -48167,6 +48201,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WeakRef\u003CT\u003E.GetRef()",
+    "kind": "method",
+    "declaringType": "Electron2D.WeakRef\u003CT\u003E",
+    "name": "GetRef",
+    "signature": "public T GetRef()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "T",
     "value": null
   },
   {

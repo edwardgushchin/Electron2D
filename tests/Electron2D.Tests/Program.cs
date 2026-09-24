@@ -181,6 +181,7 @@ CanvasStrokeTests.Run();
 CanvasTimingTests.Run();
 VerifyInstanceIds();
 VerifyLifetime();
+WeakRefTests.Run();
 VerifyNotificationsAndProperties();
 VerifyEventConnections();
 VerifyTranslations();

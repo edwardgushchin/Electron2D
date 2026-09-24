@@ -4,8 +4,8 @@ Last updated: 2026-09-24
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1222 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 969 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Review 1221 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 967 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -27,9 +27,9 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [ProjectSettings](classes/ProjectSettings.md) | 10 | 44 |
 | [SceneTree](classes/SceneTree.md) | 9 | 19 |
 | [Viewport](classes/Viewport.md) | 5 | 15 |
-| [FileAccess](classes/FileAccess.md) | 4 | 66 |
 | [Resource](classes/Resource.md) | 4 | 21 |
 | [Material](classes/Material.md) | 3 | 0 |
+| [FileAccess](classes/FileAccess.md) | 2 | 66 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
 | [Polygon2D](classes/Polygon2D.md) | 1 | 13 |
@@ -103,7 +103,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
-| Trigger: an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013). | 1 |
 | Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |

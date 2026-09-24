@@ -3,6 +3,7 @@
     "CanvasItem": "CanvasItem",
     "Geometry2D": "Geometry",
     "Node2D": "Entity",
+    "WeakRef": "WeakRef<T>",
     "Object": "ElectronObject",
     "Rect2": "Rect",
     "Rect2i": "RectI",

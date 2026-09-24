@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -11,6 +11,7 @@ This Core component defines identity, diagnostics, notifications, translation ac
 | Type | Source | Role |
 | --- | --- | --- |
 | [`ElectronObject`](../classes/ElectronObject.md) | [`ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs) | Abstract base for engine objects |
+| [`WeakRef<T>`](../classes/WeakRef.Generic.md) | [`WeakRef.cs`](../../src/Core/Object/WeakRef.cs) | Typed non-owning reference to a live engine object |
 
 ## Current implementation status
 
@@ -37,6 +38,8 @@ The first valid caller atomically changes the state from `Alive` to `Disposing` 
 `PropertyListChanged` and `ScriptChanged` are synchronous typed C# events raised through protected methods. The script-change hook is implemented for the confirmed future scripting component, but no current production type attaches scripts or raises it automatically.
 
 The separate [Typed event connections](event-connections.md) component can own, defer, or consume subscriptions to these events without changing their declarations.
+
+`WeakRef<T>` uses a managed weak reference and returns the original target only while it is reachable and has not begun disposal. Constructing it with null or a disposed target leaves it empty. Disposing the wrapper leaves the target untouched; disposing the target invalidates `GetRef()` immediately, even if the target is still strongly held elsewhere. The [typed weak-reference decision](../decisions/core-object-runtime.md#adr-0050) defines this lifetime boundary.
 
 A failure in notification or cleanup is rethrown after state publication; simultaneous failures become `AggregateException`. A derived type controls when its own event lists are cleared and may leave derived cleanup incomplete if its override throws.
 

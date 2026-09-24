@@ -1,6 +1,6 @@
 # @GlobalScope API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Godot source: [doc/classes/@GlobalScope.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -671,7 +671,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method var_to_bytes(Variant variable) -> PackedByteArray`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |
 | [`method var_to_bytes_with_objects(Variant variable) -> PackedByteArray`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |
 | [`method var_to_str(Variant variable) -> String`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |
-| [`method weakref(Variant obj) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |
+| [`method weakref(Variant obj) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | [`public WeakRef`1(T target)`](../../classes/WeakRef.Generic.md) | Implemented | ADR 0050 projects the object-or-null factory into a typed constructor; non-object values cannot satisfy the generic engine-object constraint. WeakRefTests checks live, null and disposed construction. |
 | [`method wrap(Variant value, Variant min, Variant max) -> Variant`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | [`public static System.Double Wrap(System.Double value, System.Double min, System.Double max)`](../../classes/Mathf.md)<br>[`public static System.Int32 Wrap(System.Int32 value, System.Int32 min, System.Int32 max)`](../../classes/Mathf.md)<br>[`public static System.Single Wrap(System.Single value, System.Single min, System.Single max)`](../../classes/Mathf.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`method wrapf(float value, float min, float max) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |
 | [`method wrapi(int value, int min, int max) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/@GlobalScope.xml) | — | Partial | Global functions/constants/enums are distributed across typed C# declarations; audit each row. |

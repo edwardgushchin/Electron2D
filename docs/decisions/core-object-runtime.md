@@ -265,3 +265,34 @@ Managed checks use deterministic deltas to cover state transitions, ordering, fa
 - [Godot Engine implementation](https://github.com/godotengine/godot/blob/master/core/config/engine.cpp)
 - [Godot main timer synchronizer](https://github.com/godotengine/godot/blob/master/main/main_timer_sync.cpp)
 - [Godot main iteration](https://github.com/godotengine/godot/blob/master/main/main.cpp)
+
+<a id="adr-0050"></a>
+## ADR 0050: Typed weak references to engine objects
+
+Last updated: 2026-09-24
+
+### Status
+
+Accepted.
+
+### Context
+
+The reference weak-reference utility observes an engine object by identity without extending its lifetime and returns null after destruction. Electron2D uses managed memory and deterministic `Dispose`; a plain BCL weak reference can still return an object after its logical engine lifetime has ended.
+
+### Decision
+
+`WeakRef<T> : ElectronObject`, with `T : ElectronObject`, owns a standard `System.WeakReference<T>` and no target resource. Its constructor is the typed C# projection of the reference weakref factory and accepts null or an already disposed object as an empty reference. `GetRef()` returns the live typed target, or null after target disposal or collection. The returned reference is strong for the caller while held; the wrapper never disposes or retains its target. Disposing the wrapper follows ADR 0003 and rejects later calls.
+
+Only engine objects cross this public weak boundary. Arbitrary CLR object and value types have their ordinary BCL facilities; no universal `Variant` weak container is introduced. Collection timing remains controlled by the .NET GC; deterministic disposal makes a target unavailable immediately even while a strong managed reference still exists.
+
+### Consequences and verification limits
+
+- The type is executable without a renderer, platform service, package, or separate assembly.
+- A target can be disposed concurrently after `GetRef()` checks it; callers still validate the target before a later mutation.
+- Managed tests cover live identity, null/disposed targets, wrapper disposal and GC collection. Native-host and other-platform acceptance remains separate.
+
+### Related decisions
+
+- [0001: Typed C# without Variant](product.md#adr-0001)
+- [0003: Deterministic object lifetime](core-object-runtime.md#adr-0003)
+- [0013: Resource ownership](resources.md#adr-0013)
