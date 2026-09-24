@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -167,6 +167,8 @@ local-resource prefix; otherwise `false`.
 ### `public Node GetLocalScene()`
 
 Gets the root node whose scene instance owns this scene-local resource.
+
+Replacing a packed-scene root with `Node.ReplaceBy` transfers the association to the replacement, so disposing the old root does not invalidate the resource.
 
 **Returns:** The owning scene root after scene instantiation, or `null` for other resources.
 
@@ -456,7 +458,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 [`PackedScene`](PackedScene.md) creates one graph-preserving duplication session per scene instance. A directly stored resource is duplicated when `ResourceLocalToScene` is true. Within a duplicated local graph, nested resources are duplicated when local-to-scene or built-in; external non-local resources remain shared. Repeated references and cycles resolve to the same duplicate.
 
-Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The obsolete compatibility event runs before `OnSetupLocalToScene()` and each local duplicate is set up once. After successful setup, the root adopts every resource created by the session, including non-local built-in duplicates reached inside the graph. Root disposal disposes those resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared source/external resources are never owned or disposed by the instance.
+Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The obsolete compatibility event runs before `OnSetupLocalToScene()` and each local duplicate is set up once. After successful setup, the root adopts every resource created by the session, including non-local built-in duplicates reached inside the graph. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared source/external resources are never owned or disposed by the instance.
 
 ## Path lifecycle and invariants
 

@@ -46,6 +46,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.
 - Scene-local duplication preserves graph identity. External non-local resources remain shared; created duplicates are owned and disposed by the returned root.
+- Replacing an instantiated root through `Node.ReplaceBy` transfers ownership of created resources and their local-scene association to the replacement; disposing the old root leaves them alive.
 - Null pack input preserves old data. A failure after capture begins leaves data empty. Instantiation failure never returns a partial hierarchy; rollback cleanup itself may fail and is then reported in the aggregate.
 - Callback and cleanup exceptions are not swallowed; multiple failures are aggregated after all owned cleanup is attempted.
 

@@ -6,15 +6,17 @@ Last updated: 2026-09-24
 
 **Inherited By:** [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
-- **Source:** [Node.cs](../../src/Scene/Main/Node.cs)
+- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public class Node : ElectronObject`
+- **Declaration:** `public partial class Node : ElectronObject`
 
 ## Description
 
 The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
+
+`ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Group copying is optional; owned descendants and scene-local resources follow the replacement.
 
 ## Examples
 
@@ -117,6 +119,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool RemoveChild(Node child)`](#m-electron2d-node-removechild-electron2d-scenenode) | Removes a direct child without disposing it. |
 | [`public bool RemoveFromGroup(string group)`](#m-electron2d-node-removefromgroup-system-string) | Removes this node from a case-sensitive group. |
 | [`public virtual void Reparent(Node newParent, bool keepGlobalTransform = true)`](#m-electron2d-node-reparent-electron2d-node-system-boolean) | Moves this non-root node under a new parent. |
+| [`public void ReplaceBy(Node node, bool keepGroups = false)`](#m-electron2d-node-replaceby-electron2d-node-system-boolean) | Replaces this node in its parent, transferring children and scene ownership. |
 | [`public void RequestReady()`](#m-electron2d-node-requestready) | Requests ready delivery the next time SceneTree attachment reaches the ready phase. |
 | [`public void SetTranslationDomainInherited()`](#m-electron2d-node-settranslationdomaininherited) | Restores inherited translation domain lookup. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-node-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
@@ -132,6 +135,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public event Action<Node>? ChildOrderChanged`](#e-electron2d-node-childorderchanged) | Occurs after the order or membership of direct children changes. |
 | [`public event Action<Node, Node>? ChildRemoved`](#e-electron2d-node-childremoved) | Occurs on the former parent after a direct child is detached and child order is reported. |
 | [`public event Action<Node>? Ready`](#e-electron2d-node-ready) | Occurs after child-first ready notification delivery. |
+| [`public event Action<Node>? ReplacingBy`](#e-electron2d-node-replacingby) | Occurs after the replacement enters the former parent and before children move. |
 | [`public event Action<Node>? Renamed`](#e-electron2d-node-renamed) | Occurs after an active node's own name changes and path notifications propagate. |
 | [`public event Action<Node>? TreeEntered`](#e-electron2d-node-treeentered) | Occurs when this node enters an active scene tree. |
 | [`public event Action<Node>? TreeExited`](#e-electron2d-node-treeexited) | Occurs after this node has left its scene tree. |
@@ -1043,6 +1047,27 @@ Moves this non-root node under a new parent.
 
 **System.AggregateException:** One or more structural, lifecycle, notification, or event callbacks fail after reparenting begins.
 
+<a id="m-electron2d-node-replaceby-electron2d-node-system-boolean"></a>
+### `public void ReplaceBy(Node node, bool keepGroups = false)`
+
+Replaces this node at its sibling index with a live detached node. The replacement keeps its existing children, then receives this node's direct children in order. Descendants owned by this node become owned by the replacement; other still-valid ancestor owners are restored. A packed-scene root transfers ownership of its scene-local resources and their `GetLocalScene()` association.
+
+**Parameter `node`:** The parentless replacement. It must not conflict with another sibling name or with the names of children to be transferred.
+
+**Parameter `keepGroups`:** Copies group memberships and their persistent flags when true; the default is false.
+
+**Remarks:** The original node remains detached and is not disposed. `ReplacingBy` runs after the replacement enters the former parent and before children move. An active `SceneTree.Root` has stable identity and cannot be replaced. Removing a selected `CurrentScene` or `EditedSceneRoot` clears that selection; callers may select the replacement afterward. Existing typed event subscriptions keep their original targets. Callback failures are collected while structural work continues; a child that cannot enter the replacement is restored under the old node.
+
+**System.ArgumentNullException:** `node` is null.
+
+**System.ArgumentException:** `node` is this node.
+
+**System.InvalidOperationException:** A node is attached, names conflict, a protected lifecycle is running, the active root is selected, or the caller is off the scene owner thread.
+
+**System.ObjectDisposedException:** Either node is disposed.
+
+**System.AggregateException:** One or more structural or lifecycle callbacks fail after replacement begins.
+
 <a id="m-electron2d-node-requestready"></a>
 ### `public void RequestReady()`
 
@@ -1111,6 +1136,11 @@ Occurs on the former parent after a direct child is detached and child order is 
 Occurs after child-first ready notification delivery.
 
 **Remarks:** SceneTree-managed delivery occurs once until `Node.RequestReady` resets the ready state.
+
+<a id="e-electron2d-node-replacingby"></a>
+### `public event Action<Node>? ReplacingBy`
+
+Occurs after the replacement enters the former parent and before children move. The argument is the replacement; the publishing node is already detached. A throwing handler does not stop the remaining transfer, and its exception is included in the final aggregate.
 
 <a id="e-electron2d-node-renamed"></a>
 ### `public event Action<Node>? Renamed`
@@ -1297,7 +1327,7 @@ The parent owns its children; SceneTree owns the active root. PackedScene captur
 
 ## Verification and limits
 
-[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. [NodeLocalizationTests](../../tests/Electron2D.Tests/NodeLocalizationTests.cs) checks inherited/explicit domains, automatic translation modes, root setting, entry/change notifications, callback failure continuation, thread affinity and packed state. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
+[SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. [NodeReplacementTests](../../tests/Electron2D.Tests/NodeReplacementTests.cs) checks sibling order, groups, ownership, selected-scene clearing, scene-local resources, owner-thread rejection and callback failures. [NodeLocalizationTests](../../tests/Electron2D.Tests/NodeLocalizationTests.cs) checks inherited/explicit domains, automatic translation modes, root setting, entry/change notifications, callback failure continuation, thread affinity and packed state. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
 
 The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 

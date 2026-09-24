@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope and types
 
@@ -13,6 +13,8 @@ Last updated: 2026-09-23
 Engine reserves its idle state, opens the native window through DisplayServer and initializes RenderingServer before creating SceneTree. It publishes the tree before ready, drives the native event pump before fixed/process frames, and submits the canvas after scene processing. Cleanup disposes the scene, rendering resources and display in that order. MaxFPS uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run. Window.CloseRequested precedes the default AutoAcceptQuit decision.
 
 Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, four executable policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Window.Position is the native desktop position and is rejected on Wayland. Window declares its own Visible, Show/Hide and VisibilityChanged API; it has no Entity transform or CanvasItem drawing surface; inherited viewport transforms place child canvases. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
+
+Interactive `Window.StartDrag` and `StartResize` remain blocked with their DisplayServer counterparts: SDL hit testing identifies draggable edges but does not start an interactive move or resize. An X11 window-manager request or Wayland xdg_toplevel request with the initiating pointer serial, followed by compositor verification, is required.
 
 Window also forwards effective mouse entry/exit, content-scale changes and completed file-drop snapshots before frame callbacks. Native IME activation/caret placement, taskbar progress requests, decorated geometry, maximization capability and centering are available on Window with the existing platform limits. Signal failures remain visible after the native queue drains; scene and native cleanup still run.
 

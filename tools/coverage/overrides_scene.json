@@ -2632,6 +2632,8 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Node::method:replace_by(Node:,bool:)", "Node::signal:replacing_by(Node:)"], "state": "Implemented", "reason": "NodeReplacementTests covers detached and active replacement, sibling order, callback timing/failure, optional persistent groups, owner remapping, packed-scene local resources, selected-scene clearing, invalid inputs and owner-thread guards. Stable active roots, unique sibling names and typed event subscriptions follow the accepted scene architecture; persistent string-method connection retargeting is unavailable without the excluded dynamic-call model."},
+    {"godot": ["Window::method:start_drag()", "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)"], "state": "Blocked", "reason": "Trigger: first native desktop-operation bridge shared with DisplayServer window_start_drag/window_start_resize: X11 _NET_WM_MOVERESIZE or Wayland xdg_toplevel.move/resize with the initiating pointer-button serial, plus compositor verification. SDL hit testing does not issue an interactive move or resize."},
     {"godot": ["Node::method:get_path_to(Node:,bool:)"], "state": "Implemented", "reason": "Default relative paths and the source-side or target-side owner-scoped unique shortcut follow the pinned node.cpp algorithm. NodeUniqueNameTests covers both branches, shared-root errors, packed instances and path resolution; typed strings and exceptions are the accepted NodePath adaptation."},
     {"godot": ["Node::property:unique_name_in_owner"], "state": "Implemented", "reason": "Owner-scoped percent-name lookup follows the pinned node.cpp claimant rule: the first active claim wins, while a later conflicting setter, rename or owner assignment clears the later flag. NodeUniqueNameTests covers paths, owner boundaries, rename, detach/reparent, PackedScene and owner-thread guards. The lookup uses a subtree scan in the current typed runtime; indexing is a performance follow-up if measured."},
     {"godot": ["Control::property:clip_contents"], "state": "Implemented", "reason": "Direct canvas descendants are clipped by the transformed, axis-aligned Control rectangle; nested clips intersect and top-level or neutral parents end inheritance. The root GUI picker excludes hits outside clipping ancestors, while the parent's own drawing/input remains available for a nonempty clip; an empty clip culls the item. ControlClipTests checks hover, targeting and packed state; ControlClipRenderingTests checks nested, rotated and repeated clipping on dummy compatibility and Linux Wayland compatibility/GPU. General canvas masks and nested viewport routing remain separate gaps."},
@@ -3272,8 +3274,6 @@
         "Window::method:move_to_foreground()",
         "Window::method:reset_size()",
         "Window::method:show()",
-        "Window::method:start_drag()",
-        "Window::method:start_resize(int:DisplayServer.WindowResizeEdge)",
         "Window::property:auto_translate",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",

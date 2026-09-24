@@ -16424,6 +16424,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Node.ReplacingBy()",
+    "kind": "event",
+    "declaringType": "Electron2D.Node",
+    "name": "ReplacingBy",
+    "signature": "public event System.Action\u003CElectron2D.Node\u003E ReplacingBy",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Node.TreeEntered()",
     "kind": "event",
     "declaringType": "Electron2D.Node",
@@ -37571,6 +37584,30 @@
         "name": "keepGlobalTransform",
         "type": "System.Boolean",
         "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.ReplaceBy(Electron2D.Node,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "ReplaceBy",
+    "signature": "public System.Void ReplaceBy(Electron2D.Node node, System.Boolean keepGroups = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "keepGroups",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",

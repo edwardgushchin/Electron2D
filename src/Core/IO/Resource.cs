@@ -191,7 +191,8 @@ public class Resource : ElectronObject
 
     /// <summary>Gets the root node whose scene instance owns this scene-local resource.</summary>
     /// <returns>The owning scene root after scene instantiation, or <see langword="null"/> for other resources.</returns>
-    /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs and remains until disposal.</remarks>
+    /// <remarks>The association is assigned before <see cref="OnSetupLocalToScene"/> runs. Replacing the owning
+    /// root through <see cref="Node.ReplaceBy"/> transfers it to the replacement; otherwise it remains until disposal.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     public Node? GetLocalScene()
     {
@@ -838,6 +839,16 @@ public class Resource : ElectronObject
         {
             ThrowIfDisposed();
             _localScene = root;
+        }
+    }
+
+    internal void ReassignLocalScene(Node oldRoot, Node newRoot)
+    {
+        ThrowIfDisposed();
+        lock (_stateGate)
+        {
+            ThrowIfDisposed();
+            if (ReferenceEquals(_localScene, oldRoot)) _localScene = newRoot;
         }
     }
 

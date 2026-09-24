@@ -26,7 +26,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 
 The Control branch also exposes [`ControlFocusBehaviorRecursive`](../classes/ControlFocusBehaviorRecursive.md) and [`ControlMouseBehaviorRecursive`](../classes/ControlMouseBehaviorRecursive.md) for direct-Control subtree input policy; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
 
-- `Node`: neutral ordered hierarchy, lifecycle, paths/groups including owner-scoped `%Name`, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
+- `Node`: neutral ordered hierarchy, lifecycle, paths/groups including owner-scoped `%Name`, subtree replacement, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged. Z ordering, borrowed material/modulation inheritance and draw-transform state now have managed and Wayland pixel audits; its local transform query is fulfilled by owner-guarded Entity/Control overrides. Other canvas rows retain their own status.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Parallax, ParallaxLayer, Path, PathFollow and RemoteTransform derive directly from it. All 23 own spatial members and its type row have pinned semantic audits, including near-zero scale replacement, reflected-basis direction, point-only global translation, typed relative-chain errors and rotation/skew/angle behavior; inherited canvas and scene gaps remain on their own coverage rows.
 - `RemoteTransform`: borrowed target-path binding and selected local/global spatial transfer through the scene transform-notification lanes.
@@ -64,6 +64,7 @@ The Control branch also exposes [`ControlFocusBehaviorRecursive`](../classes/Con
 
 - `Node` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
+- Replacing a node keeps the active tree root stable, preserves its old sibling index, moves children and eligible owners, and leaves the original node alive but detached. Scene-local resources transfer to the replacement root.
 - An active root can be disposed only by its owning `SceneTree`.
 - Sibling names are ordinal-unique, and path separators/reserved path tokens cannot be names.
 - SceneTree-managed enter runs parent-first, ready runs child-first and once unless explicitly reset, and exit runs child-first. Lifecycle snapshots revalidate membership and lifecycle re-entry is rejected. Constructor failure terminally closes the failed tree, rolls membership and newly consumed ready state back, disposes activation-created timers, and invalidates activation-created tweens; later lifecycle failures complete their state transition and are aggregated. Manual `Notify(int)` dispatch is outside that state machine.

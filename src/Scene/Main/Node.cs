@@ -6,7 +6,7 @@ namespace Electron2D;
 
 /// <summary>Provides tree membership, ownership, lifecycle, processing and input for scene objects.</summary>
 /// <remarks>Children may be any Node subtype. Spatial and drawing behavior belongs to CanvasItem and Entity.</remarks>
-public class Node : ElectronObject
+public partial class Node : ElectronObject
 {
     private static readonly PropertyDescriptor[] SceneNodeProperties =
     [
@@ -755,6 +755,10 @@ public class Node : ElectronObject
     /// <summary>Occurs after child-first ready notification delivery.</summary>
     /// <remarks>SceneTree-managed delivery occurs once until <see cref="RequestReady"/> resets the ready state.</remarks>
     public event Action<Node>? Ready;
+
+    /// <summary>Occurs after a replacement enters the former parent and before this node's children move to it.</summary>
+    /// <remarks>The argument is the live replacement. This node has already left its parent. A callback failure is collected while replacement continues.</remarks>
+    public event Action<Node>? ReplacingBy;
 
     /// <summary>Appends a detached node as the last direct child.</summary>
     /// <param name="child">The live node to adopt.</param>
@@ -1693,6 +1697,7 @@ public class Node : ElectronObject
             TreeExiting = null;
             TreeExited = null;
             Ready = null;
+            ReplacingBy = null;
         }
 
         try

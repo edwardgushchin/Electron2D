@@ -173,6 +173,7 @@ SceneHierarchyTests.Run();
 SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
+NodeReplacementTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();
