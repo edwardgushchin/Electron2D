@@ -4440,6 +4440,45 @@ static void VerifyInput()
                 "Disabling autoremap clears concrete command/control bits and updates copied metadata.");
         }
 
+        using (var motion = new InputEventMouseMotion())
+        using (var button = new InputEventMouseButton())
+        {
+            var deviceProperty = motion.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEvent, int>>()
+                .Single(property => property.Name == nameof(InputEvent.Device));
+            Require(motion.Device == InputEvent.DeviceIdMouse && button.Device == InputEvent.DeviceIdMouse &&
+                    motion.ButtonMask == MouseButtonMask.None && motion.Position == Vector2.Zero &&
+                    motion.GlobalPosition == Vector2.Zero && !motion.PropertyCanRevert(deviceProperty),
+                "Both mouse subclasses inherit the pinned device and value defaults.");
+            motion.Device = 23;
+            motion.RevertProperty(deviceProperty);
+            Require(motion.Device == InputEvent.DeviceIdMouse,
+                "The inherited device descriptor restores the mouse default.");
+
+            var rawMask = MouseButtonMask.Left | (MouseButtonMask)int.MinValue;
+            var observedMask = MouseButtonMask.None;
+            motion.Changed += _ => observedMask = motion.ButtonMask;
+            motion.ButtonMask = rawMask;
+            motion.Position = new Vector2(float.NaN, float.PositiveInfinity);
+            motion.GlobalPosition = new Vector2(float.NegativeInfinity, 7f);
+            using var copiedMotion = (InputEventMouseMotion)motion.Duplicate();
+            Require(observedMask == rawMask && copiedMotion.ButtonMask == rawMask &&
+                    float.IsNaN(copiedMotion.Position.X) && float.IsPositiveInfinity(copiedMotion.Position.Y) &&
+                    float.IsNegativeInfinity(copiedMotion.GlobalPosition.X) && copiedMotion.GlobalPosition.Y == 7f,
+                "Mouse fields preserve arbitrary source bits and coordinates across notification and duplication.");
+            Expect<ArgumentOutOfRangeException>(() => motion.XformedBy(Transform.Identity),
+                "A non-finite local mouse position is rejected at the positional transform boundary.");
+
+            button.ButtonMask = rawMask;
+            button.Position = new Vector2(2f, 3f);
+            button.GlobalPosition = new Vector2(float.NaN, 4f);
+            using var transformedButton = (InputEventMouseButton)button.XformedBy(Transform.Identity);
+            Require(transformedButton.ButtonMask == rawMask &&
+                    float.IsNaN(transformedButton.GlobalPosition.X) && transformedButton.GlobalPosition.Y == 4f &&
+                    transformedButton.Position == button.Position,
+                "Mouse transforms preserve the source global position and bitfield on the button subclass.");
+        }
+
         using (var invalidAction = new InputEventAction())
         using (var invalidKey = new InputEventKey())
         using (var invalidMotion = new InputEventMouseMotion())

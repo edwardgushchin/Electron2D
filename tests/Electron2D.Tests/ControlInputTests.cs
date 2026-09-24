@@ -17,7 +17,14 @@ internal static class ControlInputTests
         child.GUIAction = e =>
         {
             order.Add("child"); borrowed = e;
-            if (e is InputEventMouse mouse) Check(mouse.Position == (mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false } ? new Vector2(75, 75) : new Vector2(2, 3)), "GUI coordinates are local to the child.");
+            if (e is InputEventMouse mouse)
+            {
+                var released = mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false };
+                Check(mouse.Position == (released ? new Vector2(75, 75) : new Vector2(2, 3)),
+                    "GUI coordinates are local to the child.");
+                Check(mouse.GlobalPosition == (released ? new Vector2(90, 90) : new Vector2(17, 18)),
+                    "GUI global coordinates are in the default canvas.");
+            }
         };
         parent.GUIInput += e => { order.Add("parent"); if (e is InputEventMouse mouse) Check(mouse.Position == (mouse is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false } ? new Vector2(80, 80) : new Vector2(7, 8)), "Parent receives its own local copy."); };
         observer.UnhandledAction = _ => order.Add("unhandled");
@@ -94,7 +101,44 @@ internal static class ControlInputTests
         Check(!copy.MouseForcePassScrollEvents && ((Control)copy.GetChild(0)).FocusMode == ControlFocusMode.Click,
             "Packed controls retain GUI input and focus policy.");
         FocusContract();
+        CanvasLayerMouseCoordinates();
         Console.WriteLine("Control GUI input routing checks passed.");
+    }
+
+    private static void CanvasLayerMouseCoordinates()
+    {
+        var root = new TestViewport();
+        var layer = new CanvasLayer { Transform = new Transform(0f, new Vector2(20f, 10f)) };
+        var control = new Control { Position = new Vector2(5f, 8f), Size = new Vector2(20f, 20f) };
+        root.AddChild(layer);
+        layer.AddChild(control);
+        using var tree = new SceneTree(root);
+        var calls = 0;
+        InputEvent? delivered = null;
+        control.GUIInput += inputEvent =>
+        {
+            calls++;
+            delivered = inputEvent;
+            Check(inputEvent is InputEventMouse mouse && mouse.Position == new Vector2(3f, 4f) &&
+                mouse.GlobalPosition == new Vector2(8f, 12f),
+                "GUI mouse coordinates separate Control-local position from CanvasLayer-global position.");
+        };
+        using var source = new InputEventMouseMotion
+        {
+            Position = new Vector2(28f, 22f),
+            GlobalPosition = new Vector2(999f, 999f),
+        };
+        root.PushInput(source, inLocalCoordinates: true);
+        Check(calls == 1 && delivered!.IsDisposed && source.GlobalPosition == new Vector2(999f, 999f),
+            "CanvasLayer GUI dispatch owns its corrected copy and leaves the borrowed source unchanged.");
+
+        layer.Transform = new Transform(new Vector2(1e-20f, 0f), Vector2.Down, Vector2.Zero);
+        control.Scale = new Vector2(1e20f, 1f);
+        control.Size = new Vector2(float.MaxValue, 20f);
+        using var extreme = new InputEventMouseMotion { Position = new Vector2(1e20f, 10f) };
+        Reject<AggregateException>(() => root.PushInput(extreme, inLocalCoordinates: true));
+        Check(calls == 1 && !extreme.IsDisposed,
+            "Overflow in derived CanvasLayer-global coordinates rejects delivery without taking the source.");
     }
 
     private static void FocusContract()

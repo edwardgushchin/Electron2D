@@ -3,9 +3,6 @@ namespace Electron2D;
 /// <summary>Provides position, button-mask, and modifier state shared by mouse events.</summary>
 public abstract class InputEventMouse : InputEventWithModifiers
 {
-    private const MouseButtonMask SupportedButtons = MouseButtonMask.Left | MouseButtonMask.Right |
-        MouseButtonMask.Middle | MouseButtonMask.XButton1 | MouseButtonMask.XButton2;
-
     private static readonly IReadOnlyList<PropertyDescriptor> MouseProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
@@ -25,45 +22,36 @@ public abstract class InputEventMouse : InputEventWithModifiers
     }
 
     /// <summary>Gets or sets the buttons held while this event occurred.</summary>
-    /// <value>A bitwise combination of non-wheel mouse buttons.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains unknown bits.</exception>
+    /// <value>The source button bitfield, normally a combination of the five named non-wheel mouse-button bits.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public MouseButtonMask ButtonMask
     {
         get { ThrowIfDisposed(); return _buttonMask; }
-        set
-        {
-            ThrowIfDisposed();
-            if ((value & ~SupportedButtons) != 0)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "The mouse-button mask contains unknown bits.");
-            _buttonMask = value;
-            EmitInputChanged();
-        }
+        set { ThrowIfDisposed(); _buttonMask = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets the pointer position in the current local coordinate space.</summary>
-    /// <value>A finite position in pixels.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source local position in pixels, retained without normalization.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Position
     {
         get { ThrowIfDisposed(); return _position; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _position = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _position = value; EmitInputChanged(); }
     }
 
     /// <summary>Gets or sets the pointer position in the containing window or viewport coordinate space.</summary>
-    /// <value>A finite position in pixels that is preserved by <see cref="InputEvent.XformedBy"/>.</value>
+    /// <value>The source viewport or canvas position in pixels, preserved by <see cref="InputEvent.XformedBy"/>.</value>
     /// <remarks>Raw host events use client coordinates. Viewport localization sets this to the localized Position;
-    /// subsequent CanvasItem.MakeInputLocal preserves that viewport position.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// CanvasItem.MakeInputLocal preserves that viewport position. Control GUI delivery sets its temporary copy to
+    /// the receiving canvas layer's coordinates.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 GlobalPosition
     {
         get { ThrowIfDisposed(); return _globalPosition; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _globalPosition = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _globalPosition = value; EmitInputChanged(); }
     }
 
     /// <inheritdoc />

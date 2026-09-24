@@ -1409,6 +1409,12 @@ public sealed partial class SceneTree : MainLoop
                     try
                     {
                         using var local = current.MakeInputLocal(mouse);
+                        if (local is InputEventMouse localMouse)
+                        {
+                            var canvasPosition = current.GetCanvasTransform().AffineInverse() * mouse.Position;
+                            if (!canvasPosition.IsFinite()) throw new ArgumentOutOfRangeException(nameof(mouse), "Canvas input coordinates must be finite.");
+                            localMouse.GlobalPosition = canvasPosition;
+                        }
                         current.DispatchGUIInput(local);
                     }
                     catch (Exception error) { CollectException(ref errors, error); }

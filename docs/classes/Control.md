@@ -166,7 +166,7 @@ Queries return a borrowed Control or null when detached or no eligible target ex
 
 ### `HasPoint`, `OnGUIInput`, `GUIInput`, `AcceptEvent`
 
-The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, Size.Y)` by default and can define a custom hit shape. Pointer events are copied into each receiving Control's local coordinates; `OnGUIInput` runs before the `GUIInput` event. The local event is borrowed only during the callback. `AcceptEvent` forwards to the active scene handled flag and throws outside input delivery. Callback failures are collected while eligible parent and later Node callbacks continue.
+The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, Size.Y)` by default and can define a custom hit shape. Pointer events are copied into each receiving Control's local coordinates; their `GlobalPosition` is in the receiving CanvasLayer's coordinates. `OnGUIInput` runs before the `GUIInput` event. The local event is borrowed only during the callback. `AcceptEvent` forwards to the active scene handled flag and throws outside input delivery. Callback failures are collected while eligible parent and later Node callbacks continue.
 
 ### `GetAnchor(Side side)`, `SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)`
 

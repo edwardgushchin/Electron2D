@@ -18,7 +18,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 
 - `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, native mouse mode/cursor controls and warp, and release-all.
 - `InputMap`: action registration, default `ui_*` focus navigation bindings, typed project-action loading and its loaded event, deadzones, binding management, matching, and descriptions.
-- `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads. Gesture payloads retain source values; native magnify/pan recognition remains absent.
+- `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads. Gesture and mouse payloads retain source values; native magnify/pan recognition remains absent. Root GUI mouse copies use CanvasLayer-global coordinates.
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
 - `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, hover, focus ownership/notification, action navigation and handled propagation.

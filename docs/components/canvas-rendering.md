@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope and owned types
 
@@ -141,7 +141,7 @@ Typed Node diagnostics also cover AnimatedSprite missing-library warnings and re
 
 The root composition is `framebufferScale * Viewport.GetFinalTransform() * Viewport.CanvasTransform * nodeAndDrawingTransforms`. GetFinalTransform is GlobalCanvasTransform while content stretch is unimplemented. Live viewport transforms update retained geometry on the next submission on GPU and compatibility, including material shaders; logical Entity state, transform notifications and drawing invalidation are unchanged. TopLevel and neutral-parent roots still receive viewport transforms.
 
-SceneTree removes only the final transform from incoming client input. Mouse GlobalPosition becomes the resulting viewport Position; local motion vectors use the inverse basis, while screen motion and pan delta remain unchanged. CanvasItem.MakeInputLocal/MakeCanvasPositionLocal then remove CanvasTransform and the item's logical global transform. Positional event copies are scoped to synchronous viewport dispatch; explicit item conversion returns a caller-owned copy. A different InstanceID does not carry the source event's by-event action identity. Conversion rejects derived nonfinite event coordinates before allocation.
+SceneTree removes only the final transform from incoming client input. Mouse GlobalPosition becomes the resulting viewport Position; local motion vectors use the inverse basis, while screen motion and pan delta remain unchanged. CanvasItem.MakeInputLocal/MakeCanvasPositionLocal then remove CanvasTransform and the item's logical global transform. For Control GUI delivery, the temporary mouse copy also receives a CanvasLayer-local GlobalPosition; ordinary item conversion preserves the viewport value. Positional event copies are scoped to synchronous viewport dispatch; explicit item conversion returns a caller-owned copy. A different InstanceID does not carry the source event's by-event action identity. Conversion rejects derived nonfinite event coordinates before allocation.
 
 Viewport.GetMousePosition polls fractional native client coordinates and removes the final transform, returning zero for a singular final matrix. CanvasItem global/local pointer queries further remove canvas/node transforms; other singular inverse queries throw. CanvasItem.GetScreenTransform adds desktop placement and therefore rejects use on Wayland. Viewport.GetScreenTransform excludes desktop placement. WarpMouse applies the final transform, validates/truncates native units and preserves platform capability failures. Both viewport transform properties start at identity and are not stored by PackedScene.
 
