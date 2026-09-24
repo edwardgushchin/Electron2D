@@ -9145,9 +9145,12 @@ static void VerifyTweens()
     tree.ProcessFrame(0.1d);
     Require(target.Position == new Vector2(10f, 20f) &&
             eventLog.SequenceEqual(["property", "step:0", "callback", "step:1", "finished"]) &&
-            !sequential.IsValid() && !sequential.IsRunning() && sequential.HasTweeners() && sequential.GetLoopsLeft() == 0 &&
-            tree.GetProcessedTweens().Count == 0,
-        "Sequential steps and completion events must run in order and invalidate after final delivery.");
+            sequential.IsValid() && !sequential.IsRunning() && sequential.HasTweeners() && sequential.GetLoopsLeft() == 0 &&
+            tree.GetProcessedTweens().SequenceEqual([sequential]),
+        "The finishing step must deliver events while the stopped tween remains registered.");
+    tree.ProcessFrame(0.1d);
+    Require(!sequential.IsValid() && !sequential.HasTweeners() && tree.GetProcessedTweens().Count == 0,
+        "The next matching frame must unregister and clear a finished tween.");
     Expect<InvalidOperationException>(() => sequential.TweenInterval(1d),
         "An invalid tween must reject new tweeners.");
 
@@ -9163,8 +9166,10 @@ static void VerifyTweens()
     tree.ProcessFrame(0.5d);
     Require(parallel.IsValid(), "An exact parallel-step boundary must defer the following step.");
     tree.ProcessFrame(0.1d);
-    Require(eventLog[^1] == "after-parallel" && !parallel.IsValid(),
+    Require(eventLog[^1] == "after-parallel" && parallel.IsValid() && !parallel.IsRunning(),
         "Chain must restore sequential appending after a parallel group.");
+    tree.ProcessFrame(0.1d);
+    Require(!parallel.IsValid(), "A finished parallel sequence must leave the tree on the following frame.");
 
     var oneShotLog = new List<string>();
     var oneShot = tree.CreateTween();
@@ -9175,8 +9180,10 @@ static void VerifyTweens()
     Require(oneShotLog.SequenceEqual(["paired"]), "Parallel must join only the next append.");
     tree.ProcessFrame(0.5d);
     tree.ProcessFrame(0.1d);
-    Require(oneShotLog.SequenceEqual(["paired", "later"]) && !oneShot.IsValid(),
+    Require(oneShotLog.SequenceEqual(["paired", "later"]) && oneShot.IsValid() && !oneShot.IsRunning(),
         "A later append must return to sequential grouping.");
+    tree.ProcessFrame(0.1d);
+    Require(!oneShot.IsValid(), "The one-shot grouping tween must leave on the next frame.");
 
     var firstCurve = 0d;
     var secondCurve = 0d;
@@ -9205,6 +9212,97 @@ static void VerifyTweens()
     Require(target.Position == new Vector2(6f, 0f) && DoubleNearlyEqual(restart.GetTotalElapsedTime(), 0.5d),
         "Stop and Play must restart property interpolation from the then-current value.");
     restart.Kill();
+
+    var suspended = tree.CreateTween();
+    Require(suspended.IsValid() && suspended.IsRunning() && !suspended.HasTweeners() &&
+            suspended.GetTotalElapsedTime() == 0d,
+        "A new tween must be registered and running before any tweener is appended.");
+    suspended.TweenInterval(1d);
+    tree.ProcessFrame(0.25d);
+    suspended.Pause();
+    tree.ProcessFrame(0.5d);
+    Require(suspended.IsValid() && !suspended.IsRunning() && DoubleNearlyEqual(suspended.GetTotalElapsedTime(), 0.25d) &&
+            tree.GetProcessedTweens().Contains(suspended),
+        "Pause must retain the current step and elapsed time while the tree keeps the tween registered.");
+    suspended.Play();
+    tree.ProcessFrame(0.25d);
+    Require(suspended.IsRunning() && DoubleNearlyEqual(suspended.GetTotalElapsedTime(), 0.5d),
+        "Play must resume the paused step without resetting elapsed time.");
+    suspended.Kill();
+    suspended.Kill();
+    var killedSnapshot = tree.GetProcessedTweens();
+    Require(!suspended.IsValid() && !suspended.IsRunning() && suspended.HasTweeners() &&
+            tree.GetProcessedTweens().Contains(suspended),
+        "Kill must be idempotent, invalidate immediately and retain its registry entry until a matching step.");
+    suspended.Stop();
+    suspended.Pause();
+    Require(!suspended.IsValid() && !suspended.IsRunning() && suspended.HasTweeners() &&
+            !suspended.CustomStep(0.1d) && tree.GetProcessedTweens().Contains(suspended),
+        "Stop, Pause and CustomStep on an invalid tween must not restore registration.");
+    Expect<InvalidOperationException>(suspended.Play,
+        "Play must reject an invalid tween even after Stop clears its dead flag.");
+    tree.ProcessFrame(0.1d);
+    Require(!tree.GetProcessedTweens().Contains(suspended) && !suspended.HasTweeners() &&
+            killedSnapshot.Contains(suspended),
+        "The next matching tree step must clear a killed tween without changing prior snapshots.");
+
+    var disposedKilled = tree.CreateTween();
+    disposedKilled.TweenInterval(1d);
+    disposedKilled.Kill();
+    Require(tree.GetProcessedTweens().Contains(disposedKilled),
+        "A killed tween must remain registered before explicit disposal or its next lane step.");
+    disposedKilled.Dispose();
+    Require(!tree.GetProcessedTweens().Contains(disposedKilled),
+        "Disposal must remove a previously killed tween without waiting for another frame.");
+
+    var stoppedLoops = tree.CreateTween().SetLoops(3);
+    stoppedLoops.TweenInterval(1d);
+    tree.ProcessFrame(1.1d);
+    Require(stoppedLoops.GetLoopsLeft() == 2 && DoubleNearlyEqual(stoppedLoops.GetTotalElapsedTime(), 1.1d),
+        "Loop progress and elapsed time must include the delivered overshoot.");
+    stoppedLoops.Stop();
+    Require(stoppedLoops.IsValid() && !stoppedLoops.IsRunning() && stoppedLoops.GetLoopsLeft() == 2 &&
+            stoppedLoops.GetTotalElapsedTime() == 0d && tree.GetProcessedTweens().Contains(stoppedLoops),
+        "Stop must reset elapsed time while retaining the last observable loop count until restart.");
+    stoppedLoops.Play();
+    tree.ProcessFrame(0.25d);
+    Require(stoppedLoops.IsRunning() && stoppedLoops.GetLoopsLeft() == 3 &&
+            DoubleNearlyEqual(stoppedLoops.GetTotalElapsedTime(), 0.25d),
+        "The first frame after Stop and Play must restart the loop count and sequence cursor.");
+    stoppedLoops.Kill();
+
+    var restartedFromFinishCount = 0;
+    var restartedFromFinish = tree.CreateTween();
+    restartedFromFinish.Finished += tween =>
+    {
+        restartedFromFinishCount++;
+        if (restartedFromFinishCount == 1)
+        {
+            tween.Stop();
+            tween.Play();
+        }
+    };
+    restartedFromFinish.TweenInterval(0.1d);
+    tree.ProcessFrame(0.2d);
+    Require(restartedFromFinishCount == 1 && restartedFromFinish.IsValid() && restartedFromFinish.IsRunning(),
+        "A Finished subscriber must be able to stop and restart the still-registered tween.");
+    tree.ProcessFrame(0.2d);
+    Require(restartedFromFinishCount == 2 && restartedFromFinish.IsValid() && !restartedFromFinish.IsRunning(),
+        "The restarted tween must finish once more before tree removal.");
+    tree.ProcessFrame(0d);
+    Require(!restartedFromFinish.IsValid() && !restartedFromFinish.HasTweeners(),
+        "A finished tween must leave the tree and clear tweeners on the next matching frame.");
+
+    var overshootTime = tree.CreateTween();
+    overshootTime.TweenInterval(0.2d);
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(overshootTime.GetTotalElapsedTime(), 0.5d) && overshootTime.IsValid(),
+        "Total elapsed time must include the full final-frame delta, including overshoot.");
+    Expect<InvalidOperationException>(overshootTime.Play,
+        "Play must reject a finished tween until Stop resets it.");
+    tree.ProcessFrame(0d);
+    Require(DoubleNearlyEqual(overshootTime.GetTotalElapsedTime(), 0.5d) && !overshootTime.IsValid(),
+        "Tree removal must retain the final elapsed-time query value.");
 
     using (var configuredHolder = new TweenValueHolder { Value = 2d })
     {
@@ -9240,8 +9338,10 @@ static void VerifyTweens()
     loops.LoopFinished += (_, completed) => loopEvents += completed;
     loops.TweenCallback(() => loopCallbacks++);
     tree.ProcessFrame(0.1d);
-    Require(loopCallbacks == 2 && loopEvents == 1 && !loops.IsValid(),
+    Require(loopCallbacks == 2 && loopEvents == 1 && loops.IsValid() && !loops.IsRunning(),
         "A finite loop count must describe total sequence executions and omit LoopFinished after the final loop.");
+    tree.ProcessFrame(0.1d);
+    Require(!loops.IsValid(), "The completed finite loop must unregister on the following frame.");
 
     var counted = tree.CreateTween().SetLoops(3);
     counted.TweenInterval(1d);
@@ -9339,6 +9439,18 @@ static void VerifyTweens()
     Require(DoubleNearlyEqual(physicsValue, 0.5d), "A physics tween must advance after physics callbacks.");
     physics.Kill();
 
+    var killedPhysics = tree.CreateTween().SetProcessMode(Tween.TweenProcessMode.Physics);
+    killedPhysics.TweenInterval(1d);
+    killedPhysics.Kill();
+    Require(!killedPhysics.IsValid() && tree.GetProcessedTweens().Contains(killedPhysics),
+        "A killed physics tween must remain in the registry until an eligible physics step.");
+    tree.ProcessFrame(0.1d);
+    Require(tree.GetProcessedTweens().Contains(killedPhysics),
+        "An idle frame must not sweep a killed physics tween.");
+    tree.PhysicsFrame(0.1d);
+    Require(!tree.GetProcessedTweens().Contains(killedPhysics) && !killedPhysics.HasTweeners(),
+        "The next physics frame must clear the killed physics tween.");
+
     var bound = new Entity { Name = "bound" };
     root.AddChild(bound);
     var boundFinished = false;
@@ -9382,8 +9494,11 @@ static void VerifyTweens()
         .Finished += _ => disposedTargetFinished = true;
     disposedTarget.Dispose();
     tree.ProcessFrame(0.1d);
-    Require(disposedTargetFinished && !disposedTargetTween.IsValid(),
+    Require(disposedTargetFinished && disposedTargetTween.IsValid() && !disposedTargetTween.IsRunning(),
         "A disposed property target must finish its tweener without invoking an invalid setter.");
+    tree.ProcessFrame(0.1d);
+    Require(!disposedTargetTween.IsValid() && !disposedTargetTween.HasTweeners(),
+        "Tree removal must clear a completed property tween.");
 
     var manualValue = 0d;
     var manual = tree.CreateTween();
@@ -9391,8 +9506,29 @@ static void VerifyTweens()
     manual.Pause();
     Require(manual.CustomStep(0.25d) && DoubleNearlyEqual(manualValue, 0.25d) && !manual.IsRunning(),
         "CustomStep must advance a paused tween without changing its paused state.");
-    Require(!manual.CustomStep(1d) && !manual.IsValid(),
-        "CustomStep must complete and unregister a tween when enough time is supplied.");
+    Require(manual.CustomStep(1d) && manual.IsValid() && !manual.IsRunning(),
+        "CustomStep must report the finishing step while retaining registration.");
+    Require(!manual.CustomStep(0d) && manual.IsValid() && manual.HasTweeners() &&
+            tree.GetProcessedTweens().Contains(manual),
+        "The next manual step must report completion while the tree retains the tween.");
+    tree.ProcessFrame(0d);
+    Require(!manual.IsValid() && !manual.HasTweeners() && !tree.GetProcessedTweens().Contains(manual),
+        "The next matching tree frame must unregister a manually finished tween.");
+    Require(!manual.CustomStep(0d), "Further manual steps on an invalid tween must remain terminal.");
+
+    var signedStepValue = 0d;
+    var signedStep = tree.CreateTween();
+    signedStep.TweenMethod(value => signedStepValue = value, 0d, 1d, 1d);
+    signedStep.Pause();
+    Expect<ArgumentOutOfRangeException>(() => signedStep.CustomStep(double.NaN),
+        "Manual stepping must reject a non-finite delta before changing tween state.");
+    Require(signedStep.CustomStep(-0.25d) && signedStepValue == 0d &&
+            DoubleNearlyEqual(signedStep.GetTotalElapsedTime(), -0.25d) && !signedStep.IsRunning(),
+        "A negative manual step must reduce accumulated time without advancing tweeners or unpausing.");
+    Require(signedStep.CustomStep(0.5d) && DoubleNearlyEqual(signedStepValue, 0.5d) &&
+            DoubleNearlyEqual(signedStep.GetTotalElapsedTime(), 0.25d),
+        "A later positive manual step must advance the paused sequence from its retained cursor.");
+    signedStep.Kill();
 
     var failingManual = tree.CreateTween();
     failingManual.TweenCallback(() => throw new InvalidOperationException("expected manual tween failure"));
@@ -9410,14 +9546,20 @@ static void VerifyTweens()
     tree.ProcessFrame(0.1d);
     Require(!awaited && awaitTween.IsValid(), "An event wait must consume the frame in which it observes the event.");
     tree.ProcessFrame(0.1d);
-    Require(awaited && !awaitTween.IsValid(), "An awaited typed event must release the sequence on the following step.");
+    Require(awaited && awaitTween.IsValid() && !awaitTween.IsRunning(),
+        "An awaited typed event must release the sequence on the following step.");
+    tree.ProcessFrame(0.1d);
+    Require(!awaitTween.IsValid(), "A finished event wait must unregister on the next frame.");
 
     var timedOut = false;
     var timeoutTween = tree.CreateTween();
     timeoutTween.TweenAwait(source, handler => source.Fired += handler, handler => source.Fired -= handler).SetTimeout(0.2d);
     timeoutTween.TweenCallback(() => timedOut = true);
     tree.ProcessFrame(0.3d);
-    Require(timedOut && !timeoutTween.IsValid(), "An event wait timeout must preserve overshoot for later steps.");
+    Require(timedOut && timeoutTween.IsValid() && !timeoutTween.IsRunning(),
+        "An event wait timeout must preserve overshoot for later steps.");
+    tree.ProcessFrame(0.1d);
+    Require(!timeoutTween.IsValid(), "A completed timeout sequence must unregister on the next frame.");
 
     var preEmitted = false;
     var preEmittedTween = tree.CreateTween();
@@ -9432,8 +9574,10 @@ static void VerifyTweens()
     Require(!preEmitted && preEmittedTween.IsValid(),
         "An event observed by an active wait must consume its completion frame.");
     tree.ProcessFrame(0.1d);
-    Require(preEmitted && !preEmittedTween.IsValid(),
+    Require(preEmitted && preEmittedTween.IsValid() && !preEmittedTween.IsRunning(),
         "An active event observation must release the following sequence step on the next frame.");
+    tree.ProcessFrame(0.1d);
+    Require(!preEmittedTween.IsValid(), "The finished observed-event tween must unregister next frame.");
 
     var nestedLog = new List<string>();
     var childTween = tree.CreateTween();
@@ -9447,9 +9591,15 @@ static void VerifyTweens()
         "Appending a subtween must remove it from independent tree processing.");
     tree.ProcessFrame(0.3d);
     tree.ProcessFrame(0.1d);
+    Require(nestedLog.SequenceEqual(["before", "child"]) && parentTween.IsValid(),
+        "A finished subtween must release the parent's following step without executing it at exact exhaustion.");
+    tree.ProcessFrame(0.1d);
     Require(nestedLog.SequenceEqual(["before", "child", "after"]) &&
-            !parentTween.IsValid() && !childTween.IsValid(),
-        "A subtween must execute in sequence and share the parent's final lifetime.");
+            parentTween.IsValid() && childTween.IsValid() && !parentTween.IsRunning(),
+        "A subtween must execute in sequence and retain the parent's finishing frame.");
+    tree.ProcessFrame(0.1d);
+    Require(!parentTween.IsValid() && !childTween.IsValid(),
+        "A completed parent must unregister and terminate its nested tween on the next frame.");
 
     var dynamicNestedCalls = 0;
     var nestingController = tree.CreateTween();
@@ -9461,6 +9611,8 @@ static void VerifyTweens()
     Require(dynamicNestedCalls == 1 && !tree.GetProcessedTweens().Contains(dynamicChild),
         "A tween nested after frame capture must not also run as a stale top-level snapshot entry.");
     dynamicParent.Kill();
+    Require(!dynamicParent.IsValid() && !dynamicChild.IsValid(),
+        "Killing a parent tween must invalidate its nested tween immediately.");
 
     var migratedLaneValue = 0d;
     var laneController = tree.CreateTween();
@@ -9516,8 +9668,11 @@ static void VerifyTweens()
                 throw new InvalidOperationException("expected cancellation failure");
             });
         Require(Capture(cancellationFailure.Kill) is AggregateException && !cancellationFailure.IsValid() &&
-                !tree.GetProcessedTweens().Contains(cancellationFailure),
-            "Cancellation accessor failures must be reported after the tween reaches terminal unregistered state.");
+                tree.GetProcessedTweens().Contains(cancellationFailure),
+            "Cancellation accessor failures must leave a terminal tween for the next registry sweep.");
+        tree.ProcessFrame(0.1d);
+        Require(!tree.GetProcessedTweens().Contains(cancellationFailure),
+            "The next matching frame must clear a failed cancellation entry.");
     }
 
     var spawned = false;

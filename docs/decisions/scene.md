@@ -364,7 +364,7 @@ It does not establish real host cadence, wall-clock precision, platform scheduli
 <a id="adr-0037"></a>
 ## ADR 0037: Typed SceneTree tween scheduling
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted
 - Scope: Frame-driven interpolation sequences, typed tween tasks, and SceneTree scheduling
@@ -383,8 +383,8 @@ SceneTree already owns owner-thread frame ordering, scaled/original deltas, paus
 - SceneTree captures and advances matching tweens after node callbacks and lightweight timers and before deferred/deletion work. Creation during an earlier phase may enter that frame; creation during tween processing waits for the next captured batch. Captured entries revalidate their lane and top-level ownership before execution. Process and physics lanes use the existing scaled/original delta pair, so time-scale bypass requires no second clock.
 - Property animation uses explicit typed getter/setter delegates and generic values. Method and callback tasks use typed delegates. Event waits use `EventConnection` accessors for zero-, one-, or two-argument events. This permanently replaces dynamic values, reflection callables, signal objects, and string property paths in the implemented surface.
 - Built-in interpolation covers booleans, scalar numeric values, and current engine-owned math values. Unsupported values, including strings and collections, require a caller-supplied typed interpolator. Relative mode requires a built-in addition contract; booleans use replacement and affine transforms compose the captured start with the configured relative transform.
-- Sequential and parallel steps preserve overshoot. Exact exhaustion defers a following zero-duration step until later positive time. Finite loops count total sequence executions; zero selects an infinite loop, and an infinite sequence that consumes no time is invalidated instead of hanging a frame.
-- Pause, stop/play, speed, default and per-task easing, manual stepping, Node binding, nested tween ownership, and synchronous completion events are explicit owner-thread state. Typed event receipt may only set an atomic flag from another thread; continuation stays on the owner thread.
+- Sequential and parallel steps preserve overshoot. Exact exhaustion defers a following zero-duration step until later positive time. Finite loops count total sequence executions; non-positive counts select an infinite loop, and an infinite sequence that consumes no time is invalidated instead of hanging a frame.
+- Pause, stop/play, speed, default and per-task easing, manual stepping, Node binding, nested tween ownership, and synchronous completion events are explicit owner-thread state. A final step stops the tween and emits `Finished` while it remains valid and registered. A following manual step reports completion but only the next eligible tree step removes it and clears its tweeners. `Stop` followed by `Play` during `Finished` restarts it before removal. Kill invalidates immediately while its registry entry remains until that tree sweep or explicit disposal. Typed event receipt may only set an atomic flag from another thread; continuation stays on the owner thread.
 - A processing failure attempts every parallel sibling, invalidates the whole sequence, cancels waits and nested work, then participates in SceneTree phase aggregation. A failed manual step also unregisters the invalid tween. Tree activation rollback and finalization invalidate every created or active tween while attempting all other cleanup.
 - Top-level tween processing reuses SceneTree snapshot storage and must allocate no managed memory after warmup in the covered steady-state path. Tween objects retain normal managed lifetime and deterministic `IDisposable`; no public reference-count protocol is added.
 
@@ -405,6 +405,6 @@ SceneTree already owns owner-thread frame ordering, scaled/original deltas, paus
 
 ### Verification
 
-The executable harness covers every enum identity and curve endpoint, built-in and custom typed interpolation, property start/relative/delay controls, sequential/parallel ordering, exact boundaries, stop/restart, finite and guarded infinite loops, process/physics and pause policies, scaled/original Engine time, Node/cross-tree lifetime, manual-step cleanup, pre-start reset and active event waits, timeout and cancellation failure, nested ownership, lane/nesting snapshot isolation, callback and completion-event failures, activation rollback, finalization, owner-thread enforcement, validation, and zero warmed active-frame allocation.
+The executable harness covers every enum identity and curve endpoint, built-in and custom typed interpolation, property start/relative/delay controls, sequential/parallel ordering, exact boundaries, two-step completion and manual return values, stop/restart during `Finished`, retained loop counts until restart, finite and guarded infinite loops, process/physics and pause policies, scaled/original Engine time, Node/cross-tree lifetime, manual-step cleanup, pre-start reset and active event waits, timeout and cancellation failure, nested ownership, lane/nesting snapshot isolation, callback and completion-event failures, activation rollback, finalization, owner-thread enforcement, validation, and zero warmed active-frame allocation.
 
 It does not establish visual motion quality, editor authoring, serialized animation compatibility, real host cadence, all-target native execution, or large-scale performance.

@@ -446,15 +446,15 @@ public sealed partial class SceneTree : MainLoop
         return tween;
     }
 
-    /// <summary>Returns the valid tweens currently registered for processing.</summary>
-    /// <returns>A read-only snapshot in creation order, including paused and stopped tweens.</returns>
+    /// <summary>Returns the tweens currently registered for processing.</summary>
+    /// <returns>A read-only snapshot in creation order, including paused, stopped, just-finished, and killed tweens awaiting their next matching step.</returns>
     /// <exception cref="InvalidOperationException">The method is called from a thread other than the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
     public IReadOnlyList<Tween> GetProcessedTweens()
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
-        return Array.AsReadOnly(_tweens.Where(tween => !tween.IsDisposed && tween.IsValid()).ToArray());
+        return Array.AsReadOnly(_tweens.Where(tween => !tween.IsDisposed).ToArray());
     }
 
     /// <summary>Runs one host-driven process frame, process timers, process tweens, and one deferred safe point.</summary>
@@ -1270,7 +1270,7 @@ public sealed partial class SceneTree : MainLoop
 
         foreach (var tween in _tweenSnapshot)
         {
-            if (tween.IsDisposed || tween.IsNested || !tween.IsValid() || tween.ProcessMode != expectedMode ||
+            if (tween.IsDisposed || tween.IsNested || tween.ProcessMode != expectedMode ||
                 !tween.CanProcess(_paused))
                 continue;
 

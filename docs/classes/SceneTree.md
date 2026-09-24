@@ -67,7 +67,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public void SetDeferred<T>(Action<T> setter, T value)`](#m-electron2d-scenetree-setdeferred-1-system-action-0-0) | Thread-safely queues a typed setter invocation for a future deferred flush. |
 | [`public SceneTreeTimer CreateTimer(double timeSeconds, bool processAlways = true, bool processInPhysics = false, bool ignoreTimeScale = false)`](#m-electron2d-scenetree-createtimer-system-double-system-boolean-system-boolean-system-boolean) | Creates a one-shot timer owned and processed by this tree. |
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
-| [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the valid tweens currently registered for processing. |
+| [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the tweens currently registered for processing. |
 | [`public void ProcessFrame(double delta)`](#m-electron2d-scenetree-processframe-system-double) | Runs one host-driven process frame, process timers, process tweens, and one deferred safe point. |
 | [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point. |
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
@@ -315,9 +315,9 @@ work. A tween created during another tween's callback waits for the next matchin
 <a id="m-electron2d-scenetree-getprocessedtweens"></a>
 ### `public IReadOnlyList<Tween> GetProcessedTweens()`
 
-Returns the valid tweens currently registered for processing.
+Returns the tweens currently registered for processing.
 
-**Returns:** A read-only snapshot in creation order, including paused and stopped tweens.
+**Returns:** A read-only snapshot in creation order, including paused, stopped, just-finished, and killed tweens awaiting their next matching step.
 
 **Exceptions**
 

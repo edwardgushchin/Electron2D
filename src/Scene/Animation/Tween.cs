@@ -4,8 +4,9 @@ namespace Electron2D;
 /// <remarks>
 /// A tween is created by <see cref="SceneTree.CreateTween"/> or <see cref="Node.CreateTween"/> and is processed by
 /// that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
-/// <see cref="Parallel"/> or <see cref="SetParallel"/> groups them. A completed or killed tween is invalid and cannot
-/// accept new tweeners. <see cref="SetParallel"/> changes the append default, while <see cref="Parallel"/> affects only
+/// <see cref="Parallel"/> or <see cref="SetParallel"/> groups them. A finishing tween remains registered until the next
+/// matching tree step; killing invalidates immediately but leaves its registry entry for the next eligible sweep.
+/// <see cref="SetParallel"/> changes the append default, while <see cref="Parallel"/> affects only
 /// the next append. Curve defaults are captured by each property or method tweener when appended. A zero speed scale
 /// freezes progress without pausing; negative speed additionally reduces accumulated elapsed time. Tween mutation and
 /// processing use the creating tree's owner thread.
@@ -121,7 +122,7 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Occurs after every tweener in the final loop finishes.</summary>
-    /// <remarks>The tween is stopped but remains valid during synchronous delivery; the tree invalidates it afterward. Killed tweens do not raise this event.</remarks>
+    /// <remarks>The tween is stopped but remains valid through delivery and until its next matching step. A subscriber may stop and restart it. Killed tweens do not raise this event.</remarks>
     public event Action<Tween>? Finished;
 
     /// <summary>Occurs after a non-final loop completes.</summary>
@@ -164,17 +165,19 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Advances the tween manually by an elapsed duration.</summary>
-    /// <param name="delta">Finite non-negative elapsed seconds before speed scaling.</param>
-    /// <returns><see langword="true"/> while unfinished; otherwise <see langword="false"/>.</returns>
-    /// <remarks>This advances a paused tween but still honors a bound node being detached or disposed.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is negative, NaN, or infinite.</exception>
-    /// <exception cref="InvalidOperationException">The call is off the owner thread, re-enters processing, or the tween is invalid.</exception>
+    /// <param name="delta">Finite elapsed seconds before speed scaling; a negative value reduces accumulated time without advancing tweeners.</param>
+    /// <returns><see langword="true"/> on the finishing step; <see langword="false"/> on the following step.</returns>
+    /// <remarks>This advances a paused tween but still honors a bound node being detached or disposed. A following manual step can report completion, while the next eligible tree step removes the registry entry.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is NaN or infinite.</exception>
+    /// <exception cref="InvalidOperationException">The call is off the owner thread or re-enters processing.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     /// <exception cref="AggregateException">One or more parallel callbacks or completion subscribers fail.</exception>
     public bool CustomStep(double delta)
     {
-        ValidateDuration(delta, nameof(delta));
-        EnsureValidMutation();
+        if (!double.IsFinite(delta))
+            throw new ArgumentOutOfRangeException(nameof(delta), delta, "Manual delta must be finite.");
+        ThrowIfDisposed();
+        EnsureOwnerThread();
         if (_inStep)
             throw new InvalidOperationException("A tween cannot be advanced recursively.");
 
@@ -185,13 +188,18 @@ public sealed class Tween : ElectronObject
         {
             var unfinished = Advance(delta);
             _running = _running && wasRunning;
-            if (!unfinished)
-                tree?.CompleteTween(this);
             return unfinished;
         }
-        catch
+        catch (Exception processingError)
         {
-            tree?.RemoveTween(this);
+            try
+            {
+                tree?.CompleteTween(this);
+            }
+            catch (Exception cleanupError)
+            {
+                throw new AggregateException("Manual tween processing and cleanup both failed.", processingError, cleanupError);
+            }
             throw;
         }
     }
@@ -207,7 +215,7 @@ public sealed class Tween : ElectronObject
 
     /// <summary>Gets accumulated scaled processing time.</summary>
     /// <returns>Seconds accumulated while the tween was actively advanced, including final-frame overshoot.</returns>
-    /// <remarks><see cref="Stop"/> resets this value.</remarks>
+    /// <remarks><see cref="Stop"/> resets this value; it otherwise retains final-frame overshoot after tree removal.</remarks>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public double GetTotalElapsedTime()
     {
@@ -216,7 +224,7 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Gets whether this tween contains at least one tweener.</summary>
-    /// <returns><see langword="true"/> when at least one tweener was appended, including after invalidation.</returns>
+    /// <returns><see langword="true"/> while tweeners remain, including after killing; <see langword="false"/> after tree removal.</returns>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public bool HasTweeners()
     {
@@ -264,8 +272,8 @@ public sealed class Tween : ElectronObject
         return _running && !_dead;
     }
 
-    /// <summary>Gets whether this tween remains registered for scene-tree processing.</summary>
-    /// <returns><see langword="true"/> before completion or killing; otherwise <see langword="false"/>.</returns>
+    /// <summary>Gets whether this tween remains valid for normal processing and configuration.</summary>
+    /// <returns><see langword="true"/> through the finishing frame; <see langword="false"/> immediately after killing or after tree removal.</returns>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public bool IsValid()
     {
@@ -274,14 +282,14 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Aborts all tweening operations and invalidates this tween.</summary>
-    /// <remarks>No completion events are raised. Nested tweens are killed as well.</remarks>
+    /// <remarks>No completion events are raised. Nested tweens are killed as well. A top-level registry entry remains visible until its next eligible tree step or explicit disposal.</remarks>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public void Kill()
     {
         ThrowIfDisposed();
         EnsureOwnerThread();
-        KillCore(removeFromTree: true);
+        KillCore(removeFromTree: false);
     }
 
     /// <summary>Makes only the next appended tweener join the preceding step.</summary>
@@ -296,11 +304,12 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Pauses progression without resetting current tweener state.</summary>
-    /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public void Pause()
     {
-        EnsureValidMutation();
+        ThrowIfDisposed();
+        EnsureOwnerThread();
         _running = false;
     }
 
@@ -428,12 +437,13 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Stops progression and resets the sequence cursor and elapsed time.</summary>
-    /// <remarks>Appended tweeners remain. Animated targets are not restored. Call <see cref="Play"/> to restart.</remarks>
-    /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
+    /// <remarks>Appended tweeners remain and animated targets are not restored. The last loop count remains observable until the next start. Call <see cref="Play"/> to restart.</remarks>
+    /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public void Stop()
     {
-        EnsureValidMutation();
+        ThrowIfDisposed();
+        EnsureOwnerThread();
         StopCore();
     }
 
@@ -706,8 +716,6 @@ public sealed class Tween : ElectronObject
 
     internal bool CanProcess(bool treePaused)
     {
-        if (!_valid)
-            return true;
         if (_boundNode is not null && _pauseMode == TweenPauseMode.Bound)
             return _boundNode.IsDisposed || ReferenceEquals(_boundNode.Tree, _tree) && _boundNode.CanProcess();
         return !treePaused || _pauseMode == TweenPauseMode.Process;
@@ -800,7 +808,7 @@ public sealed class Tween : ElectronObject
                     _running = false;
                     _dead = true;
                     Finished?.Invoke(this);
-                    return false;
+                    return true;
                 }
 
                 LoopFinished?.Invoke(this, _loopsDone);
@@ -867,6 +875,7 @@ public sealed class Tween : ElectronObject
                 }
             }
         }
+        _steps.Clear();
         _tree = null;
         if (errors is not null)
             throw new AggregateException("One or more tweeners failed to cancel.", errors);
@@ -914,14 +923,20 @@ public sealed class Tween : ElectronObject
         _started = false;
         _dead = false;
         _currentStep = -1;
-        _loopsDone = 0;
         _totalElapsedTime = 0d;
     }
 
     private void KillCore(bool removeFromTree)
     {
         if (!_valid && _dead)
+        {
+            if (removeFromTree)
+            {
+                _tree?.RemoveTween(this);
+                _tree = null;
+            }
             return;
+        }
         _running = false;
         _valid = false;
         _dead = true;
@@ -951,7 +966,8 @@ public sealed class Tween : ElectronObject
                 CollectException(ref errors, error);
             }
         }
-        _tree = null;
+        if (removeFromTree)
+            _tree = null;
         if (errors is not null)
             throw new AggregateException("One or more tween cancellation operations failed.", errors);
     }

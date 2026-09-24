@@ -56,7 +56,7 @@ The component depends on Core's `MainLoop` and `EventConnection`, typed Input ev
 - Pause traversal revalidates lifetime/membership and visits each node at most once; opposite or teardown-time transitions are rejected.
 - One action batch is captured per flush; deletion is captured afterward, so deletion requested by a captured action runs in that flush while nested deferred actions wait.
 - Reusable `Timer` nodes run through internal Node processing before their own public callbacks; lightweight tree timers run after nodes and before deferred actions. Expired tree timers are disposed even if timeout handlers fail.
-- Matching valid tweens run after lightweight timers and before deferred actions. Tween processing uses a captured list, so tween-created tweens wait for the next frame; failed tweens are invalidated while later tweens and phases continue.
+- Matching registered tweens run after lightweight timers and before deferred actions. Tween processing uses a captured list, so tween-created tweens wait for the next frame. A normally finished tween remains registered but stopped until the next eligible frame removes it. A killed tween is invalid immediately but remains visible in `GetProcessedTweens()` until that sweep; failed tweens are invalidated while later tweens and phases continue.
 - Queued node deletion reaches disposal even when detach callbacks fail or the node became detached; an old tree does not consume a request owned by a new tree.
 - Tree events reflect completed lifecycle/structural stages; callback failures do not roll completed state back.
 - MainLoop initialization is complete when construction returns; explicit finalization or disposal releases every owned scene object exactly once.

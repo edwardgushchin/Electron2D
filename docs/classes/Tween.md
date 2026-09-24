@@ -22,8 +22,7 @@ Sequences typed property interpolation, method interpolation, callbacks, waits, 
 
 A tween is created by [`SceneTree.CreateTween`](SceneTree.md#m-electron2d-scenetree-createtween) or [`Node.CreateTween`](Node.md#m-electron2d-node-createtween) and is processed by
 that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
-[`Tween.Parallel`](Tween.md#m-electron2d-tween-parallel) or [`Tween.SetParallel(Boolean)`](Tween.md#m-electron2d-tween-setparallel-system-boolean) groups them. A completed or killed tween is invalid and cannot
-accept new tweeners. Tween mutation and processing use the creating tree's owner thread.
+[`Tween.Parallel`](Tween.md#m-electron2d-tween-parallel) or [`Tween.SetParallel(Boolean)`](Tween.md#m-electron2d-tween-setparallel-system-boolean) groups them. A finishing tween remains registered until the next matching tree step; killing invalidates immediately but leaves its registry entry for the next eligible sweep. Tween mutation and processing use the creating tree's owner thread.
 
 ## Examples
 
@@ -131,18 +130,18 @@ Advances the tween manually by an elapsed duration.
 
 **Parameters**
 
-- `delta`: Finite non-negative elapsed seconds before speed scaling.
+- `delta`: Finite elapsed seconds before speed scaling; a negative value reduces accumulated time without advancing tweeners.
 
-**Returns:** `true` while unfinished; otherwise `false`.
+**Returns:** `true` on the finishing step; `false` on the following step.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `delta` is negative, NaN, or infinite.
-- `InvalidOperationException`: The call is off the owner thread, re-enters processing, or the tween is invalid.
+- `ArgumentOutOfRangeException`: `delta` is NaN or infinite.
+- `InvalidOperationException`: The call is off the owner thread or re-enters processing.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 - `AggregateException`: One or more parallel callbacks or completion subscribers fail.
 
-**Remarks:** This advances a paused tween but still honors a bound node being detached or disposed.
+**Remarks:** This advances a paused tween but still honors a bound node being detached or disposed. A following manual step can report completion, while the next eligible tree step removes the registry entry.
 
 <a id="m-electron2d-tween-getloopsleft"></a>
 ### `public int GetLoopsLeft()`
@@ -166,14 +165,14 @@ Gets accumulated scaled processing time.
 
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
-**Remarks:** [`Tween.Stop`](Tween.md#m-electron2d-tween-stop) resets this value.
+**Remarks:** [`Tween.Stop`](Tween.md#m-electron2d-tween-stop) resets this value; it otherwise retains final-frame overshoot after tree removal.
 
 <a id="m-electron2d-tween-hastweeners"></a>
 ### `public bool HasTweeners()`
 
 Gets whether this tween contains at least one tweener.
 
-**Returns:** `true` when at least one tweener was appended, including after invalidation.
+**Returns:** `true` while tweeners remain, including after killing; `false` after tree removal.
 
 **Exceptions**
 
@@ -219,9 +218,9 @@ Gets whether the tween is currently playing.
 <a id="m-electron2d-tween-isvalid"></a>
 ### `public bool IsValid()`
 
-Gets whether this tween remains registered for scene-tree processing.
+Gets whether this tween remains valid for normal processing and configuration.
 
-**Returns:** `true` before completion or killing; otherwise `false`.
+**Returns:** `true` through the finishing frame; `false` immediately after killing or after tree removal.
 
 **Exceptions**
 
@@ -237,7 +236,7 @@ Aborts all tweening operations and invalidates this tween.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
-**Remarks:** No completion events are raised. Nested tweens are killed as well.
+**Remarks:** No completion events are raised. Nested tweens are killed as well. A top-level registry entry remains visible until its next eligible tree step or explicit disposal.
 
 <a id="m-electron2d-tween-parallel"></a>
 ### `public Tween Parallel()`
@@ -258,7 +257,7 @@ Pauses progression without resetting current tweener state.
 
 **Exceptions**
 
-- `InvalidOperationException`: The call is off the owner thread or the tween is invalid.
+- `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
 <a id="m-electron2d-tween-play"></a>
@@ -415,10 +414,10 @@ Stops progression and resets the sequence cursor and elapsed time.
 
 **Exceptions**
 
-- `InvalidOperationException`: The call is off the owner thread or the tween is invalid.
+- `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
-**Remarks:** Appended tweeners remain. Animated targets are not restored. Call [`Tween.Play`](Tween.md#m-electron2d-tween-play) to restart.
+**Remarks:** Appended tweeners remain and animated targets are not restored. The last loop count remains observable until the next start. Call [`Tween.Play`](Tween.md#m-electron2d-tween-play) to restart.
 
 <a id="m-electron2d-tween-tweencallback-system-action"></a>
 ### `public CallbackTweener TweenCallback(Action callback)`
@@ -634,7 +633,7 @@ Invalidates nested tweens, disposes owned tweener objects, clears subscribers, a
 
 Occurs after every tweener in the final loop finishes.
 
-**Remarks:** The tween is stopped but remains valid during synchronous delivery; the tree invalidates it afterward. Killed tweens do not raise this event.
+**Remarks:** The tween is stopped but remains valid through delivery and until its next matching step. A subscriber may stop and restart it. Killed tweens do not raise this event.
 
 <a id="e-electron2d-tween-loopfinished"></a>
 ### `public event Action<Tween, int> LoopFinished`
@@ -678,9 +677,9 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 ## Lifecycle, invariants, errors, and threading
 
-An empty tween is valid on creation but fails and invalidates if any matching frame reaches it without appended tweeners, including a zero-delta frame. First processing captures property start values and freezes the append surface. `Stop()` reopens appending and resets cursor/time without changing targets; `Play()` restarts from the resulting state. Exact step completion with no remaining delta defers the next zero-duration step to a later positive-delta frame. Normal final delivery occurs before SceneTree invalidation. Kill, bound-node disposal, tree finalization, an empty sequence, and user callback failure do not raise `Finished`.
+An empty tween is valid on creation but fails and invalidates if any matching frame reaches it without appended tweeners, including a zero-delta frame. First processing captures property start values and freezes the append surface. `Stop()` reopens appending and resets cursor/time without changing targets; the last completed-loop count remains visible until `Play()` starts the sequence again. Exact step completion with no remaining delta defers the next zero-duration step to a later positive-delta frame. Final delivery stops the tween but keeps it valid and registered; a following manual step returns `false`, and the next eligible tree step removes it. A `Finished` subscriber can use `Stop()` and `Play()` to restart it. Kill invalidates immediately but leaves its registry entry for the next eligible sweep. Kill, bound-node disposal, tree finalization, an empty sequence, and user callback failure do not raise `Finished`.
 
-Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Invalid durations, speed, loop counts, enum values, cross-tree binding/nesting, cyclic/multiple/in-progress nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly.
+Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Invalid durations, non-finite speed/manual deltas, enum values, cross-tree binding/nesting, cyclic/multiple/in-progress nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly.
 
 All public mutation, processing, and disposal are owner-thread operations. Typed event notification may arrive on another thread; `AwaitTweener` only atomically records it. Reads are not a synchronization contract. Disposal is rejected during processing, invalidates nested tweens, disposes owned tweener objects, clears subscribers, and aggregates cleanup failures. A nested Tween object remains managed and inspectable until separately disposed.
 
