@@ -20,7 +20,7 @@ Provides modifier-key state for keyboard, mouse, and gesture events.
 - Complete declared API: protected constructor; `AltPressed`, `ShiftPressed`, `ControlPressed`, `MetaPressed`, `CommandOrControlAutoremap`; `GetModifiersMask()`, `IsCommandOrControlPressed()`, `SetModifiersFromEvent(...)`; override `AsText()`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. All five modifier values are stored typed descriptors.
 - Invariants/errors: enabling autoremap chooses Meta on macOS and Control elsewhere; concrete Control/Meta assignment is rejected while enabled; disabling clears both. Disposed resources fail.
 - Threading: mutable caller-owned Resource, no internal synchronization.
-- Verification/limits: `VerifyInput` covers defaults, masks, autoremap transitions, typed copy and property-list notifications. SDL dummy and Wayland injection check all eight side-specific modifier keys: each key excludes its own modifier bit and retains other held bits. Platform choice uses .NET OS detection; native macOS delivery remains unverified.
+- Verification/limits: `VerifyInput` covers defaults, masks, autoremap transitions, typed copy and property-list notifications. `VerifyInputText` checks displayed modifier names on the current platform; macOS uses Option/Command and Windows uses Windows for Meta. SDL dummy and Wayland injection check all eight side-specific modifier keys: each key excludes its own modifier bit and retains other held bits. Platform choice uses .NET OS detection; native macOS delivery remains unverified.
 
 ## Examples
 
@@ -171,9 +171,9 @@ Copies modifier state from another event.
 <a id="m-electron2d-inputeventwithmodifiers-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns active modifier names in keyboard display order: Control, Alt/Option, Shift, then Meta/Command/Windows.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** Platform-specific names joined by `+`, or an empty string when none are active.
 
 **Exceptions**
 

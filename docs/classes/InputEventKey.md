@@ -19,6 +19,7 @@ Represents a keyboard key press, release, or operating-system repeat.
 - Responsibility: keyboard press/release/repeat with logical, physical, label, Unicode-scalar, location, window, device, and modifier data.
 - Complete declared API: `Pressed`, `Echo`, `Keycode`, `PhysicalKeycode`, `KeyLabel`, `Unicode`, `Location`; `GetKeycodeWithModifiers`, `GetPhysicalKeycodeWithModifiers`, `GetKeyLabelWithModifiers`; `AsTextKeycode`, `AsTextPhysicalKeycode`, `AsTextKeyLabel`, `AsTextLocation`; overrides `IsEcho`, `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All seven declared values are stored typed descriptors.
 - Matching: label-only bindings use labels; otherwise logical code wins over physical code. Physical bindings may require location. Non-exact presses allow extra modifiers; releases ignore required modifiers; exact matching requires equality.
+- Text: the defined key names match the pinned 191-key display table on Linux. `AsText` distinguishes label-only (` - Unicode`) and printable physical (` - Physical`) origins, while special physical keys omit the marker. Unset text and the physical marker use this resource's translation domain. Invalid Unicode key values display the replacement character; raw modifier bits embedded in a key code are named before the code. `AsTextLocation` returns lowercase `left` or `right`.
 - Errors/threading: Unicode must be zero or a scalar, location must be defined, and disposed access fails. Mutable caller-owned state is not synchronized.
 - Verification: raw logical/physical/label state, modifiers, exactness, repeat policy, text, duplication, and release matching are covered; the SDL dummy suite checks label separation and left/right modifier locations; dummy and Wayland injection check self-modifier suppression on press and release.
 
@@ -226,7 +227,7 @@ Gets the localized key label combined with active modifier bits.
 
 Returns the logical key and modifier description.
 
-**Returns:** A portable diagnostic representation.
+**Returns:** The named logical key and modifiers, or a localized parenthesized unset label.
 
 **Exceptions**
 
@@ -237,7 +238,7 @@ Returns the logical key and modifier description.
 
 Returns the physical key and modifier description.
 
-**Returns:** A portable diagnostic representation.
+**Returns:** The named physical key and modifiers, or a localized parenthesized unset label.
 
 **Exceptions**
 
@@ -248,7 +249,7 @@ Returns the physical key and modifier description.
 
 Returns the localized key label and modifier description.
 
-**Returns:** A portable diagnostic representation.
+**Returns:** The named key label and modifiers, or a localized parenthesized unset label.
 
 **Exceptions**
 
@@ -259,11 +260,10 @@ Returns the localized key label and modifier description.
 
 Returns the key-location description.
 
-**Returns:** `Left`, `Right`, or an empty string for an unspecified location.
+**Returns:** `left`, `right`, or an empty string for an unspecified location.
 
 **Exceptions**
 
-- `InvalidOperationException`: The event contains an invalid key-location value.
 - `ObjectDisposedException`: The event is disposing or disposed.
 
 <a id="m-electron2d-inputeventkey-ismatch-electron2d-inputevent-system-boolean"></a>
@@ -286,9 +286,9 @@ Tests whether this event has the same binding configuration as another event.
 <a id="m-electron2d-inputeventkey-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the active logical, physical, label-only or unset key description. Physical printable keys add a localized origin marker; label-only keys add ` - Unicode`.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The named key with modifiers and applicable origin marker.
 
 **Exceptions**
 

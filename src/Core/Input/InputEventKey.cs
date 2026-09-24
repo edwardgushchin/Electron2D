@@ -137,23 +137,22 @@ public sealed class InputEventKey : InputEventWithModifiers
     public Key GetKeyLabelWithModifiers() => CombineWithModifiers(KeyLabel);
 
     /// <summary>Returns the logical key and modifier description.</summary>
-    /// <returns>A portable diagnostic representation.</returns>
+    /// <returns>The registered key name with modifiers, or a localized parenthesized unset label.</returns>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public string AsTextKeycode() => FormatKey(Keycode);
 
     /// <summary>Returns the physical key and modifier description.</summary>
-    /// <returns>A portable diagnostic representation.</returns>
+    /// <returns>The registered physical key name with modifiers, or a localized parenthesized unset label.</returns>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public string AsTextPhysicalKeycode() => FormatKey(PhysicalKeycode);
 
     /// <summary>Returns the localized key label and modifier description.</summary>
-    /// <returns>A portable diagnostic representation.</returns>
+    /// <returns>The current key-label name with modifiers, or a localized parenthesized unset label.</returns>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public string AsTextKeyLabel() => FormatKey(KeyLabel);
 
     /// <summary>Returns the key-location description.</summary>
-    /// <returns><c>Left</c>, <c>Right</c>, or an empty string for an unspecified location.</returns>
-    /// <exception cref="InvalidOperationException">The event contains an invalid key-location value.</exception>
+    /// <returns><c>left</c>, <c>right</c>, or an empty string for an unspecified location.</returns>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public string AsTextLocation()
     {
@@ -161,9 +160,9 @@ public sealed class InputEventKey : InputEventWithModifiers
         return _location switch
         {
             KeyLocation.Unspecified => string.Empty,
-            KeyLocation.Left => "Left",
-            KeyLocation.Right => "Right",
-            _ => throw new InvalidOperationException("The event contains an invalid key location."),
+            KeyLocation.Left => "left",
+            KeyLocation.Right => "right",
+            _ => string.Empty,
         };
     }
 
@@ -183,14 +182,21 @@ public sealed class InputEventKey : InputEventWithModifiers
         return !exactMatch || GetModifiersMask() == key.GetModifiersMask();
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the active logical, physical, label or unset key description.</summary>
+    /// <returns>The key name with modifiers and applicable physical/Unicode origin marker.</returns>
+    /// <remarks>The physical origin marker and unset label use this resource's translation domain. Known key names follow the reference key-name table; an invalid Unicode code point uses the replacement character.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
         if (_keycode != Key.None) return AsTextKeycode();
-        if (_physicalKeycode != Key.None) return AsTextPhysicalKeycode();
-        if (_keyLabel != Key.None) return AsTextKeyLabel();
-        return base.AsText();
+        if (_physicalKeycode != Key.None)
+        {
+            var text = AsTextPhysicalKeycode();
+            return (_physicalKeycode & Key.Special) != 0 ? text : string.Concat(text, " - ", Tr("Physical"));
+        }
+        if (_keyLabel != Key.None) return string.Concat(AsTextKeyLabel(), " - Unicode");
+        return AsTextKeycode();
     }
 
     /// <inheritdoc />
@@ -249,7 +255,7 @@ public sealed class InputEventKey : InputEventWithModifiers
     private string FormatKey(Key key)
     {
         ThrowIfDisposed();
-        var keyText = FormatKeyCode(key);
+        var keyText = key == Key.None ? string.Concat("(", Tr("unset"), ")") : FormatKeyCode(key);
         var modifiers = base.AsText();
         return modifiers.Length == 0 ? keyText : string.Concat(modifiers, "+", keyText);
     }
@@ -257,12 +263,51 @@ public sealed class InputEventKey : InputEventWithModifiers
     private static string FormatKeyCode(Key key)
     {
         var raw = (int)key;
-        if (raw == 0)
-            return string.Empty;
+        var modifiers = (KeyModifierMask)(raw & (int)KeyModifierMask.ModifierMask);
+        var code = (Key)(raw & (int)KeyModifierMask.CodeMask);
+        var parts = new List<string>(6);
+        if ((modifiers & KeyModifierMask.CommandOrControl) != 0 && !OperatingSystem.IsMacOS()) parts.Add("Ctrl");
+        if ((modifiers & KeyModifierMask.Control) != 0) parts.Add("Ctrl");
+        if ((modifiers & KeyModifierMask.Alt) != 0) parts.Add(OperatingSystem.IsMacOS() ? "Option" : "Alt");
+        if ((modifiers & KeyModifierMask.Shift) != 0) parts.Add("Shift");
+        if ((modifiers & KeyModifierMask.CommandOrControl) != 0 && OperatingSystem.IsMacOS()) parts.Add("Command");
+        if ((modifiers & KeyModifierMask.Meta) != 0)
+            parts.Add(OperatingSystem.IsMacOS() ? "Command" : OperatingSystem.IsWindows() ? "Windows" : "Meta");
 
-        if ((raw & (int)Key.Special) == 0 && Rune.IsValid(raw))
-            return new Rune(raw).ToString();
-
-        return Enum.GetName(key) ?? $"Key({raw})";
+        if (code == Key.None)
+            return string.Join("+", parts);
+        if (code is >= Key.Key0 and <= Key.Key9)
+            parts.Add(((char)(int)code).ToString());
+        else if (code is >= Key.Keypad0 and <= Key.Keypad9)
+            parts.Add($"Kp {(int)code - (int)Key.Keypad0}");
+        else
+            parts.Add(code switch
+            {
+                Key.Control => "Ctrl",
+                Key.Meta => OperatingSystem.IsMacOS() ? "Command" : OperatingSystem.IsWindows() ? "Windows" : "Meta",
+                Key.Alt => OperatingSystem.IsMacOS() ? "Option" : "Alt",
+                Key.KeypadEnter => "Kp Enter",
+                Key.SystemRequest => "SysReq",
+                Key.KeypadMultiply => "Kp Multiply",
+                Key.KeypadDivide => "Kp Divide",
+                Key.KeypadSubtract => "Kp Subtract",
+                Key.KeypadPeriod => "Kp Period",
+                Key.KeypadAdd => "Kp Add",
+                Key.Standby => "StandBy",
+                Key.OpenUrl => "OpenURL",
+                Key.Keyboard => "On-screen keyboard",
+                Key.JisEisu => "JIS Eisu",
+                Key.JisKana => "JIS Kana",
+                Key.Exclamation => "Exclam",
+                Key.QuoteDouble => "QuoteDbl",
+                Key.ParenthesisLeft => "ParenLeft",
+                Key.ParenthesisRight => "ParenRight",
+                Key.AsciiCircumflex => "AsciiCircum",
+                Key.Backslash => "BackSlash",
+                Key.Underscore => "UnderScore",
+                Key.Special => "\uFFFD",
+                _ => Enum.GetName(code) ?? (Rune.IsValid((int)code) ? new Rune((int)code).ToString() : "\uFFFD"),
+            });
+        return string.Join("+", parts);
     }
 }

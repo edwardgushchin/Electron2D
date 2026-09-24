@@ -531,15 +531,19 @@ public abstract class InputEventWithModifiers : InputEventFromWindow
         EmitInputChanged(propertyListChanged);
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the active modifier names in keyboard display order.</summary>
+    /// <returns>The joined platform-specific modifier names, or an empty string when none are active.</returns>
+    /// <remarks>Alt is Option and Meta is Command on macOS; Meta is Windows on Windows.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
         var text = string.Empty;
         AppendModifier(ref text, _controlPressed, "Ctrl");
-        AppendModifier(ref text, _altPressed, "Alt");
+        AppendModifier(ref text, _altPressed, OperatingSystem.IsMacOS() ? "Option" : "Alt");
         AppendModifier(ref text, _shiftPressed, "Shift");
-        AppendModifier(ref text, _metaPressed, "Meta");
+        AppendModifier(ref text, _metaPressed,
+            OperatingSystem.IsMacOS() ? "Command" : OperatingSystem.IsWindows() ? "Windows" : "Meta");
         return text;
     }
 

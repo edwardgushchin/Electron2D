@@ -208,6 +208,7 @@ VerifyPackedScenes();
 VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
+VerifyInputText();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4648,6 +4649,111 @@ static void VerifyInputEventActionValues()
     using var disposed = new InputEventAction();
     disposed.Dispose();
     Expect<ObjectDisposedException>(() => disposed.AsText(), "Disposed direct action text must fail.");
+}
+
+static void VerifyInputText()
+{
+    const string empty = "tests.input.text.empty";
+    const string keys = "tests.input.text.keys";
+    var map = InputMap.Instance;
+    foreach (var action in new[] { empty, keys })
+        if (map.HasAction(action))
+            map.EraseAction(action);
+
+    using var unset = new InputEventKey();
+    using var space = new InputEventKey { Keycode = Key.Space };
+    using var function = new InputEventKey { Keycode = Key.F1 };
+    using var mouseBinding = new InputEventMouseButton { ButtonIndex = MouseButton.Left };
+    using var physical = new InputEventKey { PhysicalKeycode = Key.A };
+    using var physicalFunction = new InputEventKey { PhysicalKeycode = Key.F1 };
+    using var label = new InputEventKey { KeyLabel = Key.A };
+    using var symbol = new InputEventKey { Keycode = Key.Exclamation };
+    using var keypad = new InputEventKey { Keycode = Key.Keypad1 };
+    using var unknown = new InputEventKey { Keycode = (Key)0x110000 };
+    using var specialMarker = new InputEventKey { Keycode = Key.Special };
+    using var printable = new InputEventKey { Keycode = (Key)0x20AC };
+    using var modifiedSpace = new InputEventKey { Keycode = Key.Space, ControlPressed = true };
+    using var embeddedModifiers = new InputEventKey
+    {
+        Keycode = (Key)((int)Key.A | (int)KeyModifierMask.Control | (int)KeyModifierMask.Shift),
+    };
+    using var meta = new InputEventKey { Keycode = Key.A, MetaPressed = true };
+    using var alt = new InputEventKey { Keycode = Key.A, AltPressed = true };
+    using var left = new InputEventKey { Location = KeyLocation.Left };
+    using var right = new InputEventKey { Location = KeyLocation.Right };
+    using var synthetic = new InputEventAction { Action = keys };
+    Require(unset.AsText() == "(unset)" && unset.AsTextKeycode() == "(unset)" &&
+            unset.AsTextPhysicalKeycode() == "(unset)" && unset.AsTextKeyLabel() == "(unset)" &&
+            space.AsText() == "Space" && physical.AsText() == "A - Physical" &&
+            physicalFunction.AsText() == "F1" && physicalFunction.AsTextPhysicalKeycode() == "F1" &&
+            label.AsText() == "A - Unicode" && symbol.AsText() == "Exclam" &&
+            keypad.AsText() == "Kp 1" && unknown.AsText() == "\uFFFD" &&
+            specialMarker.AsText() == "\uFFFD" && printable.AsText() == "€" &&
+            modifiedSpace.AsTextKeycode() == "Ctrl+Space" &&
+            embeddedModifiers.AsTextKeycode() == "Ctrl+Shift+A" &&
+            meta.AsText() == (OperatingSystem.IsMacOS() ? "Command+A" : OperatingSystem.IsWindows() ? "Windows+A" : "Meta+A") &&
+            alt.AsText() == (OperatingSystem.IsMacOS() ? "Option+A" : "Alt+A") &&
+            unset.AsTextLocation() == string.Empty && left.AsTextLocation() == "left" &&
+            right.AsTextLocation() == "right",
+        "Key text must preserve the pinned names, unset fallback, origin suffixes and location casing.");
+
+    var previousCulture = TranslationServer.Culture;
+    var previousEnabled = TranslationServer.Enabled;
+    var previousMapTranslation = map.CanTranslateMessages;
+    var previousMapDomain = map.TranslationDomain;
+    var previousUnsetTranslation = unset.CanTranslateMessages;
+    try
+    {
+        map.CanTranslateMessages = true;
+        map.TranslationDomain = string.Empty;
+        unset.CanTranslateMessages = true;
+        map.AddAction(empty);
+        map.AddAction(keys);
+        Expect<KeyNotFoundException>(() => map.GetActionDescription(empty + ".missing"),
+            "Action descriptions must reject an unregistered name.");
+        map.ActionAddEvent(keys, synthetic);
+        Require(map.GetActionDescription(keys) == "Action has no bound inputs",
+            "A synthetic-only action has no concrete binding description.");
+        map.ActionAddEvent(keys, space);
+        map.ActionAddEvent(keys, function);
+        map.ActionAddEvent(keys, mouseBinding);
+        Require(map.GetActionDescription(empty) == "Action has no bound inputs" &&
+                map.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
+                synthetic.AsText() == "Space",
+            "Action descriptions must skip synthetic bindings and list concrete names in order.");
+
+        TranslationServer.Clear();
+        TranslationServer.Enabled = true;
+        TranslationServer.Culture = CultureInfo.GetCultureInfo("fr-FR");
+        var french = CultureInfo.GetCultureInfo("fr");
+        TranslationServer.AddTranslation(french, "", "Action has no bound inputs", "Action sans touche");
+        TranslationServer.AddTranslation(french, "", " or ", " ou ");
+        TranslationServer.AddTranslation(french, "", "unset", "non défini");
+        TranslationServer.AddTranslation(french, "", "Physical", "Physique");
+        Require(map.GetActionDescription(empty) == "Action sans touche" &&
+                map.GetActionDescription(keys) == $"Space ou F1 ou {mouseBinding.AsText()}" &&
+                unset.AsText() == "(non défini)" && physical.AsText() == "A - Physique",
+            "Runtime descriptions must resolve engine words through the active translation catalog.");
+        map.CanTranslateMessages = false;
+        unset.CanTranslateMessages = false;
+        Require(map.GetActionDescription(empty) == "Action has no bound inputs" &&
+                map.GetActionDescription(keys) == $"Space or F1 or {mouseBinding.AsText()}" &&
+                unset.AsText() == "(unset)",
+            "Disabling translation on a description owner must return its source wording.");
+    }
+    finally
+    {
+        map.CanTranslateMessages = previousMapTranslation;
+        map.TranslationDomain = previousMapDomain;
+        unset.CanTranslateMessages = previousUnsetTranslation;
+        TranslationServer.Clear();
+        TranslationServer.Culture = previousCulture;
+        TranslationServer.Enabled = previousEnabled;
+        if (map.HasAction(keys))
+            map.EraseAction(keys);
+        if (map.HasAction(empty))
+            map.EraseAction(empty);
+    }
 }
 
 static void VerifyInput()

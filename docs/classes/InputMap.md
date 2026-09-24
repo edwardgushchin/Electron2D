@@ -299,7 +299,7 @@ Gets a human-readable disjunction of an action's concrete bindings.
 
 - `action`: The registered action name.
 
-**Returns:** `Action has no bound inputs`, or non-action binding descriptions joined by `or`.
+**Returns:** A localized no-input message, or concrete binding descriptions joined by a localized ` or ` separator.
 
 **Exceptions**
 
@@ -308,7 +308,7 @@ Gets a human-readable disjunction of an action's concrete bindings.
 - `Collections.Generic.KeyNotFoundException`: The action is not registered.
 - `ObjectDisposedException`: A binding is disposing or disposed.
 
-**Remarks:** Synthetic [`InputEventAction`](InputEventAction.md) bindings are indirection and are omitted.
+**Remarks:** Synthetic [`InputEventAction`](InputEventAction.md) bindings are indirection and are omitted. The map's inherited translation domain and enabled flag control the no-input message and separator; each concrete event supplies its own description.
 
 <a id="m-electron2d-inputmap-validatedisposal"></a>
 ### `protected override void ValidateDisposal()`

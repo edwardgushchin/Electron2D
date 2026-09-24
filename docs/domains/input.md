@@ -38,6 +38,7 @@ Input depends on Core object/resource lifecycle, math and typed ProjectSettings 
 - Action names are ordinal; strengths/deadzones are finite and bounded.
 - Project-action reload applies active typed feature overrides, rejects unidentified key bindings and over-capacity record lists, and validates the whole candidate before replacing the map or notifying listeners.
 - Public event comparison and exact action-binding lookup have distinct rules for synthetic action events; the map never collapses a physical binding into a synthetic one solely because it triggers the named action.
+- Key display uses defined key names, platform modifier labels, localized unset/physical markers and lowercase locations. The action map localizes the no-input message and separator while concrete binding text remains owned by each event family.
 - Process and physics transition windows are independent and clear even after a frame callback fails.
 - Scene input is owner-thread, pause-aware, reverse depth-first for Node stages, and stoppable through handled state. Root viewport Control targeting uses geometry and focus between the Node stages.
 - Binding configuration and queries are lock-serialized. Registered binding resources remain live caller-owned references and cannot be disposed or mutated concurrently with matching.

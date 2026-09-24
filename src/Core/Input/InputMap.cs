@@ -334,8 +334,8 @@ public sealed class InputMap : ElectronObject
 
     /// <summary>Gets a human-readable disjunction of an action's concrete bindings.</summary>
     /// <param name="action">The registered action name.</param>
-    /// <returns><c>Action has no bound inputs</c>, or non-action binding descriptions joined by <c> or </c>.</returns>
-    /// <remarks>Synthetic <see cref="InputEventAction"/> bindings are indirection and are omitted.</remarks>
+    /// <returns>The localized no-input message, or concrete binding descriptions joined by a localized separator.</returns>
+    /// <remarks>Synthetic <see cref="InputEventAction"/> bindings are indirection and are omitted. Translation uses this map's inherited translation domain and enabled state; each concrete event supplies its own description.</remarks>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
@@ -351,8 +351,8 @@ public sealed class InputMap : ElectronObject
                 .Select(static @event => @event.AsText())
                 .ToArray();
             if (descriptions.Length == 0)
-                return "Action has no bound inputs";
-            return string.Join(" or ", descriptions);
+                return Tr("Action has no bound inputs");
+            return string.Join(Tr(" or "), descriptions);
         }
     }
 
