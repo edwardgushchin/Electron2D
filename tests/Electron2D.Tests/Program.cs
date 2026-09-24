@@ -2783,7 +2783,10 @@ static void VerifyVector4IValues()
 {
     Require(Marshal.SizeOf<Vector4I>() == 16 && typeof(Vector4I).IsDefined(typeof(SerializableAttribute), false) &&
             Vector4I.Zero == default && Vector4I.One == new Vector4I(1, 1, 1, 1) &&
-            Vector4I.MinValue.X == int.MinValue && Vector4I.MaxValue.W == int.MaxValue,
+            Vector4I.MinValue == new Vector4I(int.MinValue, int.MinValue, int.MinValue, int.MinValue) &&
+            Vector4I.MaxValue == new Vector4I(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue) &&
+            (int)Vector4I.Axis.X == 0 && (int)Vector4I.Axis.Y == 1 &&
+            (int)Vector4I.Axis.Z == 2 && (int)Vector4I.Axis.W == 3,
         "Vector4I layout and constants must be stable.");
     var value = new Vector4I(1, 2, 3, 4);
     var (x, y, z, w) = value;
@@ -2791,6 +2794,17 @@ static void VerifyVector4IValues()
             value.LengthSquared() == 30 && NearlyEqual(value.Length(), System.MathF.Sqrt(30f)) &&
             value.DistanceSquaredTo(Vector4I.Zero) == 30 && NearlyEqual(value.DistanceTo(Vector4I.Zero), System.MathF.Sqrt(30f)),
         "Vector4I indexing, deconstruction, length, and distance operations must be stable.");
+    var mutableCopy = value;
+    mutableCopy[0] = -7;
+    mutableCopy[1] = 8;
+    mutableCopy[2] = 9;
+    mutableCopy[3] = 10;
+    Require(value == new Vector4I(1, 2, 3, 4) && mutableCopy == new Vector4I(-7, 8, 9, 10),
+        "Mutable Vector4I indexing preserves copy independence across all four coordinates.");
+    Expect<ArgumentOutOfRangeException>(() => mutableCopy[4] = 1,
+        "A fifth Vector4I component cannot be assigned.");
+    Require(mutableCopy == new Vector4I(-7, 8, 9, 10),
+        "Rejected Vector4I index writes leave the previous value intact.");
     var large = new Vector4I(50_000, 50_000, 50_000, 50_000);
     Require(typeof(Vector4I).GetMethod(nameof(Vector4I.DistanceSquaredTo))!.ReturnType == typeof(long) &&
             large.LengthSquared() == 10_000_000_000L &&
@@ -2805,6 +2819,12 @@ static void VerifyVector4IValues()
             float.IsFinite(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue)) &&
             System.MathF.Abs(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue) - (float)(2d * uint.MaxValue)) <= 1024f,
         "Vector4I lengths and distances must remain finite across the entire component range.");
+    Require(new Vector4I(int.MaxValue, int.MaxValue, 0, 0).LengthSquared() ==
+                2L * int.MaxValue * int.MaxValue &&
+            new Vector4I(0, 0, 0, int.MaxValue).LengthSquared() == (long)int.MaxValue * int.MaxValue,
+        "Vector4I checked squares preserve the last fitting Int64 boundary and W contribution.");
+    Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, int.MinValue, 0, 0).LengthSquared(),
+        "Two minimum components already exceed signed Int64 by one.");
     Expect<OverflowException>(() => _ = Vector4I.MinValue.LengthSquared(),
         "Vector4I squared length must reject a result above Int64.MaxValue.");
     Expect<OverflowException>(() => _ = Vector4I.MinValue.DistanceSquaredTo(Vector4I.MaxValue),
@@ -2821,9 +2841,17 @@ static void VerifyVector4IValues()
     Require(value.Max(2) == new Vector4I(2, 2, 3, 4) && value.Max(new Vector4I(0, 3, 2, 5)) == new Vector4I(1, 3, 3, 5) &&
             value.Min(2) == new Vector4I(1, 2, 2, 2) && value.Min(new Vector4I(0, 3, 2, 5)) == new Vector4I(0, 2, 2, 4) &&
             Vector4I.One.MaxAxisIndex() == Vector4I.Axis.X && Vector4I.One.MinAxisIndex() == Vector4I.Axis.W &&
+            new Vector4I(1, 2, 2, 2).MaxAxisIndex() == Vector4I.Axis.Y &&
+            new Vector4I(2, 1, 1, 1).MinAxisIndex() == Vector4I.Axis.W &&
             new Vector4I(5, -5, 3, -3).Snapped(2) == new Vector4I(6, -4, 4, -2) &&
             new Vector4I(5, -5, 3, -3).Snapped(new Vector4I(2, 5, 2, 3)) == new Vector4I(6, -5, 4, -3),
         "Vector4I min, max, axis tie-breaking, and snapping must be stable.");
+    Require(new Vector4I(5, -5, 7, -7).Snapped(-2) == new Vector4I(4, -6, 6, -8) &&
+            new Vector4I(5, -5, 7, -7).Snapped(new Vector4I(-2, 0, 3, 0)) ==
+                new Vector4I(4, -5, 6, -7) && value.Snapped(0) == value,
+        "Vector4I negative and zero snap steps follow the scalar formula independently on W.");
+    Expect<OverflowException>(() => _ = Vector4I.MaxValue.Snapped(2),
+        "Vector4I snapping rejects a rounded component beyond Int32.MaxValue.");
     Require(value + Vector4I.One == new Vector4I(2, 3, 4, 5) && +value == value && value - Vector4I.One == new Vector4I(0, 1, 2, 3) &&
             -value == new Vector4I(-1, -2, -3, -4) && value * 2 == 2 * value && value * Vector4I.One == value &&
             value * 0.5f == 0.5f * value && value / 2f == new Vector4(0.5f, 1f, 1.5f, 2f) &&
@@ -2833,6 +2861,12 @@ static void VerifyVector4IValues()
         "Vector4I arithmetic must be componentwise.");
     Require(Vector4I.MaxValue + Vector4I.One == Vector4I.MinValue,
         "Vector4I ordinary overflow must wrap deterministically.");
+    Require(-new Vector4I(0, 0, 0, int.MinValue) == new Vector4I(0, 0, 0, int.MinValue) &&
+            new Vector4I(0, 0, 0, int.MaxValue) * 2 == new Vector4I(0, 0, 0, -2) &&
+            float.IsPositiveInfinity((new Vector4I(1, -1, 0, 0) / 0f).X) &&
+            float.IsNegativeInfinity((new Vector4I(1, -1, 0, 0) / 0f).Y) &&
+            float.IsNaN((new Vector4I(1, -1, 0, 0) / 0f).W),
+        "W wrapping and floating division by zero retain accepted C# and IEEE boundaries.");
     Expect<DivideByZeroException>(() => _ = value / new Vector4I(1, 1, 0, 1), "Vector4I division must reject zero components.");
     Expect<DivideByZeroException>(() => _ = value % 0, "Vector4I remainder must reject a zero scalar.");
     Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, 0, 0, 0) / -1,
@@ -2840,9 +2874,16 @@ static void VerifyVector4IValues()
     Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, 0, 0, 0) % -1,
         "Vector4I remainder must surface minimum-integer overflow.");
     Require(value < new Vector4I(1, 2, 3, 5) && value <= new Vector4I(1, 2, 3, 4) &&
+            value < new Vector4I(1, 2, 4, -100) &&
+            value < new Vector4I(1, 3, -100, -100) &&
             new Vector4I(2, 0, 0, 0) > value && value >= new Vector4I(1, 2, 3, 4) &&
             value.Equals((object)new Vector4I(1, 2, 3, 4)) && value.GetHashCode() == new Vector4I(1, 2, 3, 4).GetHashCode(),
         "Vector4I equality, hashing, and lexicographic ordering must be stable.");
+    Require((Vector4I)new Vector4((float)int.MinValue, 0f, 0f, 0f) ==
+                new Vector4I(int.MinValue, 0, 0, 0) &&
+            (Vector4)new Vector4I(16_777_217, int.MinValue, int.MaxValue, -2) ==
+                new Vector4(16_777_216f, int.MinValue, 2_147_483_648f, -2f),
+        "Vector4I conversions keep the lower Int32 bound and expose large-int float rounding.");
     Expect<ArgumentOutOfRangeException>(() => _ = (Vector4I)new Vector4(0f, 0f, float.NaN, 0f),
         "Vector4 to Vector4I conversion must reject non-finite values.");
     Expect<ArgumentOutOfRangeException>(() => _ = (Vector4I)new Vector4(0f, 0f, 2147483648f, 0f),

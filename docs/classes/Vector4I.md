@@ -1,6 +1,6 @@
 # Vector4I
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -22,6 +22,8 @@ Addition, subtraction, multiplication, and negation use wrapping 32-bit arithmet
 Division and remainder follow C# truncated-division rules. The zero-initialized value is [`Vector4I.Zero`](Vector4I.md#p-electron2d-vector4i-zero).
 Squared norms return signed 64-bit integers and reject results outside that range. Length and distance use widened floating-point arithmetic and remain finite for all 32-bit components.
 Numeric operations do not allocate managed memory; string formatting allocates a string.
+
+All 52 declared members and the type row have managed behavioral audits on Linux/.NET 8. `VerifyVector4IValues` covers four-coordinate copies and mutation, enum identities, checked squared norms near `long.MaxValue`, full-span finite lengths, vector/scalar boundaries, first/last axis ties, negative and zero snapping steps, wrapping arithmetic, integer failure paths, floating conversion, strict configuration and packed-scene storage. Native ABI and other platforms remain unverified.
 
 ## Examples
 

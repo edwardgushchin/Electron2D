@@ -8,6 +8,9 @@ namespace Electron2D;
 /// <remarks>
 /// Addition, subtraction, multiplication, and negation use wrapping 32-bit arithmetic.
 /// Division and remainder follow C# truncated-division rules. The zero-initialized value is <see cref="Zero"/>.
+/// Squared norms widen to checked 64-bit integers; ordinary lengths and distances use widened floating-point terms.
+/// Float-to-integer conversion rejects non-finite and out-of-range components before assignment.
+/// Component extrema select the first maximum and last minimum axis on ties.
 /// Numeric operations do not allocate managed memory; string formatting allocates a string.
 /// </remarks>
 [Serializable]

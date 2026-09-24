@@ -913,7 +913,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Vector3](classes/Vector3.md) | — | Implemented | 94 |
 | [Vector3i](classes/Vector3i.md) | — | Implemented | 56 |
 | [Vector4](classes/Vector4.md) | — | Implemented | 66 |
-| [Vector4i](classes/Vector4i.md) | — | Partial | 52 |
+| [Vector4i](classes/Vector4i.md) | — | Implemented | 52 |
 | [VehicleBody3D](classes/VehicleBody3D.md) | RigidBody3D | Excluded | 4 |
 | [VehicleWheel3D](classes/VehicleWheel3D.md) | Node3D | Excluded | 21 |
 | [VideoStream](classes/VideoStream.md) | Resource | Blocked | 2 |

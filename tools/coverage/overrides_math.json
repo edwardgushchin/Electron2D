@@ -3109,7 +3109,63 @@
         "Vector4i::method:length_squared()"
       ],
       "state": "Implemented",
-      "reason": "Sibling norm implementation widens before multiplication and distance subtraction; squared results return exact signed 64-bit values or throw above long.MaxValue, while ordinary length/distance remain finite across the int32 range (ADR 0033)."
+      "reason": "ADR 0033 widens four squared terms and coordinate differences, returns checked Int64 squares and finite float lengths across full Int32 inputs. VerifyVector4IValues checks exact W-only/two-axis boundaries, a 9e18 distance, one-past-limit overflow and full-span finite length/distance on Linux/.NET 8."
+    },
+    {
+      "godot": ["class:Vector4i"],
+      "state": "Implemented",
+      "reason": "All 52 declared members have pinned vector4i.h/.cpp and accepted ADR 0033 managed-boundary audits in VerifyVector4IValues, including packed-scene and strict typed persistence. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
+    },
+    {
+      "godot": [
+        "Vector4i::constant:MAX", "Vector4i::constant:MIN",
+        "Vector4i::constant:ONE", "Vector4i::constant:ZERO"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector4IValues checks all four pinned integer tuple constants across X/Y/Z/W, including the full Int32 minimum and maximum; Linux/.NET 8 managed values."
+    },
+    {
+      "godot": [
+        "Vector4i::constructor:Vector4i()", "Vector4i::constructor:Vector4i(Vector4:)",
+        "Vector4i::constructor:Vector4i(Vector4i:)", "Vector4i::constructor:Vector4i(int:,int:,int:,int:)",
+        "Vector4i::enum:Axis", "Vector4i::operator:operator [](int:)",
+        "Vector4i::property:w", "Vector4i::property:x", "Vector4i::property:y", "Vector4i::property:z"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector4IValues checks sequential 16-byte zero state, independent mutable value copies/indexes, four axis enum identities, invalid-index errors and float-to-int truncation with non-finite/out-of-range rejection under ADR 0033; Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4i::method:abs()", "Vector4i::method:clamp(Vector4i:,Vector4i:)",
+        "Vector4i::method:clampi(int:,int:)", "Vector4i::method:max(Vector4i:)",
+        "Vector4i::method:max_axis_index()", "Vector4i::method:maxi(int:)",
+        "Vector4i::method:min(Vector4i:)", "Vector4i::method:min_axis_index()",
+        "Vector4i::method:mini(int:)", "Vector4i::method:sign()",
+        "Vector4i::method:snapped(Vector4i:)", "Vector4i::method:snappedi(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4i.cpp uses componentwise integer scalar formulas and first-maximum/last-minimum axis loops. VerifyVector4IValues checks W and tie boundaries, signed values, typed Abs/clamp errors, negative/zero/vector snapping steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4i::operator:operator %(Vector4i:)", "Vector4i::operator:operator %(int:)",
+        "Vector4i::operator:operator *(Vector4i:)", "Vector4i::operator:operator *(float:)",
+        "Vector4i::operator:operator *(int:)", "Vector4i::operator:operator +(Vector4i:)",
+        "Vector4i::operator:operator -(Vector4i:)", "Vector4i::operator:operator /(Vector4i:)",
+        "Vector4i::operator:operator /(float:)", "Vector4i::operator:operator /(int:)",
+        "Vector4i::operator:operator unary+()", "Vector4i::operator:operator unary-()"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector4IValues checks X/Y/Z/W wrapping add/subtract/multiply/negation, truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar results and IEEE zero division under ADR 0033 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4i::operator:operator !=(Vector4i:)", "Vector4i::operator:operator <(Vector4i:)",
+        "Vector4i::operator:operator <=(Vector4i:)", "Vector4i::operator:operator ==(Vector4i:)",
+        "Vector4i::operator:operator >(Vector4i:)", "Vector4i::operator:operator >=(Vector4i:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4i.h orders X/Y/Z/W exactly. VerifyVector4IValues checks equality, comparison ties, decisive Y/Z/W positions and high-X precedence with equal-copy hashing on Linux/.NET 8."
     },
     {
       "state": "Partial",
