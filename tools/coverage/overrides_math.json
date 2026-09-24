@@ -2831,7 +2831,6 @@
         "Vector2::method:min(Vector2:)",
         "Vector2::method:min_axis_index()",
         "Vector2::method:minf(float:)",
-        "Vector2::method:move_toward(Vector2:,float:)",
         "Vector2::method:normalized()",
         "Vector2::method:orthogonal()",
         "Vector2::method:posmod(float:)",
@@ -3240,6 +3239,36 @@
       ],
       "state": "Implemented",
       "reason": "Pinned vector normalization returns zero for zero and non-finite inputs; DirectionTo normalizes the difference. VerifyVector3Values and VerifyVector4Values cover finite, zero, NaN and infinity paths on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector2::method:move_toward(Vector2:,float:)"],
+      "state": "Implemented",
+      "reason": "The pinned CMP_EPSILON proximity is 1e-5 rather than Mathf's 1e-6 scalar zero tolerance. VerifyVector2Values checks zero/negative steps below the threshold and a farther zero-step case on Linux/.NET 8."
+    },
+    {
+      "godot": ["class:Vector3"],
+      "state": "Partial",
+      "reason": "The complete three-component numeric declaration exists under ADR 0033. Normalization, direction and the four geometric length/movement/octahedral packing rows have focused native-source audits; remaining structural rows still require behavior, edge and value verification before whole-type parity."
+    },
+    {
+      "godot": ["Vector3::method:limit_length(float:)"],
+      "state": "Implemented",
+      "reason": "Pinned implementation divides by current length before multiplying by the signed cap. VerifyVector3Values checks exact float rounding order, negative reversal, longer unchanged vectors and zero/default behavior on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector3::method:move_toward(Vector3:,float:)"],
+      "state": "Implemented",
+      "reason": "Pinned CMP_EPSILON proximity is 1e-5, including negative steps near the destination. VerifyVector3Values checks zero/negative steps below the threshold and a farther zero-step case on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector3::method:octahedron_decode(Vector2:)"],
+      "state": "Implemented",
+      "reason": "Pinned fold correction clamps -z to [0,1] before normalization, including coordinates outside the nominal unit square. VerifyVector3Values checks an out-of-square vector, NaN fallback and the center on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector3::method:octahedron_encode()"],
+      "state": "Implemented",
+      "reason": "Pinned L1 normalization and lower-hemisphere fold match the typed method. VerifyVector3Values checks back/right/forward axis encodings and zero-vector NaN behavior on Linux/.NET 8."
     },
     {
       "godot": [

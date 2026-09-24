@@ -1989,6 +1989,10 @@ static void VerifyVector2Values()
             new Vector2(2f, 0f).LimitLength() == Vector2.Right &&
             Vector2.Right.MoveToward(new Vector2(4f, 0f), 2f) == new Vector2(3f, 0f),
         "Vector2 distance and interpolation operations must cover zero and nonzero vectors.");
+    Require(Vector2.Zero.MoveToward(new Vector2(0.000005f, 0f), 0f) == new Vector2(0.000005f, 0f) &&
+            Vector2.Zero.MoveToward(new Vector2(0.00002f, 0f), 0f) == Vector2.Zero &&
+            Vector2.Zero.MoveToward(new Vector2(0.000005f, 0f), -1f) == new Vector2(0.000005f, 0f),
+        "Vector2 MoveToward uses the source 1e-5 proximity threshold even for a negative step.");
     Require(new Vector2(1f, 5f).Max(new Vector2(3f, 2f)) == new Vector2(3f, 5f) &&
             new Vector2(1f, 5f).Max(4f) == new Vector2(4f, 5f) &&
             new Vector2(1f, 5f).Min(new Vector2(3f, 2f)) == new Vector2(1f, 2f) &&
@@ -2176,6 +2180,24 @@ static void VerifyVector3Values()
             new Vector3(1f, float.NegativeInfinity, 2f).Normalized() == Vector3.Zero &&
             Vector3.Zero.DirectionTo(new Vector3(1f, 2f, float.PositiveInfinity)) == Vector3.Zero,
         "Vector3 normalization and direction must reject non-finite components.");
+    var longVector = new Vector3(7f, 11f, 13f);
+    Require(longVector.LimitLength(0.7f) == longVector / longVector.Length() * 0.7f &&
+            longVector.LimitLength(100f) == longVector &&
+            longVector.LimitLength(-0.7f) == longVector / longVector.Length() * -0.7f &&
+            Vector3.Zero.LimitLength() == Vector3.Zero,
+        "Vector3 length limiting follows source division-then-multiplication order and signed limits.");
+    Require(Vector3.Zero.MoveToward(new Vector3(0.000005f, 0f, 0f), 0f) == new Vector3(0.000005f, 0f, 0f) &&
+            Vector3.Zero.MoveToward(new Vector3(0.00002f, 0f, 0f), 0f) == Vector3.Zero &&
+            Vector3.Zero.MoveToward(new Vector3(0.000005f, 0f, 0f), -1f) == new Vector3(0.000005f, 0f, 0f),
+        "Vector3 MoveToward uses the source 1e-5 proximity threshold even for a negative step.");
+    Require(Vector3.Forward.OctahedronEncode() == Vector2.One &&
+            Vector3.Right.OctahedronEncode() == new Vector2(1f, 0.5f) &&
+            Vector3.OctahedronDecode(new Vector2(2f, 0.5f)) == new Vector3(2f, -1f, -2f).Normalized() &&
+            Vector3.OctahedronDecode(new Vector2(float.NaN, 0.5f)) == Vector3.Zero,
+        "Octahedral packing preserves axis corners and clamps out-of-square decode correction.");
+    var zeroPacked = Vector3.Zero.OctahedronEncode();
+    Require(float.IsNaN(zeroPacked.X) && float.IsNaN(zeroPacked.Y),
+        "Octahedral encoding of the zero vector retains the source's undefined numeric result.");
     Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z && Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
             new Vector3I(1, 2, 3) * new Vector3I(2, 3, 4) == new Vector3I(2, 6, 12) &&
             -new Vector3I(1, 2, 3) == new Vector3I(-1, -2, -3) &&

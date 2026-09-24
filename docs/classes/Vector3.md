@@ -12,6 +12,8 @@ Last updated: 2026-09-24
 
 The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
 
+The focused length/movement and octahedral packing audit compares the pinned native formulas and edge cases. `LimitLength` divides before applying the signed cap, `MoveToward` uses a `0.00001` proximity threshold, and `OctahedronDecode` clamps the out-of-square fold correction. Those four member rows are Implemented; the remaining structurally mapped rows still require semantic review.
+
 ## Example
 
 ```csharp
@@ -458,6 +460,7 @@ Restricts the vector length to a maximum.
 
 - `length`: The maximum length.
 - Returns: The capped vector.
+- A negative cap reverses a nonzero vector; division by current length precedes multiplication by the cap.
 
 <a id="member-45"></a>
 ### `public Electron2D.Vector3 Max(Electron2D.Vector3 with)`
@@ -512,7 +515,7 @@ Moves toward another vector by a signed distance without passing it.
 
 - `to`: The destination.
 - `delta`: The signed travel distance.
-- Returns: The moved vector.
+- Returns: The moved vector, or `to` at a separation below `0.00001` even for a negative step.
 
 <a id="member-52"></a>
 ### `public Electron2D.Vector3 Normalized()`
@@ -526,8 +529,9 @@ Returns this vector scaled to unit length.
 
 Decodes an octahedrally packed unit vector from a two-component value.
 
-- `uv`: The encoded components in the unit square.
+- `uv`: The encoded components; values outside the unit square retain their source coordinates.
 - Returns: The decoded unit vector.
+- The fold correction clamps to `[0,1]` before normalization.
 
 <a id="member-54"></a>
 ### `public Electron2D.Vector2 OctahedronEncode()`
@@ -535,6 +539,7 @@ Decodes an octahedrally packed unit vector from a two-component value.
 Octahedrally packs a unit vector into a two-component value.
 
 - Returns: The packed components in the unit square.
+- Encoding a zero vector returns NaN components.
 
 <a id="member-55"></a>
 ### `public Electron2D.Vector3 PosMod(Electron2D.Vector3 mod)`

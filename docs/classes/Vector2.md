@@ -627,7 +627,9 @@ Moves toward another vector by a fixed distance without passing it.
 - `to`: The destination vector.
 - `delta`: The signed distance to move. Negative values move away.
 
-**Returns:** The moved vector, or `to` when within the nonnegative step.
+**Returns:** The moved vector, or `to` when within the step or separated by less than `0.00001`.
+
+**Remarks:** The proximity rule returns `to` even for a negative step.
 
 <a id="m-electron2d-vector2-normalized"></a>
 ### `public Vector2 Normalized()`
@@ -1075,7 +1077,7 @@ The type depends on canonical scalar [`Mathf`](Mathf.md) plus formatting and lay
 
 ## Coverage, verification, and limitations
 
-The pinned XML, native math and typed C# audit covers all 82 reference members and the type relationship. The two integer scalar operators use C# conversion to the existing float operators; `LimitLength()` retains its default length of one. The accepted midpoint-to-even `Round` behavior and unit-vector tolerance are recorded in ADRs 0033/0034. Universal-value truth conversion is permanently excluded by the typed C# architecture. No automatic conversion to an external numerics type is exposed. No 3D vector or spatial API is present.
+The pinned XML, native math and typed C# audit covers all 82 reference members and the type relationship. The two integer scalar operators use C# conversion to the existing float operators; `LimitLength()` retains its default length of one. `MoveToward` uses the source `0.00001` proximity threshold, separately from `Mathf`'s `0.000001` scalar zero tolerance; the managed check covers zero and negative steps near that threshold. The accepted midpoint-to-even `Round` behavior and unit-vector tolerance are recorded in ADRs 0033/0034. Universal-value truth conversion is permanently excluded by the typed C# architecture. No automatic conversion to an external numerics type is exposed. No 3D spatial API is present; `Vector3` is a numeric tuple.
 
 The executable harness covers layout, constants, index failures, construction and integer conversion failures, every method and operator family, integer scalar conversion, the default limit length, interpolation, zero/non-finite behavior, ordering, formatting, strict persistence, packed-scene copying, and warmed zero-allocation math. Execution is Linux/.NET 8 only; native ABI and the full platform matrix remain unverified.
 

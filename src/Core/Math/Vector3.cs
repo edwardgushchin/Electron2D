@@ -280,10 +280,11 @@ public struct Vector3 : IEquatable<Vector3>
     /// <summary>Restricts the vector length to a maximum.</summary>
     /// <param name="length">The maximum length.</param>
     /// <returns>The capped vector.</returns>
+    /// <remarks>A negative limit reverses a nonzero vector. Scaling divides by the current length before multiplying by the limit.</remarks>
     public readonly Vector3 LimitLength(float length = 1f)
     {
         var current = Length();
-        return current > length && current > 0f ? this * (length / current) : this;
+        return current > 0f && length < current ? this / current * length : this;
     }
 
     /// <summary>Returns the componentwise maximum with another vector.</summary>
@@ -348,11 +349,12 @@ public struct Vector3 : IEquatable<Vector3>
     /// <param name="to">The destination.</param>
     /// <param name="delta">The signed travel distance.</param>
     /// <returns>The moved vector.</returns>
+    /// <remarks>A separation below <c>0.00001</c> returns <paramref name="to"/> even for a negative step.</remarks>
     public readonly Vector3 MoveToward(Vector3 to, float delta)
     {
         var difference = to - this;
         var distance = difference.Length();
-        return distance <= delta || Mathf.IsZeroApprox(distance) ? to : this + (difference / distance * delta);
+        return distance <= delta || distance < 0.00001f ? to : this + (difference / distance * delta);
     }
 
     /// <summary>Returns this vector scaled to unit length.</summary>
@@ -367,22 +369,21 @@ public struct Vector3 : IEquatable<Vector3>
     /// <summary>Decodes an octahedrally packed unit vector from a two-component value.</summary>
     /// <param name="uv">The encoded components in the unit square.</param>
     /// <returns>The decoded unit vector.</returns>
+    /// <remarks>Out-of-square components retain their source values; the fold correction is clamped to one before normalization.</remarks>
     public static Vector3 OctahedronDecode(Vector2 uv)
     {
         var x = uv.X * 2f - 1f;
         var y = uv.Y * 2f - 1f;
         var z = 1f - Mathf.Abs(x) - Mathf.Abs(y);
-        if (z < 0f)
-        {
-            var oldX = x;
-            x = (1f - Mathf.Abs(y)) * (oldX >= 0f ? 1f : -1f);
-            y = (1f - Mathf.Abs(oldX)) * (y >= 0f ? 1f : -1f);
-        }
+        var correction = Mathf.Clamp(-z, 0f, 1f);
+        x += x >= 0f ? -correction : correction;
+        y += y >= 0f ? -correction : correction;
         return new Vector3(x, y, z).Normalized();
     }
 
     /// <summary>Octahedrally packs a unit vector into a two-component value.</summary>
     /// <returns>The packed components in the unit square.</returns>
+    /// <remarks>A zero vector has undefined packed coordinates and returns NaN components.</remarks>
     public readonly Vector2 OctahedronEncode()
     {
         var denominator = Mathf.Abs(X) + Mathf.Abs(Y) + Mathf.Abs(Z);

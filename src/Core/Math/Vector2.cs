@@ -340,12 +340,13 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Moves toward another vector by a fixed distance without passing it.</summary>
     /// <param name="to">The destination vector.</param>
     /// <param name="delta">The signed distance to move. Negative values move away.</param>
-    /// <returns>The moved vector, or <paramref name="to"/> when within the nonnegative step.</returns>
+    /// <returns>The moved vector, or <paramref name="to"/> when within the step or source proximity threshold.</returns>
+    /// <remarks>A separation below <c>0.00001</c> returns <paramref name="to"/> even for a negative step.</remarks>
     public readonly Vector2 MoveToward(Vector2 to, float delta)
     {
         var difference = to - this;
         var distance = difference.Length();
-        return distance <= delta || Mathf.IsZeroApprox(distance) ? to : this + (difference / distance * delta);
+        return distance <= delta || distance < 0.00001f ? to : this + (difference / distance * delta);
     }
 
     /// <summary>Returns this vector scaled to unit length.</summary>
