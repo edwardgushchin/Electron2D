@@ -5,6 +5,10 @@ internal static class InputActionSettingsTests
 {
     internal static void Run()
     {
+        Reject<System.Text.Json.JsonException>(() =>
+            System.Text.Json.JsonSerializer.Deserialize<InputActionSettings>("{\"Version\":1,\"Unknown\":0}"));
+        Reject<System.Text.Json.JsonException>(() =>
+            System.Text.Json.JsonSerializer.Deserialize<InputBindingSettings>("{\"Kind\":0,\"Unknown\":0}"));
         var map = InputMap.Instance;
         var root = IOPath.Combine(IOPath.GetTempPath(), "electron2d-input-" + Guid.NewGuid().ToString("N"));
         var project = IOPath.Combine(root, "project");
@@ -121,6 +125,30 @@ internal static class InputActionSettingsTests
 
                 loaded.Set(actionSetting, new InputActionSettings
                 {
+                    Bindings =
+                    [
+                        new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space },
+                        new InputBindingSettings { Kind = InputBindingKind.Key, Location = KeyLocation.Left },
+                    ],
+                });
+                Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
+                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
+                    Input.Instance.IsActionPressed("jump"),
+                    "A late key-location-only binding must not replace the live map after a valid candidate.");
+
+                loaded.Set(actionSetting, new InputActionSettings
+                {
+                    Bindings = Enumerable.Repeat(
+                        new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space },
+                        Input.MaxEventsPerAction + 1).ToArray(),
+                });
+                Reject<InvalidDataException>(() => map.LoadFromProjectSettings(loaded));
+                Check(loadedEvents == 1 && map.ActionGetEvents("jump").Count == 5 &&
+                    Input.Instance.IsActionPressed("jump"),
+                    "More than 32 serialized records must fail before duplicate collapse or map replacement.");
+
+                loaded.Set(actionSetting, new InputActionSettings
+                {
                     Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }],
                 });
                 void ThrowingLoaded() => throw new InvalidOperationException("expected listener failure");
@@ -141,11 +169,54 @@ internal static class InputActionSettingsTests
                     "A wrong typed input record cannot replace the live map.");
             }
             finally { map.ProjectSettingsLoaded -= OnLoaded; }
+
+            using var featured = new ProjectSettings(project, user);
+            featured.Register(actionSetting);
+            featured.Set(actionSetting, new InputActionSettings
+            {
+                Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space }],
+            });
+            featured.SetFeatureOverride(actionSetting, "testsinput", new InputActionSettings
+            {
+                Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter }],
+            });
+            featured.AddCustomFeature("testsinput");
+            map.LoadFromProjectSettings(featured);
+            using var featuredKey = new InputEventKey { Keycode = Key.Enter, Pressed = true };
+            Check(map.EventIsAction(featuredKey, "jump", exactMatch: true) &&
+                map.ActionGetEvents("jump").Count == 1,
+                "The loaded map must use the active typed feature override.");
+            featured.SetFeatureOverride(actionSetting, "testsinput", new InputActionSettings { Version = 2 });
+            Reject<InvalidDataException>(() => map.LoadFromProjectSettings(featured));
+            Check(map.EventIsAction(featuredKey, "jump", exactMatch: true) &&
+                map.ActionGetEvents("jump").Count == 1,
+                "An invalid active override must preserve the previous map.");
         }
         finally
         {
             map.LoadFromProjectSettings();
             Directory.Delete(root, recursive: true);
+        }
+
+        var processSetting = new ProjectSetting<InputActionSettings>(
+            "input/tests_public_reload", new InputActionSettings());
+        ProjectSettings.Instance.Register(processSetting);
+        try
+        {
+            ProjectSettings.Instance.Set(processSetting, new InputActionSettings
+            {
+                Bindings = [new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.F12 }],
+            });
+            map.LoadFromProjectSettings();
+            using var processKey = new InputEventKey { Keycode = Key.F12, Pressed = true };
+            Check(map.HasAction("tests_public_reload") &&
+                map.EventIsAction(processKey, "tests_public_reload", exactMatch: true),
+                "The public loader must read the process-wide typed settings registry.");
+        }
+        finally
+        {
+            ProjectSettings.Instance.Unregister(processSetting);
+            map.LoadFromProjectSettings();
         }
 
         Console.WriteLine("Typed project input-action loading checks passed.");

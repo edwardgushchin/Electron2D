@@ -4,7 +4,7 @@ namespace Electron2D;
 
 /// <summary>Stores one versioned, typed project input-action definition.</summary>
 /// <remarks>Use this as the value of a <see cref="ProjectSetting{T}"/> named <c>input/&lt;action&gt;</c>.
-/// Version one is the only supported schema; unsupported versions fail before the live action map changes.</remarks>
+/// Version one is the only supported schema; unknown JSON members and unsupported versions fail before the live action map changes.</remarks>
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
 public sealed class InputActionSettings
 {
@@ -80,6 +80,7 @@ public sealed class InputBindingSettings
 
     /// <summary>Gets the key location for a physical key binding.</summary>
     /// <value>A key location or <see cref="KeyLocation.Unspecified"/>.</value>
+    /// <remarks>A location alone does not identify a key; at least one key code or label is required.</remarks>
     public KeyLocation Location { get; init; }
 
     /// <summary>Gets Shift, Alt, Control, Meta, or portable Command-or-Control modifier bits.</summary>
@@ -116,8 +117,8 @@ public sealed class InputBindingSettings
                 (Modifiers & (KeyModifierMask.Control | KeyModifierMask.Meta)) != 0))
             throw new InvalidDataException("An input binding has an invalid kind, device, or modifier combination.");
 
-        var keyFields = Keycode != Key.None || PhysicalKeycode != Key.None || KeyLabel != Key.None ||
-            Location != KeyLocation.Unspecified;
+        var keyIdentity = Keycode != Key.None || PhysicalKeycode != Key.None || KeyLabel != Key.None;
+        var keyFields = keyIdentity || Location != KeyLocation.Unspecified;
         var mouseFields = MouseButtonIndex != MouseButton.None;
         var joyButtonFields = JoyButtonIndex != JoyButton.A;
         var joyMotionFields = JoyAxis != JoyAxis.LeftX || AxisValue != 0f;
@@ -145,7 +146,7 @@ public sealed class InputBindingSettings
             switch (result)
             {
                 case InputEventKey key:
-                    if (!keyFields || !Enum.IsDefined(Location))
+                    if (!keyIdentity || !Enum.IsDefined(Location))
                         throw new InvalidDataException("A key binding needs a key identity and a valid location.");
                     key.Keycode = Keycode;
                     key.PhysicalKeycode = PhysicalKeycode;

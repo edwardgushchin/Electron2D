@@ -68,4 +68,4 @@ The ordered typed binding list. Null entries and more than 32 entries fail load;
 
 ## Lifecycle and verification
 
-[`InputActionSettingsTests`](../../tests/Electron2D.Tests/InputActionSettingsTests.cs) checks project-file round-trip, validation rollback, map replacement, and five binding families in managed code. The contract is defined by [ADR 0038](../decisions/input.md#adr-0038); native devices and other platforms are not validated here.
+[`InputActionSettingsTests`](../../tests/Electron2D.Tests/InputActionSettingsTests.cs) checks project-file round-trip, five binding families, unknown JSON member rejection, active feature overrides, public process-registry loading, 33-record rejection before duplicate collapse, late invalid-binding rollback and map replacement in managed code. The contract is defined by [ADR 0038](../decisions/input.md#adr-0038); native devices and other platforms are not validated here.

@@ -40,7 +40,8 @@ public sealed class InputMap : ElectronObject
     public event Action? ProjectSettingsLoaded;
 
     /// <summary>Replaces all actions with the typed <c>input/*</c> records in the process-wide project settings.</summary>
-    /// <remarks>Validation finishes before the live map changes. Loaded bindings are borrowed by the map like manually
+    /// <remarks>Active project feature overrides are applied. Validation finishes before the live map changes.
+    /// Loaded bindings are borrowed by the map like manually
     /// added bindings; references obtained from <see cref="ActionGetEvents"/> remain usable after a later reload.
     /// This operation allocates and belongs in project setup, outside input dispatch. A loaded listener exception
     /// propagates after the new map has committed.</remarks>

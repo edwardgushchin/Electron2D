@@ -86,6 +86,7 @@ Current-layout key label for `Key`.
 ### `public KeyLocation Location { get; init; }`
 
 Physical key location for `Key`; an undefined value fails load.
+A location without `Keycode`, `PhysicalKeycode`, or `KeyLabel` also fails load because it cannot identify a key.
 
 <a id="modifiers"></a>
 ### `public KeyModifierMask Modifiers { get; init; }`
@@ -119,4 +120,4 @@ Nonblank ordinal name for `Action`.
 
 ## Lifecycle and verification
 
-The value is serialized by the typed project setting; it is not itself a live input event. A later map reload creates new borrowed event resources. [`InputActionSettingsTests`](../../tests/Electron2D.Tests/InputActionSettingsTests.cs) checks event-family round-trip, duplicate collapse, invalid binding rollback, and old binding detachment. See [ADR 0038](../decisions/input.md#adr-0038) for schema versioning.
+The value is serialized by the typed project setting; it is not itself a live input event. A later map reload creates new borrowed event resources. [`InputActionSettingsTests`](../../tests/Electron2D.Tests/InputActionSettingsTests.cs) checks five event-family round trips, duplicate collapse, rejection of an unidentified key after a valid candidate, invalid binding rollback, feature overrides and old binding detachment. See [ADR 0038](../decisions/input.md#adr-0038) for schema versioning.
