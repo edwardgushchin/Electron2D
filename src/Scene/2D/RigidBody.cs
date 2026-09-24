@@ -1,5 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Types;
 
 namespace Electron2D;
@@ -68,7 +69,7 @@ public sealed partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets positive finite body mass in kilograms.</summary>
     /// <value>One by default.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The mass is not positive and finite, or its shape inertia would overflow.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The mass is not positive and finite, is below the solver range, or its shape inertia would overflow or underflow the solver range.</exception>
     public float Mass
     {
         get { ThrowIfDisposed(); return _mass; }
@@ -301,10 +302,53 @@ public sealed partial class RigidBody : PhysicsBody
     {
         if (!HasBackend || _freeze) return;
         var data = b2Body_GetMassData(BackendID);
-        if (data.mass <= 0) return;
+        if (data.mass <= 0)
+        {
+            var totalLength = 0d;
+            var centerX = 0d;
+            var centerY = 0d;
+            foreach (var id in BackendShapes)
+            {
+                if (b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
+                var segment = b2Shape_GetSegment(id);
+                var dx = (double)segment.point2.X - segment.point1.X;
+                var dy = (double)segment.point2.Y - segment.point1.Y;
+                var length = Math.Sqrt(dx * dx + dy * dy);
+                totalLength += length;
+                centerX += length * ((double)segment.point1.X + segment.point2.X) * 0.5;
+                centerY += length * ((double)segment.point1.Y + segment.point2.Y) * 0.5;
+            }
+            if (totalLength > 0)
+            {
+                centerX /= totalLength;
+                centerY /= totalLength;
+                var segmentInertia = 0d;
+                foreach (var id in BackendShapes)
+                {
+                    if (b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
+                    var segment = b2Shape_GetSegment(id);
+                    var dx = (double)segment.point2.X - segment.point1.X;
+                    var dy = (double)segment.point2.Y - segment.point1.Y;
+                    var length = Math.Sqrt(dx * dx + dy * dy);
+                    var mx = ((double)segment.point1.X + segment.point2.X) * 0.5 - centerX;
+                    var my = ((double)segment.point1.Y + segment.point2.Y) * 0.5 - centerY;
+                    segmentInertia += desiredMass * length / totalLength * (length * length / 12 + mx * mx + my * my);
+                }
+                if (!double.IsFinite(segmentInertia) || segmentInertia > float.MaxValue ||
+                    (segmentInertia > 0 && !float.IsFinite(1f / (float)segmentInertia)) ||
+                    Math.Abs(centerX) > float.MaxValue || Math.Abs(centerY) > float.MaxValue)
+                    throw new ArgumentOutOfRangeException(nameof(desiredMass), "Segment mass exceeds the solver range.");
+                data.center = new((float)centerX, (float)centerY);
+                data.rotationalInertia = (float)segmentInertia;
+            }
+            data.mass = desiredMass;
+            b2Body_SetMassData(BackendID, data);
+            return;
+        }
         var ratio = desiredMass / data.mass;
         var inertia = data.rotationalInertia * ratio;
-        if (!float.IsFinite(ratio) || !float.IsFinite(inertia))
+        if (!float.IsFinite(ratio) || !float.IsFinite(inertia) ||
+            (inertia > 0 && !float.IsFinite(1f / inertia)))
             throw new ArgumentOutOfRangeException(nameof(desiredMass), "Mass exceeds the current shape's representable inertia range.");
         data.mass = desiredMass;
         data.rotationalInertia = inertia;
@@ -318,7 +362,8 @@ public sealed partial class RigidBody : PhysicsBody
 
     private static void Positive(float value)
     {
-        if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
+        if (!float.IsFinite(value) || value <= 0 || !float.IsFinite(1f / value))
+            throw new ArgumentOutOfRangeException(nameof(value));
     }
 
     private static void ValidateDampMode(DampMode value)

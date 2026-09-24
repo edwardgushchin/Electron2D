@@ -12,7 +12,7 @@ public abstract class Shape : Resource
     private ulong _revision;
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
-    /// <returns>A rectangle centered on the shape origin.</returns>
+    /// <returns>The tight local-axis bounds; a shape need not be centered on its origin.</returns>
     public abstract Rect2 GetRect();
 
     internal abstract B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition);
@@ -166,6 +166,88 @@ public sealed class CapsuleShape : Shape
     {
         ((CapsuleShape)target)._radius = _radius;
         ((CapsuleShape)target)._height = _height;
+    }
+}
+
+/// <summary>A two-sided line-segment collision shape between two local points.</summary>
+/// <remarks>A segment shorter than the backend's linear tolerance uses a point fixture while retaining its exact endpoints and bounds.</remarks>
+public sealed class SegmentShape : Shape
+{
+    private Vector2 _a;
+    private Vector2 _b = new(0, 10);
+
+    /// <summary>Creates a segment from the origin to (0, 10) in scene units.</summary>
+    public SegmentShape() { }
+
+    /// <summary>Gets or sets the first finite local endpoint.</summary>
+    /// <value>Zero by default.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
+    public Vector2 A
+    {
+        get { ThrowIfDisposed(); return _a; }
+        set
+        {
+            ThrowIfDisposed();
+            ValidateEndpoint(value, _b);
+            if (_a == value) return;
+            _a = value;
+            EmitGeometryChanged();
+        }
+    }
+
+    /// <summary>Gets or sets the second finite local endpoint.</summary>
+    /// <value>(0, 10) by default.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The endpoint is nonfinite or produces unrepresentable bounds.</exception>
+    public Vector2 B
+    {
+        get { ThrowIfDisposed(); return _b; }
+        set
+        {
+            ThrowIfDisposed();
+            ValidateEndpoint(value, _a);
+            if (_b == value) return;
+            _b = value;
+            EmitGeometryChanged();
+        }
+    }
+
+    /// <inheritdoc />
+    public override Rect2 GetRect()
+    {
+        ThrowIfDisposed();
+        return new(MathF.Min(_a.X, _b.X), MathF.Min(_a.Y, _b.Y),
+            MathF.Abs(_b.X - _a.X), MathF.Abs(_b.Y - _a.Y));
+    }
+
+    internal override B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition)
+    {
+        ThrowIfDisposed();
+        var pointA = ToBackend(localPosition + _a.Rotated(localRotation));
+        var pointB = ToBackend(localPosition + _b.Rotated(localRotation));
+        if (B2MathFunction.b2DistanceSquared(pointA, pointB) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP)
+        {
+            var center = new B2Vec2(pointA.X + (pointB.X - pointA.X) * 0.5f,
+                pointA.Y + (pointB.Y - pointA.Y) * 0.5f);
+            return b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 });
+        }
+        return b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB));
+    }
+
+    /// <inheritdoc />
+    protected override Resource CreateDuplicateInstance() => new SegmentShape();
+
+    /// <inheritdoc />
+    protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
+        Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
+    {
+        ((SegmentShape)target)._a = _a;
+        ((SegmentShape)target)._b = _b;
+    }
+
+    private static void ValidateEndpoint(Vector2 value, Vector2 other)
+    {
+        if (!value.IsFinite() || !(value - other).IsFinite())
+            throw new ArgumentOutOfRangeException(nameof(value));
     }
 }
 

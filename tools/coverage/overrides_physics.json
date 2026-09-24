@@ -33,6 +33,26 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.SegmentShape..ctor()",
+      "reason": "Managed construction projects the existing line-segment resource defaults.",
+      "adr": "ADRs 0003, 0013, 0061"
+    },
+    {
+      "electron2d": "method:Electron2D.SegmentShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copying preserves independent line endpoints.",
+      "adr": "ADRs 0013, 0061"
+    },
+    {
+      "electron2d": "method:Electron2D.SegmentShape.CreateDuplicateInstance()",
+      "reason": "Typed Resource copying creates an independent line-segment instance.",
+      "adr": "ADRs 0013, 0061"
+    },
+    {
+      "electron2d": "method:Electron2D.SegmentShape.GetRect()",
+      "reason": "Concrete local bounds override of the inherited Shape.GetRect contract.",
+      "adr": "ADRs 0008, 0061"
+    },
+    {
       "electron2d": "constructor:Electron2D.AnimatableBody..ctor()",
       "reason": "Managed construction projects the kinematic body defaults and inherited static-body role.",
       "adr": "ADRs 0003, 0008, 0060"
@@ -269,6 +289,36 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:SegmentShape2D",
+        "SegmentShape2D::property:a",
+        "SegmentShape2D::property:b"
+      ],
+      "state": "Implemented",
+      "reason": "Two-sided segment fixtures, exact endpoints/bounds, copying and live body/area contacts execute under ADR 0061; SegmentShapeTests covers rotated and dynamic geometry, degenerate fallback, mass/inertia, packing, failures and warm allocation."
+    },
+    {
+      "godot": [
+        "Joint2D::method:get_rid()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: public typed physics RID identity and joint/body/world handle lifetime before exposing a scene joint handle (ADR 0061)."
+    },
+    {
+      "godot": [
+        "Joint2D::property:bias"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: verified per-joint positional bias mapping in Box2D's constraint solver; no equivalent public revolute parameter is present (ADR 0061)."
+    },
+    {
+      "godot": [
+        "PinJoint2D::property:softness"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: linear pin-anchor compliance mapping in Box2D; its revolute spring controls angle rather than the reference's positional softness (ADR 0061)."
+    },
     {
       "godot": [
         "class:AnimatableBody2D",

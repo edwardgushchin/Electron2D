@@ -2766,6 +2766,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SegmentShape",
+    "kind": "type",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "SegmentShape",
+    "signature": "public sealed class Electron2D.SegmentShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Shader",
     "kind": "type",
     "declaringType": "Electron2D.Shader",
@@ -6191,6 +6206,19 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SegmentShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": ".ctor",
+    "signature": "public SegmentShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -45141,6 +45169,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SegmentShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SegmentShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SegmentShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shader.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Shader",
@@ -66271,6 +66364,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SegmentShape.A()",
+    "kind": "property",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "A",
+    "signature": "public Electron2D.Vector2 A { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SegmentShape.B()",
+    "kind": "property",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "B",
+    "signature": "public Electron2D.Vector2 B { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

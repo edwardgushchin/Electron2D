@@ -760,7 +760,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScriptLanguageExtension](classes/ScriptLanguageExtension.md) | ScriptLanguage | Blocked | 91 |
 | [ScrollBar](classes/ScrollBar.md) | Range | Blocked | 15 |
 | [ScrollContainer](classes/ScrollContainer.md) | Container | Blocked | 39 |
-| [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Unimplemented | 2 |
+| [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Implemented | 2 |
 | [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Unimplemented | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |

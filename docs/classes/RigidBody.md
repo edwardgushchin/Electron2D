@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle, capsule or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms, velocities and contact snapshots return to the scene before contact, sleep and area callbacks, timers, tweens and interpolation capture.
+A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle, capsule, segment or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms, velocities and contact snapshots return to the scene before contact, sleep and area callbacks, timers, tweens and interpolation capture.
 
 ## Example
 
@@ -25,7 +25,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public float Mass { get; set; }` | 1 | Positive finite kilograms; scales shape-derived inertia. |
+| `public float Mass { get; set; }` | 1 | Positive finite kilograms within the solver range; scales shape-derived or zero-area inertia. |
 | `public float GravityScale { get; set; }` | 1 | Finite multiplier, including zero and negative values. |
 | `public Vector2 LinearVelocity { get; set; }` | (0, 0) | Finite scene units per second. |
 | `public float AngularVelocity { get; set; }` | 0 | Finite radians per second. |
@@ -71,7 +71,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 <a id="mass"></a>
 ### `Mass`
 
-Zero, negative and nonfinite values throw `ArgumentOutOfRangeException` before mutation. With fixtures present, assignment scales their shape-derived mass and rotational inertia to the requested kilograms; a ratio or inertia that would overflow is rejected before replacing the current mass. A detached value is applied when the body later enters a tree; live fixture edits reapply it. An unshaped body stores mass until geometry exists.
+Zero, negative and nonfinite values throw `ArgumentOutOfRangeException` before mutation. With fixtures present, assignment scales their shape-derived mass and rotational inertia to the requested kilograms; a ratio or inertia that would overflow is rejected before replacing the current mass. A detached value is applied when the body later enters a tree; live fixture edits reapply it. A body with only zero-area segments distributes its requested mass by segment length and uses thin-rod inertia around their length-weighted center. An unshaped body has the requested mass and zero inertia, so it can move without colliding. A mass or inertia whose reciprocal exceeds the finite solver range rejects before backend mutation.
 
 <a id="velocity"></a>
 ### `LinearVelocity` and `AngularVelocity`
@@ -143,6 +143,6 @@ The event carries this RigidBody and fires when the solver changes its sleep sta
 
 ## Ownership, limits and verification
 
-SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
+SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks zero-area segment mass, torque and unshaped movement. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
 
 Shape-index contact events, tile-map virtual body reporting, exact capped-contact selection, `PhysicsDirectBodyState`, custom center of mass/inertia, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.

@@ -189,6 +189,7 @@ NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
 CapsuleShapeTests.Run();
+SegmentShapeTests.Run();
 AnimatableBodyTests.Run();
 PhysicsMaterialTests.Run();
 AreaTests.Run();
