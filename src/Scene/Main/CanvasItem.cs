@@ -274,11 +274,11 @@ public abstract partial class CanvasItem : Node
     /// <remarks>Effective Z remains the primary ordering key within one canvas. A parent sorting its children by Y uses their Y
     /// positions instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
     /// Changes affect the next submission without requiring QueueRedraw.</remarks>
-    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public bool ShowBehindParent
     {
-        get { ThrowIfDisposed(); return _showBehindParent; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _showBehindParent; }
         set { EnsureMutable(); _showBehindParent = value; }
     }
 
@@ -289,11 +289,11 @@ public abstract partial class CanvasItem : Node
     /// at their root's Y position. Approximate Y ties retain scene order. Effective Z takes precedence, and
     /// neutral nodes and TopLevel children start independent canvas roots. Processing and input order are unchanged.
     /// Changes affect the next submission without requiring QueueRedraw.</remarks>
-    /// <exception cref="InvalidOperationException">Mutation occurs off the owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public bool YSortEnabled
     {
-        get { ThrowIfDisposed(); return _ySortEnabled; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _ySortEnabled; }
         set { EnsureMutable(); _ySortEnabled = value; }
     }
 
@@ -377,13 +377,14 @@ public abstract partial class CanvasItem : Node
     /// <remarks>Every valid assignment commits the value then requests configuration-warning refresh, even if unchanged.</remarks>
     /// <exception cref="Exception">A configuration-warning subscriber fails after assignment.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is outside the supported range.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int ZIndex
     {
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _zIndex;
         }
         set
@@ -400,13 +401,14 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets whether effective Z order accumulates ancestor Z values.</summary>
     /// <value><see langword="true"/> by default.</value>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ZAsRelative
     {
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _zAsRelative;
         }
         set
@@ -488,12 +490,13 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Moves this node to the last position among its siblings.</summary>
     /// <remarks>A detached or hierarchy-root node is left unchanged.</remarks>
-    /// <exception cref="InvalidOperationException">An attached parent is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached item is accessed off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node or its parent is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="AggregateException">One or more child-order or tree-change callbacks fail after the order changes.</exception>
     public void MoveToFront()
     {
         ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
         Parent?.MoveChild(this, -1);
     }
 

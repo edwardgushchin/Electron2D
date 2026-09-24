@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Node](Node.md)
 
@@ -15,6 +15,8 @@ Last updated: 2026-09-23
 The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
 
 Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
+
+The Z and sibling-order audit closes `ZIndex`, `ZAsRelative` and `MoveToFront`. Local Z accepts -4096 through 4096; an invalid assignment throws and preserves state under ADR 0008. Equal valid Z assignments still request configuration-warning refresh. Relative Z follows direct canvas parents and stops at neutral/TopLevel boundaries. `MoveToFront` moves a child to the last sibling position, preserves the committed order after callback failure and leaves a root unchanged. Attached reads and moves enforce the scene owner thread. Managed checks and 31 Linux/Wayland pixel cases on compatibility and GPU pass; the class and other member rows retain their individual coverage states.
 
 Canvas attachment is part of actual SceneTree membership. Entry delivers NotificationEnterCanvas before the tree-enter callback, then visibility delivery when initially visible. Exit delivers NotificationExitCanvas after the tree-exit callback, with children exiting first. Changing TopLevel emits an exit/entry pair for this item and schedules redraw; failures are aggregated after the transition. These notifications use ordinary C# override/base dispatch under the engine's notification contract. Manual tree notifications do not attach or detach a canvas.
 
@@ -306,7 +308,7 @@ Gets or sets the color multiplier applied only to this node's drawing.
 
 False by default. True draws this canvas subtree before its canvas parent when effective Z is equal. Effective Z takes precedence within each canvas. An enabled Y-sorting parent orders participating children by Y instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
 
-Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Mutation off an attached tree's owner thread or during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
+Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Attached access off the owner thread or mutation during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
 
 <a id="p-electron2d-canvasitem-toplevel"></a>
 ### `public bool TopLevel { get; set; }`
@@ -356,7 +358,7 @@ False by default. True orders the item itself at Y = 0 and its direct canvas chi
 
 Invisible children do not participate. TopLevel children and children below neutral nodes are separate canvas roots. ShowBehindParent is ignored for items directly ordered by the Y group, but still applies inside unsorted subtrees. Processing and input order remain unchanged.
 
-Changes affect the next submission without QueueRedraw. PackedScene stores the value. Mutation off an attached tree's owner thread or during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
+Changes affect the next submission without QueueRedraw. PackedScene stores the value. Attached access off the owner thread or mutation during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
 
 <a id="p-electron2d-canvasitem-zasrelative"></a>
 ### `public bool ZAsRelative { get; set; }`
@@ -365,7 +367,7 @@ Gets or sets whether effective Z order accumulates ancestor Z values.
 
 **Value:** `true` by default.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -380,7 +382,7 @@ Every valid assignment commits the Z value and then requests configuration-warni
 
 **System.ArgumentOutOfRangeException:** The assigned value is outside the supported range.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -748,7 +750,7 @@ Moves this node to the last position among its siblings.
 
 **Remarks:** A detached or hierarchy-root node is left unchanged.
 
-**System.InvalidOperationException:** An attached parent is mutated off the owner thread.
+**System.InvalidOperationException:** An attached item is accessed off the owner thread.
 
 **System.ObjectDisposedException:** This node or its parent is disposing on another thread or has finished disposing.
 

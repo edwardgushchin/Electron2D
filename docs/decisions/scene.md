@@ -81,6 +81,8 @@ The complete chain is `ElectronObject → Node → CanvasItem → Entity → Spr
 
 `Entity.GetRelativeTransformToParent` preserves the source's ordered local-transform product through a direct spatial-parent chain, including across `TopLevel`. A null, disposed or unconnected ancestor fails with a typed C# exception instead of the native diagnostic plus identity fallback, because identity is also the valid result for a self query. Attached queries enforce the scene owner thread. This error adaptation does not change valid hierarchy results.
 
+`CanvasItem.ZIndex` retains the pinned -4096 through 4096 range. An out-of-range assignment throws `ArgumentOutOfRangeException` and preserves the prior value instead of reporting a native diagnostic and returning. Valid assignments, including equal values, request configuration-warning refresh. Attached Z/order reads and `MoveToFront` enforce the scene owner thread; detached nodes have no bound scene owner and use ordinary `Node` sibling-order rules.
+
 The target hierarchy is:
 
 ```text

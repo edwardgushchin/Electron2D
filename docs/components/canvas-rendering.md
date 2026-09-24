@@ -79,6 +79,8 @@ Actual SceneTree entry attaches each canvas parent-first and notifies visible en
 
 TopLevel items and items below neutral Node parents are independent canvas roots. A root's canvas subtree precedes the next root at equal effective Z. ShowBehindParent draws a child subtree before its parent. YSortEnabled orders the item itself at Y = 0 and direct canvas children by local Y; nested enabled children join that group, while disabled children keep their subtree together at their own Y. Approximate Y ties keep scene order using the shared Mathf contract. Invisible items are omitted, neutral/TopLevel boundaries end the group, and Z takes precedence everywhere. Changes use the next submission without rerecording retained commands and do not reorder processing/input.
 
+The `ZIndex`, `ZAsRelative` and `MoveToFront` audit checks local range/defaults, direct-parent accumulation, neutral/TopLevel isolation, last-sibling moves, repeated no-op, warning refresh, stored state, callback failure and attached owner-thread reads. Invalid Z throws with unchanged state under ADR 0008. The full Wayland renderer run passed 31 ordering pixel cases on compatibility and GPU; other platforms and visual owner acceptance remain unverified.
+
 ## Ownership and limits
 
 Nodes borrow materials and textures; native texture caches belong to the backend. Updates reuse compatible allocations; replacement recreates them. Unused cached resources are released, and shutdown releases all backend state. A disposed or unreadable texture fails when its retained drawing is consumed. A custom Texture may override drawing with ordinary CanvasItem geometry instead of providing an image.

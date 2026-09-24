@@ -17,6 +17,7 @@ internal static class SceneHierarchyTests
             typeof(Node).GetProperty("Parent")!.PropertyType == typeof(Node) &&
             typeof(Texture).GetMethod("Draw")!.GetParameters()[0].ParameterType == typeof(CanvasItem), "API argument roles.");
         MixedTree();
+        CanvasOrderValues();
         PackedHierarchy();
         CallbackFailures();
         Console.WriteLine("Scene hierarchy checks passed.");
@@ -73,6 +74,61 @@ internal static class SceneHierarchyTests
         Check(timeouts == 2 && root.GetNode("spatial/neutral/timer") == timer, "Neutral tween binding and path lookup.");
         timer.QueueFree(); tree.FlushDeferred();
         Check(timer.IsDisposed && neutral.ChildCount == 1, "Neutral deletion and ownership.");
+    }
+
+    private static void CanvasOrderValues()
+    {
+        using var root = new Entity { ZIndex = 4096 };
+        var first = new Entity { Name = "First", ZIndex = 1 };
+        var second = new Entity { Name = "Second", ZIndex = -4096, ZAsRelative = false };
+        root.AddChild(first);
+        root.AddChild(second);
+        using var tree = new SceneTree(root);
+
+        Check(root.ZAsRelative && first.ZAsRelative && !second.ZAsRelative &&
+            first.EffectiveZIndex == 4096 && second.EffectiveZIndex == -4096,
+            "Canvas Z defaults, inherited clamping, and absolute child Z are stable.");
+        first.ZAsRelative = false;
+        Check(first.EffectiveZIndex == 1, "Absolute Z stops direct-parent accumulation.");
+        first.ZAsRelative = true;
+        Reject<ArgumentOutOfRangeException>(() => first.ZIndex = 4097);
+        Reject<ArgumentOutOfRangeException>(() => first.ZIndex = -4097);
+        Check(first.ZIndex == 1, "Invalid Z assignments preserve the previous value.");
+        tree.EditedSceneRoot = root;
+        var warningRefreshes = 0;
+        tree.NodeConfigurationWarningChanged += (_, node) => { if (node == first) warningRefreshes++; };
+        first.ZIndex = first.ZIndex;
+        Check(warningRefreshes == 1, "Even an equal valid Z assignment requests warning refresh.");
+        first.ZAsRelative = first.ZAsRelative;
+        Check(warningRefreshes == 1, "An equal Z-relative assignment does not request warning refresh.");
+
+        var orderChanges = 0;
+        root.ChildOrderChanged += _ => orderChanges++;
+        first.MoveToFront();
+        Check(root.GetChild(1) == first && orderChanges == 1,
+            "MoveToFront places the child last and notifies its parent once.");
+        first.MoveToFront();
+        Check(orderChanges == 1, "Moving an already-last child is a no-op.");
+        Action<Node> fail = _ => throw new ApplicationException("order");
+        root.ChildOrderChanged += fail;
+        Reject<AggregateException>(second.MoveToFront);
+        root.ChildOrderChanged -= fail;
+        Check(root.GetChild(1) == second, "Failed order callbacks retain the committed sibling order.");
+
+        Reject<InvalidOperationException>(() => Task.Run(() => _ = first.ZIndex).GetAwaiter().GetResult());
+        Reject<InvalidOperationException>(() => Task.Run(() => _ = first.ZAsRelative).GetAwaiter().GetResult());
+        Reject<InvalidOperationException>(() => Task.Run(() => _ = first.ShowBehindParent).GetAwaiter().GetResult());
+        Reject<InvalidOperationException>(() => Task.Run(() => _ = first.YSortEnabled).GetAwaiter().GetResult());
+        Reject<InvalidOperationException>(() => Task.Run(root.MoveToFront).GetAwaiter().GetResult());
+        root.MoveToFront();
+        Check(root.Parent is null, "MoveToFront on the scene root is a safe no-op on its owner thread.");
+
+        using var stored = new Entity { Name = "StoredOrder", ZIndex = -3, ZAsRelative = false };
+        using var packed = new PackedScene();
+        packed.Pack(stored);
+        using var copy = (Entity)packed.Instantiate();
+        Check(copy.ZIndex == -3 && !copy.ZAsRelative,
+            "PackedScene restores local Z and relative-order policy independently.");
     }
 
     private static void PackedHierarchy()
