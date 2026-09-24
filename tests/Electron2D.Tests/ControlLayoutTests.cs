@@ -1,3 +1,4 @@
+using System.Globalization;
 using Electron2D;
 
 internal static class ControlLayoutTests
@@ -68,6 +69,7 @@ internal static class ControlLayoutTests
         VerifyAnchorPresets();
         VerifyMinimumSize();
         VerifyMaximumSize();
+        VerifyLayoutDirection();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }
@@ -326,6 +328,101 @@ internal static class ControlLayoutTests
         private Vector2 _maximum = new(-1, -1);
         protected override Vector2 OnGetMaximumSize() => _maximum;
         internal void SetIntrinsicMaximum(Vector2 value) { _maximum = value; UpdateMaximumSize(); }
+    }
+
+    private static void VerifyLayoutDirection()
+    {
+        var previousCulture = TranslationServer.Culture;
+        var previousUICulture = CultureInfo.CurrentUICulture;
+        const string domainName = "control-layout-direction-tests";
+        try
+        {
+            TranslationServer.Culture = CultureInfo.GetCultureInfo("en");
+            using var viewport = new TestViewport();
+            var notifications = new List<string>();
+            var parent = new DirectionControl("parent", notifications) { Name = "parent", Position = new(10, 20), Size = new(100, 80) };
+            var child = new DirectionControl("child", notifications) { Name = "child", Position = new(5, 6), Size = new(20, 10) };
+            viewport.AddChild(parent);
+            parent.AddChild(child);
+            using var tree = new SceneTree(viewport);
+            Check(!parent.IsLayoutRTL() && !child.IsLayoutRTL() && parent.Position == new Vector2(10, 20),
+                "An inherited English layout begins left to right.");
+            parent.LayoutDirection = ControlLayoutDirection.RTL;
+            Check(parent.IsLayoutRTL() && child.IsLayoutRTL() && parent.Position == new Vector2(90, 20)
+                && child.Position == new Vector2(75, 6), "Explicit RTL mirrors parent and inherited child rectangles.");
+            Check(notifications.SequenceEqual(new[] { "parent", "child" }),
+                "Layout-direction notifications reach controls in parent-first order.");
+            notifications.Clear();
+            child.LayoutDirection = ControlLayoutDirection.LTR;
+            Check(!child.IsLayoutRTL() && child.Position == new Vector2(5, 6),
+                "An explicit child LTR direction overrides its RTL parent.");
+            child.LayoutDirection = ControlLayoutDirection.Inherited;
+            Check(child.IsLayoutRTL() && child.Position == new Vector2(75, 6),
+                "Returning to inherited direction restores RTL mirroring.");
+            child.Position = new(12, 6);
+            child.Size = new(30, 10);
+            Check(child.Position == new Vector2(12, 6) && child.Size == new Vector2(30, 10),
+                "Position and size setters use physical coordinates under RTL.");
+            parent.LayoutDirection = ControlLayoutDirection.LTR;
+            Check(!child.IsLayoutRTL() && child.Position == new Vector2(58, 6),
+                "Returning to LTR reveals the same stored logical offsets.");
+            child.LayoutDirection = ControlLayoutDirection.RTL;
+            Check(child.Position == new Vector2(12, 6), "Explicit RTL mirrors independently of its parent.");
+            Reject<ArgumentOutOfRangeException>(() => child.LayoutDirection = ControlLayoutDirection.Max);
+            Reject<ArgumentOutOfRangeException>(() => child.LayoutDirection = (ControlLayoutDirection)(-1));
+            Check(child.LayoutDirection == ControlLayoutDirection.RTL,
+                "Invalid direction IDs leave the previous policy unchanged.");
+
+            child.LayoutDirection = ControlLayoutDirection.Inherited;
+            child.TranslationDomain = domainName;
+            Check(!child.IsLayoutRTL(), "A different translation domain stops inherited parent direction.");
+            TranslationServer.Culture = CultureInfo.GetCultureInfo("ar");
+            child.LayoutDirection = ControlLayoutDirection.ApplicationLocale;
+            Check(!child.IsLayoutRTL(), "An RTL locale without a matching catalog remains LTR.");
+            var domain = TranslationServer.GetOrAddDomain(domainName);
+            using var catalog = new Translation { Locale = "ar" };
+            domain.AddTranslation(catalog);
+            child.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(child.IsLayoutRTL() && child.Position == new Vector2(12, 6),
+                "A matching RTL catalog enables application-locale mirroring.");
+            TranslationServer.Culture = CultureInfo.GetCultureInfo("en");
+            domain.LocaleOverride = "ar";
+            child.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(child.IsLayoutRTL(), "A domain locale override selects its RTL catalog independently of the process culture.");
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("ar");
+            child.LayoutDirection = ControlLayoutDirection.SystemLocale;
+            Check(child.IsLayoutRTL(), "System-locale mode uses the current UI culture.");
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("en");
+            child.PropagateNotification(Node.NotificationTranslationChanged);
+            Check(!child.IsLayoutRTL(), "A later LTR system culture changes the resolved direction.");
+
+            var packable = new Control { Name = "packable", Position = new(10, 5), Size = new(20, 10), LayoutDirection = ControlLayoutDirection.RTL };
+            parent.AddChild(packable);
+            using var packed = new PackedScene();
+            packed.Pack(packable);
+            using var copy = (Control)packed.Instantiate();
+            Check(copy.LayoutDirection == ControlLayoutDirection.RTL && copy.IsLayoutRTL(),
+                "An explicit layout direction survives packed-scene storage.");
+            copy.Name = "copy";
+            parent.AddChild(copy);
+            Check(copy.Position == packable.Position && copy.Size == packable.Size,
+                "An instantiated RTL control resolves the same rectangle under an equal parent area.");
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = previousUICulture;
+            TranslationServer.Culture = previousCulture;
+            TranslationServer.RemoveDomain(domainName);
+        }
+    }
+
+    private sealed class DirectionControl(string tag, List<string> notifications) : Control
+    {
+        protected override void OnNotification(int what)
+        {
+            if (what == NotificationLayoutDirectionChanged) notifications.Add(tag);
+            base.OnNotification(what);
+        }
     }
 
     private sealed class TestViewport : Viewport

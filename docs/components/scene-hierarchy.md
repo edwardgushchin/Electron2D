@@ -14,6 +14,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
 | [ControlLayoutPreset](../classes/ControlLayoutPreset.md) | enum | Sixteen predefined four-anchor arrangements for Control. |
 | [ControlGrowDirection](../classes/ControlGrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
+| [ControlLayoutDirection](../classes/ControlLayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
@@ -24,6 +25,8 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 `Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and immediately reflows within the current parent area. All sixteen numeric arrangements, parent-resize propagation and invalid input rollback are checked in `ControlLayoutTests`. Offset presets remain dependent on layout-direction and further GUI integration.
 
 Control resolves componentwise minima and maxima from virtual hooks, finite custom values and direct-parent maximum propagation. Negative maximum components are unbounded. Reflow grows to the minimum, then shrinks to the maximum if enabled; the three growth directions choose which edges move. Attached visible changes coalesce through the scene tree's deferred queue before their size-change events. `ControlLayoutTests` checks conflicting bounds, notification order, derived values, parent propagation, top-level escape, packed-scene policy and invalid inputs. Container relayout, desired-size caching, wrapping windows and RTL layout remain distinct gaps.
+
+Direction-aware Control layout mirrors the resolved rectangle after horizontal size bounds. Explicit LTR/RTL and same-domain inheritance are executable; `Position` and `Size` setters preserve physical coordinates while RTL is active. Locale modes consult the selected or managed UI culture and registered translation catalogs. Direction policy changes propagate notification 49 parent-first and reflow affected controls. `ControlLayoutTests` checks parent/child overrides, domain boundaries, locale catalogs, packed state, invalid values and notification order. Root/forced project policies, Window inheritance, exact native locale aliases and automatic reflow on global culture change remain open.
 
 ## Runtime flow
 

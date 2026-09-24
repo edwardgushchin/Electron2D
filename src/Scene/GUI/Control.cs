@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Electron2D;
 
 /// <summary>A canvas item with a rectangular layout and a pivot-based transform.</summary>
@@ -21,6 +23,7 @@ public partial class Control : CanvasItem
     private ControlGrowDirection _growVertical = ControlGrowDirection.End;
     private bool _minimumSizeUpdatePending;
     private bool _maximumSizeUpdatePending;
+    private ControlLayoutDirection _layoutDirection;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
 
@@ -29,6 +32,9 @@ public partial class Control : CanvasItem
 
     /// <summary>Identifies a size change delivered after the new rectangle and transform are committed.</summary>
     public const int NotificationResized = 40;
+
+    /// <summary>Identifies a layout-direction change propagated through the scene subtree.</summary>
+    public const int NotificationLayoutDirectionChanged = 49;
 
     /// <summary>Occurs after a size change while attached to the scene tree.</summary>
     public event Action? Resized;
@@ -49,9 +55,10 @@ public partial class Control : CanvasItem
             EnsureMutable(); EnsureFinite(value, nameof(value));
             if (value == _position) return;
             var area = GetParentAreaSize();
-            _offsets[0] = value.X - _anchors[0] * area.X;
+            var logicalX = IsLayoutRTL() ? area.X - value.X - _size.X : value.X;
+            _offsets[0] = logicalX - _anchors[0] * area.X;
             _offsets[1] = value.Y - _anchors[1] * area.Y;
-            _offsets[2] = value.X + _size.X - _anchors[2] * area.X;
+            _offsets[2] = logicalX + _size.X - _anchors[2] * area.X;
             _offsets[3] = value.Y + _size.Y - _anchors[3] * area.Y;
             Reflow();
         }
@@ -68,7 +75,9 @@ public partial class Control : CanvasItem
             if (value.X < 0 || value.Y < 0) throw new ArgumentOutOfRangeException(nameof(value));
             if (value == _size) return;
             var area = GetParentAreaSize();
-            _offsets[2] = _position.X + value.X - _anchors[2] * area.X;
+            var logicalX = IsLayoutRTL() ? area.X - _position.X - value.X : _position.X;
+            _offsets[0] = logicalX - _anchors[0] * area.X;
+            _offsets[2] = logicalX + value.X - _anchors[2] * area.X;
             _offsets[3] = _position.Y + value.Y - _anchors[3] * area.Y;
             Reflow();
         }
@@ -107,6 +116,62 @@ public partial class Control : CanvasItem
     {
         get { ThrowIfDisposed(); return _propagateMaximumSize; }
         set { EnsureMutable(); if (_propagateMaximumSize == value) return; _propagateMaximumSize = value; UpdateMaximumSize(); }
+    }
+
+    /// <summary>Gets or sets the horizontal layout direction policy.</summary>
+    /// <remarks>Changes notify the subtree before the resulting rectangles are observed by callers.</remarks>
+    public ControlLayoutDirection LayoutDirection
+    {
+        get { ThrowIfDisposed(); return _layoutDirection; }
+        set
+        {
+            EnsureMutable();
+            if (value is < ControlLayoutDirection.Inherited or >= ControlLayoutDirection.Max)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown layout direction.");
+            if (_layoutDirection == value) return;
+            _layoutDirection = value;
+            PropagateNotification(NotificationLayoutDirectionChanged);
+        }
+    }
+
+    /// <summary>Reports whether this control currently resolves its layout from right to left.</summary>
+    public bool IsLayoutRTL()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        return _layoutDirection switch
+        {
+            ControlLayoutDirection.LTR => false,
+            ControlLayoutDirection.RTL => true,
+            ControlLayoutDirection.SystemLocale => IsLocaleRTL(CultureInfo.CurrentUICulture),
+            ControlLayoutDirection.ApplicationLocale => IsLocaleRTL(GetApplicationCulture()),
+            _ => InheritedLayoutRTL()
+        };
+    }
+
+    private bool InheritedLayoutRTL()
+    {
+        var domain = TranslationDomain;
+        for (Node? ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent)
+        {
+            if (ancestor.TranslationDomain != domain) break;
+            if (ancestor is Control control) return control.IsLayoutRTL();
+        }
+        return IsLocaleRTL(GetApplicationCulture());
+    }
+
+    private CultureInfo GetApplicationCulture()
+    {
+        var overrideLocale = TranslationServer.GetOrAddDomain(TranslationDomain).LocaleOverride;
+        return overrideLocale.Length == 0 ? TranslationServer.Culture : CultureInfo.GetCultureInfo(overrideLocale);
+    }
+
+    private bool IsLocaleRTL(CultureInfo culture)
+    {
+        if (!culture.TextInfo.IsRightToLeft) return false;
+        var domain = TranslationServer.GetOrAddDomain(TranslationDomain);
+        return domain.HasTranslationForLocale(culture.Name, exact: false)
+            || TranslationServer.FallbackCulture?.TwoLetterISOLanguageName == culture.TwoLetterISOLanguageName;
     }
 
     /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>
@@ -433,6 +498,7 @@ public partial class Control : CanvasItem
         }
         else if (what == NotificationExitCanvas) DisconnectLayoutSource();
         else if (what == NotificationVisibilityChanged && IsVisibleInTree) { UpdateMinimumSize(); UpdateMaximumSize(); }
+        else if (what is NotificationLayoutDirectionChanged or NotificationTranslationChanged) Reflow();
         else if (what == NotificationResized) Resized?.Invoke();
     }
 
@@ -499,6 +565,7 @@ public partial class Control : CanvasItem
             position.X += (size.X - maximum.X) * GrowthShift(_growHorizontal);
             size.X = maximum.X;
         }
+        if (IsLayoutRTL()) position.X = area.X - position.X - size.X;
         if (size.Y < minimum.Y)
         {
             position.Y += (size.Y - minimum.Y) * GrowthShift(_growVertical);
@@ -543,6 +610,7 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMinimumSize), node => node.CustomMinimumSize, (node, value) => node.CustomMinimumSize = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMaximumSize), node => node.CustomMaximumSize, (node, value) => node.CustomMaximumSize = value, _ => new Vector2(-1, -1), stored: true),
         new PropertyDescriptor<Control, bool>(nameof(PropagateMaximumSize), node => node.PropagateMaximumSize, (node, value) => node.PropagateMaximumSize = value, _ => false, stored: true),
+        new PropertyDescriptor<Control, ControlLayoutDirection>(nameof(LayoutDirection), node => node.LayoutDirection, (node, value) => node.LayoutDirection = value, _ => ControlLayoutDirection.Inherited, stored: true),
         new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowHorizontal), node => node.GrowHorizontal, (node, value) => node.GrowHorizontal = value, _ => ControlGrowDirection.End, stored: true),
         new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowVertical), node => node.GrowVertical, (node, value) => node.GrowVertical = value, _ => ControlGrowDirection.End, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorLeft), node => node.AnchorLeft, (node, value) => node.AnchorLeft = value, _ => 0f, stored: true),

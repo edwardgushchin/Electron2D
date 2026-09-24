@@ -14,7 +14,7 @@ Its production source lives under `src/Core/String/`, matching its low-level eng
 | --- | --- | --- |
 | [Translation](../components/localization.md) | Thread-safe direct and resource-backed translation registration and resolution | Implemented for in-memory lookup; locale-rule and asset gaps remain |
 
-Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy.
+Production types are [`TranslationServer`](../classes/TranslationServer.md), [`TranslationDomain`](../classes/TranslationDomain.md), [`Translation`](../classes/Translation.md), and [`OptimizedTranslation`](../classes/OptimizedTranslation.md). `ElectronObject` delegates `Tr` and `TrN` to this domain when per-object translation is enabled. Scene-owned [`Node`](../classes/Node.md) adds inherited domains and automatic translation policy. [`Control`](../classes/Control.md) consults the selected culture and registered catalog for locale-derived rectangle direction; exact native locale aliases and global scene refresh remain gaps.
 
 ## Public surface
 

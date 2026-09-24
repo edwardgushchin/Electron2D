@@ -383,6 +383,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlLayoutDirection",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "ControlLayoutDirection",
+    "signature": "public enum Electron2D.ControlLayoutDirection",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ControlLayoutPreset",
     "kind": "type",
     "declaringType": "Electron2D.ControlLayoutPreset",
@@ -3260,6 +3278,19 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "44"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationLayoutDirectionChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationLayoutDirectionChanged",
+    "signature": "public const System.Int32 NotificationLayoutDirectionChanged = 49",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "49"
   },
   {
     "id": "constant:Electron2D.Control.NotificationMouseEnter()",
@@ -6756,6 +6787,97 @@
     "parameters": [],
     "returnType": "Electron2D.ControlGrowDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.ApplicationLocale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "ApplicationLocale",
+    "signature": "public const Electron2D.ControlLayoutDirection ApplicationLocale = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "Inherited",
+    "signature": "public const Electron2D.ControlLayoutDirection Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.LTR()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "LTR",
+    "signature": "public const Electron2D.ControlLayoutDirection LTR = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.Locale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "Locale",
+    "signature": "public const Electron2D.ControlLayoutDirection Locale = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "Max",
+    "signature": "public const Electron2D.ControlLayoutDirection Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.RTL()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "RTL",
+    "signature": "public const Electron2D.ControlLayoutDirection RTL = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlLayoutDirection.SystemLocale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlLayoutDirection",
+    "name": "SystemLocale",
+    "signature": "public const Electron2D.ControlLayoutDirection SystemLocale = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.ControlLayoutPreset.BottomLeft()",
@@ -21049,6 +21171,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.IsLayoutRTL()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "IsLayoutRTL",
+    "signature": "public System.Boolean IsLayoutRTL()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Boolean",
     "value": null
   },
@@ -56062,6 +56197,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ControlGrowDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.LayoutDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "LayoutDirection",
+    "signature": "public Electron2D.ControlLayoutDirection LayoutDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlLayoutDirection",
     "value": null
   },
   {

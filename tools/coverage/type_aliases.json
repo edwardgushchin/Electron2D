@@ -32,6 +32,7 @@
     "Control.FocusMode": "ControlFocusMode",
     "Control.LayoutPreset": "ControlLayoutPreset",
     "Control.GrowDirection": "ControlGrowDirection",
+    "Control.LayoutDirection": "ControlLayoutDirection",
     "Control.MouseFilter": "ControlMouseFilter",
     "@GlobalScope.ClockDirection": "ClockDirection",
     "@GlobalScope.JoyAxis": "JoyAxis",

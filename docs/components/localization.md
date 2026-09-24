@@ -24,6 +24,8 @@ Singular keys consist of culture, domain, context, and source message. Plural ke
 
 Direct plural registrations take `Func<long, string>`. Resource catalogs store plural-form lists and select an index through `Func<long, int>`; English has its source fallback, while other locales with multiple forms require a selector.
 
+Scene [`Control`](../classes/Control.md) can use a domain's selected culture and registered catalog when resolving application-locale layout direction. Explicit LTR/RTL remains independent of translation. Managed culture direction and catalog presence drive the current geometric mirror; native locale alias tables, root/forced policies and automatic scene reflow after a global culture change are not yet equivalent.
+
 ## Threading
 
 Direct registration, domain registry changes, clearing, and culture changes use the server lock. Domain and resource state have their own locks; lookup snapshots registered resources and invokes their override hooks and selectors outside the server lock. Direct selector delegates still execute under the server lock and should be short. The global enabled flag uses volatile access.

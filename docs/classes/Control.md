@@ -14,9 +14,11 @@ Last updated: 2026-09-24
 
 Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the scene tree and canvas rendering API. A direct Control parent supplies the area for anchors; a root Control uses its viewport's visible size. A direct non-Control canvas parent supplies a zero-size anchor area in this slice. Detached controls also use a zero-size anchor area. Offsets are local canvas units; anchors are fractions of the parent area. Changes to the parent rectangle or viewport size reflow an attached control synchronously. Pivot, rotation and scale change the canvas transform without changing its layout rectangle. Control itself emits no drawing commands.
 
-`SetAnchorsPreset` applies one of the sixteen [`ControlLayoutPreset`](ControlLayoutPreset.md) arrangements in left, top, right, bottom order. By default it changes offsets to keep the current rectangle in place; `keepOffsets: true` retains local offsets so the rectangle follows the new anchors immediately. The method works while detached or attached, and an invalid preset leaves all four anchors unchanged. Offset presets remain separate coverage rows because layout direction and further GUI integration are absent.
+`SetAnchorsPreset` applies one of the sixteen [`ControlLayoutPreset`](ControlLayoutPreset.md) arrangements in left, top, right, bottom order. By default it changes offsets to keep the current rectangle in place; `keepOffsets: true` retains local offsets so the rectangle follows the new anchors immediately. The method works while detached or attached, and an invalid preset leaves all four anchors unchanged. Offset presets remain separate coverage rows.
 
-`CustomMinimumSize` combines componentwise with an intrinsic minimum supplied by `OnGetMinimumSize` and zero. `CustomMaximumSize` combines enabled bounds from the intrinsic hook, the caller and a direct parent that propagates its maximum; a negative component means unbounded. Reflow applies the minimum first and then the maximum, so the maximum wins on a conflicting axis. [`ControlGrowDirection`](ControlGrowDirection.md) independently chooses the fixed horizontal and vertical edges for growth or shrinkage. Attached visible controls coalesce size changes through `SceneTree.Defer`; `Resized` occurs before the corresponding size-change event. Both bounds are queryable immediately. Container relayout, desired-size cache, wrapping windows and RTL layout remain open.
+`CustomMinimumSize` combines componentwise with an intrinsic minimum supplied by `OnGetMinimumSize` and zero. `CustomMaximumSize` combines enabled bounds from the intrinsic hook, the caller and a direct parent that propagates its maximum; a negative component means unbounded. Reflow applies the minimum first and then the maximum, so the maximum wins on a conflicting axis. [`ControlGrowDirection`](ControlGrowDirection.md) independently chooses the fixed horizontal and vertical edges for growth or shrinkage. Attached visible controls coalesce size changes through `SceneTree.Defer`; `Resized` occurs before the corresponding size-change event. Both bounds are queryable immediately. Container relayout, desired-size cache and wrapping windows remain open.
+
+[`ControlLayoutDirection`](ControlLayoutDirection.md) adds explicit LTR/RTL mirroring after horizontal minimum/maximum resolution. Inherited controls follow the nearest Control in the same translation domain; `ApplicationLocale` and `SystemLocale` use the corresponding managed culture only when a matching catalog or configured fallback permits RTL. Direction changes notify the subtree before callers observe the resolved rectangles. `Position` and `Size` writes remain physical in RTL. Root and forced project direction settings, Window inheritance, exact locale aliases and automatic scene refresh after a process-wide culture change remain Partial.
 
 The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, layout direction, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
@@ -46,6 +48,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public Vector2 CustomMinimumSize { get; set; }` | Finite caller-supplied minimum; combines with intrinsic size and zero. |
 | `public Vector2 CustomMaximumSize { get; set; }` | Finite caller-supplied maximum; negative components normalize to unbounded `-1`. |
 | `public bool PropagateMaximumSize { get; set; }` | Passes enabled maximum bounds to direct child controls unless they are top-level. |
+| `public ControlLayoutDirection LayoutDirection { get; set; }` | Inherited by default; explicit, application-locale and system-locale policies are available. |
 | `public ControlGrowDirection GrowHorizontal { get; set; }` / `GrowVertical` | Edge policy for minimum growth and maximum shrinkage. |
 | `public float Rotation { get; set; }` | Radians around PivotOffset. |
 | `public float RotationDegrees { get; set; }` | Degrees around PivotOffset. |
@@ -74,6 +77,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float GetAnchor(Side side)` | Reads one anchor fraction. |
 | `public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Updates one anchor and optionally the opposite anchor. |
 | `public void SetAnchorsPreset(ControlLayoutPreset preset, bool keepOffsets = false)` | Applies all four anchor fractions; preserves the current rectangle unless offsets are kept. |
+| `public bool IsLayoutRTL()` | Reports the currently resolved horizontal layout direction. |
 | `public Vector2 GetMinimumSize()` / `GetCombinedMinimumSize()` | Returns intrinsic and effective componentwise minima. |
 | `public void UpdateMinimumSize()` | Coalesces a changed intrinsic minimum for deferred attached-tree reflow. |
 | `protected virtual Vector2 OnGetMinimumSize()` | Supplies a derived control's intrinsic minimum; base returns zero. |
@@ -118,6 +122,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public event Action? MouseEntered` | Raised when the pointer enters the control or a reachable child. |
 | `public event Action? MouseExited` | Raised when the pointer leaves the control and reachable children. |
 | `public const int NotificationResized = 40` | Delivered before Resized, after the rectangle and transform are committed. |
+| `public const int NotificationLayoutDirectionChanged = 49` | Propagated parent-first when a Control's direction policy changes. |
 | `public const int NotificationMouseEnter = 41` / `NotificationMouseExit = 42` | Delivered before the corresponding hover event. |
 | `public const int NotificationFocusEnter = 43` / `NotificationFocusExit = 44` | Delivered before the corresponding focus event. |
 | `public const int NotificationMouseEnterSelf = 60` / `NotificationMouseExitSelf = 61` | Delivered when the direct hover target changes. |
