@@ -20,7 +20,7 @@ Represents motion on one game-controller axis.
 - Complete declared API: `Axis`, `AxisValue`; overrides `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. Both values are stored typed descriptors.
 - Matching/state: axis identity plus direction for exact matching. The event itself is not a button-like press; action matching derives pressed state from that action's deadzone. Action raw strength is absolute magnitude in the binding direction, and adjusted strength remaps the remaining range to `[0,1]`.
 - Invariants/errors: axis `0..9`, finite value `[-1,1]`; disposed access fails.
-- Verification: per-device state, direction/exactness, deadzone boundaries, copy, and descriptions are covered.
+- Text/verification: `AsText` reports the axis index, one of ten known controller descriptions and a signed value with exactly two decimals. The source template and known description use this event's translation domain; malformed translated templates fall back to source wording. Managed checks cover all ten labels, representative signed numeric edges, per-device state, direction/exactness, deadzone boundaries and copies. Native gamepad delivery remains on its own backend trigger.
 
 ## Examples
 
@@ -110,9 +110,9 @@ Tests whether this event has the same binding configuration as another event.
 <a id="m-electron2d-inputeventjoypadmotion-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the localized axis number, known control description and signed value with two decimals.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The axis text with a two-decimal value.
 
 **Exceptions**
 

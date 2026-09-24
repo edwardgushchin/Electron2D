@@ -1,8 +1,24 @@
+using System.Globalization;
+
 namespace Electron2D;
 
 /// <summary>Represents motion on one game-controller axis.</summary>
 public sealed class InputEventJoypadMotion : InputEvent
 {
+    private static readonly string[] AxisDescriptions =
+    [
+        "Left Stick X-Axis, Joystick 0 X-Axis",
+        "Left Stick Y-Axis, Joystick 0 Y-Axis",
+        "Right Stick X-Axis, Joystick 1 X-Axis",
+        "Right Stick Y-Axis, Joystick 1 Y-Axis",
+        "Joystick 2 X-Axis, Left Trigger, Sony L2, Xbox LT",
+        "Joystick 2 Y-Axis, Right Trigger, Sony R2, Xbox RT",
+        "Joystick 3 X-Axis",
+        "Joystick 3 Y-Axis",
+        "Joystick 4 X-Axis",
+        "Joystick 4 Y-Axis",
+    ];
+
     private static readonly IReadOnlyList<PropertyDescriptor> MotionProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
@@ -59,11 +75,18 @@ public sealed class InputEventJoypadMotion : InputEvent
             (!exactMatch || (_axisValue < 0f) == (motion._axisValue < 0f));
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets the localized axis description and signed value.</summary>
+    /// <returns>The axis number, its known control description, and a value with two decimals.</returns>
+    /// <remarks>The description uses this event's translation domain. A translated template with invalid placeholders falls back to the source sentence.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return $"Controller axis {(int)_axis} at {_axisValue:0.##}";
+        const string source = "Joypad Motion on Axis %d (%s) with Value %.2f";
+        return FormatTextTemplate(Tr(source), source,
+            ((int)_axis).ToString(CultureInfo.InvariantCulture),
+            Tr(AxisDescriptions[(int)_axis]),
+            _axisValue.ToString("F2", CultureInfo.InvariantCulture));
     }
 
     /// <inheritdoc />
@@ -101,6 +124,31 @@ public sealed class InputEventJoypadMotion : InputEvent
 /// <summary>Represents a game-controller button press or release.</summary>
 public sealed class InputEventJoypadButton : InputEvent
 {
+    private static readonly string[] ButtonDescriptions =
+    [
+        "Bottom Action, Sony Cross, Xbox A, Nintendo B",
+        "Right Action, Sony Circle, Xbox B, Nintendo A",
+        "Left Action, Sony Square, Xbox X, Nintendo Y",
+        "Top Action, Sony Triangle, Xbox Y, Nintendo X",
+        "Back, Sony Select, Xbox Back, Nintendo -",
+        "Guide, Sony PS, Xbox Home",
+        "Start, Xbox Menu, Nintendo +",
+        "Left Stick, Sony L3, Xbox L/LS",
+        "Right Stick, Sony R3, Xbox R/RS",
+        "Left Shoulder, Sony L1, Xbox LB",
+        "Right Shoulder, Sony R1, Xbox RB",
+        "D-pad Up",
+        "D-pad Down",
+        "D-pad Left",
+        "D-pad Right",
+        "Xbox Share, PS5 Microphone, Nintendo Capture",
+        "Xbox Paddle 1",
+        "Xbox Paddle 2",
+        "Xbox Paddle 3",
+        "Xbox Paddle 4",
+        "PS4/5 Touchpad",
+    ];
+
     private static readonly IReadOnlyList<PropertyDescriptor> ButtonProperties =
         Array.AsReadOnly<PropertyDescriptor>(
         [
@@ -167,11 +215,21 @@ public sealed class InputEventJoypadButton : InputEvent
         return @event is InputEventJoypadButton button && _buttonIndex == button._buttonIndex;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets the localized button number, known description, and nonzero pressure.</summary>
+    /// <returns>A numbered button with an optional known control description and pressure suffix.</returns>
+    /// <remarks>Built-in descriptions cover IDs zero through 20; extended IDs use the numeric fallback. Pressure uses the full real-value text of the stored float.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return Enum.GetName(_buttonIndex) ?? $"Controller button {(int)_buttonIndex}";
+        const string source = "Joypad Button %d";
+        var index = (int)_buttonIndex;
+        var text = FormatTextTemplate(Tr(source), source, index.ToString(CultureInfo.InvariantCulture));
+        if (index < ButtonDescriptions.Length)
+            text = string.Concat(text, " (", Tr(ButtonDescriptions[index]), ")");
+        if (_pressure != 0f)
+            text = string.Concat(text, ", ", Tr("Pressure:"), " ", FormatTextPressure(_pressure));
+        return text;
     }
 
     /// <inheritdoc />

@@ -209,6 +209,7 @@ VerifyInputMapConfiguration();
 VerifyInputMapMatching();
 VerifyInputEventActionValues();
 VerifyInputText();
+VerifyControllerText();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4823,6 +4824,69 @@ static void VerifyInputText()
             map.EraseAction(keys);
         if (map.HasAction(empty))
             map.EraseAction(empty);
+    }
+}
+
+static void VerifyControllerText()
+{
+    using var button = new InputEventJoypadButton { ButtonIndex = JoyButton.A };
+    using var dpad = new InputEventJoypadButton { ButtonIndex = JoyButton.DpadUp };
+    using var extended = new InputEventJoypadButton { ButtonIndex = JoyButton.Misc2 };
+    using var rawButton = new InputEventJoypadButton { ButtonIndex = (JoyButton)127 };
+    using var pressure = new InputEventJoypadButton { ButtonIndex = JoyButton.A, Pressure = 0.1f };
+    using var fullPressure = new InputEventJoypadButton { ButtonIndex = JoyButton.A, Pressure = 1f };
+    using var tinyPressure = new InputEventJoypadButton { ButtonIndex = JoyButton.A, Pressure = float.Epsilon };
+    using var axis = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -0.257f };
+    using var rawAxis = new InputEventJoypadMotion { Axis = (JoyAxis)9 };
+    using var axisOne = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 1f };
+    using var axisNegativeOne = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = -1f };
+    using var axisMidpoint = new InputEventJoypadMotion { Axis = JoyAxis.LeftX, AxisValue = 0.125f };
+    Require(button.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B)" &&
+            dpad.AsText() == "Joypad Button 11 (D-pad Up)" &&
+            extended.AsText() == "Joypad Button 21" && rawButton.AsText() == "Joypad Button 127" &&
+            pressure.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B), Pressure: 0.10000000149012" &&
+            fullPressure.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B), Pressure: 1.0" &&
+            tinyPressure.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B), Pressure: 0.0" &&
+            axis.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value -0.26" &&
+            rawAxis.AsText() == "Joypad Motion on Axis 9 (Joystick 4 Y-Axis) with Value 0.00" &&
+            axisOne.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value 1.00" &&
+            axisNegativeOne.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value -1.00" &&
+            axisMidpoint.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value 0.12",
+        "Controller text must retain numbered descriptions, safe extended IDs, pressure and two-decimal axes.");
+
+    var previousCulture = TranslationServer.Culture;
+    var previousEnabled = TranslationServer.Enabled;
+    try
+    {
+        TranslationServer.Clear();
+        TranslationServer.Enabled = true;
+        TranslationServer.Culture = CultureInfo.GetCultureInfo("fr-FR");
+        var french = CultureInfo.GetCultureInfo("fr");
+        TranslationServer.AddTranslation(french, "", "Joypad Button %d", "Bouton de manette %d");
+        TranslationServer.AddTranslation(french, "", "Bottom Action, Sony Cross, Xbox A, Nintendo B", "Bouton inférieur");
+        TranslationServer.AddTranslation(french, "", "Pressure:", "Pression :");
+        TranslationServer.AddTranslation(french, "", "Joypad Motion on Axis %d (%s) with Value %.2f", "Axe %d (%s) : %.2f");
+        TranslationServer.AddTranslation(french, "", "Left Stick X-Axis, Joystick 0 X-Axis", "Axe X gauche");
+        Require(button.AsText() == "Bouton de manette 0 (Bouton inférieur)" &&
+                pressure.AsText() == "Bouton de manette 0 (Bouton inférieur), Pression : 0.10000000149012" &&
+                axis.AsText() == "Axe 0 (Axe X gauche) : -0.26",
+            "Controller descriptions must resolve translated templates and known labels.");
+        TranslationServer.AddTranslation(french, "", "Joypad Button %d", "Bouton sans index");
+        TranslationServer.AddTranslation(french, "", "Joypad Motion on Axis %d (%s) with Value %.2f", "Axe sans valeurs");
+        Require(button.AsText() == "Joypad Button 0 (Bouton inférieur)" &&
+                axis.AsText() == "Joypad Motion on Axis 0 (Axe X gauche) with Value -0.26",
+            "Malformed translated controller templates must fall back to the source templates.");
+        button.CanTranslateMessages = false;
+        axis.CanTranslateMessages = false;
+        Require(button.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B)" &&
+                axis.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value -0.26",
+            "Disabling translation on controller events must restore source descriptions.");
+    }
+    finally
+    {
+        TranslationServer.Clear();
+        TranslationServer.Culture = previousCulture;
+        TranslationServer.Enabled = previousEnabled;
     }
 }
 

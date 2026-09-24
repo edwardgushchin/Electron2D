@@ -19,7 +19,8 @@ Represents a game-controller button press or release.
 - Responsibility: one standardized/raw controller button press/release and optional pressure.
 - Complete declared API: `ButtonIndex`, `Pressed`, `Pressure`; overrides `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All three values are stored typed descriptors.
 - Invariants/errors: button is `0..127`, pressure finite `[0,1]`; binding identity ignores pressure; disposed access fails.
-- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, boundaries, copy, and text are covered. Device discovery/effects remain under the SDL gamepad trigger.
+- Text: `AsText` reports `Joypad Button n`, adds one of 21 known controller descriptions for indexes 0–20, and adds `Pressure: value` only when pressure is nonzero. Extended standardized IDs 21–25 and raw IDs use a safe numeric fallback. The source template, known descriptions and pressure label use this event's translation domain; malformed translated templates fall back to source wording.
+- Threading/verification: caller-owned mutable state; per-device raw tracking, action matching, boundaries, copy, all 21 defined text labels and selected pressure values are covered. Device discovery/effects remain under the SDL gamepad trigger.
 
 ## Examples
 
@@ -122,9 +123,9 @@ Tests whether this event has the same binding configuration as another event.
 <a id="m-electron2d-inputeventjoypadbutton-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the localized button number, optional known description and nonzero pressure.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** `Joypad Button n` with the applicable known label and pressure suffix.
 
 **Exceptions**
 

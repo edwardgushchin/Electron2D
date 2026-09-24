@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 
 namespace Electron2D;
 
@@ -251,20 +252,48 @@ public abstract class InputEvent : Resource
     }
 
     internal static string FormatTextVector2(Vector2 value) =>
-        string.Concat("(", FormatTextReal(value.X), ", ", FormatTextReal(value.Y), ")");
+        string.Concat("(", FormatTextReal(value.X, 6), ", ", FormatTextReal(value.Y, 6), ")");
 
-    private static string FormatTextReal(float value)
+    internal static string FormatTextPressure(float value) => FormatTextReal(value, 14);
+
+    internal static string FormatTextTemplate(string translated, string source, params string[] values) =>
+        TryFormatTextTemplate(translated, values) ?? TryFormatTextTemplate(source, values) ??
+        throw new FormatException("The input text source template has invalid placeholders.");
+
+    private static string? TryFormatTextTemplate(string template, string[] values)
     {
-        if (float.IsNaN(value)) return "nan";
-        if (float.IsPositiveInfinity(value)) return "inf";
-        if (float.IsNegativeInfinity(value)) return "-inf";
-        if (value == 0f) return "0.0";
-        if (MathF.Abs(value) < long.MaxValue && value == MathF.Truncate(value))
+        var result = new StringBuilder(template.Length);
+        var index = 0;
+        for (var position = 0; position < template.Length; position++)
+        {
+            var remaining = template.AsSpan(position);
+            var width = remaining.StartsWith("%.2f", StringComparison.Ordinal) ? 4 :
+                remaining.StartsWith("%s", StringComparison.Ordinal) ||
+                remaining.StartsWith("%d", StringComparison.Ordinal) ? 2 : 0;
+            if (width == 0)
+            {
+                result.Append(template[position]);
+                continue;
+            }
+            if (index == values.Length) return null;
+            result.Append(values[index++]);
+            position += width - 1;
+        }
+        return index == values.Length ? result.ToString() : null;
+    }
+
+    private static string FormatTextReal(double value, int precision)
+    {
+        if (double.IsNaN(value)) return "nan";
+        if (double.IsPositiveInfinity(value)) return "inf";
+        if (double.IsNegativeInfinity(value)) return "-inf";
+        if (value == 0d) return "0.0";
+        if (Math.Abs(value) < long.MaxValue && value == Math.Truncate(value))
             return value.ToString("0.0", CultureInfo.InvariantCulture);
 
-        var decimals = 6;
-        var absolute = MathF.Abs(value);
-        if (absolute > 10f) decimals -= (int)MathF.Floor(MathF.Log10(absolute));
+        var decimals = precision;
+        var absolute = Math.Abs(value);
+        if (absolute > 10d) decimals -= (int)Math.Floor(Math.Log10(absolute));
         if (decimals < 0) decimals = 6;
         var text = value.ToString($"F{decimals}", CultureInfo.InvariantCulture);
         if (!text.Contains('.')) return text;

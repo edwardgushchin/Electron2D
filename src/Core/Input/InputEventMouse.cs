@@ -361,23 +361,13 @@ public sealed class InputEventMouseMotion : InputEventMouse
 
     /// <summary>Gets a localized description of position and velocity.</summary>
     /// <returns>The source-format motion sentence with invariant position and velocity values.</returns>
-    /// <remarks>Integral components retain <c>.0</c>, fractional components use a six-decimal real policy, and non-finite components use <c>nan</c>/<c>inf</c>. Exact all-float rounding parity remains under audit. A translated template must contain exactly two <c>%s</c> placeholders; malformed templates fall back to the source sentence.</remarks>
+    /// <remarks>Integral components retain <c>.0</c>, fractional components use a six-decimal real policy, and non-finite components use <c>nan</c>/<c>inf</c>. Exact all-float rounding parity remains under audit. The source template has two <c>%s</c> placeholders; translated templates require two supported placeholders or fall back to the source sentence.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
         const string source = "Mouse motion at position (%s) with velocity (%s)";
-        var template = Tr(source);
-        var first = template.IndexOf("%s", StringComparison.Ordinal);
-        var second = first < 0 ? -1 : template.IndexOf("%s", first + 2, StringComparison.Ordinal);
-        if (second < 0 || template.IndexOf("%s", second + 2, StringComparison.Ordinal) >= 0)
-        {
-            template = source;
-            first = template.IndexOf("%s", StringComparison.Ordinal);
-            second = template.IndexOf("%s", first + 2, StringComparison.Ordinal);
-        }
-        return string.Concat(template[..first], FormatTextVector2(Position), template[(first + 2)..second],
-            FormatTextVector2(Velocity), template[(second + 2)..]);
+        return FormatTextTemplate(Tr(source), source, FormatTextVector2(Position), FormatTextVector2(Velocity));
     }
 
     /// <inheritdoc />
