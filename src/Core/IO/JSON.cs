@@ -55,7 +55,7 @@ public sealed class JSON : Resource
     public string GetErrorMessage() { lock (_gate) { ThrowIfDisposed(); return _errorMessage; } }
 
     /// <summary>Gets the last source supplied with text retention enabled.</summary>
-    /// <remarks>The text is empty after a parse without retention or an explicit <see cref="Data"/> assignment.</remarks>
+    /// <remarks>Success and failure retain source when requested. A parse without retention or an explicit <see cref="Data"/> assignment clears it.</remarks>
     public string GetParsedText() { lock (_gate) { ThrowIfDisposed(); return _parsedText; } }
 
     /// <summary>Parses JSON text and updates the resource's root and diagnostics.</summary>
@@ -127,14 +127,14 @@ public sealed class JSON : Resource
     /// <summary>Converts JSON-only data into a caller-selected native type.</summary>
     /// <typeparam name="T">The concrete destination type.</typeparam>
     /// <param name="json">The JSON value.</param>
-    /// <returns>A decoded native value, or default for JSON null.</returns>
+    /// <returns>A decoded native value, or the selected type's default for JSON null, including value types.</returns>
     /// <remarks>The generic destination type is required; arbitrary engine objects and runtime type names are not constructed from JSON.</remarks>
     /// <exception cref="NotSupportedException">The destination is an engine object or an untyped object container.</exception>
     /// <exception cref="JsonException">The JSON value does not match <typeparamref name="T"/>.</exception>
     public static T? ToNative<T>(JsonNode? json)
     {
         CheckNativeType<T>();
-        return JsonSerializer.Deserialize<T>(json?.ToJsonString() ?? "null", NativeOptions);
+        return json is null ? default : JsonSerializer.Deserialize<T>(json.ToJsonString(), NativeOptions);
     }
 
     /// <inheritdoc />

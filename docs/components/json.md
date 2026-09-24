@@ -1,6 +1,6 @@
 # JSON documents component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope and owned type
 
@@ -8,7 +8,7 @@ This Core component owns [`JSON`](../classes/JSON.md), a mutable document resour
 
 ## Runtime flow and dependencies
 
-`Parse` uses the .NET JSON parser to create a `JsonNode` tree and updates the resource's root, optional original text and diagnostic state together. `Stringify` traverses a supplied tree with optional ordinal key sorting and indentation. Generic native conversion uses the existing typed `ConfigFile` JSON schemas and rejects untyped or engine-object members. This component depends on Core resource lifetime and `System.Text.Json`, already part of the runtime; it adds no package.
+`Parse` uses the .NET JSON parser to create a `JsonNode` tree and updates the resource's root, optional original text and diagnostic state together. Parsing without retention and assigning `Data` clear source text; a successful parse clears diagnostics. `Stringify` traverses a supplied tree with optional ordinal key sorting and indentation. Generic native conversion uses the existing typed `ConfigFile` JSON schemas, returns the selected type's default for a null root, and rejects untyped or engine-object members. This component depends on Core resource lifetime and `System.Text.Json`, already part of the runtime; it adds no package.
 
 ## Invariants and limits
 
@@ -16,4 +16,4 @@ The JSON tree exists only at the document API boundary. It cannot be used as a u
 
 ## Verification and decision
 
-[`JsonTests`](../../tests/Electron2D.Tests/JsonTests.cs) runs in the managed executable harness. The architectural boundary is [ADR 0048](../decisions/core-data-io.md#adr-0048).
+[`JsonTests`](../../tests/Electron2D.Tests/JsonTests.cs) checks document state, independent duplication, typed conversion, rejected types and failures in the managed executable harness. The architectural boundary is [ADR 0048](../decisions/core-data-io.md#adr-0048).

@@ -287,7 +287,7 @@ The executable harness verifies ordinary and virtual scope behavior, listing sta
 <a id="adr-0048"></a>
 ## ADR 0048: Dedicated JSON documents with typed native conversion
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ### Status
 
@@ -299,9 +299,9 @@ ADR 0001 excludes a universal engine value container. ADRs 0018 and 0019 separat
 
 ### Decision
 
-`JSON : Resource` owns one `System.Text.Json.Nodes.JsonNode` tree. `Parse` accepts JSON documents, reports success as `bool`, and retains diagnostics and optional source text. `ParseString` returns a JSON tree or null. `Stringify` accepts a JSON tree with optional key ordering, indentation and floating-point precision. `FromNative<T>` and `ToNative<T>` convert explicitly selected C# types using the established typed value schemas; untyped `object` roots and engine objects are rejected. The tree is confined to this document API and is never a universal engine property or settings value. Data assignment and resource duplication copy the tree; a returned tree is live, mutable, and caller-synchronized.
+`JSON : Resource` owns one `System.Text.Json.Nodes.JsonNode` tree. `Parse` accepts JSON documents, reports success as `bool`, and retains diagnostics and optional source text. `ParseString` returns a JSON tree or null. `Stringify` accepts a JSON tree with optional key ordering, indentation and floating-point precision. `FromNative<T>` and `ToNative<T>` convert explicitly selected C# types using the established typed value schemas; untyped `object` roots and engine objects are rejected. A null JSON root converts to the selected type's default, including value types. The tree is confined to this document API and is never a universal engine property or settings value. Data assignment and resource duplication copy the tree; a returned tree is live, mutable, and caller-synchronized.
 
-The managed parser's syntax and error messages are the executable contract. Exact acceptance of malformed/nonstandard text, Unicode recovery, numeric formatting, error locations, and native engine-object conversion from the reference remain coverage gaps. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. JSON work is allocating and stays outside real-time callbacks.
+The managed parser's syntax and error messages are the executable contract. Parsing replaces the document and diagnostics together; source text is retained only when requested and is cleared by a parse without retention or a `Data` assignment. This deterministic state reset is the managed document adaptation. Exact acceptance of malformed/nonstandard text, Unicode recovery, numeric formatting, error locations, and native engine-object conversion from the reference remain coverage gaps. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. JSON work is allocating and stays outside real-time callbacks.
 
 ### Consequences and boundaries
 

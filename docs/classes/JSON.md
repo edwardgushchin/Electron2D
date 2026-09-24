@@ -1,6 +1,6 @@
 # JSON
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md)
 **Inherited By:** —
@@ -35,15 +35,15 @@ string output = Electron2D.JSON.Stringify(document.Data, indent: "  ");
 | `string GetParsedText()` | Verbatim last input only when `keepText` was true; empty after parsing without retention or assigning `Data`. |
 | `static string Stringify(JsonNode? data, string indent = "", bool sortKeys = true, bool fullPrecision = false)` | Formats a JSON value; null emits `null`. Keys sort ordinally by default; arbitrary indent text repeats by depth. |
 | `static JsonNode? FromNative<T>(T value)` | Serializes an explicitly typed scalar, collection, or model to an independent JSON tree. |
-| `static T? ToNative<T>(JsonNode? json)` | Deserializes a tree to a caller-selected concrete type. JSON null yields that type's default. |
+| `static T? ToNative<T>(JsonNode? json)` | Deserializes a tree to a caller-selected concrete type. JSON null yields that type's default, including zero for `int`. |
 
 ## Ownership, errors and limits
 
-The returned `Data` tree is live and mutable; callers must synchronize their own edits. Assigning `Data` and duplicating the resource deep-copy its tree. Disposal invalidates instance access. `Parse` leaves `Data` null on failure and stores the managed parser's error message and zero-based line. A failure with `keepText: true` retains the attempted source. Use `Parse` when a valid JSON null must be distinguished from an error.
+The returned `Data` tree is live and mutable; callers must synchronize their own edits. Assigning `Data` and duplicating the resource deep-copy its tree. Disposal invalidates instance access. `Parse` leaves `Data` null on failure and stores the managed parser's error message and zero-based line. Success clears previous diagnostics. Success and failure retain the attempted source only with `keepText: true`; parsing without retention and assigning `Data` clear it. This state reset follows [ADR 0048](../decisions/core-data-io.md#adr-0048). Use `Parse` when a valid JSON null must be distinguished from an error.
 
 Native conversion reuses the typed configuration value schemas. An `object` root or member and any engine object are rejected; arbitrary runtime type names are never constructed from JSON. Invalid model data can throw `JsonException` or a managed serialization exception. `Stringify` limits traversal to 128 nested levels. Nonfinite native float/double nodes format as `null` for NaN and `±1e99999` for infinity. Full precision uses round-trip float/double text; the default emits fewer digits. Parsing and formatting allocate and do not belong in a frame hot path.
 
-The managed parser differs from the reference in permissive syntax, Unicode recovery, exact numeric formatting, and diagnostics. Engine-object conversion and the universal value protocol are absent by the accepted typed boundary. The [coverage page](../coverage/classes/JSON.md) records these members as Partial until each applicable behavior has been audited.
+The managed parser differs from the reference in permissive syntax, Unicode recovery, exact numeric formatting, and diagnostics. Engine-object conversion and the universal value protocol are absent by the accepted typed boundary. The [coverage page](../coverage/classes/JSON.md) keeps parsing, diagnostic values, formatting, and the class aggregate Partial while their applicable behavior remains open.
 
 ## Verification
 

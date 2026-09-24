@@ -62,7 +62,115 @@ internal static class JsonTests
         Reject<ArgumentNullException>(() => EngineJSON.Stringify(null, null!));
         json.Dispose();
         Reject<ObjectDisposedException>(() => json.Parse("1"));
+        VerifyDocumentState();
+        VerifyTypedConversion();
         Console.WriteLine("JSON parsing, formatting, typed conversion, duplication and failures passed.");
+    }
+
+    private static void VerifyDocumentState()
+    {
+        using var json = new EngineJSON();
+        const string original = "{\"nested\":{\"value\":1}}";
+        Check(json.Parse(original, keepText: true) && json.GetParsedText() == original,
+            "Successful parsing must retain the exact requested source text.");
+        using var duplicate = (EngineJSON)json.Duplicate();
+        var borrowed = (JsonObject)json.Data!;
+        borrowed["nested"]!["value"] = 2;
+        Check(json.Data!["nested"]!["value"]!.GetValue<int>() == 2 &&
+              duplicate.Data!["nested"]!["value"]!.GetValue<int>() == 1 &&
+              duplicate.GetParsedText() == original,
+            "The getter must expose live data while resource duplication owns an independent snapshot.");
+
+        var supplied = JsonNode.Parse("{\"nested\":{\"value\":3}}")!;
+        json.Data = supplied;
+        supplied["nested"]!["value"] = 4;
+        Check(json.Data!["nested"]!["value"]!.GetValue<int>() == 3 &&
+              json.GetParsedText() == string.Empty && json.GetErrorMessage() == string.Empty &&
+              json.GetErrorLine() == 0,
+            "Data assignment must deep-copy input and clear source and diagnostic state.");
+        borrowed = (JsonObject)json.Data!;
+        json.Data = borrowed;
+        borrowed["nested"]!["value"] = 5;
+        Check(json.Data!["nested"]!["value"]!.GetValue<int>() == 3,
+            "Reassigning a borrowed live tree must replace it with an independent copy.");
+
+        const string malformed = "[1,\r\n broken]";
+        JsonException? expected = null;
+        try { _ = JsonNode.Parse(malformed, documentOptions: new JsonDocumentOptions { AllowTrailingCommas = true }); }
+        catch (JsonException error) { expected = error; }
+        Check(expected is not null && !json.Parse(malformed, keepText: true) && json.Data is null &&
+              json.GetErrorLine() == expected.LineNumber && json.GetErrorLine() == 1 &&
+              json.GetErrorMessage() == expected.Message && json.GetParsedText() == malformed,
+            "A failed parse must atomically store the managed parser's line, message and requested source.");
+        using var failedCopy = (EngineJSON)json.Duplicate();
+        Check(failedCopy.Data is null && failedCopy.GetErrorLine() == 1 &&
+              failedCopy.GetErrorMessage() == expected!.Message && failedCopy.GetParsedText() == malformed,
+            "Resource duplication must copy failure diagnostics and retained source without aliases.");
+
+        Check(json.Parse("null") && json.Data is null && json.GetErrorLine() == 0 &&
+              json.GetErrorMessage() == string.Empty && json.GetParsedText() == string.Empty,
+            "A valid JSON null must clear prior failure diagnostics and unrequested retained text.");
+        Check(json.Parse("true", keepText: true) && json.GetParsedText() == "true",
+            "Text retention must resume on the next requested parse.");
+        json.Data = null;
+        Check(json.Data is null && json.GetParsedText() == string.Empty &&
+              json.GetErrorLine() == 0 && json.GetErrorMessage() == string.Empty,
+            "Assigning a null document must reset all prior source and diagnostic state.");
+
+        json.Dispose();
+        Reject<ObjectDisposedException>(() => _ = json.Data);
+        Reject<ObjectDisposedException>(() => json.Data = JsonValue.Create(1));
+        Reject<ObjectDisposedException>(() => _ = json.GetErrorLine());
+        Reject<ObjectDisposedException>(() => _ = json.GetErrorMessage());
+        Reject<ObjectDisposedException>(() => _ = json.GetParsedText());
+    }
+
+    private static void VerifyTypedConversion()
+    {
+        static bool RoundTrip<T>(T value) where T : notnull =>
+            EqualityComparer<T>.Default.Equals(EngineJSON.ToNative<T>(EngineJSON.FromNative(value)), value);
+
+        Check(RoundTrip(true) && RoundTrip(123) && RoundTrip(123L) && RoundTrip(1.25f) &&
+              RoundTrip(1.2345678901234567d) && RoundTrip("text") &&
+              RoundTrip(new Vector2(2f, 5f)) && RoundTrip(new Vector2I(2, 5)) &&
+              RoundTrip(new Vector3(1f, 2f, 3f)) && RoundTrip(new Vector3I(1, 2, 3)) &&
+              RoundTrip(new Vector4(1f, 2f, 3f, 4f)) && RoundTrip(new Vector4I(1, 2, 3, 4)) &&
+              RoundTrip(new Color(0.2f, 0.4f, 0.6f, 1f)) &&
+              RoundTrip(new Rect(1f, 2f, 3f, 4f)) && RoundTrip(new RectI(1, 2, 3, 4)) &&
+              RoundTrip(new Transform(0f, new Vector2(2f, 3f))),
+            "Typed native conversion must round-trip every registered scalar and engine math schema.");
+        Check(EngineJSON.FromNative<string?>(null) is null &&
+              EngineJSON.ToNative<string>(null) is null && EngineJSON.ToNative<int>(null) == 0,
+            "Typed native conversion must preserve null and default values by selected destination type.");
+
+        var model = new NativeModel { Name = "ship", Position = new Vector2(2f, 5f), Values = [1, 2] };
+        var node = EngineJSON.FromNative(model)!;
+        model.Values[0] = 9;
+        Check(node["Values"]![0]!.GetValue<int>() == 1,
+            "FromNative must create an independent tree instead of retaining collection aliases.");
+        var decoded = EngineJSON.ToNative<NativeModel>(node)!;
+        ((JsonArray)node["Values"]!)[0] = 7;
+        Check(decoded.Name == "ship" && decoded.Position == new Vector2(2f, 5f) &&
+              decoded.Values.SequenceEqual([1, 2]),
+            "ToNative must decode a caller-selected model without retaining tree aliases.");
+        Reject<JsonException>(() => EngineJSON.ToNative<NativeModel>(JsonNode.Parse("\"wrong\"")));
+        Reject<NotSupportedException>(() => EngineJSON.FromNative<object>(null!));
+        Reject<NotSupportedException>(() => EngineJSON.ToNative<object>(node));
+        using var owned = new Resource();
+        Reject<NotSupportedException>(() => EngineJSON.FromNative(new { Owned = owned }));
+        Reject<NotSupportedException>(() => EngineJSON.ToNative<NativeWithResource>(node));
+    }
+
+    private sealed class NativeModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public Vector2 Position { get; set; }
+        public List<int> Values { get; set; } = [];
+    }
+
+    private sealed class NativeWithResource
+    {
+        public Resource? Owned { get; set; }
     }
 
     private static void Check(bool condition, string message)
