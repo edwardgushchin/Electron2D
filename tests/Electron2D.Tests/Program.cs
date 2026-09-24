@@ -129,6 +129,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOADER") == "1")
+{
+    ResourceLoaderTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_HANDLES") == "1")
 {
     RenderingNativeHandleTests.Run();

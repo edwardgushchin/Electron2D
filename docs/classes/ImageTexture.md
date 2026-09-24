@@ -1,6 +1,6 @@
 # ImageTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Declaration: `public sealed class ImageTexture : Texture`
 - Source: [ImageTexture.cs](../../src/Scene/Resources/ImageTexture.cs)
@@ -12,6 +12,8 @@ Last updated: 2026-09-23
 Owns a snapshot of an Image, independent of the original image and any active renderer. All incoming and returned image data is copied. SetImage replaces the pixel configuration; Update keeps it. The renderer uploads pixels on first use and after a change, and owns all native resources. Textures shared by materials remain caller-owned.
 
 State access is serialized. Validation and copying finish before mutation; failure preserves the old state. Successful mutations release the gate and then emit Changed. Observer exceptions propagate after the mutation has committed.
+
+[`ResourceLoader.Load<ImageTexture>`](ResourceLoader.md#loadtresource) can create this texture from a PNG, JPEG, WebP, BMP, TGA or SVG file. Its default cache mode returns a live instance by path; Replace decodes first and calls `SetImage` on the same instance, preserving borrowers while resetting any logical size override. A cached wrapper remains caller-owned and is removed from the weak path registry when disposed. Linux Wayland compatibility/GPU Sprite pixels pass for both the initial file load and live replacement.
 
 ## Example
 

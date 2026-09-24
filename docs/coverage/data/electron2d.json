@@ -2504,6 +2504,37 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResourceLoader",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "ResourceLoader",
+    "signature": "public static class Electron2D.ResourceLoader",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceLoader.CacheMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "CacheMode",
+    "signature": "public enum Electron2D.ResourceLoader.CacheMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneState",
     "kind": "type",
     "declaringType": "Electron2D.SceneState",
@@ -14651,6 +14682,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Repeat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.CacheMode.Ignore()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "Ignore",
+    "signature": "public const Electron2D.ResourceLoader.CacheMode Ignore = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.CacheMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.CacheMode.IgnoreDeep()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "IgnoreDeep",
+    "signature": "public const Electron2D.ResourceLoader.CacheMode IgnoreDeep = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.CacheMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.CacheMode.Replace()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "Replace",
+    "signature": "public const Electron2D.ResourceLoader.CacheMode Replace = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.CacheMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.CacheMode.ReplaceDeep()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "ReplaceDeep",
+    "signature": "public const Electron2D.ResourceLoader.CacheMode ReplaceDeep = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.CacheMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.CacheMode.Reuse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.CacheMode",
+    "name": "Reuse",
+    "signature": "public const Electron2D.ResourceLoader.CacheMode Reuse = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.CacheMode",
     "value": "1"
   },
   {
@@ -42531,6 +42627,100 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.Exists\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "Exists",
+    "signature": "public static System.Boolean Exists\u003CTResource\u003E(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.GetCachedRef\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "GetCachedRef",
+    "signature": "public static TResource GetCachedRef\u003CTResource\u003E(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "TResource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.GetRecognizedExtensionsForType\u00601()",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "GetRecognizedExtensionsForType",
+    "signature": "public static System.String[] GetRecognizedExtensionsForType\u003CTResource\u003E()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.HasCached(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "HasCached",
+    "signature": "public static System.Boolean HasCached(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.Load\u00601(System.String,Electron2D.ResourceLoader.CacheMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "Load",
+    "signature": "public static TResource Load\u003CTResource\u003E(System.String path, Electron2D.ResourceLoader.CacheMode cacheMode = Reuse)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "cacheMode",
+        "type": "Electron2D.ResourceLoader.CacheMode",
+        "default": "Reuse"
+      }
+    ],
+    "returnType": "TResource",
     "value": null
   },
   {

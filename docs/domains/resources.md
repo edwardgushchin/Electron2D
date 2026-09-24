@@ -1,12 +1,12 @@
 # Resources domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
 
-The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding and PNG/JPEG saving are executable, while general asset loading remains absent. SDL_image is an approved internal dependency for the codec integration.
+The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding, PNG/JPEG saving and the first synchronous image-texture resource loader are executable. General asset loading remains incomplete. SDL_image is an approved internal dependency for the codec integration.
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
@@ -18,6 +18,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 | [Gradients](../components/gradients.md) | Gradient and its mode/space enums, GradientRampTexture, GradientTexture and its fill/repeat enums | Managed interpolation and lazy RGBA8/RGBAF texture generation, typed copies/local ownership and native canvas/material sampling |
 | [Curves](../components/curves.md) | [`Curve`](../classes/Curve.md), [`Curve.TangentMode`](../classes/Curve.TangentMode.md), [`Curve2D`](../classes/Curve2D.md), [`CurveTexture`](../classes/CurveTexture.md), [`CurveXYZTexture`](../classes/CurveXYZTexture.md), [`CurveTexture.TextureModeEnum`](../classes/CurveTexture.TextureModeEnum.md) | Managed scalar/spatial sampling, tangents, baking, tessellation and nearest queries with typed copying and scene-local ownership |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
+| [Resource loading](../components/resource-loading.md) | [`ResourceLoader`](../classes/ResourceLoader.md), [`ResourceLoader.CacheMode`](../classes/ResourceLoader.CacheMode.md) | Synchronous image-texture files and weak-cache modes execute; general loader Partial |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), [`BitMap`](../classes/BitMap.md), Image's seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed image and mask processing implemented and verified; six native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
 | [Noise](../components/noise.md) | [`Noise`](../classes/Noise.md), [`FastNoiseLite`](../classes/FastNoiseLite.md), [`NoiseTexture`](../classes/NoiseTexture.md) | Abstract and built-in 1D/2D samplers, plus generated texture with gradient, normal-map and mipmap processing |
 | [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`CanvasItemMaterial`](../classes/CanvasItemMaterial.md) and its [`BlendMode`](../classes/BlendMode.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md), [`AtlasTexture`](../classes/AtlasTexture.md) | SPIR-V fragment programs and typed uniforms execute on Linux Wayland/Vulkan; fixed canvas blending executes on Wayland GPU and compatibility hardware, with software limited to Mix; further mappings remain pending |
@@ -25,6 +26,8 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 ## Public surface
 
 The domain exposes resource name/path/scene configuration, built-in classification, synchronous change/setup events, local-scene association, reset and raw-cache hooks, copy and graph-preserving duplication, explicit deep-copy policy, scene ID generation, path takeover, typed property descriptors, deterministic disposal, and typed CPU image storage/processing across uncompressed and raw GPU-compressed formats.
+
+ResourceLoader uses the existing process-wide weak path cache to load ImageTexture from six supported file extensions. Typed generic load, existence and extension discovery cover this first file format. Reuse retains a live cached wrapper, Ignore returns an unregistered independent wrapper, and Replace decodes before updating the same cached texture; deep modes coincide with their ordinary modes for leaf images. Callers own loaded resources. Live Wayland compatibility/GPU Sprite pixels pass before and after a file replacement.
 
 BitMap adds a packed boolean grid with Image alpha import, L8 export, nearest resize, region mutation, circular morphology and marching-squares polygon extraction. Its operations are managed and independent of a physics or rendering backend.
 
@@ -42,13 +45,14 @@ AnimatedTexture stores up to 256 borrowed texture slots with per-slot duration, 
 
 Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image and BitMap processing use Core `Color`, `Vector2`, `Vector2i`, and `Rect2i`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed image/mask processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.
 
-Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. Resource base and Image retain their independent managed behavior.
+Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. ResourceLoader consumes `Image.LoadFromFile`, `ImageTexture.CreateFromImage`/`SetImage`, `FileAccess` path policy and Resource's weak path registry. Resource base and Image retain their independent managed behavior.
 
 ## Domain-wide invariants
 
 - Electron2D-owned code stays in `Electron2D.dll`.
 - Resource state is typed; there is no dynamic property bag or untyped reflection-based copier.
 - Registered paths are ordinal, process-wide, weakly held, and single-owner.
+- Synchronous loader cache decisions serialize; decoding failures preserve existing cached image pixels and identity. Loaded resources remain caller-owned.
 - Derived resources explicitly define construction and stored-state copying.
 - Successful duplication preserves graph topology and clears external identity.
 - Scene-local duplicates preserve graph topology, receive their owning scene root before setup, run setup once, and are disposed by that root.
@@ -63,7 +67,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 
 ## Current limitations
 
-`Image`, `BitMap`, and `FastNoiseLite` are concrete managed assets; `Noise` is their abstract sampling contract. NoiseTexture has managed and Linux Wayland native pixel checks but no other-platform verification. There is no asset loader/saver, complete image-codec family, cache mode, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. BitMap has no physics collision consumer yet. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format, UID/import integration, or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039.
+`Image`, `BitMap`, and `FastNoiseLite` are concrete managed assets; `Noise` is their abstract sampling contract. NoiseTexture has managed and Linux Wayland native pixel checks but no other-platform verification. The synchronous loader covers only ImageTexture file sources and a weak cache: there is no general loader/saver, complete image-codec family, public format-loader plugin, UID/dependency graph, threaded loading, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. BitMap has no physics collision consumer yet. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039 and ResourceLoader coverage.
 
 ## Decisions
 
@@ -80,7 +84,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 
 ## Verification
 
-Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, image formats and processing, and per-instance local graph association/setup/ownership without requiring a codec, asset loader/saver, editor, or renderer. RenderingTextureTests separately verifies texture resources, native sampling, and SDL_image package loading/PNG decoding; that backend probe does not establish a public codec API.
+Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program.cs`. They exercise base duplication, managed image processing and per-instance local graph association/setup/ownership. Native `ImageCodecTests` covers the six public decoders; `ResourceLoaderTests` covers the first synchronous file loader and weak cache. Focused `SpriteRenderingTests` uses the loader for a PNG texture and verifies live file replacement pixels on Linux Wayland compatibility/GPU and dummy compatibility. Other targets remain unverified.
 
 [CurveTests](../../tests/Electron2D.Tests/CurveTests.cs) verifies CPU curve samples, geometric edge cases, event timing, cache/copy isolation, scene ownership, failure recovery, concurrent state access and allocation-free warm queries without native dependencies.
 

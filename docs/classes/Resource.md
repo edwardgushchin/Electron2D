@@ -484,7 +484,8 @@ The reference inheritance chain is `Resource -> RefCounted -> Object`. Electron2
 | `_get_rid`, `get_rid` | Deferred until a renderer/resource-handle domain defines RID ownership |
 | `get_local_scene` and automatic local-to-scene duplication/setup | Implemented for in-memory `PackedScene`; root association precedes setup and persists until resource disposal |
 | `get_id_for_path`, `set_id_for_path` | Deferred with editor/import serialization because their mapping is tooling-only |
-| Loader/saver cache modes and serialized stored-property discovery | Deferred until asset loading and serialization exist |
+| Synchronous loader cache modes for image textures | Implemented through typed [`ResourceLoader`](ResourceLoader.md) on this weak path registry |
+| General loader/saver formats and serialized stored-property discovery | Deferred until concrete file-format and dependency integrations exist |
 
 No placeholder members are exposed for deferred domains.
 
@@ -498,4 +499,4 @@ Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` perfor
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, property descriptors, event rules, validation, concurrent ID generation, path conflict/transfer/raw-cache/disposal behavior, concurrent path claims, built-in classification, setup ordering and failure aggregation, every duplication mode, forced and forbidden nested duplication, shallow and typed-container semantics, aliases, cycles, external resources, serialized concurrent copy/reset/coalescing behavior, unsupported and invalid factories, partial-graph rollback, packed-scene local duplication/aliasing/root association/setup/ownership, and access after disposal.
 
-There is no asset loader/saver, import pipeline, scene/resource file format, renderer RID, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
+The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. There is no general asset loader/saver, import pipeline, scene/resource file format, renderer RID, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.

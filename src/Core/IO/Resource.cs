@@ -19,6 +19,17 @@ public class Resource : ElectronObject
 
     private static readonly object PathCacheGate = new();
     private static readonly Dictionary<string, WeakReference<Resource>> PathCache = new(StringComparer.Ordinal);
+
+    internal static Resource? GetRegisteredPath(string path)
+    {
+        lock (PathCacheGate)
+        {
+            if (!PathCache.TryGetValue(path, out var weak)) return null;
+            if (weak.TryGetTarget(out var resource) && !resource.IsDisposed) return resource;
+            PathCache.Remove(path);
+            return null;
+        }
+    }
     private static readonly IReadOnlyList<PropertyDescriptor> ResourceProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
         new PropertyDescriptor<Resource, bool>(

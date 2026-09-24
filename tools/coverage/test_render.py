@@ -74,6 +74,12 @@ def main():
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "../../classes/AStarGrid.md" in class_rows["AStarGrid2D"]
+    loader_rows = [row for row in pages[CLASS_PAGES / "ResourceLoader.md"].splitlines()
+                   if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(loader_rows) == 26
+    assert {state: sum(f" | {state} | " in row for row in loader_rows)
+            for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
+                "Implemented": 8, "Partial": 4, "Blocked": 13, "Unimplemented": 1}
     assert "cryptography utility contract" in class_rows["AESContext"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     assert "GUI/editor Shortcut" in class_rows["Shortcut"]

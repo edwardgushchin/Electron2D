@@ -1,0 +1,106 @@
+{
+  "mappings": [
+    {
+      "godot": "ResourceLoader::method:exists(String:,String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.Exists`1(System.String)",
+      "reason": "The generic C# resource type replaces the string type hint for the supported image-texture format."
+    },
+    {
+      "godot": "ResourceLoader::method:get_cached_ref(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.GetCachedRef`1(System.String)",
+      "reason": "A typed generic result replaces the untyped Resource result."
+    },
+    {
+      "godot": "ResourceLoader::method:get_recognized_extensions_for_type(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.GetRecognizedExtensionsForType`1()",
+      "reason": "A generic resource type replaces the string type name; returns caller-owned extension arrays."
+    },
+    {
+      "godot": "ResourceLoader::method:load(String:,String:,int:ResourceLoader.CacheMode)",
+      "electron2d": "method:Electron2D.ResourceLoader.Load`1(System.String,Electron2D.ResourceLoader.CacheMode)",
+      "reason": "A generic resource type replaces the string type hint; synchronous image-texture loading uses the accepted path cache."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:ResourceLoader"
+      ],
+      "state": "Partial",
+      "reason": "Synchronous image-texture loading, weak cache modes and type discovery execute; other resource formats, public format-loader plugins, UID/dependency catalogs and threaded loading remain separate."
+    },
+    {
+      "godot": [
+        "ResourceLoader::enum:CacheMode",
+        "ResourceLoader::enum_value:CacheMode.CACHE_MODE_IGNORE",
+        "ResourceLoader::enum_value:CacheMode.CACHE_MODE_REUSE",
+        "ResourceLoader::enum_value:CacheMode.CACHE_MODE_REPLACE",
+        "ResourceLoader::enum_value:CacheMode.CACHE_MODE_IGNORE_DEEP",
+        "ResourceLoader::enum_value:CacheMode.CACHE_MODE_REPLACE_DEEP"
+      ],
+      "state": "Implemented",
+      "reason": "All five numeric identities and ignore/reuse/replace behavior are verified for dependency-free image textures; deep modes coincide with their ordinary modes for this leaf format."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:has_cached(String:)",
+        "ResourceLoader::method:get_cached_ref(String:)"
+      ],
+      "state": "Implemented",
+      "reason": "The existing process-wide weak ResourcePath registry supplies live cached identity; typed retrieval, disposal and cross-type lookup are tested."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:load(String:,String:,int:ResourceLoader.CacheMode)",
+        "ResourceLoader::method:exists(String:,String:)",
+        "ResourceLoader::method:get_recognized_extensions_for_type(String:)"
+      ],
+      "state": "Partial",
+      "reason": "The typed synchronous PNG/JPEG/WebP/BMP/TGA/SVG ImageTexture path, extension lookup and cache modes execute with native Wayland Sprite pixels; remaining applicable resource formats, type hints and extensible format loaders are absent."
+    },
+    {
+      "godot": [
+        "ResourceLoader::enum:ThreadLoadStatus",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_IN_PROGRESS",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_FAILED",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_LOADED",
+        "ResourceLoader::method:load_threaded_get(String:)",
+        "ResourceLoader::method:load_threaded_get_status(String:,Array:)",
+        "ResourceLoader::method:load_threaded_request(String:,String:,bool:,int:ResourceLoader.CacheMode)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed worker load tokens, cancellation/progress ownership and callback delivery over the synchronous loader after a portable job-system decision."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:add_resource_format_loader(ResourceFormatLoader:,bool:)",
+        "ResourceLoader::method:remove_resource_format_loader(ResourceFormatLoader:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: public typed ResourceFormatLoader contract, registration ownership and callback lifetime beyond the internal image-texture format."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:get_dependencies(String:)",
+        "ResourceLoader::method:set_abort_on_missing_resources(bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: resource-file dependency graph with typed external-resource references and missing-resource policy."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:get_resource_uid(String:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first resource UID registry and imported-file path mapping."
+    },
+    {
+      "godot": [
+        "ResourceLoader::method:list_directory(String:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Directory access exists; trigger: resource-aware directory listing with type/extension filtering and path policy."
+    }
+  ]
+}

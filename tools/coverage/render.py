@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 TEXTURE_NAMES = {
     "Texture2D": "Texture",
@@ -237,8 +237,20 @@ def reason_for_type(item, lookup):
     if name in {"ArrayMesh", "ImmediateMesh", "MeshInstance2D", "MultiMeshInstance2D", "PrimitiveMesh", "PlaceholderMesh"}:
         return "Blocked", "Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028)."
     blocked_slices = (
-        ({"ResourceFormatLoader", "ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
+        ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
+        ({"ResourceFormatLoader"},
+         "first public typed loader-plugin registration and callback slice after the concrete internal image-texture loader (ADR 0013)"),
+        ({"ImageFormatLoader", "ImageFormatLoaderExtension"},
+         "first public image-decoder plugin and format-discovery slice beyond the internal six-codec Image path (ADR 0039)"),
+        ({"ResourceSaver"},
+         "first concrete typed resource file format and serializer with ownership and rollback (ADRs 0013 and 0023)"),
+        ({"CompressedTexture2D", "PortableCompressedTexture2D"},
+         "first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039)"),
+        ({"Font", "FontFile", "FontVariation", "SystemFont"},
+         "first SDL_ttf/HarfBuzz text-shaping, font import and renderer slice (ADR 0046)"),
+        ({"VideoStream", "VideoStreamPlayback", "VideoStreamTheora"},
+         "first video decoding, timed texture playback and audio synchronization slice"),
         ({"World2D", "WorldEnvironment"},
          "first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028)"),
         ({"Mesh", "ImporterMesh", "MeshConvexDecompositionSettings", "MeshDataTool", "MeshLibrary", "MultiMesh", "SurfaceTool", "TriangleMesh"},
@@ -281,7 +293,7 @@ def reason_for_type(item, lookup):
         ("Animation", r"Animation|Skeleton2D|Bone2D", "first scene animation slice"),
         ("Tiles", r"Tile|Atlas", "first tile and atlas resource slice after 2D rendering"),
         ("Networking", r"Multiplayer|PacketPeer|ENet|WebRTC|WebSocket|HTTP|TLS|DTLS|TCP|UDP|IP$|SocketServer|StreamPeer|UDSServer|UPNP", "first networking and multiplayer slice"),
-        ("Assets", r"ResourceLoader|ResourceSaver|CompressedTexture|StreamTexture|ImageTexture|Font|Video|PackedData|ImageFormatLoader|GLTF|FBX", "first concrete loader and native-backed asset slice (ADR 0013/0023)"),
+        ("Assets", r"ResourceLoader|ResourceSaver|CompressedTexture|StreamTexture|ImageTexture|Font|Video|PackedData|ImageFormatLoader|GLTF|FBX", "first type-specific asset format and native-backed integration beyond the existing image-texture loader (ADR 0013/0023)"),
         ("InputHost", r"InputEvent|InputMap|Input$|Shortcut|Joypad|TouchScreen|Sensor", "first SDL input-host integration slice (ADR 0038)"),
         ("Host", r"DisplayServer|OS$|Time$|NativeMenu|CameraServer|CameraFeed|AccessibilityServer", "first SDL-backed platform host and display slice (ADR 0021/0038)"),
         ("Rendering2D", r"Canvas|Sprite|Texture|Shader|Material|Light2D|Polygon2D|Viewport|Camera2D|Parallax|Rendering|Gradient|Particle|Occluder|Mesh", "first missing type-specific 2D renderer integration beyond the existing GPU/fallback canvas slice (ADR 0028)"),
@@ -508,7 +520,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "CompressedTexture2D", "Font", "FontFile", "FontVariation", "ImageFormatLoader", "ImageFormatLoaderExtension", "PortableCompressedTexture2D", "ResourceFormatLoader", "ResourceLoader", "ResourceSaver", "SystemFont", "VideoStream", "VideoStreamPlayback", "VideoStreamTheora", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
