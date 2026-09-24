@@ -106,11 +106,14 @@ public abstract class PhysicsBody : CollisionObject
         var rotation = GlobalRotation;
         if (position != _lastPosition || rotation != _lastRotation)
         {
-            b2Body_SetTransform(_bodyID, Shape.ToBackend(position), b2MakeRot(rotation));
+            ApplySceneTransform(position, rotation);
             _lastPosition = position;
             _lastRotation = rotation;
         }
     }
+
+    internal virtual void ApplySceneTransform(Vector2 position, float rotation) =>
+        b2Body_SetTransform(_bodyID, Shape.ToBackend(position), b2MakeRot(rotation));
 
     internal void CompleteBackend()
     {

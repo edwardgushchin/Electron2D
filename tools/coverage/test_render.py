@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "RectangleShape2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "RectangleShape2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -77,6 +77,10 @@ def main():
     assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "../../classes/AStarGrid.md" in class_rows["AStarGrid2D"]
     assert "../../classes/Area.md" in class_rows["Area2D"] and " | Partial | " in class_rows["Area2D"]
+    assert "../../classes/AnimatableBody.md" in class_rows["AnimatableBody2D"] and " | Implemented | " in class_rows["AnimatableBody2D"]
+    animatable_rows = [row for row in pages[CLASS_PAGES / "AnimatableBody2D.md"].splitlines()
+                       if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(animatable_rows) == 2 and all(" | Implemented | " in row for row in animatable_rows)
     capsule_rows = [row for row in pages[CLASS_PAGES / "CapsuleShape2D.md"].splitlines()
                     if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(capsule_rows) == 4 and all(" | Implemented | " in row for row in capsule_rows)

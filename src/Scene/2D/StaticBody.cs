@@ -4,7 +4,7 @@ using static Box2D.NET.B2Types;
 namespace Electron2D;
 
 /// <summary>A stationary collision body that constrains simulated dynamic bodies.</summary>
-public sealed class StaticBody : PhysicsBody
+public class StaticBody : PhysicsBody
 {
     private static readonly PropertyDescriptor[] BodyProperties =
     [

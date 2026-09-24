@@ -24,6 +24,7 @@
     "AStar2D": "AStar",
     "AStarGrid2D": "AStarGrid",
     "Area2D": "Area",
+    "AnimatableBody2D": "AnimatableBody",
     "Shape2D": "Shape",
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",

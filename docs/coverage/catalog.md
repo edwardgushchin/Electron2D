@@ -16,7 +16,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AcceptDialog](classes/AcceptDialog.md) | Window | Blocked | 26 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | Object | Blocked | 178 |
 | [AimModifier3D](classes/AimModifier3D.md) | BoneConstraint3D | Excluded | 11 |
-| [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Unimplemented | 1 |
+| [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Implemented | 1 |
 | [AnimatableBody3D](classes/AnimatableBody3D.md) | StaticBody3D | Excluded | 1 |
 | [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Implemented | 22 |
 | [AnimatedSprite3D](classes/AnimatedSprite3D.md) | SpriteBase3D | Excluded | 18 |

@@ -2,15 +2,15 @@
 
 Last updated: 2026-09-25
 
-**Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
+**Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [AnimatableBody](AnimatableBody.md)
 
 - **Source:** [StaticBody.cs](../../src/Scene/2D/StaticBody.cs)
-- **Declaration:** `public sealed class StaticBody : PhysicsBody`
+- **Declaration:** `public class StaticBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
 ## Description
 
-A stationary scene collider. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle, capsule or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
+A stationary scene collider and base of [AnimatableBody](AnimatableBody.md), which moves kinematically. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle, capsule or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
 
 ## Example
 
@@ -42,4 +42,4 @@ The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) changes friction and
 
 ## Verification and limits
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies rectangle and circle contacts against a StaticBody floor, filter changes, live shape edits, borrowed resource lifetime and scene disposal. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) verifies material mixing and ownership. `ConstantLinearVelocity` and `ConstantAngularVelocity` remain incomplete on [StaticBody2D coverage](../coverage/classes/StaticBody2D.md). See [ADR 0054](../decisions/physics.md#adr-0054) for the unit and backend boundary.
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies rectangle and circle contacts against a StaticBody floor, filter changes, live shape edits, borrowed resource lifetime and scene disposal. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) verifies material mixing and ownership. `ConstantLinearVelocity` and `ConstantAngularVelocity` remain incomplete on [StaticBody2D coverage](../coverage/classes/StaticBody2D.md). See [ADRs 0054 and 0060](../decisions/physics.md#adr-0060) for the unit and kinematic boundaries.

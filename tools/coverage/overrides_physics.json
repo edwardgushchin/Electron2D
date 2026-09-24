@@ -33,6 +33,36 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.AnimatableBody..ctor()",
+      "reason": "Managed construction projects the kinematic body defaults and inherited static-body role.",
+      "adr": "ADRs 0003, 0008, 0060"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatableBody.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory restores the exact kinematic body class.",
+      "adr": "ADRs 0005, 0008, 0060"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatableBody.GetPropertyDescriptors()",
+      "reason": "Typed PackedScene descriptor stores the inherited body state and synchronization flag.",
+      "adr": "ADRs 0005, 0008, 0060"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatableBody.OnEnterTree()",
+      "reason": "Typed scene lifecycle registers kinematic motion and transform synchronization.",
+      "adr": "ADRs 0008, 0060"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatableBody.OnExitTree()",
+      "reason": "Typed scene lifecycle clears pending kinematic motion and notification state.",
+      "adr": "ADRs 0008, 0060"
+    },
+    {
+      "electron2d": "method:Electron2D.AnimatableBody.OnNotification(System.Int32)",
+      "reason": "Typed local-transform notification projects fixed-step synchronization without a scripting callback.",
+      "adr": "ADRs 0008, 0060"
+    },
+    {
       "electron2d": "constructor:Electron2D.CapsuleShape..ctor()",
       "reason": "Managed C# construction projects the existing capsule resource defaults.",
       "adr": "ADRs 0003, 0013, 0059"
@@ -239,6 +269,14 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:AnimatableBody2D",
+        "AnimatableBody2D::property:sync_to_physics"
+      ],
+      "state": "Implemented",
+      "reason": "Kinematic target velocity moves rigid contacts while fixed-step synchronization controls scene presentation; AnimatableBodyTests covers mode changes, rotation, zero-step, callback failure, packing, reentry and warm active/idle allocation (ADR 0060)."
+    },
     {
       "godot": [
         "class:Shape2D"
