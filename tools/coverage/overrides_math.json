@@ -3248,7 +3248,46 @@
     {
       "godot": ["class:Vector3"],
       "state": "Partial",
-      "reason": "The complete three-component numeric declaration exists under ADR 0033. Normalization, direction and the four geometric length/movement/octahedral packing rows have focused native-source audits; remaining structural rows still require behavior, edge and value verification before whole-type parity."
+      "reason": "The complete three-component numeric declaration exists under ADR 0033. Constants, constructors, fields, indexing, arithmetic, ordering, normalization, direction and four geometric methods have focused pinned-source audits; remaining interpolation/geometry/scalar rows still require behavior, edge and value verification before whole-type parity."
+    },
+    {
+      "godot": [
+        "Vector3::constant:BACK", "Vector3::constant:DOWN", "Vector3::constant:FORWARD",
+        "Vector3::constant:INF", "Vector3::constant:LEFT", "Vector3::constant:ONE",
+        "Vector3::constant:RIGHT", "Vector3::constant:UP", "Vector3::constant:ZERO"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector3CoreValues compares all nine applicable constants with the pinned three-component identities, including every positive-infinity channel. Model-orientation constants remain excluded under ADR 0004; Linux/.NET 8 managed check."
+    },
+    {
+      "godot": [
+        "Vector3::constructor:Vector3()", "Vector3::constructor:Vector3(Vector3:)",
+        "Vector3::constructor:Vector3(Vector3i:)", "Vector3::constructor:Vector3(float:,float:,float:)",
+        "Vector3::enum:Axis", "Vector3::operator:operator [](int:)",
+        "Vector3::property:x", "Vector3::property:y", "Vector3::property:z"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector3CoreValues checks sequential zero-initialized storage, mutable X/Y/Z indexes and value-copy independence, three axis enum identities, invalid-index typed errors before mutation, and integer-to-float rounding at 2^24 and int.MaxValue. C# default/copy and typed errors follow ADR 0033; Linux/.NET 8 managed check."
+    },
+    {
+      "godot": [
+        "Vector3::operator:operator *(Vector3:)", "Vector3::operator:operator *(float:)",
+        "Vector3::operator:operator *(int:)", "Vector3::operator:operator +(Vector3:)",
+        "Vector3::operator:operator -(Vector3:)", "Vector3::operator:operator /(Vector3:)",
+        "Vector3::operator:operator /(float:)", "Vector3::operator:operator /(int:)",
+        "Vector3::operator:operator unary+()", "Vector3::operator:operator unary-()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h and variant_op.cpp use componentwise float arithmetic; C# integer scalars convert to float under ADR 0033. VerifyVector3CoreValues checks signs, component/scalar operations, int.MaxValue conversion, both zero-division forms, signed zero and unary identity/negation on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3::operator:operator !=(Vector3:)", "Vector3::operator:operator <(Vector3:)",
+        "Vector3::operator:operator <=(Vector3:)", "Vector3::operator:operator ==(Vector3:)",
+        "Vector3::operator:operator >(Vector3:)", "Vector3::operator:operator >=(Vector3:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h compares X, then Y, then Z and uses exact IEEE component equality. VerifyVector3CoreValues checks first/second/third-component ordering, equality ties, signed zero and unordered NaN across all six operators on Linux/.NET 8."
     },
     {
       "godot": ["Vector3::method:limit_length(float:)"],

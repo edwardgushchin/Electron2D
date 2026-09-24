@@ -12,7 +12,7 @@ Last updated: 2026-09-24
 
 The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
 
-The focused length/movement and octahedral packing audit compares the pinned native formulas and edge cases. `LimitLength` divides before applying the signed cap, `MoveToward` uses a `0.00001` proximity threshold, and `OctahedronDecode` clamps the out-of-square fold correction. Those four member rows are Implemented; the remaining structurally mapped rows still require semantic review.
+The focused length/movement and octahedral packing audit compares the pinned native formulas and edge cases. `LimitLength` divides before applying the signed cap, `MoveToward` uses a `0.00001` proximity threshold, and `OctahedronDecode` clamps the out-of-square fold correction. Those four member rows are Implemented. A second audit checked the nine applicable constants, construction and copy, X/Y/Z storage and indexing, axis identity, componentwise arithmetic and all six comparisons against pinned source behavior. VerifyVector3CoreValues covers IEEE NaN and signed-zero edges, zero division, lexicographic ties, mutable value copies and int-to-float rounding; 34 core rows are Implemented. The type and 40 mapped member rows still require semantic review.
 
 ## Example
 

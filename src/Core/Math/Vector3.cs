@@ -7,6 +7,8 @@ namespace Electron2D;
 /// <summary>Represents a three-component floating-point vector for numeric tuples.</summary>
 /// <remarks>
 /// Ordinary arithmetic preserves IEEE 754 NaN and infinity values. The zero-initialized value is <see cref="Zero"/>.
+/// Equality and lexicographic ordering compare components directly: NaN is unordered and signed zeros compare equal.
+/// Integer scalar expressions convert to float before using the scalar operators.
 /// Numeric operations do not allocate managed memory; string formatting allocates a string.
 /// </remarks>
 [Serializable]

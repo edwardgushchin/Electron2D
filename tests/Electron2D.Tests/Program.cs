@@ -2160,6 +2160,7 @@ static void VerifyVector2IValues()
 
 static void VerifyVector3Values()
 {
+    VerifyVector3CoreValues();
     Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3I>() == 12 &&
             Vector3.Zero == default && Vector3I.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
             Vector3I.Forward == new Vector3I(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
@@ -2222,6 +2223,70 @@ static void VerifyVector3Values()
     Expect<JsonException>(() => config.SetValue(floatKey, Vector3.Inf), "Configuration rejects nonfinite triples.");
     config.Parse("[math]\ntriple={\"X\":1,\"Y\":2,\"Z\":3,\"W\":4}\n");
     Expect<InvalidDataException>(() => config.GetValue(floatKey), "Configuration rejects a fourth field.");
+}
+
+static void VerifyVector3CoreValues()
+{
+    Require(Vector3.Zero == default && Vector3.One == new Vector3(1f, 1f, 1f) &&
+            Vector3.Right == new Vector3(1f, 0f, 0f) && Vector3.Left == new Vector3(-1f, 0f, 0f) &&
+            Vector3.Up == new Vector3(0f, 1f, 0f) && Vector3.Down == new Vector3(0f, -1f, 0f) &&
+            Vector3.Forward == new Vector3(0f, 0f, -1f) && Vector3.Back == new Vector3(0f, 0f, 1f) &&
+            float.IsPositiveInfinity(Vector3.Inf.X) && float.IsPositiveInfinity(Vector3.Inf.Y) &&
+            float.IsPositiveInfinity(Vector3.Inf.Z) &&
+            (int)Vector3.Axis.X == 0 && (int)Vector3.Axis.Y == 1 && (int)Vector3.Axis.Z == 2,
+        "Vector3 constants and axis identities retain the pinned component values.");
+
+    var value = new Vector3(1.5f, -2f, 0f);
+    var copy = value;
+    copy[0] = -3f;
+    copy[1] = 4f;
+    copy[2] = .5f;
+    Require(value == new Vector3(1.5f, -2f, 0f) && copy == new Vector3(-3f, 4f, .5f) &&
+            copy.X == -3f && copy.Y == 4f && copy.Z == .5f &&
+            new Vector3(new Vector3I(16_777_217, int.MinValue, int.MaxValue)) ==
+                new Vector3(16_777_216f, int.MinValue, 2_147_483_648f) &&
+            (Vector3)new Vector3I(-2, 3, 4) == new Vector3(-2f, 3f, 4f),
+        "Value copies, mutable indexes and integer-to-float conversion retain component order and rounding.");
+    Expect<ArgumentOutOfRangeException>(() => _ = copy[-1], "Negative Vector3 indexes fail explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => copy[3] = 1f, "A fourth Vector3 component cannot be assigned.");
+    Require(copy == new Vector3(-3f, 4f, .5f), "A rejected index assignment leaves every component intact.");
+
+    Require(value + copy == new Vector3(-1.5f, 2f, .5f) &&
+            value - copy == new Vector3(4.5f, -6f, -.5f) &&
+            value * copy == new Vector3(-4.5f, -8f, 0f) &&
+            value / copy == new Vector3(-.5f, -.5f, 0f) &&
+            value * -2f == new Vector3(-3f, 4f, 0f) &&
+            -2f * value == value * -2f && value * -2 == value * -2f &&
+            value * int.MaxValue == value * (float)int.MaxValue &&
+            value / 2 == new Vector3(.75f, -1f, 0f) &&
+            value / int.MaxValue == value / (float)int.MaxValue &&
+            +value == value && -value == new Vector3(-1.5f, 2f, 0f),
+        "Vector3 arithmetic and integer scalar conversion match componentwise float operations.");
+    var dividedByZero = value / 0f;
+    var dividedByZeroComponents = value / Vector3.Zero;
+    Require(float.IsPositiveInfinity(dividedByZero.X) && float.IsNegativeInfinity(dividedByZero.Y) &&
+            float.IsNaN(dividedByZero.Z) &&
+            float.IsPositiveInfinity(dividedByZeroComponents.X) &&
+            float.IsNegativeInfinity(dividedByZeroComponents.Y) &&
+            float.IsNaN(dividedByZeroComponents.Z) &&
+            BitConverter.SingleToInt32Bits((-Vector3.Zero).X) == int.MinValue,
+        "Zero division preserves IEEE infinities/NaN and unary negation preserves signed zero.");
+
+    var low = new Vector3(1f, 2f, 3f);
+    var highZ = new Vector3(1f, 2f, 4f);
+    var highY = new Vector3(1f, 3f, -100f);
+    var highX = new Vector3(2f, -100f, -100f);
+    var notOrdered = new Vector3(float.NaN, 2f, 3f);
+    var lowCopy = low;
+    var unorderedCopy = notOrdered;
+    Require(low < highZ && low < highY && low < highX && highX > highY &&
+            low <= lowCopy && low >= lowCopy && low <= highZ && highZ >= low &&
+            low == new Vector3(1f, 2f, 3f) && low != highZ &&
+            new Vector3(-0f, 0f, 0f) == Vector3.Zero &&
+            notOrdered != unorderedCopy && !(notOrdered == unorderedCopy) &&
+            !(notOrdered < low) && !(notOrdered > low) &&
+            !(notOrdered <= low) && !(notOrdered >= low),
+        "Vector3 comparisons use X/Y/Z lexicographic ordering and IEEE NaN/zero equality.");
 }
 
 static void VerifyVector4Values()
