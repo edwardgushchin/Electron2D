@@ -477,11 +477,11 @@ public sealed class Tween : ElectronObject
     /// <param name="method">Receives the current value each active frame and the exact final value at completion.</param>
     /// <param name="from">The starting value.</param>
     /// <param name="to">The final value.</param>
-    /// <param name="duration">Finite non-negative interpolation seconds.</param>
+    /// <param name="duration">Finite interpolation seconds; a non-positive duration delivers the final value on the first positive step.</param>
     /// <param name="interpolator">Optional typed interpolation. Omit it for a supported built-in value type.</param>
     /// <returns>The appended typed method tweener.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="duration"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="duration"/> is NaN or infinite.</exception>
     /// <exception cref="NotSupportedException">No interpolator is supplied for an unsupported type.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread, processing started, or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
@@ -493,7 +493,8 @@ public sealed class Tween : ElectronObject
         Func<TValue, TValue, double, TValue>? interpolator = null)
     {
         ArgumentNullException.ThrowIfNull(method);
-        ValidateDuration(duration, nameof(duration));
+        if (!double.IsFinite(duration))
+            throw new ArgumentOutOfRangeException(nameof(duration), duration, "Method duration must be finite.");
         interpolator ??= TweenValue<TValue>.Interpolate ?? throw TweenValue<TValue>.Unsupported();
         return Append(new MethodTweener<TValue>(method, from, to, duration, interpolator));
     }

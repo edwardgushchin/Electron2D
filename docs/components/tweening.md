@@ -55,7 +55,9 @@ The policy audit additionally checks every enum value, persistent and one-shot p
 
 The lifecycle audit checks creation, pause/resume, stop/restart after a partial loop, overshoot time, signed manual deltas, `Finished` restart, finishing-frame validity, next-tree-frame removal and tweener clearing, immediate/idempotent invalidation by Kill with delayed registry cleanup, invalid-object calls and nested completion timing. Nine lifecycle/query rows are Implemented; type and remaining task rows retain their own status.
 
-The callback/interval audit checks null and non-finite rollback, zero/exact/negative timing, live delay changes, owner-thread guards, disposed direct targets, cancellation, callback failure, per-loop completion and the full tweener/step/loop/final event order. The callback/interval types and their own methods plus shared completion-signal rows are Implemented; property, method, subtween and await builders retain separate Partial rows.
+The callback/interval audit checks null and non-finite rollback, zero/exact/negative timing, live delay changes, owner-thread guards, disposed direct targets, cancellation, callback failure, per-loop completion and the full tweener/step/loop/final event order. The callback/interval types and their own methods plus shared completion-signal rows are Implemented.
+
+The method-tweener audit checks typed built-in and custom interpolation, finite signed duration/delay, exact start and final values, per-tweener default/override curves, live configuration, loop resets, unavailable direct targets, and callback/interpolator failures. Its own declaration rows are Implemented; property, subtween and await builders remain Partial.
 
 ## Decisions
 

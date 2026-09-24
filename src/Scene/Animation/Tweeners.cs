@@ -313,15 +313,16 @@ public sealed class MethodTweener<TValue> : Tweener
     }
 
     /// <summary>Sets the delay before callback interpolation begins.</summary>
-    /// <param name="delay">Finite non-negative seconds.</param>
+    /// <param name="delay">Finite seconds; a negative delay begins on the first positive step.</param>
     /// <returns>This tweener.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public MethodTweener<TValue> SetDelay(double delay)
     {
         EnsureMutable();
-        Tween.ValidateDuration(delay, nameof(delay));
+        if (!double.IsFinite(delay))
+            throw new ArgumentOutOfRangeException(nameof(delay), delay, "Method delay must be finite.");
         _delay = delay;
         return this;
     }

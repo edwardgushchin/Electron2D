@@ -1,6 +1,6 @@
 # MethodTweener\<TValue\>
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -18,7 +18,7 @@ Interpolates a typed value and supplies it to a callback over time.
 
 `MethodTweener<TValue>` is owned and created only by `Tween.TweenMethod<TValue>`. It interpolates from one typed value to another and invokes `Action<TValue>` on every active frame, including the exact final value. Its declared public API is `SetDelay(double)`, `SetEase(Tween.EaseType)`, and `SetTrans(Tween.TransitionType)`; each returns this tweener. `Finished` is inherited from [`Tweener`](Tweener.md).
 
-Delay and duration use finite non-negative seconds. Transition/ease defaults are captured when appended. Built-in interpolation supports the values listed by the [Tweening component](../components/tweening.md), and the append method accepts an explicit interpolator for other types. If the delegate's direct target is an `ElectronObject` and becomes disposed, the tweener completes without another call. Delegate, interpolation, completion-event, and arithmetic failures invalidate the parent after parallel siblings are attempted.
+Delay and duration use finite signed seconds. A non-positive duration delivers the final value on the first positive step; a negative delay begins on that step. Transition/ease defaults are captured when appended, and per-tweener overrides may change during playback. Built-in interpolation supports the values listed by the [Tweening component](../components/tweening.md), and the append method accepts an explicit interpolator for other types. If the delegate's direct target is an `ElectronObject` and becomes disposed, the tweener completes without another call. Delegate, interpolation, completion-event, and arithmetic failures invalidate the parent after parallel siblings are attempted.
 
 ## Examples
 
@@ -45,13 +45,13 @@ Sets the delay before callback interpolation begins.
 
 **Parameters**
 
-- `delay`: Finite non-negative seconds.
+- `delay`: Finite seconds; a negative delay begins on the first positive step.
 
 **Returns:** This tweener.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `delay` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `delay` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tweener is disposing or disposed.
 

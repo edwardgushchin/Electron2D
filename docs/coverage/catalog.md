@@ -451,7 +451,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MeshInstance3D](classes/MeshInstance3D.md) | GeometryInstance3D | Excluded | 18 |
 | [MeshLibrary](classes/MeshLibrary.md) | Resource | Excluded | 25 |
 | [MeshTexture](classes/MeshTexture.md) | Texture2D | Blocked | 4 |
-| [MethodTweener](classes/MethodTweener.md) | Tweener | Partial | 3 |
+| [MethodTweener](classes/MethodTweener.md) | Tweener | Implemented | 3 |
 | [MissingNode](classes/MissingNode.md) | Node | Blocked | 4 |
 | [MissingResource](classes/MissingResource.md) | Resource | Blocked | 2 |
 | [MobileVRInterface](classes/MobileVRInterface.md) | XRInterface | Excluded | 11 |

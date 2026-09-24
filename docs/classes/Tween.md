@@ -467,7 +467,7 @@ Appends typed interpolation delivered to a callback.
 - `method`: Receives the current value each active frame and the exact final value at completion.
 - `from`: The starting value.
 - `to`: The final value.
-- `duration`: Finite non-negative interpolation seconds.
+- `duration`: Finite interpolation seconds; a non-positive duration delivers the final value on the first positive step.
 - `interpolator`: Optional typed interpolation. Omit it for a supported built-in value type.
 
 **Returns:** The appended typed method tweener.
@@ -475,7 +475,7 @@ Appends typed interpolation delivered to a callback.
 **Exceptions**
 
 - `ArgumentNullException`: `method` is `null`.
-- `ArgumentOutOfRangeException`: `duration` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `duration` is NaN or infinite.
 - `NotSupportedException`: No interpolator is supplied for an unsupported type.
 - `InvalidOperationException`: The call is off the owner thread, processing started, or the tween is invalid.
 - `ObjectDisposedException`: The tween is disposing or disposed.
@@ -679,7 +679,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 An empty tween is valid on creation but fails and invalidates if any matching frame reaches it without appended tweeners, including a zero-delta frame. First processing captures property start values and freezes the append surface. `Stop()` reopens appending and resets cursor/time without changing targets; the last completed-loop count remains visible until `Play()` starts the sequence again. Exact step completion with no remaining delta defers the next zero-duration step to a later positive-delta frame. Final delivery stops the tween but keeps it valid and registered; a following manual step returns `false`, and the next eligible tree step removes it. A `Finished` subscriber can use `Stop()` and `Play()` to restart it. Kill invalidates immediately but leaves its registry entry for the next eligible sweep. Kill, bound-node disposal, tree finalization, an empty sequence, and user callback failure do not raise `Finished`.
 
-Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Non-finite time values, negative property/method durations, invalid enum values, cross-tree binding/nesting, cyclic/multiple/in-progress nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly. Callback delays and intervals accept finite signed values.
+Every parallel tweener is attempted before failures are reported. Any processing failure invalidates the complete tween, cancels event subscriptions/nested work, unregisters the tween even when failure came from `CustomStep()`, and reaches SceneTree as an aggregate during frame processing while later tweens, deferred work, and deletion still run. Infinite zero-duration loops fail instead of hanging, even if callbacks mutate speed. Captured SceneTree entries revalidate lane and nested ownership before execution. Non-finite time values, negative property durations, invalid enum values, cross-tree binding/nesting, cyclic/multiple/in-progress nesting, unsupported built-in value types, recursive stepping, append-after-start, and off-owner-thread mutation fail explicitly. Callback and method delays, intervals and method durations accept finite signed values.
 
 All public mutation, processing, and disposal are owner-thread operations. Typed event notification may arrive on another thread; `AwaitTweener` only atomically records it. Reads are not a synchronization contract. Disposal is rejected during processing, invalidates nested tweens, disposes owned tweener objects, clears subscribers, and aggregates cleanup failures. A nested Tween object remains managed and inspectable until separately disposed.
 

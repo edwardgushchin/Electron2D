@@ -226,6 +226,7 @@ SceneTreeTimerTests.Run();
 VerifyTimers();
 VerifyTweens();
 VerifyTweenCallbackIntervals();
+VerifyTweenMethods();
 VerifySceneTreeFailureSafety();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
 {
@@ -9901,6 +9902,161 @@ static void VerifyTweenCallbackIntervals()
         "A throwing callback must not emit tweener completion or prevent a later tween from running.");
 }
 
+static void VerifyTweenMethods()
+{
+    using var tree = new SceneTree(new Entity());
+    var rejected = tree.CreateTween();
+    Expect<ArgumentNullException>(() => rejected.TweenMethod<double>(null!, 0d, 1d, 1d),
+        "A null method callback must be rejected before append.");
+    Expect<ArgumentOutOfRangeException>(() => rejected.TweenMethod(static (double _) => { }, 0d, 1d, double.NaN),
+        "A non-finite method duration must be rejected before append.");
+    Expect<NotSupportedException>(() => rejected.TweenMethod(static (DateTime _) => { },
+            DateTime.UnixEpoch, DateTime.UnixEpoch.AddDays(1), 1d),
+        "An unsupported typed value must require an explicit interpolator.");
+    Require(!rejected.HasTweeners(), "Rejected method appends must leave the tween empty.");
+    rejected.Kill();
+
+    var samples = new List<double>();
+    var basic = tree.CreateTween();
+    var basicTweener = basic.TweenMethod(samples.Add, 0d, 10d, 1d);
+    var basicFinishes = 0;
+    basicTweener.Finished += _ => basicFinishes++;
+    tree.ProcessFrame(0d);
+    Require(samples.Count == 0, "A zero-delta frame must not call a method tweener.");
+    tree.ProcessFrame(0.25d);
+    Require(samples.Count == 1 && DoubleNearlyEqual(samples[0], 2.5d),
+        "A method tweener must deliver the built-in interpolated value on an active frame.");
+    tree.ProcessFrame(0.75d);
+    Require(samples.Count == 2 && samples[1] == 10d && basicFinishes == 1 && !basic.IsRunning(),
+        "The exact final method value must be delivered once before tweener completion.");
+
+    var delayedSamples = new List<double>();
+    var delayed = tree.CreateTween();
+    var delayedMethod = delayed.TweenMethod(delayedSamples.Add, 0d, 1d, 1d);
+    Require(ReferenceEquals(delayedMethod.SetDelay(0.5d), delayedMethod),
+        "Method SetDelay must return its own tweener.");
+    Expect<ArgumentOutOfRangeException>(() => delayedMethod.SetDelay(double.PositiveInfinity),
+        "A non-finite method delay must preserve the previous threshold.");
+    Expect<InvalidOperationException>(() => Task.Run(() => delayedMethod.SetDelay(0.1d))
+            .GetAwaiter().GetResult(),
+        "Method delay mutation must require the tween owner thread.");
+    tree.ProcessFrame(0.49d);
+    Require(delayedSamples.Count == 0, "A method callback must not run before its delay.");
+    tree.ProcessFrame(0.01d);
+    Require(delayedSamples.SequenceEqual([0d]),
+        "A method callback must receive its starting value at the exact delay boundary.");
+    tree.ProcessFrame(0.5d);
+    Require(delayedSamples.Count == 2 && DoubleNearlyEqual(delayedSamples[^1], 0.5d),
+        "The method's duration must start after its delay.");
+    delayed.Kill();
+
+    var signedValue = double.NaN;
+    var signedNext = false;
+    var signed = tree.CreateTween();
+    signed.TweenMethod(value => signedValue = value, 0d, 10d, -1d).SetDelay(-0.2d);
+    signed.TweenCallback(() => signedNext = true);
+    tree.ProcessFrame(0.1d);
+    Require(signedValue == 10d && signedNext && DoubleNearlyEqual(signed.GetTotalElapsedTime(), 0.1d),
+        "Negative method duration and delay must deliver the final value on the first positive step.");
+
+    var zeroValue = double.NaN;
+    var zero = tree.CreateTween();
+    zero.TweenMethod(value => zeroValue = value, 1d, 2d, 0d);
+    tree.ProcessFrame(0d);
+    Require(double.IsNaN(zeroValue), "A zero-duration method still needs positive frame time.");
+    tree.ProcessFrame(0.1d);
+    Require(zeroValue == 2d, "A zero-duration method must deliver its final value on the first positive frame.");
+
+    var curveValue = 0d;
+    var curves = tree.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+    var curveMethod = curves.TweenMethod(value => curveValue = value, 0d, 1d, 1d);
+    Require(ReferenceEquals(curveMethod.SetTrans(Tween.TransitionType.Cubic), curveMethod) &&
+            ReferenceEquals(curveMethod.SetEase(Tween.EaseType.Out), curveMethod),
+        "Per-method curve overrides must return the same tweener.");
+    Expect<ArgumentOutOfRangeException>(() => curveMethod.SetTrans((Tween.TransitionType)99),
+        "An undefined method transition must not replace the current curve.");
+    Expect<ArgumentOutOfRangeException>(() => curveMethod.SetEase((Tween.EaseType)99),
+        "An undefined method ease must not replace the current direction.");
+    Expect<InvalidOperationException>(() => Task.Run(() => curveMethod.SetEase(Tween.EaseType.In))
+            .GetAwaiter().GetResult(),
+        "Method curve mutation must require the tween owner thread.");
+    Expect<InvalidOperationException>(() => Task.Run(() => curveMethod.SetTrans(Tween.TransitionType.Linear))
+            .GetAwaiter().GetResult(),
+        "Method transition mutation must require the tween owner thread.");
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(curveValue, 0.578125d),
+        "Cubic/Out must override the owning tween's Quad/In default before interpolation.");
+    curveMethod.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(curveValue, 0.5d),
+        "Changing a method curve while running must affect the next interpolation sample.");
+    tree.ProcessFrame(0.5d);
+    Require(curveValue == 1d, "Curve overrides must still deliver the exact final value.");
+
+    var liveValue = double.NaN;
+    var live = tree.CreateTween();
+    var liveMethod = live.TweenMethod(value => liveValue = value, 0d, 1d, 1d).SetDelay(1d);
+    tree.ProcessFrame(0.25d);
+    Require(double.IsNaN(liveValue), "A delayed method must remain silent before its threshold.");
+    Expect<ArgumentOutOfRangeException>(() => liveMethod.SetDelay(double.NaN),
+        "Rejecting a live non-finite method delay must preserve the previous threshold.");
+    liveMethod.SetDelay(0.25d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(liveValue, 0.25d),
+        "A live delay change must use accumulated time and the new threshold.");
+    live.Kill();
+
+    var firstDate = DateTime.UnixEpoch;
+    var lastDate = firstDate.AddDays(1);
+    var receivedDate = DateTime.MinValue;
+    var custom = tree.CreateTween();
+    custom.TweenMethod(value => receivedDate = value, firstDate, lastDate, 1d,
+        (from, to, weight) => weight < 0.5d ? from : to);
+    tree.ProcessFrame(0.25d);
+    Require(receivedDate == firstDate, "An explicit typed interpolator must support a non-built-in value type.");
+    tree.ProcessFrame(0.25d);
+    Require(receivedDate == lastDate, "The explicit interpolator must receive the current eased weight.");
+    custom.Kill();
+
+    using var directTarget = new TweenValueHolder();
+    var unavailableFinishes = 0;
+    var unavailable = tree.CreateTween();
+    unavailable.TweenMethod(directTarget.SetValue, 0d, 1d, 1d).Finished += _ => unavailableFinishes++;
+    directTarget.Dispose();
+    tree.ProcessFrame(0.1d);
+    Require(directTarget.Value == 0d && unavailableFinishes == 1 && !unavailable.IsRunning(),
+        "A disposed direct method target must finish without invoking its callback.");
+
+    var loopCalls = 0;
+    var loopFinishes = 0;
+    var looped = tree.CreateTween().SetLoops(2);
+    looped.TweenMethod(_ => loopCalls++, 0d, 1d, 0.1d).Finished += _ => loopFinishes++;
+    tree.ProcessFrame(0.25d);
+    Require(loopCalls == 2 && loopFinishes == 2 && !looped.IsRunning(),
+        "A method tweener must reset and finish once per loop with its final value.");
+
+    var failedFinishes = 0;
+    var siblingRan = false;
+    var failing = tree.CreateTween();
+    failing.TweenMethod<double>(_ => throw new InvalidOperationException("expected method failure"), 0d, 1d, 1d)
+        .Finished += _ => failedFinishes++;
+    tree.CreateTween().TweenCallback(() => siblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException &&
+            failedFinishes == 0 && siblingRan && !failing.IsValid(),
+        "A throwing method callback must not finish its tweener or suppress later SceneTree work.");
+
+    var interpolatorFinished = false;
+    var interpolatorSiblingRan = false;
+    var invalidInterpolator = tree.CreateTween();
+    invalidInterpolator.TweenMethod<DateTime>(static _ => { }, firstDate, lastDate, 1d,
+            static (_, _, _) => throw new InvalidOperationException("expected interpolator failure"))
+        .Finished += _ => interpolatorFinished = true;
+    tree.CreateTween().TweenCallback(() => interpolatorSiblingRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && !interpolatorFinished &&
+            interpolatorSiblingRan && !invalidInterpolator.IsValid(),
+        "A throwing typed interpolator must invalidate its tween without emitting completion or suppressing later work.");
+}
+
 static void VerifySceneTreeFailureSafety()
 {
     var enterRoot = new FailingLifecycleNode
@@ -12214,6 +12370,8 @@ sealed class TweenEventSource : ElectronObject
 sealed class TweenValueHolder : ElectronObject
 {
     public double Value { get; set; }
+
+    public void SetValue(double value) => Value = value;
 }
 
 sealed class PreDeleteReparentNode : Entity
