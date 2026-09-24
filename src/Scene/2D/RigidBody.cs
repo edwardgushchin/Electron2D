@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <summary>A collision body moved by the fixed-step two-dimensional physics simulation.</summary>
 /// <remarks>Attach it to a SceneTree and add one or more direct CollisionShape children. The tree owns the physics
 /// step; caller code can change forces and velocity during a physics callback before that step.</remarks>
-public sealed class RigidBody : PhysicsBody
+public sealed partial class RigidBody : PhysicsBody
 {
     /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>
     public enum DampMode
@@ -200,6 +200,7 @@ public sealed class RigidBody : PhysicsBody
         EnsureMutable();
         if (!force.IsFinite()) throw new ArgumentOutOfRangeException(nameof(force));
         if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying forces.");
+        PrepareBackend();
         b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(force), wake: true);
     }
 
@@ -207,11 +208,12 @@ public sealed class RigidBody : PhysicsBody
     /// <param name="impulse">Impulse in scene units times kilograms per second.</param>
     /// <exception cref="ArgumentOutOfRangeException">The impulse is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">The body is detached from a scene tree.</exception>
-    public void ApplyCentralImpulse(Vector2 impulse)
+    public void ApplyCentralImpulse(Vector2 impulse = default)
     {
         EnsureMutable();
         if (!impulse.IsFinite()) throw new ArgumentOutOfRangeException(nameof(impulse));
         if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying impulses.");
+        PrepareBackend();
         b2Body_ApplyLinearImpulseToCenter(BackendID, Shape.ToBackend(impulse), wake: true);
     }
 
@@ -285,7 +287,7 @@ public sealed class RigidBody : PhysicsBody
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(BodyProperties);
+        base.GetPropertyDescriptors().Concat(BodyProperties).Concat(ForceProperties);
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(RigidBody)

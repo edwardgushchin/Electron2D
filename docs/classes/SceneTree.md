@@ -351,7 +351,7 @@ Runs one host-driven process frame, process timers, process tweens, and one defe
 <a id="m-electron2d-scenetree-physicsframe-system-double"></a>
 ### `public void PhysicsFrame(double delta)`
 
-Runs one host-driven physics-process frame, attached scene-body simulation and area monitoring, physics timers, physics tweens, and one deferred safe point. Current area field overlaps resolve gravity and damping before solver stepping; area monitoring snapshots and object-level events update after body synchronization. Zero elapsed time leaves both paths unchanged.
+Runs one host-driven physics-process frame, attached scene-body simulation and area monitoring, physics timers, physics tweens, and one deferred safe point. Current area field overlaps resolve gravity and damping, then stored body force and torque apply before solver stepping; area monitoring snapshots and object-level events update after body synchronization. Zero elapsed time leaves both paths unchanged.
 
 **Parameters**
 

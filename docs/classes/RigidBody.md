@@ -4,13 +4,13 @@ Last updated: 2026-09-24
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
-- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs)
-- **Declaration:** `public sealed class RigidBody : PhysicsBody`
+- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs)
+- **Declaration:** `public sealed partial class RigidBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
 ## Description
 
-A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so a central force or changed velocity applies to that step. Solved transforms and velocities return to the scene before timers, tweens and interpolation capture.
+A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle or rectangle geometry; without a child the body can still move but cannot collide. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms and velocities return to the scene before timers, tweens and interpolation capture.
 
 ## Example
 
@@ -38,6 +38,8 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public bool Freeze { get; set; }` | false | Uses a static backend mode while true; unfreezing resumes dynamic motion. |
 | `public bool LockRotation { get; set; }` | false | Locks angular movement in the solver. |
 | `public PhysicsMaterial? PhysicsMaterialOverride { get; set; }` | null | Borrows a surface material for every child fixture. |
+| `public Vector2 ConstantForce { get; set; }` | (0, 0) | Persistent center force in scene units times kilograms/s². |
+| `public float ConstantTorque { get; set; }` | 0 | Persistent torque in kilograms times squared scene units/s². |
 
 ## Methods and extension points
 
@@ -46,8 +48,16 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public RigidBody()` | Creates a detached body with pinned defaults. |
 | `public enum DampMode` | Two modes: `Combine = 0`, `Replace = 1`; see [values](RigidBody.DampMode.md). |
 | `public void ApplyCentralForce(Vector2 force)` | Adds a finite center force to an attached body. |
-| `public void ApplyCentralImpulse(Vector2 impulse)` | Adds a finite instantaneous center impulse to an attached body. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored first-profile body state to inherited scene descriptors. |
+| `public void ApplyCentralImpulse(Vector2 impulse = default)` | Adds a finite instantaneous center impulse to an attached body. |
+| `public void ApplyForce(Vector2 force, Vector2 position = default)` | Adds a one-step force at a world-axis offset from origin. |
+| `public void ApplyImpulse(Vector2 impulse, Vector2 position = default)` | Adds a one-time impulse at a world-axis offset from origin. |
+| `public void ApplyTorque(float torque)` | Adds one-step torque. |
+| `public void ApplyTorqueImpulse(float torque)` | Adds a one-time angular impulse. |
+| `public void AddConstantCentralForce(Vector2 force)` | Accumulates center force across later steps. |
+| `public void AddConstantForce(Vector2 force, Vector2 position = default)` | Accumulates force and its current offset moment across later steps. |
+| `public void AddConstantTorque(float torque)` | Accumulates persistent torque. |
+| `public void SetAxisVelocity(Vector2 axisVelocity)` | Replaces only the velocity component along the supplied axis. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored body motion, material and persistent-force state to scene descriptors. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Recreates the exact body type for PackedScene. |
 
 ## Member descriptions
@@ -75,7 +85,31 @@ CanSleep changes backend sleep eligibility. Sleeping reads the live solver state
 <a id="forces"></a>
 ### `ApplyCentralForce` and `ApplyCentralImpulse`
 
-Both take finite scene-unit vectors and wake the attached body. Force is time dependent and should be supplied during each desired physics step; impulse is instantaneous and independent of frame rate. A detached body throws `InvalidOperationException`; an invalid vector throws before backend mutation. Position-offset forces, torque, constant forces and axis-velocity methods remain separate Unimplemented rows.
+Both take finite scene-unit vectors and wake the attached body. Force is time dependent and should be supplied during each desired physics step; impulse is instantaneous and independent of frame rate. `ApplyCentralImpulse()` defaults to a zero vector. A detached body throws `InvalidOperationException`; an invalid vector throws before backend mutation. Pending shape and pose edits synchronize before the action.
+
+<a id="positionedactions"></a>
+<a id="applyforce"></a>
+<a id="applyimpulse"></a>
+<a id="applytorque"></a>
+<a id="applytorqueimpulse"></a>
+### `ApplyForce`, `ApplyImpulse`, `ApplyTorque` and `ApplyTorqueImpulse`
+
+`ApplyForce` and `ApplyImpulse` use a world-axis `position` offset from the body's current backend origin, not a rotated local offset. A force acts for the current fixed step; an impulse is instantaneous. Offset actions may rotate a body according to its current center of mass and inertia. `ApplyTorque` is time dependent, while `ApplyTorqueImpulse` changes angular motion once; both require nonzero inertia from a live shape. Force/linear impulse convert scene units to meters by 0.01, and torque/angular impulse use 0.0001 for squared units. Inputs and resulting point/moment must be finite. Actions require an attached body and wake it. Pending shape/pose edits synchronize first, so an action before the first fixed step uses the attached shape's current mass.
+
+<a id="constantforce"></a>
+<a id="constanttorque"></a>
+<a id="persistentactions"></a>
+<a id="addconstantcentralforce"></a>
+<a id="addconstantforce"></a>
+<a id="addconstanttorque"></a>
+### `ConstantForce`, `ConstantTorque`, `AddConstantCentralForce`, `AddConstantForce` and `AddConstantTorque`
+
+Both properties default to zero and replace their stored totals. The three methods add to those totals, including when the body is detached. `AddConstantForce` adds its force and computes a constant moment from the supplied world-axis origin offset and current center of mass at the time of addition; later motion does not recompute it. A centered addition changes force without torque. Persistent totals apply before each solver step and remain stored while frozen; clearing both stops new acceleration without erasing velocity. Nonfinite inputs or accumulated totals throw before either total changes. Detached totals and their PackedScene copy retain typed state; caller-triggered changes wake an eligible body.
+
+<a id="setaxisvelocity"></a>
+### `SetAxisVelocity`
+
+The supplied vector gives both axis direction and replacement speed. The method subtracts the old velocity projection along the normalized axis and adds the supplied vector, preserving perpendicular velocity. A zero vector leaves velocity unchanged; nonfinite inputs or a nonfinite result throw before mutation. Detached bodies store the new velocity; attached calls reach and wake the backend body.
 
 <a id="physicsmaterialoverride"></a>
 ### `PhysicsMaterialOverride`
@@ -84,6 +118,6 @@ The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) sets friction, bounc
 
 ## Ownership, limits and verification
 
-SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes, gravity and the warmed moving field path.
+SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state, repeated rotation and 64 warmed active force/torque frames with zero managed allocations on Linux/.NET 8.
 
-Contact monitor events, `PhysicsDirectBodyState`, other force/torque methods, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADR 0056](../decisions/physics.md#adr-0056) records the field and damping boundary.
+Contact monitor events, `PhysicsDirectBodyState`, custom center of mass/inertia, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADR 0057](../decisions/physics.md#adr-0057) records the force boundary.

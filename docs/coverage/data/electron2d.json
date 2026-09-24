@@ -43767,6 +43767,68 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RigidBody.AddConstantCentralForce(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AddConstantCentralForce",
+    "signature": "public System.Void AddConstantCentralForce(Electron2D.Vector2 force)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.AddConstantForce(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AddConstantForce",
+    "signature": "public System.Void AddConstantForce(Electron2D.Vector2 force, Electron2D.Vector2 position = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.AddConstantTorque(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AddConstantTorque",
+    "signature": "public System.Void AddConstantTorque(System.Single torque)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RigidBody.ApplyCentralForce(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.RigidBody",
@@ -43790,7 +43852,7 @@
     "kind": "method",
     "declaringType": "Electron2D.RigidBody",
     "name": "ApplyCentralImpulse",
-    "signature": "public System.Void ApplyCentralImpulse(Electron2D.Vector2 impulse)",
+    "signature": "public System.Void ApplyCentralImpulse(Electron2D.Vector2 impulse = default)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -43798,6 +43860,92 @@
       {
         "name": "impulse",
         "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyForce(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyForce",
+    "signature": "public System.Void ApplyForce(Electron2D.Vector2 force, Electron2D.Vector2 position = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyImpulse(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyImpulse",
+    "signature": "public System.Void ApplyImpulse(Electron2D.Vector2 impulse, Electron2D.Vector2 position = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyTorque(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyTorque",
+    "signature": "public System.Void ApplyTorque(System.Single torque)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyTorqueImpulse(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyTorqueImpulse",
+    "signature": "public System.Void ApplyTorqueImpulse(System.Single torque)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -43828,6 +43976,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.SetAxisVelocity(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "SetAxisVelocity",
+    "signature": "public System.Void SetAxisVelocity(Electron2D.Vector2 axisVelocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "axisVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -65509,6 +65676,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.ConstantForce()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ConstantForce",
+    "signature": "public Electron2D.Vector2 ConstantForce { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.ConstantTorque()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ConstantTorque",
+    "signature": "public System.Single ConstantTorque { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

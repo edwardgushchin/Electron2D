@@ -98,6 +98,8 @@ internal sealed class PhysicsSpace : IDisposable
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
             ApplyAreaFields(delta);
+            foreach (var body in _bodies)
+                if (body is RigidBody rigid) rigid.ApplyConstantForces();
             b2World_Step(_worldID, (float)delta, 4);
             foreach (var body in _bodies)
             {

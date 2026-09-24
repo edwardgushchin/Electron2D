@@ -87,6 +87,12 @@ def main():
     assert "../../classes/RigidBody.DampMode.md" in body_rows
     assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                        if row.startswith("| [`property int linear_damp_mode"))
+    for prefix in ("method add_constant_central_force(", "method add_constant_force(",
+                   "method add_constant_torque(", "method apply_force(", "method apply_impulse(",
+                   "method apply_torque(", "method apply_torque_impulse(", "method set_axis_velocity(",
+                   "property Vector2 constant_force", "property float constant_torque"):
+        assert "| Implemented |" in next(row for row in body_rows.splitlines()
+                                           if row.startswith(f"| [`{prefix}")), prefix
     loader_rows = [row for row in pages[CLASS_PAGES / "ResourceLoader.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(loader_rows) == 26

@@ -427,8 +427,8 @@
         "RigidBody2D::property:constant_force",
         "RigidBody2D::property:constant_torque"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: next force/torque and axis-velocity slice on the existing Box2D body, with world-point and center-of-mass semantics."
+      "state": "Implemented",
+      "reason": "Positioned force/impulse, torque, persistent totals and axis projection execute on the Box2D body with pinned units and world-axis offsets; RigidBodyForceTests covers mass-center timing, motion, packing, failures and warm allocation."
     },
     {
       "godot": [

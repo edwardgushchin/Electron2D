@@ -121,8 +121,8 @@ public abstract class PhysicsBody : CollisionObject
         var sceneRotation = b2Rot_GetAngle(rotation);
         _lastPosition = scenePosition;
         _lastRotation = sceneRotation;
-        if (GlobalPosition != scenePosition) GlobalPosition = scenePosition;
-        if (GlobalRotation != sceneRotation) GlobalRotation = sceneRotation;
+        if (GlobalPosition != scenePosition || GlobalRotation != sceneRotation)
+            GlobalTransform = new Transform(sceneRotation, Vector2.One, 0, scenePosition);
         OnBackendAdvanced();
     }
 
