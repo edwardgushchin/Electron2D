@@ -1,6 +1,6 @@
 using Electron2D;
 
-internal static class AStar2DTests
+internal static class AStarTests
 {
     internal static void Run()
     {
@@ -9,12 +9,12 @@ internal static class AStar2DTests
         WeightedAndPartialPaths();
         CustomCallbacksAndFailure();
         LongPathAndLifetime();
-        Console.WriteLine("AStar2D graph, directed path, weight, callback and lifetime checks passed.");
+        Console.WriteLine("AStar graph, directed path, weight, callback and lifetime checks passed.");
     }
 
     private static void PointsAndCapacity()
     {
-        using var graph = new AStar2D();
+        using var graph = new AStar();
         Check(graph.GetPointCount() == 0 && graph.GetPointCapacity() == 16 &&
               graph.GetAvailablePointID() == 0 && !graph.NeighborFilterEnabled &&
               graph.GetClosestPoint(Vector2.Zero) == -1 &&
@@ -56,7 +56,7 @@ internal static class AStar2DTests
         graph.Clear();
         Check(graph.GetPointCount() == 0 && graph.GetPointCapacity() == 32 && graph.GetAvailablePointID() == 0,
             "Clear keeps capacity but resets IDs and all points.");
-        using (var growth = new AStar2D())
+        using (var growth = new AStar())
         {
             for (var id = 0; id < 12; id++) growth.AddPoint(id, new(id, 0));
             Check(growth.GetPointCapacity() == 16 && growth.GetAvailablePointID() == 12,
@@ -68,7 +68,7 @@ internal static class AStar2DTests
         graph.RemovePoint(long.MaxValue);
         graph.AddPoint(long.MaxValue, Vector2.Zero);
         Reject<InvalidOperationException>(() => graph.GetAvailablePointID());
-        using var distant = new AStar2D();
+        using var distant = new AStar();
         distant.AddPoint(7, new(1e11f, 0));
         Check(distant.GetClosestPoint(Vector2.Zero) == -1,
             "The pinned nearest-point scan retains its finite squared-distance bound.");
@@ -76,7 +76,7 @@ internal static class AStar2DTests
 
     private static void DirectedConnectionsAndSegments()
     {
-        using var graph = new AStar2D();
+        using var graph = new AStar();
         graph.AddPoint(1, new(0, 0));
         graph.AddPoint(2, new(0, 5));
         graph.AddPoint(3, new(10, 0));
@@ -108,7 +108,7 @@ internal static class AStar2DTests
         Reject<KeyNotFoundException>(() => graph.ConnectPoints(1, 9));
         Reject<KeyNotFoundException>(() => graph.DisconnectPoints(1, 9));
         Check(!graph.ArePointsConnected(1, 9), "Missing connection queries return false.");
-        using var ties = new AStar2D();
+        using var ties = new AStar();
         ties.AddPoint(9, new(0, 0)); ties.AddPoint(3, new(2, 0));
         Check(ties.GetClosestPoint(new(1, 0)) == 3,
             "Equal nearest distances select the lowest ID regardless of storage order.");
@@ -116,7 +116,7 @@ internal static class AStar2DTests
 
     private static void WeightedAndPartialPaths()
     {
-        using var graph = new AStar2D();
+        using var graph = new AStar();
         graph.AddPoint(1, new(0, 0)); graph.AddPoint(2, new(0, 1));
         graph.AddPoint(3, new(1, 1)); graph.AddPoint(4, new(2, 0));
         graph.ConnectPoints(1, 2, false); graph.ConnectPoints(2, 3, false);
@@ -186,7 +186,7 @@ internal static class AStar2DTests
 
     private static void LongPathAndLifetime()
     {
-        var graph = new AStar2D();
+        var graph = new AStar();
         const int count = 1024;
         graph.ReserveSpace(count);
         for (var id = 0; id < count; id++)
@@ -202,7 +202,7 @@ internal static class AStar2DTests
         Reject<ObjectDisposedException>(() => graph.AddPoint(0, Vector2.Zero));
     }
 
-    private sealed class CustomAStar : AStar2D
+    private sealed class CustomAStar : AStar
     {
         internal int ComputeCalls;
         internal int EstimateCalls;

@@ -4,7 +4,7 @@ Last updated: 2026-09-24
 
 ## Scope and owned types
 
-[`AStar2D`](../classes/AStar2D.md) is the standalone 2D graph component. It owns points, positions, weights, enablement, outgoing links and search state. It neither reads a navigation map nor creates a SceneTree node.
+[`AStar`](../classes/AStar.md) is the standalone 2D graph component. It owns points, positions, weights, enablement, outgoing links and search state. It neither reads a navigation map nor creates a SceneTree node.
 
 ## Runtime flow
 
@@ -20,8 +20,8 @@ The graph follows `ElectronObject` disposal. Missing required points raise `KeyN
 
 ## Verification and remaining work
 
-[AStar2DTests](../../tests/Electron2D.Tests/AStar2DTests.cs) covers the reference route, weights, directed connection upgrades/removal, closest-point and segment queries, disabled/partial behavior, custom hooks, invalid and failed callbacks, lifetime, capacity thresholds and a long chain. `AStarGrid2D` remains a separate grid slice; navigation polygons, maps, agents and avoidance require a navigation-server backend and lifetime contract.
+[AStarTests](../../tests/Electron2D.Tests/AStarTests.cs) covers the reference route, weights, directed connection upgrades/removal, closest-point and segment queries, disabled/partial behavior, custom hooks, invalid and failed callbacks, lifetime, capacity thresholds and a long chain. `AStarGrid` implements the separate grid slice; navigation polygons, maps, agents and avoidance require a navigation-server backend and lifetime contract.
 
 ## Decision
 
-- [0052: Standalone typed AStar2D](../decisions/navigation.md#adr-0052)
+- [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)

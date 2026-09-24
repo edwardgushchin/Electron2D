@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Finds weighted paths through a caller-owned directed graph of two-dimensional points.</summary>
 /// <remarks>The graph is independent of SceneTree and rendering. Calls are not synchronized; coordinate access
 /// from multiple threads externally. Search callbacks may inspect the graph but cannot mutate or re-enter it.</remarks>
-public class AStar2D : ElectronObject
+public class AStar : ElectronObject
 {
     private readonly Dictionary<long, Point> _points = [];
     private readonly List<long> _pointOrder = [];
@@ -17,7 +17,7 @@ public class AStar2D : ElectronObject
     private bool _neighborFilterEnabled;
 
     /// <summary>Creates an empty graph with the reference's initial sixteen-slot reported capacity.</summary>
-    public AStar2D() { }
+    public AStar() { }
 
     /// <summary>Gets or sets whether <see cref="OnFilterNeighbor"/> can reject outgoing edges during a search.</summary>
     /// <value>False by default.</value>

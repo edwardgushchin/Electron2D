@@ -4,7 +4,7 @@ Last updated: 2026-09-24
 
 ## Scope and owned type
 
-[`AStarGrid2D`](../classes/AStarGrid2D.md) owns a rectangular cell array and the transient state for 2D grid pathfinding. It neither creates graph-edge objects nor uses navigation maps or native backends.
+[`AStarGrid`](../classes/AStarGrid.md) owns a rectangular cell array and the transient state for 2D grid pathfinding. It neither creates graph-edge objects nor uses navigation maps or native backends.
 
 ## Runtime flow
 
@@ -18,7 +18,7 @@ Optional jump-point search follows the pinned forced-successor scans and returns
 
 The grid follows `ElectronObject` disposal. Invalid region dimensions, nonfinite geometry and weights, invalid enum values, and absent cell IDs throw typed exceptions; failed geometry builds leave the previous storage uncommitted and the grid dirty. Callbacks may inspect but cannot mutate, dispose or re-enter the grid. Concurrent callers coordinate access externally.
 
-[AStarGrid2DTests](../../tests/Electron2D.Tests/AStarGrid2DTests.cs) covers defaults, invalid/dirty state, geometry transforms, cell fills/snapshots, path policies, jumping and callback/lifetime failures. Backend and visual checks do not apply to this managed algorithm. Large-map performance and owner game acceptance remain unverified.
+[AStarGridTests](../../tests/Electron2D.Tests/AStarGridTests.cs) covers defaults, invalid/dirty state, geometry transforms, cell fills/snapshots, path policies, jumping and callback/lifetime failures. Backend and visual checks do not apply to this managed algorithm. Large-map performance and owner game acceptance remain unverified.
 
 ## Decision
 

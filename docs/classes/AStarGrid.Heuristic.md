@@ -1,8 +1,8 @@
-# AStarGrid2D.Heuristic
+# AStarGrid.Heuristic
 
 Last updated: 2026-09-24
 
-**Owner:** [AStarGrid2D](AStarGrid2D.md) · **Source:** [AStarGrid2D.cs](../../src/Navigation/2D/AStarGrid2D.cs)
+**Owner:** [AStarGrid](AStarGrid.md) · **Source:** [AStarGrid.cs](../../src/Navigation/2D/AStarGrid.cs)
 
 | Value | Integer | ID-space distance |
 | --- | ---: | --- |
@@ -12,4 +12,4 @@ Last updated: 2026-09-24
 | `Chebyshev` | 3 | Maximum horizontal or vertical distance |
 | `Max` | 4 | Exclusive enum bound; rejected as a heuristic |
 
-[`DefaultComputeHeuristic`](AStarGrid2D.md#properties) and [`DefaultEstimateHeuristic`](AStarGrid2D.md#properties) are independent. Protected typed hooks override their respective defaults during path search.
+[`DefaultComputeHeuristic`](AStarGrid.md#properties) and [`DefaultEstimateHeuristic`](AStarGrid.md#properties) are independent. Protected typed hooks override their respective defaults during path search.

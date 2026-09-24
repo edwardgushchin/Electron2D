@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Finds paths through a rectangular two-dimensional grid.</summary>
 /// <remarks>Call <see cref="Update"/> after changing grid geometry. Calls are not synchronized;
 /// search callbacks may inspect the grid but cannot mutate, dispose or re-enter it.</remarks>
-public class AStarGrid2D : ElectronObject
+public class AStarGrid : ElectronObject
 {
     /// <summary>Controls whether and when diagonal neighbors are traversable.</summary>
     public enum DiagonalMode
@@ -66,7 +66,7 @@ public class AStarGrid2D : ElectronObject
     private Point? _end;
 
     /// <summary>Creates an empty grid with unit square cells.</summary>
-    public AStarGrid2D() { }
+    public AStarGrid() { }
 
     /// <summary>Gets or sets the integer grid bounds. Geometry changes need <see cref="Update"/>.</summary>
     public Rect2i Region

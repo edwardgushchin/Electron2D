@@ -1,12 +1,12 @@
-# AStarGrid2D
+# AStarGrid
 
 Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-- **Source:** [AStarGrid2D.cs](../../src/Navigation/2D/AStarGrid2D.cs)
+- **Source:** [AStarGrid.cs](../../src/Navigation/2D/AStarGrid.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public class AStarGrid2D : ElectronObject`
+- **Declaration:** `public class AStarGrid : ElectronObject`
 - **Component:** [A-star grid](../components/astar-grid.md)
 
 ## Description
@@ -18,7 +18,7 @@ Paths use ID-space heuristics and configurable diagonal eligibility. Optional ju
 ## Example
 
 ```csharp
-using var grid = new AStarGrid2D
+using var grid = new AStarGrid
 {
     Region = new Rect2i(0, 0, 8, 8),
     CellSize = new Vector2(16, 16)
@@ -32,9 +32,9 @@ Vector2i[] cells = grid.GetIDPath(new Vector2i(0, 0), new Vector2i(6, 6));
 
 | Type | Values and role |
 | --- | --- |
-| [`CellShape`](AStarGrid2D.CellShape.md) | `Square=0`, `IsometricRight=1`, `IsometricDown=2`, `Max=3` |
-| [`DiagonalMode`](AStarGrid2D.DiagonalMode.md) | `Always=0`, `Never=1`, `AtLeastOneWalkable=2`, `OnlyIfNoObstacles=3`, `Max=4` |
-| [`Heuristic`](AStarGrid2D.Heuristic.md) | `Euclidean=0`, `Manhattan=1`, `Octile=2`, `Chebyshev=3`, `Max=4` |
+| [`CellShape`](AStarGrid.CellShape.md) | `Square=0`, `IsometricRight=1`, `IsometricDown=2`, `Max=3` |
+| [`DiagonalMode`](AStarGrid.DiagonalMode.md) | `Always=0`, `Never=1`, `AtLeastOneWalkable=2`, `OnlyIfNoObstacles=3`, `Max=4` |
+| [`Heuristic`](AStarGrid.Heuristic.md) | `Euclidean=0`, `Manhattan=1`, `Octile=2`, `Chebyshev=3`, `Max=4` |
 
 ## Properties
 
@@ -56,7 +56,7 @@ Vector2i[] cells = grid.GetIDPath(new Vector2i(0, 0), new Vector2i(6, 6));
 
 | Member | Contract |
 | --- | --- |
-| `AStarGrid2D()` | Creates an empty, non-dirty grid with unit cells and default policies. |
+| `AStarGrid()` | Creates an empty, non-dirty grid with unit cells and default policies. |
 | `Update()` | Rebuilds cells when dirty; resets all flags and weights. No-op when clean. |
 | `Clear()` | Removes cells and resets `Region`; retains current dirty flag. |
 | `IsDirty()` | Reports whether changed geometry needs `Update()`. |
@@ -95,4 +95,4 @@ With `JumpingEnabled`, the pinned forced-successor scans can skip intermediate c
 
 Invalid enum values, nonfinite values and negative weights throw typed argument exceptions before mutation. Missing cells throw `KeyNotFoundException`; reading an initialized cell while geometry is dirty throws `InvalidOperationException`. A callback cannot mutate, re-enter or dispose the grid; callback exceptions release transient search ownership so a later search can proceed. `Dispose()` invalidates subsequent public calls. Very large grids may exhaust managed array memory; calls are not synchronized across threads.
 
-[AStarGrid2DTests](../../tests/Electron2D.Tests/AStarGrid2DTests.cs) verifies the pinned route fixture, geometry, clipping, four diagonal modes, all heuristic policies, weighted/partial routes, jumping, callback failures and lifetime on Linux/.NET. Native rendering, other platforms, large-map performance and owner game acceptance are unverified or not applicable as described in the [component](../components/astar-grid.md).
+[AStarGridTests](../../tests/Electron2D.Tests/AStarGridTests.cs) verifies the pinned route fixture, geometry, clipping, four diagonal modes, all heuristic policies, weighted/partial routes, jumping, callback failures and lifetime on Linux/.NET. Native rendering, other platforms, large-map performance and owner game acceptance are unverified or not applicable as described in the [component](../components/astar-grid.md).

@@ -1,4 +1,4 @@
-# AStar2D
+# AStar
 
 Last updated: 2026-09-24
 
@@ -6,9 +6,9 @@ Last updated: 2026-09-24
 
 **Inherited By:** Caller-defined graph types
 
-- **Source:** [AStar2D.cs](../../src/Navigation/2D/AStar2D.cs)
+- **Source:** [AStar.cs](../../src/Navigation/2D/AStar.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public class AStar2D : ElectronObject`
+- **Declaration:** `public class AStar : ElectronObject`
 
 ## Description
 
@@ -19,7 +19,7 @@ The implementation follows the pinned graph's ID cursor, point/connection storag
 ## Example
 
 ```csharp
-using var graph = new AStar2D();
+using var graph = new AStar();
 graph.AddPoint(1, new Vector2(0, 0));
 graph.AddPoint(2, new Vector2(0, 20));
 graph.AddPoint(3, new Vector2(30, 20));
@@ -32,7 +32,7 @@ long[] route = graph.GetIDPath(1, 3); // 1, 2, 3
 
 | Member | Contract |
 | --- | --- |
-| [`public AStar2D()`](#constructor) | Creates an empty graph with reported capacity sixteen. |
+| [`public AStar()`](#constructor) | Creates an empty graph with reported capacity sixteen. |
 
 ## Property
 
@@ -76,7 +76,7 @@ long[] route = graph.GetIDPath(1, 3); // 1, 2, 3
 ## Member descriptions
 
 <a id="constructor"></a>
-### `public AStar2D()`
+### `public AStar()`
 
 Creates an empty graph with capacity sixteen and available ID zero. The caller owns its deterministic disposal.
 
@@ -227,8 +227,8 @@ Clears owned point and edge references, then completes inherited disposal. Later
 
 ## Verification and limits
 
-[AStar2DTests](../../tests/Electron2D.Tests/AStar2DTests.cs) checks defaults, all own method families, the pinned four-point route and weighted alternative, directed edge transitions, disabled/partial routes, nearest queries, custom hooks, invalid inputs, callback/re-entry/disposal failure, capacity, array ownership and a 1,024-point path. The test runs in the managed executable harness. No SDL/native backend is involved; concurrent use and very large graphs require caller coordination and separate performance acceptance. [Coverage](../coverage/classes/AStar2D.md) records all declarations and their status.
+[AStarTests](../../tests/Electron2D.Tests/AStarTests.cs) checks defaults, all own method families, the pinned four-point route and weighted alternative, directed edge transitions, disabled/partial routes, nearest queries, custom hooks, invalid inputs, callback/re-entry/disposal failure, capacity, array ownership and a 1,024-point path. The test runs in the managed executable harness. No SDL/native backend is involved; concurrent use and very large graphs require caller coordination and separate performance acceptance. [Coverage](../coverage/classes/AStar2D.md) records all declarations and their status.
 
 ## Decision
 
-- [0052: Standalone typed AStar2D](../decisions/navigation.md#adr-0052)
+- [0052: Standalone typed AStar](../decisions/navigation.md#adr-0052)

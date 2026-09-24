@@ -20,7 +20,9 @@
     "Marker2D": "Marker",
     "Polygon2D": "Polygon",
     "Parallax2D": "Parallax",
-    "NoiseTexture2D": "NoiseTexture"
+    "NoiseTexture2D": "NoiseTexture",
+    "AStar2D": "AStar",
+    "AStarGrid2D": "AStarGrid"
   },
   "enums": {
     "CanvasItemMaterial.BlendMode": "BlendMode",
@@ -56,6 +58,9 @@
     "FastNoiseLite.CellularDistanceFunction": "CellularDistanceFunction",
     "FastNoiseLite.CellularReturnType": "CellularReturnType",
     "FastNoiseLite.DomainWarpType": "DomainWarpType",
-    "FastNoiseLite.DomainWarpFractalType": "DomainWarpFractalType"
+    "FastNoiseLite.DomainWarpFractalType": "DomainWarpFractalType",
+    "AStarGrid2D.CellShape": "AStarGrid.CellShape",
+    "AStarGrid2D.DiagonalMode": "AStarGrid.DiagonalMode",
+    "AStarGrid2D.Heuristic": "AStarGrid.Heuristic"
   }
 }

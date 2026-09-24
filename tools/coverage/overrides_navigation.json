@@ -2,88 +2,88 @@
   "mappings": [
     {
       "godot": "AStar2D::method:_compute_cost(int:,int:)",
-      "electron2d": "method:Electron2D.AStar2D.OnComputeCost(System.Int64,System.Int64)",
+      "electron2d": "method:Electron2D.AStar.OnComputeCost(System.Int64,System.Int64)",
       "reason": "Protected typed C# cost hook; default Euclidean distance."
     },
     {
       "godot": "AStar2D::method:_estimate_cost(int:,int:)",
-      "electron2d": "method:Electron2D.AStar2D.OnEstimateCost(System.Int64,System.Int64)",
+      "electron2d": "method:Electron2D.AStar.OnEstimateCost(System.Int64,System.Int64)",
       "reason": "Protected typed C# heuristic hook; default Euclidean distance."
     },
     {
       "godot": "AStar2D::method:_filter_neighbor(int:,int:)",
-      "electron2d": "method:Electron2D.AStar2D.OnFilterNeighbor(System.Int64,System.Int64)",
+      "electron2d": "method:Electron2D.AStar.OnFilterNeighbor(System.Int64,System.Int64)",
       "reason": "Protected typed C# neighbor hook, called only when filtering is enabled."
     },
     {
       "godot": "AStar2D::method:get_available_point_id()",
-      "electron2d": "method:Electron2D.AStar2D.GetAvailablePointID()",
+      "electron2d": "method:Electron2D.AStar.GetAvailablePointID()",
       "reason": "Uppercase ID naming under ADR 0045; advances the last-free cursor exactly as the pinned graph source does."
     },
     {
       "godot": "AStar2D::method:get_point_capacity()",
-      "electron2d": "method:Electron2D.AStar2D.GetPointCapacity()",
+      "electron2d": "method:Electron2D.AStar.GetPointCapacity()",
       "reason": "Reports the pinned power-of-two point-map capacity; large native reservations beyond managed collection limits reject explicitly."
     },
     {
       "godot": "AStar2D::method:get_point_count()",
-      "electron2d": "method:Electron2D.AStar2D.GetPointCount()",
+      "electron2d": "method:Electron2D.AStar.GetPointCount()",
       "reason": "Returns the registered point count as the reference 64-bit integer."
     },
     {
       "godot": "AStar2D::method:get_point_ids()",
-      "electron2d": "method:Electron2D.AStar2D.GetPointIDs()",
+      "electron2d": "method:Electron2D.AStar.GetPointIDs()",
       "reason": "Uppercase IDs naming under ADR 0045; returns a caller-owned 64-bit array in pinned swap-last storage order."
     },
     {
       "godot": "AStarGrid2D::method:_compute_cost(Vector2i:,Vector2i:)",
-      "electron2d": "method:Electron2D.AStarGrid2D.OnComputeCost(Electron2D.Vector2i,Electron2D.Vector2i)",
+      "electron2d": "method:Electron2D.AStarGrid.OnComputeCost(Electron2D.Vector2i,Electron2D.Vector2i)",
       "reason": "Protected typed C# edge-cost hook, defaulting to the selected heuristic."
     },
     {
       "godot": "AStarGrid2D::method:_estimate_cost(Vector2i:,Vector2i:)",
-      "electron2d": "method:Electron2D.AStarGrid2D.OnEstimateCost(Electron2D.Vector2i,Electron2D.Vector2i)",
+      "electron2d": "method:Electron2D.AStarGrid.OnEstimateCost(Electron2D.Vector2i,Electron2D.Vector2i)",
       "reason": "Protected typed C# remaining-cost hook, defaulting to the selected heuristic."
     },
     {
       "godot": "AStarGrid2D::property:cell_shape",
-      "electron2d": "property:Electron2D.AStarGrid2D.Shape()",
+      "electron2d": "property:Electron2D.AStarGrid.Shape()",
       "reason": "Shape avoids a C# name collision with the nested CellShape enum."
     },
     {
       "godot": "AStarGrid2D::property:diagonal_mode",
-      "electron2d": "property:Electron2D.AStarGrid2D.Diagonals()",
+      "electron2d": "property:Electron2D.AStarGrid.Diagonals()",
       "reason": "Diagonals avoids a C# name collision with the nested DiagonalMode enum."
     }
   ],
   "extras": [
     {
-      "electron2d": "constructor:Electron2D.AStar2D..ctor()",
+      "electron2d": "constructor:Electron2D.AStar..ctor()",
       "reason": "C# constructor creates the empty managed graph; the reference class XML has no constructor row.",
       "adr": "ADR 0003; ADR 0052"
     },
     {
-      "electron2d": "method:Electron2D.AStar2D.Dispose(System.Boolean)",
+      "electron2d": "method:Electron2D.AStar.Dispose(System.Boolean)",
       "reason": "Inherited deterministic ElectronObject disposal releases graph references rather than exposing manual reference counting.",
       "adr": "ADR 0003; ADR 0052"
     },
     {
-      "electron2d": "method:Electron2D.AStar2D.ValidateDisposal()",
+      "electron2d": "method:Electron2D.AStar.ValidateDisposal()",
       "reason": "Inherited disposal hook prevents a callback from invalidating a graph while A-star search owns its transient state.",
       "adr": "ADR 0003; ADR 0052"
     },
     {
-      "electron2d": "constructor:Electron2D.AStarGrid2D..ctor()",
+      "electron2d": "constructor:Electron2D.AStarGrid..ctor()",
       "reason": "Managed constructor projects creation of an empty grid.",
       "adr": "ADR 0003; ADR 0052"
     },
     {
-      "electron2d": "method:Electron2D.AStarGrid2D.Dispose(System.Boolean)",
+      "electron2d": "method:Electron2D.AStarGrid.Dispose(System.Boolean)",
       "reason": "Inherited deterministic disposal releases grid storage.",
       "adr": "ADR 0003; ADR 0052"
     },
     {
-      "electron2d": "method:Electron2D.AStarGrid2D.ValidateDisposal()",
+      "electron2d": "method:Electron2D.AStarGrid.ValidateDisposal()",
       "reason": "Inherited disposal hook rejects disposal during a path callback.",
       "adr": "ADR 0003; ADR 0052"
     }

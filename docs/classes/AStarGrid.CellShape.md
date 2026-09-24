@@ -1,8 +1,8 @@
-# AStarGrid2D.CellShape
+# AStarGrid.CellShape
 
 Last updated: 2026-09-24
 
-**Owner:** [AStarGrid2D](AStarGrid2D.md) · **Source:** [AStarGrid2D.cs](../../src/Navigation/2D/AStarGrid2D.cs)
+**Owner:** [AStarGrid](AStarGrid.md) · **Source:** [AStarGrid.cs](../../src/Navigation/2D/AStarGrid.cs)
 
 | Value | Integer | Cell position mapping |
 | --- | ---: | --- |
@@ -11,4 +11,4 @@ Last updated: 2026-09-24
 | `IsometricDown` | 2 | Down-facing half-cell transform |
 | `Max` | 3 | Exclusive enum bound; rejected as a shape |
 
-Changing [`Shape`](AStarGrid2D.md#properties) marks the grid dirty. Call `Update()` to rebuild world positions.
+Changing [`Shape`](AStarGrid.md#properties) marks the grid dirty. Call `Update()` to rebuild world positions.

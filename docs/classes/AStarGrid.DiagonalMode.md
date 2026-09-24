@@ -1,8 +1,8 @@
-# AStarGrid2D.DiagonalMode
+# AStarGrid.DiagonalMode
 
 Last updated: 2026-09-24
 
-**Owner:** [AStarGrid2D](AStarGrid2D.md) · **Source:** [AStarGrid2D.cs](../../src/Navigation/2D/AStarGrid2D.cs)
+**Owner:** [AStarGrid](AStarGrid.md) · **Source:** [AStarGrid.cs](../../src/Navigation/2D/AStarGrid.cs)
 
 | Value | Integer | Diagonal eligibility |
 | --- | ---: | --- |
@@ -12,4 +12,4 @@ Last updated: 2026-09-24
 | `OnlyIfNoObstacles` | 3 | Both adjacent cardinal cells must be walkable |
 | `Max` | 4 | Exclusive enum bound; rejected as a mode |
 
-The default [`Diagonals`](AStarGrid2D.md#properties) value is `Always`. Changing it affects the next path query without rebuilding cells.
+The default [`Diagonals`](AStarGrid.md#properties) value is `Always`. Changing it affects the next path query without rebuilding cells.
