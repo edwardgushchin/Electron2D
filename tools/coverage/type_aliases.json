@@ -23,6 +23,7 @@
     "NoiseTexture2D": "NoiseTexture",
     "AStar2D": "AStar",
     "AStarGrid2D": "AStarGrid",
+    "Area2D": "Area",
     "Shape2D": "Shape",
     "CircleShape2D": "CircleShape",
     "RectangleShape2D": "RectangleShape",

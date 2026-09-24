@@ -69,6 +69,8 @@ The pinned [AStarGrid2D](classes/AStarGrid2D.md) maps to public [`AStarGrid`](..
 
 [PhysicsMaterial](classes/PhysicsMaterial.md) now implements all five own rows and both `RigidBody2D`/`StaticBody2D` material-override rows. The two body types borrow the resource, rebuild fixtures after live edits, and use the pinned signed rough/absorbent mixing rules through world callbacks without a low-speed bounce threshold. PhysicsMaterialTests checks default and negative/invalid values, copying, packed resource identity, friction/bounce contacts including slow impacts, live changes, notification failure, disposal and 64 warmed resting and active material-contact frames each without managed allocations on Linux/.NET 8. Native allocator and other platform behavior remain unverified.
 
+[Area2D](classes/Area2D.md) now maps to `Area : CollisionObject : Entity` under [ADR 0055](../decisions/physics.md#adr-0055). Seven area-monitoring rows are Implemented; the class and five body-result/event rows remain Partial because tile-map virtual collision bodies are not integrated. Seventeen field/priority rows are Unimplemented, and six audio or typed shape-identity rows are Blocked with distinct triggers. AreaTests checks body mask zero, directional area masks, multi-shape deduplication, snapshots, events, live edits, scene packing, callback mutation/failure and 64 warmed frames each with and without overlap at zero managed allocations on Linux/.NET 8. Native allocator, other platforms and large-scene performance remain unverified.
+
 ## State vocabulary
 
 Each row has exactly one state. Typed-C# adaptation is a *mapping description* and may accompany any state.

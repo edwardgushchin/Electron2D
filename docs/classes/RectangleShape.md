@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-An independently owned rectangular collision resource centered on its local origin. A CollisionShape node borrows it; a size change invalidates attached fixtures for the next fixed step. Managed duplication owns independent dimensions and clears external Resource identity.
+An independently owned rectangular collision resource centered on its local origin. A CollisionShape node beneath a body or area borrows it; a size change invalidates attached fixtures for the next fixed step even when an earlier user `Changed` subscriber throws. Managed duplication owns independent dimensions and clears external Resource identity.
 
 ## API summary
 

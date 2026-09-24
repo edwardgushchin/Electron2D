@@ -1,4 +1,8 @@
 using Box2D.NET;
+using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2Constants;
+using static Box2D.NET.B2Distances;
+using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Types;
 using static Box2D.NET.B2Worlds;
 
@@ -12,9 +16,14 @@ internal sealed class PhysicsSpace : IDisposable
     private const ulong AbsorbentMaterial = 2;
 
     private readonly List<PhysicsBody> _bodies = [];
+    private readonly List<Area> _areas = [];
+    private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly B2WorldId _worldID;
     private bool _stepping;
+    private bool _dispatching;
     private bool _disposed;
+
+    internal readonly record struct OverlapEvent(Area Area, CollisionObject Other, bool Entered);
 
     internal PhysicsSpace()
     {
@@ -41,28 +50,56 @@ internal sealed class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
-        if (_bodies.Remove(body)) body.DetachBackend();
+        if (!_bodies.Remove(body)) return;
+        body.DetachBackend();
+        foreach (var area in _areas) area.Forget(body, _overlapEvents);
+        DispatchOverlapEvents();
+    }
+
+    internal void Add(Area area)
+    {
+        if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
+        if (_stepping) throw new InvalidOperationException("Physics areas cannot enter a world while it is stepping.");
+        _areas.EnsureCapacity(_areas.Count + 1);
+        area.AttachBackend(this);
+        _areas.Add(area);
+    }
+
+    internal void Remove(Area area)
+    {
+        if (_disposed) return;
+        if (_stepping) throw new InvalidOperationException("Physics areas cannot leave a world while it is stepping.");
+        if (!_areas.Remove(area)) return;
+        area.DetachBackend();
+        area.ClearOverlaps();
+        foreach (var other in _areas) other.Forget(area, _overlapEvents);
+        DispatchOverlapEvents();
     }
 
     internal void Step(double delta)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
-        if (delta == 0 || _bodies.Count == 0) return;
+        if (delta == 0 || (_bodies.Count == 0 && _areas.Count == 0)) return;
         if (_stepping) throw new InvalidOperationException("A physics world cannot step recursively.");
         _stepping = true;
+        List<Exception>? errors = null;
         try
         {
             foreach (var body in _bodies) body.PrepareBackend();
+            foreach (var area in _areas) area.PrepareBackend();
             b2World_Step(_worldID, (float)delta, 4);
-            List<Exception>? errors = null;
             foreach (var body in _bodies)
             {
                 try { body.CompleteBackend(); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
-            if (errors is not null) throw new AggregateException("Physics-body synchronization failed.", errors);
+            ScanAreas();
         }
+        catch (Exception error) { (errors ??= []).Add(error); }
         finally { _stepping = false; }
+        try { DispatchOverlapEvents(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
     }
 
     public void Dispose()
@@ -70,9 +107,89 @@ internal sealed class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         foreach (var body in _bodies) body.DetachBackend();
+        foreach (var area in _areas) { area.DetachBackend(); area.ClearOverlaps(); }
         _bodies.Clear();
+        _areas.Clear();
+        _overlapEvents.Clear();
         b2DestroyWorld(_worldID);
         _disposed = true;
+    }
+
+    private void ScanAreas()
+    {
+        // ponytail: Pairwise shape scans are quadratic; use a broad-phase candidate index if large worlds show a measured cost.
+        foreach (var area in _areas)
+        {
+            area.BeginOverlapScan();
+            if (area.Monitoring)
+            {
+                foreach (var body in _bodies)
+                    if ((area.CollisionMask & body.CollisionLayer) != 0 && ShapesOverlap(area, body))
+                        area.Observe(body);
+                foreach (var other in _areas)
+                    if (!ReferenceEquals(area, other) && other.Monitorable &&
+                        (area.CollisionMask & other.CollisionLayer) != 0 && ShapesOverlap(area, other))
+                        area.Observe(other);
+            }
+            area.CommitOverlapScan(_overlapEvents);
+        }
+    }
+
+    private bool ShapesOverlap(CollisionObject area, CollisionObject other)
+    {
+        var world = b2GetWorldFromId(_worldID);
+        var areaShapes = area.BackendShapes;
+        var otherShapes = other.BackendShapes;
+        for (var areaIndex = 0; areaIndex < areaShapes.Count; areaIndex++)
+        {
+            var areaID = areaShapes[areaIndex];
+            var aabbA = b2Shape_GetAABB(areaID);
+            for (var otherIndex = 0; otherIndex < otherShapes.Count; otherIndex++)
+            {
+                var otherID = otherShapes[otherIndex];
+                var aabbB = b2Shape_GetAABB(otherID);
+                if (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
+                    aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y)
+                    continue;
+                var shapeA = b2GetShape(world, areaID);
+                var shapeB = b2GetShape(world, otherID);
+                var input = new B2DistanceInput
+                {
+                    proxyA = b2MakeShapeDistanceProxy(shapeA),
+                    proxyB = b2MakeShapeDistanceProxy(shapeB),
+                    transformA = b2Body_GetTransform(b2Shape_GetBody(areaID)),
+                    transformB = b2Body_GetTransform(b2Shape_GetBody(otherID)),
+                    useRadii = true
+                };
+                var cache = new B2SimplexCache();
+                if (b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private void DispatchOverlapEvents()
+    {
+        if (_dispatching || _overlapEvents.Count == 0) return;
+        _dispatching = true;
+        List<Exception>? errors = null;
+        try
+        {
+            for (var index = 0; index < _overlapEvents.Count; index++)
+            {
+                var change = _overlapEvents[index];
+                if (!change.Area.IsInsideTree || (change.Entered && !change.Area.ContainsOverlap(change.Other))) continue;
+                try { change.Area.RaiseOverlap(change.Other, change.Entered); }
+                catch (Exception error) { (errors ??= []).Add(error); }
+            }
+        }
+        finally
+        {
+            _overlapEvents.Clear();
+            _dispatching = false;
+        }
+        if (errors is not null) throw new AggregateException("Physics-area overlap callbacks failed.", errors);
     }
 
     internal static void SetMaterial(ref B2ShapeDef definition, PhysicsMaterial? material)

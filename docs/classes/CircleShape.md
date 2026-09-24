@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-An independently owned circular collision resource. A CollisionShape node borrows it; changing `Radius` publishes `Changed` and rebuilds every attached fixture before its next physics step. The managed Resource copying contract creates an independent circle and does not copy path identity.
+An independently owned circular collision resource. A CollisionShape node beneath a body or area borrows it; changing `Radius` publishes `Changed` and rebuilds every attached fixture before its next physics step. A throwing earlier subscriber does not prevent owners from detecting the changed geometry at that step. The managed Resource copying contract creates an independent circle and does not copy path identity.
 
 ## API summary
 

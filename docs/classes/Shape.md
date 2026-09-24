@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-The reusable 2D collision-geometry role. The caller owns a Shape resource; a [CollisionShape](CollisionShape.md) borrows it for a direct physics-body parent. `Changed` invalidates the body's fixture before its next fixed step. Resource duplication of concrete shapes owns independent dimensions. The first physics profile supports circle and rectangle geometry; the abstract standalone collision/sweep and debug-draw APIs remain incomplete on [Shape2D coverage](../coverage/classes/Shape2D.md).
+The reusable 2D collision-geometry role. The caller owns a Shape resource; a [CollisionShape](CollisionShape.md) borrows it for a direct physics-body or [Area](Area.md) parent. `Changed` invalidates the parent's fixture before its next fixed step. Geometry revisions also let attached owners detect an edit when an earlier user `Changed` subscriber throws. Resource duplication of concrete shapes owns independent dimensions. The current profile supports circle and rectangle geometry; the abstract standalone collision/sweep and debug-draw APIs remain incomplete on [Shape2D coverage](../coverage/classes/Shape2D.md).
 
 ## API summary
 

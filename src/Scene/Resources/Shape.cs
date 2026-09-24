@@ -8,11 +8,21 @@ namespace Electron2D;
 /// <remarks>A <see cref="CollisionShape"/> borrows a Shape resource; callers retain its ownership.</remarks>
 public abstract class Shape : Resource
 {
+    private ulong _revision;
+
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
     /// <returns>A rectangle centered on the shape origin.</returns>
     public abstract Rect2 GetRect();
 
     internal abstract B2ShapeId AddToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation, in B2ShapeDef definition);
+
+    internal ulong GeometryRevision => _revision;
+
+    internal void EmitGeometryChanged()
+    {
+        _revision++;
+        EmitChanged();
+    }
 
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
 }
@@ -37,7 +47,7 @@ public sealed class CircleShape : Shape
             if (!float.IsFinite(value) || value <= 0 || value > float.MaxValue / 2)
                 throw new ArgumentOutOfRangeException(nameof(value));
             _radius = value;
-            EmitChanged();
+            EmitGeometryChanged();
         }
     }
 
@@ -81,7 +91,7 @@ public sealed class RectangleShape : Shape
             ThrowIfDisposed();
             if (!value.IsFinite() || value.X <= 0 || value.Y <= 0) throw new ArgumentOutOfRangeException(nameof(value));
             _size = value;
-            EmitChanged();
+            EmitGeometryChanged();
         }
     }
 

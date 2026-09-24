@@ -1,7 +1,7 @@
 namespace Electron2D;
 
-/// <summary>Places a borrowed collision shape beneath a physics body.</summary>
-/// <remarks>The direct parent must be a <see cref="PhysicsBody"/> for this shape to participate in physics.
+/// <summary>Places a borrowed collision shape beneath a physics body or area.</summary>
+/// <remarks>The direct parent must be a <see cref="CollisionObject"/> for this shape to participate in physics.
 /// A shape resource remains caller-owned. Geometry changes are applied before the next physics step.</remarks>
 public sealed class CollisionShape : Entity
 {
@@ -12,14 +12,16 @@ public sealed class CollisionShape : Entity
     ];
 
     private Shape? _shape;
-    private PhysicsBody? _body;
+    private CollisionObject? _owner;
     private bool _disabled;
+
+    internal ulong GeometryRevision => _shape is { IsDisposed: false } shape ? shape.GeometryRevision : ulong.MaxValue;
 
     /// <summary>Creates a detached node with no shape and an enabled collision slot.</summary>
     public CollisionShape()
     {
         NotifyLocalTransformChanges = true;
-        LocalTransformChanged += _ => _body?.MarkShapesDirty();
+        LocalTransformChanged += _ => _owner?.MarkShapesDirty();
     }
 
     /// <summary>Gets or sets the borrowed shape resource, or null to remove collision geometry.</summary>
@@ -36,7 +38,7 @@ public sealed class CollisionShape : Entity
             DetachShapeEvents(_shape);
             _shape = value;
             AttachShapeEvents(value);
-            _body?.MarkShapesDirty();
+            _owner?.MarkShapesDirty();
             UpdateConfigurationWarnings();
         }
     }
@@ -51,7 +53,7 @@ public sealed class CollisionShape : Entity
             EnsureMutable();
             if (_disabled == value) return;
             _disabled = value;
-            _body?.MarkShapesDirty();
+            _owner?.MarkShapesDirty();
         }
     }
 
@@ -59,7 +61,7 @@ public sealed class CollisionShape : Entity
     public override string[] GetConfigurationWarnings()
     {
         var warnings = base.GetConfigurationWarnings().ToList();
-        if (Parent is not PhysicsBody) warnings.Add("CollisionShape requires a direct PhysicsBody parent.");
+        if (Parent is not CollisionObject) warnings.Add("CollisionShape requires a direct CollisionObject parent.");
         if (_shape is null || _shape.IsDisposed) warnings.Add("Assign a live collision shape resource.");
         return warnings.ToArray();
     }
@@ -78,15 +80,15 @@ public sealed class CollisionShape : Entity
     protected override void OnEnterTree()
     {
         base.OnEnterTree();
-        if (Parent is not PhysicsBody body) return;
-        body.AttachShape(this);
-        _body = body;
+        if (Parent is not CollisionObject owner) return;
+        owner.AttachShape(this);
+        _owner = owner;
     }
 
     /// <inheritdoc />
     protected override void OnExitTree()
     {
-        if (_body is { } body) { _body = null; body.DetachShape(this); }
+        if (_owner is { } owner) { _owner = null; owner.DetachShape(this); }
         base.OnExitTree();
     }
 
@@ -95,7 +97,7 @@ public sealed class CollisionShape : Entity
     {
         if (disposing)
         {
-            if (_body is { } body) { _body = null; body.DetachShape(this); }
+            if (_owner is { } owner) { _owner = null; owner.DetachShape(this); }
             DetachShapeEvents(_shape);
             _shape = null;
         }
@@ -116,10 +118,10 @@ public sealed class CollisionShape : Entity
         shape.Disposed -= OnShapeDisposed;
     }
 
-    private void OnShapeChanged(Resource _) => _body?.MarkShapesDirty();
+    private void OnShapeChanged(Resource _) => _owner?.MarkShapesDirty();
 
     private void OnShapeDisposed(ElectronObject _)
     {
-        _body?.MarkShapesDirty();
+        _owner?.MarkShapesDirty();
     }
 }

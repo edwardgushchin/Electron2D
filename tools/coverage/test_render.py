@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Shape2D", "CircleShape2D", "RectangleShape2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "Shape2D", "CircleShape2D", "RectangleShape2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -76,6 +76,13 @@ def main():
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "../../classes/AStarGrid.md" in class_rows["AStarGrid2D"]
+    assert "../../classes/Area.md" in class_rows["Area2D"] and " | Partial | " in class_rows["Area2D"]
+    area_rows = [row for row in pages[CLASS_PAGES / "Area2D.md"].splitlines()
+                 if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(area_rows) == 36
+    assert {state: sum(f" | {state} | " in row for row in area_rows)
+            for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
+                "Implemented": 7, "Partial": 6, "Unimplemented": 17, "Blocked": 6}
     loader_rows = [row for row in pages[CLASS_PAGES / "ResourceLoader.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(loader_rows) == 26

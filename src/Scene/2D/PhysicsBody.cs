@@ -11,6 +11,7 @@ public abstract class PhysicsBody : CollisionObject
 {
     private readonly List<CollisionShape> _shapes = [];
     private readonly List<B2ShapeId> _backendShapes = [];
+    private readonly List<ulong> _appliedShapeRevisions = [];
     private PhysicsSpace? _space;
     private B2BodyId _bodyID;
     private Vector2 _lastPosition;
@@ -24,20 +25,21 @@ public abstract class PhysicsBody : CollisionObject
 
     internal B2BodyId BackendID => _bodyID;
     internal bool HasBackend => _space is not null;
+    internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
-    internal void AttachShape(CollisionShape shape)
+    internal override void AttachShape(CollisionShape shape)
     {
         if (_shapes.Contains(shape)) return;
         _shapes.Add(shape);
         MarkShapesDirty();
     }
 
-    internal void DetachShape(CollisionShape shape)
+    internal override void DetachShape(CollisionShape shape)
     {
         if (_shapes.Remove(shape)) MarkShapesDirty();
     }
 
-    internal void MarkShapesDirty() => _shapesDirty = true;
+    internal override void MarkShapesDirty() => _shapesDirty = true;
 
     internal PhysicsMaterial? MaterialOverride => _materialOverride is { IsDisposed: true } ? null : _materialOverride;
 
@@ -81,6 +83,7 @@ public abstract class PhysicsBody : CollisionObject
         if (_space is null) return;
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();
+        _appliedShapeRevisions.Clear();
         _space = null;
         _shapesDirty = true;
     }
@@ -95,6 +98,9 @@ public abstract class PhysicsBody : CollisionObject
             MarkShapesDirty();
         }
         if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision) MarkShapesDirty();
+        if (!_shapesDirty)
+            for (var index = 0; index < _shapes.Count; index++)
+                if (_shapes[index].GeometryRevision != _appliedShapeRevisions[index]) { MarkShapesDirty(); break; }
         if (_shapesDirty) RebuildShapes();
         var position = GlobalPosition;
         var rotation = GlobalRotation;
@@ -182,6 +188,8 @@ public abstract class PhysicsBody : CollisionObject
         }
 
         OnShapesRebuilt();
+        _appliedShapeRevisions.Clear();
+        foreach (var node in _shapes) _appliedShapeRevisions.Add(node.GeometryRevision);
         _appliedMaterialRevision = _materialOverride?.Revision ?? 0;
         _shapesDirty = false;
     }

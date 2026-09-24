@@ -4,6 +4,16 @@
       "godot": "Shape2D::method:get_rect()",
       "electron2d": "method:Electron2D.Shape.GetRect()",
       "reason": "Abstract typed shape bounds hook; concrete circle and rectangle overrides supply the geometry."
+    },
+    {
+      "godot": "Area2D::method:get_overlapping_areas()",
+      "electron2d": "method:Electron2D.Area.GetOverlappingAreas()",
+      "reason": "Typed array preserves the spatial Node2D-to-Entity mapping and last fixed-step overlap snapshot."
+    },
+    {
+      "godot": "Area2D::method:get_overlapping_bodies()",
+      "electron2d": "method:Electron2D.Area.GetOverlappingBodies()",
+      "reason": "Typed array preserves the spatial Node2D-to-Entity mapping and last fixed-step overlap snapshot."
     }
   ],
   "extras": [
@@ -161,6 +171,36 @@
       "electron2d": "method:Electron2D.StaticBody.GetPropertyDescriptors()",
       "reason": "Typed PackedScene property descriptor for the borrowed material override.",
       "adr": "ADRs 0005, 0008, 0013; material slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Area..ctor()",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.Area.CreateSceneInstanceFactory()",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.Area.Dispose(System.Boolean)",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.Area.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.Area.OnEnterTree()",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.Area.OnExitTree()",
+      "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
+      "adr": "ADRs 0003, 0005, 0008, 0055"
     }
   ],
   "statusGroups": [
@@ -420,6 +460,78 @@
       ],
       "state": "Implemented",
       "reason": "Borrowed material transfers to Box2D fixtures; live edits, packing, disposal and surface mixing verified by PhysicsMaterialTests."
+    },
+    {
+      "godot": [
+        "class:Area2D"
+      ],
+      "state": "Partial",
+      "reason": "Directional sensor monitoring and object-level events execute under ADR 0055; gravity/damping, audio and shape-index members retain exact gaps below."
+    },
+    {
+      "godot": [
+        "Area2D::method:get_overlapping_areas()",
+        "Area2D::method:has_overlapping_areas()",
+        "Area2D::method:overlaps_area(Node:)",
+        "Area2D::property:monitorable",
+        "Area2D::property:monitoring",
+        "Area2D::signal:area_entered(Area2D:)",
+        "Area2D::signal:area_exited(Area2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "AreaTests verifies step snapshots, directional masks, monitorability, events, multi-shape deduplication, callback failure, removal and warmed no-allocation scans."
+    },
+    {
+      "godot": [
+        "Area2D::signal:area_shape_entered(RID:,Area2D:,int:,int:)",
+        "Area2D::signal:area_shape_exited(RID:,Area2D:,int:,int:)",
+        "Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)",
+        "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed PhysicsServer2D RID identity and stable collision-shape owner indices across fixture rebuilding; then emit per-shape events."
+    },
+    {
+      "godot": [
+        "Area2D::property:audio_bus_name",
+        "Area2D::property:audio_bus_override"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable audio-bus playback/listener routing slice under ADR 0047; apply area bus selection to audible streams."
+    },
+    {
+      "godot": [
+        "Area2D::enum:SpaceOverride",
+        "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_DISABLED",
+        "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_COMBINE",
+        "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_COMBINE_REPLACE",
+        "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_REPLACE",
+        "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_REPLACE_COMBINE",
+        "Area2D::property:angular_damp",
+        "Area2D::property:angular_damp_space_override",
+        "Area2D::property:gravity",
+        "Area2D::property:gravity_direction",
+        "Area2D::property:gravity_point",
+        "Area2D::property:gravity_point_center",
+        "Area2D::property:gravity_point_unit_distance",
+        "Area2D::property:gravity_space_override",
+        "Area2D::property:linear_damp",
+        "Area2D::property:linear_damp_space_override",
+        "Area2D::property:priority"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: complete area field-priority reduction into rigid-body gravity and damping, including point falloff and combine/replace order; sensor snapshots now provide the overlap prerequisite."
+    },
+    {
+      "godot": [
+        "Area2D::method:get_overlapping_bodies()",
+        "Area2D::method:has_overlapping_bodies()",
+        "Area2D::method:overlaps_body(Node:)",
+        "Area2D::signal:body_entered(Node2D:)",
+        "Area2D::signal:body_exited(Node2D:)"
+      ],
+      "state": "Partial",
+      "reason": "Current PhysicsBody nodes work, but the reference also reports tile-map virtual collision bodies; trigger: tile collision-owner integration with the area space."
     }
   ]
 }

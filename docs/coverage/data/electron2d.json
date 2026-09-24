@@ -132,6 +132,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Area",
+    "kind": "type",
+    "declaringType": "Electron2D.Area",
+    "name": "Area",
+    "signature": "public sealed class Electron2D.Area",
+    "visibility": "public",
+    "baseType": "Electron2D.CollisionObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AtlasTexture",
     "kind": "type",
     "declaringType": "Electron2D.AtlasTexture",
@@ -4621,6 +4636,19 @@
     "declaringType": "Electron2D.AnimatedTexture",
     "name": ".ctor",
     "signature": "public AnimatedTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Area..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Area",
+    "name": ".ctor",
+    "signature": "public Area()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -16601,6 +16629,58 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Area.AreaEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "AreaEntered",
+    "signature": "public event System.Action\u003CElectron2D.Area\u003E AreaEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Area\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.AreaExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "AreaExited",
+    "signature": "public event System.Action\u003CElectron2D.Area\u003E AreaExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Area\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.BodyEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "BodyEntered",
+    "signature": "public event System.Action\u003CElectron2D.Entity\u003E BodyEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Entity\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.BodyExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "BodyExited",
+    "signature": "public event System.Action\u003CElectron2D.Entity\u003E BodyExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Entity\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.CanvasItem.Draw()",
     "kind": "event",
     "declaringType": "Electron2D.CanvasItem",
@@ -19549,6 +19629,167 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.GetOverlappingAreas()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "GetOverlappingAreas",
+    "signature": "public Electron2D.Area[] GetOverlappingAreas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.GetOverlappingBodies()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "GetOverlappingBodies",
+    "signature": "public Electron2D.Entity[] GetOverlappingBodies()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Entity[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.HasOverlappingAreas()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "HasOverlappingAreas",
+    "signature": "public System.Boolean HasOverlappingAreas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.HasOverlappingBodies()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "HasOverlappingBodies",
+    "signature": "public System.Boolean HasOverlappingBodies()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.OverlapsArea(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "OverlapsArea",
+    "signature": "public System.Boolean OverlapsArea(Electron2D.Node area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Area.OverlapsBody(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.Area",
+    "name": "OverlapsBody",
+    "signature": "public System.Boolean OverlapsBody(Electron2D.Node body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -56522,6 +56763,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.Monitorable()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "Monitorable",
+    "signature": "public System.Boolean Monitorable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.Monitoring()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "Monitoring",
+    "signature": "public System.Boolean Monitoring { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

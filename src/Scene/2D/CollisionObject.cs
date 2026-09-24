@@ -1,3 +1,5 @@
+using Box2D.NET;
+
 namespace Electron2D;
 
 /// <summary>A spatial scene object that owns collision filtering for physics shapes.</summary>
@@ -64,6 +66,11 @@ public abstract class CollisionObject : Entity
         base.GetPropertyDescriptors().Concat(CollisionProperties);
 
     internal virtual void OnCollisionFilterChanged() { }
+
+    internal abstract IReadOnlyList<B2ShapeId> BackendShapes { get; }
+    internal abstract void AttachShape(CollisionShape shape);
+    internal abstract void DetachShape(CollisionShape shape);
+    internal abstract void MarkShapesDirty();
 
     private static uint LayerBit(int number)
     {

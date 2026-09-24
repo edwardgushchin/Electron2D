@@ -72,7 +72,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
 | [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the tweens currently registered for processing. |
 | [`public void ProcessFrame(double delta)`](#m-electron2d-scenetree-processframe-system-double) | Runs one host-driven process frame, process timers, process tweens, and one deferred safe point. |
-| [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point. |
+| [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs physics callbacks, body simulation and area monitoring before physics timers and tweens. |
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
 | [`public bool IsInputHandled()`](#m-electron2d-scenetree-isinputhandled) | Gets whether the input event currently being dispatched has been handled. |
 | [`public IReadOnlyList<Node> GetNodesInGroup(string group)`](#m-electron2d-scenetree-getnodesingroup-system-string) | Returns every current node in a group in depth-first pre-order. |
@@ -351,7 +351,7 @@ Runs one host-driven process frame, process timers, process tweens, and one defe
 <a id="m-electron2d-scenetree-physicsframe-system-double"></a>
 ### `public void PhysicsFrame(double delta)`
 
-Runs one host-driven physics-process frame, attached scene-body simulation, physics timers, physics tweens, and one deferred safe point.
+Runs one host-driven physics-process frame, attached scene-body simulation and area monitoring, physics timers, physics tweens, and one deferred safe point. Area overlap snapshots and object-level events update after body synchronization; zero elapsed time leaves area snapshots unchanged.
 
 **Parameters**
 

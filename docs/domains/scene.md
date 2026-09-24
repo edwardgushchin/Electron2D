@@ -58,8 +58,8 @@ The [Physics domain](physics.md) now supplies RigidBody, StaticBody and Collisio
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
-- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and has no direct SDL3-CS dependency, audio, collision physics, asset loading/saving, file serialization, scripting, networking, or Localization.
-- Future gameplay, rendering, GUI input, and 2D physics types may depend on Scene.
+- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and fixed-step collision execution to the internal physics space; it has no direct SDL3-CS dependency, audio, asset loading/saving, file serialization, scripting, networking, or Localization.
+- Future gameplay, rendering and GUI input types may depend on Scene. Current physics bodies and areas use Scene's spatial hierarchy and fixed frame.
 - Scene must not introduce 3D types. Non-spatial, canvas and spatial behavior belongs to Node, CanvasItem and Entity respectively under ADR 0008; these layers are implemented.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
 
@@ -67,6 +67,7 @@ The [Physics domain](physics.md) now supplies RigidBody, StaticBody and Collisio
 
 - `Node` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
 - Physics interpolation changes only presentation transforms. Logical spatial, viewport and input values remain current; enabled scene trees capture previous/current canvas and camera values around each fixed tick and reset stale history after pause, scene changes and process-time edits.
+- A nonzero fixed frame advances scene bodies after node callbacks and commits area overlap snapshots before timers and tweens. Area callbacks run after backend stepping so they can remove nodes; the Physics domain owns collision semantics.
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
 - Replacing a node keeps the active tree root stable, preserves its old sibling index, moves children and eligible owners, and leaves the original node alive but detached. Scene-local resources transfer to the replacement root.
 - An active root can be disposed only by its owning `SceneTree`.

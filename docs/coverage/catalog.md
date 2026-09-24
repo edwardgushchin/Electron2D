@@ -47,7 +47,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Blocked | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Blocked | 0 |
 | [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Blocked | 12 |
-| [Area2D](classes/Area2D.md) | CollisionObject2D | Unimplemented | 35 |
+| [Area2D](classes/Area2D.md) | CollisionObject2D | Partial | 35 |
 | [Area3D](classes/Area3D.md) | CollisionObject3D | Excluded | 42 |
 | [AreaLight3D](classes/AreaLight3D.md) | Light3D | Excluded | 7 |
 | [Array](classes/Array.md) | — | Excluded | 72 |
