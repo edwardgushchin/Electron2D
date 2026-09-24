@@ -38,7 +38,7 @@ public partial class Control : CanvasItem
     private Viewport? _layoutViewport;
 
     /// <summary>Creates a detached control with zero size, zero anchors and identity transform.</summary>
-    public Control() { }
+    public Control() => PhysicsInterpolationMode = PhysicsInterpolationMode.Off;
 
     /// <summary>Identifies a size change delivered after the new rectangle and transform are committed.</summary>
     public const int NotificationResized = 40;

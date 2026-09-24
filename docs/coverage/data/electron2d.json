@@ -2162,6 +2162,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsInterpolationMode",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsInterpolationMode",
+    "name": "PhysicsInterpolationMode",
+    "signature": "public enum Electron2D.PhysicsInterpolationMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Polygon",
     "kind": "type",
     "declaringType": "Electron2D.Polygon",
@@ -4151,6 +4169,19 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "13"
+  },
+  {
+    "id": "constant:Electron2D.Node.NotificationResetPhysicsInterpolation()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationResetPhysicsInterpolation",
+    "signature": "public const System.Int32 NotificationResetPhysicsInterpolation = 2001",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2001"
   },
   {
     "id": "constant:Electron2D.Node.NotificationSceneInstantiated()",
@@ -14186,6 +14217,45 @@
     "parameters": [],
     "returnType": "Electron2D.PackedSceneEditState",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsInterpolationMode.Inherit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsInterpolationMode",
+    "name": "Inherit",
+    "signature": "public const Electron2D.PhysicsInterpolationMode Inherit = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsInterpolationMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsInterpolationMode.Off()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsInterpolationMode",
+    "name": "Off",
+    "signature": "public const Electron2D.PhysicsInterpolationMode Off = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsInterpolationMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsInterpolationMode.On()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsInterpolationMode",
+    "name": "On",
+    "signature": "public const Electron2D.PhysicsInterpolationMode On = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsInterpolationMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.ProcessMode.Always()",
@@ -37293,6 +37363,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.IsPhysicsInterpolated()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsPhysicsInterpolated",
+    "signature": "public System.Boolean IsPhysicsInterpolated()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.IsPhysicsInterpolatedAndEnabled()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "IsPhysicsInterpolatedAndEnabled",
+    "signature": "public System.Boolean IsPhysicsInterpolatedAndEnabled()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.MoveChild(Electron2D.Node,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -37619,6 +37715,19 @@
     "declaringType": "Electron2D.Node",
     "name": "RequestReady",
     "signature": "public System.Void RequestReady()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.ResetPhysicsInterpolation()",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "ResetPhysicsInterpolation",
+    "signature": "public System.Void ResetPhysicsInterpolation()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49575,6 +49684,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.PushInput(Electron2D.InputEvent,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -60368,6 +60496,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Node.PhysicsInterpolationMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "PhysicsInterpolationMode",
+    "signature": "public Electron2D.PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsInterpolationMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Node.PhysicsProcessDeltaTime()",
     "kind": "property",
     "declaringType": "Electron2D.Node",
@@ -61473,6 +61614,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.PhysicsInterpolation()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "PhysicsInterpolation",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E PhysicsInterpolation { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.PhysicsJitterFix()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -62284,6 +62438,19 @@
     "declaringType": "Electron2D.SceneTree",
     "name": "Paused",
     "signature": "public System.Boolean Paused { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SceneTree.PhysicsInterpolation()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "PhysicsInterpolation",
+    "signature": "public System.Boolean PhysicsInterpolation { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

@@ -179,7 +179,8 @@ public sealed partial class Engine : ElectronObject
 
     /// <summary>Gets the fraction of the current fixed interval remaining after the latest scheduling decision.</summary>
     /// <value>A value from <c>0</c> through <c>1</c>, where zero is exactly on a fixed-step boundary.</value>
-    /// <remarks>The value is intended for visual interpolation between the previous and current fixed states.</remarks>
+    /// <remarks>The active 2D renderer uses this fraction for eligible canvas and camera presentation when
+    /// <see cref="SceneTree.PhysicsInterpolation"/> is enabled; logical transforms remain current.</remarks>
     public double PhysicsInterpolationFraction => Volatile.Read(ref _physicsInterpolationFraction);
 
     /// <summary>Gets whether the current thread is executing a fixed-step callback.</summary>

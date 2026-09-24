@@ -177,7 +177,7 @@ Gets the fraction of the current fixed interval remaining after the latest sched
 
 **Value:** A value from `0` through `1`, where zero is exactly on a fixed-step boundary.
 
-**Remarks:** The value is intended for visual interpolation between the previous and current fixed states.
+**Remarks:** The active 2D renderer uses this value to present eligible canvas items and camera views between previous and current physics snapshots when `SceneTree.PhysicsInterpolation` is enabled. It does not change logical node or input state.
 
 <a id="p-electron2d-engine-isinphysicsframe"></a>
 ### `public bool IsInPhysicsFrame { get; }`

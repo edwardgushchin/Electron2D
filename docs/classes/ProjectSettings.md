@@ -68,6 +68,7 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<string> LocaleTest { get; }`](#localetest) | Optional startup locale override; empty by default. |
 | [`public static ProjectSetting<string> LocaleFallback { get; }`](#localefallback) | Fallback catalog locale; `en` by default. |
 | [`public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`](#rootnodeautotranslate) | Initial scene-root automatic translation; true by default. |
+| [`public static ProjectSetting<bool> PhysicsInterpolation { get; }`](#physicsinterpolation) | Initializes scene-wide 2D physics presentation interpolation; false by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`](#pseudolocalizationenabled) | Startup enablement; false by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationReplaceWithAccents { get; }`](#pseudolocalizationreplacewithaccents) | Accent substitution; true by default. |
 | [`public static ProjectSetting<bool> PseudolocalizationDoubleVowels { get; }`](#pseudolocalizationdoublevowels) | Vowel doubling; false by default. |
@@ -271,6 +272,11 @@ Defines `internationalization/locale/fallback`, default `en`. Engine startup sam
 ### `public static ProjectSetting<bool> RootNodeAutoTranslate { get; }`
 
 Defines `internationalization/rendering/root_node_auto_translate`, default true. `SceneTree` samples the active value when constructing a root whose `Node.AutoTranslateMode` is still `Inherit`, assigning `Always` or `Disabled`. Existing roots retain their selected mode when the setting changes.
+
+<a id="physicsinterpolation"></a>
+### `public static ProjectSetting<bool> PhysicsInterpolation { get; }`
+
+Defines `physics/common/physics_interpolation`, default false. `SceneTree` samples the active feature override at construction. Existing trees retain their flag when this setting changes; set `SceneTree.PhysicsInterpolation` for an immediate change. The setting affects presentation of 2D canvas and camera transforms after fixed physics ticks, leaving logical coordinates current.
 
 <a id="pseudolocalizationenabled"></a>
 ### `public static ProjectSetting<bool> PseudolocalizationEnabled { get; }`
@@ -1218,5 +1224,7 @@ Isolated instances dispose their owned document and clear subscribers/state. The
 ## Verification and known limitations
 
 The executable harness covers malformed definitions/features/paths, exact registration identity, built-ins, mutable snapshot isolation, validators and rollback, initial/revert behavior, metadata/property discovery and post-commit callback failure, override precedence/current/custom features, changed groups/version/no-op writes, event coalescing/re-entry/failure, OS/virtual path round trips/traversal, root discovery, save/load/override/late registration, failed I/O preservation, re-entrant validator rejection, concurrency, reconfiguration, disposal, Engine feature lookup/event flushing, and warmed zero-allocation Engine frames. `LocalizationProjectSettingsTests` checks locale and pseudolocalization defaults, persistence, validation, startup sampling, fallback selection and live transform reload.
+
+`PhysicsInterpolationTests` verifies the typed interpolation setting's key/default, exact registration, isolated project-file round trip and SceneTree startup sampling. Native canvas and camera pixels run through the same setting on Linux dummy compatibility and Wayland compatibility/GPU.
 
 Tests do not prove crash durability on every filesystem, symbolic-link confinement, editor presentation, packed exports, or unavailable domain settings.

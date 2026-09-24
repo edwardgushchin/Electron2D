@@ -25,6 +25,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<RenderEntry> _order = [];
     private readonly Dictionary<CanvasItem, Transform> _repeatTransforms = [];
     private readonly Dictionary<CanvasItem, Transform> _canvasTransforms = [];
+    private float _interpolationFraction = 1f;
     private readonly List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
@@ -138,6 +139,7 @@ public sealed class RenderingServer : ElectronObject
             if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
                 throw new InvalidOperationException("The render clock step is invalid.");
             CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
+            _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.Instance.PhysicsInterpolationFraction : 1f;
             _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _vertices.Clear(); _batches.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
@@ -157,7 +159,7 @@ public sealed class RenderingServer : ElectronObject
                     if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _window)) continue;
                     _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex();
                     _canvasID = layer?.InstanceID ?? 0;
-                    OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer));
+                    OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer, _interpolationFraction));
                 }
             _order.Sort(static (x, y) =>
             {
@@ -223,7 +225,7 @@ public sealed class RenderingServer : ElectronObject
         if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
-            var local = item.GetVisualTransform();
+            var local = item.GetInterpolatedVisualTransform(_interpolationFraction);
             if (_window.SnapTransformsToPixel)
             {
                 transform.Origin = CanvasGeometry.Snap(transform.Origin);
@@ -315,7 +317,7 @@ public sealed class RenderingServer : ElectronObject
         for (var index = 0; index < parent.ChildCount; index++)
         {
             if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
-            var local = child.GetVisualTransform();
+            var local = child.GetInterpolatedVisualTransform(_interpolationFraction);
             if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;
             _ySort.Add(new(child, transform, _ySort.Count));

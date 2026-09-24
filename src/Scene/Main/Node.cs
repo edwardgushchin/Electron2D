@@ -26,6 +26,10 @@ public partial class Node : ElectronObject
             _ => ProcessMode.Inherit,
             (_, value) => Enum.IsDefined(value),
             stored: true),
+        new PropertyDescriptor<Node, PhysicsInterpolationMode>(nameof(PhysicsInterpolationMode),
+            node => node.PhysicsInterpolationMode, (node, value) => node.PhysicsInterpolationMode = value,
+            node => node is Control ? PhysicsInterpolationMode.Off : PhysicsInterpolationMode.Inherit,
+            (_, value) => Enum.IsDefined(value), stored: true),
         new PropertyDescriptor<Node, NodeAutoTranslateMode>(
             nameof(AutoTranslateMode),
             node => node.AutoTranslateMode,
@@ -1564,8 +1568,9 @@ public partial class Node : ElectronObject
     /// <inheritdoc />
     /// <remarks>
     /// Calls the base implementation, then maps enter, exit, ready, process, and physics-process notification IDs to
-    /// the corresponding typed virtual callbacks. Manual <see cref="ElectronObject.Notify(int)"/> calls invoke those
-    /// callbacks but do not mutate tree membership, ready state, or delta values.
+    /// the corresponding typed virtual callbacks. Pause and application-suspend notifications reset eligible physics
+    /// presentation history. Manual <see cref="ElectronObject.Notify(int)"/> calls invoke callbacks but do not mutate
+    /// tree membership, ready state, or delta values.
     /// </remarks>
     protected override void OnNotification(int what)
     {
@@ -1587,6 +1592,10 @@ public partial class Node : ElectronObject
                 break;
             case NotificationPhysicsProcess:
                 OnPhysicsProcess(PhysicsProcessDeltaTime);
+                break;
+            case NotificationPaused:
+            case NotificationApplicationPaused:
+                if (IsPhysicsInterpolatedAndEnabled()) ResetPhysicsInterpolation();
                 break;
         }
     }

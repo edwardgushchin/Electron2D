@@ -28,18 +28,34 @@ public partial class Camera
 
     /// <inheritdoc />
     /// <remarks>Updates the current view on the selected internal frame lane and unsmoothed transform notifications.
-    /// Actual membership, not manually delivered enter/exit notifications, owns viewport registration.</remarks>
+    /// Physics interpolation samples camera scroll on physics ticks even when the configured callback lane is Idle;
+    /// the renderer presents interpolated viewport history. Actual membership, not manually delivered enter/exit
+    /// notifications, owns viewport registration.</remarks>
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
+        if (what == NotificationResetPhysicsInterpolation)
+        {
+            UpdateProcessing();
+            _viewport?.ResetCanvasInterpolationSnapshot();
+        }
         if (IsDisposed || _viewport is null) return;
-        if (what == NotificationInternalProcess && _processCallback == CameraProcessCallback.Idle ||
-            what == NotificationInternalPhysicsProcess && _processCallback == CameraProcessCallback.Physics ||
+        var interpolating = IsPhysicsInterpolatedAndEnabled();
+        if (what == NotificationInternalProcess && _processCallback == CameraProcessCallback.Idle && !interpolating ||
+            what == NotificationInternalPhysicsProcess && (_processCallback == CameraProcessCallback.Physics || interpolating) ||
             what == NotificationTransformChanged && !_positionSmoothingEnabled)
             UpdateScroll();
     }
 
-    private void UpdateProcessing() => SetInternalProcessing(_processCallback == CameraProcessCallback.Idle, _processCallback == CameraProcessCallback.Physics);
+    private void UpdateProcessing()
+    {
+        var interpolating = IsPhysicsInterpolatedAndEnabled();
+        SetInternalProcessing(_processCallback == CameraProcessCallback.Idle && !interpolating,
+            _processCallback == CameraProcessCallback.Physics || interpolating);
+        _viewport?.ResetCanvasInterpolationSnapshot();
+    }
+
+    internal void RefreshInterpolationProcessing() => UpdateProcessing();
     private void UpdateScrollPreservingPosition()
     {
         var previous = _smoothedPosition;
@@ -57,7 +73,7 @@ public partial class Camera
         if (viewport is null || !ReferenceEquals(viewport.GetCamera(), this)) return;
         var size = viewport.GetVisibleRect().Size; var halfSize = size * 0.5f; var scale = Vector2.One / _zoom;
         var position = GlobalPosition; var target = _targetPosition; var smoothed = _smoothedPosition;
-        var angle = _screenRotation; var delta = (float)(_processCallback == CameraProcessCallback.Physics ? PhysicsProcessDeltaTime : ProcessDeltaTime);
+        var angle = _screenRotation; var delta = (float)(_processCallback == CameraProcessCallback.Physics || Tree?.IsInPhysicsFrame == true ? PhysicsProcessDeltaTime : ProcessDeltaTime);
         var horizontalChanged = _horizontalOffsetChanged; var verticalChanged = _verticalOffsetChanged;
         if (_first) target = smoothed = position;
         else

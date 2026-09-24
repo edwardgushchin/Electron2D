@@ -15,7 +15,7 @@ public abstract partial class Viewport
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Camera? GetCamera() { CheckTransformQuery(); return _camera; }
 
-    internal void SetCurrentCamera(Camera camera) => _camera = camera;
+    internal void SetCurrentCamera(Camera camera) { _camera = camera; ResetCanvasInterpolationSnapshot(); }
 
     internal void RegisterParallax(Parallax parallax) => _parallaxes.Add(parallax);
     internal void UnregisterParallax(Parallax parallax) => _parallaxes.Remove(parallax);

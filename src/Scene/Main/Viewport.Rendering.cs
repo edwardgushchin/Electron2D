@@ -2,19 +2,20 @@ namespace Electron2D;
 
 public abstract partial class Viewport
 {
-    internal Transform GetCanvasRenderTransform(CanvasLayer? layer)
+    internal Transform GetCanvasRenderTransform(CanvasLayer? layer, float interpolationFraction = 1f)
     {
         var result = GetFinalTransform();
+        var cameraTransform = GetInterpolatedCanvasTransform(interpolationFraction);
         var size = GetVisibleRect().Size;
         var snapOffset = new Vector2(size.X % 2 == 0 ? -0.5f : 0, size.Y % 2 == 0 ? -0.5f : 0);
         var followScale = layer is { FollowViewportEnabled: true } ? layer.FollowViewportScale : 1;
         if (layer is { FollowViewportEnabled: true })
         {
-            var parent = CanvasTransform;
+            var parent = cameraTransform;
             if (_snapTransformsToPixel && followScale != 0) parent.Origin = (parent.Origin * followScale + snapOffset).Ceil() / followScale;
             result *= parent;
         }
-        var local = layer?.Transform ?? CanvasTransform;
+        var local = layer?.Transform ?? cameraTransform;
         if (_snapTransformsToPixel) local.Origin = (local.Origin + snapOffset).Ceil();
         result *= local;
         if (followScale != 1)

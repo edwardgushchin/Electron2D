@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Declaration: `public sealed class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -14,6 +14,8 @@ Renders the active root Window's retained CanvasItem commands. Engine.Run create
 The service supports rectangles, lines, polygons, short primitives and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
 CanvasLayer grouping precedes item Z/Y ordering. Default-canvas and layer roots use their own viewport transform; retained commands survive layer motion, camera following and order changes. [Parallax](Parallax.md) and [ParallaxLayer](ParallaxLayer.md) repeat descendant retained commands within that ordering without duplicating nodes or draw callbacks. Transform snapping prepares canvas translations separately from item translations. See [canvas layers](../components/canvas-rendering.md#canvas-layers).
+
+When the scene tree enables physics interpolation, the renderer composes previous/current canvas-item transforms and the current camera's viewport transform with the Engine's fractional tick progress. Both GPU and compatibility backends receive the same prepared vertices. Logical node, viewport and input coordinates are never rewritten for rendering. A first tick or explicit reset presents the current pose.
 
 Control descendant clipping adds a framebuffer scissor to each affected batch after order and transforms are resolved. Parent drawing stays outside that clip; top-level and neutral canvas boundaries break its inheritance. The same batch contract runs on GPU and compatibility. See [Control clipping](../components/canvas-rendering.md#control-descendant-clipping).
 

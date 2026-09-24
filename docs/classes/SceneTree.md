@@ -6,9 +6,9 @@ Last updated: 2026-09-24
 
 **Inherited By:** —
 
-- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs)
+- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs), [`src/Scene/Main/SceneTree.PhysicsInterpolation.cs`](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public sealed class SceneTree : MainLoop`
+- **Declaration:** `public sealed partial class SceneTree : MainLoop`
 
 > Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
@@ -21,6 +21,8 @@ Owns one active node hierarchy and coordinates its lifecycle, input, frames, gro
 `SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
 Before entry, a root still set to `NodeAutoTranslateMode.Inherit` samples `ProjectSettings.RootNodeAutoTranslate` and becomes `Always` or `Disabled`. Each automatically translating node receives `NotificationTranslationChanged` during entry; the setting is not re-read for an active tree.
+
+`PhysicsInterpolation` samples its typed project setting at construction. Physics frames snapshot eligible canvas and camera transforms before and after callbacks; rendering uses `Engine.PhysicsInterpolationFraction` without altering logical transforms or input coordinates. The flag can be changed on the owner thread, resetting display history.
 
 The creating thread becomes the owner thread for scene mutation, frame execution, flushing, and disposal.
 Electron2D does not create a frame-pump thread. A host can drive the loop through [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double),
@@ -54,6 +56,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public Node? CurrentScene { get; set; }`](#p-electron2d-scenetree-currentscene) | Gets or selects an existing direct scene child of the root. |
 | [`public int NodeCount { get; }`](#p-electron2d-scenetree-nodecount) | Gets the number of nodes currently inside this tree. |
 | [`public bool Paused { get; set; }`](#p-electron2d-scenetree-paused) | Gets or sets whether pause-aware processing and timers are paused. |
+| [`public bool PhysicsInterpolation { get; set; }`](#p-electron2d-scenetree-physicsinterpolation) | Enables 2D presentation between fixed physics ticks. |
 
 ## Methods
 
@@ -207,6 +210,11 @@ Each node's child snapshot is taken only after that node's notification returns,
 can affect the remainder of the same traversal. A live attached node is notified at most once even when it is
 reparented, and removed or disposed candidates are skipped. Notification failures do not roll the state back and
 are collected after traversal completes.
+
+<a id="p-electron2d-scenetree-physicsinterpolation"></a>
+### `public bool PhysicsInterpolation { get; set; }`
+
+Samples `ProjectSettings.PhysicsInterpolation` at construction, false by default. When enabled, each physics frame retains the previous and current canvas transforms for nodes whose inherited `PhysicsInterpolationMode` resolves On. The renderer samples that history using `Engine.PhysicsInterpolationFraction`; camera scroll from a current camera also interpolates. Changing the flag resets presentation snapshots without changing logical transforms. An attached caller must use the tree owner thread; notification failures aggregate after later descendants are attempted.
 
 ## Method Descriptions
 
@@ -780,7 +788,9 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 
 `tests/Electron2D.Tests/Program.cs` covers constructor validation, inherited-loop initialization/driving/finalization, Engine attachment/zero-delta scheduling/finalization, three-stage input ordering/handled state/re-entry/failure continuation/allocation, system-notification propagation, escaped-reference terminal state, timer/tween cleanup, and enter/ready rollback; stale lifecycle snapshots; lifecycle and tree-event order; exception-safe teardown and queued deletion; cross-tree deletion transfer; lifecycle execution barriers; pause re-entry/traversal/execution barriers; exiting/pre-delete/cleanup ownership guards; 256 concurrent QueueFree/flush iterations; a 64-iteration concurrent enqueue/disposal stress check; frame counters/events; public/internal process ordering, failure continuation, pause eligibility, and scaled/original deltas; group operations and invalid flags; both timer facilities; complete typed tween sequencing/lifetime/failure cases; generic queued object deletion; captured deferred batches; cancellation; recursive node disposal; and zero steady-state managed allocation across warmed idle, active-Timer, active-Tween, and non-positional/Node-root input paths. Positional viewport projections allocate temporary events.
 
-`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and interpolation state, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, physics simulation, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
+[PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks project-setting initialization, runtime toggles, eligible snapshots, first/repeated ticks, reset/pause, camera/Control policy, callback failure, and 128 warmed active ticks with zero managed allocation. [Native pixel checks](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) pass on dummy compatibility and Linux Wayland compatibility/GPU for moving items and camera scroll. Other platforms and visual owner acceptance remain unverified.
+
+`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and the fraction consumed by 2D presentation, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, collision physics simulation, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
 
 ## Related decision
 

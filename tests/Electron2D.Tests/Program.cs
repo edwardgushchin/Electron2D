@@ -141,6 +141,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") == "1")
+{
+    PhysicsInterpolationNativeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPRITE") == "1")
 {
     SpriteTests.Run();
@@ -174,6 +180,7 @@ SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
+PhysicsInterpolationTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();

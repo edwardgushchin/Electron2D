@@ -13,14 +13,22 @@ public abstract partial class Viewport
     /// <summary>Gets or sets the transform from the default canvas to viewport coordinates.</summary>
     /// <value>Identity initially. Finite singular transforms are allowed for rendering.</value>
     /// <remarks>Applies before GlobalCanvasTransform. Changes affect retained drawing on the next submission,
-    /// without changing node transforms or emitting their notifications. Runtime state is not stored by PackedScene.</remarks>
+    /// without changing node transforms or emitting their notifications. A current physics-interpolated camera may
+    /// present a historical canvas transform while this property retains the latest logical value. Runtime state is
+    /// not stored by PackedScene.</remarks>
     /// <exception cref="ArgumentException">The transform is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is accessed off-owner, or changed during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform CanvasTransform
     {
         get { CheckTransformQuery(); return _canvasTransform; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Canvas transform must be finite.", nameof(value)); _canvasTransform = value; }
+        set
+        {
+            EnsureMutable();
+            if (!value.IsFinite()) throw new ArgumentException("Canvas transform must be finite.", nameof(value));
+            _canvasTransform = value;
+            if (Tree is { IsPhysicsInterpolationActive: true, IsInPhysicsFrame: false }) ResetCanvasInterpolationSnapshot();
+        }
     }
 
     /// <summary>Gets or sets the outer transform from viewport coordinates to the window's client coordinates.</summary>

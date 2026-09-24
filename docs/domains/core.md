@@ -132,6 +132,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 
 Built-in rendering settings now include canvas mip interpolation and viewport anisotropy defaults; their consumption and native evidence are documented in [project settings](../components/project-settings.md) and [canvas rendering](../components/canvas-rendering.md).
 
+The typed `physics/common/physics_interpolation` setting initializes each new SceneTree's 2D presentation policy. Scene and Rendering own its execution; Core continues to own only the typed setting and Engine's fixed-step fraction.
+
 [`JsonTests`](../../tests/Electron2D.Tests/JsonTests.cs) verifies document parsing, formatting, diagnostics, typed conversion, duplicate ownership and disposal; exact reference parity remains Partial.
 
 The same harness verifies project-setting registration, value snapshots, validators, metadata, overrides, changes/events, persistence, virtual paths, transaction rollback, concurrency, disposal, and Engine integration.

@@ -6,7 +6,7 @@ Last updated: 2026-09-24
 
 **Inherited By:** [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
-- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs)
+- **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
 
@@ -17,6 +17,8 @@ The neutral base of every object in a scene tree. Owns ordered children, paths, 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
 
 `ReplaceBy` swaps a node with a detached replacement at the same sibling index, then moves its children. The old node stays alive and detached. Group copying is optional; owned descendants and scene-local resources follow the replacement.
+
+Physics interpolation keeps logical transforms current while the renderer presents a pose between the two latest physics ticks. A node inherits the nearest ancestor's policy; a root defaults On and Control defaults Off. The tree-wide setting and current renderer decide whether presentation interpolation is active.
 
 ## Examples
 
@@ -49,6 +51,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public Node? Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the ancestor that owns this node for packed-scene storage. |
 | [`public bool UniqueNameInOwner { get; set; }`](#p-electron2d-node-uniquenameinowner) | Enables owner-scoped `%Name` lookup when this name is unclaimed. |
 | [`public Node? Parent { get; }`](#p-electron2d-node-parent) | Gets the direct parent. |
+| [`public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`](#p-electron2d-node-physicsinterpolationmode) | Inherits, enables or disables physics presentation interpolation. |
 | [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node. |
 | [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-node-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
 | [`public int PhysicsProcessPriority { get; set; }`](#p-electron2d-node-physicsprocesspriority) | Gets or sets this node's ascending physics-process order key. |
@@ -101,6 +104,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool HasNode(string path)`](#m-electron2d-node-hasnode-system-string) | Tests whether a node path resolves. |
 | [`public bool IsAncestorOf(Node node)`](#m-electron2d-node-isancestorof-electron2d-scenenode) | Determines whether this node is a strict ancestor of another node. |
 | [`public bool IsGreaterThan(Node node)`](#m-electron2d-node-isgreaterthan-electron2d-node) | Compares two active nodes in depth-first tree order. |
+| [`public bool IsPhysicsInterpolated()`](#m-electron2d-node-isphysicsinterpolated) | Gets the resolved node policy independent of the tree-wide switch. |
+| [`public bool IsPhysicsInterpolatedAndEnabled()`](#m-electron2d-node-isphysicsinterpolatedandenabled) | Gets whether this active node's presentation is currently interpolated. |
 | [`public bool IsInGroup(string group)`](#m-electron2d-node-isingroup-system-string) | Determines whether this node belongs to a case-sensitive group. |
 | [`public void MoveChild(Node child, int index)`](#m-electron2d-node-movechild-electron2d-node-system-int32) | Moves a direct child to another sibling index. |
 | [`protected virtual void OnEnterTree()`](#m-electron2d-node-onentertree) | Called synchronously when this node enters an active scene tree. |
@@ -121,6 +126,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public virtual void Reparent(Node newParent, bool keepGlobalTransform = true)`](#m-electron2d-node-reparent-electron2d-node-system-boolean) | Moves this non-root node under a new parent. |
 | [`public void ReplaceBy(Node node, bool keepGroups = false)`](#m-electron2d-node-replaceby-electron2d-node-system-boolean) | Replaces this node in its parent, transferring children and scene ownership. |
 | [`public void RequestReady()`](#m-electron2d-node-requestready) | Requests ready delivery the next time SceneTree attachment reaches the ready phase. |
+| [`public void ResetPhysicsInterpolation()`](#m-electron2d-node-resetphysicsinterpolation) | Resets this subtree's displayed pose to its current logical transforms. |
 | [`public void SetTranslationDomainInherited()`](#m-electron2d-node-settranslationdomaininherited) | Restores inherited translation domain lookup. |
 | [`protected override void ValidateDisposal()`](#m-electron2d-node-validatedisposal) | Validates caller-specific disposal preconditions before this caller attempts the disposal transition. |
 | [`protected override void ValidateMutation()`](#m-electron2d-node-validatemutation) | Validates that mutable base state may change at the current lifecycle point. |
@@ -168,6 +174,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public const int NotificationPostEnterTree = 27`](#f-electron2d-node-notificationpostentertree) | Identifies the notification sent after this node and its descendants finish entering a tree. |
 | [`public const int NotificationProcess = 17`](#f-electron2d-node-notificationprocess) | Identifies a process callback notification. |
 | [`public const int NotificationReady = 13`](#f-electron2d-node-notificationready) | Identifies the child-first notification sent when a node becomes ready. |
+| [`public const int NotificationResetPhysicsInterpolation = 2001`](#f-electron2d-node-notificationresetphysicsinterpolation) | Identifies a recursive presentation-history reset. |
 | [`public const int NotificationSceneInstantiated = 20`](#f-electron2d-node-notificationsceneinstantiated) | Identifies the notification sent to the root after a packed scene is completely instantiated. |
 | [`public const int NotificationTextServerChanged = 2018`](#f-electron2d-node-notificationtextserverchanged) | Identifies that the active text service changed. |
 | [`public const int NotificationTranslationChanged = 2010`](#f-electron2d-node-notificationtranslationchanged) | Identifies a notification that translated messages may have changed. |
@@ -293,6 +300,17 @@ Allows `%Name` lookup from this node's owner and nodes sharing that owner. False
 Gets the direct parent.
 
 **Value:** The owning parent, or `null` while detached.
+
+<a id="p-electron2d-node-physicsinterpolationmode"></a>
+### `public PhysicsInterpolationMode PhysicsInterpolationMode { get; set; }`
+
+Defaults to `Inherit`, with a root resolving to On. `Control` starts Off; a descendant may opt back in. Changing an attached enabled policy resets presentation history for the subtree. The selected mode is stored by PackedScene. This property does not change logical transforms or processing callbacks.
+
+**ArgumentOutOfRangeException:** The value is not Inherit, On or Off.
+
+**InvalidOperationException:** Attached mutation is off the owner thread or scene capture is active.
+
+**ObjectDisposedException:** The node is disposed.
 
 <a id="p-electron2d-node-physicsprocessdeltatime"></a>
 ### `public double PhysicsProcessDeltaTime { get; }`
@@ -450,6 +468,16 @@ Returns whether `path` resolves through the relative or absolute node-path rules
 ### `public bool IsGreaterThan(Node node)`
 
 Returns whether this node follows `node` in depth-first order. A descendant follows its ancestor; a node does not follow itself. Both nodes must be live in the same active tree, and the query must run on its owner thread. Sibling reordering immediately changes the result.
+
+<a id="m-electron2d-node-isphysicsinterpolated"></a>
+### `public bool IsPhysicsInterpolated()`
+
+Returns the inherited node policy without checking the tree-wide switch. An inherited root resolves On; Off on an ancestor propagates until a descendant selects On. Attached reads require the scene owner thread. Disposed nodes throw `ObjectDisposedException`.
+
+<a id="m-electron2d-node-isphysicsinterpolatedandenabled"></a>
+### `public bool IsPhysicsInterpolatedAndEnabled()`
+
+Returns true only while this node belongs to a scene tree with `SceneTree.PhysicsInterpolation` enabled and its inherited policy resolves On. Detached nodes return false. Attached reads require the scene owner thread; disposed nodes throw `ObjectDisposedException`.
 
 <a id="m-electron2d-node-gettreestring"></a>
 ### `public string GetTreeString()`
@@ -1079,6 +1107,11 @@ Requests ready delivery the next time SceneTree attachment reaches the ready pha
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
+<a id="m-electron2d-node-resetphysicsinterpolation"></a>
+### `public void ResetPhysicsInterpolation()`
+
+When this node is attached to a tree with interpolation enabled, resets its canvas pose and every descendant to their current logical transforms. Delivers `NotificationResetPhysicsInterpolation` parent-first, even to descendants that opt out of interpolation. Pause and application-suspend notifications also reset eligible subtrees. Detached or tree-wide-disabled calls have no effect. Attached calls require the owner thread; callback failures aggregate after later descendants are attempted.
+
 <a id="m-electron2d-node-validatedisposal"></a>
 ### `protected override void ValidateDisposal()`
 
@@ -1291,6 +1324,11 @@ Identifies a process callback notification.
 
 Identifies the child-first notification sent when a node becomes ready.
 
+<a id="f-electron2d-node-notificationresetphysicsinterpolation"></a>
+### `public const int NotificationResetPhysicsInterpolation = 2001`
+
+Identifies a recursive request to discard historical presentation poses while retaining current logical transforms.
+
 <a id="f-electron2d-node-notificationsceneinstantiated"></a>
 ### `public const int NotificationSceneInstantiated = 20`
 
@@ -1329,7 +1367,9 @@ The parent owns its children; SceneTree owns the active root. PackedScene captur
 
 [SceneHierarchyTests](../../tests/Electron2D.Tests/SceneHierarchyTests.cs) verifies inheritance, neutral API boundaries, direct custom CanvasItem transforms, mixed parenting, notifications, timer/tween scheduling, packed factories/state, deletion and failure continuation. [NodeReplacementTests](../../tests/Electron2D.Tests/NodeReplacementTests.cs) checks sibling order, groups, ownership, selected-scene clearing, scene-local resources, owner-thread rejection and callback failures. [NodeLocalizationTests](../../tests/Electron2D.Tests/NodeLocalizationTests.cs) checks inherited/explicit domains, automatic translation modes, root setting, entry/change notifications, callback failure continuation, thread affinity and packed state. Existing [runtime checks](../../tests/Electron2D.Tests/Program.cs) retain lifecycle, input, math and ownership coverage. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) verifies mixed-tree pixels and a direct CanvasItem drawing texture through both GPU and compatibility backends on Linux Wayland. This does not establish visual owner acceptance or other platforms.
 
-The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
+[PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks mode identities and inheritance, reset/pause, current versus presented transforms, Control opt-in, camera, packed state, owner guards and zero managed bytes over 128 warmed active ticks. [Native interpolation pixels](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) pass for a moving canvas item and default Idle camera on dummy compatibility and Linux Wayland compatibility/GPU. Physical timing and other platforms remain unverified.
+
+The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 
 ## Canvas membership integration
 

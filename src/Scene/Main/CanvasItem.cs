@@ -17,7 +17,7 @@ public abstract partial class CanvasItem : Node
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public abstract Transform GetTransform();
 
-    /// <summary>Returns the rendering transform, which may include a visual-only control offset.</summary>
+    /// <summary>Returns the current logical rendering transform, which may include a visual-only control offset.</summary>
     internal virtual Transform GetVisualTransform() => GetTransform();
 
     /// <summary>Returns the transform composed through the direct canvas-parent chain.</summary>
@@ -65,6 +65,7 @@ public abstract partial class CanvasItem : Node
     {
         EnsureMutable();
         PropagateGlobalTransformChanged();
+        if (Tree is { IsPhysicsInterpolationActive: true, IsInPhysicsFrame: false }) ResetInterpolationSnapshot();
         if (IsInsideTree && _notifyLocalTransformChanges) DispatchNotification(NotificationLocalTransformChanged);
     }
 
@@ -87,6 +88,12 @@ public abstract partial class CanvasItem : Node
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        if (what == NotificationResetPhysicsInterpolation)
+        {
+            ResetInterpolationSnapshot();
+            base.OnNotification(what);
+            return;
+        }
         if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
         {
             base.OnNotification(what);
@@ -117,6 +124,7 @@ public abstract partial class CanvasItem : Node
     {
         if (!entering)
         {
+            _interpolationValid = false;
             Tree!.CancelTransformNotification(this);
             _globalTransformInvalid = true;
             try { ExitCanvas(); }

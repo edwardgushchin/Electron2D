@@ -1,12 +1,12 @@
 # Viewport
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Node](Node.md)
 
 **Inherited By:** [Window](Window.md)
 
-- **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs)
+- **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs), [`src/Scene/Main/Viewport.PhysicsInterpolation.cs`](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
@@ -17,6 +17,8 @@ Provides the root window's client rectangle and scene input boundary.
 Only a root `Window` is currently supported. Offscreen render targets, content scaling, and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies are connected to the root renderer. Incoming window input is converted to viewport coordinates.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Current Camera updates notify attached [Parallax](Parallax.md) nodes of the adjusted screen origin. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. Rendering and multiwindow behavior remain incomplete; see the [coverage page](../coverage/classes/Viewport.md).
+
+A current physics-interpolated Camera retains previous and current `CanvasTransform` values for the renderer. Public `CanvasTransform`, input conversion and camera logical queries keep the latest value. Camera switching, reset and scene-wide policy changes discard the historical presentation pose.
 
 ## Examples
 
@@ -56,6 +58,8 @@ window.GlobalCanvasTransform = new Transform(new Vector2(2, 0), new Vector2(0, 2
 `public Transform CanvasTransform { get; set; }`
 
 Identity by default. Maps the default canvas into viewport coordinates. Rendering composes framebuffer scale, final transform, CanvasTransform, then node/drawing transforms. Neutral parents and TopLevel do not remove the viewport transforms. Changes affect the next submission without rerecording retained commands or changing logical node transforms/notifications.
+
+When a current camera uses physics interpolation, this property still returns its current logical transform; the renderer interpolates only its presentation copy. A caller assignment outside a physics tick resets that history.
 
 ### GlobalCanvasTransform
 
@@ -164,6 +168,7 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 | --- | --- |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling/pixel-snapping properties and runtime canvas transforms to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
+| [`protected override void OnNotification(int what)`](#onnotification) | Resets camera presentation history on the inherited interpolation notification. |
 | [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
 | [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the root viewport's borrowed focused control, or null. |
 | [`public abstract Rect2 GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
@@ -186,6 +191,11 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 Extends Node descriptors with three typed stored sampling properties, two stored pixel-snapping flags, and two non-stored runtime canvas transforms. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
 
 ## Method Descriptions
+
+<a id="onnotification"></a>
+### `protected override void OnNotification(int what)`
+
+Forwards inherited node notifications and resets the camera presentation snapshot before delivering `NotificationResetPhysicsInterpolation` to derived implementations. This preserves the current logical canvas transform.
 
 <a id="dispose"></a>
 ### `protected override void Dispose(bool disposing)`

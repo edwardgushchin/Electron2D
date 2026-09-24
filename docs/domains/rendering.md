@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Responsibility
 
@@ -43,9 +43,9 @@ Pixel-snapping integration is described by [the canvas component](../components/
 
 Root viewport canvas/final transforms are connected to retained rendering, scene input localization and CanvasItem coordinate/pointer queries. Logical node transforms stay unchanged. [Canvas coordinate integration](../components/canvas-rendering.md#viewport-coordinates) records ownership, singular/overflow behavior, runtime-only properties and Linux Wayland/dummy verification. Camera and CanvasLayer are integrated; content scaling and nested/offscreen viewports remain absent.
 
-[Camera tracking](../components/canvas-rendering.md#camera-tracking) connects Camera : Entity to viewport selection, idle/physics updates, zoom/rotation, drag/limit policies and smoothing. It reuses scene ownership and canvas/input transforms; editor preview and inherited physics interpolation remain absent.
+[Camera tracking](../components/canvas-rendering.md#camera-tracking) connects Camera : Entity to viewport selection, idle/physics updates, zoom/rotation, drag/limit policies and smoothing. It reuses scene ownership and canvas/input transforms; inherited physics interpolation now presents its viewport history on both backends, while editor preview remains absent.
 
-[Parallax scrolling](../components/canvas-rendering.md#parallax-scrolling) uses camera-published screen origins and repeats retained canvas entries by a local basis offset. It keeps draw callbacks and scene nodes single-instance; inherited physics interpolation remains absent.
+[Parallax scrolling](../components/canvas-rendering.md#parallax-scrolling) uses camera-published screen origins and repeats retained canvas entries by a local basis offset. It keeps draw callbacks and scene nodes single-instance; the combined parallax/interpolation path has not had a dedicated native pixel audit.
 
 [Canvas layers](../components/canvas-rendering.md#canvas-layers) provide independent drawing groups, transforms, visibility and viewport following through CanvasLayer : Node and CanvasItem.GetCanvasLayerNode. Opaque canvas identities and independent viewport rendering remain separate dependencies.
 

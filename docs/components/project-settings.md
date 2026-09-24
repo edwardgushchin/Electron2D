@@ -50,6 +50,8 @@ The root renderer samples `RenderingMethod`, `RenderingFallback` and `DefaultCle
 
 Implemented and covered by the executable harness. The process singleton is registered in Engine; Engine timing properties read active project-setting overrides and write their typed base definitions. Two locale and nine pseudolocalization settings are sampled at Engine startup and their eight transform options can be reapplied by TranslationServer during a run; the enabled switch remains a runtime choice until the next startup. Built-in features include build configuration, managed runtime, current OS when recognized, and process architecture. Custom features are runtime-managed.
 
+The typed `physics/common/physics_interpolation` setting defaults false and initializes each new SceneTree. An active tree retains its own flag when the setting changes; callers can set `SceneTree.PhysicsInterpolation` immediately. Its renderer integration affects displayed 2D transforms and camera scroll without changing logical values.
+
 ## Exclusions and deferred integration
 
 - Global script-class discovery requires a scripting domain.
@@ -60,7 +62,7 @@ Implemented and covered by the executable harness. The process singleton is regi
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `LocalizationProjectSettingsTests` verifies typed locale and pseudolocalization defaults, project-file round trip, startup sampling, and reload; `WindowRuntimeTests` checks native startup sampling with the SDL dummy driver. `CanvasSamplingTests` checks the sampling keys and viewport construction; native sampling checks belong to [canvas rendering](canvas-rendering.md). Temporary directory-backed projects are used; resource packs, editor UI and crash-time filesystem behavior remain untested.
+`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `LocalizationProjectSettingsTests` verifies typed locale and pseudolocalization defaults, project-file round trip, startup sampling, and reload; `WindowRuntimeTests` checks native startup sampling with the SDL dummy driver. `CanvasSamplingTests` checks the sampling keys and viewport construction; `PhysicsInterpolationTests` checks tree construction sampling and runtime changes, with native pixels in [canvas rendering](canvas-rendering.md#physics-interpolation). Temporary directory-backed projects are used; resource packs, editor UI and crash-time filesystem behavior remain untested.
 
 ## Decisions
 

@@ -28,7 +28,9 @@ public sealed partial class SceneTree : MainLoop
         new PropertyDescriptor<SceneTree, ulong>(nameof(ProcessFrameCount), tree => tree.ProcessFrameCount),
         new PropertyDescriptor<SceneTree, ulong>(nameof(PhysicsFrameCount), tree => tree.PhysicsFrameCount),
         new PropertyDescriptor<SceneTree, int>(nameof(NodeCount), tree => tree.NodeCount),
-        new PropertyDescriptor<SceneTree, bool>(nameof(Paused), tree => tree.Paused, (tree, value) => tree.Paused = value, _ => false)
+        new PropertyDescriptor<SceneTree, bool>(nameof(Paused), tree => tree.Paused, (tree, value) => tree.Paused = value, _ => false),
+        new PropertyDescriptor<SceneTree, bool>(nameof(PhysicsInterpolation), tree => tree.PhysicsInterpolation,
+            (tree, value) => tree.PhysicsInterpolation = value, _ => false)
     ]);
 
     private readonly object _workGate = new();
@@ -110,6 +112,7 @@ public sealed partial class SceneTree : MainLoop
         try
         {
             root.InitializeRootAutoTranslateMode(ProjectSettings.Instance.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
+            _physicsInterpolation = ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsInterpolation);
             if (attachToEngine)
                 Engine.Instance.AttachConstructingTree(this);
             Initialize();
@@ -1164,10 +1167,12 @@ public sealed partial class SceneTree : MainLoop
             throw new ArgumentOutOfRangeException(nameof(delta), delta, "Frame delta must be finite and non-negative.");
 
         BeginExecution();
+        _inPhysicsFrame = physics;
         List<Exception>? errors = null;
 
         try
         {
+            if (physics && _physicsInterpolation) CapturePhysicsInterpolation(start: true, ref errors);
             if (physics)
                 _physicsFrameCount++;
             else
@@ -1214,9 +1219,11 @@ public sealed partial class SceneTree : MainLoop
             ProcessTimers(delta, unscaledDelta, physics, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
+            if (physics && _physicsInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
         }
         finally
         {
+            _inPhysicsFrame = false;
             _scheduledNodes.Clear();
             _scheduleTraversal.Clear();
             _timerSnapshot.Clear();

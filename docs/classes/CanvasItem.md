@@ -6,7 +6,7 @@ Last updated: 2026-09-24
 
 **Inherited By:** [Entity](Entity.md), [Control](Control.md)
 
-- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs)
+- **Source:** [CanvasItem.cs](../../src/Scene/Main/CanvasItem.cs), [CanvasItem.PhysicsInterpolation.cs](../../src/Scene/Main/CanvasItem.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class CanvasItem : Node`
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-24
 
 The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
 
-The renderer normally uses the same local transform as public logical queries. Control can add a visual-only offset matrix through an internal render-transform hook; `GetGlobalTransform` and GUI hit testing continue to use its logical `GetTransform`. The visual matrix also reaches rendered descendants and Y-sorted traversal.
+The renderer normally uses the same local transform as public logical queries. Control can add a visual-only offset matrix through an internal render-transform hook; `GetGlobalTransform` and GUI hit testing continue to use its logical `GetTransform`. When physics interpolation is active, the renderer instead blends each eligible local visual transform between fixed ticks using `Engine.PhysicsInterpolationFraction`. Logical queries and input retain the latest transform; the presentation matrix reaches descendants and Y-sorted traversal. First attachment, reset, detach and process-time edits discard stale history.
 
 Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
 
@@ -916,7 +916,7 @@ Drawing commands retain borrowed resources and are valid during NotificationDraw
 
 [CanvasLifecycleTests](../../tests/Electron2D.Tests/CanvasLifecycleTests.cs) verifies lifecycle/visibility/recording order, manual notifications, reattachment, callback failures and recording recovery. Six-frame pixel sequences on Linux Wayland GPU/compatibility and dummy/software verify all three drawing stages plus redraw on showing, reattachment and TopLevel rebinding. The complete renderer allocation check still passes.
 
-The hierarchy is implemented; complete reference API parity is not claimed. Missing GUI, canvas policies, rendering primitives, interpolation, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
+The hierarchy is implemented; complete reference API parity is not claimed. [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks logical/presentation separation, reset and zero warmed managed allocations over 128 active ticks; [native pixels](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) pass on Linux dummy compatibility and Wayland compatibility/GPU. Missing GUI, canvas policies, rendering primitives, scene-file authoring and other capabilities remain classified per member in [coverage](../coverage/index.md). No inert compatibility members are added.
 
 ## Relevant decisions
 

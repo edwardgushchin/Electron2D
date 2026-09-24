@@ -209,6 +209,11 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<bool> RootNodeAutoTranslate { get; } =
         new("internationalization/rendering/root_node_auto_translate", true);
 
+    /// <summary>Determines whether new scene trees interpolate 2D canvas transforms between physics ticks.</summary>
+    /// <value>False by default; sampled when a SceneTree is constructed.</value>
+    public static ProjectSetting<bool> PhysicsInterpolation { get; } =
+        new("physics/common/physics_interpolation", false);
+
     /// <summary>Enables pseudolocalization when an application loop starts.</summary>
     /// <value>The permanent typed project setting, false by default.</value>
     public static ProjectSetting<bool> PseudolocalizationEnabled { get; } =
@@ -351,6 +356,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
+        RegisterInternal(PhysicsInterpolation, isBasic: false);
         RegisterInternal(PseudolocalizationEnabled, isBasic: false);
         RegisterInternal(PseudolocalizationReplaceWithAccents, isBasic: false);
         RegisterInternal(PseudolocalizationDoubleVowels, isBasic: false);
@@ -1713,6 +1719,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||
+        ReferenceEquals(setting, PhysicsInterpolation) ||
         ReferenceEquals(setting, PseudolocalizationEnabled) ||
         ReferenceEquals(setting, PseudolocalizationReplaceWithAccents) ||
         ReferenceEquals(setting, PseudolocalizationDoubleVowels) ||

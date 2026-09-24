@@ -1,6 +1,6 @@
 # Camera
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Declaration: `public partial class Camera : Entity`
 - Sources: [Camera.cs](../../src/Scene/2D/Camera.cs), [Camera.Tracking.cs](../../src/Scene/2D/Camera.Tracking.cs)
@@ -12,6 +12,8 @@ Last updated: 2026-09-23
 Follows a spatial node by changing the default canvas transform of its containing Viewport. It draws no geometry itself. The first enabled camera entering an unoccupied viewport becomes current. MakeCurrent switches explicitly; disabling/removing the current camera chooses the first enabled attached camera in current tree order. That replacement calculates its view at its next update. When none remains, CanvasTransform resets to identity. GlobalCanvasTransform is independent.
 
 An enabled camera is not necessarily current. Hidden cameras still track. Internal idle/physics processing is independent of ProcessEnabled/PhysicsProcessEnabled, but follows ProcessMode and tree pause. All cameras receive their selected lane so a later switch has a current delta. Only the current camera changes the viewport. Without position smoothing, inherited transform notifications update the view when the scene delivers them, including in physics mode; the constructor enables NotifyTransformChanges. A transform setter alone queues this update. ForceUpdateTransform consumes a pending notification synchronously, while ForceUpdateScroll explicitly updates tracking regardless of pending notification state. Disabling that notification policy leaves frame-driven updates active.
+
+When `SceneTree.PhysicsInterpolation` and this node's inherited policy are On, tracking samples camera scroll on physics ticks even if `ProcessCallback` remains Idle. The renderer interpolates previous and current viewport canvas transforms; `CanvasTransform`, camera position and input coordinates stay at the latest logical pose. `ResetPhysicsInterpolation`, camera switching and policy changes clear the historical view.
 
 The camera uses global position and rotation from Entity, including parent and TopLevel behavior. Its node scale/skew do not multiply Zoom; they can affect the inherited global position/rotation. Camera movement does not mutate other node transforms. Use GetTargetPosition for the drag/limit-adjusted destination, GetScreenCenterPosition for the rendered center and GetScreenRotation for the rendered angle; they are cached, not extra tracking updates.
 
@@ -198,7 +200,7 @@ Gets or sets the internal frame lane for tracking.
 
 **Value:** CameraProcessCallback.Idle initially.
 
-**Remarks:** Selects the internal process lane, independently of the public processing flags.
+**Remarks:** Selects the internal process lane, independently of the public processing flags. An interpolated camera samples scroll on physics ticks even when this stored choice is Idle; the renderer uses the tick history for presentation.
 
 **ArgumentOutOfRangeException:** The value is nonfinite or outside the documented contract.
 
@@ -691,4 +693,4 @@ All 24 camera configuration properties are stored. CustomViewport is not stored.
 
 [CameraRenderingTests](../../tests/Electron2D.Tests/CameraRenderingTests.cs) checks native pixels and injected pointer mapping at six stages: centered view, zoom/follow, rotation, explicit camera switch, automatic handoff and identity after disabling all cameras. Retained draw commands are recorded once. Linux Wayland GPU/compatibility and dummy software passed, including both HLSL and GLSL material variants on GPU. The existing warmed renderer allocation check includes an active camera. Other platforms, physical-input/visual acceptance and large-scene performance are unverified.
 
-EditorDrawScreen/EditorDrawLimits/EditorDrawDragMargin require a real edited-scene preview mode, editor viewport ownership and its redraw/settings integration. They remain absent; EditedSceneRoot currently selects warning scope and explicitly does not enable editor behavior. Camera physics interpolation requires the still-absent inherited node interpolation policy/reset path and render-time interpolation integration. Implement these in the first corresponding editor/interpolation slices. CanvasLayer following, [Parallax](Parallax.md) and [ParallaxBackground](ParallaxBackground.md) camera updates are implemented for the root Window. Offscreen/nested viewports and multiple native windows remain separate dependencies. No inert camera properties stand in for them.
+EditorDrawScreen/EditorDrawLimits/EditorDrawDragMargin require a real edited-scene preview mode, editor viewport ownership and its redraw/settings integration. They remain absent; EditedSceneRoot currently selects warning scope and explicitly does not enable editor behavior. [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks camera policy/reset and logical versus presented transforms; [native pixel checks](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) exercise the default Idle camera on Linux dummy compatibility and Wayland compatibility/GPU. CanvasLayer following, [Parallax](Parallax.md) and [ParallaxBackground](ParallaxBackground.md) camera updates are implemented for the root Window. Offscreen/nested viewports and multiple native windows remain separate dependencies. No inert camera properties stand in for them.

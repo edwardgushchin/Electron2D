@@ -5,7 +5,7 @@ Last updated: 2026-09-24
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Review 1230 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 855 missing declarations in already represented type families; split each type by its documented dependency trigger.
+2. Complete 839 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -15,17 +15,17 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
-| [Node](classes/Node.md) | 78 | 68 |
+| [Node](classes/Node.md) | 66 | 68 |
 | [Window](classes/Window.md) | 42 | 34 |
-| [Control](classes/Control.md) | 37 | 60 |
+| [Control](classes/Control.md) | 35 | 60 |
 | [Object](classes/Object.md) | 34 | 22 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
 | [SceneState](classes/SceneState.md) | 12 | 16 |
 | [Image](classes/Image.md) | 11 | 71 |
-| [ProjectSettings](classes/ProjectSettings.md) | 10 | 44 |
-| [SceneTree](classes/SceneTree.md) | 9 | 19 |
+| [ProjectSettings](classes/ProjectSettings.md) | 9 | 44 |
+| [SceneTree](classes/SceneTree.md) | 8 | 19 |
 | [Viewport](classes/Viewport.md) | 5 | 15 |
 | [Resource](classes/Resource.md) | 4 | 21 |
 | [Material](classes/Material.md) | 3 | 0 |
