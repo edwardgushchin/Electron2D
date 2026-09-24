@@ -1,6 +1,6 @@
 # InputEventScreenTouch
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventFromWindow](InputEventFromWindow.md)
 
@@ -17,9 +17,9 @@ Last updated: 2026-09-23
 Represents one touch contact beginning, ending, or being canceled.
 
 - Responsibility: begin/end/cancel state for one touch contact.
-- Complete declared API: signed `Index`, finite `Position`, `Pressed`, `Canceled`, `DoubleTap`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All five declared values are stored typed descriptors.
+- Complete declared API: signed `Index`, source `Position`, `Pressed`, `Canceled`, `DoubleTap`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All five declared values are stored typed descriptors.
 - Transform/lifecycle: returns an independent duplicate with transformed position. A canceled contact is neither pressed nor released. Caller owns/disposes event resources.
-- Errors/threading/verification: non-finite position or disposed access fails; signed index storage and copying, state, text, and transform are covered. Native touch generation and emulation begin with the SDL event-adapter trigger.
+- Errors/threading/verification: caller-supplied position values are retained; `XformedBy` rejects non-finite derived coordinates. Disposed access fails. Managed checks cover signed index, cancellation, double-tap state, copying and transform; the Wayland SDL test covers contact indexes, press/cancel/release and invalid-event recovery. The adapter does not detect native double taps; that remains a separate touch-recognition obligation.
 
 ## Examples
 
@@ -81,11 +81,10 @@ Gets or sets the touch-contact index.
 
 Gets or sets the touch position in the current local coordinate space.
 
-**Value:** A finite position in pixels.
+**Value:** The source position in pixels, retained without normalization. A requested positional transform rejects non-finite coordinates.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

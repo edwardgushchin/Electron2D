@@ -72,13 +72,13 @@ public sealed partial class DisplayServer
     /// <remarks>
     /// The host calls this on the opening thread before advancing each Engine frame. Each input event is owned and
     /// disposed by this server after synchronous delivery; handlers must duplicate an event they need to retain.
-    /// Malformed native pointer values are rejected before mouse button or timestamp state changes.
+    /// Malformed native pointer and touch values are rejected before tracked button, contact or timestamp state changes.
     /// Callback failures are collected while later queued events continue, then thrown together after the queue drains.
     /// Re-entry is rejected. No rendering or game frame is advanced here.
     /// </remarks>
     /// <exception cref="ObjectDisposedException">The server has been disposed.</exception>
     /// <exception cref="InvalidOperationException">Called off the opening thread, re-entered, or called while the active main loop cannot accept input. Rejected calls leave the native queue untouched.</exception>
-    /// <exception cref="AggregateException">One or more native pointer values or game callbacks failed; later queued events still run.</exception>
+    /// <exception cref="AggregateException">One or more native pointer/touch values or game callbacks failed; later queued events still run.</exception>
     public void ProcessEvents() => ProcessEventsCore(dropInput: false);
 
     /// <summary>Processes native window events while discarding pending keyboard, pointer, touch, and text input.</summary>
@@ -582,22 +582,31 @@ public sealed partial class DisplayServer
     private void DispatchTouch(SDL.TouchFingerEvent source)
     {
         var id = (source.TouchID, source.FingerID);
-        if (source.Type == SDL.EventType.FingerDown)
-        {
-            var index = _freeTouchIndexes.Count > 0 ? _freeTouchIndexes.Pop() : checked(_nextTouchIndex++);
-            _touchContacts.Add(id, new TouchContact(index, source.Timestamp));
-        }
-        if (!_touchContacts.TryGetValue(id, out var contact))
+        var down = source.Type == SDL.EventType.FingerDown;
+        var active = _touchContacts.TryGetValue(id, out var contact);
+        if (down && active)
+            throw new InvalidOperationException("A touch contact cannot begin twice.");
+        if (!down && !active)
             return;
 
         var size = WindowGetSize();
         var position = new Vector2(source.X * size.X, source.Y * size.Y);
-        var pressure = float.IsFinite(source.Pressure) ? Math.Clamp(source.Pressure, 0f, 1f) : 0f;
+        if (!position.IsFinite())
+            throw new ArgumentOutOfRangeException(nameof(source), "Native touch coordinates must be finite.");
+        if (down)
+        {
+            var index = _freeTouchIndexes.Count > 0 ? _freeTouchIndexes.Pop() : checked(_nextTouchIndex++);
+            contact = new TouchContact(index, source.Timestamp);
+            _touchContacts.Add(id, contact);
+        }
         if (source.Type == SDL.EventType.FingerMotion)
         {
             var relative = new Vector2(source.DX * size.X, source.DY * size.Y);
             var dt = source.Timestamp > contact.Timestamp
                 ? (source.Timestamp - contact.Timestamp) / 1_000_000_000f : 0f;
+            var velocity = dt > 0f ? relative / dt : Vector2.Zero;
+            if (!relative.IsFinite() || !velocity.IsFinite() || !float.IsFinite(source.Pressure))
+                throw new ArgumentOutOfRangeException(nameof(source), "Native touch movement and pressure must be finite.");
             _touchContacts[id] = contact with { Timestamp = source.Timestamp };
             using var @event = new InputEventScreenDrag
             {
@@ -607,9 +616,9 @@ public sealed partial class DisplayServer
                 Position = position,
                 Relative = relative,
                 ScreenRelative = relative,
-                Velocity = dt > 0f ? relative / dt : Vector2.Zero,
-                ScreenVelocity = dt > 0f ? relative / dt : Vector2.Zero,
-                Pressure = pressure,
+                Velocity = velocity,
+                ScreenVelocity = velocity,
+                Pressure = Math.Clamp(source.Pressure, 0f, 1f),
             };
             Input.Instance.ParseInputEvent(@event);
             return;

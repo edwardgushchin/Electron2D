@@ -4,7 +4,7 @@ Last updated: 2026-09-24
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1699 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1695 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
 2. Complete 969 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -52,11 +52,11 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [JSON](classes/JSON.md) | 0 | 9 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
-| [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 8 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [PropertyTweener](classes/PropertyTweener.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
+| [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
 | [RegExMatch](classes/RegExMatch.md) | 0 | 6 |
 | [Shader](classes/Shader.md) | 0 | 6 |
 | [ImageTexture](classes/ImageTexture.md) | 0 | 5 |
@@ -64,7 +64,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
 | [InputEventAction](classes/InputEventAction.md) | 0 | 4 |
-| [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 4 |
 | [Noise](classes/Noise.md) | 0 | 4 |
 | [InputEventJoypadButton](classes/InputEventJoypadButton.md) | 0 | 3 |
 | [MethodTweener](classes/MethodTweener.md) | 0 | 3 |
@@ -73,6 +72,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | 0 | 2 |
 | [InputEventMouse](classes/InputEventMouse.md) | 0 | 2 |
+| [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
 | [AwaitTweener](classes/AwaitTweener.md) | 0 | 1 |
 | [CallbackTweener](classes/CallbackTweener.md) | 0 | 1 |
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |

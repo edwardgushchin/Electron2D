@@ -40,6 +40,8 @@ Native key events exclude their own modifier family from the event mask while pr
 
 Mouse motion, button and wheel translation validates finite native coordinates, derived velocity and wheel amounts before updating tracked button/timestamp state. The pump reports malformed events after continuing to later queue entries. A focused Wayland pointer run checks invalid-event continuation, fractional wheel factor, timed velocity and captured-mode zero velocity at pixel density one; fractional density and physical pen hardware remain unverified.
 
+Touch translation validates finite native contact position, movement, pressure and velocity before contact/index/timestamp mutation. A duplicate beginning rejects without consuming an index; invalid motion/end leaves the contact available. A focused synthetic Wayland queue check verifies later valid drag/cancel and index reuse. Native double-tap and pen data remain absent.
+
 Screen selection for the current window is a no-op. On desktop drivers with global coordinates, changing screens preserves a floating window's relative offset with work-area clamping and preserves maximized or fullscreen intent through native mode-aware transitions. Wayland cannot request relocation of a top-level window to another display.
 
 On Wayland, output positions retain compositor coordinates and screen dimensions use physical pixels recovered from SDL mode pixel density. The screen rectangle can therefore combine a compositor position with a physical size, matching the native output contract rather than a uniform logical desktop rectangle.

@@ -29,6 +29,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINTER_PIXELS") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
+{
+    using var display = DisplayServer.Open("Touch input checks", new Vector2I(320, 240));
+    DisplayServerTouchNativeTests.Run(display);
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INPUT_POINTER") == "1")
 {
     InputPointerNativeTests.Run();
@@ -4531,6 +4538,38 @@ static void VerifyInput()
             Require(invalidTouch.Index == int.MinValue && copiedTouch.Index == int.MinValue &&
                     signedDrag.Index == int.MinValue && copiedDrag.Index == int.MinValue,
                 "Touch and drag indexes must preserve signed values across duplication.");
+            invalidTouch.Position = new Vector2(float.NaN, float.PositiveInfinity);
+            invalidTouch.Pressed = true;
+            invalidTouch.Canceled = true;
+            invalidTouch.DoubleTap = true;
+            using var copiedTouchState = (InputEventScreenTouch)invalidTouch.Duplicate();
+            Require(float.IsNaN(copiedTouchState.Position.X) && float.IsPositiveInfinity(copiedTouchState.Position.Y) &&
+                    copiedTouchState.Canceled && copiedTouchState.DoubleTap &&
+                    !copiedTouchState.Pressed && !copiedTouchState.IsReleased(),
+                "Touch values retain source coordinates and canceled press state across duplication.");
+            invalidTouch.Canceled = false;
+            Require(invalidTouch.Pressed && invalidTouch.IsPressed(),
+                "Clearing touch cancellation restores the stored press.");
+            Expect<ArgumentOutOfRangeException>(() => invalidTouch.XformedBy(Transform.Identity),
+                "A non-finite touch position is rejected only at the positional transform boundary.");
+
+            signedDrag.PenInverted = true;
+            signedDrag.Position = new Vector2(float.NaN, 3f);
+            signedDrag.Pressure = 1.5f;
+            signedDrag.Relative = new Vector2(float.PositiveInfinity, 4f);
+            signedDrag.ScreenRelative = new Vector2(float.NegativeInfinity, 5f);
+            signedDrag.Velocity = new Vector2(float.NaN, 6f);
+            signedDrag.ScreenVelocity = new Vector2(float.PositiveInfinity, 7f);
+            signedDrag.Tilt = new Vector2(2f, float.NaN);
+            using var copiedDragState = (InputEventScreenDrag)signedDrag.Duplicate();
+            Require(copiedDragState.PenInverted && copiedDragState.Pressure == 1.5f &&
+                    float.IsNaN(copiedDragState.Position.X) && float.IsPositiveInfinity(copiedDragState.Relative.X) &&
+                    float.IsNegativeInfinity(copiedDragState.ScreenRelative.X) && float.IsNaN(copiedDragState.Velocity.X) &&
+                    float.IsPositiveInfinity(copiedDragState.ScreenVelocity.X) && copiedDragState.Tilt.X == 2f &&
+                    float.IsNaN(copiedDragState.Tilt.Y),
+                "Drag values retain source pen and motion components across duplication.");
+            Expect<ArgumentOutOfRangeException>(() => signedDrag.XformedBy(Transform.Identity),
+                "A non-finite drag position is rejected only at the positional transform boundary.");
         }
 
         using (var mouseButton = new InputEventMouseButton())
@@ -4948,6 +4987,25 @@ static void VerifyInput()
                     float.IsPositiveInfinity(firstOverflowMotion.Relative.X) &&
                     float.IsPositiveInfinity(firstOverflowMotion.ScreenRelative.X),
                 "Accumulation retains source arithmetic overflow without altering the payload contract.");
+        }
+
+        using (var firstOverflowDrag = new InputEventScreenDrag
+        {
+            Index = 3,
+            Relative = new Vector2(float.MaxValue, 0f),
+            ScreenRelative = new Vector2(float.MaxValue, 0f),
+        })
+        using (var secondOverflowDrag = new InputEventScreenDrag
+        {
+            Index = 3,
+            Relative = new Vector2(float.MaxValue, 0f),
+            ScreenRelative = new Vector2(float.MaxValue, 0f),
+        })
+        {
+            Require(firstOverflowDrag.Accumulate(secondOverflowDrag) &&
+                    float.IsPositiveInfinity(firstOverflowDrag.Relative.X) &&
+                    float.IsPositiveInfinity(firstOverflowDrag.ScreenRelative.X),
+                "Drag accumulation retains source arithmetic overflow for one contact.");
         }
 
         using (var firstDrag = new InputEventScreenDrag

@@ -1,6 +1,6 @@
 # InputEventScreenDrag
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventFromWindow](InputEventFromWindow.md)
 
@@ -18,9 +18,9 @@ Represents movement of one active touch or stylus contact.
 
 - Responsibility: movement/stylus data for one active touch contact.
 - Complete declared API: `Index`, `PenInverted`, `Position`, `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All nine declared values are stored typed descriptors.
-- Accumulation/transform: equal contact indexes merge atomically after validating summed deltas, adopt newest position/velocities, and emit one change notification. Only local position/relative/velocity transform; screen values remain unchanged.
-- Invariants/errors: index is a signed identifier; vectors finite; pressure `[0,1]`; tilt components `[-1,1]`; disposed access fails.
-- Verification: boundary validation, compatible/incompatible accumulation, duplication, and coordinate transforms are covered.
+- Accumulation/transform: equal contact indexes merge atomically, retain arithmetic overflow in both relative sums, adopt newest position/velocities, and emit one change notification. Only local position/relative/velocity transform; screen values remain unchanged.
+- Invariants/errors: index is a signed identifier; source vectors, pressure and tilt are retained without range checks; positional transforms still require finite derived local coordinates, and disposed access fails.
+- Verification: managed checks cover signed index, non-finite copies, accumulation overflow, compatible/incompatible events and transforms. A focused Wayland SDL test covers contact indexes, finite native input recovery, pressure, physical drag deltas and timestamp velocity; native pen eraser/tilt delivery and nested viewport scaling remain absent.
 
 ## Examples
 
@@ -99,11 +99,10 @@ Gets or sets whether the eraser end of a stylus generated the event.
 
 Gets or sets the drag position in the current local coordinate space.
 
-**Value:** A finite position in pixels.
+**Value:** The source position in pixels, retained without normalization.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -112,11 +111,10 @@ Gets or sets the drag position in the current local coordinate space.
 
 Gets or sets stylus pressure.
 
-**Value:** A finite value from zero through one.
+**Value:** The source pressure, normally from zero through one; arbitrary values are retained.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is outside zero through one, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -125,11 +123,10 @@ Gets or sets stylus pressure.
 
 Gets or sets local drag movement since the previous event.
 
-**Value:** A finite, content-scaled delta in pixels.
+**Value:** The source content-scaled delta in pixels.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -138,11 +135,10 @@ Gets or sets local drag movement since the previous event.
 
 Gets or sets unscaled screen-space movement since the previous event.
 
-**Value:** A finite delta in screen pixels that is not transformed.
+**Value:** The source delta in screen pixels that is not transformed.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -151,11 +147,10 @@ Gets or sets unscaled screen-space movement since the previous event.
 
 Gets or sets local drag velocity.
 
-**Value:** A finite content-scaled velocity in pixels per second.
+**Value:** The source content-scaled velocity in pixels per second.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -164,11 +159,10 @@ Gets or sets local drag velocity.
 
 Gets or sets unscaled screen-space drag velocity.
 
-**Value:** A finite velocity in screen pixels per second that is not transformed.
+**Value:** The source velocity in screen pixels per second that is not transformed.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
@@ -177,11 +171,10 @@ Gets or sets unscaled screen-space drag velocity.
 
 Gets or sets stylus tilt.
 
-**Value:** Finite X and Y components, each from minus one through one.
+**Value:** The source tilt components, normally from minus one through one; arbitrary values are retained.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: A component is outside the documented range, NaN, or infinite.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
