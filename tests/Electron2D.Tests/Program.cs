@@ -9068,6 +9068,11 @@ static void VerifyTweens()
             (int)Tween.TweenPauseMode.Process == 2 && (int)Tween.TransitionType.Spring == 11 &&
             (int)Tween.EaseType.OutIn == 3,
         "Tween process, pause, transition, and easing identities must remain stable.");
+    Require(Enum.GetValues<Tween.TweenProcessMode>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 2)) &&
+            Enum.GetValues<Tween.TweenPauseMode>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 3)) &&
+            Enum.GetValues<Tween.TransitionType>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 12)) &&
+            Enum.GetValues<Tween.EaseType>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 4)),
+        "Every public tween policy and curve identity must be contiguous and match its pinned numeric value.");
     Require(DoubleNearlyEqual(Tween.InterpolateValue(10d, 10d, 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.InOut), 15d) &&
             Tween.InterpolateValue(new Vector2(1f, 2f), new Vector2(2f, 4f), 1d, 1d,
@@ -9161,6 +9166,33 @@ static void VerifyTweens()
     Require(eventLog[^1] == "after-parallel" && !parallel.IsValid(),
         "Chain must restore sequential appending after a parallel group.");
 
+    var oneShotLog = new List<string>();
+    var oneShot = tree.CreateTween();
+    oneShot.TweenInterval(1d);
+    oneShot.Parallel().TweenCallback(() => oneShotLog.Add("paired"));
+    oneShot.TweenCallback(() => oneShotLog.Add("later"));
+    tree.ProcessFrame(0.5d);
+    Require(oneShotLog.SequenceEqual(["paired"]), "Parallel must join only the next append.");
+    tree.ProcessFrame(0.5d);
+    tree.ProcessFrame(0.1d);
+    Require(oneShotLog.SequenceEqual(["paired", "later"]) && !oneShot.IsValid(),
+        "A later append must return to sequential grouping.");
+
+    var firstCurve = 0d;
+    var secondCurve = 0d;
+    var curveDefaults = tree.CreateTween().SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
+    curveDefaults.TweenMethod(value => firstCurve = value, 0d, 1d, 1d);
+    curveDefaults.SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
+    curveDefaults.TweenMethod(value => secondCurve = value, 0d, 1d, 1d);
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(firstCurve, 0.25d) && secondCurve == 0d,
+        "Transition and ease defaults must be captured when each tweener is appended.");
+    tree.ProcessFrame(0.5d);
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(secondCurve, 0.875d),
+        "Later method tweeners must use the changed transition and ease defaults.");
+    curveDefaults.Kill();
+
     target.Position = Vector2.Zero;
     var restart = target.CreateTween();
     restart.TweenProperty(target, static node => node.Position,
@@ -9211,7 +9243,15 @@ static void VerifyTweens()
     Require(loopCallbacks == 2 && loopEvents == 1 && !loops.IsValid(),
         "A finite loop count must describe total sequence executions and omit LoopFinished after the final loop.");
 
+    var counted = tree.CreateTween().SetLoops(3);
+    counted.TweenInterval(1d);
+    Require(counted.GetLoopsLeft() == 3, "A new finite tween must report all scheduled executions.");
+    tree.ProcessFrame(1d);
+    Require(counted.GetLoopsLeft() == 2, "Completing one loop must decrement the remaining count.");
+    counted.Kill();
+
     var infinite = tree.CreateTween().SetLoops();
+    Require(infinite.GetLoopsLeft() == -1, "An infinite tween must report the infinite remaining-count sentinel.");
     var infiniteSpeed = false;
     infinite.LoopFinished += (_, _) =>
     {
@@ -9221,6 +9261,13 @@ static void VerifyTweens()
     infinite.TweenCallback(static () => { });
     Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && !infinite.IsValid(),
         "A zero-duration infinite loop must be stopped even when a loop callback changes speed scale.");
+
+    var negativeLoops = tree.CreateTween().SetLoops(-1);
+    negativeLoops.TweenInterval(1d);
+    tree.ProcessFrame(1d);
+    Require(negativeLoops.IsValid() && negativeLoops.GetLoopsLeft() == -1,
+        "A negative loop count must retain infinite repetition after the first loop.");
+    negativeLoops.Kill();
 
     var pausedValue = 0d;
     var pausedTween = tree.CreateTween();
@@ -9233,6 +9280,55 @@ static void VerifyTweens()
     Require(DoubleNearlyEqual(pausedValue, 0.5d), "Process pause mode must ignore tree pause.");
     tree.Paused = false;
     pausedTween.Kill();
+
+    var stoppedValue = 0d;
+    var stoppedByTree = tree.CreateTween().SetPauseMode(Tween.TweenPauseMode.Stop);
+    stoppedByTree.TweenMethod(value => stoppedValue = value, 0d, 1d, 1d);
+    tree.Paused = true;
+    tree.ProcessFrame(0.5d);
+    Require(stoppedValue == 0d, "Stop pause mode must halt with a paused tree.");
+    tree.Paused = false;
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(stoppedValue, 0.5d), "Stop pause mode must resume after the tree unpauses.");
+    stoppedByTree.Kill();
+
+    var alwaysNode = new Entity { ProcessMode = NodeProcessMode.Always };
+    root.AddChild(alwaysNode);
+    var boundPauseValue = 0d;
+    var boundPause = alwaysNode.CreateTween();
+    boundPause.TweenMethod(value => boundPauseValue = value, 0d, 1d, 1d);
+    tree.Paused = true;
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(boundPauseValue, 0.5d),
+        "Bound pause mode must follow a bound node's effective Always process policy.");
+    boundPause.SetPauseMode(Tween.TweenPauseMode.Stop);
+    tree.ProcessFrame(0.5d);
+    Require(DoubleNearlyEqual(boundPauseValue, 0.5d),
+        "Switching to Stop must override a bound node's process policy while the tree is paused.");
+    tree.Paused = false;
+    boundPause.Kill();
+    alwaysNode.Dispose();
+
+    var speedPolicyValue = 0d;
+    var scaled = tree.CreateTween().SetSpeedScale(0d);
+    scaled.TweenMethod(value => speedPolicyValue = value, 0d, 1d, 1d);
+    tree.ProcessFrame(0.5d);
+    Require(scaled.IsRunning() && speedPolicyValue == 0d && scaled.GetTotalElapsedTime() == 0d,
+        "Zero speed must freeze progression without pausing the tween.");
+    scaled.SetSpeedScale(2d);
+    tree.ProcessFrame(0.25d);
+    Require(DoubleNearlyEqual(speedPolicyValue, 0.5d) && DoubleNearlyEqual(scaled.GetTotalElapsedTime(), 0.5d),
+        "Changing speed while running must scale the next delivered delta.");
+    scaled.Kill();
+
+    var reverseSpeedValue = 0d;
+    var reverseSpeed = tree.CreateTween().SetSpeedScale(-1d);
+    reverseSpeed.TweenMethod(value => reverseSpeedValue = value, 0d, 1d, 1d);
+    tree.ProcessFrame(0.5d);
+    Require(reverseSpeed.IsRunning() && reverseSpeedValue == 0d &&
+            DoubleNearlyEqual(reverseSpeed.GetTotalElapsedTime(), -0.5d),
+        "Negative speed must reduce elapsed time without advancing the current tweener.");
+    reverseSpeed.Kill();
 
     var physicsValue = 0d;
     var physics = tree.CreateTween().SetProcessMode(Tween.TweenProcessMode.Physics);
@@ -9260,6 +9356,22 @@ static void VerifyTweens()
         Expect<ArgumentException>(() => crossTree.BindNode(foreignTree.Root),
             "A tween must reject a node owned by another scene tree.");
         crossTree.Kill();
+    }
+
+    using (var detachedBound = new Entity())
+    {
+        var detachedValue = 0d;
+        var detachedTween = tree.CreateTween().BindNode(detachedBound);
+        detachedTween.TweenMethod(value => detachedValue = value, 0d, 1d, 1d);
+        tree.ProcessFrame(0.5d);
+        Require(detachedValue == 0d && detachedTween.IsValid(),
+            "Binding a detached node must retain but suspend its tween.");
+        root.AddChild(detachedBound);
+        tree.ProcessFrame(0.5d);
+        Require(DoubleNearlyEqual(detachedValue, 0.5d),
+            "Binding must resume progression when its node enters the owning tree.");
+        detachedTween.Kill();
+        root.RemoveChild(detachedBound);
     }
 
     var disposedTarget = new TweenValueHolder();
@@ -9421,11 +9533,16 @@ static void VerifyTweens()
     Require(spawnedRan, "A tween deferred by the processing snapshot must run on the next matching frame.");
 
     var validation = tree.CreateTween();
-    Expect<ArgumentOutOfRangeException>(() => validation.SetLoops(-1), "Tween loops must reject negative values.");
     Expect<ArgumentOutOfRangeException>(() => validation.SetSpeedScale(double.PositiveInfinity),
         "Tween speed must reject non-finite values.");
     Expect<ArgumentOutOfRangeException>(() => validation.SetProcessMode((Tween.TweenProcessMode)99),
         "Tween process mode must reject undefined values.");
+    Expect<ArgumentOutOfRangeException>(() => validation.SetPauseMode((Tween.TweenPauseMode)99),
+        "Tween pause mode must reject undefined values.");
+    Expect<ArgumentOutOfRangeException>(() => validation.SetTrans((Tween.TransitionType)99),
+        "Tween transition defaults must reject undefined curves.");
+    Expect<ArgumentOutOfRangeException>(() => validation.SetEase((Tween.EaseType)99),
+        "Tween ease defaults must reject undefined directions.");
     Expect<InvalidOperationException>(() => Task.Run(() => validation.Pause()).GetAwaiter().GetResult(),
         "Tween mutation must require the scene-tree owner thread.");
     validation.Kill();
@@ -9442,13 +9559,16 @@ static void VerifyTweens()
         var originalValue = 0d;
         scaleTree.CreateTween().TweenMethod(value => scaledValue = value, 0d, 1d, 0.1d);
         scaleTree.CreateTween().SetIgnoreTimeScale().TweenMethod(value => originalValue = value, 0d, 1d, 0.1d);
+        var restoredScaleValue = 0d;
+        scaleTree.CreateTween().SetIgnoreTimeScale().SetIgnoreTimeScale(false)
+            .TweenMethod(value => restoredScaleValue = value, 0d, 1d, 0.1d);
         engine.Start(scaleTree);
         try
         {
             engine.TimeScale = 0d;
             engine.AdvanceFrame(1d);
-            Require(scaledValue == 0d && DoubleNearlyEqual(originalValue, 1d),
-                "An ignore-time-scale tween must use Engine's original process delta while scaled tween time is frozen.");
+            Require(scaledValue == 0d && DoubleNearlyEqual(originalValue, 1d) && restoredScaleValue == 0d,
+                "Time-scale bypass must use the original delta and its false setting must restore scaled time.");
         }
         finally
         {

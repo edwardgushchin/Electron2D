@@ -5,7 +5,10 @@ namespace Electron2D;
 /// A tween is created by <see cref="SceneTree.CreateTween"/> or <see cref="Node.CreateTween"/> and is processed by
 /// that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
 /// <see cref="Parallel"/> or <see cref="SetParallel"/> groups them. A completed or killed tween is invalid and cannot
-/// accept new tweeners. Tween mutation and processing use the creating tree's owner thread.
+/// accept new tweeners. <see cref="SetParallel"/> changes the append default, while <see cref="Parallel"/> affects only
+/// the next append. Curve defaults are captured by each property or method tweener when appended. A zero speed scale
+/// freezes progress without pausing; negative speed additionally reduces accumulated elapsed time. Tween mutation and
+/// processing use the creating tree's owner thread.
 /// </remarks>
 public sealed class Tween : ElectronObject
 {
@@ -199,7 +202,7 @@ public sealed class Tween : ElectronObject
     public int GetLoopsLeft()
     {
         ThrowIfDisposed();
-        return _loops == 0 ? -1 : Math.Max(0, _loops - _loopsDone);
+        return _loops <= 0 ? -1 : Math.Max(0, _loops - _loopsDone);
     }
 
     /// <summary>Gets accumulated scaled processing time.</summary>
@@ -340,16 +343,13 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Sets how many times the complete sequence runs.</summary>
-    /// <param name="loops">Zero for infinite repetition, or a positive total execution count.</param>
+    /// <param name="loops">A non-positive count for infinite repetition, or a positive total execution count.</param>
     /// <returns>This tween.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="loops"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public Tween SetLoops(int loops = 0)
     {
         EnsureValidMutation();
-        if (loops < 0)
-            throw new ArgumentOutOfRangeException(nameof(loops), loops, "Loop count must be zero or positive.");
         _loops = loops;
         return this;
     }
@@ -399,15 +399,16 @@ public sealed class Tween : ElectronObject
     }
 
     /// <summary>Sets a multiplier applied to time delivered to every tweener and delay.</summary>
-    /// <param name="speed">A finite non-negative multiplier. Zero freezes progression without changing running state.</param>
+    /// <param name="speed">A finite multiplier. Zero or negative values do not advance tweeners; negative values still reduce accumulated elapsed time.</param>
     /// <returns>This tween.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="speed"/> is negative, NaN, or infinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="speed"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
     public Tween SetSpeedScale(double speed)
     {
         EnsureValidMutation();
-        ValidateDuration(speed, nameof(speed));
+        if (!double.IsFinite(speed))
+            throw new ArgumentOutOfRangeException(nameof(speed), speed, "Speed scale must be finite.");
         _speedScale = speed;
         return this;
     }
@@ -794,7 +795,7 @@ public sealed class Tween : ElectronObject
                 }
 
                 _loopsDone++;
-                if (_loops != 0 && _loopsDone >= _loops)
+                if (_loops > 0 && _loopsDone >= _loops)
                 {
                     _running = false;
                     _dead = true;
@@ -808,7 +809,7 @@ public sealed class Tween : ElectronObject
                 _currentStep = 0;
                 StartCurrentStep();
 
-                if (_loops == 0 && remaining == initialRemaining)
+                if (_loops <= 0 && remaining == initialRemaining)
                 {
                     unchangedInfiniteLoops++;
                     if (unchangedInfiniteLoops >= 2)

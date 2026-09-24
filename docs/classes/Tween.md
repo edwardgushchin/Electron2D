@@ -1,6 +1,6 @@
 # Tween
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -17,6 +17,8 @@ Last updated: 2026-09-23
 Sequences typed property interpolation, method interpolation, callbacks, waits, and nested tweens.
 
 `Tween` owns an ordered list of parallel step groups and coordinates interpolation, callbacks, event waits, nested tweens, looping, and completion. It is constructed only by `SceneTree.CreateTween()` or `Node.CreateTween()`. The SceneTree processes valid top-level tweens; a parent Tween processes a detached subtween. The object remains inspectable after invalidation until explicitly disposed, while its managed memory remains runtime-owned.
+
+`SetParallel` changes the default grouping of later appends; `Parallel` joins only the next append, and `Chain` starts its next append in a new step. Transition and ease defaults are captured when each property or method tweener is appended. A zero or negative speed scale leaves the tween running without advancing its tweeners; negative speed reduces accumulated elapsed time. Bound pause mode follows the bound node's effective process policy; a detached bound node waits until it enters the owning tree.
 
 A tween is created by [`SceneTree.CreateTween`](SceneTree.md#m-electron2d-scenetree-createtween) or [`Node.CreateTween`](Node.md#m-electron2d-node-createtween) and is processed by
 that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
@@ -311,13 +313,12 @@ Sets how many times the complete sequence runs.
 
 **Parameters**
 
-- `loops`: Zero for infinite repetition, or a positive total execution count.
+- `loops`: A non-positive count for infinite repetition, or a positive total execution count.
 
 **Returns:** This tween.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `loops` is negative.
 - `InvalidOperationException`: The call is off the owner thread or the tween is invalid.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
@@ -380,13 +381,13 @@ Sets a multiplier applied to time delivered to every tweener and delay.
 
 **Parameters**
 
-- `speed`: A finite non-negative multiplier. Zero freezes progression without changing running state.
+- `speed`: A finite multiplier. Zero or negative values do not advance tweeners; negative values still reduce accumulated elapsed time.
 
 **Returns:** This tween.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `speed` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `speed` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread or the tween is invalid.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 

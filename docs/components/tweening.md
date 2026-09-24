@@ -1,6 +1,6 @@
 # Tweening component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -48,6 +48,8 @@ Implemented and executable-tested. Typed delegates deliberately replace untyped 
 ## Verification
 
 The executable harness covers stable enum identities and every transition/ease endpoint, manual scalar/vector/integer/boolean/transform interpolation and invalid values, sequential/parallel order, exact boundaries, all property-start/relative/custom-weight controls, restart, finite/infinite loops, pause and physics lanes, binding disposal and cross-tree rejection, manual stepping and its failure cleanup, pre-start event reset, active typed event receipt, timeout and cancellation failure, nested ownership, lane/nesting snapshot revalidation, callback and every completion-event failure, Engine time-scale bypass, tree rollback/finalization, validation, owner-thread rejection, and zero warmed active-frame allocation. It does not verify visual motion, real host cadence, all five target hosts, editor tooling, or large tween counts.
+
+The policy audit additionally checks every enum value, persistent and one-shot parallel grouping, per-append curve defaults, remaining loop counts including negative infinite loops, detached binding and later attachment, all three tree-pause policies, zero, negative and changed speed, both frame lanes, time-scale bypass reset, and invalid enum/non-finite configuration values. These 16 declaration rows are Implemented in coverage; the class and unaudited lifecycle/task rows remain Partial.
 
 ## Decisions
 
