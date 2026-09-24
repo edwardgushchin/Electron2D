@@ -98,9 +98,9 @@ public sealed class JSON : Resource
     /// <param name="sortKeys">Whether object keys are sorted by Unicode scalar value.</param>
     /// <param name="fullPrecision">Whether floating values retain all round-trip digits.</param>
     /// <returns>Formatted document text containing the supplied value.</returns>
-    /// <remarks>Parsed numbers use floating formatting; typed integer nodes keep integer text. Strings use document-specific escaping, including a vertical-tab escape.</remarks>
+    /// <remarks>Parsed numbers use floating formatting; typed integer nodes keep integer text. Strings use document-specific escaping, including a vertical-tab escape. Values deeper than 1024 levels emit an ellipsis marker.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="indent"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">The JSON tree changes during traversal or exceeds 1024 nested levels.</exception>
+    /// <exception cref="InvalidOperationException">The JSON tree changes during traversal.</exception>
     public static string Stringify(JsonNode? data, string indent = "", bool sortKeys = true, bool fullPrecision = false)
     {
         ArgumentNullException.ThrowIfNull(indent);
@@ -185,7 +185,11 @@ public sealed class JSON : Resource
 
     private static void AppendValue(StringBuilder text, JsonNode? node, string indent, bool sortKeys, bool fullPrecision, int depth)
     {
-        if (depth > 1024) throw new InvalidOperationException("JSON nesting exceeds 1024 levels.");
+        if (depth > 1024)
+        {
+            AppendDepthLimit(text);
+            return;
+        }
         if (node is null) { text.Append("null"); return; }
         if (node is JsonObject objectNode)
         {
@@ -197,7 +201,8 @@ public sealed class JSON : Resource
             {
                 if (!first) text.Append(',');
                 if (indent.Length != 0) { text.Append('\n'); AppendIndent(text, indent, depth + 1); }
-                AppendQuotedString(text, entry.Key);
+                if (depth == 1024) AppendDepthLimit(text);
+                else AppendQuotedString(text, entry.Key);
                 text.Append(indent.Length == 0 ? ":" : ": ");
                 AppendValue(text, entry.Value, indent, sortKeys, fullPrecision, depth + 1);
                 first = false;
@@ -242,7 +247,7 @@ public sealed class JSON : Resource
 
         if (fullPrecision)
         {
-            AppendRoundTripNumber(text, value);
+            text.Append(Grisu2Formatter.Format(value));
             return;
         }
 
@@ -251,52 +256,6 @@ public sealed class JSON : Resource
         var end = formatted.Length - 1;
         while (formatted[end] == '0' && formatted[end - 1] != '.') end--;
         text.Append(formatted.AsSpan(0, end + 1));
-    }
-
-    private static void AppendRoundTripNumber(StringBuilder text, double value)
-    {
-        var raw = value.ToString("R", CultureInfo.InvariantCulture);
-        var negative = raw[0] == '-';
-        var mantissaStart = negative ? 1 : 0;
-        var exponentAt = raw.IndexOf('E');
-        var mantissaEnd = exponentAt < 0 ? raw.Length : exponentAt;
-        var exponent = exponentAt < 0 ? 0 : int.Parse(raw.AsSpan(exponentAt + 1), CultureInfo.InvariantCulture);
-        var pointAt = raw.IndexOf('.', mantissaStart, mantissaEnd - mantissaStart);
-        var integerDigits = (pointAt < 0 ? mantissaEnd : pointAt) - mantissaStart;
-        var digits = raw.AsSpan(mantissaStart, mantissaEnd - mantissaStart).ToString().Replace(".", "", StringComparison.Ordinal);
-        var leading = 0;
-        while (digits[leading] == '0') leading++;
-        var scientificExponent = integerDigits - leading - 1 + exponent;
-        digits = digits[leading..].TrimEnd('0');
-        if (negative) text.Append('-');
-
-        var decimalPosition = scientificExponent + 1;
-        if (decimalPosition > 15 || decimalPosition <= -4)
-        {
-            text.Append(digits[0]);
-            if (digits.Length > 1) { text.Append('.'); text.Append(digits.AsSpan(1)); }
-            text.Append('e');
-            text.Append(scientificExponent < 0 ? '-' : '+');
-            text.Append(Math.Abs(scientificExponent).ToString("D2", CultureInfo.InvariantCulture));
-        }
-        else if (decimalPosition <= 0)
-        {
-            text.Append("0.");
-            text.Append('0', -decimalPosition);
-            text.Append(digits);
-        }
-        else if (decimalPosition >= digits.Length)
-        {
-            text.Append(digits);
-            text.Append('0', decimalPosition - digits.Length);
-            text.Append(".0");
-        }
-        else
-        {
-            text.Append(digits.AsSpan(0, decimalPosition));
-            text.Append('.');
-            text.Append(digits.AsSpan(decimalPosition));
-        }
     }
 
     private static void AppendQuotedString(StringBuilder text, string value)
@@ -337,5 +296,11 @@ public sealed class JSON : Resource
     private static void AppendIndent(StringBuilder text, string indent, int depth)
     {
         for (var index = 0; index < depth; index++) text.Append(indent);
+    }
+
+    private static void AppendDepthLimit(StringBuilder text)
+    {
+        text.Append("...");
+        System.Diagnostics.Trace.TraceError("JSON structure is too deep. Bailing.");
     }
 }

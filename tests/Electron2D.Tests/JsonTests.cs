@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Electron2D;
@@ -150,6 +151,11 @@ internal static class JsonTests
               EngineJSON.Stringify(JsonValue.Create(1e15d), fullPrecision: true) == "1e+15" &&
               EngineJSON.Stringify(JsonValue.Create(0.2f), fullPrecision: true) == "0.20000000298023224",
             "Default and full precision follow the pinned fixed and shortest round-trip formats.");
+        Check(EngineJSON.Stringify(JsonValue.Create(BitConverter.Int64BitsToDouble(unchecked((long)0xC31B19CD70E65EBDUL))),
+                  fullPrecision: true) == "-1.9070486310808793e+15" &&
+              EngineJSON.Stringify(JsonValue.Create(BitConverter.Int64BitsToDouble(unchecked((long)0xCD2B5B300586517DUL))),
+                  fullPrecision: true) == "-5.6268442801468946e+63",
+            "Full precision follows the pinned digit selection where managed round-trip formatting differs.");
         Check(EngineJSON.Stringify(JsonValue.Create("é<>&\v\n\"\\")) == "\"é<>&\\v\\n\\\"\\\\\"" &&
               EngineJSON.Stringify(JsonNode.Parse("\"é\"")) == "\"é\"",
             "String values retain Unicode and use the reference escapes for special characters.");
@@ -166,8 +172,23 @@ internal static class JsonTests
         for (var index = 129; index < 1024; index++) deep = new JsonArray(deep);
         Check(EngineJSON.Stringify(deep) == new string('[', 1024) + "true" + new string(']', 1024),
             "The documented nesting limit must still format the final permitted level.");
-        deep = new JsonArray(deep);
-        Reject<InvalidOperationException>(() => EngineJSON.Stringify(deep));
+        using var trace = new StringWriter();
+        using var listener = new TextWriterTraceListener(trace);
+        Trace.Listeners.Add(listener);
+        try
+        {
+            deep = new JsonArray(deep);
+            Check(EngineJSON.Stringify(deep) == new string('[', 1025) + "..." + new string(']', 1025),
+                "An array beyond the nesting limit emits an ellipsis at the rejected value.");
+            JsonNode deepObject = new JsonObject { ["key"] = true };
+            for (var index = 0; index < 1024; index++) deepObject = new JsonArray(deepObject);
+            Check(EngineJSON.Stringify(deepObject) == new string('[', 1024) + "{...:...}" + new string(']', 1024),
+                "Object keys and values beyond the nesting limit emit ellipses at their own depth.");
+            Trace.Flush();
+            Check(trace.ToString().Contains("JSON structure is too deep. Bailing.", StringComparison.Ordinal),
+                "Depth truncation must report its diagnostic through the managed trace listeners.");
+        }
+        finally { Trace.Listeners.Remove(listener); }
     }
 
     private static void VerifyDocumentState()
