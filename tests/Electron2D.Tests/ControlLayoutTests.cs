@@ -70,6 +70,7 @@ internal static class ControlLayoutTests
         VerifyMinimumSize();
         VerifyMaximumSize();
         VerifyLayoutDirection();
+        VerifyOffsetPresets();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }
@@ -416,6 +417,115 @@ internal static class ControlLayoutTests
         }
     }
 
+    private static void VerifyOffsetPresets()
+    {
+        using var viewport = new TestViewport();
+        var parent = new Control { Name = "preset-parent", Size = new(100, 80) };
+        viewport.AddChild(parent);
+        using var tree = new SceneTree(viewport);
+        var widths = new[] { 12f, 20f, 12f, 20f };
+        var heights = new[] { 6f, 6f, 10f, 10f };
+        for (var direction = 0; direction < 2; direction++)
+            for (var mode = 0; mode < 4; mode++)
+                for (var index = 0; index < 16; index++)
+                {
+                    using var item = new MinimumControl { Name = $"offset-{direction}-{mode}-{index}", Position = new(7, 9), Size = new(20, 10) };
+                    item.SetIntrinsicMinimum(new(12, 6));
+                    parent.AddChild(item);
+                    item.LayoutDirection = direction == 0 ? ControlLayoutDirection.LTR : ControlLayoutDirection.RTL;
+                    item.SetAnchorsAndOffsetsPreset((ControlLayoutPreset)index, (ControlLayoutPresetMode)mode, margin: 3);
+                    var (position, size) = ExpectedPreset((ControlLayoutPreset)index, widths[mode], heights[mode], direction != 0);
+                    Check(item.Position == position && item.Size == size,
+                        $"Preset {index}, mode {mode}, direction {direction}: expected {position}/{size}, got {item.Position}/{item.Size}.");
+                }
+
+        using var standalone = new Control { Name = "standalone", Position = new(7, 9), Size = new(20, 10) };
+        parent.AddChild(standalone);
+        standalone.SetAnchor(Side.Left, .2f);
+        standalone.SetAnchor(Side.Right, .3f);
+        var originalAnchors = (standalone.AnchorLeft, standalone.AnchorTop, standalone.AnchorRight, standalone.AnchorBottom);
+        var resized = 0;
+        standalone.Resized += () => resized++;
+        standalone.SetOffsetsPreset(ControlLayoutPreset.Center, ControlLayoutPresetMode.KeepSize, margin: 3);
+        Check((standalone.AnchorLeft, standalone.AnchorTop, standalone.AnchorRight, standalone.AnchorBottom) == originalAnchors,
+            "An offset preset must leave existing anchors unchanged.");
+        Check(standalone.Position == new Vector2(40, 35) && standalone.Size == new Vector2(20, 10) && resized == 0,
+            "Center offset preset positions without resizing or emitting a resize signal.");
+        standalone.SetOffsetsPreset(ControlLayoutPreset.TopLeft, ControlLayoutPresetMode.KeepSize, margin: -3);
+        Check(standalone.Position == new Vector2(-3, -3), "Signed margins shift edge presets in both directions.");
+        var before = (standalone.OffsetLeft, standalone.OffsetTop, standalone.OffsetRight, standalone.OffsetBottom);
+        Reject<ArgumentOutOfRangeException>(() => standalone.SetOffsetsPreset((ControlLayoutPreset)16));
+        Reject<ArgumentOutOfRangeException>(() => standalone.SetOffsetsPreset(ControlLayoutPreset.TopLeft, (ControlLayoutPresetMode)4));
+        Check(before == (standalone.OffsetLeft, standalone.OffsetTop, standalone.OffsetRight, standalone.OffsetBottom),
+            "Invalid offset preset identities leave every offset unchanged.");
+        using var invalidCombined = new Control { Name = "invalid-combined", Position = new(7, 9), Size = new(20, 10) };
+        parent.AddChild(invalidCombined);
+        Reject<ArgumentOutOfRangeException>(() => invalidCombined.SetAnchorsAndOffsetsPreset(
+            ControlLayoutPreset.FullRect, (ControlLayoutPresetMode)4));
+        Check(invalidCombined.AnchorRight == 1 && invalidCombined.AnchorBottom == 1
+            && invalidCombined.Position == new Vector2(7, 9) && invalidCombined.Size == new Vector2(20, 10),
+            "The combined operation commits its anchor step before rejecting an invalid offset mode.");
+        standalone.SetAnchorAndOffset(Side.Right, .5f, -4);
+        Check(standalone.AnchorRight == .5f && standalone.OffsetRight == -4,
+            "Combined side update applies anchor before its explicit offset.");
+        standalone.SetAnchorAndOffset(Side.Left, .75f, 2);
+        Check(standalone.AnchorLeft == .5f && standalone.AnchorRight == .5f && standalone.OffsetLeft == 2,
+            "The default combined update clamps a crossing anchor without pushing its opposite.");
+        standalone.SetAnchorAndOffset(Side.Left, .75f, 2, pushOppositeAnchor: true);
+        Check(standalone.AnchorLeft == .75f && standalone.AnchorRight == .75f,
+            "The optional combined update pushes the opposite anchor when they cross.");
+        before = (standalone.OffsetLeft, standalone.OffsetTop, standalone.OffsetRight, standalone.OffsetBottom);
+        var anchorBefore = standalone.AnchorLeft;
+        Reject<ArgumentOutOfRangeException>(() => standalone.SetAnchorAndOffset(Side.Left, .4f, float.NaN));
+        Check(standalone.AnchorLeft == anchorBefore && before == (standalone.OffsetLeft, standalone.OffsetTop, standalone.OffsetRight, standalone.OffsetBottom),
+            "Invalid combined side input rolls back before either edit.");
+
+        using var rtlOnly = new Control { Name = "rtl-only", Size = new(20, 10) };
+        parent.AddChild(rtlOnly);
+        rtlOnly.SetAnchor(Side.Left, .2f);
+        rtlOnly.SetAnchor(Side.Right, .3f);
+        rtlOnly.LayoutDirection = ControlLayoutDirection.RTL;
+        rtlOnly.SetOffsetsPreset(ControlLayoutPreset.Center, ControlLayoutPresetMode.KeepSize, margin: 3);
+        Check(rtlOnly.AnchorLeft == .2f && rtlOnly.AnchorRight == .3f
+            && rtlOnly.Position == new Vector2(64, 35) && rtlOnly.Size == new Vector2(32, 10),
+            "RTL offset-only placement retains arbitrary anchors and uses the pinned negative horizontal span.");
+
+        using var offsetViewport = new OffsetViewport();
+        var root = new Control { Name = "root", Size = new(20, 10) };
+        offsetViewport.AddChild(root);
+        using var offsetTree = new SceneTree(offsetViewport);
+        root.SetAnchorsAndOffsetsPreset(ControlLayoutPreset.TopLeft, ControlLayoutPresetMode.KeepSize, margin: 3);
+        Check(root.Position == new Vector2(14, 10), "A viewport's nonzero visible-rectangle origin contributes to preset offsets.");
+        root.LayoutDirection = ControlLayoutDirection.RTL;
+        root.SetAnchorsAndOffsetsPreset(ControlLayoutPreset.TopLeft, ControlLayoutPresetMode.KeepSize, margin: 3);
+        Check(root.Position == new Vector2(88, 10), "RTL mirroring uses the viewport rectangle's nonzero origin.");
+        root.Position = new(35, 10);
+        root.Size = new(30, 10);
+        Check(root.Position == new Vector2(35, 10) && root.Size == new Vector2(30, 10),
+            "RTL physical position and size setters remain correct for a translated viewport rectangle.");
+    }
+
+    private static (Vector2 Position, Vector2 Size) ExpectedPreset(ControlLayoutPreset preset, float width, float height, bool rtl)
+    {
+        if (preset is ControlLayoutPreset.TopWide or ControlLayoutPreset.BottomWide or ControlLayoutPreset.HCenterWide or ControlLayoutPreset.FullRect)
+            width = 94;
+        if (preset is ControlLayoutPreset.LeftWide or ControlLayoutPreset.RightWide or ControlLayoutPreset.VCenterWide or ControlLayoutPreset.FullRect)
+            height = 74;
+        var x = preset switch
+        {
+            ControlLayoutPreset.TopRight or ControlLayoutPreset.BottomRight or ControlLayoutPreset.CenterRight or ControlLayoutPreset.RightWide => 97 - width,
+            ControlLayoutPreset.CenterTop or ControlLayoutPreset.CenterBottom or ControlLayoutPreset.Center or ControlLayoutPreset.VCenterWide => (100 - width) / 2,
+            _ => 3
+        };
+        var y = preset switch
+        {
+            ControlLayoutPreset.BottomLeft or ControlLayoutPreset.BottomRight or ControlLayoutPreset.CenterBottom or ControlLayoutPreset.BottomWide => 77 - height,
+            ControlLayoutPreset.CenterLeft or ControlLayoutPreset.CenterRight or ControlLayoutPreset.Center or ControlLayoutPreset.HCenterWide => (80 - height) / 2,
+            _ => 3
+        };
+        return (new Vector2(rtl ? 100 - x - width : x, y), new Vector2(width, height));
+    }
+
     private sealed class DirectionControl(string tag, List<string> notifications) : Control
     {
         protected override void OnNotification(int what)
@@ -429,6 +539,11 @@ internal static class ControlLayoutTests
     {
         internal Vector2 VisibleSize = new(200, 150);
         public override Rect GetVisibleRect() => new(Vector2.Zero, VisibleSize);
+    }
+
+    private sealed class OffsetViewport : Viewport
+    {
+        public override Rect GetVisibleRect() => new(new Vector2(11, 7), new Vector2(100, 80));
     }
 
     private static void Near(Vector2 actual, Vector2 expected) => Check(actual.IsEqualApprox(expected), $"Expected {expected}, got {actual}.");

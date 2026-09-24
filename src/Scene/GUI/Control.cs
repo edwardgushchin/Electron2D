@@ -54,8 +54,9 @@ public partial class Control : CanvasItem
         {
             EnsureMutable(); EnsureFinite(value, nameof(value));
             if (value == _position) return;
-            var area = GetParentAreaSize();
-            var logicalX = IsLayoutRTL() ? area.X - value.X - _size.X : value.X;
+            var parentRect = GetParentAnchorRect();
+            var area = parentRect.Size;
+            var logicalX = IsLayoutRTL() ? area.X + 2 * parentRect.Position.X - value.X - _size.X : value.X;
             _offsets[0] = logicalX - _anchors[0] * area.X;
             _offsets[1] = value.Y - _anchors[1] * area.Y;
             _offsets[2] = logicalX + _size.X - _anchors[2] * area.X;
@@ -74,8 +75,9 @@ public partial class Control : CanvasItem
             EnsureMutable(); EnsureFinite(value, nameof(value));
             if (value.X < 0 || value.Y < 0) throw new ArgumentOutOfRangeException(nameof(value));
             if (value == _size) return;
-            var area = GetParentAreaSize();
-            var logicalX = IsLayoutRTL() ? area.X - _position.X - value.X : _position.X;
+            var parentRect = GetParentAnchorRect();
+            var area = parentRect.Size;
+            var logicalX = IsLayoutRTL() ? area.X + 2 * parentRect.Position.X - _position.X - value.X : _position.X;
             _offsets[0] = logicalX - _anchors[0] * area.X;
             _offsets[2] = logicalX + value.X - _anchors[2] * area.X;
             _offsets[3] = _position.Y + value.Y - _anchors[3] * area.Y;
@@ -372,30 +374,66 @@ public partial class Control : CanvasItem
     public void SetAnchorsPreset(ControlLayoutPreset preset, bool keepOffsets = false)
     {
         EnsureMutable();
-        var (left, top, right, bottom) = preset switch
-        {
-            ControlLayoutPreset.TopLeft => (0f, 0f, 0f, 0f),
-            ControlLayoutPreset.TopRight => (1f, 0f, 1f, 0f),
-            ControlLayoutPreset.BottomLeft => (0f, 1f, 0f, 1f),
-            ControlLayoutPreset.BottomRight => (1f, 1f, 1f, 1f),
-            ControlLayoutPreset.CenterLeft => (0f, .5f, 0f, .5f),
-            ControlLayoutPreset.CenterTop => (.5f, 0f, .5f, 0f),
-            ControlLayoutPreset.CenterRight => (1f, .5f, 1f, .5f),
-            ControlLayoutPreset.CenterBottom => (.5f, 1f, .5f, 1f),
-            ControlLayoutPreset.Center => (.5f, .5f, .5f, .5f),
-            ControlLayoutPreset.LeftWide => (0f, 0f, 0f, 1f),
-            ControlLayoutPreset.TopWide => (0f, 0f, 1f, 0f),
-            ControlLayoutPreset.RightWide => (1f, 0f, 1f, 1f),
-            ControlLayoutPreset.BottomWide => (0f, 1f, 1f, 1f),
-            ControlLayoutPreset.VCenterWide => (.5f, 0f, .5f, 1f),
-            ControlLayoutPreset.HCenterWide => (0f, .5f, 1f, .5f),
-            ControlLayoutPreset.FullRect => (0f, 0f, 1f, 1f),
-            _ => throw new ArgumentOutOfRangeException(nameof(preset), preset, "Unknown layout preset.")
-        };
+        var (left, top, right, bottom) = GetPresetAnchors(preset);
         SetAnchor(Side.Left, left, keepOffsets);
         SetAnchor(Side.Top, top, keepOffsets);
         SetAnchor(Side.Right, right, keepOffsets);
         SetAnchor(Side.Bottom, bottom, keepOffsets);
+    }
+
+    /// <summary>Sets one anchor and its local offset in sequence.</summary>
+    /// <param name="side">The rectangle side to update.</param>
+    /// <param name="anchor">A finite anchor fraction.</param>
+    /// <param name="offset">A finite local offset.</param>
+    /// <param name="pushOppositeAnchor">Move the opposite anchor when they cross.</param>
+    public void SetAnchorAndOffset(Side side, float anchor, float offset, bool pushOppositeAnchor = false)
+    {
+        EnsureMutable();
+        _ = SideIndex(side);
+        EnsureFinite(anchor, nameof(anchor));
+        EnsureFinite(offset, nameof(offset));
+        SetAnchor(side, anchor, pushOppositeAnchor: pushOppositeAnchor);
+        SetOffset(side, offset);
+    }
+
+    /// <summary>Places this control at a standard preset without changing its anchors.</summary>
+    /// <param name="preset">The target placement.</param>
+    /// <param name="resizeMode">Which current size components to preserve.</param>
+    /// <param name="margin">The signed gap from edges used by the preset.</param>
+    /// <remarks>All four offsets are committed before one rectangle reflow. Wide presets span their selected parent axis regardless of resize mode.</remarks>
+    public void SetOffsetsPreset(ControlLayoutPreset preset, ControlLayoutPresetMode resizeMode = ControlLayoutPresetMode.MinSize, int margin = 0)
+    {
+        EnsureMutable();
+        var (left, top, right, bottom) = GetPresetAnchors(preset);
+        if (resizeMode is < ControlLayoutPresetMode.MinSize or > ControlLayoutPresetMode.KeepSize)
+            throw new ArgumentOutOfRangeException(nameof(resizeMode), resizeMode, "Unknown layout preset mode.");
+        var minimum = GetMinimumSize();
+        var width = resizeMode is ControlLayoutPresetMode.MinSize or ControlLayoutPresetMode.KeepHeight ? minimum.X : _size.X;
+        var height = resizeMode is ControlLayoutPresetMode.MinSize or ControlLayoutPresetMode.KeepWidth ? minimum.Y : _size.Y;
+        var parentRect = GetParentAnchorRect();
+        var x = IsLayoutRTL() ? -width : parentRect.Size.X;
+        var y = parentRect.Size.Y;
+        var offsets = new float[4]
+        {
+            PresetEdge(left, x, width, margin, trailing: false) - _anchors[0] * x + parentRect.Position.X,
+            PresetEdge(top, y, height, margin, trailing: false) - _anchors[1] * y + parentRect.Position.Y,
+            PresetEdge(right, x, width, margin, trailing: true) - _anchors[2] * x + parentRect.Position.X,
+            PresetEdge(bottom, y, height, margin, trailing: true) - _anchors[3] * y + parentRect.Position.Y
+        };
+        foreach (var offset in offsets) EnsureFinite(offset, nameof(margin));
+        Array.Copy(offsets, _offsets, offsets.Length);
+        Reflow();
+    }
+
+    /// <summary>Applies an anchor preset followed by the matching offset preset.</summary>
+    /// <param name="preset">The standard arrangement.</param>
+    /// <param name="resizeMode">Which current size components to preserve.</param>
+    /// <param name="margin">The signed gap from edges used by the preset.</param>
+    /// <remarks>The anchor step is retained if the following offset step rejects an invalid resize mode.</remarks>
+    public void SetAnchorsAndOffsetsPreset(ControlLayoutPreset preset, ControlLayoutPresetMode resizeMode = ControlLayoutPresetMode.MinSize, int margin = 0)
+    {
+        SetAnchorsPreset(preset);
+        SetOffsetsPreset(preset, resizeMode, margin);
     }
 
     /// <summary>Gets the offset for a rectangle side.</summary>
@@ -423,13 +461,18 @@ public partial class Control : CanvasItem
     /// <returns>The direct parent control's size or the viewport's visible size.</returns>
     public Vector2 GetParentAreaSize()
     {
+        return GetParentAnchorRect().Size;
+    }
+
+    private Rect GetParentAnchorRect()
+    {
         ThrowIfDisposed();
-        if (!IsInsideTree) return Vector2.Zero;
+        if (!IsInsideTree) return default;
         return GetParentItem() switch
         {
-            Control parent => parent.Size,
-            null => GetViewport()?.GetVisibleRect().Size ?? Vector2.Zero,
-            _ => Vector2.Zero
+            Control parent => new Rect(Vector2.Zero, parent.Size),
+            null => GetViewport()?.GetVisibleRect() ?? default,
+            _ => default
         };
     }
 
@@ -549,7 +592,8 @@ public partial class Control : CanvasItem
 
     private void Reflow()
     {
-        var area = GetParentAreaSize();
+        var parentRect = GetParentAnchorRect();
+        var area = parentRect.Size;
         var position = new Vector2(_offsets[0] + _anchors[0] * area.X, _offsets[1] + _anchors[1] * area.Y);
         var end = new Vector2(_offsets[2] + _anchors[2] * area.X, _offsets[3] + _anchors[3] * area.Y);
         var size = end - position;
@@ -565,7 +609,7 @@ public partial class Control : CanvasItem
             position.X += (size.X - maximum.X) * GrowthShift(_growHorizontal);
             size.X = maximum.X;
         }
-        if (IsLayoutRTL()) position.X = area.X - position.X - size.X;
+        if (IsLayoutRTL()) position.X = area.X + 2 * parentRect.Position.X - position.X - size.X;
         if (size.Y < minimum.Y)
         {
             position.Y += (size.Y - minimum.Y) * GrowthShift(_growVertical);
@@ -583,6 +627,38 @@ public partial class Control : CanvasItem
         NotifyItemRectChanged(sizeChanged);
         if (sizeChanged && IsInsideTree) DispatchNotification(NotificationResized);
     }
+
+    private static (float Left, float Top, float Right, float Bottom) GetPresetAnchors(ControlLayoutPreset preset)
+    {
+        return preset switch
+        {
+            ControlLayoutPreset.TopLeft => (0f, 0f, 0f, 0f),
+            ControlLayoutPreset.TopRight => (1f, 0f, 1f, 0f),
+            ControlLayoutPreset.BottomLeft => (0f, 1f, 0f, 1f),
+            ControlLayoutPreset.BottomRight => (1f, 1f, 1f, 1f),
+            ControlLayoutPreset.CenterLeft => (0f, .5f, 0f, .5f),
+            ControlLayoutPreset.CenterTop => (.5f, 0f, .5f, 0f),
+            ControlLayoutPreset.CenterRight => (1f, .5f, 1f, .5f),
+            ControlLayoutPreset.CenterBottom => (.5f, 1f, .5f, 1f),
+            ControlLayoutPreset.Center => (.5f, .5f, .5f, .5f),
+            ControlLayoutPreset.LeftWide => (0f, 0f, 0f, 1f),
+            ControlLayoutPreset.TopWide => (0f, 0f, 1f, 0f),
+            ControlLayoutPreset.RightWide => (1f, 0f, 1f, 1f),
+            ControlLayoutPreset.BottomWide => (0f, 1f, 1f, 1f),
+            ControlLayoutPreset.VCenterWide => (.5f, 0f, .5f, 1f),
+            ControlLayoutPreset.HCenterWide => (0f, .5f, 1f, .5f),
+            ControlLayoutPreset.FullRect => (0f, 0f, 1f, 1f),
+            _ => throw new ArgumentOutOfRangeException(nameof(preset), preset, "Unknown layout preset.")
+        };
+    }
+
+    private static float PresetEdge(float target, float span, float size, int margin, bool trailing) => target switch
+    {
+        0f => trailing ? size + margin : margin,
+        .5f => span * .5f + (trailing ? size * .5f : -size * .5f),
+        1f => trailing ? span - margin : span - size - margin,
+        _ => throw new ArgumentOutOfRangeException(nameof(target))
+    };
 
     private static int SideIndex(Side side) => side is >= Side.Left and <= Side.Bottom ? (int)side : throw new ArgumentOutOfRangeException(nameof(side));
     private static float GrowthShift(ControlGrowDirection direction) => direction switch
