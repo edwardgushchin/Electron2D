@@ -17,9 +17,9 @@ internal static class JsonTests
               json.GetErrorLine() == 0 && json.GetErrorMessage() == string.Empty &&
               json.Data is JsonObject root && root["z"]!.GetValue<int>() == 1 &&
               root["a"] is JsonArray { Count: 2 }, "A JSON resource parses objects and trailing commas while retaining source text.");
-        Check(EngineJSON.Stringify(json.Data) == "{\"a\":[true,null],\"z\":1}" &&
-              EngineJSON.Stringify(json.Data, sortKeys: false) == "{\"z\":1,\"a\":[true,null]}" &&
-              EngineJSON.Stringify(json.Data, "..") == "{\n..\"a\": [\n....true,\n....null\n..],\n..\"z\": 1\n}",
+        Check(EngineJSON.Stringify(json.Data) == "{\"a\":[true,null],\"z\":1.0}" &&
+              EngineJSON.Stringify(json.Data, sortKeys: false) == "{\"z\":1.0,\"a\":[true,null]}" &&
+              EngineJSON.Stringify(json.Data, "..") == "{\n..\"a\": [\n....true,\n....null\n..],\n..\"z\": 1.0\n}",
             "JSON formatting honors sorting, insertion order, and arbitrary indentation.");
 
         using var duplicate = (EngineJSON)json.Duplicate();
@@ -64,7 +64,42 @@ internal static class JsonTests
         Reject<ObjectDisposedException>(() => json.Parse("1"));
         VerifyDocumentState();
         VerifyTypedConversion();
+        VerifyFormatting();
         Console.WriteLine("JSON parsing, formatting, typed conversion, duplication and failures passed.");
+    }
+
+    private static void VerifyFormatting()
+    {
+        Check(EngineJSON.Stringify(JsonValue.Create(1)) == "1" &&
+              EngineJSON.Stringify(JsonNode.Parse("[1,1e3]")) == "[1.0,1000.0]" &&
+              EngineJSON.Stringify(JsonValue.Create(0.0)) == "0.0" &&
+              EngineJSON.Stringify(JsonValue.Create(-0.0)) == "0.0",
+            "Parsed numbers are floating values, while explicitly typed integer nodes stay integers.");
+        Check(EngineJSON.Stringify(JsonValue.Create(1.2345678901234567d)) == "1.23456789012346" &&
+              EngineJSON.Stringify(JsonValue.Create(1e-30d)) == "0.000000000000000000000000000001" &&
+              EngineJSON.Stringify(JsonValue.Create(1e15d)) == "1000000000000000.0" &&
+              EngineJSON.Stringify(JsonValue.Create(1e-5d), fullPrecision: true) == "1e-05" &&
+              EngineJSON.Stringify(JsonValue.Create(1e15d), fullPrecision: true) == "1e+15" &&
+              EngineJSON.Stringify(JsonValue.Create(0.2f), fullPrecision: true) == "0.20000000298023224",
+            "Default and full precision follow the pinned fixed and shortest round-trip formats.");
+        Check(EngineJSON.Stringify(JsonValue.Create("é<>&\v\n\"\\")) == "\"é<>&\\v\\n\\\"\\\\\"" &&
+              EngineJSON.Stringify(JsonNode.Parse("\"é\"")) == "\"é\"",
+            "String values retain Unicode and use the reference escapes for special characters.");
+
+        var keys = new JsonObject { ["😀"] = 2, ["\uE000"] = 1 };
+        Check(EngineJSON.Stringify(keys) == "{\"\uE000\":1,\"😀\":2}" &&
+              EngineJSON.Stringify(keys, sortKeys: false) == "{\"😀\":2,\"\uE000\":1}",
+            "Sorted keys use Unicode scalar order; insertion order survives when sorting is disabled.");
+
+        JsonNode deep = JsonValue.Create(true)!;
+        for (var index = 0; index < 129; index++) deep = new JsonArray(deep);
+        Check(EngineJSON.Stringify(deep) == new string('[', 129) + "true" + new string(']', 129),
+            "A document deeper than the former 128-level limit must format completely.");
+        for (var index = 129; index < 1024; index++) deep = new JsonArray(deep);
+        Check(EngineJSON.Stringify(deep) == new string('[', 1024) + "true" + new string(']', 1024),
+            "The documented nesting limit must still format the final permitted level.");
+        deep = new JsonArray(deep);
+        Reject<InvalidOperationException>(() => EngineJSON.Stringify(deep));
     }
 
     private static void VerifyDocumentState()

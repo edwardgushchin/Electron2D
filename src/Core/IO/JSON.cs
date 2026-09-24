@@ -15,6 +15,7 @@ public sealed class JSON : Resource
 {
     private static readonly JsonDocumentOptions ParseOptions = new() { AllowTrailingCommas = true };
     private static readonly JsonSerializerOptions NativeOptions = CreateNativeOptions();
+    private static readonly IComparer<string> KeyOrder = Comparer<string>.Create(CompareKeys);
     private readonly object _gate = new();
     private JsonNode? _data;
     private string _parsedText = string.Empty;
@@ -98,11 +99,12 @@ public sealed class JSON : Resource
     /// <summary>Formats a JSON tree, optionally sorting keys and inserting an arbitrary indent string.</summary>
     /// <param name="data">The JSON root; null emits the JSON literal null.</param>
     /// <param name="indent">Text repeated at each nesting level; empty emits compact JSON.</param>
-    /// <param name="sortKeys">Whether object keys are sorted ordinally.</param>
-    /// <param name="fullPrecision">Whether floating values created from native types retain round-trip precision.</param>
-    /// <returns>A JSON document containing the supplied value.</returns>
+    /// <param name="sortKeys">Whether object keys are sorted by Unicode scalar value.</param>
+    /// <param name="fullPrecision">Whether floating values retain all round-trip digits.</param>
+    /// <returns>Formatted document text containing the supplied value.</returns>
+    /// <remarks>Parsed numbers use floating formatting; typed integer nodes keep integer text. Strings use document-specific escaping, including a vertical-tab escape.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="indent"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">The JSON tree changes during traversal or is too deep.</exception>
+    /// <exception cref="InvalidOperationException">The JSON tree changes during traversal or exceeds 1024 nested levels.</exception>
     public static string Stringify(JsonNode? data, string indent = "", bool sortKeys = true, bool fullPrecision = false)
     {
         ArgumentNullException.ThrowIfNull(indent);
@@ -187,19 +189,19 @@ public sealed class JSON : Resource
 
     private static void AppendValue(StringBuilder text, JsonNode? node, string indent, bool sortKeys, bool fullPrecision, int depth)
     {
-        if (depth > 128) throw new InvalidOperationException("JSON nesting exceeds 128 levels.");
+        if (depth > 1024) throw new InvalidOperationException("JSON nesting exceeds 1024 levels.");
         if (node is null) { text.Append("null"); return; }
         if (node is JsonObject objectNode)
         {
             text.Append('{');
             IEnumerable<KeyValuePair<string, JsonNode?>> entries = sortKeys
-                ? objectNode.OrderBy(entry => entry.Key, StringComparer.Ordinal) : objectNode;
+                ? objectNode.OrderBy(entry => entry.Key, KeyOrder) : objectNode;
             var first = true;
             foreach (var entry in entries)
             {
                 if (!first) text.Append(',');
                 if (indent.Length != 0) { text.Append('\n'); AppendIndent(text, indent, depth + 1); }
-                text.Append(JsonSerializer.Serialize(entry.Key));
+                AppendQuotedString(text, entry.Key);
                 text.Append(indent.Length == 0 ? ":" : ": ");
                 AppendValue(text, entry.Value, indent, sortKeys, fullPrecision, depth + 1);
                 first = false;
@@ -225,17 +227,115 @@ public sealed class JSON : Resource
         var value = (JsonValue)node;
         if (value.TryGetValue<double>(out var number))
         {
-            text.Append(double.IsNaN(number) ? "null" : double.IsPositiveInfinity(number) ? "1e99999" :
-                double.IsNegativeInfinity(number) ? "-1e99999" :
-                number.ToString(fullPrecision ? "R" : "G14", CultureInfo.InvariantCulture));
+            AppendNumber(text, number, fullPrecision);
         }
         else if (value.TryGetValue<float>(out var single))
         {
-            text.Append(float.IsNaN(single) ? "null" : float.IsPositiveInfinity(single) ? "1e99999" :
-                float.IsNegativeInfinity(single) ? "-1e99999" :
-                single.ToString(fullPrecision ? "R" : "G7", CultureInfo.InvariantCulture));
+            AppendNumber(text, single, fullPrecision);
         }
+        else if (value.TryGetValue<string>(out var stringValue)) AppendQuotedString(text, stringValue);
         else text.Append(value.ToJsonString());
+    }
+
+    private static void AppendNumber(StringBuilder text, double value, bool fullPrecision)
+    {
+        if (double.IsNaN(value)) { text.Append("null"); return; }
+        if (double.IsPositiveInfinity(value)) { text.Append("1e99999"); return; }
+        if (double.IsNegativeInfinity(value)) { text.Append("-1e99999"); return; }
+        if (value == 0) { text.Append("0.0"); return; }
+
+        if (fullPrecision)
+        {
+            AppendRoundTripNumber(text, value);
+            return;
+        }
+
+        var precision = Math.Clamp(14 - (int)Math.Floor(Math.Log10(Math.Abs(value))), 1, 32);
+        var formatted = value.ToString($"F{precision}", CultureInfo.InvariantCulture);
+        var end = formatted.Length - 1;
+        while (formatted[end] == '0' && formatted[end - 1] != '.') end--;
+        text.Append(formatted.AsSpan(0, end + 1));
+    }
+
+    private static void AppendRoundTripNumber(StringBuilder text, double value)
+    {
+        var raw = value.ToString("R", CultureInfo.InvariantCulture);
+        var negative = raw[0] == '-';
+        var mantissaStart = negative ? 1 : 0;
+        var exponentAt = raw.IndexOf('E');
+        var mantissaEnd = exponentAt < 0 ? raw.Length : exponentAt;
+        var exponent = exponentAt < 0 ? 0 : int.Parse(raw.AsSpan(exponentAt + 1), CultureInfo.InvariantCulture);
+        var pointAt = raw.IndexOf('.', mantissaStart, mantissaEnd - mantissaStart);
+        var integerDigits = (pointAt < 0 ? mantissaEnd : pointAt) - mantissaStart;
+        var digits = raw.AsSpan(mantissaStart, mantissaEnd - mantissaStart).ToString().Replace(".", "", StringComparison.Ordinal);
+        var leading = 0;
+        while (digits[leading] == '0') leading++;
+        var scientificExponent = integerDigits - leading - 1 + exponent;
+        digits = digits[leading..].TrimEnd('0');
+        if (negative) text.Append('-');
+
+        var decimalPosition = scientificExponent + 1;
+        if (decimalPosition > 15 || decimalPosition <= -4)
+        {
+            text.Append(digits[0]);
+            if (digits.Length > 1) { text.Append('.'); text.Append(digits.AsSpan(1)); }
+            text.Append('e');
+            text.Append(scientificExponent < 0 ? '-' : '+');
+            text.Append(Math.Abs(scientificExponent).ToString("D2", CultureInfo.InvariantCulture));
+        }
+        else if (decimalPosition <= 0)
+        {
+            text.Append("0.");
+            text.Append('0', -decimalPosition);
+            text.Append(digits);
+        }
+        else if (decimalPosition >= digits.Length)
+        {
+            text.Append(digits);
+            text.Append('0', decimalPosition - digits.Length);
+            text.Append(".0");
+        }
+        else
+        {
+            text.Append(digits.AsSpan(0, decimalPosition));
+            text.Append('.');
+            text.Append(digits.AsSpan(decimalPosition));
+        }
+    }
+
+    private static void AppendQuotedString(StringBuilder text, string value)
+    {
+        text.Append('"');
+        foreach (var character in value)
+        {
+            switch (character)
+            {
+                case '\\': text.Append("\\\\"); break;
+                case '\b': text.Append("\\b"); break;
+                case '\f': text.Append("\\f"); break;
+                case '\n': text.Append("\\n"); break;
+                case '\r': text.Append("\\r"); break;
+                case '\t': text.Append("\\t"); break;
+                case '\v': text.Append("\\v"); break;
+                case '"': text.Append("\\\""); break;
+                default: text.Append(character); break;
+            }
+        }
+        text.Append('"');
+    }
+
+    private static int CompareKeys(string left, string right)
+    {
+        var leftRunes = left.EnumerateRunes();
+        var rightRunes = right.EnumerateRunes();
+        while (true)
+        {
+            var hasLeft = leftRunes.MoveNext();
+            var hasRight = rightRunes.MoveNext();
+            if (!hasLeft || !hasRight) return hasLeft.CompareTo(hasRight);
+            var comparison = leftRunes.Current.Value.CompareTo(rightRunes.Current.Value);
+            if (comparison != 0) return comparison;
+        }
     }
 
     private static void AppendIndent(StringBuilder text, string indent, int depth)

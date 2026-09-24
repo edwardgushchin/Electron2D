@@ -20,7 +20,7 @@ The domain currently contains fifteen active components:
 | [Typed event connections](../components/event-connections.md) | Disposable typed subscriptions with one-shot and deferred delivery | Implemented and verified |
 | [Typed editor properties](../components/editor-properties.md) | Variant-free property discovery, typed access, validation, and revert behavior | Implemented and verified |
 | [Configuration files](../components/config-files.md) | Strongly typed sectioned values, transactional parsing, atomic persistence, and authenticated encryption | Implemented and verified |
-| [JSON documents](../components/json.md) | Document-scoped JSON parsing, diagnostics, formatting, and typed native conversion | Document state and typed conversion verified; parser, diagnostics and formatting Partial |
+| [JSON documents](../components/json.md) | Document-scoped JSON parsing, diagnostics, formatting, and typed native conversion | State and conversion verified; formatter numeric/Unicode path checked, exact full-precision text Partial; parser and diagnostics Partial |
 | [File and directory access](../components/file-access.md) | Blocking file/directory I/O, scoped navigation, virtual paths, metadata, links, hashes, temporary ownership, compression, and encryption | Implemented and verified; documented codec/platform gaps |
 | [XML parsing](../components/xml-parsing.md) | Permissive UTF-8 token reading, byte offsets, attributes and section navigation | Executable managed path; exact malformed-input parity partial |
 | [Project settings](../components/project-settings.md) | Typed global/default values, feature overrides, dirty events, project persistence, and virtual paths | Implemented and verified |
