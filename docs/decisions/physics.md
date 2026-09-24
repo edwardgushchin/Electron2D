@@ -208,8 +208,8 @@ Joint2D/PinJoint2D was compared as another gameplay slice. Its public RID needs 
 
 Games can construct two-sided terrain edges and line sensors and attach segments to moving bodies. Live edits, rotation, short/point limits, resource copying, scene packing and dynamic mass/inertia have executable checks. Compound chain geometry, joint tuning/RID, direct-space sweeps, native allocator accounting, other platforms and owner acceptance remain separate work.
 
-<a id="adr-0062"></a>
-## ADR 0062: Shared RID identity and world-scoped physics queries
+<a id="adr-0063"></a>
+## ADR 0063: Shared RID identity and world-scoped physics queries
 
 Last updated: 2026-09-25
 

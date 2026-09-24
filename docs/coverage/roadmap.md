@@ -118,8 +118,8 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first 2D skeleton bone and physics-body ownership integration. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first concrete typed resource file format and serializer with ownership and rollback (ADRs 0013 and 0023). | 1 |
-| Trigger: first executable owned world-resource slice: physics space and direct state under ADR 0062, canvas and navigation under ADRs 0028 and 0052. | 1 |
-| Trigger: first executable shared server resource-identity and lifetime slice under ADR 0062; renderer and navigation consumers retain their own domain gates. | 1 |
+| Trigger: first executable owned world-resource slice: physics space and direct state under ADR 0063, canvas and navigation under ADRs 0028 and 0052. | 1 |
+| Trigger: first executable shared server resource-identity and lifetime slice under ADR 0063; renderer and navigation consumers retain their own domain gates. | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first public typed loader-plugin registration and callback slice after the concrete internal image-texture loader (ADR 0013). | 1 |
