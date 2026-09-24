@@ -199,7 +199,7 @@ public abstract class PhysicsBody : CollisionObject
         foreach (var node in _shapes)
         {
             if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
-            _backendShapes.Add(shape.AddToBody(_bodyID, node.Position, node.Rotation, definition));
+            shape.AppendToBody(_bodyID, node.Position, node.Rotation, definition, _backendShapes);
         }
 
         OnShapesRebuilt();

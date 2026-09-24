@@ -575,6 +575,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ConvexPolygonShape",
+    "kind": "type",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "ConvexPolygonShape",
+    "signature": "public sealed class Electron2D.ConvexPolygonShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Curve",
     "kind": "type",
     "declaringType": "Electron2D.Curve",
@@ -5062,6 +5077,19 @@
     "declaringType": "Electron2D.Control",
     "name": ".ctor",
     "signature": "public Control()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ConvexPolygonShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": ".ctor",
+    "signature": "public ConvexPolygonShape()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -24507,6 +24535,90 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.SetPointCloud(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "SetPointCloud",
+    "signature": "public System.Void SetPointCloud(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E pointCloud)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pointCloud",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -61099,6 +61211,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ConvexPolygonShape.Points()",
+    "kind": "property",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "Points",
+    "signature": "public Electron2D.Vector2[] Points { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {

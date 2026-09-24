@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "ConvexPolygonShape2D::method:set_point_cloud(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.ConvexPolygonShape.SetPointCloud(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ReadOnlySpan input projects the packed point cloud to a typed C# hull operation without retaining caller storage."
+    },
+    {
       "godot": "Shape2D::method:get_rect()",
       "electron2d": "method:Electron2D.Shape.GetRect()",
       "reason": "Abstract typed shape bounds hook; concrete circle and rectangle overrides supply the geometry."
@@ -32,6 +37,26 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ConvexPolygonShape..ctor()",
+      "reason": "Managed C# construction projects the empty convex polygon resource default.",
+      "adr": "ADRs 0003, 0013, 0062"
+    },
+    {
+      "electron2d": "method:Electron2D.ConvexPolygonShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copying preserves independent polygon vertices and internal fixture pieces.",
+      "adr": "ADRs 0013, 0062"
+    },
+    {
+      "electron2d": "method:Electron2D.ConvexPolygonShape.CreateDuplicateInstance()",
+      "reason": "Typed Resource copying creates an independent convex polygon instance.",
+      "adr": "ADRs 0013, 0062"
+    },
+    {
+      "electron2d": "method:Electron2D.ConvexPolygonShape.GetRect()",
+      "reason": "Concrete local bounds override of the inherited Shape.GetRect contract.",
+      "adr": "ADRs 0008, 0062"
+    },
     {
       "electron2d": "constructor:Electron2D.SegmentShape..ctor()",
       "reason": "Managed construction projects the existing line-segment resource defaults.",
@@ -289,6 +314,15 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:ConvexPolygonShape2D",
+        "ConvexPolygonShape2D::method:set_point_cloud(PackedVector2Array:)",
+        "ConvexPolygonShape2D::property:points"
+      ],
+      "state": "Implemented",
+      "reason": "Solid convex hull resource, point-cloud generation and compound fixtures above eight vertices execute under ADR 0062; ConvexPolygonShapeTests covers bounds, winding, invalid input, copies, rotated/dynamic contacts, area monitoring, live edits, packing and warm allocation."
+    },
     {
       "godot": [
         "class:SegmentShape2D",

@@ -208,6 +208,29 @@ Joint2D/PinJoint2D was compared as another gameplay slice. Its public RID needs 
 
 Games can construct two-sided terrain edges and line sensors and attach segments to moving bodies. Live edits, rotation, short/point limits, resource copying, scene packing and dynamic mass/inertia have executable checks. Compound chain geometry, joint tuning/RID, direct-space sweeps, native allocator accounting, other platforms and owner acceptance remain separate work.
 
+<a id="adr-0062"></a>
+## ADR 0062: Compound convex collision fixtures
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: Convex polygon resource, point-cloud hull and multiple fixtures per CollisionShape
+- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0013](resources.md#adr-0013)
+
+### Context
+
+Existing circle, capsule, segment and rectangle fixtures cannot reproduce an arbitrary solid convex body. The pinned convex polygon resource stores perimeter points, accepts either winding and computes a hull from point clouds. Box2D.NET limits one polygon fixture to eight vertices, while the public contour has no eight-vertex limit. The previous Shape-to-fixture method returned only one ID, so a shape with more vertices could not be represented without dropping geometry or splitting its public identity.
+
+### Decision
+
+- Map ConvexPolygonShape2D to `ConvexPolygonShape : Shape`. `Points` defaults empty, returns/accepts caller-owned arrays, retains perimeter order and may repeat the first vertex at the end. Assignment emits a resource change even for equal contents; empty input removes all fixtures. A typed `ReadOnlySpan<Vector2>` point-cloud method uses the existing convex-hull operation and stores its closed contour. Validate finite, nondegenerate convex perimeter input, including edge crossings and backend-size limits, before committing a new resource revision.
+- Let each Shape append zero, one or several internal fixture IDs to the existing body/area owner list. The four existing concrete shapes still append one. Split a larger convex contour into a nonoverlapping fan of pieces with at most eight vertices each, sharing only seam edges. Precompute/validate all local hulls before resource mutation, then apply each child's position/rotation to those hulls on fixture rebuild. The body or area still borrows one public Shape resource, and object-level events deduplicate backend pieces by owner.
+- Keep copies of public points and internal hull pieces independent across Resource duplication. Multiple dynamic fixtures contribute area-derived mass/inertia through the existing body mass policy. Warmed unchanged contact and area scans reuse fixture storage and allocate zero managed bytes on the checked Linux/.NET 8 path. No vendored source is changed.
+
+### Consequences
+
+Games can collide and sense with a solid convex contour containing more than eight vertices; direct clockwise/counterclockwise assignment and point-cloud hull generation are executable. `CollisionPolygon` and concave polygon decomposition can reuse the compound-fixture mechanism in later slices. Native allocator counts, other platforms and owner visual acceptance remain unverified.
+
 <a id="adr-0063"></a>
 ## ADR 0063: Shared RID identity and world-scoped physics queries
 
