@@ -27,6 +27,17 @@ public abstract class Shape : Resource
     }
 
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
+
+    internal static B2ShapeId CreateSegmentOrPoint(B2BodyId bodyID, in B2ShapeDef definition, B2Vec2 pointA, B2Vec2 pointB)
+    {
+        if (B2MathFunction.b2DistanceSquared(pointA, pointB) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP)
+        {
+            var center = new B2Vec2(pointA.X + (pointB.X - pointA.X) * 0.5f,
+                pointA.Y + (pointB.Y - pointA.Y) * 0.5f);
+            return b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 });
+        }
+        return b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB));
+    }
 }
 
 /// <summary>A circular collision shape with a configurable radius.</summary>
@@ -231,14 +242,7 @@ public sealed class SegmentShape : Shape
         ThrowIfDisposed();
         var pointA = ToBackend(localPosition + _a.Rotated(localRotation));
         var pointB = ToBackend(localPosition + _b.Rotated(localRotation));
-        if (B2MathFunction.b2DistanceSquared(pointA, pointB) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP)
-        {
-            var center = new B2Vec2(pointA.X + (pointB.X - pointA.X) * 0.5f,
-                pointA.Y + (pointB.Y - pointA.Y) * 0.5f);
-            fixtures.Add(b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 }));
-            return;
-        }
-        fixtures.Add(b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB)));
+        fixtures.Add(CreateSegmentOrPoint(bodyID, definition, pointA, pointB));
     }
 
     /// <inheritdoc />

@@ -261,3 +261,28 @@ Game code can eventually query its current world through typed scene access with
 - Replace RID parameters and results with only CollisionObject/Shape references: server-created resources have no required scene object, and this would remove applicable API under ADR 0004.
 - Add a physics-only PhysicsRID: it duplicates the reference's cross-server identity role needed by rendering and navigation.
 - Publish inert RID/PhysicsServer2D placeholders or wait for every server method before the first query: either choice delays an executable, auditable physics-query slice without changing its required ownership contract.
+
+<a id="adr-0064"></a>
+## ADR 0064: Hollow paired-segment collision resource
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: ConcavePolygonShape resource and hollow multi-segment body/area fixtures
+- Depends on: [0061](#adr-0061), [0062](#adr-0062), [0013](resources.md#adr-0013)
+
+### Context
+
+SegmentShape supplies one two-sided edge, while a level boundary or line sensor needs several independent edges in one reusable resource. The pinned ConcavePolygonShape2D stores an array of endpoint pairs and has no solid interior, even if those pairs enclose an area. The current internal Shape contract can append several fixture IDs to one body or area. Box2D.NET rejects short segment fixtures, so the same numerical fallback used by SegmentShape is required for each pair.
+
+CollisionPolygon2D was compared as the adjacent scene-node feature. ConvexPolygonShape and ConcavePolygonShape now supply its two build geometries; the node still needs a direct CollisionObject polygon slot with live mode/contour rebuild and PackedScene state. Its one-way properties additionally require typed pre-solve direction/margin contact filtering. Coverage records these separate exact triggers rather than continuing to claim the polygon resources are missing.
+
+### Decision
+
+- Map ConcavePolygonShape2D to `ConcavePolygonShape : Shape` with an empty default and a caller-owned `Vector2[] Segments` copy boundary. Require an even number of finite endpoints with finite per-pair and overall bounds. Each consecutive pair defines one independent edge; empty input removes all fixtures. Assignment emits `Changed` even for equal content. `GetRect()` spans every stored endpoint and returns default when empty. Resource duplication copies the array independently.
+- Reuse the internal multiple-fixture owner lists for bodies and areas. Transform each endpoint pair by its direct CollisionShape child, then create a two-sided segment or zero-radius point fixture using the SegmentShape backend tolerance rule. The public resource remains hollow; an object fully inside a closed set of edges is not reported as overlapping until it touches an edge. Body/area object events still deduplicate by owner.
+- Keep the dynamic zero-area mass/inertia policy from ADR 0061 for bodies that borrow paired segments, while documenting that hollow multi-segment shapes are primarily level/static geometry. Warmed unchanged body/area scans allocate zero managed bytes in the checked Linux/.NET 8 profile. No vendored source is changed.
+
+### Consequences
+
+Games can use reusable multi-edge terrain, open contours and hollow line sensors. The geometry and owning resource are executable; CollisionPolygon scene integration, one-way filtering, native allocator accounting, other platforms and owner acceptance remain separate work.

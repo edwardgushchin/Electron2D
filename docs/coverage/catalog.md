@@ -193,7 +193,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CompressedTexture2DArray](classes/CompressedTexture2DArray.md) | CompressedTextureLayered | Blocked | 0 |
 | [CompressedTexture3D](classes/CompressedTexture3D.md) | Texture3D | Excluded | 2 |
 | [CompressedTextureLayered](classes/CompressedTextureLayered.md) | TextureLayered | Blocked | 2 |
-| [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Unimplemented | 1 |
+| [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Implemented | 1 |
 | [ConcavePolygonShape3D](classes/ConcavePolygonShape3D.md) | Shape3D | Excluded | 3 |
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
 | [ConfigFile](classes/ConfigFile.md) | RefCounted | Implemented | 17 |

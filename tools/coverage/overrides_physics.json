@@ -38,6 +38,26 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.ConcavePolygonShape..ctor()",
+      "reason": "Managed C# construction projects the empty paired-segment resource default.",
+      "adr": "ADRs 0003, 0013, 0064"
+    },
+    {
+      "electron2d": "method:Electron2D.ConcavePolygonShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copying preserves independent paired-segment geometry.",
+      "adr": "ADRs 0013, 0064"
+    },
+    {
+      "electron2d": "method:Electron2D.ConcavePolygonShape.CreateDuplicateInstance()",
+      "reason": "Typed Resource copying creates an independent hollow contour instance.",
+      "adr": "ADRs 0013, 0064"
+    },
+    {
+      "electron2d": "method:Electron2D.ConcavePolygonShape.GetRect()",
+      "reason": "Concrete local bounds override of the inherited Shape.GetRect contract.",
+      "adr": "ADRs 0008, 0064"
+    },
+    {
       "electron2d": "constructor:Electron2D.ConvexPolygonShape..ctor()",
       "reason": "Managed C# construction projects the empty convex polygon resource default.",
       "adr": "ADRs 0003, 0013, 0062"
@@ -314,6 +334,36 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:ConcavePolygonShape2D",
+        "ConcavePolygonShape2D::property:segments"
+      ],
+      "state": "Implemented",
+      "reason": "Hollow paired-segment resource and multi-fixture body/area integration execute under ADR 0064; ConcavePolygonShapeTests covers ownership, bounds, inside-versus-edge detection, point fallback, live edits, packing and warm allocation."
+    },
+    {
+      "godot": [
+        "class:CollisionPolygon2D",
+        "CollisionPolygon2D::enum:BuildMode",
+        "CollisionPolygon2D::enum_value:BuildMode.BUILD_SEGMENTS",
+        "CollisionPolygon2D::enum_value:BuildMode.BUILD_SOLIDS",
+        "CollisionPolygon2D::property:build_mode",
+        "CollisionPolygon2D::property:disabled",
+        "CollisionPolygon2D::property:polygon"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: a direct CollisionObject polygon slot with live convex/paired-segment BuildMode conversion, transform ownership and PackedScene state; both shape resources now exist (ADR 0064)."
+    },
+    {
+      "godot": [
+        "CollisionPolygon2D::property:one_way_collision",
+        "CollisionPolygon2D::property:one_way_collision_direction",
+        "CollisionPolygon2D::property:one_way_collision_margin"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed one-way pre-solve contact filtering with direction and margin on polygon-owner fixtures (ADR 0064)."
+    },
     {
       "godot": [
         "class:ConvexPolygonShape2D",

@@ -191,6 +191,7 @@ PhysicsBodyTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 ConvexPolygonShapeTests.Run();
+ConcavePolygonShapeTests.Run();
 AnimatableBodyTests.Run();
 PhysicsMaterialTests.Run();
 AreaTests.Run();
