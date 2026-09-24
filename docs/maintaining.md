@@ -1,8 +1,12 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
+
+## Release license audit
+
+The root [MIT license](../LICENSE) covers Electron2D-authored code. Preserve each vendor's original license and the [third-party notices](../THIRD_PARTY_NOTICES.md). Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The check compares the current 62 ELF names, pinned NuGet/runtime versions and 29 published notice files; a change requires updating the inventory and notices together. It does not establish the exact source provenance of packaged Vkd3d or audit other platforms. Resolve the outstanding LGPL source/replacement obligations in `THIRD_PARTY_NOTICES.md` before release.
 
 ## Public API and coverage
 
