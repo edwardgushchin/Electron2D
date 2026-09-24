@@ -11,6 +11,8 @@ Last updated: 2026-09-23
 
 Controls whether an attached, visible Control can become the single keyboard input target of its scene tree. The enum is stored by `Control`.
 
+`Control.GetFocusModeWithOverride()` applies [`FocusBehaviorRecursive`](ControlFocusBehaviorRecursive.md) and returns `None` when a direct Control ancestor disables focus, unless the descendant explicitly enables it.
+
 | Value | Number | Behavior |
 | --- | ---: | --- |
 | `None` | 0 | Cannot take focus; default. |

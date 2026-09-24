@@ -347,6 +347,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlFocusBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "ControlFocusBehaviorRecursive",
+    "signature": "public enum Electron2D.ControlFocusBehaviorRecursive",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ControlFocusMode",
     "kind": "type",
     "declaringType": "Electron2D.ControlFocusMode",
@@ -424,6 +442,24 @@
     "declaringType": "Electron2D.ControlLayoutPresetMode",
     "name": "ControlLayoutPresetMode",
     "signature": "public enum Electron2D.ControlLayoutPresetMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ControlMouseBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "ControlMouseBehaviorRecursive",
+    "signature": "public enum Electron2D.ControlMouseBehaviorRecursive",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -6729,6 +6765,45 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.ControlFocusMode.All()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ControlFocusMode",
@@ -7155,6 +7230,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ControlLayoutPresetMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
     "value": "0"
   },
   {
@@ -21085,6 +21199,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetFocusModeWithOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetFocusModeWithOverride",
+    "signature": "public Electron2D.ControlFocusMode GetFocusModeWithOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusMode",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetFocusNeighbor(Electron2D.Side)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21140,6 +21267,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetMouseFilterWithOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetMouseFilterWithOverride",
+    "signature": "public Electron2D.ControlMouseFilter GetMouseFilterWithOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseFilter",
     "value": null
   },
   {
@@ -56394,6 +56534,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.FocusBehaviorRecursive()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusBehaviorRecursive",
+    "signature": "public Electron2D.ControlFocusBehaviorRecursive FocusBehaviorRecursive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.FocusMode()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -56534,6 +56687,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ControlLayoutDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.MouseBehaviorRecursive()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseBehaviorRecursive",
+    "signature": "public Electron2D.ControlMouseBehaviorRecursive MouseBehaviorRecursive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
     "value": null
   },
   {

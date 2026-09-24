@@ -16,6 +16,8 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [ControlGrowDirection](../classes/ControlGrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
 | [ControlLayoutDirection](../classes/ControlLayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
 | [ControlLayoutPresetMode](../classes/ControlLayoutPresetMode.md) | enum | Intrinsic-minimum or retained width/height policy for offset presets. |
+| [ControlFocusBehaviorRecursive](../classes/ControlFocusBehaviorRecursive.md) | enum | Inherited focus eligibility for direct Control subtrees. |
+| [ControlMouseBehaviorRecursive](../classes/ControlMouseBehaviorRecursive.md) | enum | Inherited pointer eligibility for direct Control subtrees. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 

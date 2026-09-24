@@ -49,6 +49,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 
 ## Properties
 
+`FocusBehaviorRecursive` and `MouseBehaviorRecursive` default to inheritance from a direct Control parent, or enabled at the root. Disabled masks the corresponding stored mode/filter; an explicitly enabled child restores its own mode/filter. A non-Control parent ends inheritance. Policy changes refresh hover and release newly ineligible focus immediately. Mouse capture is rejected on the next pointer event if its target becomes ineligible. [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks these root viewport behaviors and packed state.
+
 | Member | Contract |
 | --- | --- |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
@@ -78,9 +80,11 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float OffsetRight { get; set; }` | Right local offset. |
 | `public float OffsetBottom { get; set; }` | Bottom local offset. |
 | `public ControlMouseFilter MouseFilter { get; set; }` | Stop by default; Pass bubbles; Ignore does not receive or block pointer events. |
+| `public ControlMouseBehaviorRecursive MouseBehaviorRecursive { get; set; }` | Inherited by default; disables or restores pointer input in a direct Control subtree. |
 | `public CursorShape MouseDefaultCursorShape { get; set; }` | Arrow by default; a hovered control refreshes the native cursor after a change. |
 | `public bool MouseForcePassScrollEvents { get; set; }` | True by default; permits wheel bubbling through Stop. |
 | `public ControlFocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus; All also permits action navigation. |
+| `public ControlFocusBehaviorRecursive FocusBehaviorRecursive { get; set; }` | Inherited by default; disables or restores focus eligibility in a direct Control subtree. |
 | `public string FocusNext { get; set; }` / `FocusPrevious` | Relative paths for forward and backward focus traversal; empty by default. |
 | `public string FocusNeighborLeft { get; set; }` / `FocusNeighborTop` / `FocusNeighborRight` / `FocusNeighborBottom` | Relative paths for directional navigation; empty by default. |
 
@@ -117,6 +121,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public override Transform GetTransform()` | Returns translation composed with pivot, rotation and scale. |
 | `public override void Reparent(Node newParent, bool keepGlobalTransform = true)` | Moves in the neutral tree; preserves global origin by default, validating a canvas inverse before mutation. |
 | `public void AcceptEvent()` | Marks current scene input handled. |
+| `public ControlMouseFilter GetMouseFilterWithOverride()` | Returns Ignore when recursive pointer input is disabled, else the stored filter. |
+| `public ControlFocusMode GetFocusModeWithOverride()` | Returns None when recursive focus is disabled, else the stored mode. |
 | `public void GrabFocus(bool hideFocus = false)` | Requests focus while attached and visible. |
 | `public bool HasFocus(bool ignoreHiddenFocus = false)` | Queries whether this is the current focused control. |
 | `public void ReleaseFocus()` | Releases focus if held. |

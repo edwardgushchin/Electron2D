@@ -870,8 +870,10 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(OffsetRight), node => node.OffsetRight, (node, value) => node.OffsetRight = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(OffsetBottom), node => node.OffsetBottom, (node, value) => node.OffsetBottom = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, ControlMouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => ControlMouseFilter.Stop, stored: true),
+        new PropertyDescriptor<Control, ControlMouseBehaviorRecursive>(nameof(MouseBehaviorRecursive), node => node.MouseBehaviorRecursive, (node, value) => node.MouseBehaviorRecursive = value, _ => ControlMouseBehaviorRecursive.Inherited, stored: true),
         new PropertyDescriptor<Control, bool>(nameof(MouseForcePassScrollEvents), node => node.MouseForcePassScrollEvents, (node, value) => node.MouseForcePassScrollEvents = value, _ => true, stored: true),
         new PropertyDescriptor<Control, ControlFocusMode>(nameof(FocusMode), node => node.FocusMode, (node, value) => node.FocusMode = value, _ => ControlFocusMode.None, stored: true),
+        new PropertyDescriptor<Control, ControlFocusBehaviorRecursive>(nameof(FocusBehaviorRecursive), node => node.FocusBehaviorRecursive, (node, value) => node.FocusBehaviorRecursive = value, _ => ControlFocusBehaviorRecursive.Inherited, stored: true),
         new PropertyDescriptor<Control, CursorShape>(nameof(MouseDefaultCursorShape), node => node.MouseDefaultCursorShape, (node, value) => node.MouseDefaultCursorShape = value, _ => CursorShape.Arrow, stored: true)
     ];
 }

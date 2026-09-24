@@ -27,6 +27,8 @@
   "enums": {
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
     "Control.FocusMode": "ControlFocusMode",
+    "Control.FocusBehaviorRecursive": "ControlFocusBehaviorRecursive",
+    "Control.MouseBehaviorRecursive": "ControlMouseBehaviorRecursive",
     "Control.LayoutPreset": "ControlLayoutPreset",
     "Control.GrowDirection": "ControlGrowDirection",
     "Control.LayoutDirection": "ControlLayoutDirection",

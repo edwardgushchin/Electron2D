@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"godot": "Control::method:get_focus_mode_with_override()", "electron2d": "method:Electron2D.Control.GetFocusModeWithOverride()", "reason": "Typed query returns the focus mode after recursive behavior is applied."},
+    {"godot": "Control::method:get_mouse_filter_with_override()", "electron2d": "method:Electron2D.Control.GetMouseFilterWithOverride()", "reason": "Typed query returns the pointer filter after recursive behavior is applied."},
     {"godot": "Control::method:get_combined_pivot_offset()", "electron2d": "method:Electron2D.Control.GetCombinedPivotOffset()", "reason": "Absolute pivot plus current-size relative pivot under the typed Control transform."},
     {"godot": "Control::method:get_begin()", "electron2d": "method:Electron2D.Control.GetBegin()", "reason": "Returns the left/top stored offset pair."},
     {"godot": "Control::method:get_end()", "electron2d": "method:Electron2D.Control.GetEnd()", "reason": "Returns the right/bottom stored offset pair."},
@@ -2624,6 +2626,24 @@
     }
   ],
   "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "Direct-Control inheritance defaults to enabled; Disabled masks the stored mode or filter, and Enabled restores a descendant. Root viewport routing, focus navigation, hover, immediate focus release, invalid values and PackedScene state are checked by ControlRecursiveBehaviorTests. Full GUI routing remains classified on its separate rows.",
+      "godot": [
+        "Control::enum:FocusBehaviorRecursive",
+        "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_INHERITED",
+        "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_DISABLED",
+        "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_ENABLED",
+        "Control::property:focus_behavior_recursive",
+        "Control::method:get_focus_mode_with_override()",
+        "Control::enum:MouseBehaviorRecursive",
+        "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_INHERITED",
+        "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_DISABLED",
+        "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_ENABLED",
+        "Control::property:mouse_behavior_recursive",
+        "Control::method:get_mouse_filter_with_override()"
+      ]
+    },
     {"godot": ["Control::method:get_combined_pivot_offset()", "Control::property:pivot_offset_ratio"], "state": "Implemented", "reason": "Absolute and relative pivots combine per current Control size and affect its live rotation/scale transform. ControlLayoutTests verifies numeric values, later resize, packed-state restoration and transformed origin."},
     {"godot": ["Control::property:offset_transform_enabled", "Control::property:offset_transform_pivot", "Control::property:offset_transform_pivot_ratio", "Control::property:offset_transform_position", "Control::property:offset_transform_position_ratio", "Control::property:offset_transform_rotation", "Control::property:offset_transform_scale", "Control::property:offset_transform_visual_only"], "state": "Implemented", "reason": "Pinned defaults and matrix order combine absolute and size-relative translation/pivot with rotation and scale. Disabled values persist; visual-only affects render traversal without changing logical transform/hit testing, while the nonvisual mode affects both. ControlLayoutTests checks composition, input and packing; SceneHierarchyRenderingTests checks changing pixels on dummy compatibility and Linux Wayland compatibility/GPU, including Y-sort traversal."},
     {"godot": ["Control::method:get_begin()", "Control::method:get_end()", "Control::method:set_begin(Vector2:)", "Control::method:set_end(Vector2:)"], "state": "Implemented", "reason": "Pairs read or atomically update the corresponding two stored offsets and reflow once. ControlLayoutTests covers edge values, resolved geometry, equal assignment and finite-validation rollback."},
