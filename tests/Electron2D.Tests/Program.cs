@@ -188,6 +188,7 @@ NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
+CapsuleShapeTests.Run();
 PhysicsMaterialTests.Run();
 AreaTests.Run();
 PhysicsAreaFieldTests.Run();

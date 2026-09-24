@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "Shape2D", "CircleShape2D", "RectangleShape2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "RectangleShape2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -77,6 +77,9 @@ def main():
     assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "../../classes/AStarGrid.md" in class_rows["AStarGrid2D"]
     assert "../../classes/Area.md" in class_rows["Area2D"] and " | Partial | " in class_rows["Area2D"]
+    capsule_rows = [row for row in pages[CLASS_PAGES / "CapsuleShape2D.md"].splitlines()
+                    if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(capsule_rows) == 4 and all(" | Implemented | " in row for row in capsule_rows)
     area_rows = [row for row in pages[CLASS_PAGES / "Area2D.md"].splitlines()
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(area_rows) == 36
@@ -111,11 +114,12 @@ def main():
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
                 "Implemented": 8, "Partial": 4, "Blocked": 13, "Unimplemented": 1}
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
+                         ("CapsuleShape2D", "CapsuleShape"),
                          ("RectangleShape2D", "RectangleShape"), ("CollisionShape2D", "CollisionShape"),
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"CircleShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
     assert "cryptography utility contract" in class_rows["AESContext"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     assert "GUI/editor Shortcut" in class_rows["Shortcut"]

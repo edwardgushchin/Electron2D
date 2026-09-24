@@ -321,6 +321,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CapsuleShape",
+    "kind": "type",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "CapsuleShape",
+    "signature": "public sealed class Electron2D.CapsuleShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CellularDistanceFunction",
     "kind": "type",
     "declaringType": "Electron2D.CellularDistanceFunction",
@@ -4763,6 +4778,19 @@
     "declaringType": "Electron2D.CanvasLayer",
     "name": ".ctor",
     "signature": "public CanvasLayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CapsuleShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": ".ctor",
+    "signature": "public CapsuleShape()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -22164,6 +22192,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CapsuleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CapsuleShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CapsuleShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -58071,6 +58164,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CapsuleShape.Height()",
+    "kind": "property",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "Height",
+    "signature": "public System.Single Height { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CapsuleShape.MidHeight()",
+    "kind": "property",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "MidHeight",
+    "signature": "public System.Single MidHeight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CapsuleShape.Radius()",
+    "kind": "property",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "Radius",
+    "signature": "public System.Single Radius { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

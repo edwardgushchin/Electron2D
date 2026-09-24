@@ -161,7 +161,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CanvasModulate](classes/CanvasModulate.md) | Node2D | Blocked | 1 |
 | [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Blocked | 8 |
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Excluded | 4 |
-| [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Unimplemented | 3 |
+| [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Implemented | 3 |
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
 | [CenterContainer](classes/CenterContainer.md) | Container | Blocked | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |

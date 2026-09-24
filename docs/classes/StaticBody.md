@@ -1,6 +1,6 @@
 # StaticBody
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-A stationary scene collider. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
+A stationary scene collider. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle, capsule or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
 
 ## Example
 

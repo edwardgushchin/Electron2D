@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle or rectangle geometry. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, its gravity and damping fields affect overlapping dynamic bodies before the solver step regardless of monitoring flags.
+A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule or rectangle geometry. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, its gravity and damping fields affect overlapping dynamic bodies before the solver step regardless of monitoring flags.
 
 ## Example
 

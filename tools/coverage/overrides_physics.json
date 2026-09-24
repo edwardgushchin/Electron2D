@@ -33,6 +33,26 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.CapsuleShape..ctor()",
+      "reason": "Managed C# construction projects the existing capsule resource defaults.",
+      "adr": "ADRs 0003, 0013, 0059"
+    },
+    {
+      "electron2d": "method:Electron2D.CapsuleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed managed Resource copying retains linked capsule dimensions without backend handles.",
+      "adr": "ADRs 0013, 0059"
+    },
+    {
+      "electron2d": "method:Electron2D.CapsuleShape.CreateDuplicateInstance()",
+      "reason": "Typed managed Resource copying creates an independent capsule instance.",
+      "adr": "ADRs 0013, 0059"
+    },
+    {
+      "electron2d": "method:Electron2D.CapsuleShape.GetRect()",
+      "reason": "Concrete local bounds override of the inherited Shape.GetRect contract.",
+      "adr": "ADRs 0008, 0059"
+    },
+    {
       "electron2d": "constructor:Electron2D.CircleShape..ctor()",
       "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
@@ -239,6 +259,16 @@
       ],
       "state": "Implemented",
       "reason": "Complete own shape dimensions and bounds execute; inherited Shape queries retain separate rows."
+    },
+    {
+      "godot": [
+        "class:CapsuleShape2D",
+        "CapsuleShape2D::property:height",
+        "CapsuleShape2D::property:mid_height",
+        "CapsuleShape2D::property:radius"
+      ],
+      "state": "Implemented",
+      "reason": "Coupled dimensions, bounds, resource copying and live body/area fixtures execute under ADR 0059; CapsuleShapeTests covers defaults, degenerate values, rotation, contacts, packing, callback failure and warm allocation."
     },
     {
       "godot": [
