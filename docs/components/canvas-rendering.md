@@ -14,6 +14,8 @@ The component owns [RenderingServer](../classes/RenderingServer.md) and its inte
 4. Batch adjacent commands only when shader state, blend mode, texture, filter, repeat and anisotropy limit match. Resolve current immutable pixel snapshots and preflight native resources before clearing/drawing. Pixel updates and blend mode changes do not require OnDraw.
 5. Upload and submit to the RGBA8 target, copy it to the native window and deliver FramePostDraw. Submission is not display completion. Callback failures trigger Engine.Run cleanup.
 
+Control may contribute a visual-only offset transform to step 3's rendering traversal. Ordinary and Y-sorted child geometry inherits that visual matrix, while logical global transforms and GUI hit testing omit it. With visual-only disabled, the same offset matrix participates in both logical and rendering transforms. The focused scene-hierarchy pixel test verifies a changed Control offset on dummy compatibility and Linux Wayland compatibility/GPU without rewriting the child Sprite's drawing commands.
+
 ## Drawing contract
 
 ### Fixed canvas blending

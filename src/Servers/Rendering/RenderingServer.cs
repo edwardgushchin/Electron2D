@@ -218,7 +218,7 @@ public sealed class RenderingServer : ElectronObject
         if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
         if (!alreadyYSorted)
         {
-            var local = item.GetTransform();
+            var local = item.GetVisualTransform();
             if (_window.SnapTransformsToPixel)
             {
                 transform.Origin = CanvasGeometry.Snap(transform.Origin);
@@ -267,7 +267,7 @@ public sealed class RenderingServer : ElectronObject
         for (var index = 0; index < parent.ChildCount; index++)
         {
             if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
-            var local = child.GetTransform();
+            var local = child.GetVisualTransform();
             if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;
             _ySort.Add(new(child, transform, _ySort.Count));

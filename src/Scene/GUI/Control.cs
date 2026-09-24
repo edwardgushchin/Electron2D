@@ -14,6 +14,15 @@ public partial class Control : CanvasItem
     private float _rotation;
     private Vector2 _scale = Vector2.One;
     private Vector2 _pivotOffset;
+    private Vector2 _pivotOffsetRatio;
+    private bool _offsetTransformEnabled;
+    private Vector2 _offsetTransformPosition;
+    private Vector2 _offsetTransformPositionRatio;
+    private Vector2 _offsetTransformScale = Vector2.One;
+    private float _offsetTransformRotation;
+    private Vector2 _offsetTransformPivot;
+    private Vector2 _offsetTransformPivotRatio = new(.5f, .5f);
+    private bool _offsetTransformVisualOnly = true;
     private Vector2 _customMinimumSize;
     private Vector2 _lastMinimumSize;
     private Vector2 _customMaximumSize = new(-1, -1);
@@ -278,6 +287,94 @@ public partial class Control : CanvasItem
     {
         get { ThrowIfDisposed(); return _pivotOffset; }
         set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffset == value) return; _pivotOffset = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+    }
+
+    /// <summary>Gets or sets the portion of the current size added to PivotOffset.</summary>
+    public Vector2 PivotOffsetRatio
+    {
+        get { ThrowIfDisposed(); return _pivotOffsetRatio; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_pivotOffsetRatio == value) return; _pivotOffsetRatio = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+    }
+
+    /// <summary>Gets the absolute pivot plus its current size-relative component.</summary>
+    public Vector2 GetCombinedPivotOffset()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        return _pivotOffset + _pivotOffsetRatio * _size;
+    }
+
+    /// <summary>Gets or sets whether the additional transform affects this control.</summary>
+    public bool OffsetTransformEnabled
+    {
+        get { ThrowIfDisposed(); return _offsetTransformEnabled; }
+        set { EnsureMutable(); if (_offsetTransformEnabled == value) return; _offsetTransformEnabled = value; NotifyLocalTransformChanged(); QueueRedraw(); }
+    }
+
+    /// <summary>Gets or sets the absolute translation of the additional transform.</summary>
+    public Vector2 OffsetTransformPosition
+    {
+        get { ThrowIfDisposed(); return _offsetTransformPosition; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformPosition == value) return; _offsetTransformPosition = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets the size-relative translation of the additional transform.</summary>
+    public Vector2 OffsetTransformPositionRatio
+    {
+        get { ThrowIfDisposed(); return _offsetTransformPositionRatio; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformPositionRatio == value) return; _offsetTransformPositionRatio = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets the componentwise scale of the additional transform.</summary>
+    public Vector2 OffsetTransformScale
+    {
+        get { ThrowIfDisposed(); return _offsetTransformScale; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformScale == value) return; _offsetTransformScale = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets the rotation in radians of the additional transform.</summary>
+    public float OffsetTransformRotation
+    {
+        get { ThrowIfDisposed(); return _offsetTransformRotation; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformRotation == value) return; _offsetTransformRotation = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets the absolute pivot of the additional transform.</summary>
+    public Vector2 OffsetTransformPivot
+    {
+        get { ThrowIfDisposed(); return _offsetTransformPivot; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformPivot == value) return; _offsetTransformPivot = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets the size-relative pivot of the additional transform.</summary>
+    public Vector2 OffsetTransformPivotRatio
+    {
+        get { ThrowIfDisposed(); return _offsetTransformPivotRatio; }
+        set { EnsureMutable(); EnsureFinite(value, nameof(value)); if (_offsetTransformPivotRatio == value) return; _offsetTransformPivotRatio = value; NotifyOffsetTransformChanged(); }
+    }
+
+    /// <summary>Gets or sets whether the additional transform affects drawing only.</summary>
+    public bool OffsetTransformVisualOnly
+    {
+        get { ThrowIfDisposed(); return _offsetTransformVisualOnly; }
+        set { EnsureMutable(); if (_offsetTransformVisualOnly == value) return; _offsetTransformVisualOnly = value; NotifyOffsetTransformChanged(); }
+    }
+
+    private void NotifyOffsetTransformChanged()
+    {
+        if (!_offsetTransformEnabled) return;
+        NotifyLocalTransformChanged();
+        QueueRedraw();
+    }
+
+    private Transform GetOffsetTransform()
+    {
+        if (!_offsetTransformEnabled) return Transform.Identity;
+        var translation = _offsetTransformPosition + _offsetTransformPositionRatio * _size;
+        var pivot = _offsetTransformPivot + _offsetTransformPivotRatio * _size;
+        var transform = new Transform(_offsetTransformRotation, _offsetTransformScale, 0f, pivot + translation);
+        transform.Origin -= transform.BasisXform(pivot);
+        return transform;
     }
 
     /// <summary>Gets or sets the transformed origin in global canvas coordinates.</summary>
@@ -546,9 +643,18 @@ public partial class Control : CanvasItem
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        var transform = new Transform(_rotation, _scale, 0f, _pivotOffset);
-        transform.Origin += _position - transform.BasisXform(_pivotOffset);
+        var pivot = GetCombinedPivotOffset();
+        var transform = new Transform(_rotation, _scale, 0f, pivot);
+        transform.Origin += _position - transform.BasisXform(pivot);
+        if (_offsetTransformEnabled && !_offsetTransformVisualOnly) transform *= GetOffsetTransform();
         return transform;
+    }
+
+    /// <inheritdoc />
+    internal override Transform GetVisualTransform()
+    {
+        var transform = GetTransform();
+        return _offsetTransformEnabled && _offsetTransformVisualOnly ? transform * GetOffsetTransform() : transform;
     }
 
     /// <summary>Moves this control under another node, preserving its global position by default.</summary>
@@ -740,6 +846,15 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(RotationDegrees), node => node.RotationDegrees, (node, value) => node.RotationDegrees = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Scale), node => node.Scale, (node, value) => node.Scale = value, _ => Vector2.One, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(PivotOffset), node => node.PivotOffset, (node, value) => node.PivotOffset = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(PivotOffsetRatio), node => node.PivotOffsetRatio, (node, value) => node.PivotOffsetRatio = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, bool>(nameof(OffsetTransformEnabled), node => node.OffsetTransformEnabled, (node, value) => node.OffsetTransformEnabled = value, _ => false, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(OffsetTransformPosition), node => node.OffsetTransformPosition, (node, value) => node.OffsetTransformPosition = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(OffsetTransformPositionRatio), node => node.OffsetTransformPositionRatio, (node, value) => node.OffsetTransformPositionRatio = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(OffsetTransformScale), node => node.OffsetTransformScale, (node, value) => node.OffsetTransformScale = value, _ => Vector2.One, stored: true),
+        new PropertyDescriptor<Control, float>(nameof(OffsetTransformRotation), node => node.OffsetTransformRotation, (node, value) => node.OffsetTransformRotation = value, _ => 0f, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(OffsetTransformPivot), node => node.OffsetTransformPivot, (node, value) => node.OffsetTransformPivot = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(OffsetTransformPivotRatio), node => node.OffsetTransformPivotRatio, (node, value) => node.OffsetTransformPivotRatio = value, _ => new Vector2(.5f, .5f), stored: true),
+        new PropertyDescriptor<Control, bool>(nameof(OffsetTransformVisualOnly), node => node.OffsetTransformVisualOnly, (node, value) => node.OffsetTransformVisualOnly = value, _ => true, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMinimumSize), node => node.CustomMinimumSize, (node, value) => node.CustomMinimumSize = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(CustomMaximumSize), node => node.CustomMaximumSize, (node, value) => node.CustomMaximumSize = value, _ => new Vector2(-1, -1), stored: true),
         new PropertyDescriptor<Control, bool>(nameof(PropagateMaximumSize), node => node.PropagateMaximumSize, (node, value) => node.PropagateMaximumSize = value, _ => false, stored: true),

@@ -24,6 +24,10 @@ Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the
 
 `SetPosition`, `SetSize` and `SetGlobalPosition` share the property setters' geometry path. By default they update stored offsets. With `keepOffsets: true`, they calculate anchors from the requested physical rectangle and existing offsets; both parent-area axes must be nonzero or the call fails before mutation. `SetSize` clamps finite requests through the effective minimum and then maximum, including negative requests; `ResetSize` requests zero through that same path. `GetBegin`/`SetBegin` and `GetEnd`/`SetEnd` read or update the corresponding offset pairs with one reflow per write. A global position edit first inverse-transforms through the direct canvas parent and retains the control's pivot/rotation/scale origin.
 
+`PivotOffsetRatio` adds a size-relative component to the ordinary pivot; `GetCombinedPivotOffset()` reports the sum. The additional offset transform combines absolute and size-relative position and pivot with rotation and scale, then composes after the ordinary pivot transform. It is disabled by default and retains configured values while disabled. When enabled, `OffsetTransformVisualOnly` defaults to true: drawing and visual child transforms move, while logical `GetTransform`, global queries and GUI hit testing stay in place. Turning visual-only off applies it to both logical and rendering transforms. The renderer uses this distinction in ordinary and Y-sorted canvas traversal.
+
+A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
+
 The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
@@ -58,6 +62,12 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float RotationDegrees { get; set; }` | Degrees around PivotOffset. |
 | `public Vector2 Scale { get; set; }` | Local scale; zero components become a small positive epsilon. |
 | `public Vector2 PivotOffset { get; set; }` | Local pivot for rotation and scale. |
+| `public Vector2 PivotOffsetRatio { get; set; }` | Current-size component added to the ordinary pivot. |
+| `public bool OffsetTransformEnabled { get; set; }` | Enables or disables the retained additional transform. |
+| `public Vector2 OffsetTransformPosition { get; set; }` / `OffsetTransformPositionRatio` | Absolute and size-relative additional translation. |
+| `public Vector2 OffsetTransformPivot { get; set; }` / `OffsetTransformPivotRatio` | Absolute and size-relative additional pivot; relative default is `(0.5, 0.5)`. |
+| `public Vector2 OffsetTransformScale { get; set; }` / `float OffsetTransformRotation` | Additional scale and rotation in radians. |
+| `public bool OffsetTransformVisualOnly { get; set; }` | True by default; excludes the additional matrix from logical/input transforms. |
 | `public Vector2 GlobalPosition { get; set; }` | Transformed origin in global canvas coordinates. |
 | `public float AnchorLeft { get; set; }` | Left anchor fraction. |
 | `public float AnchorTop { get; set; }` | Top anchor fraction. |
@@ -87,6 +97,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public void SetPosition(Vector2 position, bool keepOffsets = false)` / `SetSize(Vector2 size, bool keepOffsets = false)` | Writes offsets by default, or recalculates anchors under a nonzero parent area. |
 | `public void SetGlobalPosition(Vector2 position, bool keepOffsets = false)` | Converts through the direct canvas parent before local placement. |
 | `public void ResetSize()` | Resolves the effective minimum after all current bounds. |
+| `public Vector2 GetCombinedPivotOffset()` | Returns absolute pivot plus the size-relative part. |
 | `public Vector2 GetBegin()` / `GetEnd()` | Reads the leading or trailing stored offset pair. |
 | `public void SetBegin(Vector2 position)` / `SetEnd(Vector2 position)` | Writes one offset pair and reflows once. |
 | `public bool IsLayoutRTL()` | Reports the currently resolved horizontal layout direction. |
@@ -242,6 +253,8 @@ When reflow changes position or size, the control commits both values, invalidat
 [ControlLayoutTests](../../tests/Electron2D.Tests/ControlLayoutTests.cs) check nested anchors, parent and viewport resize propagation, callback order, transform inheritance, packed anchors/offsets, pivot/global position, invalid arguments, owner thread and disposal. [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) check root viewport GUI input order, local coordinates, filter/bubbling, wheel pass, focus notification and event order, explicit viewport release, failure continuation, pointer release capture and temporary event ownership. [ControlFocusNavigationTests](../../tests/Electron2D.Tests/ControlFocusNavigationTests.cs) checks managed Tab/arrow/D-pad/left-stick routing, paths, wrapping, hidden targets and packed state. [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs) checks managed hover ordering, filters, notifications and cursor state; [ControlHoverNativeTests](../../tests/Electron2D.Tests/ControlHoverNativeTests.cs) checks native cursor precedence on Linux Wayland. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) includes a child Sprite pixel check in the native renderer. Full GUI interaction and reference parity remain unverified.
 
 The geometry-edit checks additionally cover offset-pair commits, anchor-preserving defaults, keep-offset anchor recomputation, later parent resize, transformed global placement, minimum/maximum clamping, negative finite size, RTL viewport origins, zero-area and nonfinite rollback.
+
+Offset-transform checks verify defaults, disabled-value retention, resize-dependent pivot and translation, matrix order, logical versus visual-only hit testing, enabled logical input, finite validation and PackedScene restoration. [SceneHierarchyRenderingTests](../../tests/Electron2D.Tests/SceneHierarchyRenderingTests.cs) checks moving descendant pixels in dummy/software and Linux Wayland compatibility/GPU, including Y-sort traversal. Other platforms and owner visual acceptance remain separate.
 
 ### GUI input behavior
 
