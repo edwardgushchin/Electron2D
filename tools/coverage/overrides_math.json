@@ -2836,7 +2836,6 @@
         "Vector2::method:posmod(float:)",
         "Vector2::method:posmodv(Vector2:)",
         "Vector2::method:project(Vector2:)",
-        "Vector2::method:reflect(Vector2:)",
         "Vector2::method:rotated(float:)",
         "Vector2::method:round()",
         "Vector2::method:sign()",
@@ -3246,9 +3245,48 @@
       "reason": "The pinned CMP_EPSILON proximity is 1e-5 rather than Mathf's 1e-6 scalar zero tolerance. VerifyVector2Values checks zero/negative steps below the threshold and a farther zero-step case on Linux/.NET 8."
     },
     {
+      "godot": ["Vector2::method:reflect(Vector2:)"],
+      "state": "Implemented",
+      "reason": "Pinned vector2.cpp multiplies the normal by two before the dot scalar. VerifyVector3Geometry checks that source order and Bounce at float.MaxValue preserve finite reflected components instead of premature infinity; Linux/.NET 8, normalized-normal precondition."
+    },
+    {
       "godot": ["class:Vector3"],
-      "state": "Partial",
-      "reason": "The complete three-component numeric declaration exists under ADR 0033. Core values/operators, componentwise scalar operations, normalization, direction and four geometric methods have focused pinned-source/Mathf audits; remaining interpolation and geometry rows still require behavior, edge and value verification before whole-type parity."
+      "state": "Implemented",
+      "reason": "All 84 applicable declared members have pinned-source and typed C# semantic audits across VerifyVector3CoreValues, VerifyVector3ComponentMethods and VerifyVector3Geometry on Linux/.NET 8. The ten model-orientation, Basis, Quaternion and Transform3D rows are Excluded by ADRs 0004/0033; pure numeric Vector3 adds no 3D scene system. Native ABI and other platforms remain verification limits."
+    },
+    {
+      "godot": [
+        "Vector3::method:cross(Vector3:)", "Vector3::method:distance_squared_to(Vector3:)",
+        "Vector3::method:distance_to(Vector3:)", "Vector3::method:dot(Vector3:)",
+        "Vector3::method:length()", "Vector3::method:length_squared()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h/cpp use ordered component products, sum, square root and subtraction. VerifyVector3Geometry checks all axes, orientation, signed products, zero and IEEE float overflow for norms and distances; Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3::method:angle_to(Vector3:)", "Vector3::method:bounce(Vector3:)",
+        "Vector3::method:project(Vector3:)", "Vector3::method:reflect(Vector3:)",
+        "Vector3::method:signed_angle_to(Vector3:,Vector3:)", "Vector3::method:slide(Vector3:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned cross/dot angle sign, projection and plane-normal formulas are audited by VerifyVector3Geometry, including zero projection NaNs, signed angle axes and float.MaxValue reflection. Reflect now multiplies the normal before the dot scalar, and Bounce negates it; unit-normal behavior is checked on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector3::method:bezier_derivative(Vector3:,Vector3:,Vector3:,float:)",
+        "Vector3::method:bezier_interpolate(Vector3:,Vector3:,Vector3:,float:)",
+        "Vector3::method:cubic_interpolate(Vector3:,Vector3:,Vector3:,float:)",
+        "Vector3::method:cubic_interpolate_in_time(Vector3:,Vector3:,Vector3:,float:,float:,float:,float:)",
+        "Vector3::method:lerp(Vector3:,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector3.h delegates independent X/Y/Z interpolation to the accepted Mathf scalar formulas under ADR 0034. VerifyVector3Geometry checks endpoints, three distinct Bezier coordinates/derivative, collinear cubic, uniform/degenerate timestamps and linear extrapolation on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector3::method:rotated(Vector3:,float:)", "Vector3::method:slerp(Vector3:,float:)"],
+      "state": "Implemented",
+      "reason": "Rotated uses pinned Basis axis-angle row coefficients without exposing a spatial matrix type; a 10,000-case Linux/.NET 8 finite comparison found zero float mismatches after replacing Rodrigues order. Slerp follows pinned squared-length/axis checks and rotation order; 10,000 finite and 10,000 extreme deterministic comparisons found zero classified mismatches. VerifyVector3Geometry covers unit/nonunit axes, length interpolation, zero and antiparallel fallbacks."
     },
     {
       "godot": [

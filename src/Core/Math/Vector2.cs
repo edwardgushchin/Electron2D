@@ -385,8 +385,9 @@ public struct Vector2 : IEquatable<Vector2>
     /// <remarks>
     /// This line-reflection convention is the inverse sign of the plane-normal reflection commonly named
     /// <c>reflect</c> by other math libraries. The method assumes a normalized normal and does not validate it.
+    /// The normal is multiplied by two before applying the dot scalar, retaining finite components near float limits.
     /// </remarks>
-    public readonly Vector2 Reflect(Vector2 normal) => (2f * Dot(normal) * normal) - this;
+    public readonly Vector2 Reflect(Vector2 normal) => (2f * normal * Dot(normal)) - this;
 
     /// <summary>Rotates this vector by an angle.</summary>
     /// <param name="angle">The clockwise screen-space angle in radians.</param>

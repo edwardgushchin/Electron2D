@@ -12,7 +12,9 @@ Last updated: 2026-09-24
 
 The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
 
-The focused length/movement and octahedral packing audit compares the pinned native formulas and edge cases. `LimitLength` divides before applying the signed cap, `MoveToward` uses a `0.00001` proximity threshold, and `OctahedronDecode` clamps the out-of-square fold correction. Those four member rows are Implemented. A second audit checked the nine applicable constants, construction and copy, X/Y/Z storage and indexing, axis identity, componentwise arithmetic and all six comparisons against pinned source behavior. VerifyVector3CoreValues covers IEEE NaN and signed-zero edges, zero division, lexicographic ties, mutable value copies and int-to-float rounding; 34 core rows are Implemented. A third audit closed 22 componentwise scalar rows through `Mathf` with signed, NaN, zero, reversed-bound, strict-epsilon and midpoint checks. `MinAxisIndex` now follows the pinned X/Y/Z comparison branches for NaN; the `Vector4` sibling already used its own correct loop. The type and 18 mapped member rows still require semantic review.
+All 84 applicable declared members and the type row have managed semantic audits on Linux/.NET 8. Core values/operators, componentwise scalar behavior, normalization, movement, geometry, interpolation and octahedral packing are covered by VerifyVector3CoreValues, VerifyVector3ComponentMethods, VerifyVector3Geometry and earlier vector checks. `Reflect` and `Bounce` preserve finite values near float limits by multiplying the normal before the dot scalar. `Rotated` computes the pinned axis-angle matrix rows internally; 10,000 deterministic finite comparisons against that formula found no float differences, and `Slerp` follows the pinned squared-length/axis order with finite and non-finite samples.
+
+The ten model-orientation constants and Basis/Quaternion/Transform3D members remain Excluded under ADR 0004. This numeric tuple adds no 3D scene type. Native ABI and other-platform math/runtime behavior remain unverified.
 
 ## Example
 
@@ -573,6 +575,7 @@ Reflects this vector across a plane with a unit normal.
 
 - `normal`: The unit plane normal.
 - Returns: The reflected vector.
+- The normal is multiplied by two before the dot scalar to retain finite components near float limits.
 
 <a id="member-59"></a>
 ### `public Electron2D.Vector3 Rotated(Electron2D.Vector3 axis, System.Single angle)`
@@ -582,6 +585,7 @@ Rotates this vector about a unit axis by an angle in radians.
 - `axis`: The unit rotation axis.
 - `angle`: The rotation angle in radians.
 - Returns: The rotated vector.
+- Uses the pinned axis-angle matrix coefficient order internally without exposing a spatial matrix type.
 
 <a id="member-60"></a>
 ### `public Electron2D.Vector3 Round()`
@@ -615,6 +619,7 @@ Interpolates direction on the unit sphere and linearly interpolates length.
 - `to`: The destination vector.
 - `weight`: The interpolation weight.
 - Returns: The interpolated vector, or linear interpolation for zero length or parallel inputs.
+- Squared-length and rotation-axis checks precede interpolation; non-finite values follow IEEE arithmetic.
 
 <a id="member-64"></a>
 ### `public Electron2D.Vector3 Slide(Electron2D.Vector3 normal)`

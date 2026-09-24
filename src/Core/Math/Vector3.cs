@@ -413,16 +413,30 @@ public struct Vector3 : IEquatable<Vector3>
     /// <summary>Reflects this vector across a plane with a unit normal.</summary>
     /// <param name="normal">The unit plane normal.</param>
     /// <returns>The reflected vector.</returns>
-    public readonly Vector3 Reflect(Vector3 normal) => (2f * Dot(normal) * normal) - this;
+    /// <remarks>The normal is multiplied by two before applying the dot scalar, retaining finite components near float limits.</remarks>
+    public readonly Vector3 Reflect(Vector3 normal) => (2f * normal * Dot(normal)) - this;
 
     /// <summary>Rotates this vector about a unit axis by an angle in radians.</summary>
     /// <param name="axis">The unit rotation axis.</param>
     /// <param name="angle">The rotation angle in radians.</param>
     /// <returns>The rotated vector.</returns>
+    /// <remarks>Uses the source axis-angle matrix coefficient order without exposing a spatial matrix type.</remarks>
     public readonly Vector3 Rotated(Vector3 axis, float angle)
     {
-        var (sine, cosine) = Mathf.SinCos(angle);
-        return this * cosine + axis.Cross(this) * sine + axis * (axis.Dot(this) * (1f - cosine));
+        var squared = axis * axis;
+        var cosine = Mathf.Cos(angle);
+        var sine = Mathf.Sin(angle);
+        var factor = 1f - cosine;
+        var xy = axis.X * axis.Y * factor;
+        var zs = axis.Z * sine;
+        var xz = axis.X * axis.Z * factor;
+        var ys = axis.Y * sine;
+        var yz = axis.Y * axis.Z * factor;
+        var xs = axis.X * sine;
+        return new Vector3(
+            (squared.X + cosine * (1f - squared.X)) * X + (xy - zs) * Y + (xz + ys) * Z,
+            (xy + zs) * X + (squared.Y + cosine * (1f - squared.Y)) * Y + (yz - xs) * Z,
+            (xz - ys) * X + (yz + xs) * Y + (squared.Z + cosine * (1f - squared.Z)) * Z);
     }
 
     /// <summary>Rounds every component to the nearest integer using midpoint-to-even behavior.</summary>
@@ -438,23 +452,32 @@ public struct Vector3 : IEquatable<Vector3>
     /// <param name="to">The other vector.</param>
     /// <param name="axis">The axis selecting the angle sign.</param>
     /// <returns>The signed angle in radians.</returns>
-    public readonly float SignedAngleTo(Vector3 to, Vector3 axis) =>
-        Mathf.Atan2(Cross(to).Length(), Dot(to)) * (Cross(to).Dot(axis) < 0f ? -1f : 1f);
+    public readonly float SignedAngleTo(Vector3 to, Vector3 axis)
+    {
+        var cross = Cross(to);
+        var unsigned = Mathf.Atan2(cross.Length(), Dot(to));
+        return cross.Dot(axis) < 0f ? -unsigned : unsigned;
+    }
 
     /// <summary>Interpolates direction on the unit sphere and linearly interpolates length.</summary>
     /// <param name="to">The destination vector.</param>
     /// <param name="weight">The interpolation weight.</param>
     /// <returns>The interpolated vector, or linear interpolation for zero length or parallel inputs.</returns>
+    /// <remarks>Squared-length and rotation-axis checks precede interpolation; non-finite values follow IEEE arithmetic.</remarks>
     public readonly Vector3 Slerp(Vector3 to, float weight)
     {
-        var startLength = Length();
-        var endLength = to.Length();
-        if (startLength == 0f || endLength == 0f)
+        var startSquared = LengthSquared();
+        var endSquared = to.LengthSquared();
+        if (startSquared == 0f || endSquared == 0f)
             return Lerp(to, weight);
         var axis = Cross(to);
-        if (axis.LengthSquared() == 0f)
+        var axisSquared = axis.LengthSquared();
+        if (axisSquared == 0f)
             return Lerp(to, weight);
-        return Rotated(axis.Normalized(), AngleTo(to) * weight) * (Mathf.Lerp(startLength, endLength, weight) / startLength);
+        axis /= Mathf.Sqrt(axisSquared);
+        var startLength = Mathf.Sqrt(startSquared);
+        var resultLength = Mathf.Lerp(startLength, Mathf.Sqrt(endSquared), weight);
+        return Rotated(axis, AngleTo(to) * weight) * (resultLength / startLength);
     }
 
     /// <summary>Removes the component along a unit normal.</summary>

@@ -695,6 +695,7 @@ Reflects this vector across a line with a given unit normal.
 
 **Remarks:** This line-reflection convention is the inverse sign of the plane-normal reflection commonly named
 `reflect` by other math libraries. The method assumes a normalized normal and does not validate it.
+The normal is multiplied by two before the dot scalar, preserving finite components near float limits.
 
 <a id="m-electron2d-vector2-rotated-system-single"></a>
 ### `public Vector2 Rotated(float angle)`

@@ -2162,6 +2162,7 @@ static void VerifyVector3Values()
 {
     VerifyVector3CoreValues();
     VerifyVector3ComponentMethods();
+    VerifyVector3Geometry();
     Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3I>() == 12 &&
             Vector3.Zero == default && Vector3I.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
             Vector3I.Forward == new Vector3I(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
@@ -2355,6 +2356,80 @@ static void VerifyVector3ComponentMethods()
     Require(float.IsNaN(unchanged.X) && unchanged.Y == 1f &&
             BitConverter.SingleToInt32Bits(unchanged.Z) == int.MinValue,
         "Zero-step snapping retains source NaN and signed-zero components.");
+}
+
+static void VerifyVector3Geometry()
+{
+    var value = new Vector3(3f, 4f, 12f);
+    Require(value.LengthSquared() == 169f && value.Length() == 13f &&
+            value.DistanceSquaredTo(Vector3.Zero) == 169f && value.DistanceTo(Vector3.Zero) == 13f &&
+            value.Dot(new Vector3(-2f, 1f, .5f)) == 4f &&
+            Vector3.Right.Cross(Vector3.Up) == Vector3.Back &&
+            Vector3.Up.Cross(Vector3.Right) == Vector3.Forward &&
+            Vector3.Zero.Cross(value) == Vector3.Zero &&
+            float.IsPositiveInfinity(new Vector3(float.MaxValue, 0f, 0f).LengthSquared()) &&
+            float.IsPositiveInfinity(new Vector3(float.MaxValue, 0f, 0f).DistanceTo(Vector3.Zero)),
+        "Vector3 norms, distances, dot and cross products retain order and IEEE overflow.");
+
+    Require(Vector3.Right.AngleTo(Vector3.Up) == Mathf.Pi / 2f &&
+            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Back) == Mathf.Pi / 2f &&
+            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Forward) == -Mathf.Pi / 2f &&
+            Vector3.Right.SignedAngleTo(Vector3.Up, Vector3.Zero) == Mathf.Pi / 2f &&
+            Vector3.Zero.AngleTo(Vector3.Zero) == 0f &&
+            Vector3.Zero.Lerp(new Vector3(4f, 8f, 12f), .25f) == new Vector3(1f, 2f, 3f) &&
+            Vector3.Zero.Lerp(Vector3.One, -1f) == -Vector3.One,
+        "Unsigned/signed angle and linear interpolation preserve orientation, zero and extrapolation.");
+
+    var start = new Vector3(0f, 10f, -2f);
+    var control1 = Vector3.Zero;
+    var control2 = new Vector3(10f, 10f, 4f);
+    var end = new Vector3(10f, 0f, 2f);
+    Require(start.BezierInterpolate(control1, control2, end, 0f) == start &&
+            start.BezierInterpolate(control1, control2, end, 1f) == end &&
+            start.BezierInterpolate(control1, control2, end, .5f) == new Vector3(5f, 5f, 1.5f) &&
+            start.BezierDerivative(control1, control2, end, .5f) == new Vector3(15f, 0f, 6f),
+        "Bezier interpolation and derivative retain all three independent control coordinates.");
+
+    var pre = new Vector3(-1f, 0f, 0f);
+    var a = new Vector3(0f, 1f, 0f);
+    var b = new Vector3(1f, 2f, 0f);
+    var post = new Vector3(2f, 3f, 0f);
+    Require(a.CubicInterpolate(b, pre, post, .5f) == new Vector3(.5f, 1.5f, 0f) &&
+            a.CubicInterpolateInTime(b, pre, post, .5f, 1f, -1f, 2f) == new Vector3(.5f, 1.5f, 0f) &&
+            a.CubicInterpolateInTime(b, pre, post, .5f, 0f, 0f, 0f).IsFinite(),
+        "Catmull-Rom and time-aware cubic interpolation handle uniform and degenerate timestamps.");
+
+    var normal = new Vector3(.6f, .8f, 0f);
+    var extreme = new Vector3(float.MaxValue, 0f, 0f);
+    var reflected = extreme.Reflect(normal);
+    Require(reflected.IsFinite() && reflected.X < 0f && reflected.Y > 0f && reflected.Z == 0f &&
+            extreme.Bounce(normal) == -reflected &&
+            new Vector3(3f, 4f, 5f).Slide(Vector3.Up) == new Vector3(3f, 0f, 5f) &&
+            new Vector3(3f, 4f, 5f).Project(new Vector3(0f, 2f, 0f)) == new Vector3(0f, 4f, 0f),
+        "Reflection multiplies the normal before the dot scalar; bounce, slide and nonunit projection follow it.");
+    var undefinedProjection = Vector3.One.Project(Vector3.Zero);
+    Require(float.IsNaN(undefinedProjection.X) && float.IsNaN(undefinedProjection.Y) &&
+            float.IsNaN(undefinedProjection.Z),
+        "Projection onto zero retains the source's IEEE undefined result.");
+    var reflected2 = new Vector2(float.MaxValue, 0f).Reflect(new Vector2(.6f, .8f));
+    Require(reflected2.IsFinite() && reflected2.X < 0f && reflected2.Y > 0f &&
+            new Vector2(float.MaxValue, 0f).Bounce(new Vector2(.6f, .8f)) == -reflected2,
+        "The Vector2 sibling preserves the same source multiplication order at extreme magnitudes.");
+
+    Require(Vector3.Right.Rotated(Vector3.Back, Mathf.Pi / 2f).IsEqualApprox(Vector3.Up) &&
+            Vector3.Right.Rotated(new Vector3(0f, 0f, 2f), Mathf.Pi / 2f).IsEqualApprox(new Vector3(0f, 2f, 0f)) &&
+            Vector3.Right.Slerp(Vector3.Up, .5f).IsEqualApprox(
+                new Vector3(MathF.Sqrt(.5f), MathF.Sqrt(.5f), 0f)) &&
+            new Vector3(2f, 0f, 0f).Slerp(new Vector3(0f, 4f, 0f), .5f).IsEqualApprox(
+                new Vector3(3f * MathF.Sqrt(.5f), 3f * MathF.Sqrt(.5f), 0f)) &&
+            Vector3.Zero.Slerp(new Vector3(4f, 0f, 0f), .25f) == Vector3.Right &&
+            Vector3.Right.Slerp(Vector3.Left, .5f) == Vector3.Zero,
+        "Rotation and spherical interpolation preserve axis orientation, length, zero and antiparallel fallbacks.");
+    if (OperatingSystem.IsLinux())
+        Require(new Vector3(1.0618035f, -.669906f, 2.0769434f).Rotated(
+                new Vector3(-.41317213f, -.8195237f, -.3970765f), .6213446f) ==
+                new Vector3(-.22717518f, -.18116105f, 2.4094536f),
+            "The pinned row-by-row rotation order must retain Linux float rounding.");
 }
 
 static void VerifyVector4Values()
