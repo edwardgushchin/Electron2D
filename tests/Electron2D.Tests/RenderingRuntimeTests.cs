@@ -13,6 +13,17 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_CLIP") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyControlClipping(backend);
+                    VerifyRepeatedControlClipping(backend);
+                    VerifyFrameAllocations(backend, controlClip: true);
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_MATERIAL") == "1")
             {
                 VerifyCanvasMaterialState();
@@ -256,6 +267,9 @@ internal static partial class RenderingRuntimeTests
                 if (backend == "compatibility") VerifyCulledShader();
                 VerifySceneHierarchy(backend);
                 VerifyCanvasOrdering(backend);
+                VerifyControlClipping(backend);
+                VerifyRepeatedControlClipping(backend);
+                VerifyFrameAllocations(backend, controlClip: true);
                 VerifyCanvasLifecycle(backend);
                 VerifyFrame(backend);
                 VerifyFrameAllocations(backend);
@@ -449,7 +463,7 @@ internal static partial class RenderingRuntimeTests
         finally { first?.Dispose(); }
     }
 
-    private static void VerifyFrameAllocations(string backend, bool snapPixels = false, bool canvasTransforms = false, bool cameraTracking = false, bool canvasLayers = false, bool canvasMasks = false)
+    private static void VerifyFrameAllocations(string backend, bool snapPixels = false, bool canvasTransforms = false, bool cameraTracking = false, bool canvasLayers = false, bool canvasMasks = false, bool controlClip = false)
     {
         using var image = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         image.Fill(Colors.White);
@@ -471,6 +485,12 @@ internal static partial class RenderingRuntimeTests
         var island = new Entity();
         var nested = new Entity { YSortEnabled = true };
         window.AddChild(sorted); sorted.AddChild(island); island.AddChild(nested);
+        if (controlClip)
+        {
+            var clip = new Control { Name = "clip", Position = new(4, 4), Size = new(24, 24), ClipContents = true };
+            window.AddChild(clip);
+            clip.AddChild(new ClipBox(Colors.Cyan));
+        }
         if (canvasMasks) { window.CanvasCullMask = 3; sorted.VisibilityLayer = 1; island.VisibilityLayer = 2; nested.VisibilityLayer = 4; }
         if (canvasLayers)
         {

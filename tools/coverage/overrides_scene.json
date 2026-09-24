@@ -2626,6 +2626,7 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Control::property:clip_contents"], "state": "Implemented", "reason": "Direct canvas descendants are clipped by the transformed, axis-aligned Control rectangle; nested clips intersect and top-level or neutral parents end inheritance. The root GUI picker excludes hits outside clipping ancestors, while the parent's own drawing/input remains available for a nonempty clip; an empty clip culls the item. ControlClipTests checks hover, targeting and packed state; ControlClipRenderingTests checks nested, rotated and repeated clipping on dummy compatibility and Linux Wayland compatibility/GPU. General canvas masks and nested viewport routing remain separate gaps."},
     {
       "state": "Implemented",
       "reason": "Direct-Control inheritance defaults to enabled; Disabled masks the stored mode or filter, and Enabled restores a descendant. Root viewport routing, focus navigation, hover, immediate focus release, invalid values and PackedScene state are checked by ControlRecursiveBehaviorTests. Full GUI routing remains classified on its separate rows.",

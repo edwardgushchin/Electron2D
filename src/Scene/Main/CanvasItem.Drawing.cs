@@ -276,7 +276,7 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     private Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null)
     {
         if (_canvasCommands is null) return;
         var color = InheritedModulate * _selfModulate;
@@ -310,9 +310,9 @@ public abstract partial class CanvasItem
             }
             var repeat = command.Tile ? TextureRepeatEnum.Enabled : inheritedRepeat;
             if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture &&
-                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend)
+                last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy, blend));
+            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy, blend, clip));
         }
     }
 

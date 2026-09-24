@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>Renders the active root window's retained two-dimensional canvas commands.</summary>
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures and retained animation intervals are integrated. Shader materials require the GPU path. Lights, clipping, offscreen public viewports and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Lights, general canvas clipping, offscreen public viewports and device recovery
 /// are not integrated. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed class RenderingServer : ElectronObject
 {
@@ -24,6 +24,7 @@ public sealed class RenderingServer : ElectronObject
     private readonly List<CanvasBatch> _batches = [];
     private readonly List<RenderEntry> _order = [];
     private readonly Dictionary<CanvasItem, Transform> _repeatTransforms = [];
+    private readonly Dictionary<CanvasItem, Transform> _canvasTransforms = [];
     private readonly List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
@@ -137,7 +138,7 @@ public sealed class RenderingServer : ElectronObject
             if (!double.IsFinite(step) || step < 0 || !double.IsFinite(CanvasTime + step))
                 throw new InvalidOperationException("The render clock step is invalid.");
             CanvasTime = (CanvasTime + step) % ProjectSettings.Instance.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
-            _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _vertices.Clear(); _batches.Clear();
+            _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _vertices.Clear(); _batches.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
                 if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.IsVisibleInTree)
@@ -176,7 +177,9 @@ public sealed class RenderingServer : ElectronObject
                     }
                 if (repeatSource is null)
                 {
-                    item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime);
+                    var clip = GetClip(item.Node, pixels);
+                    if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
+                        item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime, clip);
                     continue;
                 }
                 var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
@@ -185,6 +188,8 @@ public sealed class RenderingServer : ElectronObject
                 var start = size * -(times / 2);
                 var countX = size.X == 0 ? 0 : times;
                 var countY = size.Y == 0 ? 0 : times;
+                var repeatedClip = GetClip(item.Node, pixels, repeatSource);
+                if (repeatedClip is { } empty && !empty.HasArea() || HasEmptyOwnClip(item.Node, pixels, repeatSource)) continue;
                 for (long y = 0; y <= countY; y++)
                     for (long x = 0; x <= countX; x++)
                     {
@@ -194,7 +199,7 @@ public sealed class RenderingServer : ElectronObject
                             : new Vector2(x * size.X, y * size.Y);
                         transform.Origin += sourceTransform.BasisXform(displacement);
                         if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
-                        item.Node.AppendCanvas(_vertices, _batches, transform, CanvasTime);
+                        item.Node.AppendCanvas(_vertices, _batches, transform, CanvasTime, repeatedClip);
                     }
             }
             foreach (var batch in _batches)
@@ -203,7 +208,7 @@ public sealed class RenderingServer : ElectronObject
             _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
             FramePostDraw?.Invoke();
         }
-        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _ySort.Clear(); _rendering = false; }
+        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear(); _rendering = false; }
     }
 
     private void Capture(Node node)
@@ -252,7 +257,50 @@ public sealed class RenderingServer : ElectronObject
     private void AddRenderEntry(CanvasItem item, Transform transform)
     {
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
+        _canvasTransforms[item] = transform;
         _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
+    }
+
+    private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
+        item is Control { ClipContents: true } && GetClip(item, pixels, repeatSource, includeSelf: true) is { } clip && !clip.HasArea();
+
+    private Rect2i? GetClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null, bool includeSelf = false)
+    {
+        Rect? clipped = null;
+        var repeat = repeatSource is not null && !ReferenceEquals(item, repeatSource);
+        for (var ancestor = includeSelf ? item : item.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
+        {
+            if (ReferenceEquals(ancestor, repeatSource)) repeat = false;
+            if (ancestor is not Control { ClipContents: true } control) continue;
+            var transform = _canvasTransforms[control];
+            var area = transform * new Rect(Vector2.Zero, control.Size);
+            if (repeat) area = ExpandRepeatedClip(area, repeatSource!);
+            if (!area.Position.IsFinite() || !area.Size.IsFinite())
+                throw new InvalidOperationException("Canvas clipping overflowed finite coordinates.");
+            clipped = clipped is { } prior ? prior.Intersection(area) : area;
+        }
+        if (clipped is not { } bounds) return null;
+        bounds = bounds.Intersection(new Rect(Vector2.Zero, new Vector2(pixels.X, pixels.Y)));
+        if (bounds.Size.X < .5f || bounds.Size.Y < .5f) return new Rect2i(Vector2i.Zero, Vector2i.Zero);
+        var x = (int)MathF.Round(bounds.Position.X, MidpointRounding.AwayFromZero);
+        var y = (int)MathF.Round(bounds.Position.Y, MidpointRounding.AwayFromZero);
+        var width = (int)MathF.Round(bounds.Size.X, MidpointRounding.AwayFromZero);
+        var height = (int)MathF.Round(bounds.Size.Y, MidpointRounding.AwayFromZero);
+        return new Rect2i(x, y, Math.Min(width, pixels.X - x), Math.Min(height, pixels.Y - y));
+    }
+
+    private Rect ExpandRepeatedClip(Rect area, CanvasItem source)
+    {
+        var size = source is Parallax parallax ? parallax.RepeatSize : ((ParallaxLayer)source).RepeatPeriod;
+        var times = source is Parallax repeated ? repeated.RepeatTimes : 1;
+        var basis = _repeatTransforms[source];
+        var start = size * -(times / 2);
+        var first = area with { Position = area.Position + basis.BasisXform(start) };
+        var x = basis.BasisXform(new Vector2(times * size.X, 0));
+        var y = basis.BasisXform(new Vector2(0, times * size.Y));
+        return first.Merge(first with { Position = first.Position + x })
+            .Merge(first with { Position = first.Position + y })
+            .Merge(first with { Position = first.Position + x + y });
     }
 
     private void OrderChildren(CanvasItem item, Transform transform, bool behind)
@@ -295,7 +343,7 @@ public sealed class RenderingServer : ElectronObject
             finally
             {
                 FramePreDraw = FramePostDraw = null;
-                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _ySort.Clear();
+                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
             }
         }

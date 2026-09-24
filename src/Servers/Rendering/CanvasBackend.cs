@@ -7,7 +7,7 @@ namespace Electron2D;
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     CanvasItem.TextureFilterEnum Filter = CanvasItem.TextureFilterEnum.Nearest,
     CanvasItem.TextureRepeatEnum Repeat = CanvasItem.TextureRepeatEnum.Disabled, int MaxAnisotropy = 1,
-    CanvasItemMaterial.BlendModeEnum Blend = CanvasItemMaterial.BlendModeEnum.Mix)
+    CanvasItemMaterial.BlendModeEnum Blend = CanvasItemMaterial.BlendModeEnum.Mix, Rect2i? Clip = null)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }

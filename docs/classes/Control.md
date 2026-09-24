@@ -28,7 +28,7 @@ Control is the rectangular UI branch beside [Entity](Entity.md). It inherits the
 
 A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: content clipping, stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -55,6 +55,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | --- | --- |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
 | `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
+| `public bool ClipContents { get; set; }` | False by default; clips direct canvas descendants and their root-viewport pointer targeting to this rectangle. |
 | `public Vector2 CustomMinimumSize { get; set; }` | Finite caller-supplied minimum; combines with intrinsic size and zero. |
 | `public Vector2 CustomMaximumSize { get; set; }` | Finite caller-supplied maximum; negative components normalize to unbounded `-1`. |
 | `public bool PropagateMaximumSize { get; set; }` | Passes enabled maximum bounds to direct child controls unless they are top-level. |
@@ -192,13 +193,17 @@ Each property reads or sets one local offset through GetOffset and SetOffset. Th
 
 `MouseFilter` defaults to Stop and rejects undefined enum values. It controls hit selection, hover ancestry and whether an unhandled pointer event bubbles through direct Control parents. Changing it refreshes current hover. `MouseForcePassScrollEvents` defaults to true and allows wheel input through a Stop control; setting it false makes Stop consume a wheel event. Both values are stored in a packed scene.
 
+### `ClipContents`
+
+False by default and stored by PackedScene. When enabled, a Control clips direct canvas descendants to the axis-aligned bounds of its transformed rectangle; nested clips intersect. Its own drawing remains unclipped while that clip has visible area; an empty clip culls the entire item. Its own input remains independent of descendant clipping. A top-level or non-canvas boundary starts an independent canvas branch. Changing the value refreshes root-viewport hover and takes effect in the next frame without rerecording retained child commands. Rendered clips use framebuffer pixel rounding; input tests the unrounded local rectangle. [ControlClipTests](../../tests/Electron2D.Tests/ControlClipTests.cs) checks pointer delivery and packing; [ControlClipRenderingTests](../../tests/Electron2D.Tests/ControlClipRenderingTests.cs) checks pixels on dummy compatibility and Linux Wayland compatibility/GPU, including nested, rotated, repeated and empty controls.
+
 ### `MouseDefaultCursorShape`, `GetCursorShape`, `OnGetCursorShape`
 
 The stored property defaults to Arrow, rejects unknown enum values, and is captured by PackedScene. `GetCursorShape` validates finite local coordinates and the override result. The virtual hook returns the stored property by default. While hovering, the scene queries the direct target first, then eligible Control ancestors until a non-Arrow shape or Stop filter is found. A property change refreshes the native cursor on the owner thread.
 
 ### `MouseEntered`, `MouseExited`, mouse notifications
 
-Root-viewport pointer motion updates the hover chain even if a Node handled the input. Entry is ancestor first and exit is descendant first; direct-target self notifications are distinct from chain notifications. Each chain notification precedes its event. Hidden or detached controls release their hover chain, and native window exit clears it. Callback failures are collected while later eligible callbacks continue. Clipping, stationary-pointer geometry changes and nested viewport semantics remain incomplete.
+Root-viewport pointer motion updates the hover chain even if a Node handled the input. Entry is ancestor first and exit is descendant first; direct-target self notifications are distinct from chain notifications. Each chain notification precedes its event. Hidden or detached controls release their hover chain, and native window exit clears it. Callback failures are collected while later eligible callbacks continue. Stationary-pointer geometry changes and nested viewport semantics remain incomplete.
 
 ### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
 
@@ -264,7 +269,7 @@ Offset-transform checks verify defaults, disabled-value retention, resize-depend
 
 ### GUI input behavior
 
-The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker. Clipping, multiple-button capture and nested viewport routes remain incomplete.
+The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker and respects clipping ancestors. Multiple-button capture and nested viewport routes remain incomplete.
 
 `FocusNext` and `FocusPrevious` take precedence over automatic traversal; an invalid path returns null. Directional paths can chain through ineligible controls, with cycle protection, then fall back to spatial search. Automatic traversal accepts visible `All` controls in scene order within the root viewport; explicit paths may select visible `Click` controls. Directional search uses global axis-aligned rectangles, not the full reference ranking or scroll clipping. Navigation happens after focused GUI callbacks if they leave the event unhandled. Analog navigation acts on a new press transition rather than every held motion event. No native keyboard or controller navigation has been verified for this slice.
 

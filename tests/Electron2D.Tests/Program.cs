@@ -163,6 +163,7 @@ ControlLayoutTests.Run();
 ControlInputTests.Run();
 ControlFocusNavigationTests.Run();
 ControlRecursiveBehaviorTests.Run();
+ControlClipTests.Run();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();

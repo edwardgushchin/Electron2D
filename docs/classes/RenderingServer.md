@@ -15,6 +15,8 @@ The service supports rectangles, lines, polygons, short primitives and textures 
 
 CanvasLayer grouping precedes item Z/Y ordering. Default-canvas and layer roots use their own viewport transform; retained commands survive layer motion, camera following and order changes. [Parallax](Parallax.md) and [ParallaxLayer](ParallaxLayer.md) repeat descendant retained commands within that ordering without duplicating nodes or draw callbacks. Transform snapping prepares canvas translations separately from item translations. See [canvas layers](../components/canvas-rendering.md#canvas-layers).
 
+Control descendant clipping adds a framebuffer scissor to each affected batch after order and transforms are resolved. Parent drawing stays outside that clip; top-level and neutral canvas boundaries break its inheritance. The same batch contract runs on GPU and compatibility. See [Control clipping](../components/canvas-rendering.md#control-descendant-clipping).
+
 ## Example
 
 Inside a node's OnReady callback during Engine.Run:
@@ -105,7 +107,7 @@ Public instance methods and RenderLoopEnabled reject calls off the owner thread 
 
 RenderingRuntimeTests measures zero managed allocation from FramePreDraw through FramePostDraw over twenty warmed frames with mixed geometry, textures and GPU HLSL/GLSL materials on native Wayland and dummy/software. The check includes both captures, stable Z sorting and nested Y groups; it excludes the host event loop, resource construction, readback and arbitrary user callbacks. It is not a frame-time bound.
 
-Depends on Window, SceneTree, Node, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, clipping, polygons, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
+Depends on Window, SceneTree, Node, CanvasItem, typed material/texture resources and the internal SDL3-CS backends. [Canvas rendering](../components/canvas-rendering.md) records native verification and current limits. Lights, general canvas masks, public offscreen targets, multiwindow rendering, device recovery and the full rendering API remain unfinished.
 
 Root canvas replay starts with `framebufferScale * window.GetFinalTransform() * window.CanvasTransform`, then composes the existing canvas hierarchy/drawing transforms. Both compatibility and GPU paths, including custom materials, consume that same transform. Live viewport changes do not rerecord retained commands. See [canvas coordinates](../components/canvas-rendering.md#viewport-coordinates) for input/query semantics and verification.
 
