@@ -68,7 +68,11 @@ Last updated: 2026-09-24
 | `Path2D : Node2D` | `Path : Entity` | Borrowed spatial curve and updates to attached direct followers. |
 | `PathFollow2D : Node2D` | `PathFollow : Entity` | Distance/ratio sampling, offsets and tangent rotation for descendant nodes. |
 | `Camera2D : Node2D` | `Camera : Entity` | Viewport camera selection and spatial tracking, including zoom, limits, drag margins and smoothing. |
-| `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Collision-shape placement; future implementation. |
+| `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Borrowed collision-shape placement as a direct physics-body child; first executable profile under ADR 0054. |
+| `CollisionObject2D : Node2D` | `abstract CollisionObject : Entity` | Collision filtering and shape ownership above physics-body specializations. |
+| `PhysicsBody2D : CollisionObject2D` | `abstract PhysicsBody : CollisionObject` | Shared fixed-step body and shape lifecycle. |
+| `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic Box2D-backed motion and contact response. |
+| `StaticBody2D : PhysicsBody2D` | `StaticBody : PhysicsBody` | Stationary Box2D-backed collision geometry. |
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
 | `BaseButton : Control` | `BaseButton : Control` | Shared button behavior; future UI implementation. |
 | `Button : BaseButton` | `Button : BaseButton` | Concrete button behavior; future UI implementation. |
@@ -97,6 +101,10 @@ ElectronObject
         │   ├── Sprite
         │   ├── Camera
         │   ├── CollisionShape
+        │   ├── CollisionObject
+        │   │   └── PhysicsBody
+        │   │       ├── RigidBody
+        │   │       └── StaticBody
         │   └── other spatial nodes, preserving their reference intermediate bases
         └── Control
             ├── BaseButton

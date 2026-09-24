@@ -351,7 +351,7 @@ Runs one host-driven process frame, process timers, process tweens, and one defe
 <a id="m-electron2d-scenetree-physicsframe-system-double"></a>
 ### `public void PhysicsFrame(double delta)`
 
-Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point.
+Runs one host-driven physics-process frame, attached scene-body simulation, physics timers, physics tweens, and one deferred safe point.
 
 **Parameters**
 
@@ -364,7 +364,7 @@ Runs one host-driven physics-process frame, physics timers, physics tweens, and 
 - `ObjectDisposedException`: Tree disposal has started or finished.
 - `AggregateException`: One or more frame events, node callbacks, timers, tweens, or deferred operations fail.
 
-**Remarks:** This callback lane does not perform collision or rigid-body simulation.
+**Remarks:** Attached rigid and static bodies step in an internal Box2D world after node physics callbacks and before timers, tweens and interpolation end capture. Zero delta leaves the world unchanged. Other physics services remain incomplete under [ADR 0054](../decisions/physics.md#adr-0054).
 
 <a id="m-electron2d-scenetree-setinputashandled"></a>
 ### `public void SetInputAsHandled()`
@@ -790,7 +790,7 @@ The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.
 
 [PhysicsInterpolationTests](../../tests/Electron2D.Tests/PhysicsInterpolationTests.cs) checks project-setting initialization, runtime toggles, eligible snapshots, first/repeated ticks, reset/pause, camera/Control policy, callback failure, and 128 warmed active ticks with zero managed allocation. [Native pixel checks](../../tests/Electron2D.Tests/PhysicsInterpolationNativeTests.cs) pass on dummy compatibility and Linux Wayland compatibility/GPU for moving items and camera scroll. Other platforms and visual owner acceptance remain unverified.
 
-`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and the fraction consumed by 2D presentation, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, collision physics simulation, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
+`SceneTree` itself has no automatic frame pump or elapsed-time source. Core [`Engine`](Engine.md) provides host-driven fixed-step accumulation, scaled/original delta delivery, time scaling, and the fraction consumed by 2D presentation, and Engine.Run supplies the window clock/pump and frame wait. [SceneChangeTests](../../tests/Electron2D.Tests/SceneChangeTests.cs) cover in-memory scene replacement, ownership, deferred entry, callback failures and cleanup. Scene file loading/reloading, multithreaded renderer synchronization, complete GUI input routing, wider physics server/area/joint APIs, loaded-scene performance benchmark, and exception logging remain absent. Root viewport GUI dispatch and hover are covered by [ControlInputTests](../../tests/Electron2D.Tests/ControlInputTests.cs) and [ControlHoverTests](../../tests/Electron2D.Tests/ControlHoverTests.cs); clipping, stationary-pointer geometry changes, keyboard navigation, exact renderer order and nested viewports remain. Allocation checks cover warmed empty and small active-Timer/Tween/input hierarchies, not large-scene performance; concurrency checks are local stress tests rather than formal proofs or platform-wide performance evidence. Input hardware gaps use ADR 0038's exact triggers.
 
 ## Related decision
 

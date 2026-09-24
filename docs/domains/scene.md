@@ -51,6 +51,8 @@ The Control branch also exposes [`ControlFocusBehaviorRecursive`](../classes/Con
 - `SceneState`: live read-only typed metadata view for current packed data.
 - `PackedSceneEditState`: instantiation policy whose runtime `Disabled` value is implemented and whose editor values fail explicitly.
 
+The [Physics domain](physics.md) now supplies RigidBody, StaticBody and CollisionShape descendants on the existing Entity branch. SceneTree's fixed lane owns their internal world step after node physics callbacks and before timers, tweens and interpolation end capture. The Physics domain owns shapes, body behavior and the still-incomplete wider server/query API; Scene remains the scheduling and lifetime owner.
+
 ## Dependency direction
 
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
@@ -91,7 +93,7 @@ The Control branch also exposes [`ControlFocusBehaviorRecursive`](../classes/Con
 - A caller may supply deltas directly through inherited `Process`/`PhysicsProcess` or wrappers. Core `Engine` can instead apply time scaling and fixed-step accumulation from host-supplied elapsed time. Engine.Run(Window) owns the implemented SDL pump, monotonic clock and frame-wait policy; no background scene thread is created.
 - Canvas membership emits entry/exit notifications; local and inherited visibility delivery includes Hidden, and showing schedules redraw. Manual tree notifications do not mutate membership.
 - Visibility and canvas-root, behind-parent, nested local Y and effective Z ordering govern retained commands. Rendering order does not change process/input scheduling.
-- Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. In-memory scene switching exists, but scene file loading/reloading does not. There is no independent offscreen viewport, collision/rigid-body physics, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
+- Root-window drawing and its input/client Viewport are integrated. Root viewport Control hit testing, mouse bubbling and focused keyboard delivery run; complete GUI routing remains absent. In-memory scene switching exists, but scene file loading/reloading does not. There is no independent offscreen viewport, wider physics server/area/joint API, RPC/multiplayer, accessibility backend, or scripting. Tweening is runtime-only and has no editor/serialization surface.
 - Packed scenes are in-memory only. Nested/inherited scene authoring, placeholders, editable instances, persistent event endpoint storage, node-reference remapping, UID/import integration, and every editor edit mode remain absent.
 - Paths are typed as `string`, not a separate `NodePath`; groups are strings; wildcard search covers names with `*` and `?`.
 - A detached node may remember `QueueFree`, but deletion occurs only after attachment to a tree and a flush/frame boundary.

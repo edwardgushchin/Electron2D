@@ -1,1 +1,2 @@
 src/Vendor/SDL3-CS/** -whitespace
+src/Vendor/Box2D.NET/** -whitespace

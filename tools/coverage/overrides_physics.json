@@ -1,0 +1,400 @@
+{
+  "mappings": [
+    {
+      "godot": "Shape2D::method:get_rect()",
+      "electron2d": "method:Electron2D.Shape.GetRect()",
+      "reason": "Abstract typed shape bounds hook; concrete circle and rectangle overrides supply the geometry."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CircleShape..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CollisionObject..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CollisionShape..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBody..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RectangleShape..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RigidBody..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Shape..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "constructor:Electron2D.StaticBody..ctor()",
+      "reason": "Managed C# construction projects the existing physics resource or scene-node defaults.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CircleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CircleShape.CreateDuplicateInstance()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CircleShape.GetRect()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionObject.GetPropertyDescriptors()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.CreateSceneInstanceFactory()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.Dispose(System.Boolean)",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.GetConfigurationWarnings()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.GetPropertyDescriptors()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.OnEnterTree()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionShape.OnExitTree()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBody.Dispose(System.Boolean)",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBody.OnEnterTree()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBody.OnExitTree()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.RectangleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.RectangleShape.CreateDuplicateInstance()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.RectangleShape.GetRect()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.RigidBody.CreateSceneInstanceFactory()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.RigidBody.GetPropertyDescriptors()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    },
+    {
+      "electron2d": "method:Electron2D.StaticBody.CreateSceneInstanceFactory()",
+      "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
+      "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:Shape2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "Shape2D::method:get_rect()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "class:CircleShape2D"
+      ],
+      "state": "Implemented",
+      "reason": "Complete own shape dimensions and bounds execute; inherited Shape queries retain separate rows."
+    },
+    {
+      "godot": [
+        "CircleShape2D::property:radius"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "class:RectangleShape2D"
+      ],
+      "state": "Implemented",
+      "reason": "Complete own shape dimensions and bounds execute; inherited Shape queries retain separate rows."
+    },
+    {
+      "godot": [
+        "RectangleShape2D::property:size"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "class:CollisionShape2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "CollisionShape2D::property:disabled",
+        "CollisionShape2D::property:shape"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "class:CollisionObject2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::method:get_collision_layer_value(int:)",
+        "CollisionObject2D::method:get_collision_mask_value(int:)",
+        "CollisionObject2D::method:set_collision_layer_value(int:,bool:)",
+        "CollisionObject2D::method:set_collision_mask_value(int:,bool:)",
+        "CollisionObject2D::property:collision_layer",
+        "CollisionObject2D::property:collision_mask"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "class:PhysicsBody2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "class:StaticBody2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "class:RigidBody2D"
+      ],
+      "state": "Partial",
+      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+    },
+    {
+      "godot": [
+        "RigidBody2D::method:apply_central_force(Vector2:)",
+        "RigidBody2D::method:apply_central_impulse(Vector2:)",
+        "RigidBody2D::property:angular_damp",
+        "RigidBody2D::property:angular_velocity",
+        "RigidBody2D::property:can_sleep",
+        "RigidBody2D::property:freeze",
+        "RigidBody2D::property:gravity_scale",
+        "RigidBody2D::property:linear_damp",
+        "RigidBody2D::property:linear_velocity",
+        "RigidBody2D::property:lock_rotation",
+        "RigidBody2D::property:mass",
+        "RigidBody2D::property:sleeping"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
+    },
+    {
+      "godot": [
+        "Shape2D::method:draw(RID:,Color:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: renderer RID canvas debug-draw integration for physics shapes; no public physics canvas handle exists yet."
+    },
+    {
+      "godot": [
+        "Shape2D::property:custom_solver_bias"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: accepted per-shape solver-bias mapping and Box2D contact softness verification."
+    },
+    {
+      "godot": [
+        "CollisionShape2D::property:debug_color"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: 2D physics debug drawing through the retained canvas renderer."
+    },
+    {
+      "godot": [
+        "CollisionShape2D::property:one_way_collision",
+        "CollisionShape2D::property:one_way_collision_direction",
+        "CollisionShape2D::property:one_way_collision_margin"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: one-way contact filtering with direction/margin in a typed pre-solve physics callback."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::method:get_rid()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed PhysicsServer2D resource identity, body/space lifetime and RID projection."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::method:_input_event(Viewport:,InputEvent:,int:)",
+        "CollisionObject2D::method:_mouse_enter()",
+        "CollisionObject2D::method:_mouse_exit()",
+        "CollisionObject2D::method:_mouse_shape_enter(int:)",
+        "CollisionObject2D::method:_mouse_shape_exit(int:)",
+        "CollisionObject2D::property:input_pickable",
+        "CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)",
+        "CollisionObject2D::signal:mouse_entered()",
+        "CollisionObject2D::signal:mouse_exited()",
+        "CollisionObject2D::signal:mouse_shape_entered(int:)",
+        "CollisionObject2D::signal:mouse_shape_exited(int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: viewport physics picking, pointer routing and shape-index event delivery."
+    },
+    {
+      "godot": [
+        "PhysicsBody2D::method:get_gravity()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: Area2D gravity override integration with the physics space."
+    },
+    {
+      "godot": [
+        "PhysicsBody2D::method:move_and_collide(Vector2:,bool:,float:,bool:)",
+        "PhysicsBody2D::method:test_move(Transform2D:,Vector2:,KinematicCollision2D:,float:,bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed kinematic sweep queries, safe-margin recovery and KinematicCollision result."
+    },
+    {
+      "godot": [
+        "PhysicsBody2D::property:input_pickable"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: viewport physics picking and collision-object input eligibility."
+    },
+    {
+      "godot": [
+        "StaticBody2D::property:physics_material_override"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: PhysicsMaterial resource with friction/restitution transfer into Box2D shape materials."
+    },
+    {
+      "godot": [
+        "RigidBody2D::method:_integrate_forces(PhysicsDirectBodyState2D:)",
+        "RigidBody2D::property:custom_integrator"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: PhysicsDirectBodyState2D typed solver state and callback timing contract."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:physics_material_override"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: PhysicsMaterial resource with friction/restitution transfer into Box2D shape materials."
+    },
+    {
+      "godot": [
+        "RigidBody2D::property:angular_damp_mode",
+        "RigidBody2D::property:linear_damp_mode"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: Area2D damping overrides and combine/replace integration with body damping."
+    },
+    {
+      "godot": [
+        "RigidBody2D::method:get_colliding_bodies()",
+        "RigidBody2D::method:get_contact_count()",
+        "RigidBody2D::property:contact_monitor",
+        "RigidBody2D::property:max_contacts_reported",
+        "RigidBody2D::signal:body_entered(Node:)",
+        "RigidBody2D::signal:body_exited(Node:)",
+        "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
+        "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)",
+        "RigidBody2D::signal:sleeping_state_changed()"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: next body contact/sleep event slice using Box2D step events with typed node/shape ownership and notification order."
+    },
+    {
+      "godot": [
+        "RigidBody2D::method:add_constant_central_force(Vector2:)",
+        "RigidBody2D::method:add_constant_force(Vector2:,Vector2:)",
+        "RigidBody2D::method:add_constant_torque(float:)",
+        "RigidBody2D::method:apply_force(Vector2:,Vector2:)",
+        "RigidBody2D::method:apply_impulse(Vector2:,Vector2:)",
+        "RigidBody2D::method:apply_torque(float:)",
+        "RigidBody2D::method:apply_torque_impulse(float:)",
+        "RigidBody2D::method:set_axis_velocity(Vector2:)",
+        "RigidBody2D::property:constant_force",
+        "RigidBody2D::property:constant_torque"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: next force/torque and axis-velocity slice on the existing Box2D body, with world-point and center-of-mass semantics."
+    }
+  ]
+}

@@ -4,8 +4,8 @@ Last updated: 2026-09-24
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1234 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
-2. Complete 840 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Review 1240 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+2. Complete 1036 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [AnimatableBody2D](classes/AnimatableBody2D.md), [Area2D](classes/Area2D.md), [CapsuleShape2D](classes/CapsuleShape2D.md), [CharacterBody2D](classes/CharacterBody2D.md), [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md), [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PhysicsMaterial](classes/PhysicsMaterial.md), [PinJoint2D](classes/PinJoint2D.md), [SegmentShape2D](classes/SegmentShape2D.md), [SeparationRayShape2D](classes/SeparationRayShape2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -17,8 +17,10 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
 | [Node](classes/Node.md) | 66 | 68 |
 | [Window](classes/Window.md) | 42 | 34 |
+| [RigidBody2D](classes/RigidBody2D.md) | 37 | 0 |
 | [Control](classes/Control.md) | 35 | 60 |
 | [Object](classes/Object.md) | 34 | 22 |
+| [CollisionObject2D](classes/CollisionObject2D.md) | 27 | 0 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
@@ -28,8 +30,11 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | [SceneTree](classes/SceneTree.md) | 8 | 19 |
 | [Viewport](classes/Viewport.md) | 5 | 15 |
 | [Resource](classes/Resource.md) | 4 | 21 |
+| [Shape2D](classes/Shape2D.md) | 4 | 0 |
 | [Material](classes/Material.md) | 3 | 0 |
+| [PhysicsBody2D](classes/PhysicsBody2D.md) | 3 | 0 |
 | [FileAccess](classes/FileAccess.md) | 2 | 66 |
+| [StaticBody2D](classes/StaticBody2D.md) | 2 | 0 |
 | [DirAccess](classes/DirAccess.md) | 1 | 39 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | 1 | 22 |
 | [Polygon2D](classes/Polygon2D.md) | 1 | 13 |
@@ -69,7 +74,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
-| Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). | 39 |
 | Animation: trigger is the first scene animation slice. | 28 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 10 |
@@ -77,6 +81,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |
+| Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space. | 8 |
 | Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028). | 6 |
@@ -90,6 +95,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
+| Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 3 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 2 |
@@ -105,8 +111,11 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
+| Trigger: scene query nodes consuming the typed direct-space ray/shape query slice. | 2 |
+| Trigger: typed live body-state callback and solver ownership over the PhysicsServer2D space. | 2 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
+| Trigger: first 2D skeleton bone and physics-body ownership integration. | 1 |
 | Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
 | Trigger: first concrete typed resource file format and serializer with ownership and rollback (ADRs 0013 and 0023). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
@@ -117,6 +126,7 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
+| Trigger: polygon collision-shape resource conversion and scene polygon owner integration after the first convex/concave shape slice. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

@@ -324,6 +324,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CircleShape",
+    "kind": "type",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "CircleShape",
+    "signature": "public sealed class Electron2D.CircleShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ClockDirection",
     "kind": "type",
     "declaringType": "Electron2D.ClockDirection",
@@ -336,6 +351,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CollisionObject",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "CollisionObject",
+    "signature": "public abstract class Electron2D.CollisionObject",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CollisionShape",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "CollisionShape",
+    "signature": "public sealed class Electron2D.CollisionShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -2246,6 +2291,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsBody",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "PhysicsBody",
+    "signature": "public abstract class Electron2D.PhysicsBody",
+    "visibility": "public",
+    "baseType": "Electron2D.CollisionObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsInterpolationMode",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsInterpolationMode",
@@ -2411,6 +2471,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RectangleShape",
+    "kind": "type",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "RectangleShape",
+    "signature": "public sealed class Electron2D.RectangleShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RegEx",
     "kind": "type",
     "declaringType": "Electron2D.RegEx",
@@ -2535,6 +2610,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RigidBody",
+    "kind": "type",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "RigidBody",
+    "signature": "public sealed class Electron2D.RigidBody",
+    "visibility": "public",
+    "baseType": "Electron2D.PhysicsBody",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneState",
     "kind": "type",
     "declaringType": "Electron2D.SceneState",
@@ -2628,6 +2718,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Shape",
+    "kind": "type",
+    "declaringType": "Electron2D.Shape",
+    "name": "Shape",
+    "signature": "public abstract class Electron2D.Shape",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Side",
     "kind": "type",
     "declaringType": "Electron2D.Side",
@@ -2688,6 +2793,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StaticBody",
+    "kind": "type",
+    "declaringType": "Electron2D.StaticBody",
+    "name": "StaticBody",
+    "signature": "public sealed class Electron2D.StaticBody",
+    "visibility": "public",
+    "baseType": "Electron2D.PhysicsBody",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -4572,6 +4692,45 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CircleShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CircleShape",
+    "name": ".ctor",
+    "signature": "public CircleShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CollisionObject..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": ".ctor",
+    "signature": "protected CollisionObject()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CollisionShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": ".ctor",
+    "signature": "public CollisionShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Color..ctor(Electron2D.Color,System.Single)",
     "kind": "constructor",
     "declaringType": "Electron2D.Color",
@@ -5346,6 +5505,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PhysicsBody..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": ".ctor",
+    "signature": "protected PhysicsBody()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Polygon..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Polygon",
@@ -5759,6 +5931,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.RectangleShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": ".ctor",
+    "signature": "public RectangleShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.RegEx..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.RegEx",
@@ -5830,6 +6015,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.RigidBody..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RigidBody",
+    "name": ".ctor",
+    "signature": "public RigidBody()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.SceneTree..ctor(Electron2D.Node)",
     "kind": "constructor",
     "declaringType": "Electron2D.SceneTree",
@@ -5875,6 +6073,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Shape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Shape",
+    "name": ".ctor",
+    "signature": "protected Shape()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Sprite..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Sprite",
@@ -5893,6 +6104,19 @@
     "declaringType": "Electron2D.SpriteFrames",
     "name": ".ctor",
     "signature": "public SpriteFrames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StaticBody..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StaticBody",
+    "name": ".ctor",
+    "signature": "public StaticBody()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -21501,6 +21725,254 @@
     "name": "Show",
     "signature": "public System.Void Show()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CircleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CircleShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CircleShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetCollisionLayerValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetCollisionLayerValue",
+    "signature": "public System.Boolean GetCollisionLayerValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetCollisionMaskValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetCollisionMaskValue",
+    "signature": "public System.Boolean GetCollisionMaskValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.SetCollisionLayerValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "SetCollisionLayerValue",
+    "signature": "public System.Void SetCollisionLayerValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.SetCollisionMaskValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "SetCollisionMaskValue",
+    "signature": "public System.Void SetCollisionMaskValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionShape.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -39972,6 +40444,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsBody.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsBody.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsBody.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Polygon.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Polygon",
@@ -41873,6 +42390,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RectangleShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RectangleShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RectangleShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RegEx.Clear()",
     "kind": "method",
     "declaringType": "Electron2D.RegEx",
@@ -42721,6 +43303,70 @@
       }
     ],
     "returnType": "TResource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyCentralForce(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyCentralForce",
+    "signature": "public System.Void ApplyCentralForce(Electron2D.Vector2 force)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.ApplyCentralImpulse(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ApplyCentralImpulse",
+    "signature": "public System.Void ApplyCentralImpulse(Electron2D.Vector2 impulse)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RigidBody.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -44024,6 +44670,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "GetRect",
+    "signature": "public abstract Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
@@ -44620,6 +45279,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StaticBody.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.StaticBody",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
     "value": null
   },
   {
@@ -56527,6 +57199,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CircleShape.Radius()",
+    "kind": "property",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "Radius",
+    "signature": "public System.Single Radius { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObject.CollisionLayer()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "CollisionLayer",
+    "signature": "public System.UInt32 CollisionLayer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObject.CollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "CollisionMask",
+    "signature": "public System.UInt32 CollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionShape.Disabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "Disabled",
+    "signature": "public System.Boolean Disabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionShape.Shape()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "Shape",
+    "signature": "public Electron2D.Shape Shape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shape",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Color.A8()",
     "kind": "property",
     "declaringType": "Electron2D.Color",
@@ -63716,6 +64453,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RectangleShape.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2 Size { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RegEx.GroupCount()",
     "kind": "property",
     "declaringType": "Electron2D.RegEx",
@@ -63960,6 +64710,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.AngularDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AngularDamp",
+    "signature": "public System.Single AngularDamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.AngularVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AngularVelocity",
+    "signature": "public System.Single AngularVelocity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.CanSleep()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "CanSleep",
+    "signature": "public System.Boolean CanSleep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.Freeze()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "Freeze",
+    "signature": "public System.Boolean Freeze { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.GravityScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "GravityScale",
+    "signature": "public System.Single GravityScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.LinearDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "LinearDamp",
+    "signature": "public System.Single LinearDamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.LinearVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "LinearVelocity",
+    "signature": "public Electron2D.Vector2 LinearVelocity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.LockRotation()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "LockRotation",
+    "signature": "public System.Boolean LockRotation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.Mass()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "Mass",
+    "signature": "public System.Single Mass { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.Sleeping()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "Sleeping",
+    "signature": "public System.Boolean Sleeping { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

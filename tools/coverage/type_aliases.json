@@ -22,7 +22,15 @@
     "Parallax2D": "Parallax",
     "NoiseTexture2D": "NoiseTexture",
     "AStar2D": "AStar",
-    "AStarGrid2D": "AStarGrid"
+    "AStarGrid2D": "AStarGrid",
+    "Shape2D": "Shape",
+    "CircleShape2D": "CircleShape",
+    "RectangleShape2D": "RectangleShape",
+    "CollisionShape2D": "CollisionShape",
+    "CollisionObject2D": "CollisionObject",
+    "PhysicsBody2D": "PhysicsBody",
+    "RigidBody2D": "RigidBody",
+    "StaticBody2D": "StaticBody"
   },
   "enums": {
     "CanvasItemMaterial.BlendMode": "BlendMode",

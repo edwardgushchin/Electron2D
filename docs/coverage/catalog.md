@@ -16,7 +16,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AcceptDialog](classes/AcceptDialog.md) | Window | Blocked | 26 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | Object | Blocked | 178 |
 | [AimModifier3D](classes/AimModifier3D.md) | BoneConstraint3D | Excluded | 11 |
-| [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Blocked | 1 |
+| [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Unimplemented | 1 |
 | [AnimatableBody3D](classes/AnimatableBody3D.md) | StaticBody3D | Excluded | 1 |
 | [AnimatedSprite2D](classes/AnimatedSprite2D.md) | Node2D | Implemented | 22 |
 | [AnimatedSprite3D](classes/AnimatedSprite3D.md) | SpriteBase3D | Excluded | 18 |
@@ -47,7 +47,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Blocked | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Blocked | 0 |
 | [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Blocked | 12 |
-| [Area2D](classes/Area2D.md) | CollisionObject2D | Blocked | 35 |
+| [Area2D](classes/Area2D.md) | CollisionObject2D | Unimplemented | 35 |
 | [Area3D](classes/Area3D.md) | CollisionObject3D | Excluded | 42 |
 | [AreaLight3D](classes/AreaLight3D.md) | Light3D | Excluded | 7 |
 | [Array](classes/Array.md) | — | Excluded | 72 |
@@ -161,24 +161,24 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CanvasModulate](classes/CanvasModulate.md) | Node2D | Blocked | 1 |
 | [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Blocked | 8 |
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Excluded | 4 |
-| [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Blocked | 3 |
+| [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Unimplemented | 3 |
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
 | [CenterContainer](classes/CenterContainer.md) | Container | Blocked | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
-| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Blocked | 40 |
+| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Unimplemented | 40 |
 | [CharacterBody3D](classes/CharacterBody3D.md) | PhysicsBody3D | Excluded | 41 |
 | [CheckBox](classes/CheckBox.md) | Button | Blocked | 13 |
 | [CheckButton](classes/CheckButton.md) | Button | Blocked | 13 |
-| [CircleShape2D](classes/CircleShape2D.md) | Shape2D | Blocked | 1 |
+| [CircleShape2D](classes/CircleShape2D.md) | Shape2D | Implemented | 1 |
 | [ClassDB](classes/ClassDB.md) | Object | Excluded | 36 |
 | [CodeEdit](classes/CodeEdit.md) | TextEdit | Blocked | 145 |
 | [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Blocked | 21 |
-| [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Blocked | 45 |
+| [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Partial | 45 |
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Blocked | 9 |
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |
-| [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Blocked | 6 |
+| [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Partial | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |
 | [Color](classes/Color.md) | — | Implemented | 206 |
 | [ColorPalette](classes/ColorPalette.md) | Resource | Blocked | 1 |
@@ -193,7 +193,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CompressedTexture2DArray](classes/CompressedTexture2DArray.md) | CompressedTextureLayered | Blocked | 0 |
 | [CompressedTexture3D](classes/CompressedTexture3D.md) | Texture3D | Excluded | 2 |
 | [CompressedTextureLayered](classes/CompressedTextureLayered.md) | TextureLayered | Blocked | 2 |
-| [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Blocked | 1 |
+| [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Unimplemented | 1 |
 | [ConcavePolygonShape3D](classes/ConcavePolygonShape3D.md) | Shape3D | Excluded | 3 |
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
 | [ConfigFile](classes/ConfigFile.md) | RefCounted | Implemented | 17 |
@@ -201,7 +201,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Container](classes/Container.md) | Control | Blocked | 11 |
 | [Control](classes/Control.md) | CanvasItem | Partial | 267 |
 | [ConvertTransformModifier3D](classes/ConvertTransformModifier3D.md) | BoneConstraint3D | Excluded | 25 |
-| [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Blocked | 2 |
+| [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Unimplemented | 2 |
 | [ConvexPolygonShape3D](classes/ConvexPolygonShape3D.md) | Shape3D | Excluded | 1 |
 | [CopyTransformModifier3D](classes/CopyTransformModifier3D.md) | BoneConstraint3D | Excluded | 39 |
 | [Crypto](classes/Crypto.md) | RefCounted | Blocked | 9 |
@@ -217,7 +217,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
 | [DTLSServer](classes/DTLSServer.md) | RefCounted | Blocked | 2 |
-| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Blocked | 4 |
+| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Unimplemented | 4 |
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |
 | [Dictionary](classes/Dictionary.md) | — | Excluded | 40 |
 | [DirAccess](classes/DirAccess.md) | RefCounted | Partial | 40 |
@@ -357,7 +357,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GridContainer](classes/GridContainer.md) | Container | Blocked | 3 |
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
-| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Blocked | 2 |
+| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Unimplemented | 2 |
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Blocked | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
@@ -413,7 +413,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [JavaObject](classes/JavaObject.md) | RefCounted | Blocked | 2 |
 | [JavaScriptBridge](classes/JavaScriptBridge.md) | Object | Blocked | 11 |
 | [JavaScriptObject](classes/JavaScriptObject.md) | RefCounted | Blocked | 0 |
-| [Joint2D](classes/Joint2D.md) | Node2D | Blocked | 5 |
+| [Joint2D](classes/Joint2D.md) | Node2D | Unimplemented | 5 |
 | [Joint3D](classes/Joint3D.md) | Node3D | Excluded | 5 |
 | [JointLimitation3D](classes/JointLimitation3D.md) | Resource | Excluded | 0 |
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
@@ -608,7 +608,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicalBone3D](classes/PhysicalBone3D.md) | PhysicsBody3D | Excluded | 32 |
 | [PhysicalBoneSimulator3D](classes/PhysicalBoneSimulator3D.md) | SkeletonModifier3D | Excluded | 5 |
 | [PhysicalSkyMaterial](classes/PhysicalSkyMaterial.md) | Material | Excluded | 11 |
-| [PhysicsBody2D](classes/PhysicsBody2D.md) | CollisionObject2D | Blocked | 7 |
+| [PhysicsBody2D](classes/PhysicsBody2D.md) | CollisionObject2D | Partial | 7 |
 | [PhysicsBody3D](classes/PhysicsBody3D.md) | CollisionObject3D | Excluded | 14 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | Object | Blocked | 42 |
 | [PhysicsDirectBodyState2DExtension](classes/PhysicsDirectBodyState2DExtension.md) | PhysicsDirectBodyState2D | Blocked | 48 |
@@ -618,7 +618,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsDirectSpaceState2DExtension](classes/PhysicsDirectSpaceState2DExtension.md) | PhysicsDirectSpaceState2D | Blocked | 7 |
 | [PhysicsDirectSpaceState3D](classes/PhysicsDirectSpaceState3D.md) | Object | Excluded | 6 |
 | [PhysicsDirectSpaceState3DExtension](classes/PhysicsDirectSpaceState3DExtension.md) | PhysicsDirectSpaceState3D | Excluded | 8 |
-| [PhysicsMaterial](classes/PhysicsMaterial.md) | Resource | Blocked | 4 |
+| [PhysicsMaterial](classes/PhysicsMaterial.md) | Resource | Unimplemented | 4 |
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | RefCounted | Blocked | 6 |
 | [PhysicsPointQueryParameters3D](classes/PhysicsPointQueryParameters3D.md) | RefCounted | Excluded | 5 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | RefCounted | Blocked | 8 |
@@ -636,7 +636,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Blocked | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
-| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Blocked | 6 |
+| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Unimplemented | 6 |
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |
 | [PlaceholderCubemap](classes/PlaceholderCubemap.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |
@@ -694,7 +694,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |
 | [Rect2](classes/Rect2.md) | — | Implemented | 27 |
 | [Rect2i](classes/Rect2i.md) | — | Implemented | 23 |
-| [RectangleShape2D](classes/RectangleShape2D.md) | Shape2D | Blocked | 1 |
+| [RectangleShape2D](classes/RectangleShape2D.md) | Shape2D | Implemented | 1 |
 | [RefCounted](classes/RefCounted.md) | Object | Excluded | 4 |
 | [ReferenceRect](classes/ReferenceRect.md) | Control | Blocked | 3 |
 | [ReflectionProbe](classes/ReflectionProbe.md) | VisualInstance3D | Excluded | 22 |
@@ -742,7 +742,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RibbonTrailMesh](classes/RibbonTrailMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [RichTextEffect](classes/RichTextEffect.md) | Resource | Blocked | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | Control | Blocked | 173 |
-| [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Blocked | 54 |
+| [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Partial | 54 |
 | [RigidBody3D](classes/RigidBody3D.md) | PhysicsBody3D | Excluded | 51 |
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
 | [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Blocked | 17 |
@@ -760,9 +760,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScriptLanguageExtension](classes/ScriptLanguageExtension.md) | ScriptLanguage | Blocked | 91 |
 | [ScrollBar](classes/ScrollBar.md) | Range | Blocked | 15 |
 | [ScrollContainer](classes/ScrollContainer.md) | Container | Blocked | 39 |
-| [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Blocked | 2 |
+| [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Unimplemented | 2 |
 | [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
-| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Blocked | 2 |
+| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Unimplemented | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Blocked | 2 |
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |
@@ -770,7 +770,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Blocked | 1 |
 | [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Blocked | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
-| [Shape2D](classes/Shape2D.md) | Resource | Blocked | 7 |
+| [Shape2D](classes/Shape2D.md) | Resource | Partial | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Blocked | 27 |
 | [ShapeCast3D](classes/ShapeCast3D.md) | Node3D | Excluded | 29 |
@@ -816,7 +816,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SpriteBase3D](classes/SpriteBase3D.md) | GeometryInstance3D | Excluded | 36 |
 | [SpriteFrames](classes/SpriteFrames.md) | Resource | Implemented | 24 |
 | [StandardMaterial3D](classes/StandardMaterial3D.md) | BaseMaterial3D | Excluded | 0 |
-| [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Blocked | 3 |
+| [StaticBody2D](classes/StaticBody2D.md) | PhysicsBody2D | Partial | 3 |
 | [StaticBody3D](classes/StaticBody3D.md) | PhysicsBody3D | Excluded | 3 |
 | [StatusIndicator](classes/StatusIndicator.md) | Node | Blocked | 6 |
 | [StreamPeer](classes/StreamPeer.md) | RefCounted | Blocked | 34 |
@@ -1055,7 +1055,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |
 | [World2D](classes/World2D.md) | Resource | Blocked | 4 |
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |
-| [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Blocked | 2 |
+| [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Unimplemented | 2 |
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |
 | [WorldEnvironment](classes/WorldEnvironment.md) | Node | Blocked | 3 |
 | [X509Certificate](classes/X509Certificate.md) | Resource | Blocked | 4 |

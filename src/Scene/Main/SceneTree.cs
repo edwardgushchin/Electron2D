@@ -468,9 +468,11 @@ public sealed partial class SceneTree : MainLoop
     /// <exception cref="AggregateException">One or more frame events, node callbacks, timers, tweens, or deferred operations fail.</exception>
     public void ProcessFrame(double delta) => _ = Process(delta);
 
-    /// <summary>Runs one host-driven physics-process frame, physics timers, physics tweens, and one deferred safe point.</summary>
+    /// <summary>Runs one host-driven physics-process frame, scene-body simulation, physics timers, physics tweens, and one deferred safe point.</summary>
     /// <param name="delta">Elapsed physics-step time in seconds; it must be finite and non-negative.</param>
-    /// <remarks>This callback lane does not perform collision or rigid-body simulation.</remarks>
+    /// <remarks>Attached rigid and static bodies use the internal physics world after node callbacks and before
+    /// timers, tweens and interpolation end capture. Zero delta does not advance the world. Other physics domains
+    /// remain outside the first scene-body profile.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="delta"/> is negative, NaN, or infinite.</exception>
     /// <exception cref="InvalidOperationException">The method is called off the owner thread, re-entered, called before initialization or after finalization, or called during node lifecycle or pause delivery.</exception>
     /// <exception cref="ObjectDisposedException">Tree disposal has started or finished.</exception>
@@ -991,6 +993,10 @@ public sealed partial class SceneTree : MainLoop
             CollectException(ref errors, error);
         }
 
+        try { _physicsSpace?.Dispose(); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        _physicsSpace = null;
+
         DisposePendingScenes(ref errors);
 
         foreach (var timer in _timers.ToArray())
@@ -1213,6 +1219,12 @@ public sealed partial class SceneTree : MainLoop
                 {
                     CollectException(ref errors, error);
                 }
+            }
+
+            if (physics && _physicsSpace is { } physicsSpace)
+            {
+                try { physicsSpace.Step(delta); }
+                catch (Exception error) { CollectException(ref errors, error); }
             }
 
             if (!physics) FlushTransformNotifications(ref errors);

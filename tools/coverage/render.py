@@ -15,8 +15,49 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
+PHYSICS_AUDITED_TYPES = {
+    "AnimatableBody2D",
+    "Area2D",
+    "CapsuleShape2D",
+    "CharacterBody2D",
+    "CircleShape2D",
+    "CollisionObject2D",
+    "CollisionPolygon2D",
+    "CollisionShape2D",
+    "ConcavePolygonShape2D",
+    "ConvexPolygonShape2D",
+    "DampedSpringJoint2D",
+    "GrooveJoint2D",
+    "Joint2D",
+    "KinematicCollision2D",
+    "PhysicalBone2D",
+    "PhysicsBody2D",
+    "PhysicsDirectBodyState2D",
+    "PhysicsDirectBodyState2DExtension",
+    "PhysicsDirectSpaceState2D",
+    "PhysicsDirectSpaceState2DExtension",
+    "PhysicsMaterial",
+    "PhysicsPointQueryParameters2D",
+    "PhysicsRayQueryParameters2D",
+    "PhysicsServer2D",
+    "PhysicsServer2DExtension",
+    "PhysicsServer2DManager",
+    "PhysicsShapeQueryParameters2D",
+    "PhysicsTestMotionParameters2D",
+    "PhysicsTestMotionResult2D",
+    "PinJoint2D",
+    "RayCast2D",
+    "RectangleShape2D",
+    "RigidBody2D",
+    "SegmentShape2D",
+    "SeparationRayShape2D",
+    "Shape2D",
+    "ShapeCast2D",
+    "StaticBody2D",
+    "WorldBoundaryShape2D",
+}
 TEXTURE_NAMES = {
     "Texture2D": "Texture",
     "Texture2DArray": "TextureArray",
@@ -186,6 +227,14 @@ def reason_for_type(item, lookup):
          "first curve-texture slice using implemented Curve and Texture; integrate curve-change rebaking, float channel formats and verified backend sampling (ADRs 0013 and 0028); GUI is not a prerequisite"),
         ({"AnimatedTexture"},
          "next timed texture-frame resource slice using the existing Texture, SpriteFrames and engine clock (ADRs 0013 and 0028)"),
+        ({"CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "WorldBoundaryShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D"},
+         "next concrete Box2D geometry/fixture slice using the implemented Shape and physics world (ADR 0012)"),
+        ({"PhysicsMaterial"},
+         "typed friction and restitution resource with verified Box2D shape-material transfer (ADR 0013)"),
+        ({"AnimatableBody2D", "Area2D", "CharacterBody2D"},
+         "next kinematic or sensor scene-body slice using the implemented CollisionObject, PhysicsBody and Box2D world"),
+        ({"Joint2D", "PinJoint2D", "GrooveJoint2D", "DampedSpringJoint2D"},
+         "typed scene-joint ownership, anchors and Box2D solver integration using the implemented physics world"),
     )
     for names, trigger in accepted_slices:
         if name in names:
@@ -241,6 +290,18 @@ def reason_for_type(item, lookup):
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
         ({"ResourceFormatLoader"},
          "first public typed loader-plugin registration and callback slice after the concrete internal image-texture loader (ADR 0013)"),
+        ({"CollisionPolygon2D"},
+         "polygon collision-shape resource conversion and scene polygon owner integration after the first convex/concave shape slice"),
+        ({"PhysicsServer2D", "PhysicsServer2DExtension", "PhysicsServer2DManager"},
+         "typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice"),
+        ({"PhysicsDirectBodyState2D", "PhysicsDirectBodyState2DExtension"},
+         "typed live body-state callback and solver ownership over the PhysicsServer2D space"),
+        ({"PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "KinematicCollision2D"},
+         "typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space"),
+        ({"RayCast2D", "ShapeCast2D"},
+         "scene query nodes consuming the typed direct-space ray/shape query slice"),
+        ({"PhysicalBone2D"},
+         "first 2D skeleton bone and physics-body ownership integration"),
         ({"ImageFormatLoader", "ImageFormatLoaderExtension"},
          "first public image-decoder plugin and format-discovery slice beyond the internal six-codec Image path (ADR 0039)"),
         ({"ResourceSaver"},
@@ -287,7 +348,7 @@ def reason_for_type(item, lookup):
     if gui_type:
         return "Blocked", "GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028)."
     families = (
-        ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "first Box2D.NET-backed 2D physics slice (ADR 0012)"),
+        ("Physics2D", r"Physics|Collision|RigidBody2D|StaticBody2D|CharacterBody2D|Area2D|Joint2D|RayCast2D|ShapeCast2D|Shape2D|SpringArm2D", "next type-specific 2D physics operation beyond the implemented Box2D-backed scene-body slice (ADR 0012)"),
         ("Audio", r"Audio|Sound|Microphone", "first audio mixing and playback slice"),
         ("Navigation2D", r"Navigation", "first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052)"),
         ("Animation", r"Animation|Skeleton2D|Bone2D", "first scene animation slice"),
@@ -520,7 +581,7 @@ def render():
         inherited = f"[{godot_type['inherits']}]({coverage_target(godot_type['inherits'])})" if godot_type["inherits"] else "—"
         page_name = TEXTURE_NAMES.get(name, name)
         page = CLASS_PAGES / f"{page_name}.md"
-        updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "CompressedTexture2D", "Font", "FontFile", "FontVariation", "ImageFormatLoader", "ImageFormatLoaderExtension", "PortableCompressedTexture2D", "ResourceFormatLoader", "ResourceLoader", "ResourceSaver", "SystemFont", "VideoStream", "VideoStreamPlayback", "VideoStreamTheora", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
+        updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "CompressedTexture2D", "Font", "FontFile", "FontVariation", "ImageFormatLoader", "ImageFormatLoaderExtension", "PortableCompressedTexture2D", "ResourceFormatLoader", "ResourceLoader", "ResourceSaver", "SystemFont", "VideoStream", "VideoStreamPlayback", "VideoStreamTheora", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or name in PHYSICS_AUDITED_TYPES or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

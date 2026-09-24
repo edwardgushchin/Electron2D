@@ -187,6 +187,7 @@ NodeTreeDiagnosticsTests.Run();
 NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
+PhysicsBodyTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

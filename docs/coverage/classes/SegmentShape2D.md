@@ -1,6 +1,6 @@
 # SegmentShape2D API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Godot source: [doc/classes/SegmentShape2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,6 +10,6 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class SegmentShape2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Blocked | Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). |
-| [`property Vector2 a = Vector2(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Blocked | Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). |
-| [`property Vector2 b = Vector2(0, 10)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Blocked | Physics2D: trigger is the first Box2D.NET-backed 2D physics slice (ADR 0012). |
+| [`class SegmentShape2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Unimplemented | Accepted 2D capability; trigger: next concrete Box2D geometry/fixture slice using the implemented Shape and physics world (ADR 0012). |
+| [`property Vector2 a = Vector2(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Unimplemented | Accepted 2D capability; trigger: next concrete Box2D geometry/fixture slice using the implemented Shape and physics world (ADR 0012). |
+| [`property Vector2 b = Vector2(0, 10)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/SegmentShape2D.xml) | — | Unimplemented | Accepted 2D capability; trigger: next concrete Box2D geometry/fixture slice using the implemented Shape and physics world (ADR 0012). |
