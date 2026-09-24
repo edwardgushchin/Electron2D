@@ -6,7 +6,9 @@ internal static partial class RenderingRuntimeTests
     {
         using var image = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
             new byte[] { 255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255 });
-        using var texture = ImageTexture.CreateFromImage(image);
+        var imagePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Electron2D-sprite-" + Guid.NewGuid().ToString("N") + ".png");
+        image.SavePNG(imagePath);
+        using var texture = ResourceLoader.Load<ImageTexture>(imagePath);
         using var replacementImage = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         replacementImage.Fill(Colors.Magenta);
         using var replacement = ImageTexture.CreateFromImage(replacementImage);
@@ -57,10 +59,16 @@ internal static partial class RenderingRuntimeTests
                     case 7:
                         Pixel(pixels, 10, 10, Colors.Red); Pixel(pixels, 34, 10, Colors.Green);
                         Pixel(pixels, 10, 34, Colors.Blue); Pixel(pixels, 34, 34, Colors.Yellow); Pixel(pixels, 42, 34, Colors.Black);
-                        Task.Run(() => { image.Fill(Colors.Cyan); texture.Update(image); }).GetAwaiter().GetResult();
+                        Task.Run(() =>
+                        {
+                            image.Fill(Colors.Cyan);
+                            image.SavePNG(imagePath);
+                            Check(ReferenceEquals(ResourceLoader.Load<ImageTexture>(imagePath, ResourceLoader.CacheMode.Replace), texture),
+                                "Reload retains the Sprite's borrowed texture instance.");
+                        }).GetAwaiter().GetResult();
                         break;
                     case 8:
-                        Pixel(pixels, 10, 10, Colors.Cyan); Pixel(pixels, 34, 34, Colors.Cyan);
+                        Pixel(pixels, 18, 18, Colors.Cyan); Pixel(pixels, 10, 10, Colors.Black); Pixel(pixels, 34, 34, Colors.Black);
                         sprite.Texture = replacement;
                         break;
                     case 9:
@@ -83,9 +91,13 @@ internal static partial class RenderingRuntimeTests
                 }
             };
         };
-        Engine.Instance.Run(window);
-        Check(frames == 12 && sprite.IsDisposed && !texture.IsDisposed && !replacement.IsDisposed, "Sprite frame progression and borrowed lifetime.");
-        Released(window);
+        try
+        {
+            Engine.Instance.Run(window);
+            Check(frames == 12 && sprite.IsDisposed && !texture.IsDisposed && !replacement.IsDisposed, "Sprite frame progression and borrowed lifetime.");
+            Released(window);
+        }
+        finally { File.Delete(imagePath); }
         Console.WriteLine($"Sprite pixel checks passed: {backend}/{fixture ?? "default"}.");
     }
 }

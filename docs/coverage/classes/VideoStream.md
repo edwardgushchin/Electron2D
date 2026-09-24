@@ -1,6 +1,6 @@
 # VideoStream API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Godot source: [doc/classes/VideoStream.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,6 +10,6 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class VideoStream`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
-| [`method _instantiate_playback() -> VideoStreamPlayback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
-| [`property String file = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Assets: trigger is the first concrete loader and native-backed asset slice (ADR 0013/0023). |
+| [`class VideoStream`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Trigger: first video decoding, timed texture playback and audio synchronization slice. |
+| [`method _instantiate_playback() -> VideoStreamPlayback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Trigger: first video decoding, timed texture playback and audio synchronization slice. |
+| [`property String file = ""`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/VideoStream.xml) | — | Blocked | Trigger: first video decoding, timed texture playback and audio synchronization slice. |

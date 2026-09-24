@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope
 
@@ -27,7 +27,7 @@ Both types are production members of `Electron2D.dll`.
 
 The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`Node`](../classes/Node.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle.
 
-The managed [Images](images.md) component derives from this base and implements concrete CPU buffer duplication without changing base lifetime. Future asset serialization, rendering handles, and editor/import metadata may consume this component but are not implemented dependencies today. The base still has no dependency on `PackedScene`, `SceneTree`, or file formats.
+The managed [Images](images.md) component derives from this base and implements concrete CPU buffer duplication without changing base lifetime. The [Resource loading](resource-loading.md) component now reads registered paths from this base cache and loads `ImageTexture` files without adding a Resource-to-loader dependency. Future asset serialization, rendering handles, and editor/import metadata may consume this component. The base still has no dependency on `PackedScene`, `SceneTree`, or file formats.
 
 ## Invariants and error behavior
 
@@ -48,7 +48,7 @@ Name/path/scene configuration, path cache ownership, raw cache paths, changed/se
 
 ## Exclusions and deferred integration
 
-The component does not expose a public manual reference counter: managed memory remains owned by the runtime, while `IDisposable` performs deterministic logical cleanup. A future asset manager may use internal disposable leases to retain shared native-backed payloads and release them when the last lease ends; that mechanism is deferred until the first concrete loader and native-backed asset establish real ownership transitions. Managed `Image` does not trigger native leases; ADR 0039 defines its codec/texture triggers. Renderer IDs, asset loading/saving, imports, automatic file-serialization discovery, and editor path IDs remain deferred. Runtime packed scenes implement per-instance local duplication and automatic setup; persistent endpoint storage and disk scene/resource formats remain absent.
+The component does not expose a public manual reference counter: managed memory remains owned by the runtime, while `IDisposable` performs deterministic logical cleanup. The first synchronous image-texture loader uses this weak path cache; it adds no manager-owned native payload or lease. A future shared-payload asset manager may use internal disposable leases when a concrete ownership transition requires them. Renderer IDs, general asset loading/saving, imports, automatic file-serialization discovery, and editor path IDs remain deferred. Runtime packed scenes implement per-instance local duplication and automatic setup; persistent endpoint storage and disk scene/resource formats remain absent.
 
 ## Verification
 

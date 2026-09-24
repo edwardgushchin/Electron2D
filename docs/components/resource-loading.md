@@ -1,0 +1,31 @@
+# Resource loading component
+
+Last updated: 2026-09-24
+
+## Scope and owned types
+
+[`ResourceLoader`](../classes/ResourceLoader.md) and its [`CacheMode`](../classes/ResourceLoader.CacheMode.md) enum provide the first synchronous resource-file path: six integrated image decoders produce an `ImageTexture` that the current Sprite and renderer can draw. This component uses the existing `Resource` weak path cache; it does not create a general importer, saver, UID registry, threaded worker or public format-loader plugin yet.
+
+## Runtime flow and ownership
+
+`Load<ImageTexture>` validates the cache mode and asks `Image.LoadFromFile` to decode through `FileAccess`. The codec limit and path policy apply unchanged. A successful decode is copied into an `ImageTexture` and is registered or given an unregistered visible path according to cache mode. `Reuse` returns a live cached texture immediately; `Replace` decodes first and refreshes the same texture through `SetImage`. A different cached type can be displaced only after the new texture is ready. The returned wrapper is caller-owned; weak registration does not retain it. Disposal unregisters the path.
+
+The GPU payload is managed by the existing texture renderer when the resource is drawn. A Sprite or Material borrows the texture wrapper and sees its `Changed` notification on replacement. No separate lease or manager-owned native payload is introduced by this first file format. Cache decisions are serialized; the loader does not synchronize arbitrary caller changes to a returned resource.
+
+## Invariants, failures and remaining work
+
+- An exact nonempty path has at most one live registered owner. Ignore modes do not claim ownership.
+- Cache modes have their pinned numeric identities. Deep modes equal ordinary modes for dependency-free image files.
+- Malformed input, unsupported types/extensions and invalid paths fail explicitly. Failed decoding preserves a cached texture and its pixels; callback failure can propagate after committed replacement.
+- `Exists` may return true for a cached resource after its source file is removed. Discovery returns caller-owned extension arrays.
+- Other resource formats, public format-loader registration, UID/dependency catalogs, threaded loading and resource-aware directory listing have separate coverage triggers. Generic load/exists/discovery remain Partial across the full applicable asset API.
+
+## Verification
+
+[ResourceLoaderTests](../../tests/Electron2D.Tests/ResourceLoaderTests.cs) checks native file decoding, cache identity, replacement, independent ignores, wrong-type takeover, concurrent reuse, malformed rollback and disposal. [SpriteRenderingTests](../../tests/Electron2D.Tests/SpriteRenderingTests.cs) verifies pixels from a loaded PNG and after file replacement on Linux Wayland compatibility/GPU and dummy compatibility. Other platforms, AOT, further formats and owner acceptance remain unverified.
+
+## Decisions
+
+- [ADR 0013: Managed typed Resource and first loader profile](../decisions/resources.md#adr-0013)
+- [ADR 0014: Resource lifetime and hot paths](../decisions/resources.md#adr-0014)
+- [ADR 0039: Image codecs](../decisions/resources.md#adr-0039)

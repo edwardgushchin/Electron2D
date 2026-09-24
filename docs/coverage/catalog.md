@@ -734,7 +734,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ResourceImporterTexture](classes/ResourceImporterTexture.md) | ResourceImporter | Blocked | 26 |
 | [ResourceImporterTextureAtlas](classes/ResourceImporterTextureAtlas.md) | ResourceImporter | Blocked | 4 |
 | [ResourceImporterWAV](classes/ResourceImporterWAV.md) | ResourceImporter | Blocked | 10 |
-| [ResourceLoader](classes/ResourceLoader.md) | Object | Blocked | 25 |
+| [ResourceLoader](classes/ResourceLoader.md) | Object | Partial | 25 |
 | [ResourcePreloader](classes/ResourcePreloader.md) | Node | Blocked | 6 |
 | [ResourceSaver](classes/ResourceSaver.md) | Object | Blocked | 15 |
 | [ResourceUID](classes/ResourceUID.md) | Object | Blocked | 13 |
