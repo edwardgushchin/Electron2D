@@ -61,6 +61,8 @@ Core values are executable with type-specific semantic coverage. `Rect`, `Transf
 
 `Geometry` implements twenty-four pure raster, nearest-point, polygon, hull, decomposition, triangulation, atlas, intersection, clipping and offset methods. Its polygon triangulation also serves retained canvas drawing through caller-owned scratch buffers. Convex-part merging adapts PolyPartition ([notice and license](../licenses/PolyPartition-LICENSE.txt)). The declared geometry class is complete under the accepted typed C# projection; clipping and offsets use internally compiled Clipper2 1.5.4 with five decimal digits of internal precision.
 
+`Rect` now has all 27 mapped members and its type row audited against the pinned floating-point rectangle and ADRs 0025/0029/0034. Source-order `Abs` and growth calculations preserve IEEE edge behavior; half-open containment and border-aware overlap preserve the source's rejection order when NaN is present. The integer sibling's implementation and typed conversion were reviewed for this slice, but its own 23 member rows and type row remain for a separate semantic audit.
+
 ## Exclusions and limitations
 
 - Universal-value truth conversion is permanently excluded by the typed C# architecture.

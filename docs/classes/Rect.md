@@ -1,6 +1,6 @@
 # Rect
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -23,6 +23,8 @@ The value owns no resources, identity, handles, callbacks, or managed references
 The rectangle is defined by a position and size and is commonly used for fast overlap tests.
 Most geometric operations assume non-negative size components. Call [`Rect.Abs`](Rect.md#m-electron2d-rect-abs) before those
 operations when a rectangle may have a negative width or height.
+
+All 27 mapped members and the type row have a pinned-source, ADR 0025/0029/0034 and Linux/.NET 8 managed audit. `Abs` adds the negative part of size before taking its magnitude; `Grow` doubles its amount before size addition, while `GrowIndividual` sums opposite side amounts first. `HasPoint` and `Intersects` reject positions beyond each edge, so a NaN component alone does not reject a point or rectangle. `VerifyRectangles`, `VerifyIntegerRectangles` and `VerifyTransforms` cover layout, copies, edge rules, IEEE boundaries, typed conversion, affine bounds, strict persistence and packed-scene storage. Native ABI and other platforms remain unverified.
 
 ## Examples
 

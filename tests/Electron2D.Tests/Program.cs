@@ -2970,9 +2970,10 @@ static void VerifyRectangles()
         "Side numeric values must remain stable.");
 
     var mutable = new Rect(new Vector2(1f, 2f), new Vector2(3f, 4f));
+    var independentCopy = mutable;
     mutable.Position = new Vector2(2f, 3f);
     mutable.Size = new Vector2(5f, 6f);
-    Require(mutable.End == new Vector2(7f, 9f),
+    Require(mutable.End == new Vector2(7f, 9f) && independentCopy == new Rect(1f, 2f, 3f, 4f),
         "Position and Size mutation must update the computed end.");
     mutable.End = new Vector2(10f, 12f);
     Require(mutable.Position == new Vector2(2f, 3f) && mutable.Size == new Vector2(8f, 9f),
@@ -2985,6 +2986,9 @@ static void VerifyRectangles()
     var normalized = new Rect(25f, 25f, -100f, -50f).Abs();
     Require(normalized == new Rect(-75f, -25f, 100f, 50f),
         "Abs must move the origin and normalize both size components.");
+    Require(new Rect(float.NegativeInfinity, 0f, float.PositiveInfinity, 1f).Abs().Position.X ==
+                float.NegativeInfinity,
+        "Abs must select the size contribution before adding it to the position.");
     var outer = new Rect(0f, 0f, 10f, 10f);
     Require(outer.Encloses(new Rect(0f, 0f, 10f, 10f)) &&
             outer.Encloses(new Rect(2f, 3f, 4f, 5f)) &&
@@ -3001,8 +3005,14 @@ static void VerifyRectangles()
     var baseRect = new Rect(1f, 2f, 3f, 4f);
     Require(baseRect.Grow(2f) == new Rect(-1f, 0f, 7f, 8f) &&
             baseRect.Grow(-1f) == new Rect(2f, 3f, 1f, 2f) &&
+            baseRect.Grow(-3f) == new Rect(4f, 5f, -3f, -2f) &&
             baseRect.GrowIndividual(1f, 2f, 3f, 4f) == new Rect(0f, 0f, 7f, 10f),
         "Grow operations must move origins and add the matching side amounts.");
+    Require(float.IsPositiveInfinity(new Rect(0f, 0f, -float.MaxValue, 1f).Grow(float.MaxValue).Size.X) &&
+            new Rect(0f, 0f, float.MaxValue, float.MaxValue)
+                .GrowIndividual(float.MaxValue, float.MaxValue, -float.MaxValue, -float.MaxValue).Size ==
+                new Vector2(float.MaxValue, float.MaxValue),
+        "Grow doubles a shared amount before adding it; individual sides combine before size addition.");
     Require(baseRect.GrowSide(Side.Left, 1f) == new Rect(0f, 2f, 4f, 4f) &&
             baseRect.GrowSide(Side.Top, 1f) == new Rect(1f, 1f, 3f, 5f) &&
             baseRect.GrowSide(Side.Right, 1f) == new Rect(1f, 2f, 4f, 4f) &&
@@ -3017,6 +3027,10 @@ static void VerifyRectangles()
             !outer.HasPoint(new Vector2(10f, 5f)) && !outer.HasPoint(new Vector2(5f, 10f)) &&
             !outer.HasPoint(new Vector2(-0.001f, 5f)),
         "HasPoint must include left/top edges and exclude right/bottom edges.");
+    Require(outer.HasPoint(new Vector2(float.NaN, 5f)) &&
+            outer.HasPoint(new Vector2(5f, float.NaN)) &&
+            !outer.HasPoint(new Vector2(float.NaN, 11f)),
+        "HasPoint retains the ordered rejection behavior for NaN coordinates.");
 
     var overlap = new Rect(8f, 4f, 5f, 8f);
     var touching = new Rect(10f, 2f, 4f, 3f);
@@ -3026,6 +3040,10 @@ static void VerifyRectangles()
             outer.Intersection(touching) == default && !outer.Intersects(new Rect(11f, 0f, 1f, 1f)) &&
             outer.Intersects(containedEmpty) && outer.Intersection(containedEmpty) == containedEmpty,
         "Intersection tests must distinguish positive overlap, touching borders, and separation.");
+    Require(outer.Intersects(new Rect(float.NaN, 2f, 1f, 1f)) &&
+            outer.Intersects(new Rect(float.NaN, 2f, 1f, 1f), includeBorders: true) &&
+            !outer.Intersects(new Rect(float.NaN, 11f, 1f, 1f)),
+        "Intersects retains the ordered rejection behavior for NaN rectangle coordinates.");
     Require(outer.Merge(overlap) == new Rect(0f, 0f, 13f, 12f),
         "Merge must return the smallest enclosing rectangle.");
     var exact = new Rect(1f, 2f, 3f, 4f);
@@ -3039,7 +3057,9 @@ static void VerifyRectangles()
             nanRect != new Rect(float.NaN, 2f, 3f, 4f) && !nanRect.IsEqualApprox(nanRect),
         "Exact and approximate equality must define finite, infinity, and NaN behavior.");
     Require(exact.IsFinite() && !nanRect.IsFinite() &&
-            !new Rect(0f, 0f, float.NegativeInfinity, 1f).IsFinite(),
+            !new Rect(0f, 0f, float.NegativeInfinity, 1f).IsFinite() &&
+            !new Rect(0f, float.NaN, 1f, 1f).IsFinite() &&
+            !new Rect(0f, 0f, 1f, float.PositiveInfinity).IsFinite(),
         "IsFinite must inspect every position and size component.");
 
     var previousCulture = CultureInfo.CurrentCulture;
@@ -3348,9 +3368,12 @@ static void VerifyTransforms()
         "Inverse and reverse point multiplication must invert an orthonormal transform.");
     var rectangle = new Rect(1f, 2f, 3f, 4f);
     var transformedRectangle = quarterTurn * rectangle;
+    var scaledRectangle = new Transform(new Vector2(2f, 0f), new Vector2(0f, 3f),
+        new Vector2(5f, -4f)) * rectangle;
     Require(transformedRectangle.IsEqualApprox(new Rect(-3f, 5f, 4f, 3f)) &&
             (transformedRectangle * quarterTurn).IsEqualApprox(rectangle) &&
-            Transform.Identity * new Rect(4f, 6f, -3f, -4f) == rectangle,
+            Transform.Identity * new Rect(4f, 6f, -3f, -4f) == rectangle &&
+            scaledRectangle == new Rect(7f, 2f, 6f, 12f),
         "Rectangle operators must transform all corners, support orthonormal reversal, and normalize negative sizes.");
 
     var parent = new Transform(0.6f, new Vector2(4f, 5f));

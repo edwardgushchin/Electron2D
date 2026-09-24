@@ -2510,6 +2510,53 @@
   ],
   "statusGroups": [
     {
+      "godot": ["class:Rect2"],
+      "state": "Implemented",
+      "reason": "All 27 declared members have a pinned rect2.h/.cpp, Transform2D and ADR 0025/0029/0034 audit in VerifyRectangles, VerifyIntegerRectangles and VerifyTransforms. Managed Linux/.NET 8 checks include typed persistence and packed-scene copies; native ABI and other platforms remain unverified."
+    },
+    {
+      "godot": [
+        "Rect2::constructor:Rect2()", "Rect2::constructor:Rect2(Rect2:)",
+        "Rect2::constructor:Rect2(Rect2i:)", "Rect2::constructor:Rect2(Vector2:,Vector2:)",
+        "Rect2::constructor:Rect2(float:,float:,float:,float:)",
+        "Rect2::property:end", "Rect2::property:position", "Rect2::property:size"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyRectangles and VerifyIntegerRectangles check zero state, 16-byte sequential storage, value-copy independence, all mapped construction and integer conversion forms, mutable position/size, derived end and end assignment. Typed C# conversion rejects invalid float-to-int input under ADR 0035."
+    },
+    {
+      "godot": [
+        "Rect2::method:abs()", "Rect2::method:encloses(Rect2:)",
+        "Rect2::method:expand(Vector2:)", "Rect2::method:get_area()",
+        "Rect2::method:get_center()", "Rect2::method:get_support(Vector2:)",
+        "Rect2::method:has_area()", "Rect2::method:has_point(Vector2:)",
+        "Rect2::method:intersection(Rect2:)", "Rect2::method:intersects(Rect2:,bool:)",
+        "Rect2::method:is_equal_approx(Rect2:)", "Rect2::method:is_finite()",
+        "Rect2::method:merge(Rect2:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned rect2.h/.cpp geometry and ADR 0025/0034 behavior are checked in VerifyRectangles: signed area, normalization, support and center, half-open containment, border/empty overlap, enclosure, merge, NaN-sensitive rejection order, finite and approximate comparisons. Abs selects the negative size contribution before position addition."
+    },
+    {
+      "godot": [
+        "Rect2::method:grow(float:)",
+        "Rect2::method:grow_individual(float:,float:,float:,float:)",
+        "Rect2::method:grow_side(int:,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyRectangles checks positive/negative growth, all Side identities and undefined no-op, over-shrink and IEEE overflow/cancellation. Grow doubles a shared amount before size addition; GrowIndividual sums each side pair before size addition, matching pinned rect2.h order."
+    },
+    {
+      "godot": ["Rect2::operator:operator !=(Rect2:)", "Rect2::operator:operator ==(Rect2:)"],
+      "state": "Implemented",
+      "reason": "VerifyRectangles checks exact position/size equality, inequality, independent copies, hash equality and IEEE NaN behavior on Linux/.NET 8."
+    },
+    {
+      "godot": ["Rect2::operator:operator *(Transform2D:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0029/0033 map the operand-directed rectangular transform to Transform. VerifyTransforms checks rotation, nonuniform scaling, inverse orthonormal direction, negative size normalization and four-corner bounds on Linux/.NET 8."
+    },
+    {
       "godot": [
         "class:Geometry2D"
       ],

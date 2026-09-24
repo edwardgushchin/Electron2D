@@ -61,7 +61,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`EventCo
 - `Vector2` and `Vector2I`: complete two-component floating-point/integer values for 2D spatial, grid, and numeric behavior.
 - `Vector3` and `Vector3I`: three-component numeric tuples without 3D scene semantics. Vector3 has 84 applicable members and its type row audited, with ten model-orientation/3D transform exclusions under ADR 0004; all 56 Vector3I members and its type row now have managed behavioral audits under ADR 0033.
 - `Vector4` and `Vector4I`: four-component numeric tuples without 3D scene semantics. Vector4 has all 65 applicable members and its type row audited; the Projection operator is Excluded by ADR 0004. Vector4I has all 52 declared members and its type row audited with accepted checked-integer boundaries under ADR 0033.
-- `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators.
+- `Rect` and `RectI`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect` additionally provides transform bounds operators. All 27 Rect members and its type row have a pinned semantic audit, including IEEE growth and ordered edge rejection; RectI's structural coverage rows still need their own audit.
 - `Transform`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector/rectangle transforms.
 - `Side`: stable identity of the four rectangle edges.
 

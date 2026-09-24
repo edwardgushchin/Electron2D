@@ -87,7 +87,8 @@ public struct Rect : IEquatable<Rect>
 
     /// <summary>Returns an equivalent rectangle with a non-negative size and top-left position.</summary>
     /// <returns>The normalized rectangle.</returns>
-    public readonly Rect Abs() => new(End.Min(_position), _size.Abs());
+    /// <remarks>The position adds the negative part of each size component before the size is made absolute.</remarks>
+    public readonly Rect Abs() => new(_position + _size.Min(0f), _size.Abs());
 
     /// <summary>Tests whether this rectangle completely encloses another rectangle.</summary>
     /// <param name="other">The candidate enclosed rectangle.</param>
@@ -133,7 +134,12 @@ public struct Rect : IEquatable<Rect>
     /// <summary>Returns a copy extended equally on every side.</summary>
     /// <param name="amount">The amount added outward on each side; negative values shrink the rectangle.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
-    public readonly Rect Grow(float amount) => GrowIndividual(amount, amount, amount, amount);
+    /// <remarks>Each size component adds twice <paramref name="amount"/> in one step.</remarks>
+    public readonly Rect Grow(float amount) => new(
+        _position.X - amount,
+        _position.Y - amount,
+        _size.X + amount * 2f,
+        _size.Y + amount * 2f);
 
     /// <summary>Returns a copy extended independently on each side.</summary>
     /// <param name="left">The amount added outward on the left.</param>
@@ -141,11 +147,12 @@ public struct Rect : IEquatable<Rect>
     /// <param name="right">The amount added outward on the right.</param>
     /// <param name="bottom">The amount added outward on the bottom.</param>
     /// <returns>The grown or shrunk rectangle.</returns>
+    /// <remarks>Each pair of side amounts is summed before it is added to the corresponding size component.</remarks>
     public readonly Rect GrowIndividual(float left, float top, float right, float bottom) => new(
         _position.X - left,
         _position.Y - top,
-        _size.X + left + right,
-        _size.Y + top + bottom);
+        _size.X + (left + right),
+        _size.Y + (top + bottom));
 
     /// <summary>Returns a copy extended on one side.</summary>
     /// <param name="side">The side to extend.</param>
@@ -166,12 +173,13 @@ public struct Rect : IEquatable<Rect>
     /// <returns>
     /// <see langword="true"/> when the point is on or after the left/top edges and strictly before the right/bottom edges.
     /// </returns>
-    /// <remarks>Negative size components are unsupported; normalize with <see cref="Abs"/> first.</remarks>
+    /// <remarks>Negative size components are unsupported; normalize with <see cref="Abs"/> first. Comparisons reject
+    /// points outside each edge, so a NaN coordinate alone does not cause rejection.</remarks>
     public readonly bool HasPoint(Vector2 point) =>
-        point.X >= _position.X &&
-        point.Y >= _position.Y &&
-        point.X < End.X &&
-        point.Y < End.Y;
+        !(point.X < _position.X ||
+          point.Y < _position.Y ||
+          point.X >= End.X ||
+          point.Y >= End.Y);
 
     /// <summary>Returns the intersection with another rectangle.</summary>
     /// <param name="other">The other rectangle.</param>
@@ -194,17 +202,18 @@ public struct Rect : IEquatable<Rect>
     /// <param name="other">The other rectangle.</param>
     /// <param name="includeBorders">Whether touching borders count as an intersection.</param>
     /// <returns><see langword="true"/> when the rectangles overlap under the selected border rule.</returns>
-    /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.</remarks>
+    /// <remarks>Negative size components are unsupported; normalize either rectangle with <see cref="Abs"/> first.
+    /// Comparisons reject rectangles beyond each edge, so a NaN component alone does not cause rejection.</remarks>
     public readonly bool Intersects(Rect other, bool includeBorders = false)
     {
         if (includeBorders)
         {
-            return _position.X <= other.End.X && End.X >= other._position.X &&
-                   _position.Y <= other.End.Y && End.Y >= other._position.Y;
+            return !(_position.X > other.End.X || End.X < other._position.X ||
+                     _position.Y > other.End.Y || End.Y < other._position.Y);
         }
 
-        return _position.X < other.End.X && End.X > other._position.X &&
-               _position.Y < other.End.Y && End.Y > other._position.Y;
+        return !(_position.X >= other.End.X || End.X <= other._position.X ||
+                 _position.Y >= other.End.Y || End.Y <= other._position.Y);
     }
 
     /// <summary>Tests whether all position and size components are finite.</summary>

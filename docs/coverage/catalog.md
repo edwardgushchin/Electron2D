@@ -692,7 +692,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Range](classes/Range.md) | Control | Blocked | 17 |
 | [RayCast2D](classes/RayCast2D.md) | Node2D | Blocked | 21 |
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |
-| [Rect2](classes/Rect2.md) | — | Partial | 27 |
+| [Rect2](classes/Rect2.md) | — | Implemented | 27 |
 | [Rect2i](classes/Rect2i.md) | — | Partial | 23 |
 | [RectangleShape2D](classes/RectangleShape2D.md) | Shape2D | Blocked | 1 |
 | [RefCounted](classes/RefCounted.md) | Object | Excluded | 4 |
