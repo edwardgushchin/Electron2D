@@ -43,7 +43,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `TimerProcessCallback`: stable physics/process lane selection for `Timer`.
 - `SceneTreeTimer`: lightweight one-shot delay advanced by the selected frame lane with optional Engine time-scale bypass, and automatically disposed after timeout.
 - `GroupCallFlags`: immediate/reverse/deferred/unique policy for typed group operations.
-- `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events. Policy, lifecycle, callback/interval, method, property, subtween and shared completion-event rows have pinned semantic audits; remaining task and type rows retain their own coverage status.
+- `Tween` and tweeners: typed SceneTree-driven sequential/parallel interpolation, callbacks, waits, nested timelines, looping, pause/lane/time-scale policy, and completion events. Policy, lifecycle, callback/interval, method, property, subtween, await and shared completion-event rows have pinned semantic audits; remaining type-level work retains its own coverage status.
 - `PackedScene`: `Resource` that captures any reusable typed owned-node hierarchy, from one composed game object through a complete level, and reconstructs independent detached instances.
 - `SceneState`: live read-only typed metadata view for current packed data.
 - `PackedSceneEditState`: instantiation policy whose runtime `Disabled` value is implemented and whose editor values fail explicitly.

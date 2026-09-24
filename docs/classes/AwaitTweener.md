@@ -1,6 +1,6 @@
 # AwaitTweener
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [Tweener](Tweener.md)
 
@@ -18,9 +18,9 @@ Waits for a typed C# event, an optional timeout, or disposal of the event publis
 
 `AwaitTweener` is created by one of the three typed `Tween.TweenAwait` overloads and waits for a zero-, one-, or two-argument C# event. Its complete declared public API is `AwaitTweener SetTimeout(double timeout)`; `Finished` and lifetime API are inherited from [`Tweener`](Tweener.md).
 
-Append establishes an owned `EventConnection`. Only an event observed while the wait is the active step releases it; observations before the step begins are cleared at start, and replayed parent loops begin a fresh wait. Event receipt atomically marks state and may occur on any thread. The next owner-thread advance completes the task and consumes that frame's remaining delta. A finite non-negative timeout can complete sooner and preserves overshoot. Disposing the publisher, losing the connection, parent completion/killing, or explicit disposal also ends or cancels the wait and disconnects.
+Append establishes an owned `EventConnection`. Only an event observed while the wait is the active step releases it; observations before the step begins are cleared at start, and replayed parent loops begin a fresh wait. Event receipt atomically marks state and may occur on any thread. The next owner-thread advance completes the task and consumes that frame's remaining delta. A finite non-negative timeout can complete sooner, takes priority over an event observed in the same frame, and preserves overshoot. A negative timeout disables expiry. Publisher disposal or loss of the connection ends the wait. The subscription remains available across parent loops and is disconnected when the parent is canceled, disposed, or removed from its tree.
 
-The event subscription is established when the tweener is appended and released when the wait or its owner ends.
+The connection reports its own logical state; it cannot observe a publisher that independently removes its wrapper or clears its event invocation list. Supply a timeout when such external changes are possible. Event arities above two require a future typed `EventConnection` overload under ADR 0037.
 
 ## Examples
 
@@ -48,15 +48,17 @@ Sets the maximum time to wait for the event.
 
 **Parameters**
 
-- `timeout`: Finite non-negative seconds.
+- `timeout`: Finite seconds; a negative value disables the timeout.
 
 **Returns:** This tweener.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: `timeout` is negative, NaN, or infinite.
+- `ArgumentOutOfRangeException`: `timeout` is NaN or infinite.
 - `InvalidOperationException`: The call is off the owner thread.
 - `ObjectDisposedException`: The tweener is disposing or disposed.
+
+**Remarks:** A non-negative timeout takes priority when an event is also observed in the same processing frame.
 
 ## Inherited API
 

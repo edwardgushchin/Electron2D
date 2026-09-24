@@ -20,6 +20,8 @@ Sequences typed property interpolation, method interpolation, callbacks, waits, 
 
 `SetParallel` changes the default grouping of later appends; `Parallel` joins only the next append, and `Chain` starts its next append in a new step. Transition and ease defaults are captured when each property or method tweener is appended. A zero or negative speed scale leaves the tween running without advancing its tweeners; negative speed reduces accumulated elapsed time. Bound pause mode follows the bound node's effective process policy; a detached bound node waits until it enters the owning tree.
 
+`TweenAwait` maps zero-, one-, and two-argument C# events to typed waits. A negative timeout disables expiry; a non-negative timeout wins when both event and timeout are ready in one frame. The subscription remains for replayed loops until the tween is canceled or removed. An independent publisher-side removal is not observable through the typed connection token.
+
 A tween is created by [`SceneTree.CreateTween`](SceneTree.md#m-electron2d-scenetree-createtween) or [`Node.CreateTween`](Node.md#m-electron2d-node-createtween) and is processed by
 that tree after node callbacks and lightweight timers in the selected frame lane. Tweeners are sequential unless
 [`Tween.Parallel`](Tween.md#m-electron2d-tween-parallel) or [`Tween.SetParallel(Boolean)`](Tween.md#m-electron2d-tween-setparallel-system-boolean) groups them. A finishing tween remains registered until the next matching tree step; killing invalidates immediately but leaves its registry entry for the next eligible sweep. Tween mutation and processing use the creating tree's owner thread.

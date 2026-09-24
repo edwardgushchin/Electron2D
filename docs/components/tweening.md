@@ -31,7 +31,7 @@ Property and method tweeners resolve interpolation once at creation. Built-in al
 
 Callback and interval tasks accept finite signed delays or durations. Negative values complete on the first positive step, while the parent caps the time forwarded between steps at the delivered frame delta. A zero interval waits for positive frame time. `Tweener.Finished` fires before `StepFinished`, then `LoopFinished` for a non-final loop or `Tween.Finished` for the final loop. An unavailable direct callback target finishes without invocation; killing an unfinished task does not emit completion.
 
-Typed event waits reuse Core `EventConnection`. They subscribe on append, accept events from any thread through an atomic received flag, consume the active frame, and disconnect on tween completion, killing, or disposal. Nested tweens are removed from independent SceneTree processing and follow the parent timeline and final lifetime.
+Typed event waits reuse Core `EventConnection`. They subscribe on append, accept events from any thread through an atomic received flag, consume the active frame, and disconnect on tween completion, killing, or disposal. A negative timeout disables expiry; a non-negative timeout wins a same-frame race with event receipt and forwards overshoot. The typed token cannot detect an event list independently cleared by the publisher; a timeout bounds that wait. Nested tweens are removed from independent SceneTree processing and follow the parent timeline and final lifetime.
 
 ## Dependencies and invariants
 
@@ -61,7 +61,9 @@ The method-tweener audit checks typed built-in and custom interpolation, finite 
 
 The property-tweener audit checks typed append validation, immediate and deferred start capture around the pinned `1e-5` threshold, `From`/`FromCurrent` chaining and live displacement, delayed relative final values, scalar/vector/transform/bool interpolation, signed times, custom final-weight overshoot, curve changes, error continuation and zero warmed managed allocations. Its own declaration rows are Implemented.
 
-The subtween audit checks signed/live delay, source-tree detachment including cross-tree transfer on a shared owner thread, parent pause/lane and combined speed, child reset across loops, next-frame completion and unused-time forwarding. Invalid children are skipped; explicit child disposal and nested callback failure release or invalidate the parent safely. The subtween's own rows are Implemented; await remains Partial.
+The subtween audit checks signed/live delay, source-tree detachment including cross-tree transfer on a shared owner thread, parent pause/lane and combined speed, child reset across loops, next-frame completion and unused-time forwarding. Invalid children are skipped; explicit child disposal and nested callback failure release or invalidate the parent safely. The subtween's own rows are Implemented.
+
+The await audit checks all three typed event arities, append-time subscription and rollback, pre-start receipt reset, cross-thread receipt with owner-thread completion, same-frame timeout priority, negative/zero/live timeout, source disposal, loop replay, cancellation and completion subscriber failure. Its own rows are Implemented under the accepted typed-event scope; event arities above two and publisher-side invocation-list inspection remain explicit future boundaries.
 
 ## Decisions
 

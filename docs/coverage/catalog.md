@@ -113,7 +113,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamRandomizer](classes/AudioStreamRandomizer.md) | AudioStream | Blocked | 18 |
 | [AudioStreamSynchronized](classes/AudioStreamSynchronized.md) | AudioStream | Blocked | 6 |
 | [AudioStreamWAV](classes/AudioStreamWAV.md) | AudioStream | Blocked | 21 |
-| [AwaitTweener](classes/AwaitTweener.md) | Tweener | Partial | 1 |
+| [AwaitTweener](classes/AwaitTweener.md) | Tweener | Implemented | 1 |
 | [BackBufferCopy](classes/BackBufferCopy.md) | Node2D | Blocked | 6 |
 | [BaseButton](classes/BaseButton.md) | Control | Blocked | 29 |
 | [BaseMaterial3D](classes/BaseMaterial3D.md) | Material | Excluded | 289 |

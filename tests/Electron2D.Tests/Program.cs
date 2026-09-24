@@ -229,6 +229,7 @@ VerifyTweenCallbackIntervals();
 VerifyTweenMethods();
 VerifyTweenProperties();
 VerifyTweenSubtweens();
+VerifyTweenAwaits();
 VerifySceneTreeFailureSafety();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
 {
@@ -10671,6 +10672,208 @@ static void VerifyTweenSubtweens()
     Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException && parallelSiblingRan &&
             laterTweenRan && !failedParent.IsValid() && !failedChild.IsValid(),
         "A child failure must invalidate its parent while preserving parallel siblings and later tree work.");
+}
+
+static void VerifyTweenAwaits()
+{
+    using var tree = new SceneTree(new Entity());
+    using var source = new TweenEventSource();
+    var rejected = tree.CreateTween();
+    Expect<ArgumentNullException>(() => rejected.TweenAwait(null!,
+            handler => source.Fired += handler, handler => source.Fired -= handler),
+        "A null event publisher must be rejected before append.");
+    Expect<ArgumentNullException>(() => rejected.TweenAwait(source, null!, handler => source.Fired -= handler),
+        "A null subscription accessor must be rejected before append.");
+    Expect<ArgumentNullException>(() => rejected.TweenAwait(source, handler => source.Fired += handler, null!),
+        "A null removal accessor must be rejected before append.");
+    Expect<ArgumentNullException>(() => rejected.TweenAwait<int>(source, null!, static _ => { }),
+        "The one-argument overload must validate its typed subscription accessor.");
+    Expect<ArgumentNullException>(() => rejected.TweenAwait<int, string>(source, static _ => { }, null!),
+        "The two-argument overload must validate its typed removal accessor.");
+    using (var disposed = new TweenEventSource())
+    {
+        disposed.Dispose();
+        Expect<ObjectDisposedException>(() => rejected.TweenAwait(disposed, static _ => { }, static _ => { }),
+            "A disposed event publisher must be rejected before subscribing.");
+    }
+    Action? partlySubscribed = null;
+    Expect<InvalidOperationException>(() => rejected.TweenAwait(source,
+            handler => { partlySubscribed = handler; throw new InvalidOperationException("expected subscription failure"); },
+            handler => { if (ReferenceEquals(partlySubscribed, handler)) partlySubscribed = null; }),
+        "A throwing subscription must report its failure after attempting rollback.");
+    Require(partlySubscribed is null && !rejected.HasTweeners(),
+        "A failed event subscription must leave no wrapper or tweener behind.");
+    rejected.Kill();
+
+    var added = 0;
+    var removed = 0;
+    var finished = 0;
+    var afterEvent = false;
+    var awaited = tree.CreateTween();
+    awaited.TweenAwait(source,
+            handler => { added++; source.Fired += handler; },
+            handler => { removed++; source.Fired -= handler; })
+        .Finished += _ => finished++;
+    awaited.TweenCallback(() => afterEvent = true);
+    Require(added == 1, "TweenAwait must subscribe when appended, before its step starts.");
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(finished == 0 && !afterEvent,
+        "An event observed before the wait starts must be cleared at step start.");
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(finished == 1 && !afterEvent && removed == 0,
+        "An observed event must finish its wait but consume that frame and retain the subscription for replay.");
+    tree.ProcessFrame(0.1d);
+    Require(afterEvent && removed == 0,
+        "The following callback must run in the next positive frame without disconnecting early.");
+    tree.ProcessFrame(0d);
+    Require(removed == 1 && !awaited.IsValid(),
+        "Tree removal must disconnect the wait exactly once.");
+
+    Action<int>? oneArgument = null;
+    Action<int, string>? twoArguments = null;
+    var oneFinishes = 0;
+    var twoFinishes = 0;
+    var one = tree.CreateTween();
+    one.TweenAwait<int>(source, handler => oneArgument += handler, handler => oneArgument -= handler)
+        .Finished += _ => oneFinishes++;
+    var two = tree.CreateTween();
+    two.TweenAwait<int, string>(source, handler => twoArguments += handler, handler => twoArguments -= handler)
+        .Finished += _ => twoFinishes++;
+    tree.ProcessFrame(0.1d);
+    Task.Run(() => oneArgument?.Invoke(42)).GetAwaiter().GetResult();
+    twoArguments?.Invoke(7, "ready");
+    Require(oneFinishes == 0 && twoFinishes == 0,
+        "Typed event receipt must only set state; completion remains on the owner thread.");
+    tree.ProcessFrame(0.1d);
+    Require(oneFinishes == 1 && twoFinishes == 1 && !one.IsRunning() && !two.IsRunning(),
+        "Both typed argument overloads must release their waits on the next owner frame.");
+    tree.ProcessFrame(0d);
+    Require(oneArgument is null && twoArguments is null,
+        "Tree cleanup must remove wrappers for both typed event arities.");
+
+    var zeroTimeoutFinished = 0;
+    var zeroTimeoutNext = false;
+    var zeroTimeout = tree.CreateTween();
+    var zeroWait = zeroTimeout.TweenAwait(source,
+        handler => source.Fired += handler, handler => source.Fired -= handler);
+    Require(ReferenceEquals(zeroWait.SetTimeout(0d), zeroWait),
+        "SetTimeout must return its own await tweener.");
+    zeroWait.Finished += _ => zeroTimeoutFinished++;
+    zeroTimeout.TweenCallback(() => zeroTimeoutNext = true);
+    tree.ProcessFrame(0d);
+    Require(zeroTimeoutFinished == 0, "A zero timeout still needs positive processing time.");
+    tree.ProcessFrame(0.2d);
+    Require(zeroTimeoutFinished == 1 && zeroTimeoutNext,
+        "A zero timeout must finish on the first positive frame and forward its full delta.");
+
+    var indefiniteFinished = 0;
+    var indefinite = tree.CreateTween();
+    indefinite.TweenAwait(source, handler => source.Fired += handler, handler => source.Fired -= handler)
+        .SetTimeout(-1d).Finished += _ => indefiniteFinished++;
+    tree.ProcessFrame(10d);
+    Require(indefiniteFinished == 0 && indefinite.IsRunning(),
+        "A negative timeout must disable expiry even after a long frame.");
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(indefiniteFinished == 1,
+        "A wait with timeout disabled must still finish when its event arrives.");
+
+    var liveTimedOut = false;
+    var liveTimeout = tree.CreateTween();
+    var adjustable = liveTimeout.TweenAwait(source,
+        handler => source.Fired += handler, handler => source.Fired -= handler).SetTimeout(0.2d);
+    adjustable.Finished += _ => liveTimedOut = true;
+    tree.ProcessFrame(0.1d);
+    Expect<ArgumentOutOfRangeException>(() => adjustable.SetTimeout(double.NaN),
+        "A non-finite timeout must preserve the previous setting.");
+    Expect<InvalidOperationException>(() => Task.Run(() => adjustable.SetTimeout(0d)).GetAwaiter().GetResult(),
+        "Timeout mutation must require the tween owner thread.");
+    adjustable.SetTimeout(-2d);
+    tree.ProcessFrame(0.5d);
+    Require(!liveTimedOut && liveTimeout.IsRunning(),
+        "Changing a live timeout to a negative value must disable expiry.");
+    adjustable.SetTimeout(0d);
+    tree.ProcessFrame(0.1d);
+    Require(liveTimedOut, "Re-enabling a live timeout must compare accumulated elapsed time immediately.");
+
+    Action? independentlyCleared = null;
+    var externallyCleared = tree.CreateTween();
+    externallyCleared.TweenAwait(source, handler => independentlyCleared += handler,
+            handler => independentlyCleared -= handler).SetTimeout(0.3d);
+    tree.ProcessFrame(0.1d);
+    independentlyCleared = null;
+    tree.ProcessFrame(0.1d);
+    Require(externallyCleared.IsRunning(),
+        "A typed subscription token cannot observe a publisher that independently clears its event list.");
+    tree.ProcessFrame(0.2d);
+    Require(!externallyCleared.IsRunning(),
+        "A timeout must still release a wait after an independently cleared event list.");
+
+    var raceNext = false;
+    var timeoutRace = tree.CreateTween();
+    timeoutRace.TweenAwait(source, handler => source.Fired += handler, handler => source.Fired -= handler)
+        .SetTimeout(0.1d);
+    timeoutRace.TweenCallback(() => raceNext = true);
+    tree.ProcessFrame(0d);
+    source.Emit();
+    tree.ProcessFrame(0.2d);
+    Require(raceNext,
+        "When event and timeout are both ready, timeout must take priority and forward overshoot.");
+
+    var lostSource = new TweenEventSource();
+    var lostFinished = 0;
+    var afterLoss = false;
+    var lost = tree.CreateTween();
+    lost.TweenAwait(lostSource,
+            handler => lostSource.Fired += handler, handler => lostSource.Fired -= handler)
+        .Finished += _ => lostFinished++;
+    lost.TweenCallback(() => afterLoss = true);
+    tree.ProcessFrame(0.1d);
+    lostSource.Dispose();
+    tree.ProcessFrame(0.1d);
+    Require(lostFinished == 1 && afterLoss,
+        "Disposing an event publisher must finish the wait and leave the delivered delta for later steps.");
+
+    var loopFinishes = 0;
+    var looped = tree.CreateTween().SetLoops(2);
+    looped.TweenAwait(source, handler => source.Fired += handler, handler => source.Fired -= handler)
+        .Finished += _ => loopFinishes++;
+    tree.ProcessFrame(0.1d);
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(loopFinishes == 1 && looped.IsRunning(),
+        "The first awaited event must finish one loop and reset the wait for the next loop.");
+    tree.ProcessFrame(0.1d);
+    Require(loopFinishes == 1, "A loop restart must clear the previous event receipt.");
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(loopFinishes == 2 && !looped.IsRunning(),
+        "A second event must finish the replayed wait and final loop.");
+
+    var canceledFinishes = 0;
+    var canceledRemovals = 0;
+    var canceled = tree.CreateTween();
+    canceled.TweenAwait(source, handler => source.Fired += handler,
+            handler => { canceledRemovals++; source.Fired -= handler; })
+        .Finished += _ => canceledFinishes++;
+    canceled.Kill();
+    source.Emit();
+    tree.ProcessFrame(0.1d);
+    Require(canceledFinishes == 0 && canceledRemovals == 1 && !canceled.IsValid(),
+        "Killing an unstarted wait must disconnect once without emitting completion.");
+
+    var failedLaterRan = false;
+    var failed = tree.CreateTween();
+    failed.TweenAwait(source, handler => source.Fired += handler, handler => source.Fired -= handler)
+        .Finished += _ => throw new InvalidOperationException("expected wait completion failure");
+    tree.ProcessFrame(0.1d);
+    source.Emit();
+    tree.CreateTween().TweenCallback(() => failedLaterRan = true);
+    Require(Capture(() => tree.ProcessFrame(0.1d)) is AggregateException &&
+            failedLaterRan && !failed.IsValid(),
+        "A failing wait completion subscriber must invalidate only its sequence and preserve later tree work.");
 }
 
 static void VerifySceneTreeFailureSafety()

@@ -568,7 +568,7 @@ public sealed class SubtweenTweener : Tweener
 }
 
 /// <summary>Waits for a typed C# event, an optional timeout, or disposal of the event publisher.</summary>
-/// <remarks>The event subscription is established when the tweener is appended and released when the wait or its owner ends.</remarks>
+/// <remarks>The event subscription is established on append and retained across parent loops until owner cancellation, disposal, or tree removal. The typed connection cannot detect a publisher that independently clears its event list; a timeout can bound that wait.</remarks>
 public sealed class AwaitTweener : Tweener
 {
     private readonly ElectronObject _source;
@@ -583,16 +583,18 @@ public sealed class AwaitTweener : Tweener
     }
 
     /// <summary>Sets the maximum time to wait for the event.</summary>
-    /// <param name="timeout">Finite non-negative seconds.</param>
+    /// <param name="timeout">Finite seconds; a negative value disables the timeout.</param>
     /// <returns>This tweener.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is negative, NaN, or infinite.</exception>
+    /// <remarks>A non-negative timeout takes priority when an event is also observed in the same processing frame.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="timeout"/> is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The tweener is disposing or disposed.</exception>
     public AwaitTweener SetTimeout(double timeout)
     {
         ThrowIfDisposed();
         Owner?.EnsureOwnerThreadForTweener();
-        Tween.ValidateDuration(timeout, nameof(timeout));
+        if (!double.IsFinite(timeout))
+            throw new ArgumentOutOfRangeException(nameof(timeout), timeout, "Await timeout must be finite.");
         _timeout = timeout;
         return this;
     }
@@ -611,7 +613,7 @@ public sealed class AwaitTweener : Tweener
             return false;
         }
         AddElapsed(remaining);
-        if (_timeout.HasValue && ElapsedTime >= _timeout.Value)
+        if (_timeout is >= 0d && ElapsedTime >= _timeout.Value)
         {
             remaining = ElapsedTime - _timeout.Value;
             Complete();
