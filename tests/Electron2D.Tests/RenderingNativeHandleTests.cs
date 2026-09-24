@@ -15,13 +15,13 @@ internal static class RenderingNativeHandleTests
         try
         {
             for (var i = 0; i < Types.Length; i++) Check((int)Types[i] == i + 3, "Native handle numeric identity.");
-            using (var display = DisplayServer.Open("No renderer", new Vector2I(64, 64), hidden: true))
+            using (var display = DisplayServer.Open("No renderer", new Vector2i(64, 64), hidden: true))
                 foreach (var type in Types) Reject<NotSupportedException>(() => display.WindowGetNativeHandle(type));
             settings.Set(ProjectSettings.RenderingFallback, false);
             settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_HANDLE_METHOD") ?? "compatibility");
             for (var run = 0; run < 2; run++)
             {
-                using var window = new Window { Title = "Electron2D native handles", Size = new Vector2I(96, 64) };
+                using var window = new Window { Title = "Electron2D native handles", Size = new Vector2i(96, 64) };
                 var probe = new Probe();
                 window.AddChild(probe);
                 Check(Engine.Instance.Run(window) == 0 && probe.Frames == 2, "Two rendered frames and clean shutdown.");

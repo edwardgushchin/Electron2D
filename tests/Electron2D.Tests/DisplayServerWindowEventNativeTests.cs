@@ -5,7 +5,7 @@ internal static class DisplayServerWindowEventNativeTests
 {
     public static void Run()
     {
-        using var display = DisplayServer.Open("Electron2D close event test", new Vector2I(480, 360));
+        using var display = DisplayServer.Open("Electron2D close event test", new Vector2i(480, 360));
         Check(display.GetName() == "Wayland", "The native close test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The native close test needs one window.");

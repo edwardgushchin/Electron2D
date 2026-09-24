@@ -54,14 +54,14 @@ public static class Geometry
     /// <param name="to">The final grid point.</param>
     /// <returns>The ordered grid points.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The line would require more than <see cref="int.MaxValue"/> points.</exception>
-    public static Vector2I[] BresenhamLine(Vector2I from, Vector2I to)
+    public static Vector2i[] BresenhamLine(Vector2i from, Vector2i to)
     {
         var dx = Math.Abs((long)to.X - from.X);
         var dy = Math.Abs((long)to.Y - from.Y);
         var count = Math.Max(dx, dy) + 1;
         if (count > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(to), "The rasterized line exceeds the maximum array length.");
 
-        var points = new Vector2I[(int)count];
+        var points = new Vector2i[(int)count];
         var x = from.X;
         var y = from.Y;
         var stepX = Math.Sign((long)to.X - from.X);
@@ -69,7 +69,7 @@ public static class Geometry
         var error = Math.Max(dx, dy);
         for (var i = 0; i < points.Length; i++)
         {
-            points[i] = new Vector2I(x, y);
+            points[i] = new Vector2i(x, y);
             if (i + 1 == points.Length) break;
             if (dx > dy)
             {
@@ -529,13 +529,13 @@ public static class Geometry
     /// <exception cref="ArgumentException">No tile sizes were supplied.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A truncated size is nonpositive, a width exceeds 4096 pixels, or no layout fits a 32-bit integer atlas height.</exception>
     /// <remarks>Input and returned positions are independent. Candidate strip widths are powers of two up to 4096, but the returned bounds are the actual occupied size. Equal-width tiles retain input order.</remarks>
-    public static (Vector2[] Points, Vector2I Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)
+    public static (Vector2[] Points, Vector2i Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)
     {
         if (sizes.IsEmpty) throw new ArgumentException("At least one tile size is required.", nameof(sizes));
         var rectangles = new (int Width, int Height, int Index)[sizes.Length];
         for (var i = 0; i < sizes.Length; i++)
         {
-            var size = new Vector2I(sizes[i]);
+            var size = new Vector2i(sizes[i]);
             if (size.X <= 0 || size.Y <= 0 || size.X > 4096)
                 throw new ArgumentOutOfRangeException(nameof(sizes), "Tile dimensions must be positive and width must not exceed 4096 pixels.");
             rectangles[i] = (size.X, size.Y, i);
@@ -548,7 +548,7 @@ public static class Geometry
 
         var candidatePoints = new Vector2[sizes.Length];
         var bestPoints = new Vector2[sizes.Length];
-        var bestSize = Vector2I.Zero;
+        var bestSize = Vector2i.Zero;
         var bestAspect = double.PositiveInfinity;
         for (var width = 1; width <= 4096; width <<= 1)
         {
@@ -579,7 +579,7 @@ public static class Geometry
             var aspect = powerHeight > powerWidth ? (double)powerHeight / powerWidth : (double)powerWidth / powerHeight;
             if (aspect >= bestAspect) continue;
             bestAspect = aspect;
-            bestSize = new Vector2I(maxWidth, (int)maxHeight);
+            bestSize = new Vector2i(maxWidth, (int)maxHeight);
             candidatePoints.CopyTo(bestPoints, 0);
         }
         if (double.IsPositiveInfinity(bestAspect))

@@ -31,7 +31,7 @@ texture.Update(image);
 | `static ImageTexture CreateFromImage(Image image)` | Copies a live nonempty image. |
 | `void SetImage(Image image)` | Copies pixels, replaces allocation configuration and resets logical size. |
 | `void Update(Image image)` | Copies matching pixels while retaining configuration and logical size. |
-| `void SetSizeOverride(Vector2I size)` | Overrides logical axes; zero retains the current axis. |
+| `void SetSizeOverride(Vector2i size)` | Overrides logical axes; zero retains the current axis. |
 | `override int GetWidth()` | Logical width. |
 | `override int GetHeight()` | Logical height. |
 | `override Vector2 GetSize()` | Atomic logical dimensions. |

@@ -5,7 +5,7 @@ internal static class DisplayServerAttentionNativeTests
 {
     public static void Run()
     {
-        using var display = DisplayServer.Open("Electron2D attention protocol test", new Vector2I(200, 150));
+        using var display = DisplayServer.Open("Electron2D attention protocol test", new Vector2i(200, 150));
         if (display.GetName() != "Wayland")
             throw new InvalidOperationException("The attention protocol test requires Wayland.");
 

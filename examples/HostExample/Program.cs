@@ -1,6 +1,6 @@
 using Electron2D;
 
-var window = new Window { Title = "Electron2D: window and input", Size = new Vector2I(640, 360) };
+var window = new Window { Title = "Electron2D: window and input", Size = new Vector2i(640, 360) };
 window.AddChild(new ExampleRoot());
 Engine.Instance.MaxFPS = 60;
 return Engine.Instance.Run(window);

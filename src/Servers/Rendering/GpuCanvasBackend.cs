@@ -23,7 +23,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private RenderHandle? _vertexBuffer;
     private RenderHandle? _transfer;
     private int _bufferSize;
-    private Vector2I _targetSize;
+    private Vector2i _targetSize;
     private bool _hasFrame;
     private bool _disposed;
     internal override string Method => "gpu";
@@ -55,7 +55,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         }
     }
 
-    internal override Vector2I GetPixelSize()
+    internal override Vector2i GetPixelSize()
     {
         Check(SDL.GetWindowSizeInPixels(_window, out var width, out var height), "query GPU window size");
         return new(width, height);
@@ -305,7 +305,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         finally { Array.Clear(_textureScratch); }
     }
 
-    private void EnsureTarget(Vector2I size)
+    private void EnsureTarget(Vector2i size)
     {
         if (_targetSize == size) return;
         var info = new SDL.GPUTextureCreateInfo

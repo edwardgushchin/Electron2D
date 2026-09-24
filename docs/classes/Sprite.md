@@ -25,7 +25,7 @@ var sprite = new Sprite
     Texture = texture,
     HFrames = 4,
     VFrames = 2,
-    FrameCoords = new Vector2I(1, 0),
+    FrameCoords = new Vector2i(1, 0),
     Position = new Vector2(120, 80),
 };
 window.AddChild(sprite);
@@ -54,7 +54,7 @@ The texture must outlive its use by the scene. `Engine.Instance.Run(window)` own
 | `public int HFrames { get; set; }` | 1 | [Grid](#hframes-and-vframes) |
 | `public int VFrames { get; set; }` | 1 | [Grid](#hframes-and-vframes) |
 | `public int Frame { get; set; }` | 0 | [Frame](#frame) |
-| `public Vector2I FrameCoords { get; set; }` | Zero | [Frame coordinates](#framecoords) |
+| `public Vector2i FrameCoords { get; set; }` | Zero | [Frame coordinates](#framecoords) |
 
 ## Methods and events
 

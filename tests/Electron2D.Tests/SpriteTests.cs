@@ -10,7 +10,7 @@ internal static class SpriteTests
         using var replacement = ImageTexture.CreateFromImage(image);
         using var sprite = new Sprite();
         Check(sprite.Centered && !sprite.FlipH && !sprite.FlipV && !sprite.RegionEnabled && !sprite.RegionFilterClipEnabled &&
-            sprite.Texture is null && sprite.Offset == Vector2.Zero && sprite.Frame == 0 && sprite.FrameCoords == Vector2I.Zero &&
+            sprite.Texture is null && sprite.Offset == Vector2.Zero && sprite.Frame == 0 && sprite.FrameCoords == Vector2i.Zero &&
             sprite.HFrames == 1 && sprite.VFrames == 1 && sprite.RegionRect == default, "Sprite defaults.");
         Check(sprite.GetRect() == new Rect(0, 0, 1, 1) && !sprite.IsPixelOpaque(Vector2.Zero), "Empty sprite bounds and opacity.");
         var frames = 0; var textures = 0; var lists = 0;
@@ -30,13 +30,13 @@ internal static class SpriteTests
         sprite.HFrames = 3; sprite.VFrames = 4; sprite.FrameCoords = new(2, 2);
         Check(sprite.Frame == 8 && frames == 1 && lists == 2, "Grid indexing and notifications.");
         sprite.HFrames = 5;
-        Check(sprite.Frame == 12 && sprite.FrameCoords == new Vector2I(2, 2) && frames == 1, "Grid preserves coordinates without FrameChanged.");
+        Check(sprite.Frame == 12 && sprite.FrameCoords == new Vector2i(2, 2) && frames == 1, "Grid preserves coordinates without FrameChanged.");
         sprite.HFrames = 2;
         Check(sprite.Frame == 0 && frames == 1, "Dropped column resets frame.");
         sprite.Frame = 7; sprite.VFrames = 2;
         Check(sprite.Frame == 0 && frames == 2, "Dropped row resets frame.");
         sprite.VFrames = 1; sprite.Frame = 1; sprite.HFrames = 4;
-        Check(sprite.Frame == 1 && sprite.FrameCoords == new Vector2I(1, 0), "Single-row column retention.");
+        Check(sprite.Frame == 1 && sprite.FrameCoords == new Vector2i(1, 0), "Single-row column retention.");
         var grid = (sprite.HFrames, sprite.VFrames, sprite.Frame);
         Reject<ArgumentOutOfRangeException>(() => sprite.HFrames = 0);
         Reject<ArgumentOutOfRangeException>(() => sprite.VFrames = -1);
@@ -106,7 +106,7 @@ internal static class SpriteTests
         };
         using var scene = new PackedScene(); scene.Pack(sprite);
         using var copy = (Sprite)scene.Instantiate();
-        Check(copy.GetType() == typeof(Sprite) && copy.Frame == 11 && copy.FrameCoords == new Vector2I(3, 2) &&
+        Check(copy.GetType() == typeof(Sprite) && copy.Frame == 11 && copy.FrameCoords == new Vector2i(3, 2) &&
             copy.HFrames == 4 && copy.VFrames == 3 && ReferenceEquals(copy.Texture, texture) && !copy.Centered &&
             copy.Offset == new Vector2(2, 3) && copy.FlipH && copy.FlipV && copy.RegionEnabled &&
             copy.RegionRect == sprite.RegionRect && copy.RegionFilterClipEnabled, "Complete stored sprite reconstruction.");

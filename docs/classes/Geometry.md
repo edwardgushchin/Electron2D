@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2I`](Vector2I.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Polygon clipping and offsets use Clipper2 at five decimal digits of internal precision and reject nonfinite or out-of-range coordinates. Other inputs are not generally checked for finiteness. Each returned array is owned by the caller.
+Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2i`](Vector2i.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Polygon clipping and offsets use Clipper2 at five decimal digits of internal precision and reject nonfinite or out-of-range coordinates. Other inputs are not generally checked for finiteness. Each returned array is owned by the caller.
 
 The class covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls and decomposition, simple-polygon and Delaunay triangulation, atlas layout, segment/circle intersections, polygon boolean operations and offsets. The public name is `Geometry`; [`Geometry2D` coverage](../coverage/classes/Geometry2D.md) identifies the reference source only.
 
@@ -31,7 +31,7 @@ Vector2? crossing = Geometry.SegmentIntersectsSegment(
 
 | Signature | Result |
 | --- | --- |
-| [`public static Vector2I[] BresenhamLine(Vector2I from, Vector2I to)`](#bresenhamline) | Ordered raster points, endpoints included. |
+| [`public static Vector2i[] BresenhamLine(Vector2i from, Vector2i to)`](#bresenhamline) | Ordered raster points, endpoints included. |
 | [`public static Vector2 GetClosestPointToSegment(Vector2 point, Vector2 s1, Vector2 s2)`](#getclosestpointtosegment) | Nearest point on the bounded segment. |
 | [`public static Vector2 GetClosestPointToSegmentUncapped(Vector2 point, Vector2 s1, Vector2 s2)`](#getclosestpointtosegmentuncapped) | Projection on the infinite line. |
 | [`public static Vector2[] GetClosestPointsBetweenSegments(Vector2 p1, Vector2 q1, Vector2 p2, Vector2 q2)`](#getclosestpointsbetweensegments) | Nearest pair, one point on each segment. |
@@ -46,7 +46,7 @@ Vector2? crossing = Geometry.SegmentIntersectsSegment(
 | [`public static bool IsPointInPolygon(Vector2 point, ReadOnlySpan<Vector2> polygon)`](#ispointinpolygon) | Odd-even polygon inclusion, including the boundary. |
 | [`public static bool IsPolygonClockwise(ReadOnlySpan<Vector2> polygon)`](#ispolygonclockwise) | Cartesian winding test. |
 | [`public static Vector2? LineIntersectsLine(Vector2 fromA, Vector2 dirA, Vector2 fromB, Vector2 dirB)`](#lineintersectsline) | Unique intersection of infinite lines, or `null`. |
-| [`public static (Vector2[] Points, Vector2I Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)`](#makeatlas) | Tile origins and the occupied atlas size. |
+| [`public static (Vector2[] Points, Vector2i Size) MakeAtlas(ReadOnlySpan<Vector2> sizes)`](#makeatlas) | Tile origins and the occupied atlas size. |
 | [`public static Vector2[][] MergePolygons(ReadOnlySpan<Vector2> polygonA, ReadOnlySpan<Vector2> polygonB)`](#polygon-boolean-operations) | Union of both regions. |
 | [`public static Vector2[][] OffsetPolygon(ReadOnlySpan<Vector2> polygon, float delta, PolyJoinType joinType = PolyJoinType.Square)`](#polygon-offsets) | Expanded or contracted polygon contours. |
 | [`public static Vector2[][] OffsetPolyline(ReadOnlySpan<Vector2> polyline, float delta, PolyJoinType joinType = PolyJoinType.Square, PolyEndType endType = PolyEndType.Square)`](#polygon-offsets) | Stroked polygon contours for an open or joined line. |

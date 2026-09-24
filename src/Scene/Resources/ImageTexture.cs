@@ -8,7 +8,7 @@ public sealed class ImageTexture : Texture
 {
     private readonly object _gate = new();
     private TexturePixels? _pixels;
-    private Vector2I _size;
+    private Vector2i _size;
 
     /// <summary>Creates an uninitialized texture with zero size and no image.</summary>
     public ImageTexture() { }
@@ -79,13 +79,13 @@ public sealed class ImageTexture : Texture
     /// <param name="size">New dimensions; zero retains that axis's current value.</param>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is negative.</exception>
     /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
-    public void SetSizeOverride(Vector2I size)
+    public void SetSizeOverride(Vector2i size)
     {
         lock (_gate)
         {
             ThrowIfDisposed();
             if (size.X < 0 || size.Y < 0) throw new ArgumentOutOfRangeException(nameof(size));
-            var next = new Vector2I(size.X == 0 ? _size.X : size.X, size.Y == 0 ? _size.Y : size.Y);
+            var next = new Vector2i(size.X == 0 ? _size.X : size.X, size.Y == 0 ? _size.Y : size.Y);
             if (next == _size) return;
             _size = next;
         }
@@ -105,7 +105,7 @@ public sealed class ImageTexture : Texture
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         TexturePixels? pixels;
-        Vector2I size;
+        Vector2i size;
         lock (_gate) { ThrowIfDisposed(); pixels = _pixels; size = _size; }
         var copy = (ImageTexture)target;
         lock (copy._gate) { copy._pixels = pixels; copy._size = size; }

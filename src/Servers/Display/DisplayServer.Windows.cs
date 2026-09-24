@@ -129,7 +129,7 @@ public sealed partial class DisplayServer
                 continue;
             var size = SDL.GetCurrentVideoDriver() == "wayland"
                 ? WaylandPhysicalScreenSize(displays[index], bounds)
-                : new Vector2I(bounds.W, bounds.H);
+                : new Vector2i(bounds.W, bounds.H);
             var left = Math.Max((double)rectangle.Position.X, bounds.X);
             var top = Math.Max((double)rectangle.Position.Y, bounds.Y);
             var right = Math.Min((double)rectangle.End.X, (double)bounds.X + size.X);
@@ -204,7 +204,7 @@ public sealed partial class DisplayServer
     /// <returns><see cref="MainWindowId"/> when the point is inside the visible main window; otherwise <see cref="InvalidWindowId"/>.</returns>
     /// <remarks>On X11, only the client area is counted; the native border and title bar are excluded. Other desktop drivers use decorated bounds.</remarks>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public int GetWindowAtScreenPosition(Vector2I position)
+    public int GetWindowAtScreenPosition(Vector2i position)
     {
         EnsureOwner();
         var flags = SDL.GetWindowFlags(GetWindow(MainWindowId));
@@ -339,7 +339,7 @@ public sealed partial class DisplayServer
     /// <summary>Gets the requested minimum size of the main window.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
-    public Vector2I WindowGetMinSize(int windowId = MainWindowId)
+    public Vector2i WindowGetMinSize(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (_waylandWindowPosition)
@@ -349,7 +349,7 @@ public sealed partial class DisplayServer
         }
         if (!SDL.GetWindowMinimumSize(GetWindow(windowId), out var width, out var height))
             throw SDLFailure("read minimum window size");
-        return new Vector2I(width, height);
+        return new Vector2i(width, height);
     }
 
     /// <summary>Requests minimum dimensions for the main window.</summary>
@@ -357,7 +357,7 @@ public sealed partial class DisplayServer
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <remarks>Wayland rounds each pixel lower bound upward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A bound is negative, exceeds a nonzero maximum, or cannot coexist with it after native pixel-density conversion.</exception>
-    public void WindowSetMinSize(Vector2I size, int windowId = MainWindowId)
+    public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
@@ -383,7 +383,7 @@ public sealed partial class DisplayServer
     /// <summary>Gets the requested maximum size of the main window.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>The requested pixel dimensions on Wayland or native window dimensions elsewhere; zero means no bound on that axis.</returns>
-    public Vector2I WindowGetMaxSize(int windowId = MainWindowId)
+    public Vector2i WindowGetMaxSize(int windowId = MainWindowId)
     {
         EnsureOwner();
         if (_waylandWindowPosition)
@@ -393,7 +393,7 @@ public sealed partial class DisplayServer
         }
         if (!SDL.GetWindowMaximumSize(GetWindow(windowId), out var width, out var height))
             throw SDLFailure("read maximum window size");
-        return new Vector2I(width, height);
+        return new Vector2i(width, height);
     }
 
     /// <summary>Requests maximum dimensions for the main window.</summary>
@@ -401,7 +401,7 @@ public sealed partial class DisplayServer
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <remarks>Wayland rounds each pixel upper bound downward to native window coordinates and reapplies it when the window pixel density changes.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A bound is negative, falls below a nonzero minimum, or cannot represent a finite maximum after native pixel-density conversion.</exception>
-    public void WindowSetMaxSize(Vector2I size, int windowId = MainWindowId)
+    public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         if (size.X < 0 || size.Y < 0)
@@ -612,7 +612,7 @@ public sealed partial class DisplayServer
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>The outer upper-left position in platform-native desktop coordinates.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public Vector2I WindowGetPositionWithDecorations(int windowId = MainWindowId)
+    public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -620,14 +620,14 @@ public sealed partial class DisplayServer
         if (!SDL.GetWindowPosition(window, out var x, out var y) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out _, out _))
             throw SDLFailure("read decorated window position");
-        return new Vector2I(checked(x - left), checked(y - top));
+        return new Vector2i(checked(x - left), checked(y - top));
     }
 
     /// <summary>Gets the main-window size including native decorations.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>Outer window dimensions in platform-native window coordinates; on Wayland, the client size in pixels.</returns>
     /// <remarks>Wayland does not provide a reliable server-side decoration size for a top-level window.</remarks>
-    public Vector2I WindowGetSizeWithDecorations(int windowId = MainWindowId)
+    public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -636,7 +636,7 @@ public sealed partial class DisplayServer
         if (!SDL.GetWindowSize(window, out var width, out var height) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out var bottom, out var right))
             throw SDLFailure("read decorated window size");
-        return new Vector2I(checked(width + left + right), checked(height + top + bottom));
+        return new Vector2i(checked(width + left + right), checked(height + top + bottom));
     }
 
     /// <summary>Requests a taskbar progress state for the main window where the desktop supports it.</summary>

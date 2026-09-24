@@ -5,7 +5,7 @@ internal static class DisplayServerDialogNativeTests
 {
     public static void Run()
     {
-        using var display = DisplayServer.Open("Electron2D native dialog test", new Vector2I(400, 240));
+        using var display = DisplayServer.Open("Electron2D native dialog test", new Vector2i(400, 240));
         if (display.GetName() != "Wayland")
             throw new InvalidOperationException("The native dialog test requires Wayland.");
 

@@ -21,7 +21,7 @@ Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canva
 ## Examples
 
 ```csharp
-var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
+var window = new Window { Title = "Game", Size = new Vector2i(960, 540) };
 window.AddChild(scene); // caller-created Node
 Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);
@@ -39,10 +39,10 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 
 | Member | Contract |
 | --- | --- |
-| [`public Vector2I MaxSize { get; set; }`](#maxsize) | Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis. |
-| [`public Vector2I MinSize { get; set; }`](#minsize) | Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis. |
-| [`public Vector2I Position { get; set; }`](#position) | Gets or requests the client origin in native desktop coordinates. |
-| [`public Vector2I Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
+| [`public Vector2i MaxSize { get; set; }`](#maxsize) | Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis. |
+| [`public Vector2i MinSize { get; set; }`](#minsize) | Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis. |
+| [`public Vector2i Position { get; set; }`](#position) | Gets or requests the client origin in native desktop coordinates. |
+| [`public Vector2i Size { get; set; }`](#size) | Gets the observed client size or requests a positive client size. |
 | [`public string Title { get; set; }`](#title) | Gets or sets the native window title. |
 | [`public bool Visible { get; set; }`](#visible) | Gets or sets the root window's native visibility. |
 | [`public ModeEnum Mode { get; set; }`](#mode) | Gets the observed native mode, or configures a presentation-mode request. |
@@ -71,11 +71,11 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | [`public bool GetFlag(Flags flag)`](#getflag) | Gets a configured window policy. |
 | [`public void SetFlag(Flags flag, bool enabled)`](#setflag) | Configures an executable policy and requests its native application when active. |
 | [`public bool IsMaximizeAllowed()`](#ismaximizeallowed) | Reports whether the current resize policy permits native maximization. |
-| [`public Vector2I GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including native borders when visible and active. |
-| [`public Vector2I GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including native borders when visible and active. |
+| [`public Vector2i GetPositionWithDecorations()`](#getpositionwithdecorations) | Gets the outer window origin, including native borders when visible and active. |
+| [`public Vector2i GetSizeWithDecorations()`](#getsizewithdecorations) | Gets the outer window size, including native borders when visible and active. |
 | [`public void MoveToCenter()`](#movetocenter) | Requests centering of the active client area in its current screen's usable rectangle. |
 | [`public void SetIMEActive(bool active)`](#setimeactive) | Enables or disables native text input for the active window. |
-| [`public void SetIMEPosition(Vector2I position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
+| [`public void SetIMEPosition(Vector2i position)`](#setimeposition) | Requests native IME candidate placement at a client-coordinate caret. |
 | [`public void SetTaskbarProgressState(DisplayServer.ProgressState state)`](#settaskbarprogressstate) | Requests a native taskbar progress indication for the active window. |
 | [`public void SetTaskbarProgressValue(float value)`](#settaskbarprogressvalue) | Requests a native taskbar progress fraction for the active window. |
 
@@ -112,7 +112,7 @@ No native resources are acquired until `Engine.Run(Window)`.
 ## Property Descriptions
 
 <a id="maxsize"></a>
-### `public Vector2I MaxSize { get; set; }`
+### `public Vector2i MaxSize { get; set; }`
 
 Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis.
 
@@ -125,7 +125,7 @@ Zero by default.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="minsize"></a>
-### `public Vector2I MinSize { get; set; }`
+### `public Vector2i MinSize { get; set; }`
 
 Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis.
 
@@ -138,7 +138,7 @@ Zero by default.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="position"></a>
-### `public Vector2I Position { get; set; }`
+### `public Vector2i Position { get; set; }`
 
 Gets or requests the client origin in native desktop coordinates.
 
@@ -153,7 +153,7 @@ Window has no Entity transform; inherited Viewport.CanvasTransform and GlobalCan
 **ObjectDisposedException:** The window is disposed.
 
 <a id="size"></a>
-### `public Vector2I Size { get; set; }`
+### `public Vector2i Size { get; set; }`
 
 Gets the observed client size or requests a positive client size.
 
@@ -389,7 +389,7 @@ Reports whether the current resize policy permits native maximization.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="getpositionwithdecorations"></a>
-### `public Vector2I GetPositionWithDecorations()`
+### `public Vector2i GetPositionWithDecorations()`
 
 Gets the outer window origin, including native borders when visible and active.
 
@@ -404,7 +404,7 @@ Gets the outer window origin, including native borders when visible and active.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="getsizewithdecorations"></a>
-### `public Vector2I GetSizeWithDecorations()`
+### `public Vector2i GetSizeWithDecorations()`
 
 Gets the outer window size, including native borders when visible and active.
 
@@ -445,7 +445,7 @@ Enable while a text field owns focus. Disabling clears native composition state.
 **ObjectDisposedException:** The window is disposed.
 
 <a id="setimeposition"></a>
-### `public void SetIMEPosition(Vector2I position)`
+### `public void SetIMEPosition(Vector2i position)`
 
 Requests native IME candidate placement at a client-coordinate caret.
 

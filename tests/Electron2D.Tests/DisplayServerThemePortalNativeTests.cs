@@ -11,7 +11,7 @@ internal static class DisplayServerThemePortalNativeTests
         var scheme = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THEME_SCHEME")!);
         var signalTest = Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THEME_SIGNALS") == "1";
 
-        using var display = DisplayServer.Open("Electron2D hidden theme probe", new Vector2I(160, 120), hidden: true);
+        using var display = DisplayServer.Open("Electron2D hidden theme probe", new Vector2i(160, 120), hidden: true);
         Check(display.IsDarkModeSupported() == (version >= 1), "Theme support follows the portal interface version.");
         Check(SDL.GetSystemTheme() == NativeTheme(scheme), "SDL read the portal's initial color scheme.");
         Check(display.IsDarkMode() == (version >= 1 && scheme == 1),

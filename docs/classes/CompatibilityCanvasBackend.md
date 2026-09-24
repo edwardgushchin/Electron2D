@@ -28,7 +28,7 @@ using CanvasBackend backend = new CompatibilityCanvasBackend(nativeWindow);
 | `internal CompatibilityCanvasBackend(SafeHandle window)` | [Construction](#construction) |
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
-| `internal override Vector2I GetPixelSize()` | [Pixel size](#pixel-size) |
+| `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
 | `internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
 | `internal override Image Readback()` | [Readback](#readback) |
 | `internal override nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
@@ -56,7 +56,7 @@ Captures the selected SDL_Renderer driver name.
 
 ### Pixel size
 
-`internal override Vector2I GetPixelSize()`
+`internal override Vector2i GetPixelSize()`
 
 Queries physical render output dimensions.
 

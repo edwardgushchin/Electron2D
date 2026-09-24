@@ -21,7 +21,7 @@ Linux compatibility rendering also exposes its borrowed GL/EGL/GLX identities. T
 ```csharp
 using Electron2D;
 
-using var display = DisplayServer.Open("Native integration", new Vector2I(640, 480));
+using var display = DisplayServer.Open("Native integration", new Vector2i(640, 480));
 nint window = display.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle);
 // Pass window to platform code while display remains alive; never release it.
 ```

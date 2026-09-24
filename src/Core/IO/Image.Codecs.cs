@@ -249,7 +249,7 @@ public sealed partial class Image
         }
     }
 
-    private static Vector2I EncodedSize(ReadOnlySpan<byte> data, string codec)
+    private static Vector2i EncodedSize(ReadOnlySpan<byte> data, string codec)
     {
         static InvalidDataException Invalid() => new("Invalid or truncated image header.");
         if (codec == "PNG")

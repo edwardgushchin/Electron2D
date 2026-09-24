@@ -164,7 +164,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer position exceeds integer coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorations();
+    public Vector2i GetPositionWithDecorations() => _display is null || !Visible ? Position : GetDisplay().WindowGetPositionWithDecorations();
 
     /// <summary>Gets the outer window size, including native borders when visible and active.</summary>
     /// <returns>Native window units; on Wayland, client pixels because decoration extents are unavailable.
@@ -172,7 +172,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The caller is not the owner or native geometry is unavailable.</exception>
     /// <exception cref="OverflowException">The outer size exceeds integer dimensions.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I GetSizeWithDecorations() => _display is null || !Visible ? Size : GetDisplay().WindowGetSizeWithDecorations();
+    public Vector2i GetSizeWithDecorations() => _display is null || !Visible ? Size : GetDisplay().WindowGetSizeWithDecorations();
 
     /// <summary>Requests centering of the active client area in its current screen's usable rectangle.</summary>
     /// <remarks>Requires global positioning. Wayland rejects the request.</remarks>
@@ -185,7 +185,7 @@ public partial class Window
         EnsureMutable();
         var area = GetDisplay().ScreenGetUsableRect(CurrentScreen);
         var size = Size;
-        Position = new Vector2I(checked((int)((long)area.Position.X + ((long)area.Size.X - size.X) / 2)),
+        Position = new Vector2i(checked((int)((long)area.Position.X + ((long)area.Size.X - size.X) / 2)),
             checked((int)((long)area.Position.Y + ((long)area.Size.Y - size.Y) / 2)));
     }
 
@@ -203,7 +203,7 @@ public partial class Window
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="OverflowException">The position cannot be represented in native coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetIMEPosition(Vector2I position) { EnsureMutable(); GetDisplay().WindowSetIMEPosition(position); }
+    public void SetIMEPosition(Vector2i position) { EnsureMutable(); GetDisplay().WindowSetIMEPosition(position); }
 
     /// <summary>Requests a native taskbar progress indication for the active window.</summary>
     /// <param name="state">The progress indication to show.</param>

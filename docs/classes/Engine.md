@@ -32,7 +32,7 @@ named-singleton operations are safe from other threads. Fixed-step and time-scal
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
 
 ```csharp
-var window = new Window { Title = "Game", Size = new Vector2I(960, 540) };
+var window = new Window { Title = "Game", Size = new Vector2i(960, 540) };
 window.AddChild(scene); // a caller-created Node hierarchy
 Engine.Instance.MaxFPS = 60;
 int exitCode = Engine.Instance.Run(window);

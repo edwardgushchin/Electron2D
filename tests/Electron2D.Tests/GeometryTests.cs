@@ -185,16 +185,16 @@ internal static class GeometryTests
             "Delaunay chooses the empty-circumcircle diagonal of an asymmetric quadrilateral");
 
         var packed = Geometry.MakeAtlas([new(2, 2), new(2, 2)]);
-        Check(packed.Size == new Vector2I(2, 4) && packed.Points.SequenceEqual([new(0, 0), new(0, 2)]),
+        Check(packed.Size == new Vector2i(2, 4) && packed.Points.SequenceEqual([new(0, 0), new(0, 2)]),
             "Atlas chooses the first equal-aspect strip and returns positions in input order");
         packed = Geometry.MakeAtlas([new(1, 3), new(3, 1)]);
-        Check(packed.Size == new Vector2I(4, 3) && packed.Points.SequenceEqual([new(3, 0), new(0, 0)]),
+        Check(packed.Size == new Vector2i(4, 3) && packed.Points.SequenceEqual([new(3, 0), new(0, 0)]),
             "Atlas sorts by width but restores original tile order");
         packed = Geometry.MakeAtlas([new(3.9f, 2.9f)]);
-        Check(packed.Size == new Vector2I(3, 2) && packed.Points.SequenceEqual([Vector2.Zero]),
+        Check(packed.Size == new Vector2i(3, 2) && packed.Points.SequenceEqual([Vector2.Zero]),
             "Atlas truncates fractional tile dimensions to pixels");
         packed = Geometry.MakeAtlas([new(1, 2147483520f), new(1, 2147483520f)]);
-        Check(packed.Size == new Vector2I(2, 2147483520) && packed.Points.SequenceEqual([new(0, 0), new(1, 0)]),
+        Check(packed.Size == new Vector2i(2, 2147483520) && packed.Points.SequenceEqual([new(0, 0), new(1, 0)]),
             "Atlas skips an overflowing narrow strip when a wider layout fits");
         Reject<ArgumentException>(() => Geometry.MakeAtlas([]));
         Reject<ArgumentOutOfRangeException>(() => Geometry.MakeAtlas([new(0, 1)]));

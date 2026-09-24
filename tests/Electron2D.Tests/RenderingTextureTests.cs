@@ -5,11 +5,11 @@ internal static partial class RenderingRuntimeTests
 {
     private static void VerifyTextureCursor()
     {
-        using var display = DisplayServer.Open("Electron2D texture cursor verification", new Vector2I(96, 80));
+        using var display = DisplayServer.Open("Electron2D texture cursor verification", new Vector2i(96, 80));
         using var source = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8);
         source.Fill(Colors.Yellow);
         using var texture = ImageTexture.CreateFromImage(source);
-        texture.SetSizeOverride(new Vector2I(512, 512));
+        texture.SetSizeOverride(new Vector2i(512, 512));
         display.CursorSetCustomImage(texture, hotspot: new Vector2(1.75f, 0.25f));
         var installed = SDL3.SDL.GetCursor();
         Check(installed != 0 && !texture.IsDisposed && !source.IsDisposed, "A texture cursor borrows its source and uses original image pixels.");
@@ -78,9 +78,9 @@ internal static partial class RenderingRuntimeTests
         Check(texture.GetWidth() == 2 && texture.GetHeight() == 2 && texture.GetSize() == new Vector2(2, 2) && texture.HasAlpha && !texture.HasMipmaps && texture.MipmapCount == 0,
             "Texture metadata describes its copied original pixels.");
         Check(!texture.IsPixelOpaque(0, 0) && texture.IsPixelOpaque(1, 1) && texture.IsPixelOpaque(int.MaxValue, int.MaxValue), "Opacity checks clamp safely.");
-        texture.SetSizeOverride(new Vector2I(8, 0));
+        texture.SetSizeOverride(new Vector2i(8, 0));
         Check(texture.GetSize() == new Vector2(8, 2) && !texture.IsPixelOpaque(3, 0) && texture.IsPixelOpaque(4, 0), "Logical texture sizes map to original pixel coordinates.");
-        Reject<ArgumentOutOfRangeException>(() => texture.SetSizeOverride(new Vector2I(-1, 0)));
+        Reject<ArgumentOutOfRangeException>(() => texture.SetSizeOverride(new Vector2i(-1, 0)));
         using var wrongSize = Image.CreateEmpty(1, 2, false, Image.Format.Rgba8);
         Reject<ArgumentException>(() => texture.Update(wrongSize));
         using var wrongFormat = Image.CreateEmpty(2, 2, false, Image.Format.Rgb8);
@@ -202,7 +202,7 @@ internal static partial class RenderingRuntimeTests
         shader.SetDefaultTextureParameter("colorMap", texture);
         material.SetShaderParameter("detailMap", detail);
         material.SetShaderParameter("tint", Colors.White);
-        var window = new Window { Size = new Vector2I(96, 80) };
+        var window = new Window { Size = new Vector2i(96, 80) };
         var frames = 0;
         var node = new CanvasNode { DrawAction = n => n.DrawRect(new Rect(0, 0, 64, 64), Colors.White), Material = material };
         node.ReadyAction = n =>

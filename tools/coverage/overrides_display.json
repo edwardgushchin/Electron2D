@@ -233,7 +233,7 @@
       "adr": "ADR 0040"
     },
     {
-      "electron2d": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2I,System.Boolean)",
+      "electron2d": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2i,System.Boolean)",
       "reason": "Typed C# native-host bootstrap creates the SDL video connection and main window.",
       "adr": "ADR 0040"
     },

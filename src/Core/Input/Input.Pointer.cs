@@ -108,7 +108,7 @@ public sealed partial class Input
         if (!position.IsFinite() || (double)position.X < int.MinValue || (double)position.X > int.MaxValue ||
             (double)position.Y < int.MinValue || (double)position.Y > int.MaxValue)
             throw new ArgumentException("Pointer coordinates must be finite and within native integer limits.", nameof(position));
-        RequireDisplay().WarpMouse(new Vector2I((int)position.X, (int)position.Y));
+        RequireDisplay().WarpMouse(new Vector2i((int)position.X, (int)position.Y));
     }
 
     private static DisplayServer RequireDisplay() => DisplayServer.Instance ??

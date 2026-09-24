@@ -13,7 +13,7 @@ internal static partial class RenderingRuntimeTests
         using var detail = ImageTexture.CreateFromImage(black);
         shader.SetDefaultTextureParameter("colorMap", single); material.SetShaderParameter("detailMap", detail);
         material.SetShaderParameter("tint", new Color(.25f, .25f, .25f, 1));
-        var window = new Window { Size = new Vector2I(96, 80) }; var stage = 0;
+        var window = new Window { Size = new Vector2i(96, 80) }; var stage = 0;
         var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect(0, 0, 64, 64), Colors.White) };
         node.ReadyAction = n =>
         {
@@ -54,7 +54,7 @@ internal static partial class RenderingRuntimeTests
     {
         using var curve = CurveTextureTests.Constant(2); using var single = new CurveTexture { Curve = curve };
         using var xyz = new CurveXYZTexture { CurveY = curve };
-        var window = new Window { Size = new Vector2I(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         window.AddChild(new CanvasNode
         {
             DrawAction = n => { n.DrawTextureRect(single, new Rect(0, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); n.DrawTextureRect(xyz, new Rect(24, 0, 16, 16), false, new Color(.25f, .25f, .25f, 1)); },

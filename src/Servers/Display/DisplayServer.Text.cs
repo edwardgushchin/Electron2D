@@ -5,7 +5,7 @@ namespace Electron2D;
 public sealed partial class DisplayServer
 {
     private string _imeText = string.Empty;
-    private Vector2I _imeSelection;
+    private Vector2i _imeSelection;
 
     /// <summary>Gets the most recently received native IME composition text.</summary>
     /// <returns>The active composition, or an empty string before composition begins or after it commits.</returns>
@@ -21,7 +21,7 @@ public sealed partial class DisplayServer
     /// <returns>The zero-based Unicode-codepoint start and length reported by the input method. Unknown negative offsets become zero.</returns>
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the opening thread.</exception>
-    public Vector2I IMEGetSelection()
+    public Vector2i IMEGetSelection()
     {
         EnsureOwner();
         return _imeSelection;
@@ -44,7 +44,7 @@ public sealed partial class DisplayServer
         if (!active)
         {
             _imeText = string.Empty;
-            _imeSelection = Vector2I.Zero;
+            _imeSelection = Vector2i.Zero;
         }
     }
 
@@ -56,7 +56,7 @@ public sealed partial class DisplayServer
     /// <exception cref="ObjectDisposedException">The server is disposing or disposed.</exception>
     /// <exception cref="OverflowException">The pixel position cannot be represented in native window coordinates.</exception>
     /// <exception cref="InvalidOperationException">The caller is off the opening thread or the native density or area request fails.</exception>
-    public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)
+    public void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);

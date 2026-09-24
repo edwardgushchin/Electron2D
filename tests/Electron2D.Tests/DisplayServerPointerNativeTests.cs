@@ -50,7 +50,7 @@ internal static class DisplayServerPointerNativeTests
             var warpRejected = false;
             try
             {
-                display.WarpMouse(new Vector2I(20, 20));
+                display.WarpMouse(new Vector2i(20, 20));
             }
             catch (NotSupportedException)
             {

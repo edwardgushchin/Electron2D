@@ -98,10 +98,10 @@ public abstract class Texture : Resource
     public virtual bool IsPixelOpaque(int x, int y)
     {
         var pixels = CapturePixels();
-        return SampleOpacity(pixels, new Vector2I(GetWidth(), GetHeight()), x, y);
+        return SampleOpacity(pixels, new Vector2i(GetWidth(), GetHeight()), x, y);
     }
 
-    private protected static bool SampleOpacity(TexturePixels? pixels, Vector2I size, int x, int y)
+    private protected static bool SampleOpacity(TexturePixels? pixels, Vector2i size, int x, int y)
     {
         if (pixels is null || size.X <= 0 || size.Y <= 0) return true;
         x = (int)Math.Clamp((long)x * pixels.Source.Width / size.X, 0, pixels.Source.Width - 1);

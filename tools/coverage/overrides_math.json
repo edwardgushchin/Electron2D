@@ -122,8 +122,8 @@
     },
     {
       "godot": "Geometry2D::method:bresenham_line(Vector2i:,Vector2i:)",
-      "electron2d": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2I,Electron2D.Vector2I)",
-      "reason": "Vector2I[] represents the ordered typed grid points; array length above Int32.MaxValue is rejected before allocation."
+      "electron2d": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2i,Electron2D.Vector2i)",
+      "reason": "Vector2i[] represents the ordered typed grid points; array length above Int32.MaxValue is rejected before allocation."
     },
     {
       "godot": "Geometry2D::method:convex_hull(PackedVector2Array:)",
@@ -261,22 +261,22 @@
       "reason": "Typed C# constructor for the same Color input/conversion (ADR 0024)."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2I)",
+      "electron2d": "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2i)",
       "godot": "Vector2::constructor:Vector2(Vector2i:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector2I..ctor(Electron2D.Vector2)",
+      "electron2d": "constructor:Electron2D.Vector2i..ctor(Electron2D.Vector2)",
       "godot": "Vector2i::constructor:Vector2i(Vector2:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector4..ctor(Electron2D.Vector4I)",
+      "electron2d": "constructor:Electron2D.Vector4..ctor(Electron2D.Vector4i)",
       "godot": "Vector4::constructor:Vector4(Vector4i:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector4I..ctor(Electron2D.Vector4)",
+      "electron2d": "constructor:Electron2D.Vector4i..ctor(Electron2D.Vector4)",
       "godot": "Vector4i::constructor:Vector4i(Vector4:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
@@ -326,7 +326,7 @@
       "reason": "C# component indexer for the upstream Vector2 operator (ADR 0033)."
     },
     {
-      "electron2d": "indexer:Electron2D.Vector2I.Item(System.Int32)",
+      "electron2d": "indexer:Electron2D.Vector2i.Item(System.Int32)",
       "godot": "Vector2i::operator:operator [](int:)",
       "reason": "C# indexer is the upstream component-index operator."
     },
@@ -336,7 +336,7 @@
       "reason": "C# indexer is the upstream component-index operator."
     },
     {
-      "electron2d": "indexer:Electron2D.Vector4I.Item(System.Int32)",
+      "electron2d": "indexer:Electron2D.Vector4i.Item(System.Int32)",
       "godot": "Vector4i::operator:operator [](int:)",
       "reason": "C# indexer is the upstream component-index operator."
     },
@@ -356,7 +356,7 @@
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
     {
-      "electron2d": "method:Electron2D.Image.GetPixel(Electron2D.Vector2I)",
+      "electron2d": "method:Electron2D.Image.GetPixel(Electron2D.Vector2i)",
       "godot": "Image::method:get_pixelv(Vector2i:)",
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
@@ -371,7 +371,7 @@
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
     {
-      "electron2d": "method:Electron2D.Image.SetPixel(Electron2D.Vector2I,Electron2D.Color)",
+      "electron2d": "method:Electron2D.Image.SetPixel(Electron2D.Vector2i,Electron2D.Color)",
       "godot": "Image::method:set_pixelv(Vector2i:,Color:)",
       "reason": "C# spelling or typed vector/byte-array form of the Image operation (ADR 0039)."
     },
@@ -936,22 +936,22 @@
       "reason": "Typed C# vector/scalar overload of the same Vector2 operation (ADR 0033)."
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Clamp(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Vector2i.Clamp(System.Int32,System.Int32)",
       "godot": "Vector2i::method:clampi(int:,int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Max(System.Int32)",
+      "electron2d": "method:Electron2D.Vector2i.Max(System.Int32)",
       "godot": "Vector2i::method:maxi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Min(System.Int32)",
+      "electron2d": "method:Electron2D.Vector2i.Min(System.Int32)",
       "godot": "Vector2i::method:mini(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Snapped(System.Int32)",
+      "electron2d": "method:Electron2D.Vector2i.Snapped(System.Int32)",
       "godot": "Vector2i::method:snappedi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
@@ -981,22 +981,22 @@
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Clamp(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Vector4i.Clamp(System.Int32,System.Int32)",
       "godot": "Vector4i::method:clampi(int:,int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Max(System.Int32)",
+      "electron2d": "method:Electron2D.Vector4i.Max(System.Int32)",
       "godot": "Vector4i::method:maxi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Min(System.Int32)",
+      "electron2d": "method:Electron2D.Vector4i.Min(System.Int32)",
       "godot": "Vector4i::method:mini(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Snapped(System.Int32)",
+      "electron2d": "method:Electron2D.Vector4i.Snapped(System.Int32)",
       "godot": "Vector4i::method:snappedi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
@@ -1121,42 +1121,42 @@
       "reason": "Unary plus counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Explicit(Electron2D.Vector2)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Explicit(Electron2D.Vector2)",
       "godot": "Vector2i::constructor:Vector2i(Vector2:)",
       "reason": "C# cast form of upstream float-to-integer vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Implicit(Electron2D.Vector2I)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Implicit(Electron2D.Vector2i)",
       "godot": "Vector2::constructor:Vector2(Vector2i:)",
       "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,Electron2D.Vector2I)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,Electron2D.Vector2i)",
       "godot": "Vector2i::operator:operator *(Vector2i:)",
       "reason": "Componentwise vector multiplication counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Int32)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,System.Int32)",
       "godot": "Vector2i::operator:operator *(int:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Single)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,System.Single)",
       "godot": "Vector2i::operator:operator *(float:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(System.Int32,Electron2D.Vector2I)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Multiply(System.Int32,Electron2D.Vector2i)",
       "godot": "Vector2i::operator:operator *(int:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_Multiply(System.Single,Electron2D.Vector2I)",
+      "electron2d": "operator:Electron2D.Vector2i.op_Multiply(System.Single,Electron2D.Vector2i)",
       "godot": "Vector2i::operator:operator *(float:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector2I.op_UnaryPlus(Electron2D.Vector2I)",
+      "electron2d": "operator:Electron2D.Vector2i.op_UnaryPlus(Electron2D.Vector2i)",
       "godot": "Vector2i::operator:operator unary+()",
       "reason": "Unary plus counterpart."
     },
@@ -1181,42 +1181,42 @@
       "reason": "Unary plus counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Explicit(Electron2D.Vector4)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Explicit(Electron2D.Vector4)",
       "godot": "Vector4i::constructor:Vector4i(Vector4:)",
       "reason": "C# cast form of upstream float-to-integer vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Implicit(Electron2D.Vector4I)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Implicit(Electron2D.Vector4i)",
       "godot": "Vector4::constructor:Vector4(Vector4i:)",
       "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,Electron2D.Vector4I)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,Electron2D.Vector4i)",
       "godot": "Vector4i::operator:operator *(Vector4i:)",
       "reason": "Componentwise vector multiplication counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Int32)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,System.Int32)",
       "godot": "Vector4i::operator:operator *(int:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Single)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,System.Single)",
       "godot": "Vector4i::operator:operator *(float:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(System.Int32,Electron2D.Vector4I)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Multiply(System.Int32,Electron2D.Vector4i)",
       "godot": "Vector4i::operator:operator *(int:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_Multiply(System.Single,Electron2D.Vector4I)",
+      "electron2d": "operator:Electron2D.Vector4i.op_Multiply(System.Single,Electron2D.Vector4i)",
       "godot": "Vector4i::operator:operator *(float:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector4I.op_UnaryPlus(Electron2D.Vector4I)",
+      "electron2d": "operator:Electron2D.Vector4i.op_UnaryPlus(Electron2D.Vector4i)",
       "godot": "Vector4i::operator:operator unary+()",
       "reason": "Unary plus counterpart."
     },
@@ -1246,22 +1246,22 @@
       "reason": "Read-only C# property for the Image state query (ADR 0039)."
     },
     {
-      "electron2d": "property:Electron2D.Vector2I.MaxValue()",
+      "electron2d": "property:Electron2D.Vector2i.MaxValue()",
       "godot": "Vector2i::constant:MAX",
       "reason": "All components equal int.MaxValue, matching upstream MAX."
     },
     {
-      "electron2d": "property:Electron2D.Vector2I.MinValue()",
+      "electron2d": "property:Electron2D.Vector2i.MinValue()",
       "godot": "Vector2i::constant:MIN",
       "reason": "All components equal int.MinValue, matching upstream MIN."
     },
     {
-      "electron2d": "property:Electron2D.Vector4I.MaxValue()",
+      "electron2d": "property:Electron2D.Vector4i.MaxValue()",
       "godot": "Vector4i::constant:MAX",
       "reason": "All components equal int.MaxValue, matching upstream MAX."
     },
     {
-      "electron2d": "property:Electron2D.Vector4I.MinValue()",
+      "electron2d": "property:Electron2D.Vector4i.MinValue()",
       "godot": "Vector4i::constant:MIN",
       "reason": "All components equal int.MinValue, matching upstream MIN."
     },
@@ -1636,12 +1636,12 @@
       "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3I)",
+      "electron2d": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3i)",
       "godot": "Vector3::constructor:Vector3(Vector3i:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
     {
-      "electron2d": "constructor:Electron2D.Vector3I..ctor(Electron2D.Vector3)",
+      "electron2d": "constructor:Electron2D.Vector3i..ctor(Electron2D.Vector3)",
       "godot": "Vector3i::constructor:Vector3i(Vector3:)",
       "reason": "Cross-precision vector constructor; parameter type corresponds exactly to the upstream integer/float vector constructor."
     },
@@ -1651,7 +1651,7 @@
       "reason": "C# indexer is the upstream component-index operator."
     },
     {
-      "electron2d": "indexer:Electron2D.Vector3I.Item(System.Int32)",
+      "electron2d": "indexer:Electron2D.Vector3i.Item(System.Int32)",
       "godot": "Vector3i::operator:operator [](int:)",
       "reason": "C# indexer is the upstream component-index operator."
     },
@@ -1681,22 +1681,22 @@
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Clamp(System.Int32,System.Int32)",
+      "electron2d": "method:Electron2D.Vector3i.Clamp(System.Int32,System.Int32)",
       "godot": "Vector3i::method:clampi(int:,int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Max(System.Int32)",
+      "electron2d": "method:Electron2D.Vector3i.Max(System.Int32)",
       "godot": "Vector3i::method:maxi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Min(System.Int32)",
+      "electron2d": "method:Electron2D.Vector3i.Min(System.Int32)",
       "godot": "Vector3i::method:mini(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Snapped(System.Int32)",
+      "electron2d": "method:Electron2D.Vector3i.Snapped(System.Int32)",
       "godot": "Vector3i::method:snappedi(int:)",
       "reason": "Scalar overload has the same typed upstream vector operation."
     },
@@ -1721,52 +1721,52 @@
       "reason": "Unary plus counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Explicit(Electron2D.Vector3)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Explicit(Electron2D.Vector3)",
       "godot": "Vector3i::constructor:Vector3i(Vector3:)",
       "reason": "C# cast form of upstream float-to-integer vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Implicit(Electron2D.Vector3I)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Implicit(Electron2D.Vector3i)",
       "godot": "Vector3::constructor:Vector3(Vector3i:)",
       "reason": "C# implicit cast form of upstream integer-to-float vector conversion."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,Electron2D.Vector3I)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,Electron2D.Vector3i)",
       "godot": "Vector3i::operator:operator *(Vector3i:)",
       "reason": "Componentwise vector multiplication counterpart."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Int32)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,System.Int32)",
       "godot": "Vector3i::operator:operator *(int:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Single)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,System.Single)",
       "godot": "Vector3i::operator:operator *(float:)",
       "reason": "Forward C# vector-by-scalar operator is the exact upstream operator; reverse C# overload is mapped separately to the same commutative operation."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(System.Int32,Electron2D.Vector3I)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Multiply(System.Int32,Electron2D.Vector3i)",
       "godot": "Vector3i::operator:operator *(int:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_Multiply(System.Single,Electron2D.Vector3I)",
+      "electron2d": "operator:Electron2D.Vector3i.op_Multiply(System.Single,Electron2D.Vector3i)",
       "godot": "Vector3i::operator:operator *(float:)",
       "reason": "C# commutative scalar-left overload of upstream scalar multiplication; return type agrees."
     },
     {
-      "electron2d": "operator:Electron2D.Vector3I.op_UnaryPlus(Electron2D.Vector3I)",
+      "electron2d": "operator:Electron2D.Vector3i.op_UnaryPlus(Electron2D.Vector3i)",
       "godot": "Vector3i::operator:operator unary+()",
       "reason": "Unary plus counterpart."
     },
     {
-      "electron2d": "property:Electron2D.Vector3I.MaxValue()",
+      "electron2d": "property:Electron2D.Vector3i.MaxValue()",
       "godot": "Vector3i::constant:MAX",
       "reason": "All components equal int.MaxValue, matching upstream MAX."
     },
     {
-      "electron2d": "property:Electron2D.Vector3I.MinValue()",
+      "electron2d": "property:Electron2D.Vector3i.MinValue()",
       "godot": "Vector3i::constant:MIN",
       "reason": "All components equal int.MinValue, matching upstream MIN."
     },
@@ -1838,67 +1838,67 @@
     {
       "godot": "BitMap::method:convert_to_image()",
       "electron2d": "method:Electron2D.BitMap.ConvertToImage()",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:create(Vector2i:)",
-      "electron2d": "method:Electron2D.BitMap.Create(Electron2D.Vector2I)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.Create(Electron2D.Vector2i)",
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:create_from_image_alpha(Image:,float:)",
       "electron2d": "method:Electron2D.BitMap.CreateFromImageAlpha(Electron2D.Image,System.Single)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_bit(int:,int:)",
       "electron2d": "method:Electron2D.BitMap.GetBit(System.Int32,System.Int32)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_bitv(Vector2i:)",
-      "electron2d": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2I)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2i)",
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_size()",
       "electron2d": "method:Electron2D.BitMap.GetSize()",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:get_true_bit_count()",
       "electron2d": "method:Electron2D.BitMap.GetTrueBitCount()",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:grow_mask(int:,Rect2i:)",
       "electron2d": "method:Electron2D.BitMap.GrowMask(System.Int32,Electron2D.RectI)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:opaque_to_polygons(Rect2i:,float:)",
       "electron2d": "method:Electron2D.BitMap.OpaqueToPolygons(Electron2D.RectI,System.Single)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:resize(Vector2i:)",
-      "electron2d": "method:Electron2D.BitMap.Resize(Electron2D.Vector2I)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.Resize(Electron2D.Vector2i)",
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bit(int:,int:,bool:)",
       "electron2d": "method:Electron2D.BitMap.SetBit(System.Int32,System.Int32,System.Boolean)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bit_rect(Rect2i:,bool:)",
       "electron2d": "method:Electron2D.BitMap.SetBitRect(Electron2D.RectI,System.Boolean)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "godot": "BitMap::method:set_bitv(Vector2i:,bool:)",
-      "electron2d": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2I,System.Boolean)",
-      "reason": "Typed Vector2I/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
+      "electron2d": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2i,System.Boolean)",
+      "reason": "Typed Vector2i/RectI/Image and Vector2[][] represent the matching mask operation; managed exceptions and change events are the C# boundary."
     },
     {
       "electron2d": "operator:Electron2D.Vector2.op_Multiply(Electron2D.Vector2,System.Single)",
@@ -1973,12 +1973,12 @@
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2I,System.Int32,System.Int32)",
+      "electron2d": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
     {
-      "electron2d": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2I)",
+      "electron2d": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
       "reason": "Typed C# convenience constructor or standard value/format member without an exact XML declaration.",
       "adr": "core-math.md#adr-0035"
     },
@@ -2193,32 +2193,32 @@
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Deconstruct(ref System.Int32,ref System.Int32)",
+      "electron2d": "method:Electron2D.Vector2i.Deconstruct(ref System.Int32,ref System.Int32)",
       "reason": "C# tuple deconstruction convenience for the vector components.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Equals(Electron2D.Vector2I)",
+      "electron2d": "method:Electron2D.Vector2i.Equals(Electron2D.Vector2i)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.Equals(System.Object)",
+      "electron2d": "method:Electron2D.Vector2i.Equals(System.Object)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.GetHashCode()",
+      "electron2d": "method:Electron2D.Vector2i.GetHashCode()",
       "reason": "C# value hashing implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.ToString()",
+      "electron2d": "method:Electron2D.Vector2i.ToString()",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector2I.ToString(System.String)",
+      "electron2d": "method:Electron2D.Vector2i.ToString(System.String)",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
@@ -2253,32 +2253,32 @@
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32)",
+      "electron2d": "method:Electron2D.Vector4i.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32)",
       "reason": "C# tuple deconstruction convenience for the vector components.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Equals(Electron2D.Vector4I)",
+      "electron2d": "method:Electron2D.Vector4i.Equals(Electron2D.Vector4i)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.Equals(System.Object)",
+      "electron2d": "method:Electron2D.Vector4i.Equals(System.Object)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.GetHashCode()",
+      "electron2d": "method:Electron2D.Vector4i.GetHashCode()",
       "reason": "C# value hashing implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.ToString()",
+      "electron2d": "method:Electron2D.Vector4i.ToString()",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector4I.ToString(System.String)",
+      "electron2d": "method:Electron2D.Vector4i.ToString(System.String)",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
@@ -2433,27 +2433,27 @@
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Equals(Electron2D.Vector3I)",
+      "electron2d": "method:Electron2D.Vector3i.Equals(Electron2D.Vector3i)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Equals(System.Object)",
+      "electron2d": "method:Electron2D.Vector3i.Equals(System.Object)",
       "reason": "C# value equality implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.GetHashCode()",
+      "electron2d": "method:Electron2D.Vector3i.GetHashCode()",
       "reason": "C# value hashing implementation with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.ToString()",
+      "electron2d": "method:Electron2D.Vector3i.ToString()",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.ToString(System.String)",
+      "electron2d": "method:Electron2D.Vector3i.ToString(System.String)",
       "reason": "C# formatting method with no separate upstream method declaration.",
       "adr": "core-math.md#adr-0033"
     },
@@ -2473,7 +2473,7 @@
       "adr": "core-math.md#adr-0033"
     },
     {
-      "electron2d": "method:Electron2D.Vector3I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
+      "electron2d": "method:Electron2D.Vector3i.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
       "reason": "C# tuple deconstruction convenience for the vector components.",
       "adr": "core-math.md#adr-0033"
     },
@@ -3025,7 +3025,7 @@
         "Vector2i::constant:ZERO"
       ],
       "state": "Implemented",
-      "reason": "Values match the pinned XML and Vector2I properties; layout and constants are checked by VerifyVector2IValues."
+      "reason": "Values match the pinned XML and Vector2i properties; layout and constants are checked by VerifyVector2iValues."
     },
     {
       "godot": [
@@ -3036,7 +3036,7 @@
         "Vector2i::property:y"
       ],
       "state": "Implemented",
-      "reason": "The zero-initialized and copied C# struct preserves both components; the two-int constructor and mutable fields are checked by VerifyVector2IValues."
+      "reason": "The zero-initialized and copied C# struct preserves both components; the two-int constructor and mutable fields are checked by VerifyVector2iValues."
     },
     {
       "godot": [
@@ -3103,7 +3103,7 @@
         "Vector2i::method:mini(int:)"
       ],
       "state": "Implemented",
-      "reason": "Componentwise integer min/max agrees with the pinned methods and is exercised by VerifyVector2IValues."
+      "reason": "Componentwise integer min/max agrees with the pinned methods and is exercised by VerifyVector2iValues."
     },
     {
       "godot": [
@@ -3138,7 +3138,7 @@
         "Vector2i::operator:operator >=(Vector2i:)"
       ],
       "state": "Implemented",
-      "reason": "Componentwise equality and lexicographic X-then-Y ordering match the pinned operators and are exercised by VerifyVector2IValues."
+      "reason": "Componentwise equality and lexicographic X-then-Y ordering match the pinned operators and are exercised by VerifyVector2iValues."
     },
     {
       "godot": [
@@ -3188,7 +3188,7 @@
         "Vector2i::constructor:Vector2i(Vector2:)"
       ],
       "state": "Implemented",
-      "reason": "The Vector2-to-Vector2I constructor truncates finite in-range components toward zero; rejecting nonfinite/out-of-range input is the accepted typed C# safety rule in ADR 0033."
+      "reason": "The Vector2-to-Vector2i constructor truncates finite in-range components toward zero; rejecting nonfinite/out-of-range input is the accepted typed C# safety rule in ADR 0033."
     },
     {
       "godot": [
@@ -3198,12 +3198,12 @@
         "Vector4i::method:length_squared()"
       ],
       "state": "Implemented",
-      "reason": "ADR 0033 widens four squared terms and coordinate differences, returns checked Int64 squares and finite float lengths across full Int32 inputs. VerifyVector4IValues checks exact W-only/two-axis boundaries, a 9e18 distance, one-past-limit overflow and full-span finite length/distance on Linux/.NET 8."
+      "reason": "ADR 0033 widens four squared terms and coordinate differences, returns checked Int64 squares and finite float lengths across full Int32 inputs. VerifyVector4iValues checks exact W-only/two-axis boundaries, a 9e18 distance, one-past-limit overflow and full-span finite length/distance on Linux/.NET 8."
     },
     {
       "godot": ["class:Vector4i"],
       "state": "Implemented",
-      "reason": "All 52 declared members have pinned vector4i.h/.cpp and accepted ADR 0033 managed-boundary audits in VerifyVector4IValues, including packed-scene and strict typed persistence. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
+      "reason": "All 52 declared members have pinned vector4i.h/.cpp and accepted ADR 0033 managed-boundary audits in VerifyVector4iValues, including packed-scene and strict typed persistence. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
     },
     {
       "godot": [
@@ -3211,7 +3211,7 @@
         "Vector4i::constant:ONE", "Vector4i::constant:ZERO"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector4IValues checks all four pinned integer tuple constants across X/Y/Z/W, including the full Int32 minimum and maximum; Linux/.NET 8 managed values."
+      "reason": "VerifyVector4iValues checks all four pinned integer tuple constants across X/Y/Z/W, including the full Int32 minimum and maximum; Linux/.NET 8 managed values."
     },
     {
       "godot": [
@@ -3221,7 +3221,7 @@
         "Vector4i::property:w", "Vector4i::property:x", "Vector4i::property:y", "Vector4i::property:z"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector4IValues checks sequential 16-byte zero state, independent mutable value copies/indexes, four axis enum identities, invalid-index errors and float-to-int truncation with non-finite/out-of-range rejection under ADR 0033; Linux/.NET 8."
+      "reason": "VerifyVector4iValues checks sequential 16-byte zero state, independent mutable value copies/indexes, four axis enum identities, invalid-index errors and float-to-int truncation with non-finite/out-of-range rejection under ADR 0033; Linux/.NET 8."
     },
     {
       "godot": [
@@ -3233,7 +3233,7 @@
         "Vector4i::method:snapped(Vector4i:)", "Vector4i::method:snappedi(int:)"
       ],
       "state": "Implemented",
-      "reason": "Pinned vector4i.cpp uses componentwise integer scalar formulas and first-maximum/last-minimum axis loops. VerifyVector4IValues checks W and tie boundaries, signed values, typed Abs/clamp errors, negative/zero/vector snapping steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
+      "reason": "Pinned vector4i.cpp uses componentwise integer scalar formulas and first-maximum/last-minimum axis loops. VerifyVector4iValues checks W and tie boundaries, signed values, typed Abs/clamp errors, negative/zero/vector snapping steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
     },
     {
       "godot": [
@@ -3245,7 +3245,7 @@
         "Vector4i::operator:operator unary+()", "Vector4i::operator:operator unary-()"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector4IValues checks X/Y/Z/W wrapping add/subtract/multiply/negation, truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar results and IEEE zero division under ADR 0033 on Linux/.NET 8."
+      "reason": "VerifyVector4iValues checks X/Y/Z/W wrapping add/subtract/multiply/negation, truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar results and IEEE zero division under ADR 0033 on Linux/.NET 8."
     },
     {
       "godot": [
@@ -3254,7 +3254,7 @@
         "Vector4i::operator:operator >(Vector4i:)", "Vector4i::operator:operator >=(Vector4i:)"
       ],
       "state": "Implemented",
-      "reason": "Pinned vector4i.h orders X/Y/Z/W exactly. VerifyVector4IValues checks equality, comparison ties, decisive Y/Z/W positions and high-X precedence with equal-copy hashing on Linux/.NET 8."
+      "reason": "Pinned vector4i.h orders X/Y/Z/W exactly. VerifyVector4iValues checks equality, comparison ties, decisive Y/Z/W positions and high-X precedence with equal-copy hashing on Linux/.NET 8."
     },
     {
       "state": "Partial",
@@ -3534,7 +3534,7 @@
     {
       "godot": ["class:Vector3i"],
       "state": "Implemented",
-      "reason": "All 56 declared members have pinned-source and accepted ADR 0033 managed-boundary audits in VerifyVector3IValues, including typed persistence. Three axis enum values retain separately verified numeric identities. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
+      "reason": "All 56 declared members have pinned-source and accepted ADR 0033 managed-boundary audits in VerifyVector3iValues, including typed persistence. Three axis enum values retain separately verified numeric identities. Linux/.NET 8 managed results do not establish native ABI or other-platform parity."
     },
     {
       "godot": [
@@ -3544,7 +3544,7 @@
         "Vector3i::constant:ZERO"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector3IValues checks all ten pinned three-component constants, including Int32 minima/maxima and signed unit directions; Linux/.NET 8 managed values."
+      "reason": "VerifyVector3iValues checks all ten pinned three-component constants, including Int32 minima/maxima and signed unit directions; Linux/.NET 8 managed values."
     },
     {
       "godot": [
@@ -3554,7 +3554,7 @@
         "Vector3i::property:x", "Vector3i::property:y", "Vector3i::property:z"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector3IValues checks 12-byte sequential zero storage, value-copy isolation, mutable X/Y/Z indexes, enum identities, typed bad-index errors, finite truncation and non-finite/out-of-range conversion rejection under ADR 0033; Linux/.NET 8."
+      "reason": "VerifyVector3iValues checks 12-byte sequential zero storage, value-copy isolation, mutable X/Y/Z indexes, enum identities, typed bad-index errors, finite truncation and non-finite/out-of-range conversion rejection under ADR 0033; Linux/.NET 8."
     },
     {
       "godot": [
@@ -3562,7 +3562,7 @@
         "Vector3i::method:length()", "Vector3i::method:length_squared()"
       ],
       "state": "Implemented",
-      "reason": "ADR 0033 widens coordinate subtraction and squared terms, returns checked Int64 squares and finite float lengths even across the full Int32 span. VerifyVector3IValues checks ordinary values, a 9e18 distance, exact two-axis Int64 boundary, three-axis overflow and full-span finite lengths on Linux/.NET 8."
+      "reason": "ADR 0033 widens coordinate subtraction and squared terms, returns checked Int64 squares and finite float lengths even across the full Int32 span. VerifyVector3iValues checks ordinary values, a 9e18 distance, exact two-axis Int64 boundary, three-axis overflow and full-span finite lengths on Linux/.NET 8."
     },
     {
       "godot": [
@@ -3574,7 +3574,7 @@
         "Vector3i::method:snapped(Vector3i:)", "Vector3i::method:snappedi(int:)"
       ],
       "state": "Implemented",
-      "reason": "Pinned vector3i.h/cpp applies componentwise integer scalar formulas and first-maximum/last-minimum ties. VerifyVector3IValues checks signed values, reversed-bound and Int32.MinValue errors, negative/zero/vector snap steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
+      "reason": "Pinned vector3i.h/cpp applies componentwise integer scalar formulas and first-maximum/last-minimum ties. VerifyVector3iValues checks signed values, reversed-bound and Int32.MinValue errors, negative/zero/vector snap steps and checked snap overflow under ADRs 0033/0034 on Linux/.NET 8."
     },
     {
       "godot": [
@@ -3586,7 +3586,7 @@
         "Vector3i::operator:operator unary+()", "Vector3i::operator:operator unary-()"
       ],
       "state": "Implemented",
-      "reason": "VerifyVector3IValues checks componentwise wrapping add/subtract/multiply/negation, signed truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar result and IEEE zero division under ADR 0033; Linux/.NET 8."
+      "reason": "VerifyVector3iValues checks componentwise wrapping add/subtract/multiply/negation, signed truncated quotient/remainder, managed zero and MinValue/-1 errors, float scalar result and IEEE zero division under ADR 0033; Linux/.NET 8."
     },
     {
       "godot": [
@@ -3595,7 +3595,7 @@
         "Vector3i::operator:operator >(Vector3i:)", "Vector3i::operator:operator >=(Vector3i:)"
       ],
       "state": "Implemented",
-      "reason": "Pinned vector3i.h orders X, Y, then Z and compares components exactly. VerifyVector3IValues checks equality, less/equal/greater boundaries, high-X precedence and copy hashing on Linux/.NET 8."
+      "reason": "Pinned vector3i.h orders X, Y, then Z and compares components exactly. VerifyVector3iValues checks equality, less/equal/greater boundaries, high-X precedence and copy hashing on Linux/.NET 8."
     },
     {
       "godot": ["class:Vector4"],

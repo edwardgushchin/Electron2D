@@ -10,7 +10,7 @@ Last updated: 2026-09-24
 
 `Vector3` is a mutable sequential three-component single-precision numeric value with X/Y/Z storage. It is independent of scene nodes and three-dimensional rendering. Its layout is 12 bytes. Ordinary numeric operations do not allocate managed memory; formatting and configuration serialization do.
 
-The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3I`](Vector3I.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
+The value can be copied directly into typed packed-scene properties. [`ConfigFile`](ConfigFile.md) uses a strict X/Y/Z schema; floating-point persistence rejects nonfinite components. Shader uniforms use [`Vector3`](Vector3.md) for float3 and [`Vector3i`](Vector3i.md) for signed or unsigned int3. [`Color`](Color.md) remains an RGB alias for float3 when the value has color semantics.
 
 All 84 applicable declared members and the type row have managed semantic audits on Linux/.NET 8. Core values/operators, componentwise scalar behavior, normalization, movement, geometry, interpolation and octahedral packing are covered by VerifyVector3CoreValues, VerifyVector3ComponentMethods, VerifyVector3Geometry and earlier vector checks. `Reflect` and `Bounce` preserve finite values near float limits by multiplying the normal before the dot scalar. `Rotated` computes the pinned axis-angle matrix rows internally; 10,000 deterministic finite comparisons against that formula found no float differences, and `Slerp` follows the pinned squared-length/axis order with finite and non-finite samples.
 
@@ -27,7 +27,7 @@ var doubled = value * 2;
 
 | Declaration | Contract |
 | --- | --- |
-| [`public Vector3(Electron2D.Vector3I value)`](#member-1) | Initializes a floating-point vector from an integer vector. |
+| [`public Vector3(Electron2D.Vector3i value)`](#member-1) | Initializes a floating-point vector from an integer vector. |
 | [`public Vector3(System.Single x, System.Single y, System.Single z)`](#member-2) | Initializes a vector from three components. |
 | [`public static Electron2D.Vector3 Back { get;  }`](#member-3) | Gets the positive Z unit vector. |
 | [`public static Electron2D.Vector3 Down { get;  }`](#member-4) | Gets the negative Y unit vector. |
@@ -120,7 +120,7 @@ var doubled = value * 2;
 ## Member contracts
 
 <a id="member-1"></a>
-### `public Vector3(Electron2D.Vector3I value)`
+### `public Vector3(Electron2D.Vector3i value)`
 
 Initializes a floating-point vector from an integer vector.
 

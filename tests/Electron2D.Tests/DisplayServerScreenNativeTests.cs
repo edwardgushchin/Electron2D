@@ -5,7 +5,7 @@ internal static class DisplayServerScreenNativeTests
 {
     public static void RunHiddenWindow()
     {
-        using var display = DisplayServer.Open("Electron2D hidden scale check", new Vector2I(320, 240), hidden: true);
+        using var display = DisplayServer.Open("Electron2D hidden scale check", new Vector2i(320, 240), hidden: true);
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is [var window] && window != 0,
             "The hidden scale check has one SDL window.");
@@ -84,12 +84,12 @@ internal static class DisplayServerScreenNativeTests
             var pixelDensity = nativeMode?.PixelDensity ?? 0f;
             Check(float.IsFinite(pixelDensity) && pixelDensity > 0f,
                 "A Wayland display mode reports its logical-to-physical pixel density.");
-            var physicalSize = new Vector2I((int)Math.Round(bounds.W * (double)pixelDensity),
+            var physicalSize = new Vector2i((int)Math.Round(bounds.W * (double)pixelDensity),
                 (int)Math.Round(bounds.H * (double)pixelDensity));
-            Check(display.ScreenGetPosition(index) == new Vector2I(bounds.X, bounds.Y) &&
+            Check(display.ScreenGetPosition(index) == new Vector2i(bounds.X, bounds.Y) &&
                   display.ScreenGetSize(index) == physicalSize &&
                   display.ScreenGetUsableRect(index) ==
-                  new RectI(new Vector2I(bounds.X, bounds.Y), physicalSize),
+                  new RectI(new Vector2i(bounds.X, bounds.Y), physicalSize),
                 "Wayland screen position and physical size match the native output snapshot.");
             if (index == 0 && physicalSize.X > bounds.W)
                 Check(display.GetScreenFromRect(new Rect(bounds.X + bounds.W, bounds.Y, 1, 1)) == 0,

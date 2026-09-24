@@ -11,9 +11,9 @@ public partial class Window : Viewport
     [
         new PropertyDescriptor<Window, bool>(nameof(Visible), w => w.Visible, (w, v) => w.Visible = v, _ => true, stored: true),
         new PropertyDescriptor<Window, string>(nameof(Title), w => w.Title, (w, v) => w.Title = v, _ => "", stored: true),
-        new PropertyDescriptor<Window, Vector2I>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
-        new PropertyDescriptor<Window, Vector2I>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2I.Zero, stored: true),
-        new PropertyDescriptor<Window, Vector2I>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2I.Zero, stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(Size), w => w.Size, (w, v) => w.Size = v, _ => new(100, 100), stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(MinSize), w => w.MinSize, (w, v) => w.MinSize = v, _ => Vector2i.Zero, stored: true),
+        new PropertyDescriptor<Window, Vector2i>(nameof(MaxSize), w => w.MaxSize, (w, v) => w.MaxSize = v, _ => Vector2i.Zero, stored: true),
         new PropertyDescriptor<Window, ModeEnum>(nameof(Mode), w => w.Mode, (w, v) => w.Mode = v, _ => ModeEnum.Windowed, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Unresizable), w => w.Unresizable, (w, v) => w.Unresizable = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
@@ -25,10 +25,10 @@ public partial class Window : Viewport
     private DisplayServer? _display;
     private RenderingServer? _renderer;
     private string _title = "";
-    private Vector2I _size = new(100, 100);
-    private Vector2I _minSize;
-    private Vector2I _maxSize;
-    private Vector2I? _screenPosition;
+    private Vector2i _size = new(100, 100);
+    private Vector2i _minSize;
+    private Vector2i _maxSize;
+    private Vector2i? _screenPosition;
 
     /// <summary>Creates a detached visible window with an empty title and a 100 by 100 client area.</summary>
     /// <remarks>Initial pixel-snapping choices read active project settings. No native resources are acquired until <see cref="Engine.Run"/>.</remarks>
@@ -71,7 +71,7 @@ public partial class Window : Viewport
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I Size
+    public Vector2i Size
     {
         get { ThrowIfDisposed(); return _size; }
         set
@@ -93,7 +93,7 @@ public partial class Window : Viewport
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or exceeds a nonzero maximum.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I MinSize
+    public Vector2i MinSize
     {
         get { ThrowIfDisposed(); return _display?.WindowGetMinSize() ?? _minSize; }
         set { EnsureMutable(); ValidateLimits(value, MaxSize); _display?.WindowSetMinSize(value); _minSize = value; }
@@ -104,7 +104,7 @@ public partial class Window : Viewport
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or a nonzero maximum is below the minimum.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I MaxSize
+    public Vector2i MaxSize
     {
         get { ThrowIfDisposed(); return _display?.WindowGetMaxSize() ?? _maxSize; }
         set { EnsureMutable(); ValidateLimits(MinSize, value); _display?.WindowSetMaxSize(value); _maxSize = value; }
@@ -117,9 +117,9 @@ public partial class Window : Viewport
     /// <exception cref="NotSupportedException">The active compositor does not expose or accept global window positions, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public Vector2I Position
+    public Vector2i Position
     {
-        get { ThrowIfDisposed(); return _display?.WindowGetPosition() ?? _screenPosition ?? Vector2I.Zero; }
+        get { ThrowIfDisposed(); return _display?.WindowGetPosition() ?? _screenPosition ?? Vector2i.Zero; }
         set { EnsureMutable(); _display?.WindowSetPosition(value); _screenPosition = value; }
     }
 
@@ -266,7 +266,7 @@ public partial class Window : Viewport
     }
 
     internal Vector2 GetClientMousePosition() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); return _display!.GetClientMousePosition(); }
-    internal void WarpClientMouse(Vector2I position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouse(position); }
+    internal void WarpClientMouse(Vector2i position) { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); EnsureNativeOpen(); _display!.WarpMouse(position); }
 
     internal void EnsureNativeOpen()
     {
@@ -334,7 +334,7 @@ public partial class Window : Viewport
     private void HandleDPIChanged() => DpiChanged?.Invoke();
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 
-    private void CommitSize(Vector2I size)
+    private void CommitSize(Vector2i size)
     {
         if (_size == size)
             return;
@@ -342,7 +342,7 @@ public partial class Window : Viewport
         NotifySizeChanged();
     }
 
-    private static void ValidateLimits(Vector2I minimum, Vector2I maximum)
+    private static void ValidateLimits(Vector2i minimum, Vector2i maximum)
     {
         if (minimum.X < 0 || minimum.Y < 0 || maximum.X < 0 || maximum.Y < 0 ||
             maximum.X != 0 && maximum.X < minimum.X || maximum.Y != 0 && maximum.Y < minimum.Y)

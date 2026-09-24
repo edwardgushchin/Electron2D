@@ -39,7 +39,7 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
     internal PropertyDescriptor Describe(string propertyName) => Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
-        Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2I) ? Describe<Vector2I>(propertyName) : Type == typeof(Vector3I) ? Describe<Vector3I>(propertyName) : Describe<Vector4I>(propertyName);
+        Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2i) ? Describe<Vector2i>(propertyName) : Type == typeof(Vector3i) ? Describe<Vector3i>(propertyName) : Describe<Vector4i>(propertyName);
 
     internal void Write<T>(Span<byte> target, in T value) where T : unmanaged
     {

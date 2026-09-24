@@ -22,7 +22,7 @@ public sealed partial class Image : Resource
     [
         new PropertyDescriptor<Image, int>(nameof(Width), image => image.Width),
         new PropertyDescriptor<Image, int>(nameof(Height), image => image.Height),
-        new PropertyDescriptor<Image, Vector2I>(nameof(Size), image => image.Size),
+        new PropertyDescriptor<Image, Vector2i>(nameof(Size), image => image.Size),
         new PropertyDescriptor<Image, Format>(nameof(PixelFormat), image => image.PixelFormat),
         new PropertyDescriptor<Image, bool>(nameof(HasMipmaps), image => image.HasMipmaps),
         new PropertyDescriptor<Image, int>(nameof(DataSize), image => image.DataSize),
@@ -235,7 +235,7 @@ public sealed partial class Image : Resource
     /// <summary>Gets the image dimensions in pixels.</summary>
     /// <value>Zero for an empty image; otherwise the current positive width and height.</value>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public Vector2I Size => Read(state => new Vector2I(state.Width, state.Height));
+    public Vector2i Size => Read(state => new Vector2i(state.Width, state.Height));
 
     /// <summary>Gets the raw pixel storage format.</summary>
     /// <value><see cref="Format.L8"/> for a newly constructed empty image; otherwise the configured format.</value>
@@ -401,7 +401,7 @@ public sealed partial class Image : Resource
     /// <exception cref="ArgumentOutOfRangeException">The coordinate lies outside the base image.</exception>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
-    public Color GetPixel(Vector2I point) => GetPixel(point.X, point.Y);
+    public Color GetPixel(Vector2i point) => GetPixel(point.X, point.Y);
 
     /// <summary>Stores a color at a base-level pixel coordinate.</summary>
     /// <remarks>Existing mip levels are not regenerated; call <see cref="GenerateMipmaps(bool)"/> after a batch of pixel edits when they must reflect the base level.</remarks>
@@ -437,7 +437,7 @@ public sealed partial class Image : Resource
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the pixel commits.</exception>
-    public void SetPixel(Vector2I point, Color color) => SetPixel(point.X, point.Y, color);
+    public void SetPixel(Vector2i point, Color color) => SetPixel(point.X, point.Y, color);
 
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new Image();

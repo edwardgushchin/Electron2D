@@ -173,7 +173,7 @@ Accepted; managed buffers implemented, native codec integration partially execut
 
 The first concrete asset must provide useful CPU-side image behavior before textures, rendering, importing, or an editor exist. The current official 4.7.2 image contract includes raw storage in 47 uncompressed and GPU-block-compressed formats, mipmaps, pixel access and conversion, region composition, filtering, color processing, normal-map helpers, metrics, file codecs, and editor/GPU compression hooks.
 
-Electron2D owns `Color`, `Vector2I`, `RectI`, `Resource`, typed duplication, blocking `FileAccess`, and an SDL host. Texture and GPU integration is in progress. The user selected SDL_image through SDL3-CS for encoded images, including the `SDL3-CS.Linux.Image` native package. Importing and general resource loading/saving remain unfinished. Image has six native loaders and PNG/JPEG saving; the full codec family and semantics remain unfinished. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR would duplicate mature codec libraries.
+Electron2D owns `Color`, `Vector2i`, `RectI`, `Resource`, typed duplication, blocking `FileAccess`, and an SDL host. Texture and GPU integration is in progress. The user selected SDL_image through SDL3-CS for encoded images, including the `SDL3-CS.Linux.Image` native package. Importing and general resource loading/saving remain unfinished. Image has six native loaders and PNG/JPEG saving; the full codec family and semantics remain unfinished. Reimplementing PNG, JPEG, WebP, SVG, DDS, KTX, and EXR would duplicate mature codec libraries.
 
 ### Decision
 

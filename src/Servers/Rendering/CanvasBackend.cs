@@ -16,7 +16,7 @@ internal abstract class CanvasBackend : IDisposable
 {
     internal abstract string Method { get; }
     internal abstract string Driver { get; }
-    internal abstract Vector2I GetPixelSize();
+    internal abstract Vector2i GetPixelSize();
     internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time);
     internal abstract Image Readback();
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>

@@ -22,7 +22,7 @@ public class Sprite : Entity
         new PropertyDescriptor<Sprite, int>(nameof(HFrames), s => s.HFrames, (s, v) => s.HFrames = v, _ => 1, stored: true),
         new PropertyDescriptor<Sprite, int>(nameof(VFrames), s => s.VFrames, (s, v) => s.VFrames = v, _ => 1, stored: true),
         new PropertyDescriptor<Sprite, int>(nameof(Frame), s => s.Frame, (s, v) => s.Frame = v, _ => 0, stored: true),
-        new PropertyDescriptor<Sprite, Vector2I>(nameof(FrameCoords), s => s.FrameCoords, (s, v) => s.FrameCoords = v, _ => Vector2I.Zero),
+        new PropertyDescriptor<Sprite, Vector2i>(nameof(FrameCoords), s => s.FrameCoords, (s, v) => s.FrameCoords = v, _ => Vector2i.Zero),
     ];
 
     private Texture? _texture;
@@ -205,7 +205,7 @@ public class Sprite : Entity
     /// <exception cref="ArgumentOutOfRangeException">Either coordinate is outside the current grid.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable on this thread or during capture.</exception>
     /// <exception cref="ObjectDisposedException">The sprite is disposed.</exception>
-    public Vector2I FrameCoords
+    public Vector2i FrameCoords
     {
         get { ThrowIfDisposed(); return new(_frame % _hframes, _frame / _hframes); }
         set

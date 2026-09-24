@@ -383,7 +383,7 @@ internal static partial class RenderingRuntimeTests
 
     private static void VerifyFrame(string expectedBackend)
     {
-        var window = new Window { Title = "Electron2D canvas verification", Size = new Vector2I(128, 96) };
+        var window = new Window { Title = "Electron2D canvas verification", Size = new Vector2i(128, 96) };
         var red = new CanvasNode { Name = "red", DrawAction = n => n.DrawRect(new Rect(8, 8, 64, 40), Colors.Red) };
         var green = new CanvasNode { Name = "green", ZIndex = 1, DrawAction = n => n.DrawRect(new Rect(24, 16, 32, 24), new Color(0, 1, 0, 0.5f)) };
         var blue = new CanvasNode { Name = "blue", Position = new Vector2(88, 8), Scale = new Vector2(2, 2), DrawAction = n => n.DrawRect(new Rect(0, 0, 8, 8), Colors.Blue) };
@@ -464,7 +464,7 @@ internal static partial class RenderingRuntimeTests
             material.SetShaderParameter("detailMap", texture);
             material.SetShaderParameter("tint", Colors.White);
         }
-        var window = new Window { SnapTransformsToPixel = snapPixels, SnapVerticesToPixel = snapPixels, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
+        var window = new Window { SnapTransformsToPixel = snapPixels, SnapVerticesToPixel = snapPixels, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2i(96, 80) };
         if (canvasTransforms) { window.CanvasTransform = new(0.1f, new(2, 3)); window.GlobalCanvasTransform = new(0, new(1.2f, 0.8f), 0, new(4, 5)); }
         if (cameraTracking) window.AddChild(new Camera { Position = new(48, 40), PositionSmoothingEnabled = true, IgnoreRotation = false, RotationSmoothingEnabled = true });
         var sorted = new Entity { YSortEnabled = true };
@@ -519,7 +519,7 @@ internal static partial class RenderingRuntimeTests
         using var material = new ShaderMaterial { Shader = shader };
         using var binaryShader = Shader.CreateFromSPIRV(shader.GetSPIRV());
         material.Shader = binaryShader;
-        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2i(96, 80) };
         window.AddChild(new CanvasNode
         {
             Material = material,
@@ -616,7 +616,7 @@ internal static partial class RenderingRuntimeTests
         material.SetShaderParameter("gain", 1f);
         material.SetShaderParameter("mode", 0);
         material.SetShaderParameter("offset", Vector2.Zero);
-        material.SetShaderParameter("shift", Vector2I.Zero);
+        material.SetShaderParameter("shift", Vector2i.Zero);
         material.SetShaderParameter("enabled", 1u);
         material.SetShaderParameter<float>("weights", new float[] { 0.25f, 0.75f }.AsSpan());
     }
@@ -629,8 +629,8 @@ internal static partial class RenderingRuntimeTests
         using var second = new ShaderMaterial { Shader = shader };
         Initialize(first, Colors.Red); Initialize(second, Colors.Green);
         first.SetShaderParameter("offset", new Vector2(10, 0));
-        first.SetShaderParameter("shift", new Vector2I(2, 0));
-        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2I(96, 80) };
+        first.SetShaderParameter("shift", new Vector2i(2, 0));
+        var window = new Window { CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, Size = new Vector2i(96, 80) };
         var frames = 0;
         var left = new CanvasNode { Name = "left", Material = first, DrawAction = n => n.DrawRect(new Rect(0, 0, 40, 48), Colors.White) };
         var right = new CanvasNode { Name = "right", Material = second, DrawAction = n => n.DrawRect(new Rect(48, 0, 40, 48), Colors.White) };

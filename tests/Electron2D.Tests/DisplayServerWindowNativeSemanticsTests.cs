@@ -17,7 +17,7 @@ internal static class DisplayServerWindowNativeSemanticsTests
             "Wayland decorated size uses the client size when server decorations cannot be measured.");
         ExpectNotSupported(() => display.WindowGetPosition());
         ExpectNotSupported(() => display.WindowGetPositionWithDecorations());
-        ExpectNotSupported(() => display.WindowSetPosition(Vector2I.Zero));
+        ExpectNotSupported(() => display.WindowSetPosition(Vector2i.Zero));
         var currentScreen = display.WindowGetCurrentScreen();
         display.WindowSetCurrentScreen(currentScreen);
         Check(display.WindowGetCurrentScreen() == currentScreen,
@@ -34,47 +34,47 @@ internal static class DisplayServerWindowNativeSemanticsTests
         var originalMaximum = display.WindowGetMaxSize();
         try
         {
-            display.WindowSetMaxSize(new Vector2I(640, 480));
-            display.WindowSetMinSize(new Vector2I(96, 72));
-            Check(display.WindowGetMaxSize() == new Vector2I(640, 480) &&
-                  display.WindowGetMinSize() == new Vector2I(96, 72),
+            display.WindowSetMaxSize(new Vector2i(640, 480));
+            display.WindowSetMinSize(new Vector2i(96, 72));
+            Check(display.WindowGetMaxSize() == new Vector2i(640, 480) &&
+                  display.WindowGetMinSize() == new Vector2i(96, 72),
                 "Wayland minimum and maximum size requests are observable.");
 
-            ExpectOutOfRange(() => display.WindowSetMaxSize(new Vector2I(95, 480)));
-            ExpectOutOfRange(() => display.WindowSetMinSize(new Vector2I(641, 72)));
-            Check(display.WindowGetMaxSize() == new Vector2I(640, 480) &&
-                  display.WindowGetMinSize() == new Vector2I(96, 72),
+            ExpectOutOfRange(() => display.WindowSetMaxSize(new Vector2i(95, 480)));
+            ExpectOutOfRange(() => display.WindowSetMinSize(new Vector2i(641, 72)));
+            Check(display.WindowGetMaxSize() == new Vector2i(640, 480) &&
+                  display.WindowGetMinSize() == new Vector2i(96, 72),
                 "Rejected size limits preserve the previous native constraints.");
 
-            display.WindowSetMaxSize(new Vector2I(0, 480));
-            display.WindowSetMinSize(new Vector2I(96, 0));
-            Check(display.WindowGetMaxSize() == new Vector2I(0, 480) &&
-                  display.WindowGetMinSize() == new Vector2I(96, 0),
+            display.WindowSetMaxSize(new Vector2i(0, 480));
+            display.WindowSetMinSize(new Vector2i(96, 0));
+            Check(display.WindowGetMaxSize() == new Vector2i(0, 480) &&
+                  display.WindowGetMinSize() == new Vector2i(96, 0),
                 "Each zero size-limit component leaves only its own axis unbounded.");
-            display.WindowSetMaxSize(new Vector2I(640, 480));
-            display.WindowSetMinSize(new Vector2I(96, 72));
+            display.WindowSetMaxSize(new Vector2i(640, 480));
+            display.WindowSetMinSize(new Vector2i(96, 72));
 
             display.WindowSetTitle("Electron2D Wayland window semantics");
             Check(display.WindowGetTitle() == SDL.GetWindowTitle(window),
                 "The title getter observes the native title change.");
-            display.WindowSetSize(new Vector2I(400, 300));
+            display.WindowSetSize(new Vector2i(400, 300));
             display.ProcessEvents();
             Check(SDL.GetWindowSizeInPixels(window, out var width, out var height) &&
-                  display.WindowGetSize() == new Vector2I(width, height) &&
-                  display.WindowGetSizeWithDecorations() == new Vector2I(width, height),
+                  display.WindowGetSize() == new Vector2i(width, height) &&
+                  display.WindowGetSizeWithDecorations() == new Vector2i(width, height),
                 "Client and decorated size getters observe the same Wayland pixel size.");
-            display.WindowSetSize(new Vector2I(0, -3));
+            display.WindowSetSize(new Vector2i(0, -3));
             display.ProcessEvents();
             Check(display.WindowGetSize() is { X: >= 1, Y: >= 1 },
                 "Wayland clamps nonpositive resize requests before applying native size limits.");
 
-            display.WindowSetMaxSize(Vector2I.Zero);
-            Check(display.WindowGetMaxSize() == Vector2I.Zero,
+            display.WindowSetMaxSize(Vector2i.Zero);
+            Check(display.WindowGetMaxSize() == Vector2i.Zero,
                 "A zero maximum clears the native limit.");
         }
         finally
         {
-            display.WindowSetMaxSize(Vector2I.Zero);
+            display.WindowSetMaxSize(Vector2i.Zero);
             display.WindowSetMinSize(originalMinimum);
             display.WindowSetMaxSize(originalMaximum);
             display.WindowSetTitle(originalTitle);

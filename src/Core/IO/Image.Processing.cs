@@ -330,7 +330,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">Either image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">Either image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the copy commits.</exception>
-    public void BlitRect(Image source, RectI sourceRect, Vector2I destination) =>
+    public void BlitRect(Image source, RectI sourceRect, Vector2i destination) =>
         Composite(source, null, sourceRect, destination, blend: false);
 
     /// <summary>Alpha-composites a clipped source rectangle over this image.</summary>
@@ -342,7 +342,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">Either image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">Either image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the blend commits.</exception>
-    public void BlendRect(Image source, RectI sourceRect, Vector2I destination) =>
+    public void BlendRect(Image source, RectI sourceRect, Vector2i destination) =>
         Composite(source, null, sourceRect, destination, blend: true);
 
     /// <summary>Copies source pixels whose corresponding mask alpha is nonzero.</summary>
@@ -355,7 +355,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">An image is empty or block-compressed, or the mask has no alpha channel.</exception>
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the copy commits.</exception>
-    public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination) =>
+    public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination) =>
         Composite(source, mask, sourceRect, destination, blend: false);
 
     /// <summary>Alpha-composites source pixels whose corresponding mask alpha is nonzero.</summary>
@@ -368,7 +368,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">An image is empty or block-compressed, or source or mask lacks alpha.</exception>
     /// <exception cref="ObjectDisposedException">An image is disposing or disposed.</exception>
     /// <exception cref="Exception">A change subscriber throws after the blend commits.</exception>
-    public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination) =>
+    public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination) =>
         Composite(source, mask, sourceRect, destination, blend: true);
 
     /// <summary>Adjusts RGB brightness, contrast, and saturation in every stored level.</summary>
@@ -639,7 +639,7 @@ public sealed partial class Image
         return new ImageMetrics(maximum, mean, meanSquared, rootMeanSquared, peak);
     }
 
-    private void Composite(Image source, Image? mask, RectI sourceRect, Vector2I destination, bool blend)
+    private void Composite(Image source, Image? mask, RectI sourceRect, Vector2i destination, bool blend)
     {
         ArgumentNullException.ThrowIfNull(source);
         var sourceState = source.RequireReadablePixels();

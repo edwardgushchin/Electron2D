@@ -28,7 +28,7 @@ using CanvasBackend backend = new GpuCanvasBackend(nativeWindow);
 | `internal GpuCanvasBackend(SafeHandle window)` | [Construction](#construction) |
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
-| `internal override Vector2I GetPixelSize()` | [Pixel size](#pixel-size) |
+| `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
 | `internal override void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
 | `internal override Image Readback()` | [Readback](#readback) |
 | `public override void Dispose()` | [Disposal](#disposal) |
@@ -55,7 +55,7 @@ SDL device driver name captured after creation; unknown if SDL supplies no name.
 
 ### Pixel size
 
-`internal override Vector2I GetPixelSize()`
+`internal override Vector2i GetPixelSize()`
 
 Uses the window physical pixel dimensions.
 

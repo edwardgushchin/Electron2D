@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 ```csharp
 using var mask = new BitMap();
-mask.Create(new Vector2I(8, 8));
+mask.Create(new Vector2i(8, 8));
 mask.SetBitRect(new RectI(2, 2, 4, 4), true);
 Vector2[][] outlines = mask.OpaqueToPolygons(new RectI(0, 0, 8, 8));
 using Image preview = mask.ConvertToImage();
@@ -32,16 +32,16 @@ using Image preview = mask.ConvertToImage();
 
 | Member | Contract |
 | --- | --- |
-| `public Vector2I GetSize()` | Returns dimensions. |
-| `public void Create(Vector2I size)` | Replaces the mask with false bits. |
+| `public Vector2i GetSize()` | Returns dimensions. |
+| `public void Create(Vector2i size)` | Replaces the mask with false bits. |
 | `public void CreateFromImageAlpha(Image image, float threshold = 0.1f)` | Copies alpha classification from a source image. |
 | `public bool GetBit(int x, int y)` | Reads one bit. |
-| `public bool GetBitv(Vector2I position)` | Reads one bit by point. |
+| `public bool GetBitv(Vector2i position)` | Reads one bit by point. |
 | `public void SetBit(int x, int y, bool bit)` | Writes one bit. |
-| `public void SetBitv(Vector2I position, bool bit)` | Writes one bit by point. |
+| `public void SetBitv(Vector2i position, bool bit)` | Writes one bit by point. |
 | `public void SetBitRect(RectI rect, bool bit)` | Writes a clipped rectangle. |
 | `public int GetTrueBitCount()` | Counts set bits. |
-| `public void Resize(Vector2I newSize)` | Nearest-neighbor resize. |
+| `public void Resize(Vector2i newSize)` | Nearest-neighbor resize. |
 | `public Image ConvertToImage()` | Creates independent L8 black/white pixels. |
 | `public void GrowMask(int pixels, RectI rect)` | Circular dilation or erosion within a rectangle. |
 | `public Vector2[][] OpaqueToPolygons(RectI rect, float epsilon = 2f)` | Extracts and reduces mask contours. |
@@ -58,7 +58,7 @@ using Image preview = mask.ConvertToImage();
 
 ### GetSize
 
-Returns `Vector2I(width, height)`; a default instance is `(0, 0)`.
+Returns `Vector2i(width, height)`; a default instance is `(0, 0)`.
 
 ### Create
 
@@ -70,11 +70,11 @@ Duplicates `image`, converts the copy to LA8 and marks each pixel true only when
 
 ### GetBit and GetBitv
 
-Read at zero-based integer coordinates. An invalid coordinate throws `ArgumentOutOfRangeException`, the typed C# adaptation of the upstream error-return path. `GetBitv` uses `Vector2I`.
+Read at zero-based integer coordinates. An invalid coordinate throws `ArgumentOutOfRangeException`, the typed C# adaptation of the upstream error-return path. `GetBitv` uses `Vector2i`.
 
 ### SetBit and SetBitv
 
-Write one pixel; `SetBitv` uses `Vector2I`. An invalid coordinate throws without mutation. A successful value change raises `Changed` after the write.
+Write one pixel; `SetBitv` uses `Vector2i`. An invalid coordinate throws without mutation. A successful value change raises `Changed` after the write.
 
 ### SetBitRect
 

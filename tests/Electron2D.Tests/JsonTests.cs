@@ -253,9 +253,9 @@ internal static class JsonTests
 
         Check(RoundTrip(true) && RoundTrip(123) && RoundTrip(123L) && RoundTrip(1.25f) &&
               RoundTrip(1.2345678901234567d) && RoundTrip("text") &&
-              RoundTrip(new Vector2(2f, 5f)) && RoundTrip(new Vector2I(2, 5)) &&
-              RoundTrip(new Vector3(1f, 2f, 3f)) && RoundTrip(new Vector3I(1, 2, 3)) &&
-              RoundTrip(new Vector4(1f, 2f, 3f, 4f)) && RoundTrip(new Vector4I(1, 2, 3, 4)) &&
+              RoundTrip(new Vector2(2f, 5f)) && RoundTrip(new Vector2i(2, 5)) &&
+              RoundTrip(new Vector3(1f, 2f, 3f)) && RoundTrip(new Vector3i(1, 2, 3)) &&
+              RoundTrip(new Vector4(1f, 2f, 3f, 4f)) && RoundTrip(new Vector4i(1, 2, 3, 4)) &&
               RoundTrip(new Color(0.2f, 0.4f, 0.6f, 1f)) &&
               RoundTrip(new Rect(1f, 2f, 3f, 4f)) && RoundTrip(new RectI(1, 2, 3, 4)) &&
               RoundTrip(new Transform(0f, new Vector2(2f, 3f))),

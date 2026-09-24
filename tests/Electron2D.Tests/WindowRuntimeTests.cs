@@ -30,10 +30,10 @@ internal static class WindowRuntimeTests
             }
             using (var detached = new Window())
             {
-                Check(detached.Size == new Vector2I(100, 100) && detached.Title == "" && detached.Visible &&
-                      detached.MinSize == Vector2I.Zero && detached.MaxSize == Vector2I.Zero && detached.GetWindowID() == -1,
+                Check(detached.Size == new Vector2i(100, 100) && detached.Title == "" && detached.Visible &&
+                      detached.MinSize == Vector2i.Zero && detached.MaxSize == Vector2i.Zero && detached.GetWindowID() == -1,
                     "Window defaults and detached identity are explicit.");
-                Reject<ArgumentOutOfRangeException>(() => detached.Size = Vector2I.Zero);
+                Reject<ArgumentOutOfRangeException>(() => detached.Size = Vector2i.Zero);
                 Reject<ArgumentException>(() => detached.Title = "bad\0title");
                 Reject<InvalidOperationException>(() => detached.GrabFocus());
                 Reject<InvalidOperationException>(() => detached.IsInputHandled());
@@ -50,10 +50,10 @@ internal static class WindowRuntimeTests
                         "Capture rejects activation before native acquisition or ownership transfer.");
                 }
                 finally { Entity.EndSceneCapture(captured); }
-                detached.MinSize = new Vector2I(70, 60);
-                Reject<ArgumentOutOfRangeException>(() => detached.MaxSize = new Vector2I(69, 80));
-                Check(detached.MaxSize == Vector2I.Zero, "Rejected constraints preserve state.");
-                detached.MaxSize = new Vector2I(400, 300);
+                detached.MinSize = new Vector2i(70, 60);
+                Reject<ArgumentOutOfRangeException>(() => detached.MaxSize = new Vector2i(69, 80));
+                Check(detached.MaxSize == Vector2i.Zero, "Rejected constraints preserve state.");
+                detached.MaxSize = new Vector2i(400, 300);
                 detached.Title = "Packed window";
                 using var packed = new PackedScene();
                 packed.Pack(detached);
@@ -213,13 +213,13 @@ internal static class WindowRuntimeTests
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
             {
                 window = NewWindow();
-                window.Position = Vector2I.Zero;
+                window.Position = Vector2i.Zero;
                 Reject<NotSupportedException>(() => engine.Run(window));
                 AssertReleased(window);
             }
 
             // A second native owner must survive a rejected startup and remain usable.
-            using (var existing = DisplayServer.Open("Existing owner", new Vector2I(100, 100), hidden: true))
+            using (var existing = DisplayServer.Open("Existing owner", new Vector2i(100, 100), hidden: true))
             {
                 window = NewWindow();
                 Reject<InvalidOperationException>(() => engine.Run(window));
@@ -242,7 +242,7 @@ internal static class WindowRuntimeTests
         }
     }
 
-    private static Window NewWindow() => new() { Title = "Window runtime checks", Size = new Vector2I(160, 100) };
+    private static Window NewWindow() => new() { Title = "Window runtime checks", Size = new Vector2i(160, 100) };
 
     private static void CheckNativeControls()
     {
@@ -267,7 +267,7 @@ internal static class WindowRuntimeTests
                 Reject<ArgumentOutOfRangeException>(() => template.CurrentScreen = -1);
                 Reject<InvalidOperationException>(template.MoveToCenter);
                 Reject<InvalidOperationException>(() => template.SetIMEActive(true));
-                Check(template.GetSizeWithDecorations() == template.Size && template.GetPositionWithDecorations() == Vector2I.Zero,
+                Check(template.GetSizeWithDecorations() == template.Size && template.GetPositionWithDecorations() == Vector2i.Zero,
                     "Detached decoration geometry needs no native owner.");
                 template.CurrentScreen = 999;
                 using var packed = new PackedScene();
@@ -309,7 +309,7 @@ internal static class WindowRuntimeTests
                     Check(!window.Unresizable, "Off-thread requests preserve configured state.");
                     window.SetIMEActive(true);
                     Check(SDL.TextInputActive(native), "Window activates native text input.");
-                    window.SetIMEPosition(new Vector2I(12, 18));
+                    window.SetIMEPosition(new Vector2i(12, 18));
                     window.SetIMEActive(false);
                     Check(!SDL.TextInputActive(native), "Window deactivates native text input.");
                     Reject<ArgumentOutOfRangeException>(() => window.SetTaskbarProgressValue(float.NaN));

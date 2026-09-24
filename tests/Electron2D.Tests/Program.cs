@@ -23,7 +23,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_NATIVE") == "1")
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINTER_PIXELS") == "1")
 {
-    using var display = DisplayServer.Open("Pointer pixel checks", new Vector2I(320, 240));
+    using var display = DisplayServer.Open("Pointer pixel checks", new Vector2i(320, 240));
     DisplayServerPointerPixelNativeTests.Run(display);
     Console.WriteLine("Pointer pixel native checks passed.");
     return;
@@ -31,7 +31,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_POINTER_PIXELS") == "1")
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOUCH_INPUT") == "1")
 {
-    using var display = DisplayServer.Open("Touch input checks", new Vector2I(320, 240));
+    using var display = DisplayServer.Open("Touch input checks", new Vector2i(320, 240));
     DisplayServerTouchNativeTests.Run(display);
     return;
 }
@@ -193,11 +193,11 @@ VerifyColors();
 SpriteTests.Run();
 VerifyImages();
 VerifyVector2Values();
-VerifyVector2IValues();
+VerifyVector2iValues();
 VerifyVector3Values();
-VerifyVector3IValues();
+VerifyVector3iValues();
 VerifyVector4Values();
-VerifyVector4IValues();
+VerifyVector4iValues();
 VerifyRectangles();
 VerifyIntegerRectangles();
 VerifyTransforms();
@@ -240,7 +240,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY") == "1")
     VerifyDisplayServerPointerModifiers();
     DisplayServerDialogTests.Run();
     DisplayServerClipboardTests.Run();
-    using (var display = DisplayServer.Open("Icon checks", new Vector2I(64, 64), hidden: true))
+    using (var display = DisplayServer.Open("Icon checks", new Vector2i(64, 64), hidden: true))
         DisplayServerIconTests.Run(display);
     WindowRuntimeTests.Run();
 }
@@ -250,10 +250,10 @@ Console.WriteLine("Electron2D checks passed.");
 static void VerifyDisplayServer()
 {
     Require(DisplayServer.Instance is null, "No display server is open before initialization.");
-    Expect<ArgumentOutOfRangeException>(() => DisplayServer.Open("invalid", new Vector2I(0, 40)),
+    Expect<ArgumentOutOfRangeException>(() => DisplayServer.Open("invalid", new Vector2i(0, 40)),
         "A native window requires positive dimensions.");
 
-    using (var display = DisplayServer.Open("Initial", new Vector2I(320, 240), hidden: true))
+    using (var display = DisplayServer.Open("Initial", new Vector2i(320, 240), hidden: true))
     {
         Require(ReferenceEquals(DisplayServer.Instance, display), "Opening registers the process display server.");
         var expectedBackendName = SDL3.SDL.GetCurrentVideoDriver() switch
@@ -355,8 +355,8 @@ static void VerifyDisplayServer()
                 display.ScreenGetSize(DisplayServer.ScreenWithKeyboardFocus).X > 0 &&
                 display.ScreenGetSize(DisplayServer.ScreenWithMouseFocus).X > 0,
             "Negative screen selectors resolve to connected displays.");
-        Require(display.ScreenGetPosition(int.MaxValue) == Vector2I.Zero &&
-                display.ScreenGetSize(int.MaxValue) == Vector2I.Zero &&
+        Require(display.ScreenGetPosition(int.MaxValue) == Vector2i.Zero &&
+                display.ScreenGetSize(int.MaxValue) == Vector2i.Zero &&
                 display.ScreenGetScale(int.MaxValue) == 1f &&
                 display.ScreenGetRefreshRate(int.MaxValue) == -1f,
             "Invalid screen queries return their documented fallbacks.");
@@ -368,19 +368,19 @@ static void VerifyDisplayServer()
                 DisplayServer.InvalidScreen &&
                 display.GetScreenFromRect(new Rect(float.NaN, 0, 1, 1)) == DisplayServer.InvalidScreen,
             "Screen overlap requires at least one whole pixel of finite intersection.");
-        Require(display.WindowGetTitle() == "Initial" && display.WindowGetSize() == new Vector2I(320, 240),
+        Require(display.WindowGetTitle() == "Initial" && display.WindowGetSize() == new Vector2i(320, 240),
             "The native window exposes its initial title and logical size.");
-        Require(display.WindowGetMinSize() == new Vector2I(64, 64),
+        Require(display.WindowGetMinSize() == new Vector2i(64, 64),
             "The main window starts with its documented minimum size.");
         display.WindowSetTitle("Updated");
         Expect<ArgumentNullException>(() => display.WindowSetTitle(null!),
             "A null title is rejected without changing the native title.");
         Expect<ArgumentOutOfRangeException>(() => display.WindowSetTitle("Wrong window", 1),
             "A title request for an unknown window is rejected.");
-        display.WindowSetSize(new Vector2I(400, 300));
-        Require(display.WindowGetTitle() == "Updated" && display.WindowGetSize() == new Vector2I(400, 300),
+        display.WindowSetSize(new Vector2i(400, 300));
+        Require(display.WindowGetTitle() == "Updated" && display.WindowGetSize() == new Vector2i(400, 300),
             "Native title and size mutations are observable.");
-        Expect<InvalidOperationException>(() => DisplayServer.Open("duplicate", new Vector2I(100, 100)),
+        Expect<InvalidOperationException>(() => DisplayServer.Open("duplicate", new Vector2i(100, 100)),
             "Only one native display server can own the process window.");
         Expect<ArgumentOutOfRangeException>(() => display.WindowGetSize(1),
             "Unknown window identifiers fail explicitly.");
@@ -504,7 +504,7 @@ static void VerifyDisplayServer()
             "The mouse-mode terminal marker cannot be applied.");
         Require(!display.HasFeature(DisplayServer.Feature.MouseWarp),
             "The dummy backend does not advertise pointer warping.");
-        Expect<NotSupportedException>(() => display.WarpMouse(new Vector2I(20, 20)),
+        Expect<NotSupportedException>(() => display.WarpMouse(new Vector2i(20, 20)),
             "An unavailable pointer warp rejects use before native mutation.");
 
         using (var icon = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
@@ -513,7 +513,7 @@ static void VerifyDisplayServer()
             Expect<InvalidOperationException>(() => display.WindowSetIcon(icon),
                 "The dummy video backend reports unsupported icon installation explicitly.");
             Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(icon,
-                hotspot: new Vector2I(2, 0)), "A cursor hotspot must remain inside its image.");
+                hotspot: new Vector2i(2, 0)), "A cursor hotspot must remain inside its image.");
         }
 
         var windows = SDL3.SDL.GetWindows(out var windowCount);
@@ -649,8 +649,8 @@ static void VerifyDisplayServer()
 
         display.ProcessEvents();
         var initialRect = new RectI(display.WindowGetPosition(), display.WindowGetSize());
-        var movedPosition = initialRect.Position + new Vector2I(17, 19);
-        var resizedSize = initialRect.Size + new Vector2I(23, 29);
+        var movedPosition = initialRect.Position + new Vector2i(17, 19);
+        var resizedSize = initialRect.Size + new Vector2i(23, 29);
         var rectDelivery = new List<RectI>();
         var rectOrder = new List<string>();
         Action<RectI> rectChanged = rect =>
@@ -723,10 +723,10 @@ static void VerifyDisplayServer()
                 catch (AggregateException errors)
                 {
                     Require(errors.InnerExceptions.Count == 1 && rectDelivery.Count == 4 &&
-                            rectDelivery[2] == new RectI(new Vector2I(movedPosition.X + 5, movedPosition.Y + 7),
+                            rectDelivery[2] == new RectI(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
                                 resizedSize) &&
-                            rectDelivery[3] == new RectI(new Vector2I(movedPosition.X + 5, movedPosition.Y + 7),
-                                new Vector2I(resizedSize.X + 11, resizedSize.Y + 13)) &&
+                            rectDelivery[3] == new RectI(new Vector2i(movedPosition.X + 5, movedPosition.Y + 7),
+                                new Vector2i(resizedSize.X + 11, resizedSize.Y + 13)) &&
                             rectOrder.SequenceEqual(["rect", "quit", "rect", "rect", "rect", "quit"]),
                         "The rectangle cache commits before callbacks, and callback failure does not stop later events.");
                 }
@@ -846,8 +846,8 @@ static void VerifyDisplayServer()
     }
 
     Require(DisplayServer.Instance is null, "Disposal unregisters the native display server.");
-    using var reopened = DisplayServer.Open("Reopened", new Vector2I(120, 80), hidden: true);
-    Require(reopened.WindowGetSize() == new Vector2I(120, 80),
+    using var reopened = DisplayServer.Open("Reopened", new Vector2i(120, 80), hidden: true);
+    Require(reopened.WindowGetSize() == new Vector2i(120, 80),
         "The native video subsystem can reopen after deterministic disposal.");
     reopened.Dispose();
     Expect<ObjectDisposedException>(() => reopened.WindowGetNativeHandle(DisplayServer.HandleType.WindowHandle),
@@ -1531,7 +1531,7 @@ static void VerifyImages()
 
     using (var empty = new Image())
     {
-        Require(empty.IsEmpty && empty.Width == 0 && empty.Height == 0 && empty.Size == Vector2I.Zero &&
+        Require(empty.IsEmpty && empty.Width == 0 && empty.Height == 0 && empty.Size == Vector2i.Zero &&
                 empty.PixelFormat == Image.Format.L8 && !empty.HasMipmaps && empty.MipmapCount == 0 &&
                 empty.DataSize == 0 && empty.GetData().Length == 0 && empty.IsInvisible &&
                 empty.DetectAlpha() == Image.AlphaMode.None,
@@ -1605,7 +1605,7 @@ static void VerifyImages()
             ? new Color(10f, 20f, 30f, 40f)
             : new Color(0.2f, 0.4f, 0.6f, 0.8f);
         image.SetPixel(1, 2, sample);
-        var decoded = image.GetPixel(new Vector2I(1, 2));
+        var decoded = image.GetPixel(new Vector2i(1, 2));
         Require(float.IsFinite(decoded.R) && float.IsFinite(decoded.G) && float.IsFinite(decoded.B) && float.IsFinite(decoded.A),
             $"{pair.Key} pixel encoding must produce finite decoded components.");
     }
@@ -1708,7 +1708,7 @@ static void VerifyImages()
                 integerAlpha.DetectUsedChannels() == Image.UsedChannels.Rgba,
             "Integer alpha detection must use the 16-bit opaque endpoint, not normalized one.");
         integerSource.Fill(new Color(1000f, 0f, 0f, 32768f));
-        integerAlpha.BlendRect(integerSource, new RectI(0, 0, 1, 1), new Vector2I(1, 0));
+        integerAlpha.BlendRect(integerSource, new RectI(0, 0, 1, 1), new Vector2i(1, 0));
         var mixed = integerAlpha.GetPixel(1, 0);
         Require(mixed.R is >= 499f and <= 501f && mixed.B is >= 499f and <= 501f && mixed.A == 65535f,
             "Integer-alpha compositing must normalize only alpha during straight-alpha mixing.");
@@ -1728,12 +1728,12 @@ static void VerifyImages()
         image.Rotate180();
         Require(image.GetPixel(1, 1) == Colors.White, "Rotate180 must reverse both axes.");
         image.Rotate90(ClockDirection.Clockwise);
-        Require(image.Size == new Vector2I(2, 2), "Rotate90 must swap dimensions while preserving pixel count.");
+        Require(image.Size == new Vector2i(2, 2), "Rotate90 must swap dimensions while preserving pixel count.");
         Expect<ArgumentOutOfRangeException>(() => image.Rotate90((ClockDirection)7),
             "Rotate90 must reject an undefined direction.");
 
         using var region = image.GetRegion(new RectI(1, 1, 4, 4));
-        Require(region.Size == Vector2I.One && region.GetPixel(0, 0) == image.GetPixel(1, 1),
+        Require(region.Size == Vector2i.One && region.GetPixel(0, 0) == image.GetPixel(1, 1),
             "GetRegion must return only the clipped source intersection.");
         using var emptyRegion = image.GetRegion(new RectI(9, 9, 1, 1));
         Require(emptyRegion.IsEmpty, "GetRegion must return an empty image for a disjoint rectangle.");
@@ -1743,10 +1743,10 @@ static void VerifyImages()
     {
         rectangular.SetPixel(0, 0, new Color(1f, 0f, 0f));
         rectangular.Rotate90(ClockDirection.Clockwise);
-        Require(rectangular.Size == new Vector2I(2, 3) && rectangular.GetPixel(1, 0).R == 1f,
+        Require(rectangular.Size == new Vector2i(2, 3) && rectangular.GetPixel(1, 0).R == 1f,
             "Clockwise rotation must map a rectangular image's top-left pixel to its top-right corner.");
         rectangular.Rotate90(ClockDirection.CounterClockwise);
-        Require(rectangular.Size == new Vector2I(3, 2) && rectangular.GetPixel(0, 0).R == 1f,
+        Require(rectangular.Size == new Vector2i(3, 2) && rectangular.GetPixel(0, 0).R == 1f,
             "Counterclockwise rotation must invert a prior clockwise quarter turn.");
     }
 
@@ -1755,20 +1755,20 @@ static void VerifyImages()
         using var image = Image.CreateEmpty(3, 2, true, Image.Format.Rgba8);
         image.Fill(Colors.Red);
         image.Resize(7, 5, interpolation);
-        Require(image.Size == new Vector2I(7, 5) && image.HasMipmaps && ColorNearlyEqual(image.GetPixel(6, 4), Colors.Red, 0.01f),
+        Require(image.Size == new Vector2i(7, 5) && image.HasMipmaps && ColorNearlyEqual(image.GetPixel(6, 4), Colors.Red, 0.01f),
             $"{interpolation} resizing must preserve dimensions, mipmap policy, and a constant field.");
     }
 
     using (var image = Image.CreateEmpty(3, 5, false, Image.Format.Rgba8))
     {
         image.ResizeToPowerOfTwo();
-        Require(image.Size == new Vector2I(4, 8), "ResizeToPowerOfTwo must round dimensions independently.");
+        Require(image.Size == new Vector2i(4, 8), "ResizeToPowerOfTwo must round dimensions independently.");
         image.ResizeToPowerOfTwo(square: true, Image.Interpolation.Nearest);
-        Require(image.Size == new Vector2I(8, 8), "Square power-of-two resizing must use the larger dimension.");
+        Require(image.Size == new Vector2i(8, 8), "Square power-of-two resizing must use the larger dimension.");
         image.ShrinkX2();
-        Require(image.Size == new Vector2I(4, 4), "ShrinkX2 must halve both dimensions.");
+        Require(image.Size == new Vector2i(4, 4), "ShrinkX2 must halve both dimensions.");
         image.Crop(6, 3);
-        Require(image.Size == new Vector2I(6, 3) && image.GetPixel(5, 2) == default,
+        Require(image.Size == new Vector2i(6, 3) && image.GetPixel(5, 2) == default,
             "Crop must fill expanded pixels with transparent black.");
     }
 
@@ -1778,7 +1778,7 @@ static void VerifyImages()
             "Crop must reject byte-count overflow before changing state.");
         Expect<ArgumentOutOfRangeException>(() => largeFormat.Resize(16_384, 16_384),
             "Resize must reject byte-count overflow before resampling.");
-        Require(largeFormat.Size == Vector2I.One,
+        Require(largeFormat.Size == Vector2i.One,
             "Failed size changes must preserve the original image.");
     }
 
@@ -1790,21 +1790,21 @@ static void VerifyImages()
         source.Fill(new Color(1f, 0f, 0f, 0.5f));
         mask.Fill(new Color(1f, 1f, 1f, 0f));
         mask.SetPixel(1, 0, Colors.White);
-        destination.BlendRectMask(source, mask, new RectI(0, 0, 2, 2), new Vector2I(1, 0));
+        destination.BlendRectMask(source, mask, new RectI(0, 0, 2, 2), new Vector2i(1, 0));
         Require(ColorNearlyEqual(destination.GetPixel(2, 0), new Color(0.5f, 0f, 0.5f, 1f), 0.01f) &&
                 destination.GetPixel(1, 0).B == 1f && destination.HasMipmaps,
             "Masked blending must honor mask alpha, clipping, straight alpha, and mipmap rebuilding.");
-        destination.BlitRectMask(source, mask, new RectI(0, 0, 2, 2), Vector2I.Zero);
+        destination.BlitRectMask(source, mask, new RectI(0, 0, 2, 2), Vector2i.Zero);
         Require(destination.GetPixel(1, 0).R == 1f && destination.GetPixel(0, 0).B == 1f,
             "Masked blitting must copy only selected source pixels without blending.");
-        destination.BlendRect(source, new RectI(0, 0, 1, 1), Vector2I.Zero);
+        destination.BlendRect(source, new RectI(0, 0, 1, 1), Vector2i.Zero);
         Require(destination.GetPixel(0, 0).R > 0f && destination.GetPixel(0, 0).B > 0f,
             "Unmasked blending must composite straight-alpha source and destination colors.");
         source.Fill(Colors.Green);
-        destination.BlitRect(source, new RectI(0, 0, 2, 2), new Vector2I(-1, 0));
+        destination.BlitRect(source, new RectI(0, 0, 2, 2), new Vector2i(-1, 0));
         Require(destination.GetPixel(0, 0).G > 0f, "BlitRect must clip negative destinations while keeping source alignment.");
         using var wrongFormat = Image.CreateEmpty(1, 1, false, Image.Format.Rgb8);
-        Expect<ArgumentException>(() => destination.BlitRect(wrongFormat, new RectI(0, 0, 1, 1), Vector2I.Zero),
+        Expect<ArgumentException>(() => destination.BlitRect(wrongFormat, new RectI(0, 0, 1, 1), Vector2i.Zero),
             "BlitRect must reject format mismatch.");
     }
 
@@ -2048,14 +2048,14 @@ static void VerifyVector2Values()
             value.Equals((object)new Vector2(3f, 4f)) && value.GetHashCode() == new Vector2(3f, 4f).GetHashCode(),
         "Vector2 equality, hashing, and lexicographic ordering must be stable.");
 
-    var integer = new Vector2I(7, -8);
+    var integer = new Vector2i(7, -8);
     Require(new Vector2(integer) == new Vector2(7f, -8f) && (Vector2)integer == new Vector2(7f, -8f) &&
-            (Vector2I)new Vector2(7.9f, -8.9f) == integer,
-        "Vector2 and Vector2I conversions must widen implicitly and truncate explicitly.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector2I)new Vector2(float.NaN, 0f),
-        "Vector2 to Vector2I conversion must reject non-finite values.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector2I)new Vector2(2147483648f, 0f),
-        "Vector2 to Vector2I conversion must reject out-of-range values.");
+            (Vector2i)new Vector2(7.9f, -8.9f) == integer,
+        "Vector2 and Vector2i conversions must widen implicitly and truncate explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector2i)new Vector2(float.NaN, 0f),
+        "Vector2 to Vector2i conversion must reject non-finite values.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector2i)new Vector2(2147483648f, 0f),
+        "Vector2 to Vector2i conversion must reject out-of-range values.");
     VerifyInvariantString(() => new Vector2(1.5f, -2.5f).ToString("F1"), "(1.5, -2.5)", "Vector2");
     Expect<FormatException>(() => _ = value.ToString("Q"), "Vector2 must reject invalid numeric formats.");
 
@@ -2071,100 +2071,100 @@ static void VerifyVector2Values()
     Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject unknown Vector2 fields.");
 }
 
-static void VerifyVector2IValues()
+static void VerifyVector2iValues()
 {
-    Require(Marshal.SizeOf<Vector2I>() == 8 && typeof(Vector2I).IsDefined(typeof(SerializableAttribute), false) &&
-            Vector2I.MinValue.X == int.MinValue && Vector2I.MaxValue.Y == int.MaxValue &&
-            Vector2I.Zero == default && Vector2I.One == new Vector2I(1, 1) &&
-            Vector2I.Up == new Vector2I(0, -1) && Vector2I.Down == new Vector2I(0, 1) &&
-            Vector2I.Left == new Vector2I(-1, 0) && Vector2I.Right == new Vector2I(1, 0),
-        "Vector2I layout and constants must be stable.");
-    var value = new Vector2I(3, 4);
+    Require(Marshal.SizeOf<Vector2i>() == 8 && typeof(Vector2i).IsDefined(typeof(SerializableAttribute), false) &&
+            Vector2i.MinValue.X == int.MinValue && Vector2i.MaxValue.Y == int.MaxValue &&
+            Vector2i.Zero == default && Vector2i.One == new Vector2i(1, 1) &&
+            Vector2i.Up == new Vector2i(0, -1) && Vector2i.Down == new Vector2i(0, 1) &&
+            Vector2i.Left == new Vector2i(-1, 0) && Vector2i.Right == new Vector2i(1, 0),
+        "Vector2i layout and constants must be stable.");
+    var value = new Vector2i(3, 4);
     var (x, y) = value;
     Require(value[0] == 3 && value[1] == 4 && x == 3 && y == 4 && value.LengthSquared() == 25 && value.Length() == 5f &&
-            value.DistanceSquaredTo(Vector2I.Zero) == 25 && value.DistanceTo(Vector2I.Zero) == 5f && value.Aspect() == 0.75f,
-        "Vector2I indexing, deconstruction, length, distance, and aspect must be stable.");
+            value.DistanceSquaredTo(Vector2i.Zero) == 25 && value.DistanceTo(Vector2i.Zero) == 5f && value.Aspect() == 0.75f,
+        "Vector2i indexing, deconstruction, length, distance, and aspect must be stable.");
     var copy = value;
     copy[0] = -7;
     copy[1] = 9;
-    Require(copy == new Vector2I(-7, 9) && value == new Vector2I(3, 4),
-        "Vector2I component writes must not mutate a copied value.");
-    Expect<ArgumentOutOfRangeException>(() => _ = value[2], "Vector2I must reject indices after Y.");
-    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector2I must reject negative indices.");
-    Expect<ArgumentOutOfRangeException>(() => copy[2] = 1, "Vector2I must reject out-of-range component writes.");
-    Require(float.IsPositiveInfinity(new Vector2I(1, 0).Aspect()) && float.IsNaN(Vector2I.Zero.Aspect()),
-        "Vector2I aspect must preserve IEEE zero-division results.");
-    var large = new Vector2I(50_000, 0);
-    Require(typeof(Vector2I).GetMethod(nameof(Vector2I.LengthSquared))!.ReturnType == typeof(long) &&
-            large.LengthSquared() == 2_500_000_000L && large.DistanceSquaredTo(Vector2I.Zero) == 2_500_000_000L &&
-            large.Length() == 50_000f && large.DistanceTo(Vector2I.Zero) == 50_000f,
-        "Vector2I norms must widen before squaring and expose the signed 64-bit result.");
-    Require(new Vector2I(-1_500_000_000, 0).DistanceSquaredTo(new Vector2I(1_500_000_000, 0)) == 9_000_000_000_000_000_000L &&
-            new Vector2I(-1_500_000_000, 0).DistanceTo(new Vector2I(1_500_000_000, 0)) == 3_000_000_000f,
-        "Vector2I distance must widen before subtracting components across the Int32 span.");
-    Require(Vector2I.MaxValue.LengthSquared() == 2L * int.MaxValue * int.MaxValue &&
-            float.IsFinite(Vector2I.MinValue.Length()) &&
-            System.MathF.Abs(Vector2I.MinValue.Length() - (float)(Math.Sqrt(2d) * 2_147_483_648d)) <= 512f &&
-            float.IsFinite(Vector2I.MinValue.DistanceTo(Vector2I.MaxValue)) &&
-            System.MathF.Abs(Vector2I.MinValue.DistanceTo(Vector2I.MaxValue) - (float)(Math.Sqrt(2d) * uint.MaxValue)) <= 512f,
-        "Vector2I lengths and distances must remain finite across the entire component range.");
-    Expect<OverflowException>(() => _ = Vector2I.MinValue.LengthSquared(),
-        "Vector2I squared length must reject a result above Int64.MaxValue.");
-    Expect<OverflowException>(() => _ = Vector2I.MinValue.DistanceSquaredTo(Vector2I.MaxValue),
-        "Vector2I squared distance must reject a widened difference above Int64.MaxValue.");
-    Require(new Vector2I(-3, 4).Abs() == value && new Vector2I(-3, 0).Sign() == new Vector2I(-1, 0) &&
-            new Vector2I(5, -2).Clamp(0, 4) == new Vector2I(4, 0) &&
-            new Vector2I(5, -2).Clamp(new Vector2I(1, -1), new Vector2I(4, 3)) == new Vector2I(4, -1),
-        "Vector2I absolute, sign, and clamp methods must be componentwise.");
-    Expect<OverflowException>(() => Vector2I.MinValue.Abs(), "Vector2I Abs must surface minimum-integer overflow.");
-    Expect<ArgumentException>(() => value.Clamp(2, 1), "Vector2I must reject reversed clamp bounds.");
-    Require(new Vector2I(1, 5).Max(new Vector2I(3, 2)) == new Vector2I(3, 5) &&
-            new Vector2I(1, 5).Max(4) == new Vector2I(4, 5) &&
-            new Vector2I(1, 5).Min(new Vector2I(3, 2)) == new Vector2I(1, 2) &&
-            new Vector2I(1, 5).Min(2) == new Vector2I(1, 2) &&
-            Vector2I.One.MaxAxisIndex() == Vector2I.Axis.X && Vector2I.One.MinAxisIndex() == Vector2I.Axis.Y &&
-            new Vector2I(5, -5).Snapped(2) == new Vector2I(6, -4) &&
-            new Vector2I(5, -5).Snapped(new Vector2I(2, 5)) == new Vector2I(6, -5),
-        "Vector2I min, max, axis tie-breaking, and snapping must be stable.");
-    Require(new Vector2I(5, -5).Snapped(-2) == new Vector2I(4, -6) &&
-            new Vector2I(5, -5).Snapped(new Vector2I(-2, 0)) == new Vector2I(4, -5) &&
+    Require(copy == new Vector2i(-7, 9) && value == new Vector2i(3, 4),
+        "Vector2i component writes must not mutate a copied value.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[2], "Vector2i must reject indices after Y.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector2i must reject negative indices.");
+    Expect<ArgumentOutOfRangeException>(() => copy[2] = 1, "Vector2i must reject out-of-range component writes.");
+    Require(float.IsPositiveInfinity(new Vector2i(1, 0).Aspect()) && float.IsNaN(Vector2i.Zero.Aspect()),
+        "Vector2i aspect must preserve IEEE zero-division results.");
+    var large = new Vector2i(50_000, 0);
+    Require(typeof(Vector2i).GetMethod(nameof(Vector2i.LengthSquared))!.ReturnType == typeof(long) &&
+            large.LengthSquared() == 2_500_000_000L && large.DistanceSquaredTo(Vector2i.Zero) == 2_500_000_000L &&
+            large.Length() == 50_000f && large.DistanceTo(Vector2i.Zero) == 50_000f,
+        "Vector2i norms must widen before squaring and expose the signed 64-bit result.");
+    Require(new Vector2i(-1_500_000_000, 0).DistanceSquaredTo(new Vector2i(1_500_000_000, 0)) == 9_000_000_000_000_000_000L &&
+            new Vector2i(-1_500_000_000, 0).DistanceTo(new Vector2i(1_500_000_000, 0)) == 3_000_000_000f,
+        "Vector2i distance must widen before subtracting components across the Int32 span.");
+    Require(Vector2i.MaxValue.LengthSquared() == 2L * int.MaxValue * int.MaxValue &&
+            float.IsFinite(Vector2i.MinValue.Length()) &&
+            System.MathF.Abs(Vector2i.MinValue.Length() - (float)(Math.Sqrt(2d) * 2_147_483_648d)) <= 512f &&
+            float.IsFinite(Vector2i.MinValue.DistanceTo(Vector2i.MaxValue)) &&
+            System.MathF.Abs(Vector2i.MinValue.DistanceTo(Vector2i.MaxValue) - (float)(Math.Sqrt(2d) * uint.MaxValue)) <= 512f,
+        "Vector2i lengths and distances must remain finite across the entire component range.");
+    Expect<OverflowException>(() => _ = Vector2i.MinValue.LengthSquared(),
+        "Vector2i squared length must reject a result above Int64.MaxValue.");
+    Expect<OverflowException>(() => _ = Vector2i.MinValue.DistanceSquaredTo(Vector2i.MaxValue),
+        "Vector2i squared distance must reject a widened difference above Int64.MaxValue.");
+    Require(new Vector2i(-3, 4).Abs() == value && new Vector2i(-3, 0).Sign() == new Vector2i(-1, 0) &&
+            new Vector2i(5, -2).Clamp(0, 4) == new Vector2i(4, 0) &&
+            new Vector2i(5, -2).Clamp(new Vector2i(1, -1), new Vector2i(4, 3)) == new Vector2i(4, -1),
+        "Vector2i absolute, sign, and clamp methods must be componentwise.");
+    Expect<OverflowException>(() => Vector2i.MinValue.Abs(), "Vector2i Abs must surface minimum-integer overflow.");
+    Expect<ArgumentException>(() => value.Clamp(2, 1), "Vector2i must reject reversed clamp bounds.");
+    Require(new Vector2i(1, 5).Max(new Vector2i(3, 2)) == new Vector2i(3, 5) &&
+            new Vector2i(1, 5).Max(4) == new Vector2i(4, 5) &&
+            new Vector2i(1, 5).Min(new Vector2i(3, 2)) == new Vector2i(1, 2) &&
+            new Vector2i(1, 5).Min(2) == new Vector2i(1, 2) &&
+            Vector2i.One.MaxAxisIndex() == Vector2i.Axis.X && Vector2i.One.MinAxisIndex() == Vector2i.Axis.Y &&
+            new Vector2i(5, -5).Snapped(2) == new Vector2i(6, -4) &&
+            new Vector2i(5, -5).Snapped(new Vector2i(2, 5)) == new Vector2i(6, -5),
+        "Vector2i min, max, axis tie-breaking, and snapping must be stable.");
+    Require(new Vector2i(5, -5).Snapped(-2) == new Vector2i(4, -6) &&
+            new Vector2i(5, -5).Snapped(new Vector2i(-2, 0)) == new Vector2i(4, -5) &&
             value.Snapped(0) == value,
-        "Vector2I negative and zero snapping steps must match the scalar formula.");
-    Expect<OverflowException>(() => _ = Vector2I.MaxValue.Snapped(2),
-        "Vector2I snapping must reject results outside Int32 range.");
-    Require(value + Vector2I.One == new Vector2I(4, 5) && +value == value && value - Vector2I.One == new Vector2I(2, 3) &&
-            -value == new Vector2I(-3, -4) && value * 2 == 2 * value &&
+        "Vector2i negative and zero snapping steps must match the scalar formula.");
+    Expect<OverflowException>(() => _ = Vector2i.MaxValue.Snapped(2),
+        "Vector2i snapping must reject results outside Int32 range.");
+    Require(value + Vector2i.One == new Vector2i(4, 5) && +value == value && value - Vector2i.One == new Vector2i(2, 3) &&
+            -value == new Vector2i(-3, -4) && value * 2 == 2 * value &&
             value * 0.5f == 0.5f * value && value / 2f == new Vector2(1.5f, 2f) &&
-            value * new Vector2I(2, 3) == new Vector2I(6, 12) &&
-            new Vector2I(7, -7) / 2 == new Vector2I(3, -3) &&
-            new Vector2I(8, 9) / new Vector2I(2, 3) == new Vector2I(4, 3) &&
-            new Vector2I(7, -7) % 3 == new Vector2I(1, -1) &&
-            new Vector2I(7, 8) % new Vector2I(3, 5) == new Vector2I(1, 3),
-        "Vector2I arithmetic must use componentwise integer rules.");
-    Require(Vector2I.MaxValue + Vector2I.One == Vector2I.MinValue && -new Vector2I(int.MinValue, 0) == new Vector2I(int.MinValue, 0),
-        "Vector2I ordinary overflow must wrap deterministically.");
-    Expect<DivideByZeroException>(() => _ = value / 0, "Vector2I division must reject zero.");
-    Require(float.IsPositiveInfinity((new Vector2I(1, 0) / 0f).X) &&
-            float.IsNaN((new Vector2I(1, 0) / 0f).Y),
-        "Vector2I floating-point division must retain IEEE zero-division behavior.");
-    Expect<DivideByZeroException>(() => _ = value % new Vector2I(1, 0), "Vector2I remainder must reject zero components.");
-    Expect<OverflowException>(() => _ = new Vector2I(int.MinValue, 0) / -1, "Vector2I division must surface minimum-integer overflow.");
-    Expect<OverflowException>(() => _ = new Vector2I(int.MinValue, 0) % -1,
-        "Vector2I remainder must surface minimum-integer overflow.");
-    Require(new Vector2I(1, 2) < new Vector2I(1, 3) && new Vector2I(1, 2) <= new Vector2I(1, 2) &&
-            new Vector2I(2, 0) > new Vector2I(1, 99) && new Vector2I(2, 0) >= new Vector2I(2, 0) &&
-            value.Equals((object)new Vector2I(3, 4)) && value.GetHashCode() == new Vector2I(3, 4).GetHashCode(),
-        "Vector2I equality, hashing, and ordering must be stable.");
-    VerifyInvariantString(() => new Vector2I(12, -34).ToString("D3"), "(012, -034)", "Vector2I");
-    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector2I must reject invalid numeric formats.");
+            value * new Vector2i(2, 3) == new Vector2i(6, 12) &&
+            new Vector2i(7, -7) / 2 == new Vector2i(3, -3) &&
+            new Vector2i(8, 9) / new Vector2i(2, 3) == new Vector2i(4, 3) &&
+            new Vector2i(7, -7) % 3 == new Vector2i(1, -1) &&
+            new Vector2i(7, 8) % new Vector2i(3, 5) == new Vector2i(1, 3),
+        "Vector2i arithmetic must use componentwise integer rules.");
+    Require(Vector2i.MaxValue + Vector2i.One == Vector2i.MinValue && -new Vector2i(int.MinValue, 0) == new Vector2i(int.MinValue, 0),
+        "Vector2i ordinary overflow must wrap deterministically.");
+    Expect<DivideByZeroException>(() => _ = value / 0, "Vector2i division must reject zero.");
+    Require(float.IsPositiveInfinity((new Vector2i(1, 0) / 0f).X) &&
+            float.IsNaN((new Vector2i(1, 0) / 0f).Y),
+        "Vector2i floating-point division must retain IEEE zero-division behavior.");
+    Expect<DivideByZeroException>(() => _ = value % new Vector2i(1, 0), "Vector2i remainder must reject zero components.");
+    Expect<OverflowException>(() => _ = new Vector2i(int.MinValue, 0) / -1, "Vector2i division must surface minimum-integer overflow.");
+    Expect<OverflowException>(() => _ = new Vector2i(int.MinValue, 0) % -1,
+        "Vector2i remainder must surface minimum-integer overflow.");
+    Require(new Vector2i(1, 2) < new Vector2i(1, 3) && new Vector2i(1, 2) <= new Vector2i(1, 2) &&
+            new Vector2i(2, 0) > new Vector2i(1, 99) && new Vector2i(2, 0) >= new Vector2i(2, 0) &&
+            value.Equals((object)new Vector2i(3, 4)) && value.GetHashCode() == new Vector2i(3, 4).GetHashCode(),
+        "Vector2i equality, hashing, and ordering must be stable.");
+    VerifyInvariantString(() => new Vector2i(12, -34).ToString("D3"), "(012, -034)", "Vector2i");
+    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector2i must reject invalid numeric formats.");
 
-    var key = new ConfigKey<Vector2I>("math", "vector2i");
+    var key = new ConfigKey<Vector2i>("math", "vector2i");
     using var config = new ConfigFile();
     config.SetValue(key, value);
     Require(config.GetValue(key) == value && config.EncodeToText() == "[math]\n\nvector2i={\"X\":3,\"Y\":4}\n",
-        "ConfigFile must preserve the strict Vector2I schema.");
+        "ConfigFile must preserve the strict Vector2i schema.");
     config.Parse("[math]\nvector2i={\"X\":1.5,\"Y\":2}\n");
-    Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject non-integer Vector2I fields.");
+    Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject non-integer Vector2i fields.");
 }
 
 static void VerifyVector3Values()
@@ -2172,9 +2172,9 @@ static void VerifyVector3Values()
     VerifyVector3CoreValues();
     VerifyVector3ComponentMethods();
     VerifyVector3Geometry();
-    Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3I>() == 12 &&
-            Vector3.Zero == default && Vector3I.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
-            Vector3I.Forward == new Vector3I(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
+    Require(Marshal.SizeOf<Vector3>() == 12 && Marshal.SizeOf<Vector3i>() == 12 &&
+            Vector3.Zero == default && Vector3i.Zero == default && Vector3.Right == new Vector3(1, 0, 0) &&
+            Vector3i.Forward == new Vector3i(0, 0, -1), "Three-component values have sequential layouts and stable constants.");
     var value = new Vector3(3, 4, 12);
     var (x, y, z) = value;
     Require((x, y, z) == (3f, 4f, 12f) && value[2] == 12 && value.Length() == 13 &&
@@ -2211,24 +2211,24 @@ static void VerifyVector3Values()
     Require(float.IsNaN(zeroPacked.X) && float.IsNaN(zeroPacked.Y),
         "Octahedral encoding of the zero vector retains the source's undefined numeric result.");
     Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z && Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
-            new Vector3I(1, 2, 3) * new Vector3I(2, 3, 4) == new Vector3I(2, 6, 12) &&
-            -new Vector3I(1, 2, 3) == new Vector3I(-1, -2, -3) &&
-            new Vector3I(3, 4, 12).LengthSquared() == 169 &&
-            new Vector3I(1, 2, 3).DistanceSquaredTo(new Vector3I(4, 6, 6)) == 34 &&
-            (Vector3I)new Vector3(1.9f, -2.9f, 3.9f) == new Vector3I(1, -2, 3) &&
-            new Vector3(new Vector3I(1, 2, 3)) == new Vector3(1, 2, 3),
+            new Vector3i(1, 2, 3) * new Vector3i(2, 3, 4) == new Vector3i(2, 6, 12) &&
+            -new Vector3i(1, 2, 3) == new Vector3i(-1, -2, -3) &&
+            new Vector3i(3, 4, 12).LengthSquared() == 169 &&
+            new Vector3i(1, 2, 3).DistanceSquaredTo(new Vector3i(4, 6, 6)) == 34 &&
+            (Vector3i)new Vector3(1.9f, -2.9f, 3.9f) == new Vector3i(1, -2, 3) &&
+            new Vector3(new Vector3i(1, 2, 3)) == new Vector3(1, 2, 3),
         "Integer arithmetic, norms, ties and typed conversions retain all axes.");
-    Require(float.IsFinite(Vector3I.MinValue.DistanceTo(Vector3I.MaxValue)) &&
-            float.IsFinite(Vector3I.MinValue.Length()), "Full-range integer distances remain finite.");
-    Expect<OverflowException>(() => _ = Vector3I.MinValue.DistanceSquaredTo(Vector3I.MaxValue), "Squared integer distances reject overflow.");
-    Expect<OverflowException>(() => _ = Vector3I.MinValue.LengthSquared(), "Squared integer lengths reject overflow.");
+    Require(float.IsFinite(Vector3i.MinValue.DistanceTo(Vector3i.MaxValue)) &&
+            float.IsFinite(Vector3i.MinValue.Length()), "Full-range integer distances remain finite.");
+    Expect<OverflowException>(() => _ = Vector3i.MinValue.DistanceSquaredTo(Vector3i.MaxValue), "Squared integer distances reject overflow.");
+    Expect<OverflowException>(() => _ = Vector3i.MinValue.LengthSquared(), "Squared integer lengths reject overflow.");
     Expect<ArgumentOutOfRangeException>(() => _ = value[3], "A fourth vector component does not exist.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0, 0, float.NaN), "Nonfinite integer conversion is rejected.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3i)new Vector3(0, 0, float.NaN), "Nonfinite integer conversion is rejected.");
     using var config = new ConfigFile();
     var floatKey = new ConfigKey<Vector3>("math", "triple");
-    var intKey = new ConfigKey<Vector3I>("math", "triplei");
-    config.SetValue(floatKey, value); config.SetValue(intKey, new Vector3I(1, 2, 3));
-    Require(config.GetValue(floatKey) == value && config.GetValue(intKey) == new Vector3I(1, 2, 3) &&
+    var intKey = new ConfigKey<Vector3i>("math", "triplei");
+    config.SetValue(floatKey, value); config.SetValue(intKey, new Vector3i(1, 2, 3));
+    Require(config.GetValue(floatKey) == value && config.GetValue(intKey) == new Vector3i(1, 2, 3) &&
             config.EncodeToText().Contains("triple={\"X\":3,\"Y\":4,\"Z\":12}", StringComparison.Ordinal),
         "Configuration stores exact three-component schemas.");
     Expect<JsonException>(() => config.SetValue(floatKey, Vector3.Inf), "Configuration rejects nonfinite triples.");
@@ -2236,124 +2236,124 @@ static void VerifyVector3Values()
     Expect<InvalidDataException>(() => config.GetValue(floatKey), "Configuration rejects a fourth field.");
 }
 
-static void VerifyVector3IValues()
+static void VerifyVector3iValues()
 {
-    Require(Marshal.SizeOf<Vector3I>() == 12 && Vector3I.Zero == default &&
-            Vector3I.One == new Vector3I(1, 1, 1) &&
-            Vector3I.MinValue == new Vector3I(int.MinValue, int.MinValue, int.MinValue) &&
-            Vector3I.MaxValue == new Vector3I(int.MaxValue, int.MaxValue, int.MaxValue) &&
-            Vector3I.Right == new Vector3I(1, 0, 0) && Vector3I.Left == new Vector3I(-1, 0, 0) &&
-            Vector3I.Up == new Vector3I(0, 1, 0) && Vector3I.Down == new Vector3I(0, -1, 0) &&
-            Vector3I.Forward == new Vector3I(0, 0, -1) && Vector3I.Back == new Vector3I(0, 0, 1) &&
-            (int)Vector3I.Axis.X == 0 && (int)Vector3I.Axis.Y == 1 && (int)Vector3I.Axis.Z == 2,
-        "Vector3I layout, constants and axis identities retain the three-component contract.");
-    var value = new Vector3I(3, 4, 12);
+    Require(Marshal.SizeOf<Vector3i>() == 12 && Vector3i.Zero == default &&
+            Vector3i.One == new Vector3i(1, 1, 1) &&
+            Vector3i.MinValue == new Vector3i(int.MinValue, int.MinValue, int.MinValue) &&
+            Vector3i.MaxValue == new Vector3i(int.MaxValue, int.MaxValue, int.MaxValue) &&
+            Vector3i.Right == new Vector3i(1, 0, 0) && Vector3i.Left == new Vector3i(-1, 0, 0) &&
+            Vector3i.Up == new Vector3i(0, 1, 0) && Vector3i.Down == new Vector3i(0, -1, 0) &&
+            Vector3i.Forward == new Vector3i(0, 0, -1) && Vector3i.Back == new Vector3i(0, 0, 1) &&
+            (int)Vector3i.Axis.X == 0 && (int)Vector3i.Axis.Y == 1 && (int)Vector3i.Axis.Z == 2,
+        "Vector3i layout, constants and axis identities retain the three-component contract.");
+    var value = new Vector3i(3, 4, 12);
     var copy = value;
     copy[0] = -7;
     copy[1] = 9;
     copy[2] = 5;
     var (x, y, z) = value;
-    Require(value == new Vector3I(3, 4, 12) && copy == new Vector3I(-7, 9, 5) &&
+    Require(value == new Vector3i(3, 4, 12) && copy == new Vector3i(-7, 9, 5) &&
             (x, y, z) == (3, 4, 12) && value[0] == 3 && value[1] == 4 && value[2] == 12,
-        "Vector3I indexed mutation does not alias value copies or reorder components.");
-    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "A negative Vector3I index fails explicitly.");
-    Expect<ArgumentOutOfRangeException>(() => copy[3] = 1, "A fourth Vector3I component cannot be assigned.");
-    Require(copy == new Vector3I(-7, 9, 5), "A rejected Vector3I index write leaves state intact.");
+        "Vector3i indexed mutation does not alias value copies or reorder components.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "A negative Vector3i index fails explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => copy[3] = 1, "A fourth Vector3i component cannot be assigned.");
+    Require(copy == new Vector3i(-7, 9, 5), "A rejected Vector3i index write leaves state intact.");
 
-    Require(new Vector3I(new Vector3(1.9f, -2.9f, 3.9f)) == new Vector3I(1, -2, 3) &&
-            (Vector3I)new Vector3((float)int.MinValue, 0f, 0f) ==
-                new Vector3I(int.MinValue, 0, 0) &&
-            (Vector3)new Vector3I(16_777_217, int.MinValue, int.MaxValue) ==
+    Require(new Vector3i(new Vector3(1.9f, -2.9f, 3.9f)) == new Vector3i(1, -2, 3) &&
+            (Vector3i)new Vector3((float)int.MinValue, 0f, 0f) ==
+                new Vector3i(int.MinValue, 0, 0) &&
+            (Vector3)new Vector3i(16_777_217, int.MinValue, int.MaxValue) ==
                 new Vector3(16_777_216f, int.MinValue, 2_147_483_648f),
-        "Vector3I floating conversions truncate finite components and expose float precision loss.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(float.NaN, 0f, 0f),
-        "Vector3I conversion rejects NaN before casting.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0f, float.PositiveInfinity, 0f),
-        "Vector3I conversion rejects infinity before casting.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3I)new Vector3(0f, 0f, (float)int.MaxValue),
-        "Vector3I conversion rejects the rounded-up Int32 maximum.");
+        "Vector3i floating conversions truncate finite components and expose float precision loss.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3i)new Vector3(float.NaN, 0f, 0f),
+        "Vector3i conversion rejects NaN before casting.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3i)new Vector3(0f, float.PositiveInfinity, 0f),
+        "Vector3i conversion rejects infinity before casting.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector3i)new Vector3(0f, 0f, (float)int.MaxValue),
+        "Vector3i conversion rejects the rounded-up Int32 maximum.");
 
     Require(value.LengthSquared() == 169L && value.Length() == 13f &&
-            value.DistanceSquaredTo(Vector3I.Zero) == 169L && value.DistanceTo(Vector3I.Zero) == 13f &&
-            new Vector3I(int.MaxValue, int.MaxValue, 0).LengthSquared() ==
+            value.DistanceSquaredTo(Vector3i.Zero) == 169L && value.DistanceTo(Vector3i.Zero) == 13f &&
+            new Vector3i(int.MaxValue, int.MaxValue, 0).LengthSquared() ==
                 2L * int.MaxValue * int.MaxValue &&
-            new Vector3I(-1_500_000_000, 0, 0).DistanceSquaredTo(
-                new Vector3I(1_500_000_000, 0, 0)) == 9_000_000_000_000_000_000L &&
-            float.IsFinite(Vector3I.MinValue.Length()) &&
-            float.IsFinite(Vector3I.MinValue.DistanceTo(Vector3I.MaxValue)),
-        "Vector3I norms widen before multiplication/subtraction and ordinary distances stay finite.");
-    Expect<OverflowException>(() => _ = Vector3I.MinValue.LengthSquared(),
+            new Vector3i(-1_500_000_000, 0, 0).DistanceSquaredTo(
+                new Vector3i(1_500_000_000, 0, 0)) == 9_000_000_000_000_000_000L &&
+            float.IsFinite(Vector3i.MinValue.Length()) &&
+            float.IsFinite(Vector3i.MinValue.DistanceTo(Vector3i.MaxValue)),
+        "Vector3i norms widen before multiplication/subtraction and ordinary distances stay finite.");
+    Expect<OverflowException>(() => _ = Vector3i.MinValue.LengthSquared(),
         "Three minimum components exceed the exact Int64 squared-length limit.");
-    Expect<OverflowException>(() => _ = Vector3I.MinValue.DistanceSquaredTo(Vector3I.MaxValue),
+    Expect<OverflowException>(() => _ = Vector3i.MinValue.DistanceSquaredTo(Vector3i.MaxValue),
         "Full-span three-axis squared distance rejects Int64 overflow.");
 
-    Require(new Vector3I(-3, 4, -5).Abs() == new Vector3I(3, 4, 5) &&
-            new Vector3I(int.MinValue, 0, int.MaxValue).Sign() == new Vector3I(-1, 0, 1) &&
-            new Vector3I(5, -2, 8).Clamp(new Vector3I(1, -1, 2), new Vector3I(4, 3, 7)) ==
-                new Vector3I(4, -1, 7) &&
-            new Vector3I(5, -2, 8).Clamp(0, 4) == new Vector3I(4, 0, 4) &&
-            new Vector3I(1, 5, -1).Max(new Vector3I(3, 2, 0)) == new Vector3I(3, 5, 0) &&
-            new Vector3I(1, 5, -1).Min(2) == new Vector3I(1, 2, -1) &&
-            new Vector3I(1, 5, -1).Max(2) == new Vector3I(2, 5, 2) &&
-            new Vector3I(1, 5, -1).Min(new Vector3I(3, 2, 0)) == new Vector3I(1, 2, -1),
-        "Vector3I componentwise absolute/sign/clamp/min/max preserve every axis.");
-    Expect<OverflowException>(() => _ = Vector3I.MinValue.Abs(), "Int32 minimum absolute value fails explicitly.");
+    Require(new Vector3i(-3, 4, -5).Abs() == new Vector3i(3, 4, 5) &&
+            new Vector3i(int.MinValue, 0, int.MaxValue).Sign() == new Vector3i(-1, 0, 1) &&
+            new Vector3i(5, -2, 8).Clamp(new Vector3i(1, -1, 2), new Vector3i(4, 3, 7)) ==
+                new Vector3i(4, -1, 7) &&
+            new Vector3i(5, -2, 8).Clamp(0, 4) == new Vector3i(4, 0, 4) &&
+            new Vector3i(1, 5, -1).Max(new Vector3i(3, 2, 0)) == new Vector3i(3, 5, 0) &&
+            new Vector3i(1, 5, -1).Min(2) == new Vector3i(1, 2, -1) &&
+            new Vector3i(1, 5, -1).Max(2) == new Vector3i(2, 5, 2) &&
+            new Vector3i(1, 5, -1).Min(new Vector3i(3, 2, 0)) == new Vector3i(1, 2, -1),
+        "Vector3i componentwise absolute/sign/clamp/min/max preserve every axis.");
+    Expect<OverflowException>(() => _ = Vector3i.MinValue.Abs(), "Int32 minimum absolute value fails explicitly.");
     Expect<ArgumentException>(() => _ = value.Clamp(2, 1), "Reversed scalar clamp bounds fail explicitly.");
-    Expect<ArgumentException>(() => _ = value.Clamp(new Vector3I(0, 5, 0), new Vector3I(9, 4, 20)),
+    Expect<ArgumentException>(() => _ = value.Clamp(new Vector3i(0, 5, 0), new Vector3i(9, 4, 20)),
         "Reversed bounds on one vector axis fail explicitly.");
-    Require(Vector3I.One.MinAxisIndex() == Vector3I.Axis.Z &&
-            Vector3I.One.MaxAxisIndex() == Vector3I.Axis.X &&
-            new Vector3I(1, 2, 2).MaxAxisIndex() == Vector3I.Axis.Y &&
-            new Vector3I(2, 1, 1).MinAxisIndex() == Vector3I.Axis.Z,
-        "Vector3I axis ties match the pinned first-maximum and last-minimum rules.");
+    Require(Vector3i.One.MinAxisIndex() == Vector3i.Axis.Z &&
+            Vector3i.One.MaxAxisIndex() == Vector3i.Axis.X &&
+            new Vector3i(1, 2, 2).MaxAxisIndex() == Vector3i.Axis.Y &&
+            new Vector3i(2, 1, 1).MinAxisIndex() == Vector3i.Axis.Z,
+        "Vector3i axis ties match the pinned first-maximum and last-minimum rules.");
 
-    Require(new Vector3I(5, -5, 7).Snapped(2) == new Vector3I(6, -4, 8) &&
-            new Vector3I(5, -5, 7).Snapped(new Vector3I(2, 0, 3)) ==
-                new Vector3I(6, -5, 6) &&
-            new Vector3I(5, -5, 7).Snapped(-2) == new Vector3I(4, -6, 6) &&
+    Require(new Vector3i(5, -5, 7).Snapped(2) == new Vector3i(6, -4, 8) &&
+            new Vector3i(5, -5, 7).Snapped(new Vector3i(2, 0, 3)) ==
+                new Vector3i(6, -5, 6) &&
+            new Vector3i(5, -5, 7).Snapped(-2) == new Vector3i(4, -6, 6) &&
             value.Snapped(0) == value,
-        "Vector3I snapping respects midpoint, negative and independent zero steps.");
-    Expect<OverflowException>(() => _ = Vector3I.MaxValue.Snapped(2),
-        "Vector3I snapping rejects an Int32-overflowing rounded result.");
+        "Vector3i snapping respects midpoint, negative and independent zero steps.");
+    Expect<OverflowException>(() => _ = Vector3i.MaxValue.Snapped(2),
+        "Vector3i snapping rejects an Int32-overflowing rounded result.");
 
-    Require(value + Vector3I.One == new Vector3I(4, 5, 13) &&
-            value - Vector3I.One == new Vector3I(2, 3, 11) &&
-            +value == value && -value == new Vector3I(-3, -4, -12) &&
-            value * new Vector3I(2, 3, 4) == new Vector3I(6, 12, 48) &&
+    Require(value + Vector3i.One == new Vector3i(4, 5, 13) &&
+            value - Vector3i.One == new Vector3i(2, 3, 11) &&
+            +value == value && -value == new Vector3i(-3, -4, -12) &&
+            value * new Vector3i(2, 3, 4) == new Vector3i(6, 12, 48) &&
             value * 2 == 2 * value && value * .5f == .5f * value &&
             value / 2f == new Vector3(1.5f, 2f, 6f) &&
-            new Vector3I(7, -7, 9) / 2 == new Vector3I(3, -3, 4) &&
-            new Vector3I(8, 9, -10) / new Vector3I(2, 3, -2) == new Vector3I(4, 3, 5) &&
-            new Vector3I(7, -7, 9) % 3 == new Vector3I(1, -1, 0) &&
-            new Vector3I(7, 8, -9) % new Vector3I(3, 5, 4) == new Vector3I(1, 3, -1),
-        "Vector3I arithmetic uses wrapping components and truncated integer division/remainder.");
-    Require(Vector3I.MaxValue + Vector3I.One == Vector3I.MinValue &&
-            -new Vector3I(int.MinValue, 0, 0) == new Vector3I(int.MinValue, 0, 0) &&
-            new Vector3I(int.MaxValue, 0, 0) * 2 == new Vector3I(-2, 0, 0) &&
-            float.IsPositiveInfinity((new Vector3I(1, -1, 0) / 0f).X) &&
-            float.IsNegativeInfinity((new Vector3I(1, -1, 0) / 0f).Y) &&
-            float.IsNaN((new Vector3I(1, -1, 0) / 0f).Z),
+            new Vector3i(7, -7, 9) / 2 == new Vector3i(3, -3, 4) &&
+            new Vector3i(8, 9, -10) / new Vector3i(2, 3, -2) == new Vector3i(4, 3, 5) &&
+            new Vector3i(7, -7, 9) % 3 == new Vector3i(1, -1, 0) &&
+            new Vector3i(7, 8, -9) % new Vector3i(3, 5, 4) == new Vector3i(1, 3, -1),
+        "Vector3i arithmetic uses wrapping components and truncated integer division/remainder.");
+    Require(Vector3i.MaxValue + Vector3i.One == Vector3i.MinValue &&
+            -new Vector3i(int.MinValue, 0, 0) == new Vector3i(int.MinValue, 0, 0) &&
+            new Vector3i(int.MaxValue, 0, 0) * 2 == new Vector3i(-2, 0, 0) &&
+            float.IsPositiveInfinity((new Vector3i(1, -1, 0) / 0f).X) &&
+            float.IsNegativeInfinity((new Vector3i(1, -1, 0) / 0f).Y) &&
+            float.IsNaN((new Vector3i(1, -1, 0) / 0f).Z),
         "Ordinary Int32 overflow wraps while floating division by zero follows IEEE behavior.");
     Expect<DivideByZeroException>(() => _ = value / 0, "Integer scalar division rejects zero.");
-    Expect<DivideByZeroException>(() => _ = value % new Vector3I(1, 1, 0),
+    Expect<DivideByZeroException>(() => _ = value % new Vector3i(1, 1, 0),
         "Integer component remainder rejects zero.");
-    Expect<OverflowException>(() => _ = new Vector3I(int.MinValue, 0, 0) / -1,
+    Expect<OverflowException>(() => _ = new Vector3i(int.MinValue, 0, 0) / -1,
         "Int32 minimum division by -1 surfaces managed overflow.");
-    Expect<OverflowException>(() => _ = new Vector3I(int.MinValue, 0, 0) % -1,
+    Expect<OverflowException>(() => _ = new Vector3i(int.MinValue, 0, 0) % -1,
         "Int32 minimum remainder by -1 surfaces managed overflow.");
 
-    var same = new Vector3I(3, 4, 12);
+    var same = new Vector3i(3, 4, 12);
     Require(value == same && !(value != same) &&
-            new Vector3I(1, 2, 3) < new Vector3I(1, 2, 4) &&
-            new Vector3I(1, 2, 3) <= new Vector3I(1, 2, 3) &&
-            new Vector3I(2, -100, 0) > new Vector3I(1, 100, 100) &&
-            new Vector3I(2, 0, 0) >= new Vector3I(2, 0, 0) &&
+            new Vector3i(1, 2, 3) < new Vector3i(1, 2, 4) &&
+            new Vector3i(1, 2, 3) <= new Vector3i(1, 2, 3) &&
+            new Vector3i(2, -100, 0) > new Vector3i(1, 100, 100) &&
+            new Vector3i(2, 0, 0) >= new Vector3i(2, 0, 0) &&
             value.Equals((object)same) && value.GetHashCode() == same.GetHashCode(),
-        "Vector3I equality, hashing and lexicographic ordering retain X/Y/Z precedence.");
-    VerifyInvariantString(() => new Vector3I(12, -34, 5).ToString("D3"), "(012, -034, 005)", "Vector3I");
-    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector3I rejects invalid numeric formats.");
+        "Vector3i equality, hashing and lexicographic ordering retain X/Y/Z precedence.");
+    VerifyInvariantString(() => new Vector3i(12, -34, 5).ToString("D3"), "(012, -034, 005)", "Vector3i");
+    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector3i rejects invalid numeric formats.");
     using var config = new ConfigFile();
-    var key = new ConfigKey<Vector3I>("math", "vector3i");
+    var key = new ConfigKey<Vector3i>("math", "vector3i");
     config.SetValue(key, value);
     Require(config.GetValue(key) == value &&
             config.EncodeToText() == "[math]\n\nvector3i={\"X\":3,\"Y\":4,\"Z\":12}\n",
@@ -2381,9 +2381,9 @@ static void VerifyVector3CoreValues()
     copy[2] = .5f;
     Require(value == new Vector3(1.5f, -2f, 0f) && copy == new Vector3(-3f, 4f, .5f) &&
             copy.X == -3f && copy.Y == 4f && copy.Z == .5f &&
-            new Vector3(new Vector3I(16_777_217, int.MinValue, int.MaxValue)) ==
+            new Vector3(new Vector3i(16_777_217, int.MinValue, int.MaxValue)) ==
                 new Vector3(16_777_216f, int.MinValue, 2_147_483_648f) &&
-            (Vector3)new Vector3I(-2, 3, 4) == new Vector3(-2f, 3f, 4f),
+            (Vector3)new Vector3i(-2, 3, 4) == new Vector3(-2f, 3f, 4f),
         "Value copies, mutable indexes and integer-to-float conversion retain component order and rounding.");
     Expect<ArgumentOutOfRangeException>(() => _ = copy[-1], "Negative Vector3 indexes fail explicitly.");
     Expect<ArgumentOutOfRangeException>(() => copy[3] = 1f, "A fourth Vector3 component cannot be assigned.");
@@ -2636,9 +2636,9 @@ static void VerifyVector4Values()
     var nan = new Vector4(float.NaN, 0f, 0f, 0f);
     Require(!(nan < Vector4.Zero) && !(nan <= Vector4.Zero) && !(nan > Vector4.Zero) && !(nan >= Vector4.Zero),
         "Vector4 relational operators must preserve unordered NaN comparisons.");
-    var integer = new Vector4I(1, -2, 3, -4);
+    var integer = new Vector4i(1, -2, 3, -4);
     Require(new Vector4(integer) == new Vector4(1f, -2f, 3f, -4f) && (Vector4)integer == new Vector4(1f, -2f, 3f, -4f) &&
-            (Vector4I)new Vector4(1.9f, -2.9f, 3.9f, -4.9f) == integer,
+            (Vector4i)new Vector4(1.9f, -2.9f, 3.9f, -4.9f) == integer,
         "Vector4 conversions must widen implicitly and truncate explicitly.");
     VerifyInvariantString(() => new Vector4(1.5f, 2.5f, 3.5f, 4.5f).ToString("F1"), "(1.5, 2.5, 3.5, 4.5)", "Vector4");
     Expect<FormatException>(() => _ = value.ToString("Q"), "Vector4 must reject invalid numeric formats.");
@@ -2671,7 +2671,7 @@ static void VerifyVector4RemainingValues()
     Require(value == new Vector4(1.5f, -2f, 0f, 4f) &&
             copy == new Vector4(-3f, 4f, .5f, -2f) &&
             copy.X == -3f && copy.Y == 4f && copy.Z == .5f && copy.W == -2f &&
-            new Vector4(new Vector4I(16_777_217, int.MinValue, int.MaxValue, -2)) ==
+            new Vector4(new Vector4i(16_777_217, int.MinValue, int.MaxValue, -2)) ==
                 new Vector4(16_777_216f, int.MinValue, 2_147_483_648f, -2f),
         "Vector4 copies, mutable indexes and integer construction retain W and float rounding.");
     Expect<ArgumentOutOfRangeException>(() => _ = copy[-1], "Negative Vector4 indexes fail explicitly.");
@@ -2787,143 +2787,143 @@ static void VerifyVector4RemainingValues()
         "Vector4 cubic paths preserve distinct W values and degenerate time fallback.");
 }
 
-static void VerifyVector4IValues()
+static void VerifyVector4iValues()
 {
-    Require(Marshal.SizeOf<Vector4I>() == 16 && typeof(Vector4I).IsDefined(typeof(SerializableAttribute), false) &&
-            Vector4I.Zero == default && Vector4I.One == new Vector4I(1, 1, 1, 1) &&
-            Vector4I.MinValue == new Vector4I(int.MinValue, int.MinValue, int.MinValue, int.MinValue) &&
-            Vector4I.MaxValue == new Vector4I(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue) &&
-            (int)Vector4I.Axis.X == 0 && (int)Vector4I.Axis.Y == 1 &&
-            (int)Vector4I.Axis.Z == 2 && (int)Vector4I.Axis.W == 3,
-        "Vector4I layout and constants must be stable.");
-    var value = new Vector4I(1, 2, 3, 4);
+    Require(Marshal.SizeOf<Vector4i>() == 16 && typeof(Vector4i).IsDefined(typeof(SerializableAttribute), false) &&
+            Vector4i.Zero == default && Vector4i.One == new Vector4i(1, 1, 1, 1) &&
+            Vector4i.MinValue == new Vector4i(int.MinValue, int.MinValue, int.MinValue, int.MinValue) &&
+            Vector4i.MaxValue == new Vector4i(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue) &&
+            (int)Vector4i.Axis.X == 0 && (int)Vector4i.Axis.Y == 1 &&
+            (int)Vector4i.Axis.Z == 2 && (int)Vector4i.Axis.W == 3,
+        "Vector4i layout and constants must be stable.");
+    var value = new Vector4i(1, 2, 3, 4);
     var (x, y, z, w) = value;
     Require(value[0] == 1 && value[3] == 4 && (x, y, z, w) == (1, 2, 3, 4) &&
             value.LengthSquared() == 30 && NearlyEqual(value.Length(), System.MathF.Sqrt(30f)) &&
-            value.DistanceSquaredTo(Vector4I.Zero) == 30 && NearlyEqual(value.DistanceTo(Vector4I.Zero), System.MathF.Sqrt(30f)),
-        "Vector4I indexing, deconstruction, length, and distance operations must be stable.");
+            value.DistanceSquaredTo(Vector4i.Zero) == 30 && NearlyEqual(value.DistanceTo(Vector4i.Zero), System.MathF.Sqrt(30f)),
+        "Vector4i indexing, deconstruction, length, and distance operations must be stable.");
     var mutableCopy = value;
     mutableCopy[0] = -7;
     mutableCopy[1] = 8;
     mutableCopy[2] = 9;
     mutableCopy[3] = 10;
-    Require(value == new Vector4I(1, 2, 3, 4) && mutableCopy == new Vector4I(-7, 8, 9, 10),
-        "Mutable Vector4I indexing preserves copy independence across all four coordinates.");
+    Require(value == new Vector4i(1, 2, 3, 4) && mutableCopy == new Vector4i(-7, 8, 9, 10),
+        "Mutable Vector4i indexing preserves copy independence across all four coordinates.");
     Expect<ArgumentOutOfRangeException>(() => mutableCopy[4] = 1,
-        "A fifth Vector4I component cannot be assigned.");
-    Require(mutableCopy == new Vector4I(-7, 8, 9, 10),
-        "Rejected Vector4I index writes leave the previous value intact.");
-    var large = new Vector4I(50_000, 50_000, 50_000, 50_000);
-    Require(typeof(Vector4I).GetMethod(nameof(Vector4I.DistanceSquaredTo))!.ReturnType == typeof(long) &&
+        "A fifth Vector4i component cannot be assigned.");
+    Require(mutableCopy == new Vector4i(-7, 8, 9, 10),
+        "Rejected Vector4i index writes leave the previous value intact.");
+    var large = new Vector4i(50_000, 50_000, 50_000, 50_000);
+    Require(typeof(Vector4i).GetMethod(nameof(Vector4i.DistanceSquaredTo))!.ReturnType == typeof(long) &&
             large.LengthSquared() == 10_000_000_000L &&
-            large.DistanceSquaredTo(Vector4I.Zero) == 10_000_000_000L &&
-            large.Length() == 100_000f && large.DistanceTo(Vector4I.Zero) == 100_000f,
-        "Vector4I norms must widen all four components before squaring.");
-    Require(new Vector4I(-1_500_000_000, 0, 0, 0).DistanceSquaredTo(new Vector4I(1_500_000_000, 0, 0, 0)) == 9_000_000_000_000_000_000L &&
-            new Vector4I(-1_500_000_000, 0, 0, 0).DistanceTo(new Vector4I(1_500_000_000, 0, 0, 0)) == 3_000_000_000f,
-        "Vector4I distance must widen before subtracting components across the Int32 span.");
-    Require(float.IsFinite(Vector4I.MinValue.Length()) &&
-            System.MathF.Abs(Vector4I.MinValue.Length() - (float)(2d * 2_147_483_648d)) <= 512f &&
-            float.IsFinite(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue)) &&
-            System.MathF.Abs(Vector4I.MinValue.DistanceTo(Vector4I.MaxValue) - (float)(2d * uint.MaxValue)) <= 1024f,
-        "Vector4I lengths and distances must remain finite across the entire component range.");
-    Require(new Vector4I(int.MaxValue, int.MaxValue, 0, 0).LengthSquared() ==
+            large.DistanceSquaredTo(Vector4i.Zero) == 10_000_000_000L &&
+            large.Length() == 100_000f && large.DistanceTo(Vector4i.Zero) == 100_000f,
+        "Vector4i norms must widen all four components before squaring.");
+    Require(new Vector4i(-1_500_000_000, 0, 0, 0).DistanceSquaredTo(new Vector4i(1_500_000_000, 0, 0, 0)) == 9_000_000_000_000_000_000L &&
+            new Vector4i(-1_500_000_000, 0, 0, 0).DistanceTo(new Vector4i(1_500_000_000, 0, 0, 0)) == 3_000_000_000f,
+        "Vector4i distance must widen before subtracting components across the Int32 span.");
+    Require(float.IsFinite(Vector4i.MinValue.Length()) &&
+            System.MathF.Abs(Vector4i.MinValue.Length() - (float)(2d * 2_147_483_648d)) <= 512f &&
+            float.IsFinite(Vector4i.MinValue.DistanceTo(Vector4i.MaxValue)) &&
+            System.MathF.Abs(Vector4i.MinValue.DistanceTo(Vector4i.MaxValue) - (float)(2d * uint.MaxValue)) <= 1024f,
+        "Vector4i lengths and distances must remain finite across the entire component range.");
+    Require(new Vector4i(int.MaxValue, int.MaxValue, 0, 0).LengthSquared() ==
                 2L * int.MaxValue * int.MaxValue &&
-            new Vector4I(0, 0, 0, int.MaxValue).LengthSquared() == (long)int.MaxValue * int.MaxValue,
-        "Vector4I checked squares preserve the last fitting Int64 boundary and W contribution.");
-    Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, int.MinValue, 0, 0).LengthSquared(),
+            new Vector4i(0, 0, 0, int.MaxValue).LengthSquared() == (long)int.MaxValue * int.MaxValue,
+        "Vector4i checked squares preserve the last fitting Int64 boundary and W contribution.");
+    Expect<OverflowException>(() => _ = new Vector4i(int.MinValue, int.MinValue, 0, 0).LengthSquared(),
         "Two minimum components already exceed signed Int64 by one.");
-    Expect<OverflowException>(() => _ = Vector4I.MinValue.LengthSquared(),
-        "Vector4I squared length must reject a result above Int64.MaxValue.");
-    Expect<OverflowException>(() => _ = Vector4I.MinValue.DistanceSquaredTo(Vector4I.MaxValue),
-        "Vector4I squared distance must reject a widened difference above Int64.MaxValue.");
-    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector4I must reject negative indices.");
-    Require(new Vector4I(-1, -2, -3, -4).Abs() == value && new Vector4I(-1, 0, 3, -4).Sign() == new Vector4I(-1, 0, 1, -1) &&
-            value.Clamp(2, 3) == new Vector4I(2, 2, 3, 3) &&
-            value.Clamp(new Vector4I(0, 0, 4, 0), new Vector4I(2, 3, 5, 3)) == new Vector4I(1, 2, 4, 3),
-        "Vector4I absolute, sign, and clamp methods must be componentwise.");
-    Expect<OverflowException>(() => Vector4I.MinValue.Abs(), "Vector4I Abs must surface minimum-integer overflow.");
-    Expect<ArgumentException>(() => value.Clamp(2, 1), "Vector4I must reject reversed scalar clamp bounds.");
-    Expect<ArgumentException>(() => value.Clamp(new Vector4I(0, 3, 0, 0), new Vector4I(2, 2, 4, 5)),
-        "Vector4I must reject reversed component clamp bounds.");
-    Require(value.Max(2) == new Vector4I(2, 2, 3, 4) && value.Max(new Vector4I(0, 3, 2, 5)) == new Vector4I(1, 3, 3, 5) &&
-            value.Min(2) == new Vector4I(1, 2, 2, 2) && value.Min(new Vector4I(0, 3, 2, 5)) == new Vector4I(0, 2, 2, 4) &&
-            Vector4I.One.MaxAxisIndex() == Vector4I.Axis.X && Vector4I.One.MinAxisIndex() == Vector4I.Axis.W &&
-            new Vector4I(1, 2, 2, 2).MaxAxisIndex() == Vector4I.Axis.Y &&
-            new Vector4I(2, 1, 1, 1).MinAxisIndex() == Vector4I.Axis.W &&
-            new Vector4I(5, -5, 3, -3).Snapped(2) == new Vector4I(6, -4, 4, -2) &&
-            new Vector4I(5, -5, 3, -3).Snapped(new Vector4I(2, 5, 2, 3)) == new Vector4I(6, -5, 4, -3),
-        "Vector4I min, max, axis tie-breaking, and snapping must be stable.");
-    Require(new Vector4I(5, -5, 7, -7).Snapped(-2) == new Vector4I(4, -6, 6, -8) &&
-            new Vector4I(5, -5, 7, -7).Snapped(new Vector4I(-2, 0, 3, 0)) ==
-                new Vector4I(4, -5, 6, -7) && value.Snapped(0) == value,
-        "Vector4I negative and zero snap steps follow the scalar formula independently on W.");
-    Expect<OverflowException>(() => _ = Vector4I.MaxValue.Snapped(2),
-        "Vector4I snapping rejects a rounded component beyond Int32.MaxValue.");
-    Require(value + Vector4I.One == new Vector4I(2, 3, 4, 5) && +value == value && value - Vector4I.One == new Vector4I(0, 1, 2, 3) &&
-            -value == new Vector4I(-1, -2, -3, -4) && value * 2 == 2 * value && value * Vector4I.One == value &&
+    Expect<OverflowException>(() => _ = Vector4i.MinValue.LengthSquared(),
+        "Vector4i squared length must reject a result above Int64.MaxValue.");
+    Expect<OverflowException>(() => _ = Vector4i.MinValue.DistanceSquaredTo(Vector4i.MaxValue),
+        "Vector4i squared distance must reject a widened difference above Int64.MaxValue.");
+    Expect<ArgumentOutOfRangeException>(() => _ = value[-1], "Vector4i must reject negative indices.");
+    Require(new Vector4i(-1, -2, -3, -4).Abs() == value && new Vector4i(-1, 0, 3, -4).Sign() == new Vector4i(-1, 0, 1, -1) &&
+            value.Clamp(2, 3) == new Vector4i(2, 2, 3, 3) &&
+            value.Clamp(new Vector4i(0, 0, 4, 0), new Vector4i(2, 3, 5, 3)) == new Vector4i(1, 2, 4, 3),
+        "Vector4i absolute, sign, and clamp methods must be componentwise.");
+    Expect<OverflowException>(() => Vector4i.MinValue.Abs(), "Vector4i Abs must surface minimum-integer overflow.");
+    Expect<ArgumentException>(() => value.Clamp(2, 1), "Vector4i must reject reversed scalar clamp bounds.");
+    Expect<ArgumentException>(() => value.Clamp(new Vector4i(0, 3, 0, 0), new Vector4i(2, 2, 4, 5)),
+        "Vector4i must reject reversed component clamp bounds.");
+    Require(value.Max(2) == new Vector4i(2, 2, 3, 4) && value.Max(new Vector4i(0, 3, 2, 5)) == new Vector4i(1, 3, 3, 5) &&
+            value.Min(2) == new Vector4i(1, 2, 2, 2) && value.Min(new Vector4i(0, 3, 2, 5)) == new Vector4i(0, 2, 2, 4) &&
+            Vector4i.One.MaxAxisIndex() == Vector4i.Axis.X && Vector4i.One.MinAxisIndex() == Vector4i.Axis.W &&
+            new Vector4i(1, 2, 2, 2).MaxAxisIndex() == Vector4i.Axis.Y &&
+            new Vector4i(2, 1, 1, 1).MinAxisIndex() == Vector4i.Axis.W &&
+            new Vector4i(5, -5, 3, -3).Snapped(2) == new Vector4i(6, -4, 4, -2) &&
+            new Vector4i(5, -5, 3, -3).Snapped(new Vector4i(2, 5, 2, 3)) == new Vector4i(6, -5, 4, -3),
+        "Vector4i min, max, axis tie-breaking, and snapping must be stable.");
+    Require(new Vector4i(5, -5, 7, -7).Snapped(-2) == new Vector4i(4, -6, 6, -8) &&
+            new Vector4i(5, -5, 7, -7).Snapped(new Vector4i(-2, 0, 3, 0)) ==
+                new Vector4i(4, -5, 6, -7) && value.Snapped(0) == value,
+        "Vector4i negative and zero snap steps follow the scalar formula independently on W.");
+    Expect<OverflowException>(() => _ = Vector4i.MaxValue.Snapped(2),
+        "Vector4i snapping rejects a rounded component beyond Int32.MaxValue.");
+    Require(value + Vector4i.One == new Vector4i(2, 3, 4, 5) && +value == value && value - Vector4i.One == new Vector4i(0, 1, 2, 3) &&
+            -value == new Vector4i(-1, -2, -3, -4) && value * 2 == 2 * value && value * Vector4i.One == value &&
             value * 0.5f == 0.5f * value && value / 2f == new Vector4(0.5f, 1f, 1.5f, 2f) &&
-            new Vector4I(2, 4, 6, 8) / 2 == value && new Vector4I(2, 6, 12, 20) / value == new Vector4I(2, 3, 4, 5) &&
-            new Vector4I(5, -5, 8, -8) % 3 == new Vector4I(2, -2, 2, -2) &&
-            new Vector4I(5, 8, 9, 10) % new Vector4I(3, 5, 4, 6) == new Vector4I(2, 3, 1, 4),
-        "Vector4I arithmetic must be componentwise.");
-    Require(Vector4I.MaxValue + Vector4I.One == Vector4I.MinValue,
-        "Vector4I ordinary overflow must wrap deterministically.");
-    Require(-new Vector4I(0, 0, 0, int.MinValue) == new Vector4I(0, 0, 0, int.MinValue) &&
-            new Vector4I(0, 0, 0, int.MaxValue) * 2 == new Vector4I(0, 0, 0, -2) &&
-            float.IsPositiveInfinity((new Vector4I(1, -1, 0, 0) / 0f).X) &&
-            float.IsNegativeInfinity((new Vector4I(1, -1, 0, 0) / 0f).Y) &&
-            float.IsNaN((new Vector4I(1, -1, 0, 0) / 0f).W),
+            new Vector4i(2, 4, 6, 8) / 2 == value && new Vector4i(2, 6, 12, 20) / value == new Vector4i(2, 3, 4, 5) &&
+            new Vector4i(5, -5, 8, -8) % 3 == new Vector4i(2, -2, 2, -2) &&
+            new Vector4i(5, 8, 9, 10) % new Vector4i(3, 5, 4, 6) == new Vector4i(2, 3, 1, 4),
+        "Vector4i arithmetic must be componentwise.");
+    Require(Vector4i.MaxValue + Vector4i.One == Vector4i.MinValue,
+        "Vector4i ordinary overflow must wrap deterministically.");
+    Require(-new Vector4i(0, 0, 0, int.MinValue) == new Vector4i(0, 0, 0, int.MinValue) &&
+            new Vector4i(0, 0, 0, int.MaxValue) * 2 == new Vector4i(0, 0, 0, -2) &&
+            float.IsPositiveInfinity((new Vector4i(1, -1, 0, 0) / 0f).X) &&
+            float.IsNegativeInfinity((new Vector4i(1, -1, 0, 0) / 0f).Y) &&
+            float.IsNaN((new Vector4i(1, -1, 0, 0) / 0f).W),
         "W wrapping and floating division by zero retain accepted C# and IEEE boundaries.");
-    Expect<DivideByZeroException>(() => _ = value / new Vector4I(1, 1, 0, 1), "Vector4I division must reject zero components.");
-    Expect<DivideByZeroException>(() => _ = value % 0, "Vector4I remainder must reject a zero scalar.");
-    Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, 0, 0, 0) / -1,
-        "Vector4I division must surface minimum-integer overflow.");
-    Expect<OverflowException>(() => _ = new Vector4I(int.MinValue, 0, 0, 0) % -1,
-        "Vector4I remainder must surface minimum-integer overflow.");
-    Require(value < new Vector4I(1, 2, 3, 5) && value <= new Vector4I(1, 2, 3, 4) &&
-            value < new Vector4I(1, 2, 4, -100) &&
-            value < new Vector4I(1, 3, -100, -100) &&
-            new Vector4I(2, 0, 0, 0) > value && value >= new Vector4I(1, 2, 3, 4) &&
-            value.Equals((object)new Vector4I(1, 2, 3, 4)) && value.GetHashCode() == new Vector4I(1, 2, 3, 4).GetHashCode(),
-        "Vector4I equality, hashing, and lexicographic ordering must be stable.");
-    Require((Vector4I)new Vector4((float)int.MinValue, 0f, 0f, 0f) ==
-                new Vector4I(int.MinValue, 0, 0, 0) &&
-            (Vector4)new Vector4I(16_777_217, int.MinValue, int.MaxValue, -2) ==
+    Expect<DivideByZeroException>(() => _ = value / new Vector4i(1, 1, 0, 1), "Vector4i division must reject zero components.");
+    Expect<DivideByZeroException>(() => _ = value % 0, "Vector4i remainder must reject a zero scalar.");
+    Expect<OverflowException>(() => _ = new Vector4i(int.MinValue, 0, 0, 0) / -1,
+        "Vector4i division must surface minimum-integer overflow.");
+    Expect<OverflowException>(() => _ = new Vector4i(int.MinValue, 0, 0, 0) % -1,
+        "Vector4i remainder must surface minimum-integer overflow.");
+    Require(value < new Vector4i(1, 2, 3, 5) && value <= new Vector4i(1, 2, 3, 4) &&
+            value < new Vector4i(1, 2, 4, -100) &&
+            value < new Vector4i(1, 3, -100, -100) &&
+            new Vector4i(2, 0, 0, 0) > value && value >= new Vector4i(1, 2, 3, 4) &&
+            value.Equals((object)new Vector4i(1, 2, 3, 4)) && value.GetHashCode() == new Vector4i(1, 2, 3, 4).GetHashCode(),
+        "Vector4i equality, hashing, and lexicographic ordering must be stable.");
+    Require((Vector4i)new Vector4((float)int.MinValue, 0f, 0f, 0f) ==
+                new Vector4i(int.MinValue, 0, 0, 0) &&
+            (Vector4)new Vector4i(16_777_217, int.MinValue, int.MaxValue, -2) ==
                 new Vector4(16_777_216f, int.MinValue, 2_147_483_648f, -2f),
-        "Vector4I conversions keep the lower Int32 bound and expose large-int float rounding.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector4I)new Vector4(0f, 0f, float.NaN, 0f),
-        "Vector4 to Vector4I conversion must reject non-finite values.");
-    Expect<ArgumentOutOfRangeException>(() => _ = (Vector4I)new Vector4(0f, 0f, 2147483648f, 0f),
-        "Vector4 to Vector4I conversion must reject out-of-range values.");
-    VerifyInvariantString(() => new Vector4I(1, 2, 3, 4).ToString("D2"), "(01, 02, 03, 04)", "Vector4I");
-    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector4I must reject invalid numeric formats.");
+        "Vector4i conversions keep the lower Int32 bound and expose large-int float rounding.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector4i)new Vector4(0f, 0f, float.NaN, 0f),
+        "Vector4 to Vector4i conversion must reject non-finite values.");
+    Expect<ArgumentOutOfRangeException>(() => _ = (Vector4i)new Vector4(0f, 0f, 2147483648f, 0f),
+        "Vector4 to Vector4i conversion must reject out-of-range values.");
+    VerifyInvariantString(() => new Vector4i(1, 2, 3, 4).ToString("D2"), "(01, 02, 03, 04)", "Vector4i");
+    Expect<FormatException>(() => _ = value.ToString("Q"), "Vector4i must reject invalid numeric formats.");
 
-    var key = new ConfigKey<Vector4I>("math", "vector4i");
+    var key = new ConfigKey<Vector4i>("math", "vector4i");
     using var config = new ConfigFile();
     config.SetValue(key, value);
     Require(config.GetValue(key) == value && config.EncodeToText() == "[math]\n\nvector4i={\"X\":1,\"Y\":2,\"Z\":3,\"W\":4}\n",
-        "ConfigFile must preserve the strict Vector4I schema.");
+        "ConfigFile must preserve the strict Vector4i schema.");
     config.Parse("[math]\nvector4i={\"X\":1,\"Y\":2,\"Z\":3,\"W\":4,\"Q\":5}\n");
-    Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject unknown Vector4I fields.");
+    Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject unknown Vector4i fields.");
 
     using var scene = new PackedScene();
     var source = new ColorPackedNode
     {
         Name = "VectorRoot",
         PackedVector2 = new Vector2(1.5f, -2.5f),
-        PackedVector2I = new Vector2I(3, -4),
+        PackedVector2i = new Vector2i(3, -4),
         PackedVector3 = new Vector3(.5f, 1.5f, 2.5f),
-        PackedVector3I = new Vector3I(3, -4, 5),
+        PackedVector3i = new Vector3i(3, -4, 5),
         PackedVector4 = new Vector4(1f, 2f, 3f, 4f),
-        PackedVector4I = new Vector4I(5, 6, 7, 8),
+        PackedVector4i = new Vector4i(5, 6, 7, 8),
     };
     scene.Pack(source);
     source.Dispose();
     using var instance = (ColorPackedNode)scene.Instantiate();
-    Require(instance.PackedVector2 == new Vector2(1.5f, -2.5f) && instance.PackedVector2I == new Vector2I(3, -4) &&
-            instance.PackedVector3 == new Vector3(.5f, 1.5f, 2.5f) && instance.PackedVector3I == new Vector3I(3, -4, 5) &&
-            instance.PackedVector4 == new Vector4(1f, 2f, 3f, 4f) && instance.PackedVector4I == new Vector4I(5, 6, 7, 8),
+    Require(instance.PackedVector2 == new Vector2(1.5f, -2.5f) && instance.PackedVector2i == new Vector2i(3, -4) &&
+            instance.PackedVector3 == new Vector3(.5f, 1.5f, 2.5f) && instance.PackedVector3i == new Vector3i(3, -4, 5) &&
+            instance.PackedVector4 == new Vector4(1f, 2f, 3f, 4f) && instance.PackedVector4i == new Vector4i(5, 6, 7, 8),
         "PackedScene must preserve all six stored vector value types.");
 
     _ = ExerciseVectorHotPath(32);
@@ -2937,15 +2937,15 @@ static void VerifyVector4IValues()
 static float ExerciseVectorHotPath(int iterations)
 {
     var vector2 = new Vector2(0.25f, -0.5f);
-    var vector2I = new Vector2I(3, -5);
+    var vector2I = new Vector2i(3, -5);
     var vector4 = new Vector4(0.25f, -0.5f, 0.75f, -1f);
-    var vector4I = new Vector4I(3, -5, 7, -9);
+    var vector4I = new Vector4i(3, -5, 7, -9);
     for (var index = 0; index < iterations; index++)
     {
         vector2 = vector2.Rotated(0.00001f).Lerp(Vector2.One, 0.00001f);
-        vector2I = (vector2I + Vector2I.One) - Vector2I.One;
+        vector2I = (vector2I + Vector2i.One) - Vector2i.One;
         vector4 = vector4.Lerp(Vector4.One, 0.00001f).Snapped(0.000001f);
-        vector4I = (vector4I + Vector4I.One) - Vector4I.One;
+        vector4I = (vector4I + Vector4i.One) - Vector4i.One;
     }
 
     return vector2.X + vector2I.X + vector4.X + vector4I.X;
@@ -3162,24 +3162,24 @@ static void VerifyIntegerRectangles()
     Require(Marshal.SizeOf<RectI>() == 16 && typeof(RectI).IsDefined(typeof(SerializableAttribute), inherit: false) &&
             typeof(RectI).StructLayoutAttribute?.Value == LayoutKind.Sequential,
         "RectI must be a serializable sequential four-integer value type.");
-    Require(default(RectI) == new RectI(Vector2I.Zero, Vector2I.Zero) &&
-            new RectI(new Vector2I(1, 2), new Vector2I(3, 4)) == new RectI(1, 2, 3, 4) &&
-            new RectI(new Vector2I(1, 2), 3, 4) == new RectI(1, 2, new Vector2I(3, 4)),
+    Require(default(RectI) == new RectI(Vector2i.Zero, Vector2i.Zero) &&
+            new RectI(new Vector2i(1, 2), new Vector2i(3, 4)) == new RectI(1, 2, 3, 4) &&
+            new RectI(new Vector2i(1, 2), 3, 4) == new RectI(1, 2, new Vector2i(3, 4)),
         "Zero initialization and every RectI constructor must preserve position and size.");
 
-    var mutable = new RectI(new Vector2I(1, 2), new Vector2I(3, 4));
+    var mutable = new RectI(new Vector2i(1, 2), new Vector2i(3, 4));
     var independentCopy = mutable;
-    mutable.Position = new Vector2I(2, 3);
-    mutable.Size = new Vector2I(5, 6);
-    Require(mutable.End == new Vector2I(7, 9) && independentCopy == new RectI(1, 2, 3, 4),
+    mutable.Position = new Vector2i(2, 3);
+    mutable.Size = new Vector2i(5, 6);
+    Require(mutable.End == new Vector2i(7, 9) && independentCopy == new RectI(1, 2, 3, 4),
         "RectI Position and Size mutation must update the computed end.");
-    mutable.End = new Vector2I(10, 12);
-    Require(mutable.Position == new Vector2I(2, 3) && mutable.Size == new Vector2I(8, 9),
+    mutable.End = new Vector2i(10, 12);
+    Require(mutable.Position == new Vector2i(2, 3) && mutable.Size == new Vector2i(8, 9),
         "Assigning RectI.End must preserve Position and derive Size.");
     var wrappedEnd = new RectI(int.MaxValue, int.MinValue, 0, 0);
-    wrappedEnd.End = new Vector2I(int.MinValue, int.MaxValue);
-    Require(wrappedEnd.Position == new Vector2I(int.MaxValue, int.MinValue) &&
-            wrappedEnd.Size == new Vector2I(1, -1),
+    wrappedEnd.End = new Vector2i(int.MinValue, int.MaxValue);
+    Require(wrappedEnd.Position == new Vector2i(int.MaxValue, int.MinValue) &&
+            wrappedEnd.Size == new Vector2i(1, -1),
         "Assigning RectI.End wraps the derived size without moving Position.");
     Require(new RectI(0, 0, 3, 4).Area == 12 && new RectI(0, 0, -3, -4).Area == 12 &&
             !new RectI(0, 0, -3, -4).HasArea() &&
@@ -3201,10 +3201,10 @@ static void VerifyIntegerRectangles()
             outer.Encloses(new RectI(2, 3, 4, 5)) &&
             !outer.Encloses(new RectI(-1, 3, 4, 5)),
         "RectI.Encloses must accept coincident edges and reject an escaped edge.");
-    Require(new RectI(0, 0, 5, 5).Expand(new Vector2I(-2, 7)) == new RectI(-2, 0, 7, 7) &&
-            outer.Expand(new Vector2I(10, 10)) == outer &&
-            new RectI(1, 2, 3, 5).GetCenter() == new Vector2I(2, 4) &&
-            new RectI(0, 0, -3, -5).GetCenter() == new Vector2I(-1, -2),
+    Require(new RectI(0, 0, 5, 5).Expand(new Vector2i(-2, 7)) == new RectI(-2, 0, 7, 7) &&
+            outer.Expand(new Vector2i(10, 10)) == outer &&
+            new RectI(1, 2, 3, 5).GetCenter() == new Vector2i(2, 4) &&
+            new RectI(0, 0, -3, -5).GetCenter() == new Vector2i(-1, -2),
         "RectI expansion and integer center rounding must preserve edge semantics.");
 
     var baseRect = new RectI(1, 2, 3, 4);
@@ -3223,9 +3223,9 @@ static void VerifyIntegerRectangles()
     Require(outer.HasArea() && !new RectI(0, 0, 0, 1).HasArea() &&
             !new RectI(0, 0, 1, -1).HasArea(),
         "RectI.HasArea must reject zero and negative size components.");
-    Require(outer.HasPoint(Vector2I.Zero) && outer.HasPoint(new Vector2I(9, 9)) &&
-            !outer.HasPoint(new Vector2I(10, 5)) && !outer.HasPoint(new Vector2I(5, 10)) &&
-            !outer.HasPoint(new Vector2I(-1, 5)),
+    Require(outer.HasPoint(Vector2i.Zero) && outer.HasPoint(new Vector2i(9, 9)) &&
+            !outer.HasPoint(new Vector2i(10, 5)) && !outer.HasPoint(new Vector2i(5, 10)) &&
+            !outer.HasPoint(new Vector2i(-1, 5)),
         "RectI.HasPoint must include left/top edges and exclude right/bottom edges.");
 
     var overlap = new RectI(8, 4, 5, 8);
@@ -6965,7 +6965,7 @@ static void VerifyInputEmulation()
 
 static void VerifyDisplayServerPointerModifiers()
 {
-    using var display = DisplayServer.Open("Pointer modifiers", new Vector2I(320, 240), hidden: true);
+    using var display = DisplayServer.Open("Pointer modifiers", new Vector2i(320, 240), hidden: true);
     var probe = new InputEmulationProbeNode { InputEnabled = true, PhysicsProcessEnabled = true };
     using var tree = new SceneTree(probe);
     var previousModifiers = SDL3.SDL.GetModState();
@@ -9312,8 +9312,8 @@ static void VerifyTweens()
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2(3f, 6f) &&
             Tween.InterpolateValue(new Vector3(1f, 2f, 3f), new Vector3(2f, 4f, 6f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3(2f, 4f, 6f) &&
-            Tween.InterpolateValue(new Vector3I(1, 2, 3), Vector3I.One, 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3I(2, 3, 4) &&
+            Tween.InterpolateValue(new Vector3i(1, 2, 3), Vector3i.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3i(2, 3, 4) &&
             Tween.InterpolateValue(Transform.Identity, new Transform(0f, new Vector2(4f, 6f)), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In).Origin == new Vector2(2f, 3f) &&
             Tween.InterpolateValue(0, 1, 0.5d, 1d,
@@ -10080,16 +10080,16 @@ static void VerifyTweenInterpolation()
 
     Require(Tween.InterpolateValue(new Vector2(1f, 2f), new Vector2(2f, 4f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2(2f, 4f) &&
-            Tween.InterpolateValue(new Vector2I(1, 2), new Vector2I(1, 3), 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2I(2, 4) &&
+            Tween.InterpolateValue(new Vector2i(1, 2), new Vector2i(1, 3), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2i(2, 4) &&
             Tween.InterpolateValue(new Vector3(1f, 2f, 3f), new Vector3(2f, 4f, 6f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3(2f, 4f, 6f) &&
-            Tween.InterpolateValue(new Vector3I(1, 2, 3), Vector3I.One, 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3I(2, 3, 4) &&
+            Tween.InterpolateValue(new Vector3i(1, 2, 3), Vector3i.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3i(2, 3, 4) &&
             Tween.InterpolateValue(new Vector4(1f, 2f, 3f, 4f), new Vector4(2f, 4f, 6f, 8f), 0.5d, 1d,
                 Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector4(2f, 4f, 6f, 8f) &&
-            Tween.InterpolateValue(new Vector4I(1, 2, 3, 4), Vector4I.One, 0.5d, 1d,
-                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector4I(2, 3, 4, 5),
+            Tween.InterpolateValue(new Vector4i(1, 2, 3, 4), Vector4i.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector4i(2, 3, 4, 5),
         "All declared vector families must interpolate by initial value plus delta.");
 
     Require(Tween.InterpolateValue(new Color(0f, 0.2f, 0.4f, 1f),
@@ -12296,29 +12296,29 @@ sealed class ColorPackedNode : Entity
         (node, value) => node.PackedVector2 = value,
         _ => Vector2.Zero,
         stored: true);
-    private static readonly PropertyDescriptor<ColorPackedNode, Vector2I> Vector2IProperty = new(
-        nameof(PackedVector2I),
-        node => node.PackedVector2I,
-        (node, value) => node.PackedVector2I = value,
-        _ => Vector2I.Zero,
+    private static readonly PropertyDescriptor<ColorPackedNode, Vector2i> Vector2iProperty = new(
+        nameof(PackedVector2i),
+        node => node.PackedVector2i,
+        (node, value) => node.PackedVector2i = value,
+        _ => Vector2i.Zero,
         stored: true);
     private static readonly PropertyDescriptor<ColorPackedNode, Vector3> Vector3Property = new(
         nameof(PackedVector3), node => node.PackedVector3, (node, value) => node.PackedVector3 = value,
         _ => Vector3.Zero, stored: true);
-    private static readonly PropertyDescriptor<ColorPackedNode, Vector3I> Vector3IProperty = new(
-        nameof(PackedVector3I), node => node.PackedVector3I, (node, value) => node.PackedVector3I = value,
-        _ => Vector3I.Zero, stored: true);
+    private static readonly PropertyDescriptor<ColorPackedNode, Vector3i> Vector3iProperty = new(
+        nameof(PackedVector3i), node => node.PackedVector3i, (node, value) => node.PackedVector3i = value,
+        _ => Vector3i.Zero, stored: true);
     private static readonly PropertyDescriptor<ColorPackedNode, Vector4> Vector4Property = new(
         nameof(PackedVector4),
         node => node.PackedVector4,
         (node, value) => node.PackedVector4 = value,
         _ => Vector4.Zero,
         stored: true);
-    private static readonly PropertyDescriptor<ColorPackedNode, Vector4I> Vector4IProperty = new(
-        nameof(PackedVector4I),
-        node => node.PackedVector4I,
-        (node, value) => node.PackedVector4I = value,
-        _ => Vector4I.Zero,
+    private static readonly PropertyDescriptor<ColorPackedNode, Vector4i> Vector4iProperty = new(
+        nameof(PackedVector4i),
+        node => node.PackedVector4i,
+        (node, value) => node.PackedVector4i = value,
+        _ => Vector4i.Zero,
         stored: true);
 
     private Color _tint = Colors.White;
@@ -12326,11 +12326,11 @@ sealed class ColorPackedNode : Entity
     private RectI _boundsI;
     private Transform _transform = Transform.Identity;
     private Vector2 _vector2;
-    private Vector2I _vector2I;
+    private Vector2i _vector2I;
     private Vector3 _vector3;
-    private Vector3I _vector3I;
+    private Vector3i _vector3I;
     private Vector4 _vector4;
-    private Vector4I _vector4I;
+    private Vector4i _vector4I;
 
     public Color Tint
     {
@@ -12382,7 +12382,7 @@ sealed class ColorPackedNode : Entity
         }
     }
 
-    public Vector2I PackedVector2I
+    public Vector2i PackedVector2i
     {
         get => _vector2I;
         set
@@ -12408,13 +12408,13 @@ sealed class ColorPackedNode : Entity
         set { EnsureMutable(); _vector3 = value; }
     }
 
-    public Vector3I PackedVector3I
+    public Vector3i PackedVector3i
     {
         get => _vector3I;
         set { EnsureMutable(); _vector3I = value; }
     }
 
-    public Vector4I PackedVector4I
+    public Vector4i PackedVector4i
     {
         get => _vector4I;
         set
@@ -12433,11 +12433,11 @@ sealed class ColorPackedNode : Entity
             .Append(BoundsIProperty)
             .Append(TransformProperty)
             .Append(Vector2Property)
-            .Append(Vector2IProperty)
+            .Append(Vector2iProperty)
             .Append(Vector3Property)
-            .Append(Vector3IProperty)
+            .Append(Vector3iProperty)
             .Append(Vector4Property)
-            .Append(Vector4IProperty);
+            .Append(Vector4iProperty);
 
     private static Entity CreateNode() => new ColorPackedNode();
 }

@@ -4,7 +4,7 @@ internal static class DisplayServerClipboardTests
 {
     public static void Run()
     {
-        using var display = DisplayServer.Open("Clipboard contract", new Vector2I(160, 120), hidden: true);
+        using var display = DisplayServer.Open("Clipboard contract", new Vector2i(160, 120), hidden: true);
 
         display.ClipboardSet(string.Empty);
         Check(!display.ClipboardHas() && display.ClipboardGet() == string.Empty,

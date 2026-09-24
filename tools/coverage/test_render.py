@@ -51,9 +51,9 @@ def main():
               len(item["attributes"].get("params", [])) == 1]
     by_parameter = {item["attributes"]["params"][0]["type"]: choose(vector, item, constructors, set())
                     for item in copies}
-    assert by_parameter["Vector2"] == [], "A Vector2I constructor cannot represent a Vector2 copy"
+    assert by_parameter["Vector2"] == [], "A Vector2i constructor cannot represent a Vector2 copy"
     assert [item["id"] for item in by_parameter["Vector2i"]] == [
-        "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2I)"
+        "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2i)"
     ]
 
     pages, summary = render()

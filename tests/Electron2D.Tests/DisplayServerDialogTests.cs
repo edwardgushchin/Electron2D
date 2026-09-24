@@ -12,7 +12,7 @@ internal static class DisplayServerDialogTests
             (int)DisplayServer.FileDialogMode.SaveFile != 4)
             throw new Exception("File dialog mode identities changed.");
 
-        using var display = DisplayServer.Open("Dialog validation", new Vector2I(320, 240), hidden: true);
+        using var display = DisplayServer.Open("Dialog validation", new Vector2i(320, 240), hidden: true);
         Action<bool, IReadOnlyList<string>, int> unused = (_, _, _) => { };
         Expect<ArgumentException>(() => display.DialogShow("title", "body", [], _ => { }));
         Expect<ArgumentException>(() => display.DialogShow("title", "body", ["OK", ""], _ => { }));

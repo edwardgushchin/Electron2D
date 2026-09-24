@@ -43,8 +43,8 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly nint _gtkScreen;
     private readonly nint _gtkTitlebarProvider;
     private RectI _windowRect;
-    private Vector2I _waylandMinimumSize = new(64, 64);
-    private Vector2I _waylandMaximumSize;
+    private Vector2i _waylandMinimumSize = new(64, 64);
+    private Vector2i _waylandMaximumSize;
 
     private DisplayServer(nint window, nint gtkScreen, nint gtkTitlebarProvider)
     {
@@ -65,12 +65,12 @@ public sealed partial class DisplayServer : ElectronObject
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
             throw SDLFailure("read the main window's initial size");
-        var position = Vector2I.Zero;
+        var position = Vector2i.Zero;
         if (!_waylandWindowPosition)
         {
             if (!SDL.GetWindowPosition(window, out var x, out var y))
                 throw SDLFailure("read the main window's initial position");
-            position = new Vector2I(x, y);
+            position = new Vector2i(x, y);
         }
         _windowRect = new RectI(position, width, height);
         _window = new SdlWindowHandle(window);
@@ -93,13 +93,13 @@ public sealed partial class DisplayServer : ElectronObject
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
-    public static DisplayServer Open(string title, Vector2I size, bool hidden = false) =>
+    public static DisplayServer Open(string title, Vector2i size, bool hidden = false) =>
         OpenCore(title, size, hidden, presentBlank: true);
 
-    internal static DisplayServer OpenForRendering(string title, Vector2I size, bool hidden) =>
+    internal static DisplayServer OpenForRendering(string title, Vector2i size, bool hidden) =>
         OpenCore(title, size, hidden, presentBlank: false);
 
-    private static DisplayServer OpenCore(string title, Vector2I size, bool hidden, bool presentBlank)
+    private static DisplayServer OpenCore(string title, Vector2i size, bool hidden, bool presentBlank)
     {
         ArgumentNullException.ThrowIfNull(title);
         if (size.X <= 0 || size.Y <= 0)
@@ -151,8 +151,8 @@ public sealed partial class DisplayServer : ElectronObject
                 try
                 {
                     var minimumSize = SDL.GetCurrentVideoDriver() == "wayland"
-                        ? WaylandLogicalWindowLimit(new Vector2I(64, 64), window, minimum: true)
-                        : new Vector2I(64, 64);
+                        ? WaylandLogicalWindowLimit(new Vector2i(64, 64), window, minimum: true)
+                        : new Vector2i(64, 64);
                     if (!SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
                         throw SDLFailure("set the main window's minimum size");
                     if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
@@ -310,25 +310,25 @@ public sealed partial class DisplayServer : ElectronObject
     /// <summary>Gets the global desktop position of a display.</summary>
     /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
     /// <returns>The upper-left position in platform-native desktop coordinates, or zero if the display is invalid.</returns>
-    public Vector2I ScreenGetPosition(int screen = ScreenOfMainWindow)
+    public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
-            return Vector2I.Zero;
-        return new Vector2I(bounds.X, bounds.Y);
+            return Vector2i.Zero;
+        return new Vector2i(bounds.X, bounds.Y);
     }
 
     /// <summary>Gets the full size of a display.</summary>
     /// <param name="screen">Display index or one of the negative display selectors; defaults to the main window's display.</param>
     /// <returns>The display size in pixels on Wayland or platform-native desktop units elsewhere; zero if the display is invalid.</returns>
-    public Vector2I ScreenGetSize(int screen = ScreenOfMainWindow)
+    public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)
     {
         EnsureOwner();
         if (!TryGetDisplayID(screen, out var displayId) || !SDL.GetDisplayBounds(displayId, out var bounds))
-            return Vector2I.Zero;
+            return Vector2i.Zero;
         return SDL.GetCurrentVideoDriver() == "wayland"
             ? WaylandPhysicalScreenSize(displayId, bounds)
-            : new Vector2I(bounds.W, bounds.H);
+            : new Vector2i(bounds.W, bounds.H);
     }
 
     /// <summary>Gets the usable desktop rectangle of a display.</summary>
@@ -346,16 +346,16 @@ public sealed partial class DisplayServer : ElectronObject
             return default;
         var size = SDL.GetCurrentVideoDriver() == "wayland"
             ? WaylandPhysicalScreenSize(displayId, bounds)
-            : new Vector2I(bounds.W, bounds.H);
-        return new RectI(new Vector2I(bounds.X, bounds.Y), size);
+            : new Vector2i(bounds.W, bounds.H);
+        return new RectI(new Vector2i(bounds.X, bounds.Y), size);
     }
 
-    private static Vector2I WaylandPhysicalScreenSize(uint displayId, SDL.Rect bounds)
+    private static Vector2i WaylandPhysicalScreenSize(uint displayId, SDL.Rect bounds)
     {
         var density = SDL.GetCurrentDisplayMode(displayId)?.PixelDensity ?? 0f;
         if (!float.IsFinite(density) || density <= 0f)
-            return new Vector2I(bounds.W, bounds.H);
-        return new Vector2I(checked((int)Math.Round(bounds.W * (double)density)),
+            return new Vector2i(bounds.W, bounds.H);
+        return new Vector2i(checked((int)Math.Round(bounds.W * (double)density)),
             checked((int)Math.Round(bounds.H * (double)density)));
     }
 
@@ -408,7 +408,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <summary>Gets the main window's client size.</summary>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>Pixel dimensions on Wayland and platform-native window dimensions elsewhere.</returns>
-    public Vector2I WindowGetSize(int windowId = MainWindowId)
+    public Vector2i WindowGetSize(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
@@ -419,7 +419,7 @@ public sealed partial class DisplayServer : ElectronObject
             : SDL.GetWindowSize(window, out width, out height);
         if (!sizeRead)
             throw SDLFailure("read window size");
-        return new Vector2I(width, height);
+        return new Vector2i(width, height);
     }
 
     /// <summary>Requests a new main-window client size.</summary>
@@ -427,11 +427,11 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <remarks>Wayland clamps each requested component below one to one before applying native minimum-size constraints. Other video drivers require positive dimensions.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is not positive on a non-Wayland video driver.</exception>
-    public void WindowSetSize(Vector2I size, int windowId = MainWindowId)
+    public void WindowSetSize(Vector2i size, int windowId = MainWindowId)
     {
         EnsureOwner();
         var requestedSize = SDL.GetCurrentVideoDriver() == "wayland"
-            ? new Vector2I(Math.Max(1, size.X), Math.Max(1, size.Y))
+            ? new Vector2i(Math.Max(1, size.X), Math.Max(1, size.Y))
             : size;
         if (requestedSize.X <= 0 || requestedSize.Y <= 0)
             throw new ArgumentOutOfRangeException(nameof(size), size, "Both window dimensions must be positive.");
@@ -439,24 +439,24 @@ public sealed partial class DisplayServer : ElectronObject
         if (_waylandWindowPosition)
         {
             requestedSize = WaylandLogicalWindowSize(requestedSize, window);
-            requestedSize = new Vector2I(Math.Max(1, requestedSize.X), Math.Max(1, requestedSize.Y));
+            requestedSize = new Vector2i(Math.Max(1, requestedSize.X), Math.Max(1, requestedSize.Y));
         }
         if (!SDL.SetWindowSize(window, requestedSize.X, requestedSize.Y))
             throw SDLFailure("set window size");
     }
 
-    private static Vector2I WaylandLogicalWindowSize(Vector2I pixelSize, nint window)
+    private static Vector2i WaylandLogicalWindowSize(Vector2i pixelSize, nint window)
     {
         var density = WaylandWindowPixelDensity(window);
-        return new Vector2I(
+        return new Vector2i(
             checked((int)Math.Round(pixelSize.X / (double)density, MidpointRounding.AwayFromZero)),
             checked((int)Math.Round(pixelSize.Y / (double)density, MidpointRounding.AwayFromZero)));
     }
 
-    private static Vector2I WaylandLogicalWindowLimit(Vector2I pixelSize, nint window, bool minimum)
+    private static Vector2i WaylandLogicalWindowLimit(Vector2i pixelSize, nint window, bool minimum)
     {
         var density = WaylandWindowPixelDensity(window);
-        var logicalSize = new Vector2I(
+        var logicalSize = new Vector2i(
             checked((int)(minimum ? Math.Ceiling(pixelSize.X / (double)density) : Math.Floor(pixelSize.X / (double)density))),
             checked((int)(minimum ? Math.Ceiling(pixelSize.Y / (double)density) : Math.Floor(pixelSize.Y / (double)density))));
         if (!minimum && ((pixelSize.X > 0 && logicalSize.X == 0) || (pixelSize.Y > 0 && logicalSize.Y == 0)))
@@ -476,21 +476,21 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <returns>The upper-left position in platform-native desktop coordinates.</returns>
     /// <exception cref="NotSupportedException">The active Wayland compositor does not expose a reliable global window position.</exception>
-    public Vector2I WindowGetPosition(int windowId = MainWindowId)
+    public Vector2i WindowGetPosition(int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);
         EnsureGlobalWindowCoordinatesAvailable();
         if (!SDL.GetWindowPosition(window, out var x, out var y))
             throw SDLFailure("read window position");
-        return new Vector2I(x, y);
+        return new Vector2i(x, y);
     }
 
     /// <summary>Requests a global desktop position for the main window.</summary>
     /// <param name="position">Upper-left position in platform-native desktop coordinates.</param>
     /// <param name="windowId">The main-window ID, zero.</param>
     /// <exception cref="NotSupportedException">Wayland does not allow this top-level window to choose its desktop position.</exception>
-    public void WindowSetPosition(Vector2I position, int windowId = MainWindowId)
+    public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)
     {
         EnsureOwner();
         var window = GetWindow(windowId);

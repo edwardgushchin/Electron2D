@@ -7,7 +7,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _renderer;
     private RenderHandle? _target;
-    private Vector2I _targetSize;
+    private Vector2i _targetSize;
     private SDL.Vertex[] _vertices = [];
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
@@ -107,7 +107,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         finally { NativeLibrary.Free(x11); }
     }
 
-    internal override Vector2I GetPixelSize()
+    internal override Vector2i GetPixelSize()
     {
         Check(SDL.GetRenderOutputSize(_renderer.DangerousGetHandle(), out var width, out var height), "query output size");
         return new(width, height);

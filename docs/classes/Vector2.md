@@ -36,7 +36,7 @@ var nextPosition = position + velocity * delta;
 | Member | Description |
 | --- | --- |
 | [`public Vector2(float x, float y)`](#m-electron2d-vector2-ctor-system-single-system-single) | Initializes a vector from horizontal and vertical components. |
-| [`public Vector2(Vector2I value)`](#m-electron2d-vector2-ctor-electron2d-vector2i) | Initializes a floating-point vector from an integer vector. |
+| [`public Vector2(Vector2i value)`](#m-electron2d-vector2-ctor-electron2d-vector2i) | Initializes a floating-point vector from an integer vector. |
 
 ## Properties
 
@@ -166,7 +166,7 @@ Initializes a vector from horizontal and vertical components.
 - `y`: The vertical component.
 
 <a id="m-electron2d-vector2-ctor-electron2d-vector2i"></a>
-### `public Vector2(Vector2I value)`
+### `public Vector2(Vector2i value)`
 
 Initializes a floating-point vector from an integer vector.
 

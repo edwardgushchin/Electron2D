@@ -14,12 +14,12 @@ namespace Electron2D;
 [StructLayout(LayoutKind.Sequential)]
 public struct RectI : IEquatable<RectI>
 {
-    private Vector2I _position;
-    private Vector2I _size;
+    private Vector2i _position;
+    private Vector2i _size;
 
     /// <summary>Gets or sets the beginning corner, usually the top-left integer point.</summary>
     /// <value>The rectangle origin. It is normally componentwise less than or equal to <see cref="End"/>.</value>
-    public Vector2I Position
+    public Vector2i Position
     {
         readonly get => _position;
         set => _position = value;
@@ -28,7 +28,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Gets or sets the integer width and height measured from <see cref="Position"/>.</summary>
     /// <value>The rectangle size. Non-negative components are required by most geometric operations.</value>
     /// <remarks>Assignment changes <see cref="End"/> because the end is computed from position plus size.</remarks>
-    public Vector2I Size
+    public Vector2i Size
     {
         readonly get => _size;
         set => _size = value;
@@ -37,7 +37,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Gets or sets the ending corner.</summary>
     /// <value><see cref="Position"/> plus <see cref="Size"/> using unchecked integer arithmetic.</value>
     /// <remarks>Assignment changes <see cref="Size"/> while preserving <see cref="Position"/>.</remarks>
-    public Vector2I End
+    public Vector2i End
     {
         readonly get => _position + _size;
         set => _size = value - _position;
@@ -51,7 +51,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Initializes an integer rectangle from a position and size.</summary>
     /// <param name="position">The beginning corner.</param>
     /// <param name="size">The integer width and height.</param>
-    public RectI(Vector2I position, Vector2I size)
+    public RectI(Vector2i position, Vector2i size)
     {
         _position = position;
         _size = size;
@@ -61,8 +61,8 @@ public struct RectI : IEquatable<RectI>
     /// <param name="position">The beginning corner.</param>
     /// <param name="width">The integer width.</param>
     /// <param name="height">The integer height.</param>
-    public RectI(Vector2I position, int width, int height)
-        : this(position, new Vector2I(width, height))
+    public RectI(Vector2i position, int width, int height)
+        : this(position, new Vector2i(width, height))
     {
     }
 
@@ -70,8 +70,8 @@ public struct RectI : IEquatable<RectI>
     /// <param name="x">The horizontal position.</param>
     /// <param name="y">The vertical position.</param>
     /// <param name="size">The integer width and height.</param>
-    public RectI(int x, int y, Vector2I size)
-        : this(new Vector2I(x, y), size)
+    public RectI(int x, int y, Vector2i size)
+        : this(new Vector2i(x, y), size)
     {
     }
 
@@ -81,7 +81,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="width">The integer width.</param>
     /// <param name="height">The integer height.</param>
     public RectI(int x, int y, int width, int height)
-        : this(new Vector2I(x, y), new Vector2I(width, height))
+        : this(new Vector2i(x, y), new Vector2i(width, height))
     {
     }
 
@@ -106,7 +106,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="point">The integer point to include.</param>
     /// <returns>The expanded rectangle.</returns>
     /// <remarks>A point exactly on an existing edge does not change the rectangle.</remarks>
-    public readonly RectI Expand(Vector2I point)
+    public readonly RectI Expand(Vector2i point)
     {
         var begin = _position;
         var end = End;
@@ -124,7 +124,7 @@ public struct RectI : IEquatable<RectI>
     /// <summary>Gets the integer center point.</summary>
     /// <returns><c>Position + Size / 2</c>.</returns>
     /// <remarks>Odd size components round toward <see cref="Position"/>.</remarks>
-    public readonly Vector2I GetCenter() => _position + (_size / 2);
+    public readonly Vector2i GetCenter() => _position + (_size / 2);
 
     /// <summary>Returns a copy extended equally on every side.</summary>
     /// <param name="amount">The integer amount added outward on each side; a negative value shrinks.</param>
@@ -161,7 +161,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="point">The point to test.</param>
     /// <returns><see langword="true"/> when the point is on or after the left/top edges and before the right/bottom edges.</returns>
     /// <remarks>Negative size components are unsupported; normalize with <see cref="Abs"/> first.</remarks>
-    public readonly bool HasPoint(Vector2I point) =>
+    public readonly bool HasPoint(Vector2i point) =>
         point.X >= _position.X &&
         point.Y >= _position.Y &&
         point.X < End.X &&
@@ -224,7 +224,7 @@ public struct RectI : IEquatable<RectI>
     /// <param name="value">The floating-point rectangle to convert.</param>
     /// <returns>The truncated integer rectangle.</returns>
     /// <exception cref="ArgumentOutOfRangeException">A component is not finite or is outside the 32-bit signed integer range.</exception>
-    public static explicit operator RectI(Rect value) => new((Vector2I)value.Position, (Vector2I)value.Size);
+    public static explicit operator RectI(Rect value) => new((Vector2i)value.Position, (Vector2i)value.Size);
 
     /// <summary>Tests whether another object is an equal integer rectangle.</summary>
     /// <param name="obj">The object to compare.</param>

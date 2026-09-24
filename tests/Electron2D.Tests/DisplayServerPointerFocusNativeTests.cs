@@ -5,7 +5,7 @@ internal static class DisplayServerPointerFocusNativeTests
 {
     public static void RunConfinement()
     {
-        using var display = DisplayServer.Open("Electron2D pointer confinement test", new Vector2I(480, 360));
+        using var display = DisplayServer.Open("Electron2D pointer confinement test", new Vector2i(480, 360));
         Check(display.GetName() == "Wayland", "The confinement test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The confinement test needs one native window.");
@@ -59,7 +59,7 @@ internal static class DisplayServerPointerFocusNativeTests
 
     public static void Run()
     {
-        using var display = DisplayServer.Open("Electron2D pointer focus test", new Vector2I(480, 360));
+        using var display = DisplayServer.Open("Electron2D pointer focus test", new Vector2i(480, 360));
         Check(display.GetName() == "Wayland", "The focused pointer test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The focused pointer test needs one native window.");
@@ -87,7 +87,7 @@ internal static class DisplayServerPointerFocusNativeTests
                 var density = SDL.GetWindowPixelDensity(window);
                 Check(float.IsFinite(density) && density > 0f, "The focused window has valid pixel density.");
                 var position = display.MouseGetPosition();
-                Check(position == new Vector2I((int)(x * density), (int)(y * density)),
+                Check(position == new Vector2i((int)(x * density), (int)(y * density)),
                     "The focused pointer position matches native SDL state in client pixels.");
                 if (position != lastPosition)
                     moved = true;
@@ -107,7 +107,7 @@ internal static class DisplayServerPointerFocusNativeTests
             var warpRejected = false;
             try
             {
-                display.WarpMouse(new Vector2I(beforeWarp.X + 40, beforeWarp.Y + 40));
+                display.WarpMouse(new Vector2i(beforeWarp.X + 40, beforeWarp.Y + 40));
             }
             catch (NotSupportedException)
             {

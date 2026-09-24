@@ -294,7 +294,7 @@ This ADR records the required architecture only. It does not make `Vector` a pro
 <a id="adr-0033"></a>
 ## ADR 0033: Dimensioned engine-owned vector family
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ### Status
 
@@ -308,14 +308,16 @@ The existing rectangle and affine-transform names do not have this ambiguity: El
 
 ### Decision
 
-Electron2D owns six canonical vector values: `Vector2`, `Vector2I`, `Vector3`, `Vector3I`, `Vector4`, and `Vector4I`.
+Electron2D owns six canonical vector values: `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, and `Vector4i`.
 
-- `Vector2` is the engine's single-precision 2D spatial and numeric pair. `Vector2I` is its 32-bit integer counterpart for pixels, grids, tiles, dimensions, and integer pairs.
-- `Vector3` and `Vector3I` are three-component floating-point and integer numeric values. `Vector3` carries arbitrary `vec3`/`float3` data; `Color` carries values with RGB semantics. A numeric three-component value does not add three-dimensional nodes, scenes, transforms, cameras, physics, rendering paths, or assets.
-- `Vector4` and `Vector4I` are four-component numeric tuples. Their existence does not create 3D or 4D scene geometry, transforms, cameras, physics, rendering paths, or assets.
+Integer-vector type names use the lowercase `i` suffix. This naming rule applies to types; ADR 0045's uppercase-acronym rule applies to functions, methods, and properties. No alternate integer-vector type names or aliases ship.
+
+- `Vector2` is the engine's single-precision 2D spatial and numeric pair. `Vector2i` is its 32-bit integer counterpart for pixels, grids, tiles, dimensions, and integer pairs.
+- `Vector3` and `Vector3i` are three-component floating-point and integer numeric values. `Vector3` carries arbitrary `vec3`/`float3` data; `Color` carries values with RGB semantics. A numeric three-component value does not add three-dimensional nodes, scenes, transforms, cameras, physics, rendering paths, or assets.
+- `Vector4` and `Vector4i` are four-component numeric tuples. Their existence does not create 3D or 4D scene geometry, transforms, cameras, physics, rendering paths, or assets.
 - `Rect`, `Transform`, and `Entity` use `Electron2D.Vector2` throughout their public/protected API and engine-owned state.
 - The previously accepted `Vector` name and the temporary `VectorI` name do not ship. No aliases, forwarding wrappers, duplicate overloads, or compatibility conversions are provided.
-- Typed shader parameters use `Vector3` as the canonical `vec3`/`float3` descriptor and accept `Color` when the components represent RGB. Signed and unsigned three-component integer uniforms use `Vector3I` with preserved component bits.
+- Typed shader parameters use `Vector3` as the canonical `vec3`/`float3` descriptor and accept `Color` when the components represent RGB. Signed and unsigned three-component integer uniforms use `Vector3i` with preserved component bits.
 - External numerics types may appear only inside future localized integration adapters. They do not cross a public/protected Electron2D boundary.
 - Every vector is a sequential mutable value with explicit float/integer arithmetic, edge behavior, invariant formatting, strict typed configuration persistence, packed-scene storage, and allocation-free warmed numeric operations.
 - Universal-value truth conversion is permanently excluded by ADR 0001. Four-component projection operators are excluded because Electron2D has no 3D projection type.
@@ -324,7 +326,7 @@ Electron2D owns six canonical vector values: `Vector2`, `Vector2I`, `Vector3`, `
 
 - The vector family states component count explicitly across two-, three-, and four-component values.
 - The completed migration is source-breaking from both the former external numerics surface and ADR 0032's unimplemented `Vector` spelling. The repository is pre-release and retains only the final contract.
-- `Vector2I`, `Vector3I`, and `Vector4I` use explicit managed integer behavior: ordinary component arithmetic wraps, invalid division throws, and float-to-integer conversion rejects non-finite or out-of-range components. Their squared length and distance return signed 64-bit values after widening before multiplication; they throw `OverflowException` if the exact result exceeds `long.MaxValue`. Distance widens coordinate differences before subtraction. Length and distance use widened floating-point arithmetic independently of the squared-return limit and remain finite for every 32-bit input. This corrects the pre-release 32-bit squared wrap, which made moderate lengths NaN.
+- `Vector2i`, `Vector3i`, and `Vector4i` use explicit managed integer behavior: ordinary component arithmetic wraps, invalid division throws, and float-to-integer conversion rejects non-finite or out-of-range components. Their squared length and distance return signed 64-bit values after widening before multiplication; they throw `OverflowException` if the exact result exceeds `long.MaxValue`. Distance widens coordinate differences before subtraction. Length and distance use widened floating-point arithmetic independently of the squared-return limit and remain finite for every 32-bit input. This corrects the pre-release 32-bit squared wrap, which made moderate lengths NaN.
 - Their floating-scalar division returns a floating vector with IEEE 754 results, including infinity or NaN for a zero divisor. The typed API has no dynamic `Variant` error state under ADR 0001.
 - The current executable verification is Linux/.NET 8 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
 
@@ -432,7 +434,7 @@ Some paired value types have distinct storage and behavior but form one predicta
 - The sibling receives its full own API, XML/living documentation, persistence and integration where supported, positive/negative/boundary tests, and post-implementation audit. Empty shells and compatibility aliases remain forbidden.
 - Pure symmetry is insufficient: speculative types, 3D families, and concepts outside the accepted architecture remain excluded.
 - `RectI` is the required integer sibling of `Rect`. Its complete implementation includes the audited integer-rectangle contract and typed conversions in both rectangle types.
-- The delivered type uses `Vector2I`, explicit normalization, unchecked ordinary integer arithmetic, strict typed persistence, and direct reference-free packed-scene storage without adding an absent consumer domain.
+- The delivered type uses `Vector2i`, explicit normalization, unchecked ordinary integer arithmetic, strict typed persistence, and direct reference-free packed-scene storage without adding an absent consumer domain.
 
 ### Consequences
 

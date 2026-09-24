@@ -12,7 +12,7 @@ internal static class DisplayServerNativeSmokeTests
         if (requestedDriver == "wayland")
             DisplayServerScreenNativeTests.RunHiddenWindow();
 
-        using var display = DisplayServer.Open("Electron2D native smoke", new Vector2I(320, 240));
+        using var display = DisplayServer.Open("Electron2D native smoke", new Vector2i(320, 240));
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTAL_SETTINGS") is { } expectedPortal)
         {
             Check(expectedPortal is "0" or "1", "Portal test expectation must be zero or one.");
@@ -57,7 +57,7 @@ internal static class DisplayServerNativeSmokeTests
         {
             try
             {
-                display.GetWindowAtScreenPosition(Vector2I.Zero);
+                display.GetWindowAtScreenPosition(Vector2i.Zero);
                 throw new InvalidOperationException("Wayland unexpectedly exposed a global window-position hit test.");
             }
             catch (NotSupportedException)
@@ -70,7 +70,7 @@ internal static class DisplayServerNativeSmokeTests
             SDL.GetMouseState(out var mouseX, out var mouseY);
             var mousePixelScale = SDL.GetWindowPixelDensity(windows![0]);
             Check(float.IsFinite(mousePixelScale) && mousePixelScale > 0f &&
-                  display.MouseGetPosition() == new Vector2I((int)(mouseX * mousePixelScale),
+                  display.MouseGetPosition() == new Vector2i((int)(mouseX * mousePixelScale),
                       (int)(mouseY * mousePixelScale)),
                 "Wayland mouse position converts SDL's window-relative state to physical client pixels.");
             Check(display.HasFeature(DisplayServer.Feature.Ime),
@@ -148,11 +148,11 @@ internal static class DisplayServerNativeSmokeTests
         }
 
         display.WindowSetTitle("Electron2D native smoke updated");
-        display.WindowSetMinSize(new Vector2I(96, 72));
-        display.WindowSetSize(new Vector2I(400, 300));
+        display.WindowSetMinSize(new Vector2i(96, 72));
+        display.WindowSetSize(new Vector2i(400, 300));
         display.ProcessEvents();
         Check(display.WindowGetTitle() == "Electron2D native smoke updated" &&
-              display.WindowGetMinSize() == new Vector2I(96, 72) &&
+              display.WindowGetMinSize() == new Vector2i(96, 72) &&
               display.WindowGetSize() is { X: > 0, Y: > 0 },
             "Window getters observe valid state after title, minimum-size, and size requests.");
 
@@ -161,15 +161,15 @@ internal static class DisplayServerNativeSmokeTests
             var origin = display.WindowGetPosition();
             var size = display.WindowGetSize();
             Check(display.GetWindowAtScreenPosition(origin) == DisplayServer.MainWindowId &&
-                  display.GetWindowAtScreenPosition(new Vector2I(origin.X + size.X, origin.Y)) == DisplayServer.InvalidWindowId &&
-                  display.GetWindowAtScreenPosition(new Vector2I(origin.X, origin.Y + size.Y)) == DisplayServer.InvalidWindowId,
+                  display.GetWindowAtScreenPosition(new Vector2i(origin.X + size.X, origin.Y)) == DisplayServer.InvalidWindowId &&
+                  display.GetWindowAtScreenPosition(new Vector2i(origin.X, origin.Y + size.Y)) == DisplayServer.InvalidWindowId,
                 "X11 window hit testing uses half-open client bounds.");
             if (SDL.GetWindowBordersSize(windows![0], out var top, out var left, out _, out _) &&
                 (top > 0 || left > 0))
             {
                 var borderPoint = top > 0
-                    ? new Vector2I(origin.X, origin.Y - 1)
-                    : new Vector2I(origin.X - 1, origin.Y);
+                    ? new Vector2i(origin.X, origin.Y - 1)
+                    : new Vector2i(origin.X - 1, origin.Y);
                 Check(display.GetWindowAtScreenPosition(borderPoint) == DisplayServer.InvalidWindowId,
                     "X11 title bar and window borders are outside the client hit area.");
             }
@@ -183,7 +183,7 @@ internal static class DisplayServerNativeSmokeTests
                 try
                 {
                     var sourceUsable = display.ScreenGetUsableRect(sourceScreen);
-                    display.WindowSetPosition(sourceUsable.Position + new Vector2I(80, 80));
+                    display.WindowSetPosition(sourceUsable.Position + new Vector2i(80, 80));
                     Check(SDL.SyncWindow(windows![0]), "X11 applied the normal-window test position.");
                     display.ProcessEvents();
                     var before = display.WindowGetPosition();

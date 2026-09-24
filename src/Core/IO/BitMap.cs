@@ -16,12 +16,12 @@ public class BitMap : Resource
 
     /// <summary>Returns the mask dimensions.</summary>
     /// <returns>The width and height in pixels.</returns>
-    public Vector2I GetSize() { lock (_gate) { ThrowIfDisposed(); return new(_width, _height); } }
+    public Vector2i GetSize() { lock (_gate) { ThrowIfDisposed(); return new(_width, _height); } }
 
     /// <summary>Replaces the mask with unset bits of the requested positive size.</summary>
     /// <param name="size">The new dimensions.</param>
     /// <exception cref="ArgumentOutOfRangeException">A dimension is nonpositive or the bit count exceeds the supported range.</exception>
-    public void Create(Vector2I size)
+    public void Create(Vector2i size)
     {
         var data = Allocate(size);
         lock (_gate) { ThrowIfDisposed(); _width = size.X; _height = size.Y; _bits = data; }
@@ -62,7 +62,7 @@ public class BitMap : Resource
     /// <summary>Reads one bit by integer point.</summary>
     /// <param name="position">The pixel coordinate.</param>
     /// <returns>Whether the bit is set.</returns>
-    public bool GetBitv(Vector2I position) => GetBit(position.X, position.Y);
+    public bool GetBitv(Vector2i position) => GetBit(position.X, position.Y);
 
     /// <summary>Sets one bit.</summary>
     /// <param name="x">Horizontal pixel coordinate.</param>
@@ -85,7 +85,7 @@ public class BitMap : Resource
     /// <summary>Sets one bit by integer point.</summary>
     /// <param name="position">The pixel coordinate.</param>
     /// <param name="bit">The new value.</param>
-    public void SetBitv(Vector2I position, bool bit) => SetBit(position.X, position.Y, bit);
+    public void SetBitv(Vector2i position, bool bit) => SetBit(position.X, position.Y, bit);
 
     /// <summary>Sets all bits in the clipped half-open rectangle.</summary>
     /// <param name="rect">The requested region.</param>
@@ -123,7 +123,7 @@ public class BitMap : Resource
 
     /// <summary>Resizes with nearest-neighbor sampling; a default empty mask becomes all false.</summary>
     /// <param name="newSize">Positive destination dimensions.</param>
-    public void Resize(Vector2I newSize)
+    public void Resize(Vector2i newSize)
     {
         var data = Allocate(newSize);
         lock (_gate)
@@ -360,7 +360,7 @@ public class BitMap : Resource
         return y * _width + x;
     }
 
-    private static byte[] Allocate(Vector2I size)
+    private static byte[] Allocate(Vector2i size)
     {
         var pixels = (long)size.X * size.Y;
         if (size.X <= 0 || size.Y <= 0 || pixels > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(size));

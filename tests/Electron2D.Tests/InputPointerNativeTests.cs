@@ -5,7 +5,7 @@ internal static class InputPointerNativeTests
 {
     internal static void Run()
     {
-        using (var display = DisplayServer.Open("Input pointer contract", new Vector2I(320, 240)))
+        using (var display = DisplayServer.Open("Input pointer contract", new Vector2i(320, 240)))
         {
             DisplayServerPointerNativeTests.Run(display);
             foreach (var shape in Enum.GetValues<Input.CursorShape>())

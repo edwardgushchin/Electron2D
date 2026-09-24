@@ -31,7 +31,7 @@ public sealed partial class Image
         LoadSVGFromBuffer(bytes, scale);
     }
 
-    private static Vector2I SVGSize(byte[] data, float scale)
+    private static Vector2i SVGSize(byte[] data, float scale)
     {
         if (!float.IsFinite(scale) || scale <= 0) throw new ArgumentOutOfRangeException(nameof(scale));
         try

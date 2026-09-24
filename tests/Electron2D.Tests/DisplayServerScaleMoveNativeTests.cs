@@ -5,7 +5,7 @@ internal static class DisplayServerScaleMoveNativeTests
 {
     public static void Run()
     {
-        using var display = DisplayServer.Open("Electron2D scale move test", new Vector2I(320, 240));
+        using var display = DisplayServer.Open("Electron2D scale move test", new Vector2i(320, 240));
         if (display.GetName() != "Wayland")
             throw new InvalidOperationException("The scale move test requires Wayland.");
 
@@ -13,8 +13,8 @@ internal static class DisplayServerScaleMoveNativeTests
         if (count != 1 || windows is not { Length: 1 })
             throw new InvalidOperationException("The scale move test needs one window.");
         var window = windows[0];
-        display.WindowSetMaxSize(new Vector2I(501, 401));
-        display.WindowSetMinSize(new Vector2I(97, 73));
+        display.WindowSetMaxSize(new Vector2i(501, 401));
+        display.WindowSetMinSize(new Vector2i(97, 73));
 
         var renderer = SDL.CreateRenderer(window, "software");
         if (renderer == 0)
@@ -66,8 +66,8 @@ internal static class DisplayServerScaleMoveNativeTests
                 if (!SDL.GetWindowSizeInPixels(window, out var pixelWidth, out var pixelHeight) ||
                     !SDL.GetWindowMinimumSize(window, out var minWidth, out var minHeight) ||
                     !SDL.GetWindowMaximumSize(window, out var maxWidth, out var maxHeight) ||
-                    size != new Vector2I(pixelWidth, pixelHeight) ||
-                    minimum != new Vector2I(97, 73) || maximum != new Vector2I(501, 401) ||
+                    size != new Vector2i(pixelWidth, pixelHeight) ||
+                    minimum != new Vector2i(97, 73) || maximum != new Vector2i(501, 401) ||
                     minWidth != (int)Math.Ceiling(97 / (double)density) ||
                     minHeight != (int)Math.Ceiling(73 / (double)density) ||
                     maxWidth != (int)Math.Floor(501 / (double)density) ||

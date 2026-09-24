@@ -37,7 +37,7 @@ var normalized = weights.Normalized();
 | Member | Description |
 | --- | --- |
 | [`public Vector4(float x, float y, float z, float w)`](#m-electron2d-vector4-ctor-system-single-system-single-system-single-system-single) | Initializes a vector from four components. |
-| [`public Vector4(Vector4I value)`](#m-electron2d-vector4-ctor-electron2d-vector4i) | Initializes a floating-point vector from an integer vector. |
+| [`public Vector4(Vector4i value)`](#m-electron2d-vector4-ctor-electron2d-vector4i) | Initializes a floating-point vector from an integer vector. |
 
 ## Properties
 
@@ -152,7 +152,7 @@ Initializes a vector from four components.
 - `w`: The W component.
 
 <a id="m-electron2d-vector4-ctor-electron2d-vector4i"></a>
-### `public Vector4(Vector4I value)`
+### `public Vector4(Vector4i value)`
 
 Initializes a floating-point vector from an integer vector.
 
@@ -853,7 +853,7 @@ Compares vectors lexicographically by X, Y, Z, then W.
 
 Copies are independent, with no state transition. Numeric operations allocate no managed memory after warmup; formatting allocates. Independent copies are thread-safe to read or mutate independently; shared writes are unsynchronized.
 
-The type depends on canonical scalar [`Mathf`](Mathf.md), formatting/layout primitives, and [`Vector4I`](Vector4I.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
+The type depends on canonical scalar [`Mathf`](Mathf.md), formatting/layout primitives, and [`Vector4i`](Vector4i.md). [`ConfigFile`](ConfigFile.md) accepts only finite values and persists exact `X/Y/Z/W` fields. [`PackedScene`](PackedScene.md) stores the value directly.
 
 ## Coverage, verification, and limitations
 

@@ -113,7 +113,7 @@ public struct Vector4 : IEquatable<Vector4>
     /// <summary>Initializes a floating-point vector from an integer vector.</summary>
     /// <param name="value">The integer vector to convert.</param>
     /// <remarks>Large integer components can lose low-order precision during conversion.</remarks>
-    public Vector4(Vector4I value)
+    public Vector4(Vector4i value)
     {
         X = value.X;
         Y = value.Y;

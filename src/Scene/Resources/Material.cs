@@ -47,7 +47,7 @@ public sealed class ShaderMaterial : Material
     }
 
     /// <summary>Sets a typed scalar, vector or matrix material uniform.</summary>
-    /// <typeparam name="T">Bool, float, int, uint, Vector2, Vector3, Vector4, Color, Rect, Transform, Vector2I, Vector3I or Vector4I as required by the shader.</typeparam>
+    /// <typeparam name="T">Bool, float, int, uint, Vector2, Vector3, Vector4, Color, Rect, Transform, Vector2i, Vector3i or Vector4i as required by the shader.</typeparam>
     /// <param name="name">The exact, case-sensitive uniform member name.</param>
     /// <param name="value">The new value. Color maps RGB to float3 or RGBA to float4 without color-space conversion.
     /// Rect maps position and size to float4. Integer vectors preserve component bits for signed or unsigned shader vectors.

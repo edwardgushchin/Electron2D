@@ -68,7 +68,7 @@ internal static partial class RenderingRuntimeTests
         Check(material.GetShaderParameterArray<bool>("switches")[0], "Boolean array reads return independent copies.");
         Reject<ArgumentException>(() => material.SetShaderParameter("enabled", 1u));
         Reject<ArgumentException>(() => material.SetShaderParameter("number", true));
-        Reject<ArgumentException>(() => material.SetShaderParameter("pair", new Vector2I(1, 1)));
+        Reject<ArgumentException>(() => material.SetShaderParameter("pair", new Vector2i(1, 1)));
         Reject<ArgumentException>(() => material.SetShaderParameter<bool>("switches", [true, false]));
         Reject<ArgumentException>(() => material.SetShaderParameter<int>("pairs", [1, 2, 3]));
         Check(material.GetShaderParameterArray<bool>("switches").SequenceEqual(new[] { true, false, true }), "Wrong types and array lengths preserve the previous values.");

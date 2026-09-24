@@ -2786,26 +2786,26 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector2I",
+    "id": "T:Electron2D.Vector2i",
     "kind": "type",
-    "declaringType": "Electron2D.Vector2I",
-    "name": "Vector2I",
-    "signature": "public struct Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
+    "name": "Vector2i",
+    "signature": "public struct Electron2D.Vector2i",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [
-      "System.IEquatable\u003CElectron2D.Vector2I\u003E"
+      "System.IEquatable\u003CElectron2D.Vector2i\u003E"
     ],
     "parameters": null,
     "returnType": null,
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector2I.Axis",
+    "id": "T:Electron2D.Vector2i.Axis",
     "kind": "type",
-    "declaringType": "Electron2D.Vector2I.Axis",
+    "declaringType": "Electron2D.Vector2i.Axis",
     "name": "Axis",
-    "signature": "public enum Electron2D.Vector2I.Axis",
+    "signature": "public enum Electron2D.Vector2i.Axis",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -2852,26 +2852,26 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector3I",
+    "id": "T:Electron2D.Vector3i",
     "kind": "type",
-    "declaringType": "Electron2D.Vector3I",
-    "name": "Vector3I",
-    "signature": "public struct Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
+    "name": "Vector3i",
+    "signature": "public struct Electron2D.Vector3i",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [
-      "System.IEquatable\u003CElectron2D.Vector3I\u003E"
+      "System.IEquatable\u003CElectron2D.Vector3i\u003E"
     ],
     "parameters": null,
     "returnType": null,
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector3I.Axis",
+    "id": "T:Electron2D.Vector3i.Axis",
     "kind": "type",
-    "declaringType": "Electron2D.Vector3I.Axis",
+    "declaringType": "Electron2D.Vector3i.Axis",
     "name": "Axis",
-    "signature": "public enum Electron2D.Vector3I.Axis",
+    "signature": "public enum Electron2D.Vector3i.Axis",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -2918,26 +2918,26 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector4I",
+    "id": "T:Electron2D.Vector4i",
     "kind": "type",
-    "declaringType": "Electron2D.Vector4I",
-    "name": "Vector4I",
-    "signature": "public struct Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
+    "name": "Vector4i",
+    "signature": "public struct Electron2D.Vector4i",
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [
-      "System.IEquatable\u003CElectron2D.Vector4I\u003E"
+      "System.IEquatable\u003CElectron2D.Vector4i\u003E"
     ],
     "parameters": null,
     "returnType": null,
     "value": null
   },
   {
-    "id": "T:Electron2D.Vector4I.Axis",
+    "id": "T:Electron2D.Vector4i.Axis",
     "kind": "type",
-    "declaringType": "Electron2D.Vector4I.Axis",
+    "declaringType": "Electron2D.Vector4i.Axis",
     "name": "Axis",
-    "signature": "public enum Electron2D.Vector4I.Axis",
+    "signature": "public enum Electron2D.Vector4i.Axis",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -5373,23 +5373,23 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "constructor",
     "declaringType": "Electron2D.RectI",
     "name": ".ctor",
-    "signature": "public RectI(Electron2D.Vector2I position, Electron2D.Vector2I size)",
+    "signature": "public RectI(Electron2D.Vector2i position, Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -5397,18 +5397,18 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2I,System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.RectI..ctor(Electron2D.Vector2i,System.Int32,System.Int32)",
     "kind": "constructor",
     "declaringType": "Electron2D.RectI",
     "name": ".ctor",
-    "signature": "public RectI(Electron2D.Vector2I position, System.Int32 width, System.Int32 height)",
+    "signature": "public RectI(Electron2D.Vector2i position, System.Int32 width, System.Int32 height)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -5426,11 +5426,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2I)",
+    "id": "constructor:Electron2D.RectI..ctor(System.Int32,System.Int32,Electron2D.Vector2i)",
     "kind": "constructor",
     "declaringType": "Electron2D.RectI",
     "name": ".ctor",
-    "signature": "public RectI(System.Int32 x, System.Int32 y, Electron2D.Vector2I size)",
+    "signature": "public RectI(System.Int32 x, System.Int32 y, Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5447,7 +5447,7 @@
       },
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -5814,18 +5814,18 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2I)",
+    "id": "constructor:Electron2D.Vector2..ctor(Electron2D.Vector2i)",
     "kind": "constructor",
     "declaringType": "Electron2D.Vector2",
     "name": ".ctor",
-    "signature": "public Vector2(Electron2D.Vector2I value)",
+    "signature": "public Vector2(Electron2D.Vector2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -5857,11 +5857,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector2I..ctor(Electron2D.Vector2)",
+    "id": "constructor:Electron2D.Vector2i..ctor(Electron2D.Vector2)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": ".ctor",
-    "signature": "public Vector2I(Electron2D.Vector2 value)",
+    "signature": "public Vector2i(Electron2D.Vector2 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5876,11 +5876,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector2I..ctor(System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.Vector2i..ctor(System.Int32,System.Int32)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": ".ctor",
-    "signature": "public Vector2I(System.Int32 x, System.Int32 y)",
+    "signature": "public Vector2i(System.Int32 x, System.Int32 y)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5900,18 +5900,18 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3I)",
+    "id": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3i)",
     "kind": "constructor",
     "declaringType": "Electron2D.Vector3",
     "name": ".ctor",
-    "signature": "public Vector3(Electron2D.Vector3I value)",
+    "signature": "public Vector3(Electron2D.Vector3i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -5948,11 +5948,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector3I..ctor(Electron2D.Vector3)",
+    "id": "constructor:Electron2D.Vector3i..ctor(Electron2D.Vector3)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": ".ctor",
-    "signature": "public Vector3I(Electron2D.Vector3 value)",
+    "signature": "public Vector3i(Electron2D.Vector3 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5967,11 +5967,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector3I..ctor(System.Int32,System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.Vector3i..ctor(System.Int32,System.Int32,System.Int32)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": ".ctor",
-    "signature": "public Vector3I(System.Int32 x, System.Int32 y, System.Int32 z)",
+    "signature": "public Vector3i(System.Int32 x, System.Int32 y, System.Int32 z)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -5996,18 +5996,18 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector4..ctor(Electron2D.Vector4I)",
+    "id": "constructor:Electron2D.Vector4..ctor(Electron2D.Vector4i)",
     "kind": "constructor",
     "declaringType": "Electron2D.Vector4",
     "name": ".ctor",
-    "signature": "public Vector4(Electron2D.Vector4I value)",
+    "signature": "public Vector4(Electron2D.Vector4i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -6049,11 +6049,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector4I..ctor(Electron2D.Vector4)",
+    "id": "constructor:Electron2D.Vector4i..ctor(Electron2D.Vector4)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": ".ctor",
-    "signature": "public Vector4I(Electron2D.Vector4 value)",
+    "signature": "public Vector4i(Electron2D.Vector4 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -6068,11 +6068,11 @@
     "value": null
   },
   {
-    "id": "constructor:Electron2D.Vector4I..ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
+    "id": "constructor:Electron2D.Vector4i..ctor(System.Int32,System.Int32,System.Int32,System.Int32)",
     "kind": "constructor",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": ".ctor",
-    "signature": "public Vector4I(System.Int32 x, System.Int32 y, System.Int32 z, System.Int32 w)",
+    "signature": "public Vector4i(System.Int32 x, System.Int32 y, System.Int32 z, System.Int32 w)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -14740,29 +14740,29 @@
     "value": "1"
   },
   {
-    "id": "enumValue:Electron2D.Vector2I.Axis.X()",
+    "id": "enumValue:Electron2D.Vector2i.Axis.X()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector2I.Axis",
+    "declaringType": "Electron2D.Vector2i.Axis",
     "name": "X",
-    "signature": "public const Electron2D.Vector2I.Axis X = 0",
+    "signature": "public const Electron2D.Vector2i.Axis X = 0",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I.Axis",
+    "returnType": "Electron2D.Vector2i.Axis",
     "value": "0"
   },
   {
-    "id": "enumValue:Electron2D.Vector2I.Axis.Y()",
+    "id": "enumValue:Electron2D.Vector2i.Axis.Y()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector2I.Axis",
+    "declaringType": "Electron2D.Vector2i.Axis",
     "name": "Y",
-    "signature": "public const Electron2D.Vector2I.Axis Y = 1",
+    "signature": "public const Electron2D.Vector2i.Axis Y = 1",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I.Axis",
+    "returnType": "Electron2D.Vector2i.Axis",
     "value": "1"
   },
   {
@@ -14805,42 +14805,42 @@
     "value": "2"
   },
   {
-    "id": "enumValue:Electron2D.Vector3I.Axis.X()",
+    "id": "enumValue:Electron2D.Vector3i.Axis.X()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector3I.Axis",
+    "declaringType": "Electron2D.Vector3i.Axis",
     "name": "X",
-    "signature": "public const Electron2D.Vector3I.Axis X = 0",
+    "signature": "public const Electron2D.Vector3i.Axis X = 0",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I.Axis",
+    "returnType": "Electron2D.Vector3i.Axis",
     "value": "0"
   },
   {
-    "id": "enumValue:Electron2D.Vector3I.Axis.Y()",
+    "id": "enumValue:Electron2D.Vector3i.Axis.Y()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector3I.Axis",
+    "declaringType": "Electron2D.Vector3i.Axis",
     "name": "Y",
-    "signature": "public const Electron2D.Vector3I.Axis Y = 1",
+    "signature": "public const Electron2D.Vector3i.Axis Y = 1",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I.Axis",
+    "returnType": "Electron2D.Vector3i.Axis",
     "value": "1"
   },
   {
-    "id": "enumValue:Electron2D.Vector3I.Axis.Z()",
+    "id": "enumValue:Electron2D.Vector3i.Axis.Z()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector3I.Axis",
+    "declaringType": "Electron2D.Vector3i.Axis",
     "name": "Z",
-    "signature": "public const Electron2D.Vector3I.Axis Z = 2",
+    "signature": "public const Electron2D.Vector3i.Axis Z = 2",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I.Axis",
+    "returnType": "Electron2D.Vector3i.Axis",
     "value": "2"
   },
   {
@@ -14896,55 +14896,55 @@
     "value": "2"
   },
   {
-    "id": "enumValue:Electron2D.Vector4I.Axis.W()",
+    "id": "enumValue:Electron2D.Vector4i.Axis.W()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector4I.Axis",
+    "declaringType": "Electron2D.Vector4i.Axis",
     "name": "W",
-    "signature": "public const Electron2D.Vector4I.Axis W = 3",
+    "signature": "public const Electron2D.Vector4i.Axis W = 3",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": "3"
   },
   {
-    "id": "enumValue:Electron2D.Vector4I.Axis.X()",
+    "id": "enumValue:Electron2D.Vector4i.Axis.X()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector4I.Axis",
+    "declaringType": "Electron2D.Vector4i.Axis",
     "name": "X",
-    "signature": "public const Electron2D.Vector4I.Axis X = 0",
+    "signature": "public const Electron2D.Vector4i.Axis X = 0",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": "0"
   },
   {
-    "id": "enumValue:Electron2D.Vector4I.Axis.Y()",
+    "id": "enumValue:Electron2D.Vector4i.Axis.Y()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector4I.Axis",
+    "declaringType": "Electron2D.Vector4i.Axis",
     "name": "Y",
-    "signature": "public const Electron2D.Vector4I.Axis Y = 1",
+    "signature": "public const Electron2D.Vector4i.Axis Y = 1",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": "1"
   },
   {
-    "id": "enumValue:Electron2D.Vector4I.Axis.Z()",
+    "id": "enumValue:Electron2D.Vector4i.Axis.Z()",
     "kind": "enumValue",
-    "declaringType": "Electron2D.Vector4I.Axis",
+    "declaringType": "Electron2D.Vector4i.Axis",
     "name": "Z",
-    "signature": "public const Electron2D.Vector4I.Axis Z = 2",
+    "signature": "public const Electron2D.Vector4i.Axis Z = 2",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": "2"
   },
   {
@@ -15849,12 +15849,12 @@
     "kind": "event",
     "declaringType": "Electron2D.DisplayServer",
     "name": "TextEditing",
-    "signature": "public event System.Action\u003CSystem.String, Electron2D.Vector2I\u003E TextEditing",
+    "signature": "public event System.Action\u003CSystem.String, Electron2D.Vector2i\u003E TextEditing",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "System.Action\u003CSystem.String, Electron2D.Vector2I\u003E",
+    "returnType": "System.Action\u003CSystem.String, Electron2D.Vector2i\u003E",
     "value": null
   },
   {
@@ -16664,9 +16664,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector2I.X()",
+    "id": "field:Electron2D.Vector2i.X()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "X",
     "signature": "public System.Int32 X",
     "visibility": "public",
@@ -16677,9 +16677,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector2I.Y()",
+    "id": "field:Electron2D.Vector2i.Y()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Y",
     "signature": "public System.Int32 Y",
     "visibility": "public",
@@ -16729,9 +16729,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector3I.X()",
+    "id": "field:Electron2D.Vector3i.X()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "X",
     "signature": "public System.Int32 X",
     "visibility": "public",
@@ -16742,9 +16742,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector3I.Y()",
+    "id": "field:Electron2D.Vector3i.Y()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Y",
     "signature": "public System.Int32 Y",
     "visibility": "public",
@@ -16755,9 +16755,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector3I.Z()",
+    "id": "field:Electron2D.Vector3i.Z()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Z",
     "signature": "public System.Int32 Z",
     "visibility": "public",
@@ -16820,9 +16820,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector4I.W()",
+    "id": "field:Electron2D.Vector4i.W()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "W",
     "signature": "public System.Int32 W",
     "visibility": "public",
@@ -16833,9 +16833,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector4I.X()",
+    "id": "field:Electron2D.Vector4i.X()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "X",
     "signature": "public System.Int32 X",
     "visibility": "public",
@@ -16846,9 +16846,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector4I.Y()",
+    "id": "field:Electron2D.Vector4i.Y()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Y",
     "signature": "public System.Int32 Y",
     "visibility": "public",
@@ -16859,9 +16859,9 @@
     "value": null
   },
   {
-    "id": "field:Electron2D.Vector4I.Z()",
+    "id": "field:Electron2D.Vector4i.Z()",
     "kind": "field",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Z",
     "signature": "public System.Int32 Z",
     "visibility": "public",
@@ -16953,9 +16953,9 @@
     "value": null
   },
   {
-    "id": "indexer:Electron2D.Vector2I.Item(System.Int32)",
+    "id": "indexer:Electron2D.Vector2i.Item(System.Int32)",
     "kind": "indexer",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Item",
     "signature": "public System.Int32 this[System.Int32 index] { get; set; }",
     "visibility": "public",
@@ -16991,9 +16991,9 @@
     "value": null
   },
   {
-    "id": "indexer:Electron2D.Vector3I.Item(System.Int32)",
+    "id": "indexer:Electron2D.Vector3i.Item(System.Int32)",
     "kind": "indexer",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Item",
     "signature": "public System.Int32 this[System.Int32 index] { get; set; }",
     "visibility": "public",
@@ -17029,9 +17029,9 @@
     "value": null
   },
   {
-    "id": "indexer:Electron2D.Vector4I.Item(System.Int32)",
+    "id": "indexer:Electron2D.Vector4i.Item(System.Int32)",
     "kind": "indexer",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Item",
     "signature": "public System.Int32 this[System.Int32 index] { get; set; }",
     "visibility": "public",
@@ -17862,18 +17862,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.Create(Electron2D.Vector2I)",
+    "id": "method:Electron2D.BitMap.Create(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "Create",
-    "signature": "public System.Void Create(Electron2D.Vector2I size)",
+    "signature": "public System.Void Create(Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -17961,18 +17961,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2I)",
+    "id": "method:Electron2D.BitMap.GetBitv(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "GetBitv",
-    "signature": "public System.Boolean GetBitv(Electron2D.Vector2I position)",
+    "signature": "public System.Boolean GetBitv(Electron2D.Vector2i position)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -17984,12 +17984,12 @@
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "GetSize",
-    "signature": "public Electron2D.Vector2I GetSize()",
+    "signature": "public Electron2D.Vector2i GetSize()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -18054,18 +18054,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.Resize(Electron2D.Vector2I)",
+    "id": "method:Electron2D.BitMap.Resize(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "Resize",
-    "signature": "public System.Void Resize(Electron2D.Vector2I newSize)",
+    "signature": "public System.Void Resize(Electron2D.Vector2i newSize)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "newSize",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -18126,18 +18126,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2I,System.Boolean)",
+    "id": "method:Electron2D.BitMap.SetBitv(Electron2D.Vector2i,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
     "name": "SetBitv",
-    "signature": "public System.Void SetBitv(Electron2D.Vector2I position, System.Boolean bit)",
+    "signature": "public System.Void SetBitv(Electron2D.Vector2i position, System.Boolean bit)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -23084,18 +23084,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.GetWindowAtScreenPosition(Electron2D.Vector2I)",
+    "id": "method:Electron2D.DisplayServer.GetWindowAtScreenPosition(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "GetWindowAtScreenPosition",
-    "signature": "public System.Int32 GetWindowAtScreenPosition(Electron2D.Vector2I position)",
+    "signature": "public System.Int32 GetWindowAtScreenPosition(Electron2D.Vector2i position)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -23152,12 +23152,12 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "IMEGetSelection",
-    "signature": "public Electron2D.Vector2I IMEGetSelection()",
+    "signature": "public Electron2D.Vector2i IMEGetSelection()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23281,12 +23281,12 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "MouseGetPosition",
-    "signature": "public Electron2D.Vector2I MouseGetPosition()",
+    "signature": "public Electron2D.Vector2i MouseGetPosition()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23309,11 +23309,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2I,System.Boolean)",
+    "id": "method:Electron2D.DisplayServer.Open(System.String,Electron2D.Vector2i,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "Open",
-    "signature": "public static Electron2D.DisplayServer Open(System.String title, Electron2D.Vector2I size, System.Boolean hidden = false)",
+    "signature": "public static Electron2D.DisplayServer Open(System.String title, Electron2D.Vector2i size, System.Boolean hidden = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23325,7 +23325,7 @@
       },
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -23368,7 +23368,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "ScreenGetPosition",
-    "signature": "public Electron2D.Vector2I ScreenGetPosition(System.Int32 screen = -1)",
+    "signature": "public Electron2D.Vector2i ScreenGetPosition(System.Int32 screen = -1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23379,7 +23379,7 @@
         "default": "-1"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23425,7 +23425,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "ScreenGetSize",
-    "signature": "public Electron2D.Vector2I ScreenGetSize(System.Int32 screen = -1)",
+    "signature": "public Electron2D.Vector2i ScreenGetSize(System.Int32 screen = -1)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23436,7 +23436,7 @@
         "default": "-1"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23523,18 +23523,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WarpMouse(Electron2D.Vector2I)",
+    "id": "method:Electron2D.DisplayServer.WarpMouse(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WarpMouse",
-    "signature": "public System.Void WarpMouse(Electron2D.Vector2I position)",
+    "signature": "public System.Void WarpMouse(Electron2D.Vector2i position)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -23589,7 +23589,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetMaxSize",
-    "signature": "public Electron2D.Vector2I WindowGetMaxSize(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetMaxSize(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23600,7 +23600,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23608,7 +23608,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetMinSize",
-    "signature": "public Electron2D.Vector2I WindowGetMinSize(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetMinSize(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23619,7 +23619,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23670,7 +23670,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetPosition",
-    "signature": "public Electron2D.Vector2I WindowGetPosition(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetPosition(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23681,7 +23681,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23689,7 +23689,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetPositionWithDecorations",
-    "signature": "public Electron2D.Vector2I WindowGetPositionWithDecorations(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetPositionWithDecorations(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23700,7 +23700,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23708,7 +23708,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetSize",
-    "signature": "public Electron2D.Vector2I WindowGetSize(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetSize(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23719,7 +23719,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23727,7 +23727,7 @@
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowGetSizeWithDecorations",
-    "signature": "public Electron2D.Vector2I WindowGetSizeWithDecorations(System.Int32 windowId = 0)",
+    "signature": "public Electron2D.Vector2i WindowGetSizeWithDecorations(System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23738,7 +23738,7 @@
         "default": "0"
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -23895,18 +23895,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetIMEPosition(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetIMEPosition(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowSetIMEPosition",
-    "signature": "public System.Void WindowSetIMEPosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
+    "signature": "public System.Void WindowSetIMEPosition(Electron2D.Vector2i position, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -23943,18 +23943,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetMaxSize(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetMaxSize(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowSetMaxSize",
-    "signature": "public System.Void WindowSetMaxSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "signature": "public System.Void WindowSetMaxSize(Electron2D.Vector2i size, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -23967,18 +23967,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetMinSize(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetMinSize(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowSetMinSize",
-    "signature": "public System.Void WindowSetMinSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "signature": "public System.Void WindowSetMinSize(Electron2D.Vector2i size, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -24015,18 +24015,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetPosition(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetPosition(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowSetPosition",
-    "signature": "public System.Void WindowSetPosition(Electron2D.Vector2I position, System.Int32 windowId = 0)",
+    "signature": "public System.Void WindowSetPosition(Electron2D.Vector2i position, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -24039,18 +24039,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.DisplayServer.WindowSetSize(Electron2D.Vector2I,System.Int32)",
+    "id": "method:Electron2D.DisplayServer.WindowSetSize(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
     "name": "WindowSetSize",
-    "signature": "public System.Void WindowSetSize(Electron2D.Vector2I size, System.Int32 windowId = 0)",
+    "signature": "public System.Void WindowSetSize(Electron2D.Vector2i size, System.Int32 windowId = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -26301,27 +26301,27 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Geometry.BresenhamLine(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Geometry",
     "name": "BresenhamLine",
-    "signature": "public static Electron2D.Vector2I[] BresenhamLine(Electron2D.Vector2I from, Electron2D.Vector2I to)",
+    "signature": "public static Electron2D.Vector2i[] BresenhamLine(Electron2D.Vector2i from, Electron2D.Vector2i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "from",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "to",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I[]",
+    "returnType": "Electron2D.Vector2i[]",
     "value": null
   },
   {
@@ -26685,7 +26685,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Geometry",
     "name": "MakeAtlas",
-    "signature": "public static System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2I\u003E MakeAtlas(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E sizes)",
+    "signature": "public static System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2i\u003E MakeAtlas(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E sizes)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26696,7 +26696,7 @@
         "default": null
       }
     ],
-    "returnType": "System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2I\u003E",
+    "returnType": "System.ValueTuple\u003CElectron2D.Vector2[], Electron2D.Vector2i\u003E",
     "value": null
   },
   {
@@ -27486,11 +27486,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlendRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Image.BlendRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlendRect",
-    "signature": "public System.Void BlendRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2I destination)",
+    "signature": "public System.Void BlendRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27507,7 +27507,7 @@
       },
       {
         "name": "destination",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -27515,11 +27515,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlendRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Image.BlendRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlendRectMask",
-    "signature": "public System.Void BlendRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2I destination)",
+    "signature": "public System.Void BlendRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27541,7 +27541,7 @@
       },
       {
         "name": "destination",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -27549,11 +27549,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlitRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Image.BlitRect(Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlitRect",
-    "signature": "public System.Void BlitRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2I destination)",
+    "signature": "public System.Void BlitRect(Electron2D.Image source, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27570,7 +27570,7 @@
       },
       {
         "name": "destination",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -27578,11 +27578,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.BlitRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Image.BlitRectMask(Electron2D.Image,Electron2D.Image,Electron2D.RectI,Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "BlitRectMask",
-    "signature": "public System.Void BlitRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2I destination)",
+    "signature": "public System.Void BlitRectMask(Electron2D.Image source, Electron2D.Image mask, Electron2D.RectI sourceRect, Electron2D.Vector2i destination)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27604,7 +27604,7 @@
       },
       {
         "name": "destination",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -28073,18 +28073,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.GetPixel(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Image.GetPixel(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "GetPixel",
-    "signature": "public Electron2D.Color GetPixel(Electron2D.Vector2I point)",
+    "signature": "public Electron2D.Color GetPixel(Electron2D.Vector2i point)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "point",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -28606,18 +28606,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Image.SetPixel(Electron2D.Vector2I,Electron2D.Color)",
+    "id": "method:Electron2D.Image.SetPixel(Electron2D.Vector2i,Electron2D.Color)",
     "kind": "method",
     "declaringType": "Electron2D.Image",
     "name": "SetPixel",
-    "signature": "public System.Void SetPixel(Electron2D.Vector2I point, Electron2D.Color color)",
+    "signature": "public System.Void SetPixel(Electron2D.Vector2i point, Electron2D.Color color)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "point",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -28921,18 +28921,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.ImageTexture.SetSizeOverride(Electron2D.Vector2I)",
+    "id": "method:Electron2D.ImageTexture.SetSizeOverride(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.ImageTexture",
     "name": "SetSizeOverride",
-    "signature": "public System.Void SetSizeOverride(Electron2D.Vector2I size)",
+    "signature": "public System.Void SetSizeOverride(Electron2D.Vector2i size)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "size",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -39136,18 +39136,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.Expand(Electron2D.Vector2I)",
+    "id": "method:Electron2D.RectI.Expand(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.RectI",
     "name": "Expand",
-    "signature": "public Electron2D.RectI Expand(Electron2D.Vector2I point)",
+    "signature": "public Electron2D.RectI Expand(Electron2D.Vector2i point)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "point",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -39159,12 +39159,12 @@
     "kind": "method",
     "declaringType": "Electron2D.RectI",
     "name": "GetCenter",
-    "signature": "public Electron2D.Vector2I GetCenter()",
+    "signature": "public Electron2D.Vector2i GetCenter()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -39271,18 +39271,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RectI.HasPoint(Electron2D.Vector2I)",
+    "id": "method:Electron2D.RectI.HasPoint(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.RectI",
     "name": "HasPoint",
-    "signature": "public System.Boolean HasPoint(Electron2D.Vector2I point)",
+    "signature": "public System.Boolean HasPoint(Electron2D.Vector2i point)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "point",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -45510,22 +45510,22 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Abs()",
+    "id": "method:Electron2D.Vector2i.Abs()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Abs",
-    "signature": "public Electron2D.Vector2I Abs()",
+    "signature": "public Electron2D.Vector2i Abs()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Aspect()",
+    "id": "method:Electron2D.Vector2i.Aspect()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Aspect",
     "signature": "public System.Single Aspect()",
     "visibility": "public",
@@ -45536,35 +45536,35 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Clamp(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.Clamp(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector2I Clamp(Electron2D.Vector2I min, Electron2D.Vector2I max)",
+    "signature": "public Electron2D.Vector2i Clamp(Electron2D.Vector2i min, Electron2D.Vector2i max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "min",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "max",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Clamp(System.Int32,System.Int32)",
+    "id": "method:Electron2D.Vector2i.Clamp(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector2I Clamp(System.Int32 min, System.Int32 max)",
+    "signature": "public Electron2D.Vector2i Clamp(System.Int32 min, System.Int32 max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -45580,13 +45580,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Deconstruct(ref System.Int32,ref System.Int32)",
+    "id": "method:Electron2D.Vector2i.Deconstruct(ref System.Int32,ref System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Deconstruct",
     "signature": "public System.Void Deconstruct(out System.Int32 x, out System.Int32 y)",
     "visibility": "public",
@@ -45608,18 +45608,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.DistanceSquaredTo(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.DistanceSquaredTo(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "DistanceSquaredTo",
-    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector2I to)",
+    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector2i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -45627,18 +45627,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.DistanceTo(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.DistanceTo(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "DistanceTo",
-    "signature": "public System.Single DistanceTo(Electron2D.Vector2I to)",
+    "signature": "public System.Single DistanceTo(Electron2D.Vector2i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -45646,18 +45646,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Equals(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.Equals(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Equals",
-    "signature": "public virtual System.Boolean Equals(Electron2D.Vector2I other)",
+    "signature": "public virtual System.Boolean Equals(Electron2D.Vector2i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -45665,9 +45665,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Equals(System.Object)",
+    "id": "method:Electron2D.Vector2i.Equals(System.Object)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Equals",
     "signature": "public override System.Boolean Equals(System.Object obj)",
     "visibility": "public",
@@ -45684,9 +45684,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.GetHashCode()",
+    "id": "method:Electron2D.Vector2i.GetHashCode()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "GetHashCode",
     "signature": "public override System.Int32 GetHashCode()",
     "visibility": "public",
@@ -45697,9 +45697,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Length()",
+    "id": "method:Electron2D.Vector2i.Length()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Length",
     "signature": "public System.Single Length()",
     "visibility": "public",
@@ -45710,9 +45710,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.LengthSquared()",
+    "id": "method:Electron2D.Vector2i.LengthSquared()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "LengthSquared",
     "signature": "public System.Int64 LengthSquared()",
     "visibility": "public",
@@ -45723,30 +45723,30 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Max(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.Max(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Max",
-    "signature": "public Electron2D.Vector2I Max(Electron2D.Vector2I with)",
+    "signature": "public Electron2D.Vector2i Max(Electron2D.Vector2i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Max(System.Int32)",
+    "id": "method:Electron2D.Vector2i.Max(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Max",
-    "signature": "public Electron2D.Vector2I Max(System.Int32 with)",
+    "signature": "public Electron2D.Vector2i Max(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -45757,47 +45757,47 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.MaxAxisIndex()",
+    "id": "method:Electron2D.Vector2i.MaxAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "MaxAxisIndex",
-    "signature": "public Electron2D.Vector2I.Axis MaxAxisIndex()",
+    "signature": "public Electron2D.Vector2i.Axis MaxAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I.Axis",
+    "returnType": "Electron2D.Vector2i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Min(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.Min(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Min",
-    "signature": "public Electron2D.Vector2I Min(Electron2D.Vector2I with)",
+    "signature": "public Electron2D.Vector2i Min(Electron2D.Vector2i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Min(System.Int32)",
+    "id": "method:Electron2D.Vector2i.Min(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Min",
-    "signature": "public Electron2D.Vector2I Min(System.Int32 with)",
+    "signature": "public Electron2D.Vector2i Min(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -45808,60 +45808,60 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.MinAxisIndex()",
+    "id": "method:Electron2D.Vector2i.MinAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "MinAxisIndex",
-    "signature": "public Electron2D.Vector2I.Axis MinAxisIndex()",
+    "signature": "public Electron2D.Vector2i.Axis MinAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I.Axis",
+    "returnType": "Electron2D.Vector2i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Sign()",
+    "id": "method:Electron2D.Vector2i.Sign()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Sign",
-    "signature": "public Electron2D.Vector2I Sign()",
+    "signature": "public Electron2D.Vector2i Sign()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Snapped(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Vector2i.Snapped(Electron2D.Vector2i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector2I Snapped(Electron2D.Vector2I step)",
+    "signature": "public Electron2D.Vector2i Snapped(Electron2D.Vector2i step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "step",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.Snapped(System.Int32)",
+    "id": "method:Electron2D.Vector2i.Snapped(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector2I Snapped(System.Int32 step)",
+    "signature": "public Electron2D.Vector2i Snapped(System.Int32 step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -45872,13 +45872,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.ToString()",
+    "id": "method:Electron2D.Vector2i.ToString()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "ToString",
     "signature": "public override System.String ToString()",
     "visibility": "public",
@@ -45889,9 +45889,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector2I.ToString(System.String)",
+    "id": "method:Electron2D.Vector2i.ToString(System.String)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "ToString",
     "signature": "public System.String ToString(System.String format)",
     "visibility": "public",
@@ -46933,48 +46933,48 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Abs()",
+    "id": "method:Electron2D.Vector3i.Abs()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Abs",
-    "signature": "public Electron2D.Vector3I Abs()",
+    "signature": "public Electron2D.Vector3i Abs()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Clamp(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.Clamp(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector3I Clamp(Electron2D.Vector3I min, Electron2D.Vector3I max)",
+    "signature": "public Electron2D.Vector3i Clamp(Electron2D.Vector3i min, Electron2D.Vector3i max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "min",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "max",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Clamp(System.Int32,System.Int32)",
+    "id": "method:Electron2D.Vector3i.Clamp(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector3I Clamp(System.Int32 min, System.Int32 max)",
+    "signature": "public Electron2D.Vector3i Clamp(System.Int32 min, System.Int32 max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -46990,13 +46990,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
+    "id": "method:Electron2D.Vector3i.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Deconstruct",
     "signature": "public System.Void Deconstruct(out System.Int32 x, out System.Int32 y, out System.Int32 z)",
     "visibility": "public",
@@ -47023,18 +47023,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.DistanceSquaredTo(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.DistanceSquaredTo(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "DistanceSquaredTo",
-    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector3I to)",
+    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector3i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -47042,18 +47042,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.DistanceTo(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.DistanceTo(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "DistanceTo",
-    "signature": "public System.Single DistanceTo(Electron2D.Vector3I to)",
+    "signature": "public System.Single DistanceTo(Electron2D.Vector3i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -47061,18 +47061,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Equals(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.Equals(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Equals",
-    "signature": "public virtual System.Boolean Equals(Electron2D.Vector3I other)",
+    "signature": "public virtual System.Boolean Equals(Electron2D.Vector3i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -47080,9 +47080,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Equals(System.Object)",
+    "id": "method:Electron2D.Vector3i.Equals(System.Object)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Equals",
     "signature": "public override System.Boolean Equals(System.Object obj)",
     "visibility": "public",
@@ -47099,9 +47099,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.GetHashCode()",
+    "id": "method:Electron2D.Vector3i.GetHashCode()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "GetHashCode",
     "signature": "public override System.Int32 GetHashCode()",
     "visibility": "public",
@@ -47112,9 +47112,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Length()",
+    "id": "method:Electron2D.Vector3i.Length()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Length",
     "signature": "public System.Single Length()",
     "visibility": "public",
@@ -47125,9 +47125,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.LengthSquared()",
+    "id": "method:Electron2D.Vector3i.LengthSquared()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "LengthSquared",
     "signature": "public System.Int64 LengthSquared()",
     "visibility": "public",
@@ -47138,30 +47138,30 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Max(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.Max(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Max",
-    "signature": "public Electron2D.Vector3I Max(Electron2D.Vector3I with)",
+    "signature": "public Electron2D.Vector3i Max(Electron2D.Vector3i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Max(System.Int32)",
+    "id": "method:Electron2D.Vector3i.Max(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Max",
-    "signature": "public Electron2D.Vector3I Max(System.Int32 with)",
+    "signature": "public Electron2D.Vector3i Max(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -47172,47 +47172,47 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.MaxAxisIndex()",
+    "id": "method:Electron2D.Vector3i.MaxAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "MaxAxisIndex",
-    "signature": "public Electron2D.Vector3I.Axis MaxAxisIndex()",
+    "signature": "public Electron2D.Vector3i.Axis MaxAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I.Axis",
+    "returnType": "Electron2D.Vector3i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Min(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.Min(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Min",
-    "signature": "public Electron2D.Vector3I Min(Electron2D.Vector3I with)",
+    "signature": "public Electron2D.Vector3i Min(Electron2D.Vector3i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Min(System.Int32)",
+    "id": "method:Electron2D.Vector3i.Min(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Min",
-    "signature": "public Electron2D.Vector3I Min(System.Int32 with)",
+    "signature": "public Electron2D.Vector3i Min(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -47223,60 +47223,60 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.MinAxisIndex()",
+    "id": "method:Electron2D.Vector3i.MinAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "MinAxisIndex",
-    "signature": "public Electron2D.Vector3I.Axis MinAxisIndex()",
+    "signature": "public Electron2D.Vector3i.Axis MinAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I.Axis",
+    "returnType": "Electron2D.Vector3i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Sign()",
+    "id": "method:Electron2D.Vector3i.Sign()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Sign",
-    "signature": "public Electron2D.Vector3I Sign()",
+    "signature": "public Electron2D.Vector3i Sign()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Snapped(Electron2D.Vector3I)",
+    "id": "method:Electron2D.Vector3i.Snapped(Electron2D.Vector3i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector3I Snapped(Electron2D.Vector3I step)",
+    "signature": "public Electron2D.Vector3i Snapped(Electron2D.Vector3i step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "step",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.Snapped(System.Int32)",
+    "id": "method:Electron2D.Vector3i.Snapped(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector3I Snapped(System.Int32 step)",
+    "signature": "public Electron2D.Vector3i Snapped(System.Int32 step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -47287,13 +47287,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.ToString()",
+    "id": "method:Electron2D.Vector3i.ToString()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "ToString",
     "signature": "public override System.String ToString()",
     "visibility": "public",
@@ -47304,9 +47304,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector3I.ToString(System.String)",
+    "id": "method:Electron2D.Vector3i.ToString(System.String)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "ToString",
     "signature": "public System.String ToString(System.String format)",
     "visibility": "public",
@@ -48024,48 +48024,48 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Abs()",
+    "id": "method:Electron2D.Vector4i.Abs()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Abs",
-    "signature": "public Electron2D.Vector4I Abs()",
+    "signature": "public Electron2D.Vector4i Abs()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Clamp(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.Clamp(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector4I Clamp(Electron2D.Vector4I min, Electron2D.Vector4I max)",
+    "signature": "public Electron2D.Vector4i Clamp(Electron2D.Vector4i min, Electron2D.Vector4i max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "min",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "max",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Clamp(System.Int32,System.Int32)",
+    "id": "method:Electron2D.Vector4i.Clamp(System.Int32,System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Clamp",
-    "signature": "public Electron2D.Vector4I Clamp(System.Int32 min, System.Int32 max)",
+    "signature": "public Electron2D.Vector4i Clamp(System.Int32 min, System.Int32 max)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -48081,13 +48081,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32)",
+    "id": "method:Electron2D.Vector4i.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32,ref System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Deconstruct",
     "signature": "public System.Void Deconstruct(out System.Int32 x, out System.Int32 y, out System.Int32 z, out System.Int32 w)",
     "visibility": "public",
@@ -48119,18 +48119,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.DistanceSquaredTo(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.DistanceSquaredTo(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "DistanceSquaredTo",
-    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector4I to)",
+    "signature": "public System.Int64 DistanceSquaredTo(Electron2D.Vector4i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -48138,18 +48138,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.DistanceTo(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.DistanceTo(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "DistanceTo",
-    "signature": "public System.Single DistanceTo(Electron2D.Vector4I to)",
+    "signature": "public System.Single DistanceTo(Electron2D.Vector4i to)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "to",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -48157,18 +48157,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Equals(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.Equals(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Equals",
-    "signature": "public virtual System.Boolean Equals(Electron2D.Vector4I other)",
+    "signature": "public virtual System.Boolean Equals(Electron2D.Vector4i other)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "other",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -48176,9 +48176,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Equals(System.Object)",
+    "id": "method:Electron2D.Vector4i.Equals(System.Object)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Equals",
     "signature": "public override System.Boolean Equals(System.Object obj)",
     "visibility": "public",
@@ -48195,9 +48195,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.GetHashCode()",
+    "id": "method:Electron2D.Vector4i.GetHashCode()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "GetHashCode",
     "signature": "public override System.Int32 GetHashCode()",
     "visibility": "public",
@@ -48208,9 +48208,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Length()",
+    "id": "method:Electron2D.Vector4i.Length()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Length",
     "signature": "public System.Single Length()",
     "visibility": "public",
@@ -48221,9 +48221,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.LengthSquared()",
+    "id": "method:Electron2D.Vector4i.LengthSquared()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "LengthSquared",
     "signature": "public System.Int64 LengthSquared()",
     "visibility": "public",
@@ -48234,30 +48234,30 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Max(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.Max(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Max",
-    "signature": "public Electron2D.Vector4I Max(Electron2D.Vector4I with)",
+    "signature": "public Electron2D.Vector4i Max(Electron2D.Vector4i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Max(System.Int32)",
+    "id": "method:Electron2D.Vector4i.Max(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Max",
-    "signature": "public Electron2D.Vector4I Max(System.Int32 with)",
+    "signature": "public Electron2D.Vector4i Max(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -48268,47 +48268,47 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.MaxAxisIndex()",
+    "id": "method:Electron2D.Vector4i.MaxAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "MaxAxisIndex",
-    "signature": "public Electron2D.Vector4I.Axis MaxAxisIndex()",
+    "signature": "public Electron2D.Vector4i.Axis MaxAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Min(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.Min(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Min",
-    "signature": "public Electron2D.Vector4I Min(Electron2D.Vector4I with)",
+    "signature": "public Electron2D.Vector4i Min(Electron2D.Vector4i with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "with",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Min(System.Int32)",
+    "id": "method:Electron2D.Vector4i.Min(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Min",
-    "signature": "public Electron2D.Vector4I Min(System.Int32 with)",
+    "signature": "public Electron2D.Vector4i Min(System.Int32 with)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -48319,60 +48319,60 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.MinAxisIndex()",
+    "id": "method:Electron2D.Vector4i.MinAxisIndex()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "MinAxisIndex",
-    "signature": "public Electron2D.Vector4I.Axis MinAxisIndex()",
+    "signature": "public Electron2D.Vector4i.Axis MinAxisIndex()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I.Axis",
+    "returnType": "Electron2D.Vector4i.Axis",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Sign()",
+    "id": "method:Electron2D.Vector4i.Sign()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Sign",
-    "signature": "public Electron2D.Vector4I Sign()",
+    "signature": "public Electron2D.Vector4i Sign()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Snapped(Electron2D.Vector4I)",
+    "id": "method:Electron2D.Vector4i.Snapped(Electron2D.Vector4i)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector4I Snapped(Electron2D.Vector4I step)",
+    "signature": "public Electron2D.Vector4i Snapped(Electron2D.Vector4i step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "step",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.Snapped(System.Int32)",
+    "id": "method:Electron2D.Vector4i.Snapped(System.Int32)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Snapped",
-    "signature": "public Electron2D.Vector4I Snapped(System.Int32 step)",
+    "signature": "public Electron2D.Vector4i Snapped(System.Int32 step)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -48383,13 +48383,13 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.ToString()",
+    "id": "method:Electron2D.Vector4i.ToString()",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "ToString",
     "signature": "public override System.String ToString()",
     "visibility": "public",
@@ -48400,9 +48400,9 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Vector4I.ToString(System.String)",
+    "id": "method:Electron2D.Vector4i.ToString(System.String)",
     "kind": "method",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "ToString",
     "signature": "public System.String ToString(System.String format)",
     "visibility": "public",
@@ -48722,12 +48722,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Window",
     "name": "GetPositionWithDecorations",
-    "signature": "public Electron2D.Vector2I GetPositionWithDecorations()",
+    "signature": "public Electron2D.Vector2i GetPositionWithDecorations()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -48748,12 +48748,12 @@
     "kind": "method",
     "declaringType": "Electron2D.Window",
     "name": "GetSizeWithDecorations",
-    "signature": "public Electron2D.Vector2I GetSizeWithDecorations()",
+    "signature": "public Electron2D.Vector2i GetSizeWithDecorations()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -48904,18 +48904,18 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Window.SetIMEPosition(Electron2D.Vector2I)",
+    "id": "method:Electron2D.Window.SetIMEPosition(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.Window",
     "name": "SetIMEPosition",
-    "signature": "public System.Void SetIMEPosition(Electron2D.Vector2I position)",
+    "signature": "public System.Void SetIMEPosition(Electron2D.Vector2i position)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "position",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50456,66 +50456,66 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Addition(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Addition(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Addition",
-    "signature": "public static Electron2D.Vector2I op_Addition(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static Electron2D.Vector2i op_Addition(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Division(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Division(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector2I op_Division(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static Electron2D.Vector2i op_Division(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Division(Electron2D.Vector2I,System.Int32)",
+    "id": "operator:Electron2D.Vector2i.op_Division(Electron2D.Vector2i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector2I op_Division(Electron2D.Vector2I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector2i op_Division(Electron2D.Vector2i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -50524,22 +50524,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Division(Electron2D.Vector2I,System.Single)",
+    "id": "operator:Electron2D.Vector2i.op_Division(Electron2D.Vector2i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2I vector, System.Single divisor)",
+    "signature": "public static Electron2D.Vector2 op_Division(Electron2D.Vector2i vector, System.Single divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -50552,23 +50552,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Equality(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Equality(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Equality",
-    "signature": "public static System.Boolean op_Equality(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_Equality(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50576,11 +50576,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Explicit(Electron2D.Vector2)",
+    "id": "operator:Electron2D.Vector2i.op_Explicit(Electron2D.Vector2)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Explicit",
-    "signature": "public static Electron2D.Vector2I op_Explicit(Electron2D.Vector2 value)",
+    "signature": "public static Electron2D.Vector2i op_Explicit(Electron2D.Vector2 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -50591,27 +50591,27 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_GreaterThan(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_GreaterThan(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_GreaterThan",
-    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50619,23 +50619,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_GreaterThanOrEqual(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_GreaterThanOrEqual(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_GreaterThanOrEqual",
-    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50643,18 +50643,18 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Implicit(Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Implicit(Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Implicit",
-    "signature": "public static Electron2D.Vector2 op_Implicit(Electron2D.Vector2I value)",
+    "signature": "public static Electron2D.Vector2 op_Implicit(Electron2D.Vector2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50662,23 +50662,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Inequality(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Inequality(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Inequality",
-    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50686,23 +50686,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_LessThan(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_LessThan(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_LessThan",
-    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50710,23 +50710,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_LessThanOrEqual(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_LessThanOrEqual(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_LessThanOrEqual",
-    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50734,42 +50734,42 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Modulus(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Modulus(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector2I op_Modulus(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static Electron2D.Vector2i op_Modulus(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Modulus(Electron2D.Vector2I,System.Int32)",
+    "id": "operator:Electron2D.Vector2i.op_Modulus(Electron2D.Vector2i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector2I op_Modulus(Electron2D.Vector2I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector2i op_Modulus(Electron2D.Vector2i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -50778,46 +50778,46 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector2I op_Multiply(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static Electron2D.Vector2i op_Multiply(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Int32)",
+    "id": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector2I op_Multiply(Electron2D.Vector2I vector, System.Int32 scalar)",
+    "signature": "public static Electron2D.Vector2i op_Multiply(Electron2D.Vector2i vector, System.Int32 scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -50826,22 +50826,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Multiply(Electron2D.Vector2I,System.Single)",
+    "id": "operator:Electron2D.Vector2i.op_Multiply(Electron2D.Vector2i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2I vector, System.Single scalar)",
+    "signature": "public static Electron2D.Vector2 op_Multiply(Electron2D.Vector2i vector, System.Single scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
@@ -50854,11 +50854,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Multiply(System.Int32,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Multiply(System.Int32,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector2I op_Multiply(System.Int32 scalar, Electron2D.Vector2I vector)",
+    "signature": "public static Electron2D.Vector2i op_Multiply(System.Int32 scalar, Electron2D.Vector2i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -50870,19 +50870,19 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Multiply(System.Single,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Multiply(System.Single,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector2 op_Multiply(System.Single scalar, Electron2D.Vector2I vector)",
+    "signature": "public static Electron2D.Vector2 op_Multiply(System.Single scalar, Electron2D.Vector2i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -50894,7 +50894,7 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -50902,65 +50902,65 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_Subtraction(Electron2D.Vector2I,Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_Subtraction(Electron2D.Vector2i,Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_Subtraction",
-    "signature": "public static Electron2D.Vector2I op_Subtraction(Electron2D.Vector2I left, Electron2D.Vector2I right)",
+    "signature": "public static Electron2D.Vector2i op_Subtraction(Electron2D.Vector2i left, Electron2D.Vector2i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_UnaryNegation(Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_UnaryNegation(Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_UnaryNegation",
-    "signature": "public static Electron2D.Vector2I op_UnaryNegation(Electron2D.Vector2I value)",
+    "signature": "public static Electron2D.Vector2i op_UnaryNegation(Electron2D.Vector2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector2I.op_UnaryPlus(Electron2D.Vector2I)",
+    "id": "operator:Electron2D.Vector2i.op_UnaryPlus(Electron2D.Vector2i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "op_UnaryPlus",
-    "signature": "public static Electron2D.Vector2I op_UnaryPlus(Electron2D.Vector2I value)",
+    "signature": "public static Electron2D.Vector2i op_UnaryPlus(Electron2D.Vector2i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector2I",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -51362,66 +51362,66 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Addition(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Addition(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Addition",
-    "signature": "public static Electron2D.Vector3I op_Addition(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static Electron2D.Vector3i op_Addition(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Division(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Division(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector3I op_Division(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static Electron2D.Vector3i op_Division(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Division(Electron2D.Vector3I,System.Int32)",
+    "id": "operator:Electron2D.Vector3i.op_Division(Electron2D.Vector3i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector3I op_Division(Electron2D.Vector3I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector3i op_Division(Electron2D.Vector3i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
@@ -51430,22 +51430,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Division(Electron2D.Vector3I,System.Single)",
+    "id": "operator:Electron2D.Vector3i.op_Division(Electron2D.Vector3i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector3 op_Division(Electron2D.Vector3I vector, System.Single divisor)",
+    "signature": "public static Electron2D.Vector3 op_Division(Electron2D.Vector3i vector, System.Single divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
@@ -51458,23 +51458,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Equality(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Equality(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Equality",
-    "signature": "public static System.Boolean op_Equality(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_Equality(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51482,11 +51482,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Explicit(Electron2D.Vector3)",
+    "id": "operator:Electron2D.Vector3i.op_Explicit(Electron2D.Vector3)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Explicit",
-    "signature": "public static Electron2D.Vector3I op_Explicit(Electron2D.Vector3 value)",
+    "signature": "public static Electron2D.Vector3i op_Explicit(Electron2D.Vector3 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -51497,27 +51497,27 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_GreaterThan(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_GreaterThan(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_GreaterThan",
-    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51525,23 +51525,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_GreaterThanOrEqual(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_GreaterThanOrEqual(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_GreaterThanOrEqual",
-    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51549,18 +51549,18 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Implicit(Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Implicit(Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Implicit",
-    "signature": "public static Electron2D.Vector3 op_Implicit(Electron2D.Vector3I value)",
+    "signature": "public static Electron2D.Vector3 op_Implicit(Electron2D.Vector3i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51568,23 +51568,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Inequality(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Inequality(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Inequality",
-    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51592,23 +51592,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_LessThan(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_LessThan(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_LessThan",
-    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51616,23 +51616,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_LessThanOrEqual(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_LessThanOrEqual(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_LessThanOrEqual",
-    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51640,42 +51640,42 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Modulus(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Modulus(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector3I op_Modulus(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static Electron2D.Vector3i op_Modulus(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Modulus(Electron2D.Vector3I,System.Int32)",
+    "id": "operator:Electron2D.Vector3i.op_Modulus(Electron2D.Vector3i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector3I op_Modulus(Electron2D.Vector3I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector3i op_Modulus(Electron2D.Vector3i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
@@ -51684,46 +51684,46 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector3I op_Multiply(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static Electron2D.Vector3i op_Multiply(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Int32)",
+    "id": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector3I op_Multiply(Electron2D.Vector3I vector, System.Int32 scalar)",
+    "signature": "public static Electron2D.Vector3i op_Multiply(Electron2D.Vector3i vector, System.Int32 scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
@@ -51732,22 +51732,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Multiply(Electron2D.Vector3I,System.Single)",
+    "id": "operator:Electron2D.Vector3i.op_Multiply(Electron2D.Vector3i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector3 op_Multiply(Electron2D.Vector3I vector, System.Single scalar)",
+    "signature": "public static Electron2D.Vector3 op_Multiply(Electron2D.Vector3i vector, System.Single scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
@@ -51760,11 +51760,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Multiply(System.Int32,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Multiply(System.Int32,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector3I op_Multiply(System.Int32 scalar, Electron2D.Vector3I vector)",
+    "signature": "public static Electron2D.Vector3i op_Multiply(System.Int32 scalar, Electron2D.Vector3i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -51776,19 +51776,19 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Multiply(System.Single,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Multiply(System.Single,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector3 op_Multiply(System.Single scalar, Electron2D.Vector3I vector)",
+    "signature": "public static Electron2D.Vector3 op_Multiply(System.Single scalar, Electron2D.Vector3i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -51800,7 +51800,7 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
@@ -51808,65 +51808,65 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_Subtraction(Electron2D.Vector3I,Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_Subtraction(Electron2D.Vector3i,Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_Subtraction",
-    "signature": "public static Electron2D.Vector3I op_Subtraction(Electron2D.Vector3I left, Electron2D.Vector3I right)",
+    "signature": "public static Electron2D.Vector3i op_Subtraction(Electron2D.Vector3i left, Electron2D.Vector3i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_UnaryNegation(Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_UnaryNegation(Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_UnaryNegation",
-    "signature": "public static Electron2D.Vector3I op_UnaryNegation(Electron2D.Vector3I value)",
+    "signature": "public static Electron2D.Vector3i op_UnaryNegation(Electron2D.Vector3i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector3I.op_UnaryPlus(Electron2D.Vector3I)",
+    "id": "operator:Electron2D.Vector3i.op_UnaryPlus(Electron2D.Vector3i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "op_UnaryPlus",
-    "signature": "public static Electron2D.Vector3I op_UnaryPlus(Electron2D.Vector3I value)",
+    "signature": "public static Electron2D.Vector3i op_UnaryPlus(Electron2D.Vector3i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector3I",
+        "type": "Electron2D.Vector3i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
@@ -52268,66 +52268,66 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Addition(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Addition(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Addition",
-    "signature": "public static Electron2D.Vector4I op_Addition(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static Electron2D.Vector4i op_Addition(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Division(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Division(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector4I op_Division(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static Electron2D.Vector4i op_Division(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Division(Electron2D.Vector4I,System.Int32)",
+    "id": "operator:Electron2D.Vector4i.op_Division(Electron2D.Vector4i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector4I op_Division(Electron2D.Vector4I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector4i op_Division(Electron2D.Vector4i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
@@ -52336,22 +52336,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Division(Electron2D.Vector4I,System.Single)",
+    "id": "operator:Electron2D.Vector4i.op_Division(Electron2D.Vector4i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Division",
-    "signature": "public static Electron2D.Vector4 op_Division(Electron2D.Vector4I vector, System.Single divisor)",
+    "signature": "public static Electron2D.Vector4 op_Division(Electron2D.Vector4i vector, System.Single divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
@@ -52364,23 +52364,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Equality(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Equality(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Equality",
-    "signature": "public static System.Boolean op_Equality(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_Equality(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52388,11 +52388,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Explicit(Electron2D.Vector4)",
+    "id": "operator:Electron2D.Vector4i.op_Explicit(Electron2D.Vector4)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Explicit",
-    "signature": "public static Electron2D.Vector4I op_Explicit(Electron2D.Vector4 value)",
+    "signature": "public static Electron2D.Vector4i op_Explicit(Electron2D.Vector4 value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -52403,27 +52403,27 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_GreaterThan(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_GreaterThan(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_GreaterThan",
-    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_GreaterThan(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52431,23 +52431,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_GreaterThanOrEqual(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_GreaterThanOrEqual(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_GreaterThanOrEqual",
-    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52455,18 +52455,18 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Implicit(Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Implicit(Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Implicit",
-    "signature": "public static Electron2D.Vector4 op_Implicit(Electron2D.Vector4I value)",
+    "signature": "public static Electron2D.Vector4 op_Implicit(Electron2D.Vector4i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52474,23 +52474,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Inequality(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Inequality(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Inequality",
-    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52498,23 +52498,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_LessThan(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_LessThan(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_LessThan",
-    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_LessThan(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52522,23 +52522,23 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_LessThanOrEqual(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_LessThanOrEqual(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_LessThanOrEqual",
-    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52546,42 +52546,42 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Modulus(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Modulus(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector4I op_Modulus(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static Electron2D.Vector4i op_Modulus(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Modulus(Electron2D.Vector4I,System.Int32)",
+    "id": "operator:Electron2D.Vector4i.op_Modulus(Electron2D.Vector4i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Modulus",
-    "signature": "public static Electron2D.Vector4I op_Modulus(Electron2D.Vector4I vector, System.Int32 divisor)",
+    "signature": "public static Electron2D.Vector4i op_Modulus(Electron2D.Vector4i vector, System.Int32 divisor)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
@@ -52590,46 +52590,46 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector4I op_Multiply(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static Electron2D.Vector4i op_Multiply(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Int32)",
+    "id": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,System.Int32)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector4I op_Multiply(Electron2D.Vector4I vector, System.Int32 scalar)",
+    "signature": "public static Electron2D.Vector4i op_Multiply(Electron2D.Vector4i vector, System.Int32 scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
@@ -52638,22 +52638,22 @@
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Multiply(Electron2D.Vector4I,System.Single)",
+    "id": "operator:Electron2D.Vector4i.op_Multiply(Electron2D.Vector4i,System.Single)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector4 op_Multiply(Electron2D.Vector4I vector, System.Single scalar)",
+    "signature": "public static Electron2D.Vector4 op_Multiply(Electron2D.Vector4i vector, System.Single scalar)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
@@ -52666,11 +52666,11 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Multiply(System.Int32,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Multiply(System.Int32,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector4I op_Multiply(System.Int32 scalar, Electron2D.Vector4I vector)",
+    "signature": "public static Electron2D.Vector4i op_Multiply(System.Int32 scalar, Electron2D.Vector4i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -52682,19 +52682,19 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Multiply(System.Single,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Multiply(System.Single,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Multiply",
-    "signature": "public static Electron2D.Vector4 op_Multiply(System.Single scalar, Electron2D.Vector4I vector)",
+    "signature": "public static Electron2D.Vector4 op_Multiply(System.Single scalar, Electron2D.Vector4i vector)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -52706,7 +52706,7 @@
       },
       {
         "name": "vector",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
@@ -52714,65 +52714,65 @@
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_Subtraction(Electron2D.Vector4I,Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_Subtraction(Electron2D.Vector4i,Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_Subtraction",
-    "signature": "public static Electron2D.Vector4I op_Subtraction(Electron2D.Vector4I left, Electron2D.Vector4I right)",
+    "signature": "public static Electron2D.Vector4i op_Subtraction(Electron2D.Vector4i left, Electron2D.Vector4i right)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "left",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       },
       {
         "name": "right",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_UnaryNegation(Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_UnaryNegation(Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_UnaryNegation",
-    "signature": "public static Electron2D.Vector4I op_UnaryNegation(Electron2D.Vector4I value)",
+    "signature": "public static Electron2D.Vector4i op_UnaryNegation(Electron2D.Vector4i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "operator:Electron2D.Vector4I.op_UnaryPlus(Electron2D.Vector4I)",
+    "id": "operator:Electron2D.Vector4i.op_UnaryPlus(Electron2D.Vector4i)",
     "kind": "operator",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "op_UnaryPlus",
-    "signature": "public static Electron2D.Vector4I op_UnaryPlus(Electron2D.Vector4I value)",
+    "signature": "public static Electron2D.Vector4i op_UnaryPlus(Electron2D.Vector4i value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [
       {
         "name": "value",
-        "type": "Electron2D.Vector4I",
+        "type": "Electron2D.Vector4i",
         "default": null
       }
     ],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
@@ -57629,12 +57629,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Image",
     "name": "Size",
-    "signature": "public Electron2D.Vector2I Size { get;  }",
+    "signature": "public Electron2D.Vector2i Size { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -60658,12 +60658,12 @@
     "kind": "property",
     "declaringType": "Electron2D.RectI",
     "name": "End",
-    "signature": "public Electron2D.Vector2I End { get; set; }",
+    "signature": "public Electron2D.Vector2i End { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -60671,12 +60671,12 @@
     "kind": "property",
     "declaringType": "Electron2D.RectI",
     "name": "Position",
-    "signature": "public Electron2D.Vector2I Position { get; set; }",
+    "signature": "public Electron2D.Vector2i Position { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -60684,12 +60684,12 @@
     "kind": "property",
     "declaringType": "Electron2D.RectI",
     "name": "Size",
-    "signature": "public Electron2D.Vector2I Size { get; set; }",
+    "signature": "public Electron2D.Vector2i Size { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -61113,12 +61113,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Sprite",
     "name": "FrameCoords",
-    "signature": "public Electron2D.Vector2I FrameCoords { get; set; }",
+    "signature": "public Electron2D.Vector2i FrameCoords { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -61720,107 +61720,107 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.Down()",
+    "id": "property:Electron2D.Vector2i.Down()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Down",
-    "signature": "public static Electron2D.Vector2I Down { get;  }",
+    "signature": "public static Electron2D.Vector2i Down { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.Left()",
+    "id": "property:Electron2D.Vector2i.Left()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Left",
-    "signature": "public static Electron2D.Vector2I Left { get;  }",
+    "signature": "public static Electron2D.Vector2i Left { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.MaxValue()",
+    "id": "property:Electron2D.Vector2i.MaxValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "MaxValue",
-    "signature": "public static Electron2D.Vector2I MaxValue { get;  }",
+    "signature": "public static Electron2D.Vector2i MaxValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.MinValue()",
+    "id": "property:Electron2D.Vector2i.MinValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "MinValue",
-    "signature": "public static Electron2D.Vector2I MinValue { get;  }",
+    "signature": "public static Electron2D.Vector2i MinValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.One()",
+    "id": "property:Electron2D.Vector2i.One()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "One",
-    "signature": "public static Electron2D.Vector2I One { get;  }",
+    "signature": "public static Electron2D.Vector2i One { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.Right()",
+    "id": "property:Electron2D.Vector2i.Right()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Right",
-    "signature": "public static Electron2D.Vector2I Right { get;  }",
+    "signature": "public static Electron2D.Vector2i Right { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.Up()",
+    "id": "property:Electron2D.Vector2i.Up()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Up",
-    "signature": "public static Electron2D.Vector2I Up { get;  }",
+    "signature": "public static Electron2D.Vector2i Up { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector2I.Zero()",
+    "id": "property:Electron2D.Vector2i.Zero()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector2I",
+    "declaringType": "Electron2D.Vector2i",
     "name": "Zero",
-    "signature": "public static Electron2D.Vector2I Zero { get;  }",
+    "signature": "public static Electron2D.Vector2i Zero { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -61941,133 +61941,133 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Back()",
+    "id": "property:Electron2D.Vector3i.Back()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Back",
-    "signature": "public static Electron2D.Vector3I Back { get;  }",
+    "signature": "public static Electron2D.Vector3i Back { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Down()",
+    "id": "property:Electron2D.Vector3i.Down()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Down",
-    "signature": "public static Electron2D.Vector3I Down { get;  }",
+    "signature": "public static Electron2D.Vector3i Down { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Forward()",
+    "id": "property:Electron2D.Vector3i.Forward()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Forward",
-    "signature": "public static Electron2D.Vector3I Forward { get;  }",
+    "signature": "public static Electron2D.Vector3i Forward { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Left()",
+    "id": "property:Electron2D.Vector3i.Left()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Left",
-    "signature": "public static Electron2D.Vector3I Left { get;  }",
+    "signature": "public static Electron2D.Vector3i Left { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.MaxValue()",
+    "id": "property:Electron2D.Vector3i.MaxValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "MaxValue",
-    "signature": "public static Electron2D.Vector3I MaxValue { get;  }",
+    "signature": "public static Electron2D.Vector3i MaxValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.MinValue()",
+    "id": "property:Electron2D.Vector3i.MinValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "MinValue",
-    "signature": "public static Electron2D.Vector3I MinValue { get;  }",
+    "signature": "public static Electron2D.Vector3i MinValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.One()",
+    "id": "property:Electron2D.Vector3i.One()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "One",
-    "signature": "public static Electron2D.Vector3I One { get;  }",
+    "signature": "public static Electron2D.Vector3i One { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Right()",
+    "id": "property:Electron2D.Vector3i.Right()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Right",
-    "signature": "public static Electron2D.Vector3I Right { get;  }",
+    "signature": "public static Electron2D.Vector3i Right { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Up()",
+    "id": "property:Electron2D.Vector3i.Up()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Up",
-    "signature": "public static Electron2D.Vector3I Up { get;  }",
+    "signature": "public static Electron2D.Vector3i Up { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector3I.Zero()",
+    "id": "property:Electron2D.Vector3i.Zero()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector3I",
+    "declaringType": "Electron2D.Vector3i",
     "name": "Zero",
-    "signature": "public static Electron2D.Vector3I Zero { get;  }",
+    "signature": "public static Electron2D.Vector3i Zero { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector3I",
+    "returnType": "Electron2D.Vector3i",
     "value": null
   },
   {
@@ -62110,55 +62110,55 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector4I.MaxValue()",
+    "id": "property:Electron2D.Vector4i.MaxValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "MaxValue",
-    "signature": "public static Electron2D.Vector4I MaxValue { get;  }",
+    "signature": "public static Electron2D.Vector4i MaxValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector4I.MinValue()",
+    "id": "property:Electron2D.Vector4i.MinValue()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "MinValue",
-    "signature": "public static Electron2D.Vector4I MinValue { get;  }",
+    "signature": "public static Electron2D.Vector4i MinValue { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector4I.One()",
+    "id": "property:Electron2D.Vector4i.One()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "One",
-    "signature": "public static Electron2D.Vector4I One { get;  }",
+    "signature": "public static Electron2D.Vector4i One { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
-    "id": "property:Electron2D.Vector4I.Zero()",
+    "id": "property:Electron2D.Vector4i.Zero()",
     "kind": "property",
-    "declaringType": "Electron2D.Vector4I",
+    "declaringType": "Electron2D.Vector4i",
     "name": "Zero",
-    "signature": "public static Electron2D.Vector4I Zero { get;  }",
+    "signature": "public static Electron2D.Vector4i Zero { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector4I",
+    "returnType": "Electron2D.Vector4i",
     "value": null
   },
   {
@@ -62309,12 +62309,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Window",
     "name": "MaxSize",
-    "signature": "public Electron2D.Vector2I MaxSize { get; set; }",
+    "signature": "public Electron2D.Vector2i MaxSize { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -62322,12 +62322,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Window",
     "name": "MinSize",
-    "signature": "public Electron2D.Vector2I MinSize { get; set; }",
+    "signature": "public Electron2D.Vector2i MinSize { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -62348,12 +62348,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Window",
     "name": "Position",
-    "signature": "public Electron2D.Vector2I Position { get; set; }",
+    "signature": "public Electron2D.Vector2i Position { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
@@ -62361,12 +62361,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Window",
     "name": "Size",
-    "signature": "public Electron2D.Vector2I Size { get; set; }",
+    "signature": "public Electron2D.Vector2i Size { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Vector2I",
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {

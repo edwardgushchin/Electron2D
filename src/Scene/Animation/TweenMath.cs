@@ -173,21 +173,21 @@ internal static class TweenValue<TValue>
             });
         if (typeof(TValue) == typeof(Vector2))
             return Cast((Vector2 from, Vector2 to, double weight) => from.Lerp(to, (float)weight));
-        if (typeof(TValue) == typeof(Vector2I))
-            return Cast((Vector2I from, Vector2I to, double weight) => new Vector2I(
+        if (typeof(TValue) == typeof(Vector2i))
+            return Cast((Vector2i from, Vector2i to, double weight) => new Vector2i(
                 RoundToInt(from.X + ((to.X - (double)from.X) * weight)),
                 RoundToInt(from.Y + ((to.Y - (double)from.Y) * weight))));
         if (typeof(TValue) == typeof(Vector3))
             return Cast((Vector3 from, Vector3 to, double weight) => from.Lerp(to, (float)weight));
-        if (typeof(TValue) == typeof(Vector3I))
-            return Cast((Vector3I from, Vector3I to, double weight) => new Vector3I(
+        if (typeof(TValue) == typeof(Vector3i))
+            return Cast((Vector3i from, Vector3i to, double weight) => new Vector3i(
                 RoundToInt(from.X + ((to.X - (double)from.X) * weight)),
                 RoundToInt(from.Y + ((to.Y - (double)from.Y) * weight)),
                 RoundToInt(from.Z + ((to.Z - (double)from.Z) * weight))));
         if (typeof(TValue) == typeof(Vector4))
             return Cast((Vector4 from, Vector4 to, double weight) => from.Lerp(to, (float)weight));
-        if (typeof(TValue) == typeof(Vector4I))
-            return Cast((Vector4I from, Vector4I to, double weight) => new Vector4I(
+        if (typeof(TValue) == typeof(Vector4i))
+            return Cast((Vector4i from, Vector4i to, double weight) => new Vector4i(
                 RoundToInt(from.X + ((to.X - (double)from.X) * weight)),
                 RoundToInt(from.Y + ((to.Y - (double)from.Y) * weight)),
                 RoundToInt(from.Z + ((to.Z - (double)from.Z) * weight)),
@@ -200,8 +200,8 @@ internal static class TweenValue<TValue>
                 from.Size.Lerp(to.Size, (float)weight)));
         if (typeof(TValue) == typeof(RectI))
             return Cast((RectI from, RectI to, double weight) => new RectI(
-                TweenValue<Vector2I>.Interpolate!(from.Position, to.Position, weight),
-                TweenValue<Vector2I>.Interpolate!(from.Size, to.Size, weight)));
+                TweenValue<Vector2i>.Interpolate!(from.Position, to.Position, weight),
+                TweenValue<Vector2i>.Interpolate!(from.Size, to.Size, weight)));
         if (typeof(TValue) == typeof(Transform))
             return Cast((Transform from, Transform to, double weight) => from.InterpolateWith(to, (float)weight));
         return null;
@@ -221,16 +221,16 @@ internal static class TweenValue<TValue>
             return Cast((long left, long right) => checked(left + right));
         if (typeof(TValue) == typeof(Vector2))
             return Cast((Vector2 left, Vector2 right) => left + right);
-        if (typeof(TValue) == typeof(Vector2I))
-            return Cast((Vector2I left, Vector2I right) => left + right);
+        if (typeof(TValue) == typeof(Vector2i))
+            return Cast((Vector2i left, Vector2i right) => left + right);
         if (typeof(TValue) == typeof(Vector3))
             return Cast((Vector3 left, Vector3 right) => left + right);
-        if (typeof(TValue) == typeof(Vector3I))
-            return Cast((Vector3I left, Vector3I right) => left + right);
+        if (typeof(TValue) == typeof(Vector3i))
+            return Cast((Vector3i left, Vector3i right) => left + right);
         if (typeof(TValue) == typeof(Vector4))
             return Cast((Vector4 left, Vector4 right) => left + right);
-        if (typeof(TValue) == typeof(Vector4I))
-            return Cast((Vector4I left, Vector4I right) => left + right);
+        if (typeof(TValue) == typeof(Vector4i))
+            return Cast((Vector4i left, Vector4i right) => left + right);
         if (typeof(TValue) == typeof(Color))
             return Cast((Color left, Color right) => left + right);
         if (typeof(TValue) == typeof(Rect))
@@ -256,16 +256,16 @@ internal static class TweenValue<TValue>
             return Cast((long left, long right) => checked(left - right));
         if (typeof(TValue) == typeof(Vector2))
             return Cast((Vector2 left, Vector2 right) => left - right);
-        if (typeof(TValue) == typeof(Vector2I))
-            return Cast((Vector2I left, Vector2I right) => left - right);
+        if (typeof(TValue) == typeof(Vector2i))
+            return Cast((Vector2i left, Vector2i right) => left - right);
         if (typeof(TValue) == typeof(Vector3))
             return Cast((Vector3 left, Vector3 right) => left - right);
-        if (typeof(TValue) == typeof(Vector3I))
-            return Cast((Vector3I left, Vector3I right) => left - right);
+        if (typeof(TValue) == typeof(Vector3i))
+            return Cast((Vector3i left, Vector3i right) => left - right);
         if (typeof(TValue) == typeof(Vector4))
             return Cast((Vector4 left, Vector4 right) => left - right);
-        if (typeof(TValue) == typeof(Vector4I))
-            return Cast((Vector4I left, Vector4I right) => left - right);
+        if (typeof(TValue) == typeof(Vector4i))
+            return Cast((Vector4i left, Vector4i right) => left - right);
         if (typeof(TValue) == typeof(Color))
             return Cast((Color left, Color right) => left - right);
         if (typeof(TValue) == typeof(Rect))

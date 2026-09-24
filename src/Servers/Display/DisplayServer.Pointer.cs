@@ -117,17 +117,17 @@ public sealed partial class DisplayServer
     /// <returns>Desktop coordinates where available; on Wayland, the last position in physical pixels relative to the main window.</returns>
     /// <remarks>Wayland does not expose global pointer coordinates. Its window-relative SDL position is scaled to the physical client pixels used by <see cref="WindowGetSize(int)"/> and truncated toward zero.</remarks>
     /// <exception cref="InvalidOperationException">The native Wayland window pixel density cannot be read.</exception>
-    public Vector2I MouseGetPosition()
+    public Vector2i MouseGetPosition()
     {
         EnsureOwner();
         if (_waylandWindowPosition)
         {
             SDL.GetMouseState(out var windowX, out var windowY);
             var scale = GetMousePixelScale();
-            return new Vector2I((int)(windowX * scale), (int)(windowY * scale));
+            return new Vector2i((int)(windowX * scale), (int)(windowY * scale));
         }
         SDL.GetGlobalMouseState(out var x, out var y);
-        return new Vector2I((int)Mathf.Round(x), (int)Mathf.Round(y));
+        return new Vector2i((int)Mathf.Round(x), (int)Mathf.Round(y));
     }
 
     /// <summary>Gets the mouse buttons currently reported as held by SDL.</summary>
@@ -152,7 +152,7 @@ public sealed partial class DisplayServer
     /// On an advertised backend, the platform may still ignore movement under its input or remote-desktop policy.
     /// </remarks>
     /// <exception cref="NotSupportedException">Pointer warping is unavailable on the current backend.</exception>
-    public void WarpMouse(Vector2I position)
+    public void WarpMouse(Vector2i position)
     {
         EnsureOwner();
         if (!HasFeature(Feature.MouseWarp))

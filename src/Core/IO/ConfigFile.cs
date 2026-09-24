@@ -74,11 +74,11 @@ public sealed class ConfigFile : ElectronObject
         {
             new ColorJsonConverter(),
             new Vector2JsonConverter(),
-            new Vector2IJsonConverter(),
+            new Vector2iJsonConverter(),
             new Vector3JsonConverter(),
             new Vector4JsonConverter(),
-            new Vector3IJsonConverter(),
-            new Vector4IJsonConverter(),
+            new Vector3iJsonConverter(),
+            new Vector4iJsonConverter(),
             new RectJsonConverter(),
             new RectIJsonConverter(),
             new TransformJsonConverter(),
@@ -1134,18 +1134,18 @@ internal sealed class Vector2JsonConverter : JsonConverter<Vector2>
     }
 }
 
-internal sealed class Vector2IJsonConverter : JsonConverter<Vector2I>
+internal sealed class Vector2iJsonConverter : JsonConverter<Vector2i>
 {
     private const int XField = 1;
     private const int YField = 2;
 
-    public override Vector2I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Vector2i Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("An integer vector must be a JSON object.");
 
         var fields = 0;
-        var value = default(Vector2I);
+        var value = default(Vector2i);
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType != JsonTokenType.PropertyName)
@@ -1154,8 +1154,8 @@ internal sealed class Vector2IJsonConverter : JsonConverter<Vector2I>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Vector2I.X) => XField,
-                nameof(Vector2I.Y) => YField,
+                nameof(Vector2i.X) => XField,
+                nameof(Vector2i.Y) => YField,
                 _ => throw new JsonException($"An integer vector contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1178,11 +1178,11 @@ internal sealed class Vector2IJsonConverter : JsonConverter<Vector2I>
         return value;
     }
 
-    public override void Write(Utf8JsonWriter writer, Vector2I value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Vector2i value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteNumber(nameof(Vector2I.X), value.X);
-        writer.WriteNumber(nameof(Vector2I.Y), value.Y);
+        writer.WriteNumber(nameof(Vector2i.X), value.X);
+        writer.WriteNumber(nameof(Vector2i.Y), value.Y);
         writer.WriteEndObject();
     }
 }
@@ -1249,15 +1249,15 @@ internal sealed class Vector3JsonConverter : JsonConverter<Vector3>
     }
 }
 
-internal sealed class Vector3IJsonConverter : JsonConverter<Vector3I>
+internal sealed class Vector3iJsonConverter : JsonConverter<Vector3i>
 {
-    public override Vector3I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Vector3i Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("A three-component integer vector must be a JSON object.");
 
         var fields = 0;
-        var value = default(Vector3I);
+        var value = default(Vector3i);
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType != JsonTokenType.PropertyName)
@@ -1266,9 +1266,9 @@ internal sealed class Vector3IJsonConverter : JsonConverter<Vector3I>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Vector3I.X) => 1,
-                nameof(Vector3I.Y) => 2,
-                nameof(Vector3I.Z) => 4,
+                nameof(Vector3i.X) => 1,
+                nameof(Vector3i.Y) => 2,
+                nameof(Vector3i.Z) => 4,
                 _ => throw new JsonException($"A three-component integer vector contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1298,12 +1298,12 @@ internal sealed class Vector3IJsonConverter : JsonConverter<Vector3I>
         return value;
     }
 
-    public override void Write(Utf8JsonWriter writer, Vector3I value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Vector3i value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteNumber(nameof(Vector3I.X), value.X);
-        writer.WriteNumber(nameof(Vector3I.Y), value.Y);
-        writer.WriteNumber(nameof(Vector3I.Z), value.Z);
+        writer.WriteNumber(nameof(Vector3i.X), value.X);
+        writer.WriteNumber(nameof(Vector3i.Y), value.Y);
+        writer.WriteNumber(nameof(Vector3i.Z), value.Z);
         writer.WriteEndObject();
     }
 }
@@ -1375,15 +1375,15 @@ internal sealed class Vector4JsonConverter : JsonConverter<Vector4>
     }
 }
 
-internal sealed class Vector4IJsonConverter : JsonConverter<Vector4I>
+internal sealed class Vector4iJsonConverter : JsonConverter<Vector4i>
 {
-    public override Vector4I Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Vector4i Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("A four-component integer vector must be a JSON object.");
 
         var fields = 0;
-        var value = default(Vector4I);
+        var value = default(Vector4i);
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType != JsonTokenType.PropertyName)
@@ -1392,10 +1392,10 @@ internal sealed class Vector4IJsonConverter : JsonConverter<Vector4I>
             var propertyName = reader.GetString();
             var field = propertyName switch
             {
-                nameof(Vector4I.X) => 1,
-                nameof(Vector4I.Y) => 2,
-                nameof(Vector4I.Z) => 4,
-                nameof(Vector4I.W) => 8,
+                nameof(Vector4i.X) => 1,
+                nameof(Vector4i.Y) => 2,
+                nameof(Vector4i.Z) => 4,
+                nameof(Vector4i.W) => 8,
                 _ => throw new JsonException($"A four-component integer vector contains unknown field '{propertyName}'."),
             };
             if ((fields & field) != 0)
@@ -1428,13 +1428,13 @@ internal sealed class Vector4IJsonConverter : JsonConverter<Vector4I>
         return value;
     }
 
-    public override void Write(Utf8JsonWriter writer, Vector4I value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Vector4i value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteNumber(nameof(Vector4I.X), value.X);
-        writer.WriteNumber(nameof(Vector4I.Y), value.Y);
-        writer.WriteNumber(nameof(Vector4I.Z), value.Z);
-        writer.WriteNumber(nameof(Vector4I.W), value.W);
+        writer.WriteNumber(nameof(Vector4i.X), value.X);
+        writer.WriteNumber(nameof(Vector4i.Y), value.Y);
+        writer.WriteNumber(nameof(Vector4i.Z), value.Z);
+        writer.WriteNumber(nameof(Vector4i.W), value.W);
         writer.WriteEndObject();
     }
 }
@@ -1508,8 +1508,8 @@ internal sealed class RectIJsonConverter : JsonConverter<RectI>
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("An integer rectangle must be a JSON object.");
 
-        var position = default(Vector2I);
-        var size = default(Vector2I);
+        var position = default(Vector2i);
+        var size = default(Vector2i);
         var fields = 0;
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
@@ -1530,9 +1530,9 @@ internal sealed class RectIJsonConverter : JsonConverter<RectI>
 
             fields |= field;
             if (field == Position)
-                position = JsonSerializer.Deserialize<Vector2I>(ref reader, options);
+                position = JsonSerializer.Deserialize<Vector2i>(ref reader, options);
             else
-                size = JsonSerializer.Deserialize<Vector2I>(ref reader, options);
+                size = JsonSerializer.Deserialize<Vector2i>(ref reader, options);
         }
 
         if (reader.TokenType != JsonTokenType.EndObject)

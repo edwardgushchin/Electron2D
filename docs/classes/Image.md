@@ -46,7 +46,7 @@ byte[] ownedCopy = image.GetData();
 | --- | --- |
 | [`public int Width { get; }`](#width) | Base-level width in pixels. |
 | [`public int Height { get; }`](#height) | Base-level height in pixels. |
-| [`public Vector2I Size { get; }`](#size) | Base-level dimensions. |
+| [`public Vector2i Size { get; }`](#size) | Base-level dimensions. |
 | [`public Image.Format PixelFormat { get; }`](#pixelformat) | Raw buffer layout. |
 | [`public bool HasMipmaps { get; }`](#hasmipmaps) | Whether a complete lower-resolution chain follows the base level. |
 | [`public int MipmapCount { get; }`](#mipmapcount) | Number of stored levels excluding the base. |
@@ -67,9 +67,9 @@ byte[] ownedCopy = image.GetData();
 | [`public int GetMipmapOffset(int mipmap)`](#getmipmapoffset) | Gets a stored level's byte offset. |
 | [`public void CopyFrom(Image source)`](#copyfrom) | Copies pixel state while preserving resource identity. |
 | [`public Color GetPixel(int x, int y)`](#getpixel-xy) | Decodes one base-level pixel. |
-| [`public Color GetPixel(Vector2I point)`](#getpixel-point) | Decodes one base-level pixel. |
+| [`public Color GetPixel(Vector2i point)`](#getpixel-point) | Decodes one base-level pixel. |
 | [`public void SetPixel(int x, int y, Color color)`](#setpixel-xy) | Encodes one base-level pixel. |
-| [`public void SetPixel(Vector2I point, Color color)`](#setpixel-point) | Encodes one base-level pixel. |
+| [`public void SetPixel(Vector2i point, Color color)`](#setpixel-point) | Encodes one base-level pixel. |
 | [`public Image.AlphaMode DetectAlpha()`](#detectalpha) | Classifies base-level alpha use. |
 | [`public Image.UsedChannels DetectUsedChannels(Image.CompressSource source = Image.CompressSource.Generic)`](#detectusedchannels) | Detects the smallest meaningful channel set. |
 | [`public RectI GetUsedRect()`](#getusedrect) | Finds nontransparent base-level bounds. |
@@ -87,10 +87,10 @@ byte[] ownedCopy = image.GetData();
 | [`public void ShrinkX2()`](#shrinkx2) | Halves dimensions with bilinear filtering. |
 | [`public void Resize(int width, int height, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resize) | Resamples the base level. |
 | [`public void ResizeToPowerOfTwo(bool square = false, Image.Interpolation interpolation = Image.Interpolation.Bilinear)`](#resizetopot) | Resamples to power-of-two dimensions. |
-| [`public void BlitRect(Image source, RectI sourceRect, Vector2I destination)`](#blitrect) | Copies a clipped source rectangle. |
-| [`public void BlendRect(Image source, RectI sourceRect, Vector2I destination)`](#blendrect) | Alpha-composites a clipped source rectangle. |
-| [`public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`](#blitrectmask) | Copies source pixels selected by mask alpha. |
-| [`public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`](#blendrectmask) | Alpha-composites source pixels selected by mask alpha. |
+| [`public void BlitRect(Image source, RectI sourceRect, Vector2i destination)`](#blitrect) | Copies a clipped source rectangle. |
+| [`public void BlendRect(Image source, RectI sourceRect, Vector2i destination)`](#blendrect) | Alpha-composites a clipped source rectangle. |
+| [`public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`](#blitrectmask) | Copies source pixels selected by mask alpha. |
+| [`public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`](#blendrectmask) | Alpha-composites source pixels selected by mask alpha. |
 | [`public void AdjustBCS(float brightness, float contrast, float saturation)`](#adjustbcs) | Adjusts brightness, contrast, and saturation. |
 | [`public void FixAlphaEdges()`](#fixalphaedges) | Propagates nearby opaque RGB into low-alpha `Rgba8` pixels. |
 | [`public void PremultiplyAlpha()`](#premultiplyalpha) | Multiplies `Rgba8` RGB bytes by alpha. |
@@ -167,9 +167,9 @@ Returns zero for an empty image; otherwise returns the positive base-level width
 Returns zero for an empty image; otherwise returns the positive base-level height in pixels. Access after disposal throws `ObjectDisposedException`.
 
 <a id="size"></a>
-### `public Vector2I Size { get; }`
+### `public Vector2i Size { get; }`
 
-Returns `(Width, Height)` in pixels, or `Vector2I.Zero` for an empty image.
+Returns `(Width, Height)` in pixels, or `Vector2i.Zero` for an empty image.
 
 <a id="pixelformat"></a>
 ### `public Image.Format PixelFormat { get; }`
@@ -254,7 +254,7 @@ Copies dimensions, format, mipmap policy, and bytes from a snapshot of `source`,
 Decodes an uncompressed base-level pixel. Coordinates are zero-based and must be inside the image; empty or compressed images throw `InvalidOperationException`.
 
 <a id="getpixel-point"></a>
-### `public Color GetPixel(Vector2I point)`
+### `public Color GetPixel(Vector2i point)`
 
 Equivalent to `GetPixel(point.X, point.Y)`.
 
@@ -264,7 +264,7 @@ Equivalent to `GetPixel(point.X, point.Y)`.
 Encodes one uncompressed base-level pixel using the current format's quantization rules and raises `Changed`. Existing mip levels are not regenerated; call `GenerateMipmaps` after a batch of per-pixel edits when a consistent chain is required.
 
 <a id="setpixel-point"></a>
-### `public void SetPixel(Vector2I point, Color color)`
+### `public void SetPixel(Vector2i point, Color color)`
 
 Equivalent to `SetPixel(point.X, point.Y, color)`.
 
@@ -354,22 +354,22 @@ Resamples the base level to positive validated dimensions with the selected filt
 Rounds each dimension upward to a power of two. When `square` is true, both use the larger result. The selected interpolation and normal resize limits apply.
 
 <a id="blitrect"></a>
-### `public void BlitRect(Image source, RectI sourceRect, Vector2I destination)`
+### `public void BlitRect(Image source, RectI sourceRect, Vector2i destination)`
 
 Copies the clipped source rectangle without alpha blending. Source and destination formats must match. Destination is aligned with `sourceRect.Position`, so source clipping preserves the corresponding destination offset.
 
 <a id="blendrect"></a>
-### `public void BlendRect(Image source, RectI sourceRect, Vector2I destination)`
+### `public void BlendRect(Image source, RectI sourceRect, Vector2i destination)`
 
 Composites straight-alpha source colors over the destination. Formats must match and both images must be readable. For `Rgba16I`, alpha is normalized from `0..65535` during blending and converted back to integer storage afterward.
 
 <a id="blitrectmask"></a>
-### `public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`
+### `public void BlitRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`
 
 Copies only pixels whose same-coordinate mask alpha is nonzero. Source and mask dimensions must match; source/destination formats must match; the mask must expose alpha.
 
 <a id="blendrectmask"></a>
-### `public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2I destination)`
+### `public void BlendRectMask(Image source, Image mask, RectI sourceRect, Vector2i destination)`
 
 Combines mask selection with straight-alpha compositing. Source, destination, and mask validation occurs before destination commit.
 
@@ -541,7 +541,7 @@ Public state reads and writes are safe for concurrent calls on the same image. M
 
 ## Dependencies and interactions
 
-`Image` depends on `Resource`, `Color`, `Vector2I`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
+`Image` depends on `Resource`, `Color`, `Vector2i`, `RectI`, `ClockDirection`, `Mathf`/BCL scalar operations, binary primitives, and managed arrays. Managed processing does not invoke native code. File/buffer codecs use internal SDL3-CS bindings, temporary native surfaces, `FileAccess`, and atomic file replacement; no native surface escapes to callers. Packed scenes duplicate image buffers through the normal resource graph rules.
 
 ## Verification
 

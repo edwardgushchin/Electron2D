@@ -35,7 +35,7 @@ The active server is a process singleton, not an `Engine` owned object. `Electro
 ```csharp
 using Electron2D;
 
-using var display = DisplayServer.Open("My game", new Vector2I(800, 600));
+using var display = DisplayServer.Open("My game", new Vector2i(800, 600));
 using var tree = new SceneTree(new Node());
 Engine.Instance.Start(tree);
 try
@@ -99,30 +99,30 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public void SetIcon(Image image)`](#method-seticon) | Sets the application-default icon while the main window has no override. |
 | [`public MouseMode MouseGetMode()`](#method-mousegetmode) | Gets the last successfully requested mouse mode. |
 | [`public void MouseSetMode(MouseMode mode)`](#method-mousesetmode) | Requests cursor visibility, capture, and confinement as one mode. |
-| [`public Vector2I MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |
+| [`public Vector2i MouseGetPosition()`](#method-mousegetposition) | Gets desktop pointer coordinates or the window-relative position on Wayland. |
 | [`public MouseButtonMask MouseGetButtonState()`](#method-mousegetbuttonstate) | Gets the mouse buttons currently reported as held by SDL. |
-| [`public void WarpMouse(Vector2I position)`](#method-warpmouse) | Requests a client-area pointer move when the backend supports warping. |
+| [`public void WarpMouse(Vector2i position)`](#method-warpmouse) | Requests a client-area pointer move when the backend supports warping. |
 | [`public CursorShape CursorGetShape()`](#method-cursorgetshape) | Gets the last successfully selected standard pointer shape. |
 | [`public void CursorSetShape(CursorShape shape)`](#method-cursorsetshape) | Selects a standard pointer shape from the native cursor theme. |
 | [`public void CursorSetCustomImage(Resource? image, CursorShape shape = CursorShape.Arrow, Vector2 hotspot = default)`](#method-cursorsetcustomimage) | Sets or clears the image used for one pointer shape. |
 | [`public string IMEGetText()`](#method-imegettext) | Gets the most recently received native IME composition text. |
-| [`public Vector2I IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
+| [`public Vector2i IMEGetSelection()`](#method-imegetselection) | Gets the current composition selection. |
 | [`public void WindowSetIMEActive(bool active, int windowId = MainWindowId)`](#method-windowsetimeactive) | Enables or disables native text input for the main window. |
-| [`public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
+| [`public void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetimeposition) | Moves the native IME candidate area to a window-local text caret. |
 | [`public bool IsTouchscreenAvailable()`](#method-istouchscreenavailable) | Gets whether touch input is available from a device or mouse emulation. |
 | [`public int WindowGetCurrentScreen(int windowId = MainWindowId)`](#method-windowgetcurrentscreen) | Gets the current screen index containing the main window. |
 | [`public int GetKeyboardFocusScreen()`](#method-getkeyboardfocusscreen) | Gets the index of the display with keyboard focus. |
 | [`public int GetScreenFromRect(Rect rectangle)`](#method-getscreenfromrect) | Gets the display containing the largest portion of a desktop rectangle. |
 | [`public int[] GetWindowList()`](#method-getwindowlist) | Gets a snapshot of the engine-owned native window IDs. |
 | [`public nint WindowGetNativeHandle(HandleType handleType, int windowId = MainWindowId)`](#method-windowgetnativehandle) | Gets a borrowed operating-system display, window or graphics-context identity. |
-| [`public int GetWindowAtScreenPosition(Vector2I position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
+| [`public int GetWindowAtScreenPosition(Vector2i position)`](#method-getwindowatscreenposition) | Finds the engine-owned window at a desktop position. |
 | [`public void WindowSetCurrentScreen(int screen, int windowId = MainWindowId)`](#method-windowsetcurrentscreen) | Requests that the main window move to another connected display. |
 | [`public float ScreenGetRefreshRate(int screen = ScreenOfMainWindow)`](#method-screengetrefreshrate) | Gets the current mode's refresh rate in hertz, or `-1` when unavailable. |
 | [`public float ScreenGetMaxScale()`](#method-screengetmaxscale) | Gets the largest reported content scale among connected displays. |
-| [`public Vector2I WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
-| [`public void WindowSetMinSize(Vector2I size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
-| [`public Vector2I WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
-| [`public void WindowSetMaxSize(Vector2I size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
+| [`public Vector2i WindowGetMinSize(int windowId = MainWindowId)`](#method-windowgetminsize) | Gets the requested minimum client size. |
+| [`public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetminsize) | Requests minimum client dimensions. |
+| [`public Vector2i WindowGetMaxSize(int windowId = MainWindowId)`](#method-windowgetmaxsize) | Gets the requested maximum client size. |
+| [`public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetmaxsize) | Requests maximum client dimensions. |
 | [`public WindowMode WindowGetMode(int windowId = MainWindowId)`](#method-windowgetmode) | Gets the main window's current native mode. |
 | [`public void WindowSetMode(WindowMode mode, int windowId = MainWindowId)`](#method-windowsetmode) | Requests a native main-window mode. |
 | [`public bool WindowIsFocused(int windowId = MainWindowId)`](#method-windowisfocused) | Gets whether the main window currently has keyboard focus. |
@@ -131,11 +131,11 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public bool WindowIsMaximizeAllowed(int windowId = MainWindowId)`](#method-windowismaximizeallowed) | Gets whether the current SDL resize policy permits a maximize request. |
 | [`public void WindowMoveToForeground(int windowId = MainWindowId)`](#method-windowmovetoforeground) | Requests native foreground on supported drivers; does nothing on Wayland. |
 | [`public void WindowRequestAttention(int windowId = MainWindowId)`](#method-windowrequestattention) | Requests user attention until the main window receives focus. |
-| [`public Vector2I WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
-| [`public Vector2I WindowGetSizeWithDecorations(int windowId = MainWindowId)`](#method-windowgetsizewithdecorations) | Gets the main-window size including native decorations. |
+| [`public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`](#method-windowgetpositionwithdecorations) | Gets the main-window position including its left and top decorations. |
+| [`public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`](#method-windowgetsizewithdecorations) | Gets the main-window size including native decorations. |
 | [`public void WindowSetTaskbarProgressState(ProgressState state, int windowId = MainWindowId)`](#method-windowsettaskbarprogressstate) | Requests a taskbar progress state where the desktop supports it. |
 | [`public void WindowSetTaskbarProgressValue(float value, int windowId = MainWindowId)`](#method-windowsettaskbarprogressvalue) | Requests a taskbar progress fraction where the desktop supports it. |
-| [`public static DisplayServer Open(string title, Vector2I size, bool hidden = false)`](#method-open) | Opens the native video subsystem and creates the main window. |
+| [`public static DisplayServer Open(string title, Vector2i size, bool hidden = false)`](#method-open) | Opens the native video subsystem and creates the main window. |
 | [`public string GetName()`](#method-getname) | Gets the current display backend name. |
 | [`public int GetScreenCount()`](#method-getscreencount) | Gets the current number of connected displays. |
 | [`public bool IsDarkMode()`](#method-isdarkmode) | Reports whether the current native system theme is dark. |
@@ -144,15 +144,15 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public bool ScreenIsKeptOn()`](#method-screeniskepton) | Reports whether native screen blanking is disabled. |
 | [`public void ScreenSetKeepOn(bool enable)`](#method-screensetkeepon) | Requests screen wakefulness for this process. |
 | [`public int GetPrimaryScreen()`](#method-getprimaryscreen) | Gets the index of the current primary display. |
-| [`public Vector2I ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
-| [`public Vector2I ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
+| [`public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`](#method-screengetposition) | Gets the global desktop position of a display. |
+| [`public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`](#method-screengetsize) | Gets the full size of a display. |
 | [`public RectI ScreenGetUsableRect(int screen = ScreenOfMainWindow)`](#method-screengetusablerect) | Gets the usable desktop rectangle of a display. |
 | [`public float ScreenGetScale(int screen = ScreenOfMainWindow)`](#method-screengetscale) | Gets the display content scale reported by the native video system. |
 | [`public void WindowSetTitle(string title, int windowId = MainWindowId)`](#method-windowsettitle) | Requests a new main-window title. |
-| [`public Vector2I WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
-| [`public void WindowSetSize(Vector2I size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
-| [`public Vector2I WindowGetPosition(int windowId = MainWindowId)`](#method-windowgetposition) | Gets the main window's global desktop position. |
-| [`public void WindowSetPosition(Vector2I position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
+| [`public Vector2i WindowGetSize(int windowId = MainWindowId)`](#method-windowgetsize) | Gets the main window's client size. |
+| [`public void WindowSetSize(Vector2i size, int windowId = MainWindowId)`](#method-windowsetsize) | Requests a new main-window client size. |
+| [`public Vector2i WindowGetPosition(int windowId = MainWindowId)`](#method-windowgetposition) | Gets the main window's global desktop position. |
+| [`public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
 | [`public bool ClipboardHas()`](#method-clipboardhas) | Gets whether the system clipboard currently contains text. |
 | [`public string ClipboardGet()`](#method-clipboardget) | Gets text from the system clipboard. |
 | [`public void ClipboardSet(string text)`](#method-clipboardset) | Replaces system clipboard text. |
@@ -172,7 +172,7 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public event Action<RectI>? WindowRectChanged`](#event-windowrectchanged) | Occurs after a change to the main window's complete client rectangle. |
 | [`public event Action<bool>? WindowFocusChanged`](#event-windowfocuschanged) | Occurs when the main window gains or loses keyboard focus. |
 | [`public event Action<string>? TextInput`](#event-textinput) | Occurs when the platform commits text input, including text composed through an IME. |
-| [`public event Action<string, Vector2I>? TextEditing`](#event-textediting) | Occurs after the native input method updates its uncommitted composition. |
+| [`public event Action<string, Vector2i>? TextEditing`](#event-textediting) | Occurs after the native input method updates its uncommitted composition. |
 | [`public event Action<IReadOnlyList<string>>? FilesDropped`](#event-filesdropped) | Occurs once for a completed ordered group of dropped files. |
 
 ### Enumerations
@@ -398,7 +398,7 @@ Requests cursor visibility, capture, and confinement as one mode.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-mousegetposition"></a>
-#### `public Vector2I MouseGetPosition()`
+#### `public Vector2i MouseGetPosition()`
 
 Gets the current global desktop mouse position where the driver exposes it. On Wayland, where the compositor does not provide reliable global coordinates, reads the last position relative to the main window from SDL's pointer state and converts it to client pixels.
 
@@ -416,7 +416,7 @@ Gets the mouse buttons currently reported as held by SDL.
 **Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
 
 <a id="method-warpmouse"></a>
-#### `public void WarpMouse(Vector2I position)`
+#### `public void WarpMouse(Vector2i position)`
 
 Requests a pointer move to a position in the main window's client area when pointer warping is available.
 
@@ -473,7 +473,7 @@ Gets the most recently received native IME composition text.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-imegetselection"></a>
-#### `public Vector2I IMEGetSelection()`
+#### `public Vector2i IMEGetSelection()`
 
 Gets the current composition selection.
 
@@ -494,7 +494,7 @@ Enables or disables native text input for the main window.
 **Source:** `src/Servers/Display/DisplayServer.Text.cs`.
 
 <a id="method-windowsetimeposition"></a>
-#### `public void WindowSetIMEPosition(Vector2I position, int windowId = MainWindowId)`
+#### `public void WindowSetIMEPosition(Vector2i position, int windowId = MainWindowId)`
 
 Moves the native IME candidate area to a window-local text caret.
 
@@ -575,7 +575,7 @@ Gets a borrowed operating-system identity through SDL window properties. `Displa
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-getwindowatscreenposition"></a>
-#### `public int GetWindowAtScreenPosition(Vector2I position)`
+#### `public int GetWindowAtScreenPosition(Vector2i position)`
 
 Finds the engine-owned window at a desktop position.
 
@@ -624,7 +624,7 @@ Gets the largest reported content scale among connected displays.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetminsize"></a>
-#### `public Vector2I WindowGetMinSize(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetMinSize(int windowId = MainWindowId)`
 
 Gets the requested minimum size of the main window, initially 64×64 client pixels on Wayland or native window units elsewhere.
 
@@ -635,7 +635,7 @@ Gets the requested minimum size of the main window, initially 64×64 client pixe
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetminsize"></a>
-#### `public void WindowSetMinSize(Vector2I size, int windowId = MainWindowId)`
+#### `public void WindowSetMinSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests minimum client dimensions for the main window. Wayland converts each pixel bound to native logical units using window pixel density, rounding minimums upward and maximums downward, then reapplies them after a display-scale change.
 
@@ -647,7 +647,7 @@ Requests minimum client dimensions for the main window. Wayland converts each pi
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetmaxsize"></a>
-#### `public Vector2I WindowGetMaxSize(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetMaxSize(int windowId = MainWindowId)`
 
 Gets the requested maximum size of the main window.
 
@@ -658,7 +658,7 @@ Gets the requested maximum size of the main window.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowsetmaxsize"></a>
-#### `public void WindowSetMaxSize(Vector2I size, int windowId = MainWindowId)`
+#### `public void WindowSetMaxSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests maximum client dimensions for the main window. Wayland converts each pixel bound to native logical units using window pixel density, rounding minimums upward and maximums downward, then reapplies them after a display-scale change.
 
@@ -776,7 +776,7 @@ Requests user attention until the main window receives focus.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetpositionwithdecorations"></a>
-#### `public Vector2I WindowGetPositionWithDecorations(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetPositionWithDecorations(int windowId = MainWindowId)`
 
 Gets the main-window position including its left and top decorations.
 
@@ -789,7 +789,7 @@ Gets the main-window position including its left and top decorations.
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-windowgetsizewithdecorations"></a>
-#### `public Vector2I WindowGetSizeWithDecorations(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetSizeWithDecorations(int windowId = MainWindowId)`
 
 Gets the main-window size including native decorations.
 
@@ -824,7 +824,7 @@ Requests the taskbar progress fraction for the main window. On Wayland this call
 **Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
 
 <a id="method-open"></a>
-#### `public static DisplayServer Open(string title, Vector2I size, bool hidden = false)`
+#### `public static DisplayServer Open(string title, Vector2i size, bool hidden = false)`
 
 Opens the native video subsystem and creates the main window.
 
@@ -870,7 +870,7 @@ Gets the index of the current primary display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetposition"></a>
-#### `public Vector2I ScreenGetPosition(int screen = ScreenOfMainWindow)`
+#### `public Vector2i ScreenGetPosition(int screen = ScreenOfMainWindow)`
 
 Gets the global desktop position of a display.
 
@@ -881,7 +881,7 @@ Gets the global desktop position of a display.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-screengetsize"></a>
-#### `public Vector2I ScreenGetSize(int screen = ScreenOfMainWindow)`
+#### `public Vector2i ScreenGetSize(int screen = ScreenOfMainWindow)`
 
 Gets the full size of a display.
 
@@ -926,7 +926,7 @@ Requests a new main-window title.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowgetsize"></a>
-#### `public Vector2I WindowGetSize(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetSize(int windowId = MainWindowId)`
 
 Gets the main window's client size.
 
@@ -937,7 +937,7 @@ Gets the main window's client size.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowsetsize"></a>
-#### `public void WindowSetSize(Vector2I size, int windowId = MainWindowId)`
+#### `public void WindowSetSize(Vector2i size, int windowId = MainWindowId)`
 
 Requests a new main-window client size.
 
@@ -949,7 +949,7 @@ Requests a new main-window client size.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowgetposition"></a>
-#### `public Vector2I WindowGetPosition(int windowId = MainWindowId)`
+#### `public Vector2i WindowGetPosition(int windowId = MainWindowId)`
 
 Gets the main window's global desktop position.
 
@@ -962,7 +962,7 @@ Gets the main window's global desktop position.
 **Source:** `src/Servers/Display/DisplayServer.cs`.
 
 <a id="method-windowsetposition"></a>
-#### `public void WindowSetPosition(Vector2I position, int windowId = MainWindowId)`
+#### `public void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`
 
 Requests a global desktop position for the main window.
 
@@ -1112,7 +1112,7 @@ Occurs when the platform commits text input, including text composed through an 
 **Source:** `src/Servers/Display/DisplayServer.Events.cs`.
 
 <a id="event-textediting"></a>
-#### `public event Action<string, Vector2I>? TextEditing`
+#### `public event Action<string, Vector2i>? TextEditing`
 
 Occurs after the native input method updates its uncommitted composition.
 

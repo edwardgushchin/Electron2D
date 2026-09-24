@@ -77,7 +77,7 @@ internal static class DisplayServerClipboardNativeTests
     {
         var expectedClipboard = Console.ReadLine() ?? throw new InvalidOperationException("Missing clipboard expectation.");
         var expectedPrimary = Console.ReadLine() ?? throw new InvalidOperationException("Missing primary-selection expectation.");
-        using var display = DisplayServer.Open("Clipboard reader", new Vector2I(64, 64));
+        using var display = DisplayServer.Open("Clipboard reader", new Vector2i(64, 64));
         var windows = SDL.GetWindows(out var count);
         if (count != 1 || windows is not { Length: 1 })
             throw new InvalidOperationException("The clipboard reader did not create one window.");

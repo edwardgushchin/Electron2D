@@ -20,7 +20,7 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 1. A caller defines and reuses a `ConfigKey<T>`.
 2. `SetValue` serializes the typed value to a compact JSON token before taking the document mutation lock; null removes the entry.
 3. Reads copy the stored token under the lock and deserialize a new `T`, preventing mutable aliasing.
-   [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2I`](../classes/Vector2I.md), [`Vector3`](../classes/Vector3.md), [`Vector3I`](../classes/Vector3I.md), [`Vector4`](../classes/Vector4.md), [`Vector4I`](../classes/Vector4I.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), and [`Transform`](../classes/Transform.md) use exact object converters instead of relying on incidental field/property reflection.
+   [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect`](../classes/Rect.md), [`RectI`](../classes/RectI.md), and [`Transform`](../classes/Transform.md) use exact object converters instead of relying on incidental field/property reflection.
 4. `Parse` and all load variants fully validate a temporary operation list before one locked merge.
 5. Save variants snapshot the encoded document, then write, flush, and move a same-directory temporary file over the destination.
 6. Encrypted loads authenticate/decrypt before UTF-8 decoding and parsing, so failed authentication cannot alter state.
@@ -41,9 +41,9 @@ Both types are implemented in [`src/Core/IO/ConfigFile.cs`](../../src/Core/IO/Co
 - Failed parsing, decoding, serialization, authentication, or file reads do not mutate in-memory state.
 - A null assignment or parsed JSON null removes an entry; empty sections are removed.
 - Color snapshots contain exactly four finite numeric `R`, `G`, `B`, and `A` fields. Missing, duplicate, unknown, or non-finite fields are rejected.
-- `Vector2` snapshots contain exactly finite numeric `X` and `Y` fields; `Vector2I` snapshots contain exact 32-bit integer `X` and `Y` fields.
-- `Vector3` snapshots contain exactly finite numeric `X`, `Y`, and `Z` fields; `Vector3I` snapshots contain exact 32-bit integer fields with the same names.
-- `Vector4` snapshots contain exactly finite numeric `X`, `Y`, `Z`, and `W` fields; `Vector4I` snapshots contain exact 32-bit integer fields with the same names.
+- `Vector2` snapshots contain exactly finite numeric `X` and `Y` fields; `Vector2i` snapshots contain exact 32-bit integer `X` and `Y` fields.
+- `Vector3` snapshots contain exactly finite numeric `X`, `Y`, and `Z` fields; `Vector3i` snapshots contain exact 32-bit integer fields with the same names.
+- `Vector4` snapshots contain exactly finite numeric `X`, `Y`, `Z`, and `W` fields; `Vector4i` snapshots contain exact 32-bit integer fields with the same names.
 - Rectangle snapshots contain exactly `Position` and `Size`, each with finite numeric `X` and `Y` fields. Missing, duplicate, unknown, nonnumeric, or non-finite fields are rejected; computed `End` and `Area` are never persisted.
 - Integer rectangle snapshots contain exactly `Position` and `Size`, each with exact 32-bit integer `X` and `Y` fields. Missing, duplicate, unknown, non-integer, or out-of-range fields are rejected; computed `End` and `Area` are never persisted.
 - Transform snapshots contain exactly `X`, `Y`, and `Origin`, each with finite numeric `X` and `Y` fields. Missing, duplicate, unknown, nonnumeric, or non-finite fields are rejected.

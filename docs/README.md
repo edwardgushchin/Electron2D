@@ -24,7 +24,7 @@ This directory describes the engine as it exists now. Planned features are liste
 - Managed memory remains runtime-owned; `IDisposable` controls deterministic logical/native cleanup. Public manual reference counting is excluded, while internal asset leases are reserved for a future resource manager with concrete native-backed assets.
 - Canonical scalar mathematics with seven constants, 127 typed overloads, strict `1e-6f`/`1e-14` approximation, angle/interpolation/wrapping helpers, documented managed failures, and allocation-free warmed execution: implemented in `Mathf`. Geometry and Entity transform math use this shared contract.
 - Floating-point RGBA values, HSV and perceptual OKHSL conversion, straight-alpha blend, arithmetic/comparison, packed/HTML formats, strict finite configuration serialization, packed-scene value storage, and all 146 standard named colors: implemented without a renderer dependency.
-- Engine-owned `Vector2`/`Vector2I` and `Vector4`/`Vector4I` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
+- Engine-owned `Vector2`/`Vector2i` and `Vector4`/`Vector4i` families with complete float/integer value math, strict typed configuration schemas, packed-scene storage, documented IEEE/overflow behavior, and allocation-free warmed numeric paths: implemented. The four-component values are numeric tuples and do not introduce 3D/4D scene geometry.
 - Floating-point `Rect` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge/support and transform-bound operations, strict finite configuration serialization, packed-scene storage, and stable side identities: implemented without renderer, UI, or physics dependencies.
 - Integer `RectI` geometry with explicit negative-size normalization, half-open containment, enclosure/intersection/growth/merge, typed `Rect` conversions, strict configuration serialization, and packed-scene storage: implemented for foreseeable pixel, atlas, image-region, and grid bounds without depending on those future consumers.
 - Engine-owned `Transform` is implemented with complete affine math, rectangle operators, strict finite configuration persistence, direct packed-scene storage, allocation-free numeric hot paths, and direct `Entity` local/global integration through `Vector2`.
@@ -81,9 +81,9 @@ This directory describes the engine as it exists now. Planned features are liste
 - Struct: [Color](classes/Color.md)
 - Static class: [Colors](classes/Colors.md)
 - Struct: [Vector2](classes/Vector2.md)
-- Struct: [Vector2I](classes/Vector2I.md)
+- Struct: [Vector2i](classes/Vector2i.md)
 - Struct: [Vector4](classes/Vector4.md)
-- Struct: [Vector4I](classes/Vector4I.md)
+- Struct: [Vector4i](classes/Vector4i.md)
 - Struct: [Rect](classes/Rect.md)
 - Struct: [RectI](classes/RectI.md)
 - Struct: [Transform](classes/Transform.md)

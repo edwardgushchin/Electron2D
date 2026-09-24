@@ -27,13 +27,13 @@ internal static class ImageCodecTests
         image.LoadWebPFromBuffer(Convert.FromBase64String(WEBP));
         CheckPixels(image, Pixels);
         image.LoadSVGFromString(SVG);
-        Check(image.Size == new Vector2I(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
+        Check(image.Size == new Vector2i(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetPixel(1, 1) == Colors.Red,
             "SVG string rasterizes at intrinsic size and color.");
         image.LoadSVGFromBuffer(Encoding.UTF8.GetBytes(SVG), 2);
-        Check(image.Size == new Vector2I(6, 4) && image.GetPixel(3, 2) == Colors.Red,
+        Check(image.Size == new Vector2i(6, 4) && image.GetPixel(3, 2) == Colors.Red,
             "SVG buffer scale changes raster dimensions and preserves fill.");
         image.LoadSVGFromString("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 4 3\"><rect width=\"4\" height=\"3\" fill=\"#00ff00\"/></svg>");
-        Check(image.Size == new Vector2I(4, 3) && image.GetPixel(1, 1) == Colors.Green,
+        Check(image.Size == new Vector2i(4, 3) && image.GetPixel(1, 1) == Colors.Green,
             "SVG viewBox supplies intrinsic dimensions.");
         foreach (var topDown in new[] { false, true })
         {
@@ -191,7 +191,7 @@ internal static class ImageCodecTests
         return bytes;
     }
 
-    private static void CheckPixels(Image image, byte[] expected) => Check(image.Size == new Vector2I(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetData().SequenceEqual(expected), "Decoded color, alpha, orientation and row pitch are exact.");
+    private static void CheckPixels(Image image, byte[] expected) => Check(image.Size == new Vector2i(3, 2) && image.PixelFormat == Image.Format.Rgba8 && image.GetData().SequenceEqual(expected), "Decoded color, alpha, orientation and row pitch are exact.");
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception
     {

@@ -7,7 +7,7 @@ internal static partial class RenderingRuntimeTests
         using var g = new Gradient();
         using var ramp = new GradientRampTexture { Gradient = g, Width = 3 };
         using var fill = new GradientTexture { Gradient = g, Width = 3, Height = 3 };
-        var window = new Window { Size = new Vector2I(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var stage = 0; var changes = 0; ramp.Changed += _ => changes++; fill.Changed += _ => changes++;
         var node = new CanvasNode { DrawAction = n => { n.DrawTextureRect(ramp, new Rect(0, 0, 16, 16), false); n.DrawTextureRect(fill, new Rect(24, 0, 16, 16), false); } };
         node.ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
@@ -33,7 +33,7 @@ internal static partial class RenderingRuntimeTests
 
         using var hdr = new Gradient { Colors = [new Color(2, 0, 0)] };
         using var texture = new GradientTexture { Gradient = hdr, UseHDR = true, Width = 1, Height = 1 };
-        window = new Window { Size = new Vector2I(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         window.AddChild(new CanvasNode
         {
             DrawAction = n => n.DrawTextureRect(texture, new Rect(0, 0, 16, 16), false, new Color(.25f, .25f, .25f)),
@@ -63,7 +63,7 @@ internal static partial class RenderingRuntimeTests
         using var detail = ImageTexture.CreateFromImage(black);
         shader.SetDefaultTextureParameter("colorMap", ramp); material.SetShaderParameter("detailMap", detail);
         material.SetShaderParameter("tint", new Color(.25f, .25f, .25f));
-        var window = new Window { Size = new Vector2I(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var stage = 0;
+        var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest }; var stage = 0;
         var node = new CanvasNode { Material = material, DrawAction = n => n.DrawRect(new Rect(0, 0, 64, 64), Colors.White) };
         node.ReadyAction = n => RenderingServer.Instance!.FramePostDraw += () =>
         {

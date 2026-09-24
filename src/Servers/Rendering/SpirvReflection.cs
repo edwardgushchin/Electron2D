@@ -78,13 +78,13 @@ internal static unsafe partial class SpirvReflection
                     (13, 3) => typeof(Vector3),
                     (13, 4) => typeof(Vector4),
                     (7, 1) => typeof(int),
-                    (7, 2) => typeof(Vector2I),
-                    (7, 3) => typeof(Vector3I),
-                    (7, 4) => typeof(Vector4I),
+                    (7, 2) => typeof(Vector2i),
+                    (7, 3) => typeof(Vector3i),
+                    (7, 4) => typeof(Vector4i),
                     (8, 1) => typeof(uint),
-                    (8, 2) => typeof(Vector2I),
-                    (8, 3) => typeof(Vector3I),
-                    (8, 4) => typeof(Vector4I),
+                    (8, 2) => typeof(Vector2i),
+                    (8, 3) => typeof(Vector3i),
+                    (8, 4) => typeof(Vector4i),
                     _ => throw new NotSupportedException($"Uniform '{name}' has no integrated typed material mapping.")
                 };
                 Check(GetMemberOffset(compiler, type, member, out var offset));

@@ -5,12 +5,12 @@ internal static class BitMapTests
     internal static void Run()
     {
         using var mask = new BitMap();
-        Check(mask.GetSize() == new Vector2I(0, 0) && mask.GetTrueBitCount() == 0, "Default mask must be empty.");
-        Reject<ArgumentOutOfRangeException>(() => mask.Create(new Vector2I(0, 2)));
-        mask.Create(new Vector2I(4, 3));
+        Check(mask.GetSize() == new Vector2i(0, 0) && mask.GetTrueBitCount() == 0, "Default mask must be empty.");
+        Reject<ArgumentOutOfRangeException>(() => mask.Create(new Vector2i(0, 2)));
+        mask.Create(new Vector2i(4, 3));
         mask.SetBitRect(new RectI(-1, -1, 3, 3), true);
-        Check(mask.GetTrueBitCount() == 4 && mask.GetBitv(new Vector2I(1, 1)) && !mask.GetBit(2, 2), "Clipped rectangular writes must preserve bit order.");
-        mask.SetBitv(new Vector2I(1, 1), false);
+        Check(mask.GetTrueBitCount() == 4 && mask.GetBitv(new Vector2i(1, 1)) && !mask.GetBit(2, 2), "Clipped rectangular writes must preserve bit order.");
+        mask.SetBitv(new Vector2i(1, 1), false);
         Check(mask.GetTrueBitCount() == 3, "Vector writes must clear the chosen bit.");
         Reject<ArgumentOutOfRangeException>(() => mask.GetBit(4, 0));
         Reject<ArgumentOutOfRangeException>(() => mask.SetBit(-1, 0, true));
@@ -25,7 +25,7 @@ internal static class BitMapTests
         }
         using (var derived = new DerivedBitMap())
         {
-            derived.Create(new Vector2I(1, 1));
+            derived.Create(new Vector2i(1, 1));
             Reject<NotSupportedException>(() => derived.Duplicate());
         }
 
@@ -33,12 +33,12 @@ internal static class BitMapTests
             [10, 20, 30, 25, 10, 20, 30, 26, 10, 20, 30, 255]))
         {
             mask.CreateFromImageAlpha(alpha, 0.1f);
-            Check(mask.GetSize() == new Vector2I(3, 1) && mask.GetTrueBitCount() == 2 && !mask.GetBit(0, 0),
+            Check(mask.GetSize() == new Vector2i(3, 1) && mask.GetTrueBitCount() == 2 && !mask.GetBit(0, 0),
                 "Alpha equality must remain transparent.");
             Check(alpha.PixelFormat == Image.Format.Rgba8, "Alpha conversion must not mutate the source image.");
         }
 
-        mask.Create(new Vector2I(5, 5));
+        mask.Create(new Vector2i(5, 5));
         mask.SetBit(2, 2, true);
         mask.GrowMask(1, new RectI(0, 0, 5, 5));
         Check(mask.GetTrueBitCount() == 5 && mask.GetBit(2, 1) && !mask.GetBit(1, 1), "Positive radius must use a circular neighborhood.");
@@ -48,7 +48,7 @@ internal static class BitMapTests
         mask.GrowMask(-1, new RectI(1, 1, 3, 3));
         Check(mask.GetBit(0, 0) && !mask.GetBit(1, 1) && mask.GetBit(2, 2), "Erosion must preserve outside-region pixels and treat its border as unset.");
 
-        mask.Create(new Vector2I(4, 4));
+        mask.Create(new Vector2i(4, 4));
         mask.SetBitRect(new RectI(1, 1, 2, 2), true);
         var polygons = mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), 0);
         Check(polygons.Length == 1 && polygons[0].Length == 4 &&
@@ -59,24 +59,24 @@ internal static class BitMapTests
         Check(mask.OpaqueToPolygons(new RectI(10, 10, 2, 2)).Length == 0, "Disjoint regions must return no polygons.");
         Reject<ArgumentOutOfRangeException>(() => mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), float.NaN));
 
-        mask.Create(new Vector2I(8, 8));
+        mask.Create(new Vector2i(8, 8));
         mask.SetBit(1, 1, true);
         mask.SetBit(6, 6, true);
         Check(mask.OpaqueToPolygons(new RectI(0, 0, 8, 8), 0).Length == 2, "Disconnected islands must produce separate polygons.");
-        mask.Resize(new Vector2I(16, 16));
+        mask.Resize(new Vector2i(16, 16));
         Check(mask.GetTrueBitCount() == 8 && mask.GetBit(2, 2) && !mask.GetBit(4, 4), "Nearest-neighbor upscaling must preserve independent islands.");
-        mask.Resize(new Vector2I(8, 8));
+        mask.Resize(new Vector2i(8, 8));
         Check(mask.GetTrueBitCount() == 2 && mask.GetBit(1, 1), "Nearest-neighbor downscaling must recover sampled pixels.");
-        Reject<ArgumentOutOfRangeException>(() => mask.Resize(new Vector2I(0, 4)));
+        Reject<ArgumentOutOfRangeException>(() => mask.Resize(new Vector2i(0, 4)));
 
-        mask.Create(new Vector2I(4, 4));
+        mask.Create(new Vector2i(4, 4));
         mask.SetBit(1, 1, true);
         mask.SetBit(2, 2, true);
         var diagonal = mask.OpaqueToPolygons(new RectI(0, 0, 4, 4), 0);
         Check(diagonal.Length == 2 && diagonal.All(polygon => polygon.Length >= 3),
             "Diagonal contact must split at the ambiguous marching-squares crossing.");
 
-        mask.Create(new Vector2I(8, 8));
+        mask.Create(new Vector2i(8, 8));
         mask.SetBitRect(new RectI(1, 1, 6, 6), true);
         mask.SetBitRect(new RectI(3, 3, 2, 2), false);
         var ring = mask.OpaqueToPolygons(new RectI(0, 0, 8, 8), 2);
@@ -85,7 +85,7 @@ internal static class BitMapTests
 
         for (var pattern = 0; pattern < 512; pattern++)
         {
-            mask.Create(new Vector2I(3, 3));
+            mask.Create(new Vector2i(3, 3));
             for (var bit = 0; bit < 9; bit++)
                 if ((pattern & (1 << bit)) != 0) mask.SetBit(bit % 3, bit / 3, true);
             var contours = mask.OpaqueToPolygons(new RectI(0, 0, 3, 3), 0);
@@ -94,7 +94,7 @@ internal static class BitMapTests
 
         using (var observed = new BitMap())
         {
-            observed.Create(new Vector2I(1, 1));
+            observed.Create(new Vector2i(1, 1));
             observed.Changed += _ =>
             {
                 Check(observed.GetBit(0, 0), "A change handler must see committed state without a held mask lock.");

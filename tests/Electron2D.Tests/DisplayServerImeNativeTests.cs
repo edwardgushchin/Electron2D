@@ -6,7 +6,7 @@ internal static class DisplayServerImeNativeTests
 {
     public static void RunMove()
     {
-        using var display = DisplayServer.Open("Electron2D IME scale move test", new Vector2I(400, 300));
+        using var display = DisplayServer.Open("Electron2D IME scale move test", new Vector2i(400, 300));
         Check(display.GetName() == "Wayland", "The IME scale move test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is [var window] && window != 0,
@@ -29,7 +29,7 @@ internal static class DisplayServerImeNativeTests
                     display.WindowSetIMEActive(true);
                     try
                     {
-                        display.WindowSetIMEPosition(new Vector2I(125, 75));
+                        display.WindowSetIMEPosition(new Vector2i(125, 75));
                         Check(SDL.GetTextInputArea(nativeWindow, out var area, out var cursor) &&
                               area.X == 100 && area.Y == 60 && area.W == 1 && area.H == 10 && cursor == 0,
                             "The 1.25-scale candidate area uses SDL logical coordinates (100, 60).");
@@ -63,9 +63,9 @@ internal static class DisplayServerImeNativeTests
         var windowId = SDL.GetWindowID(nativeWindow);
         display.ProcessEvents();
 
-        var editing = new List<(string Text, Vector2I Selection)>();
-        var committed = new List<(string Text, string Composition, Vector2I Selection)>();
-        void OnEditing(string text, Vector2I selection)
+        var editing = new List<(string Text, Vector2i Selection)>();
+        var committed = new List<(string Text, string Composition, Vector2i Selection)>();
+        void OnEditing(string text, Vector2i selection)
         {
             Check(display.IMEGetText() == text && display.IMEGetSelection() == selection,
                 "Composition state commits before the editing callback.");
@@ -81,9 +81,9 @@ internal static class DisplayServerImeNativeTests
             Check(SDL.TextInputActive(nativeWindow), "Text input starts for the native window.");
             var density = SDL.GetWindowPixelDensity(nativeWindow);
             Check(float.IsFinite(density) && density > 0f, "The native window reports a valid pixel density.");
-            var caret = new Vector2I(125, 75);
+            var caret = new Vector2i(125, 75);
             display.WindowSetIMEPosition(caret);
-            var logicalCaret = new Vector2I(
+            var logicalCaret = new Vector2i(
                 checked((int)Math.Round(caret.X / (double)density, MidpointRounding.AwayFromZero)),
                 checked((int)Math.Round(caret.Y / (double)density, MidpointRounding.AwayFromZero)));
             Check(SDL.GetTextInputArea(nativeWindow, out var area, out var cursor) &&
@@ -93,17 +93,17 @@ internal static class DisplayServerImeNativeTests
 
             PushEditing(display, windowId, "a🙂", 1, 1);
             Check(editing is [("a🙂", { X: 1, Y: 1 })] &&
-                  display.IMEGetText() == "a🙂" && display.IMEGetSelection() == new Vector2I(1, 1),
+                  display.IMEGetText() == "a🙂" && display.IMEGetSelection() == new Vector2i(1, 1),
                 "Composition text and codepoint selection are observable after event delivery.");
 
             PushEditing(display, windowId, "é", -1, -1);
             Check(editing is [_, ("é", { X: 0, Y: 0 })] &&
-                  display.IMEGetSelection() == Vector2I.Zero,
+                  display.IMEGetSelection() == Vector2i.Zero,
                 "Unknown native selection offsets become an empty selection.");
 
             PushInput(display, windowId, "é");
             Check(committed is [("é", "", { X: 0, Y: 0 })] &&
-                  display.IMEGetText() == string.Empty && display.IMEGetSelection() == Vector2I.Zero,
+                  display.IMEGetText() == string.Empty && display.IMEGetSelection() == Vector2i.Zero,
                 "Committed text clears the composition before callback delivery.");
 
             PushEditing(display, windowId, "pending", 0, 0);
@@ -115,7 +115,7 @@ internal static class DisplayServerImeNativeTests
             display.TextInput -= OnInput;
         }
         Check(!SDL.TextInputActive(nativeWindow) && display.IMEGetText() == string.Empty &&
-              display.IMEGetSelection() == Vector2I.Zero,
+              display.IMEGetSelection() == Vector2i.Zero,
             "Disabling text input clears any unfinished composition.");
     }
 

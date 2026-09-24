@@ -25,7 +25,7 @@ backend.Draw(vertices, batches, clearColor, present: true, renderTime);
 | --- | --- |
 | `internal abstract string Method { get; }` | [Method](#method) |
 | `internal abstract string Driver { get; }` | [Driver](#driver) |
-| `internal abstract Vector2I GetPixelSize()` | [Pixel size](#pixel-size) |
+| `internal abstract Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
 | `internal abstract void Draw(ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool present, double time)` | [Draw](#draw) |
 | `internal abstract Image Readback()` | [Readback](#readback) |
 | `internal virtual nint GetNativeHandle(DisplayServer.HandleType type)` | [Native identity](#native-identity) |
@@ -49,7 +49,7 @@ Reports the native driver selected during creation.
 
 ### Pixel size
 
-`internal abstract Vector2I GetPixelSize()`
+`internal abstract Vector2i GetPixelSize()`
 
 Queries current framebuffer dimensions in physical pixels; native failure throws InvalidOperationException.
 

@@ -25,7 +25,7 @@ internal static partial class RenderingRuntimeTests
         Check(atlas.GetSize() == new Vector2(5, 3) && atlas.Region.Size == new Vector2(2.9f, 1.9f), "Only region size is floored; dimension sums truncate.");
         using (var cropped = atlas.GetImage()!)
         {
-            Check(cropped.Size == new Vector2I(2, 1) && !cropped.HasMipmaps, "Image crop excludes margins and mipmaps.");
+            Check(cropped.Size == new Vector2i(2, 1) && !cropped.HasMipmaps, "Image crop excludes margins and mipmaps.");
             Check(cropped.GetPixel(0, 0).A == 0 && cropped.GetPixel(1, 0) == Colors.Red, "Fractional position truncates for image extraction.");
             cropped.Fill(Colors.Blue);
         }
@@ -165,7 +165,7 @@ internal static partial class RenderingRuntimeTests
         using var nested = new AtlasTexture { Atlas = atlas, Region = new Rect(2, 1, 1, 2) };
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
-        var window = new Window { Size = new Vector2I(128, 96), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new Vector2i(128, 96), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var sprite = new Sprite { Texture = atlas, Centered = false, Position = new Vector2(8, 64), Scale = new Vector2(4, 4), Material = material };
         var child = new Sprite { Name = "Nested", Texture = nested, Centered = false, Position = new Vector2(40, 64), Scale = new Vector2(8, 8), Material = material };
         window.AddChild(sprite); window.AddChild(child);
@@ -230,7 +230,7 @@ internal static partial class RenderingRuntimeTests
         shader.SetDefaultTextureParameter("colorMap", nested);
         material.SetShaderParameter("detailMap", texture);
         material.SetShaderParameter("tint", Colors.White);
-        var window = new Window { Size = new Vector2I(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var frames = 0;
         window.AddChild(new CanvasNode
         {

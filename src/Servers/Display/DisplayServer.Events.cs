@@ -62,7 +62,7 @@ public sealed partial class DisplayServer
 
     /// <summary>Occurs after the native input method updates its uncommitted composition.</summary>
     /// <remarks>The text and Unicode-codepoint selection have already committed to <see cref="IMEGetText"/> and <see cref="IMEGetSelection"/>. Unknown negative native selection offsets become zero.</remarks>
-    public event Action<string, Vector2I>? TextEditing;
+    public event Action<string, Vector2i>? TextEditing;
 
     /// <summary>Occurs when the operating system finishes dropping one or more files onto the main window.</summary>
     /// <remarks>Paths are copied from native event memory in arrival order. One completed drop produces one callback, even when it contains multiple files. The returned array belongs to the caller and remains valid after delivery.</remarks>
@@ -273,7 +273,7 @@ public sealed partial class DisplayServer
                 if (_waylandWindowPosition)
                     RefreshBlankWindowSurface();
                 var resizedRect = new RectI(_windowRect.Position,
-                    new Vector2I(nativeEvent.Window.Data1, nativeEvent.Window.Data2));
+                    new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2));
                 if (resizedRect != _windowRect)
                 {
                     _windowRect = resizedRect;
@@ -283,7 +283,7 @@ public sealed partial class DisplayServer
             case SDL.EventType.WindowMoved:
                 if (_waylandWindowPosition)
                     break;
-                var movedRect = new RectI(new Vector2I(nativeEvent.Window.Data1, nativeEvent.Window.Data2),
+                var movedRect = new RectI(new Vector2i(nativeEvent.Window.Data1, nativeEvent.Window.Data2),
                     _windowRect.Size);
                 if (movedRect != _windowRect)
                 {
@@ -296,7 +296,7 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowFocusLost:
                 _imeText = string.Empty;
-                _imeSelection = Vector2I.Zero;
+                _imeSelection = Vector2i.Zero;
                 _eventKeyModifiers = SDL.Keymod.None;
                 _hasEventKeyModifiers = true;
                 _touchContacts.Clear();
@@ -311,12 +311,12 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.TextInput:
                 _imeText = string.Empty;
-                _imeSelection = Vector2I.Zero;
+                _imeSelection = Vector2i.Zero;
                 TextInput?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
                 break;
             case SDL.EventType.TextEditing:
                 _imeText = Marshal.PtrToStringUTF8(nativeEvent.Edit.Text) ?? string.Empty;
-                _imeSelection = new Vector2I(Math.Max(0, nativeEvent.Edit.Start),
+                _imeSelection = new Vector2i(Math.Max(0, nativeEvent.Edit.Start),
                     Math.Max(0, nativeEvent.Edit.Length));
                 TextEditing?.Invoke(_imeText, _imeSelection);
                 break;

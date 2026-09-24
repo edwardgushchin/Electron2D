@@ -108,7 +108,7 @@ public struct Vector2 : IEquatable<Vector2>
     /// <summary>Initializes a floating-point vector from an integer vector.</summary>
     /// <param name="value">The integer vector whose components are converted exactly to single precision when representable.</param>
     /// <remarks>Large integer components can lose low-order precision during conversion.</remarks>
-    public Vector2(Vector2I value)
+    public Vector2(Vector2i value)
     {
         X = value.X;
         Y = value.Y;
