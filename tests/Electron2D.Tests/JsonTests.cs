@@ -65,7 +65,75 @@ internal static class JsonTests
         VerifyDocumentState();
         VerifyTypedConversion();
         VerifyFormatting();
+        VerifyDocumentParsing();
         Console.WriteLine("JSON parsing, formatting, typed conversion, duplication and failures passed.");
+    }
+
+    private static void VerifyDocumentParsing()
+    {
+        using var json = new EngineJSON();
+        const string permissive = "{\"line\":\"a\nb\",\"lead\":01,\"fraction\":-.5,\"end\":1.,\"same\":1,\"same\":2,}";
+        Check(json.Parse(permissive, keepText: true) && json.Data is JsonObject value &&
+              value["line"]!.GetValue<string>() == "a\nb" && value["lead"]!.GetValue<int>() == 1 &&
+              value["fraction"]!.GetValue<double>() == -0.5 && value["end"]!.GetValue<int>() == 1 &&
+              value["same"]!.GetValue<int>() == 2 && json.GetParsedText() == permissive &&
+              EngineJSON.ParseString(permissive)!["same"]!.GetValue<int>() == 2,
+            "Both parse entry points accept raw string lines, permissive number forms, trailing commas and last-key wins.");
+        Check(json.Parse("[true,false,null,]\v") && json.Data is JsonArray { Count: 3 } &&
+              json.GetErrorLine() == 0 && json.GetErrorMessage() == string.Empty,
+            "Document whitespace and trailing commas follow the same token path.");
+        Check(json.Parse("9007199254740993") && json.Data!.GetValue<double>() == 9007199254740992d &&
+              EngineJSON.ToNative<long>(json.Data) == 9007199254740992L,
+            "Document numbers use the parsed floating value instead of retaining extra integer digits.");
+        Check(json.Parse("0000000000000000001") && json.Data!.GetValue<int>() == 0 &&
+              json.Parse("1e4000") && double.IsPositiveInfinity(json.Data!.GetValue<double>()) &&
+              json.Parse("1e-4000") && json.Data!.GetValue<int>() == 0,
+            "Numeric conversion keeps the first eighteen mantissa digits and caps very large exponents.");
+        Check(json.Parse("\"\\uD83D\\uDE00\"") && json.Data!.GetValue<string>() == "😀",
+            "A valid escaped surrogate pair produces one Unicode scalar.");
+
+        Check(!json.Parse("\"\\uD83D\"") && json.GetErrorMessage() ==
+              "Invalid UTF-16 sequence in string, unpaired lead surrogate" && json.GetErrorLine() == 0,
+            "An unpaired lead surrogate reports the document diagnostic.");
+        Check(!json.Parse("\"\\uDE00\"") && json.GetErrorMessage() ==
+              "Invalid UTF-16 sequence in string, unpaired trail surrogate",
+            "An unpaired trail surrogate reports its own diagnostic.");
+        Check(!json.Parse("\"\\u12xz\"") && json.GetErrorMessage() == "Malformed hex constant in string" &&
+              EngineJSON.ParseString("\"\\v\"") is null,
+            "Malformed hex and unsupported escapes fail consistently.");
+        Check(!json.Parse("{\"a\" 1}") && json.GetErrorMessage() == "Expected ':'" &&
+              !json.Parse("[1 2]") && json.GetErrorMessage() == "Expected ','" &&
+              !json.Parse("1 trailing") && json.GetErrorMessage() == "Expected 'EOF'" &&
+              !json.Parse("[") && json.GetErrorMessage() == "Expected ']'",
+            "Structural failures report the offending token or missing closer.");
+        Check(!json.Parse("[\n bad]") && json.GetErrorLine() == 1 && json.GetErrorMessage() ==
+              "Expected 'true', 'false', or 'null', got 'bad'",
+            "Diagnostic line counting follows literal newlines.");
+        (string Source, string Message)[] failures =
+        [
+            ("", "Unknown error getting token"),
+            (" \t", "Expected value, got 'EOF'"),
+            ("$", "Unexpected character"),
+            ("{a:1}", "Expected key"),
+            ("{\"a\":1 \"b\":2}", "Expected '}' or ','"),
+            ("\"unterminated", "Unterminated string"),
+            ("\"\\v\"", "Invalid escape sequence"),
+            ("null false", "Expected 'EOF'"),
+        ];
+        foreach (var (source, message) in failures)
+            Check(!json.Parse(source) && json.GetErrorMessage() == message && json.GetErrorLine() == 0 &&
+                  EngineJSON.ParseString(source) is null,
+                $"Both parse entry points must report or reject {source} with {message}.");
+
+        var withinLimit = new string('[', 1024) + "0" + new string(']', 1024);
+        Check(json.Parse(withinLimit) && json.Data is JsonArray &&
+              EngineJSON.ParseString(withinLimit) is JsonArray,
+            "Both parse entry points accept the documented nesting boundary.");
+        var tooDeep = '[' + withinLimit + ']';
+        Check(!json.Parse(tooDeep) && json.Data is null &&
+              json.GetErrorMessage() == "JSON structure is too deep" &&
+              EngineJSON.ParseString(tooDeep) is null,
+            "Both entry points reject the next nesting level without exposing partial data.");
     }
 
     private static void VerifyFormatting()
@@ -130,16 +198,13 @@ internal static class JsonTests
             "Reassigning a borrowed live tree must replace it with an independent copy.");
 
         const string malformed = "[1,\r\n broken]";
-        JsonException? expected = null;
-        try { _ = JsonNode.Parse(malformed, documentOptions: new JsonDocumentOptions { AllowTrailingCommas = true }); }
-        catch (JsonException error) { expected = error; }
-        Check(expected is not null && !json.Parse(malformed, keepText: true) && json.Data is null &&
-              json.GetErrorLine() == expected.LineNumber && json.GetErrorLine() == 1 &&
-              json.GetErrorMessage() == expected.Message && json.GetParsedText() == malformed,
-            "A failed parse must atomically store the managed parser's line, message and requested source.");
+        const string expected = "Expected 'true', 'false', or 'null', got 'broken'";
+        Check(!json.Parse(malformed, keepText: true) && json.Data is null &&
+              json.GetErrorLine() == 1 && json.GetErrorMessage() == expected && json.GetParsedText() == malformed,
+            "A failed parse must atomically store the document parser's line, message and requested source.");
         using var failedCopy = (EngineJSON)json.Duplicate();
         Check(failedCopy.Data is null && failedCopy.GetErrorLine() == 1 &&
-              failedCopy.GetErrorMessage() == expected!.Message && failedCopy.GetParsedText() == malformed,
+              failedCopy.GetErrorMessage() == expected && failedCopy.GetParsedText() == malformed,
             "Resource duplication must copy failure diagnostics and retained source without aliases.");
 
         Check(json.Parse("null") && json.Data is null && json.GetErrorLine() == 0 &&

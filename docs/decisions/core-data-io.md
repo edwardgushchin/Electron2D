@@ -301,14 +301,14 @@ ADR 0001 excludes a universal engine value container. ADRs 0018 and 0019 separat
 
 `JSON : Resource` owns one `System.Text.Json.Nodes.JsonNode` tree. `Parse` accepts JSON documents, reports success as `bool`, and retains diagnostics and optional source text. `ParseString` returns a JSON tree or null. `Stringify` accepts a JSON tree with optional key ordering, indentation and floating-point precision. `FromNative<T>` and `ToNative<T>` convert explicitly selected C# types using the established typed value schemas; untyped `object` roots and engine objects are rejected. A null JSON root converts to the selected type's default, including value types. The tree is confined to this document API and is never a universal engine property or settings value. Data assignment and resource duplication copy the tree; a returned tree is live, mutable, and caller-synchronized.
 
-The managed parser's syntax and error messages are the executable contract. Parsing replaces the document and diagnostics together; source text is retained only when requested and is cleared by a parse without retention or a `Data` assignment. This deterministic state reset is the managed document adaptation. Exact acceptance of malformed/nonstandard text, Unicode recovery, numeric formatting, error locations, and native engine-object conversion from the reference remain coverage gaps. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. JSON work is allocating and stays outside real-time callbacks.
+The document parser follows the reference token grammar for trailing commas, raw string line breaks, whitespace, escaped Unicode pairs, structural diagnostics and 1024-level nesting. `Parse` and `ParseString` use the same path. Numeric tokens use the reference 18-digit mantissa and power-of-ten conversion before entering the document tree. Exponent text beyond the native signed-integer range is safely capped instead of relying on overflow; this is the accepted managed boundary for exceptional inputs. Parsing replaces the document and diagnostics together; source text is retained only when requested and is cleared by a parse without retention or a `Data` assignment. This deterministic state reset is the managed document adaptation. A valid JSON null and a parse failure both yield null from `ParseString`; use `Parse` when diagnostics matter. JSON work is allocating and stays outside real-time callbacks.
 
 ### Consequences and boundaries
 
 - `ConfigFile` and `ProjectSettings` continue to use compile-time typed keys and never store JSON DOM nodes.
 - Generic conversion never constructs an engine object from a document or interprets a serialized runtime type name.
 - The resource requires no new dependency or assembly: it uses the .NET JSON library already present in the runtime.
-- Exact reference parity is Partial until the differences above are resolved or separately accepted.
+- Exact reference parity remains Partial for the separately recorded formatter differences.
 
 ### Related decisions
 

@@ -13,7 +13,6 @@ namespace Electron2D;
 /// </remarks>
 public sealed class JSON : Resource
 {
-    private static readonly JsonDocumentOptions ParseOptions = new() { AllowTrailingCommas = true };
     private static readonly JsonSerializerOptions NativeOptions = CreateNativeOptions();
     private static readonly IComparer<string> KeyOrder = Comparer<string>.Create(CompareKeys);
     private readonly object _gate = new();
@@ -49,10 +48,10 @@ public sealed class JSON : Resource
         }
     }
 
-    /// <summary>Gets the zero-based line of the most recent parse error, or zero after success.</summary>
+    /// <summary>Gets the zero-based source line of the most recent parse error, or zero after success.</summary>
     public int GetErrorLine() { lock (_gate) { ThrowIfDisposed(); return _errorLine; } }
 
-    /// <summary>Gets the most recent parse error, or an empty string after success.</summary>
+    /// <summary>Gets the document parser's most recent error, or an empty string after success.</summary>
     public string GetErrorMessage() { lock (_gate) { ThrowIfDisposed(); return _errorMessage; } }
 
     /// <summary>Gets the last source supplied with text retention enabled.</summary>
@@ -63,37 +62,34 @@ public sealed class JSON : Resource
     /// <param name="jsonText">The JSON source; objects, arrays, and scalar roots are accepted.</param>
     /// <param name="keepText">Whether to retain the original source verbatim.</param>
     /// <returns>True on success; false when the text is malformed or exceeds the parser's limits.</returns>
-    /// <remarks>Trailing commas are accepted. Other malformed syntax follows the managed JSON parser and is reported through the diagnostic methods.</remarks>
+    /// <remarks>Trailing commas, raw line breaks in strings and permissive number text are accepted. Number conversion uses at most 18 mantissa digits. Nesting is limited to 1024 levels. Diagnostics count literal line feeds.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="jsonText"/> is null.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public bool Parse(string jsonText, bool keepText = false)
     {
         ArgumentNullException.ThrowIfNull(jsonText);
-        JsonNode? parsed = null;
-        JsonException? failure = null;
-        try { parsed = JsonNode.Parse(jsonText, documentOptions: ParseOptions); }
-        catch (JsonException error) { failure = error; }
+        var parser = new JSONDocumentParser(jsonText);
+        var success = parser.TryParse(out var parsed);
 
         lock (_gate)
         {
             ThrowIfDisposed();
             _data = parsed;
             _parsedText = keepText ? jsonText : string.Empty;
-            _errorLine = failure is null ? 0 : checked((int)(failure.LineNumber ?? 0));
-            _errorMessage = failure?.Message ?? string.Empty;
+            _errorLine = success ? 0 : parser.ErrorLine;
+            _errorMessage = success ? string.Empty : parser.ErrorMessage;
         }
-        return failure is null;
+        return success;
     }
 
-    /// <summary>Parses one JSON value, returning null for malformed text and for a valid JSON null.</summary>
+    /// <summary>Parses one document value with the same syntax as <see cref="Parse"/>, returning null for malformed text and for a valid JSON null.</summary>
     /// <param name="jsonText">The JSON source.</param>
     /// <returns>A mutable JSON tree, or null.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="jsonText"/> is null.</exception>
     public static JsonNode? ParseString(string jsonText)
     {
         ArgumentNullException.ThrowIfNull(jsonText);
-        try { return JsonNode.Parse(jsonText, documentOptions: ParseOptions); }
-        catch (JsonException) { return null; }
+        return new JSONDocumentParser(jsonText).TryParse(out var parsed) ? parsed : null;
     }
 
     /// <summary>Formats a JSON tree, optionally sorting keys and inserting an arbitrary indent string.</summary>
