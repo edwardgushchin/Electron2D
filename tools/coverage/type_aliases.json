@@ -34,6 +34,7 @@
     "CanvasItemMaterial.BlendMode": "CanvasItemMaterial.BlendModeEnum",
     "Control.FocusMode": "ControlFocusMode",
     "Control.LayoutPreset": "ControlLayoutPreset",
+    "Control.GrowDirection": "ControlGrowDirection",
     "Control.MouseFilter": "ControlMouseFilter",
     "@GlobalScope.ClockDirection": "ClockDirection",
     "@GlobalScope.JoyAxis": "JoyAxis",

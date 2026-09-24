@@ -13,6 +13,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy; remaining GUI behavior is incomplete. |
 | [ControlLayoutPreset](../classes/ControlLayoutPreset.md) | enum | Sixteen predefined four-anchor arrangements for Control. |
+| [ControlGrowDirection](../classes/ControlGrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
 | [NodeProcessMode](../classes/NodeProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
@@ -20,7 +21,9 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 [RemoteTransform](../classes/RemoteTransform.md) also derives from Entity. It weakly targets another spatial node by path, resolves the target on tree entry or an explicit cache refresh, and transfers selected transform components through the existing queued global or synchronous local notification path. It rejects hierarchy feedback and remote-target cycles; PackedScene stores the path and policy, not the live target.
 
-`Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and immediately reflows within the current parent area. All sixteen numeric arrangements, parent-resize propagation and invalid input rollback are checked in `ControlLayoutTests`. Offset presets remain dependent on minimum-size and layout-direction behavior.
+`Control.SetAnchorsPreset` applies all four anchors in the pinned side order. Its default preserves the current rectangle by adjusting offsets; `keepOffsets` leaves the offsets and immediately reflows within the current parent area. All sixteen numeric arrangements, parent-resize propagation and invalid input rollback are checked in `ControlLayoutTests`. Offset presets remain dependent on maximum-size and layout-direction behavior.
+
+Control now resolves a componentwise minimum from the intrinsic virtual hook, a finite custom value and zero. Attached visible changes coalesce through the scene tree's deferred queue before reflow and `MinimumSizeChanged`; the three numeric growth directions choose which edges move. `ControlLayoutTests` checks values, notification order, mixed minima, packed-scene policy and invalid inputs. Container propagation, maximum bounds, wrapping windows and RTL layout remain distinct gaps.
 
 ## Runtime flow
 

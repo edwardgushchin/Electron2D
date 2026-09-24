@@ -365,6 +365,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlGrowDirection",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlGrowDirection",
+    "name": "ControlGrowDirection",
+    "signature": "public enum Electron2D.ControlGrowDirection",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ControlLayoutPreset",
     "kind": "type",
     "declaringType": "Electron2D.ControlLayoutPreset",
@@ -6699,6 +6717,45 @@
     "parameters": [],
     "returnType": "Electron2D.ControlFocusMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlGrowDirection.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlGrowDirection",
+    "name": "Begin",
+    "signature": "public const Electron2D.ControlGrowDirection Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlGrowDirection",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlGrowDirection.Both()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlGrowDirection",
+    "name": "Both",
+    "signature": "public const Electron2D.ControlGrowDirection Both = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlGrowDirection",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlGrowDirection.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlGrowDirection",
+    "name": "End",
+    "signature": "public const Electron2D.ControlGrowDirection End = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlGrowDirection",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.ControlLayoutPreset.BottomLeft()",
@@ -15645,6 +15702,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.MinimumSizeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "MinimumSizeChanged",
+    "signature": "public event System.Action MinimumSizeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Control.MouseEntered()",
     "kind": "event",
     "declaringType": "Electron2D.Control",
@@ -20713,6 +20783,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetCombinedMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetCombinedMinimumSize",
+    "signature": "public Electron2D.Vector2 GetCombinedMinimumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetCursorShape(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -20761,6 +20844,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetMinimumSize",
+    "signature": "public Electron2D.Vector2 GetMinimumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -20943,6 +21039,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetMinimumSize",
+    "signature": "protected virtual Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.OnNotification(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21101,6 +21210,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.UpdateMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "UpdateMinimumSize",
+    "signature": "public System.Void UpdateMinimumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -55709,6 +55831,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.CustomMinimumSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "CustomMinimumSize",
+    "signature": "public Electron2D.Vector2 CustomMinimumSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.FocusMode()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -55810,6 +55945,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.GrowHorizontal()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "GrowHorizontal",
+    "signature": "public Electron2D.ControlGrowDirection GrowHorizontal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlGrowDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.GrowVertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "GrowVertical",
+    "signature": "public Electron2D.ControlGrowDirection GrowVertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlGrowDirection",
     "value": null
   },
   {

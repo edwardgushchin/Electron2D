@@ -12,6 +12,11 @@ public partial class Control : CanvasItem
     private float _rotation;
     private Vector2 _scale = Vector2.One;
     private Vector2 _pivotOffset;
+    private Vector2 _customMinimumSize;
+    private Vector2 _lastMinimumSize;
+    private ControlGrowDirection _growHorizontal = ControlGrowDirection.End;
+    private ControlGrowDirection _growVertical = ControlGrowDirection.End;
+    private bool _minimumSizeUpdatePending;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
 
@@ -23,6 +28,9 @@ public partial class Control : CanvasItem
 
     /// <summary>Occurs after a size change while attached to the scene tree.</summary>
     public event Action? Resized;
+
+    /// <summary>Occurs after a changed minimum size has been applied in the scene tree.</summary>
+    public event Action? MinimumSizeChanged;
 
     /// <summary>Gets or sets the local rectangle's upper-left point.</summary>
     /// <value>The position before pivot, rotation and scale.</value>
@@ -58,6 +66,65 @@ public partial class Control : CanvasItem
             Reflow();
         }
     }
+
+    /// <summary>Gets or sets the caller-supplied lower bound for layout size.</summary>
+    /// <remarks>Each component is combined with the intrinsic minimum and zero. Updates in a scene tree are coalesced for deferred delivery.</remarks>
+    public Vector2 CustomMinimumSize
+    {
+        get { ThrowIfDisposed(); return _customMinimumSize; }
+        set
+        {
+            EnsureMutable(); EnsureFinite(value, nameof(value));
+            if (_customMinimumSize == value) return;
+            _customMinimumSize = value;
+            UpdateMinimumSize();
+        }
+    }
+
+    /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>
+    public ControlGrowDirection GrowHorizontal
+    {
+        get { ThrowIfDisposed(); return _growHorizontal; }
+        set { EnsureMutable(); ValidateGrowDirection(value); if (_growHorizontal == value) return; _growHorizontal = value; Reflow(); }
+    }
+
+    /// <summary>Gets or sets which vertical edge stays fixed when the minimum height grows.</summary>
+    public ControlGrowDirection GrowVertical
+    {
+        get { ThrowIfDisposed(); return _growVertical; }
+        set { EnsureMutable(); ValidateGrowDirection(value); if (_growVertical == value) return; _growVertical = value; Reflow(); }
+    }
+
+    /// <summary>Gets the intrinsic minimum size supplied by this control type.</summary>
+    public Vector2 GetMinimumSize()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        var size = OnGetMinimumSize();
+        EnsureFinite(size, nameof(size));
+        return size;
+    }
+
+    /// <summary>Gets the componentwise maximum of the intrinsic minimum, custom minimum, and zero.</summary>
+    public Vector2 GetCombinedMinimumSize()
+    {
+        ThrowIfDisposed();
+        var intrinsic = GetMinimumSize();
+        return new(Mathf.Max(0, Mathf.Max(intrinsic.X, _customMinimumSize.X)),
+            Mathf.Max(0, Mathf.Max(intrinsic.Y, _customMinimumSize.Y)));
+    }
+
+    /// <summary>Requests a coalesced minimum-size update after an intrinsic minimum changes.</summary>
+    public void UpdateMinimumSize()
+    {
+        EnsureMutable();
+        if (!IsInsideTree || !IsVisibleInTree || _minimumSizeUpdatePending) return;
+        _minimumSizeUpdatePending = true;
+        Tree!.Defer(ApplyMinimumSizeUpdate);
+    }
+
+    /// <summary>Supplies the intrinsic minimum size; the base control has none.</summary>
+    protected virtual Vector2 OnGetMinimumSize() => Vector2.Zero;
 
     /// <summary>Gets or sets the local rotation in radians around PivotOffset.</summary>
     public float Rotation
@@ -284,9 +351,11 @@ public partial class Control : CanvasItem
             _layoutParent = GetParentItem();
             if (_layoutParent is not null) _layoutParent.ItemRectChanged += OnParentRectChanged;
             else if ((_layoutViewport = GetViewport()) is not null) _layoutViewport.SizeChanged += Reflow;
+            _lastMinimumSize = GetCombinedMinimumSize();
             Reflow();
         }
         else if (what == NotificationExitCanvas) DisconnectLayoutSource();
+        else if (what == NotificationVisibilityChanged && IsVisibleInTree) UpdateMinimumSize();
         else if (what == NotificationResized) Resized?.Invoke();
     }
 
@@ -299,7 +368,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
+        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
         base.Dispose(disposing);
     }
 
@@ -313,13 +382,34 @@ public partial class Control : CanvasItem
         _layoutParent = null; _layoutViewport = null;
     }
 
+    private void ApplyMinimumSizeUpdate()
+    {
+        _minimumSizeUpdatePending = false;
+        if (IsDisposed || !IsInsideTree || !IsVisibleInTree) return;
+        var minimum = GetCombinedMinimumSize();
+        if (minimum == _lastMinimumSize) return;
+        _lastMinimumSize = minimum;
+        Reflow();
+        MinimumSizeChanged?.Invoke();
+    }
+
     private void Reflow()
     {
         var area = GetParentAreaSize();
         var position = new Vector2(_offsets[0] + _anchors[0] * area.X, _offsets[1] + _anchors[1] * area.Y);
         var end = new Vector2(_offsets[2] + _anchors[2] * area.X, _offsets[3] + _anchors[3] * area.Y);
         var size = end - position;
-        size = new(Mathf.Max(0, size.X), Mathf.Max(0, size.Y));
+        var minimum = GetCombinedMinimumSize();
+        if (size.X < minimum.X)
+        {
+            position.X += (size.X - minimum.X) * GrowthShift(_growHorizontal);
+            size.X = minimum.X;
+        }
+        if (size.Y < minimum.Y)
+        {
+            position.Y += (size.Y - minimum.Y) * GrowthShift(_growVertical);
+            size.Y = minimum.Y;
+        }
         if (position == _position && size == _size) return;
         var sizeChanged = size != _size;
         _position = position; _size = size;
@@ -329,6 +419,17 @@ public partial class Control : CanvasItem
     }
 
     private static int SideIndex(Side side) => side is >= Side.Left and <= Side.Bottom ? (int)side : throw new ArgumentOutOfRangeException(nameof(side));
+    private static float GrowthShift(ControlGrowDirection direction) => direction switch
+    {
+        ControlGrowDirection.Begin => 1f,
+        ControlGrowDirection.Both => .5f,
+        _ => 0f
+    };
+    private static void ValidateGrowDirection(ControlGrowDirection direction)
+    {
+        if (direction is < ControlGrowDirection.Begin or > ControlGrowDirection.Both)
+            throw new ArgumentOutOfRangeException(nameof(direction));
+    }
     private static void EnsureFinite(float value, string name) { if (!Mathf.IsFinite(value)) throw new ArgumentOutOfRangeException(name); }
     private static void EnsureFinite(Vector2 value, string name) { if (!Mathf.IsFinite(value.X) || !Mathf.IsFinite(value.Y)) throw new ArgumentOutOfRangeException(name); }
 
@@ -339,6 +440,9 @@ public partial class Control : CanvasItem
         new PropertyDescriptor<Control, float>(nameof(RotationDegrees), node => node.RotationDegrees, (node, value) => node.RotationDegrees = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(Scale), node => node.Scale, (node, value) => node.Scale = value, _ => Vector2.One, stored: true),
         new PropertyDescriptor<Control, Vector2>(nameof(PivotOffset), node => node.PivotOffset, (node, value) => node.PivotOffset = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, Vector2>(nameof(CustomMinimumSize), node => node.CustomMinimumSize, (node, value) => node.CustomMinimumSize = value, _ => Vector2.Zero, stored: true),
+        new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowHorizontal), node => node.GrowHorizontal, (node, value) => node.GrowHorizontal = value, _ => ControlGrowDirection.End, stored: true),
+        new PropertyDescriptor<Control, ControlGrowDirection>(nameof(GrowVertical), node => node.GrowVertical, (node, value) => node.GrowVertical = value, _ => ControlGrowDirection.End, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorLeft), node => node.AnchorLeft, (node, value) => node.AnchorLeft = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorTop), node => node.AnchorTop, (node, value) => node.AnchorTop = value, _ => 0f, stored: true),
         new PropertyDescriptor<Control, float>(nameof(AnchorRight), node => node.AnchorRight, (node, value) => node.AnchorRight = value, _ => 0f, stored: true),
