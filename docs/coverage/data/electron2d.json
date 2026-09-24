@@ -347,6 +347,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ControlFocusBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "ControlFocusBehaviorRecursive",
+    "signature": "public enum Electron2D.ControlFocusBehaviorRecursive",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ControlMouseBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "ControlMouseBehaviorRecursive",
+    "signature": "public enum Electron2D.ControlMouseBehaviorRecursive",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Curve",
     "kind": "type",
     "declaringType": "Electron2D.Curve",
@@ -6701,6 +6737,84 @@
     "parameters": [],
     "returnType": "Electron2D.Control.CursorShape",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Curve.TangentMode.Count()",
@@ -21040,6 +21154,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetCombinedPivotOffset()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetCombinedPivotOffset",
+    "signature": "public Electron2D.Vector2 GetCombinedPivotOffset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetCursorShape(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21069,6 +21196,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetFocusModeWithOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetFocusModeWithOverride",
+    "signature": "public Electron2D.FocusMode GetFocusModeWithOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusMode",
     "value": null
   },
   {
@@ -21127,6 +21267,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetMouseFilterWithOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetMouseFilterWithOverride",
+    "signature": "public Electron2D.MouseFilter GetMouseFilterWithOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseFilter",
     "value": null
   },
   {
@@ -56381,6 +56534,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.FocusBehaviorRecursive()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "FocusBehaviorRecursive",
+    "signature": "public Electron2D.ControlFocusBehaviorRecursive FocusBehaviorRecursive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.FocusMode()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -56524,6 +56690,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.MouseBehaviorRecursive()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "MouseBehaviorRecursive",
+    "signature": "public Electron2D.ControlMouseBehaviorRecursive MouseBehaviorRecursive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.MouseDefaultCursorShape()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -56615,11 +56794,128 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.OffsetTransformEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformEnabled",
+    "signature": "public System.Boolean OffsetTransformEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformPivot()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformPivot",
+    "signature": "public Electron2D.Vector2 OffsetTransformPivot { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformPivotRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformPivotRatio",
+    "signature": "public Electron2D.Vector2 OffsetTransformPivotRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformPosition",
+    "signature": "public Electron2D.Vector2 OffsetTransformPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformPositionRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformPositionRatio",
+    "signature": "public Electron2D.Vector2 OffsetTransformPositionRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformRotation()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformRotation",
+    "signature": "public System.Single OffsetTransformRotation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformScale",
+    "signature": "public Electron2D.Vector2 OffsetTransformScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.OffsetTransformVisualOnly()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "OffsetTransformVisualOnly",
+    "signature": "public System.Boolean OffsetTransformVisualOnly { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.PivotOffset()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
     "name": "PivotOffset",
     "signature": "public Electron2D.Vector2 PivotOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.PivotOffsetRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "PivotOffsetRatio",
+    "signature": "public Electron2D.Vector2 PivotOffsetRatio { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

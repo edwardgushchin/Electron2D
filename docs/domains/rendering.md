@@ -24,6 +24,7 @@ AnimatedTexture is a node-independent Texture that selects borrowed frame source
 ## Dependencies and invariants
 
 - Uses Scene for Window, tree membership, transforms, visibility, behind-parent and nested local Y ordering, with stable Z precedence.
+- Canvas traversal uses the internal visual transform when a Control enables a visual-only offset; logical global coordinates and GUI hit testing continue to use the ordinary transform. Both normal and Y-sorted descendants inherit the visual matrix.
 - Uses Resources for copied image snapshots and typed materials; consumers borrow these resources.
 - GPU is primary; compatibility is explicit startup fallback and rejects shaders.
 - Frame submission and native resource lifetimes belong to the scene owner thread.

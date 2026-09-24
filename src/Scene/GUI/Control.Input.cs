@@ -22,6 +22,28 @@ public enum FocusMode
     All = 2
 }
 
+/// <summary>Controls whether focus eligibility is inherited, disabled, or restored in a control subtree.</summary>
+public enum ControlFocusBehaviorRecursive
+{
+    /// <summary>Follow the direct parent control, or allow focus when there is none.</summary>
+    Inherited = 0,
+    /// <summary>Disable focus unless a descendant explicitly enables it.</summary>
+    Disabled = 1,
+    /// <summary>Allow focus regardless of the parent control's policy.</summary>
+    Enabled = 2
+}
+
+/// <summary>Controls whether pointer input is inherited, disabled, or restored in a control subtree.</summary>
+public enum ControlMouseBehaviorRecursive
+{
+    /// <summary>Follow the direct parent control, or allow pointer input when there is none.</summary>
+    Inherited = 0,
+    /// <summary>Ignore pointer input unless a descendant explicitly enables it.</summary>
+    Disabled = 1,
+    /// <summary>Allow pointer input regardless of the parent control's policy.</summary>
+    Enabled = 2
+}
+
 public partial class Control
 {
     /// <summary>Identifies the system cursor shown over a control.</summary>
@@ -78,6 +100,8 @@ public partial class Control
 
     private MouseFilter _mouseFilter;
     private FocusMode _focusMode;
+    private ControlMouseBehaviorRecursive _mouseBehaviorRecursive;
+    private ControlFocusBehaviorRecursive _focusBehaviorRecursive;
     private bool _mouseForcePassScrollEvents = true;
     private CursorShape _mouseDefaultCursorShape;
 
@@ -111,6 +135,21 @@ public partial class Control
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_mouseFilter == value) return;
             _mouseFilter = value;
+            Tree?.RefreshGUIHover();
+        }
+    }
+
+    /// <summary>Gets or sets the inherited pointer input policy for this control and its descendants.</summary>
+    /// <value><see cref="ControlMouseBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public ControlMouseBehaviorRecursive MouseBehaviorRecursive
+    {
+        get { ThrowIfDisposed(); return _mouseBehaviorRecursive; }
+        set
+        {
+            EnsureMutable();
+            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_mouseBehaviorRecursive == value) return;
+            _mouseBehaviorRecursive = value;
             Tree?.RefreshGUIHover();
         }
     }
@@ -153,6 +192,49 @@ public partial class Control
             if (value == FocusMode.None) Tree?.ReleaseGUIFocus(this);
         }
     }
+
+    /// <summary>Gets or sets the inherited keyboard focus policy for this control and its descendants.</summary>
+    /// <value><see cref="ControlFocusBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public ControlFocusBehaviorRecursive FocusBehaviorRecursive
+    {
+        get { ThrowIfDisposed(); return _focusBehaviorRecursive; }
+        set
+        {
+            EnsureMutable();
+            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_focusBehaviorRecursive == value) return;
+            _focusBehaviorRecursive = value;
+            Tree?.RefreshGUIFocus();
+        }
+    }
+
+    internal MouseFilter EffectiveMouseFilter =>
+        IsMouseBehaviorEnabled() ? _mouseFilter : MouseFilter.Ignore;
+
+    internal FocusMode EffectiveFocusMode =>
+        IsFocusBehaviorEnabled() ? _focusMode : FocusMode.None;
+
+    /// <summary>Returns the pointer filter after applying the inherited recursive policy.</summary>
+    /// <returns><see cref="MouseFilter.Ignore"/> when this control's pointer behavior is disabled; otherwise <see cref="MouseFilter"/>.</returns>
+    public MouseFilter GetMouseFilterWithOverride() { ThrowIfDisposed(); return EffectiveMouseFilter; }
+
+    /// <summary>Returns the focus mode after applying the inherited recursive policy.</summary>
+    /// <returns><see cref="FocusMode.None"/> when this control's focus behavior is disabled; otherwise <see cref="FocusMode"/>.</returns>
+    public FocusMode GetFocusModeWithOverride() { ThrowIfDisposed(); return EffectiveFocusMode; }
+
+    private bool IsMouseBehaviorEnabled() => _mouseBehaviorRecursive switch
+    {
+        ControlMouseBehaviorRecursive.Enabled => true,
+        ControlMouseBehaviorRecursive.Disabled => false,
+        _ => Parent is not Control parent || parent.IsMouseBehaviorEnabled()
+    };
+
+    private bool IsFocusBehaviorEnabled() => _focusBehaviorRecursive switch
+    {
+        ControlFocusBehaviorRecursive.Enabled => true,
+        ControlFocusBehaviorRecursive.Disabled => false,
+        _ => Parent is not Control parent || parent.IsFocusBehaviorEnabled()
+    };
 
     /// <summary>Marks the current GUI event handled, preventing further delivery.</summary>
     /// <exception cref="InvalidOperationException">No scene input is currently being delivered.</exception>

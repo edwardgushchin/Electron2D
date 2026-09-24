@@ -16,6 +16,8 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [GrowDirection](../classes/GrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
 | [LayoutDirection](../classes/LayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
 | [LayoutPresetMode](../classes/LayoutPresetMode.md) | enum | Intrinsic-minimum or retained width/height policy for offset presets. |
+| [ControlFocusBehaviorRecursive](../classes/ControlFocusBehaviorRecursive.md) | enum | Inherited focus eligibility for direct Control subtrees. |
+| [ControlMouseBehaviorRecursive](../classes/ControlMouseBehaviorRecursive.md) | enum | Inherited pointer eligibility for direct Control subtrees. |
 | [ProcessMode](../classes/ProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
@@ -30,6 +32,8 @@ Control resolves componentwise minima and maxima from virtual hooks, finite cust
 Direction-aware Control layout mirrors the resolved rectangle after horizontal size bounds. Explicit LTR/RTL and same-domain inheritance are executable; `Position` and `Size` setters preserve physical coordinates while RTL is active. Locale modes consult the selected or managed UI culture and registered translation catalogs. Direction policy changes propagate notification 49 parent-first and reflow affected controls. `ControlLayoutTests` checks parent/child overrides, domain boundaries, locale catalogs, packed state, invalid values and notification order. Root/forced project policies, Window inheritance, exact native locale aliases and automatic reflow on global culture change remain open.
 
 The shared Control rectangle-edit path now supports `SetPosition`, `SetSize` and `SetGlobalPosition` with optional keep-offset anchor recomputation, pairwise begin/end offset edits and `ResetSize`. Position and size properties delegate to the same behavior. Negative finite size requests clamp to the effective minimum before maximum constraints; keep-offset writes require nonzero parent width and height. `ControlLayoutTests` checks stable offsets, adaptive anchors after parent resize, transformed global placement, RTL/translated viewport coordinates, finite-input rollback and bounds. Complete container sizing remains separate.
+
+Control's ordinary pivot now combines `PivotOffset` with `PivotOffsetRatio * Size`. The optional offset transform composes after that pivot. Visual-only mode leaves logical/global transforms and GUI hit regions unchanged while the canvas renderer moves this item's retained geometry and descendants; disabling visual-only moves both. Values persist while the offset is disabled and through PackedScene. `ControlLayoutTests` verifies matrix order, relative resize behavior, hit testing and state; focused dummy and Wayland scene-hierarchy pixels verify actual child drawing in compatibility and GPU/Y-sort paths.
 
 ## Runtime flow
 

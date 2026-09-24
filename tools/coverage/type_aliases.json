@@ -25,11 +25,13 @@
   "enums": {
     "CanvasItemMaterial.BlendMode": "BlendMode",
     "Control.FocusMode": "FocusMode",
+    "Control.FocusBehaviorRecursive": "ControlFocusBehaviorRecursive",
     "Control.LayoutPreset": "LayoutPreset",
     "Control.GrowDirection": "GrowDirection",
     "Control.LayoutDirection": "LayoutDirection",
     "Control.LayoutPresetMode": "LayoutPresetMode",
     "Control.MouseFilter": "MouseFilter",
+    "Control.MouseBehaviorRecursive": "ControlMouseBehaviorRecursive",
     "FileAccess.CompressionMode": "FileCompressionMode",
     "FileAccess.ModeFlags": "FileAccessModeFlags",
     "FileAccess.UnixPermissionFlags": "UnixPermissionFlags",

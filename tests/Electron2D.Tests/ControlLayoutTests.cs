@@ -74,6 +74,7 @@ internal static class ControlLayoutTests
         VerifyLayoutDirection();
         VerifyOffsetPresets();
         VerifyLayoutEditing();
+        VerifyOffsetTransform();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }
@@ -626,6 +627,97 @@ internal static class ControlLayoutTests
         root.SetSize(new(30, 20), keepOffsets: true);
         Check(root.Position == new Vector2(35, 10) && root.Size == new Vector2(30, 20),
             "RTL keep-offset edits preserve physical coordinates under a translated viewport rectangle.");
+    }
+
+    private static void VerifyOffsetTransform()
+    {
+        using var viewport = new TestViewport();
+        var control = new Control { Name = "offset-transform", Position = new(10, 10), Size = new(20, 20) };
+        viewport.AddChild(control);
+        using var tree = new SceneTree(viewport);
+        Check(control.PivotOffsetRatio == Vector2.Zero && control.GetCombinedPivotOffset() == Vector2.Zero
+            && !control.OffsetTransformEnabled && control.OffsetTransformVisualOnly
+            && control.OffsetTransformPosition == Vector2.Zero && control.OffsetTransformPositionRatio == Vector2.Zero
+            && control.OffsetTransformScale == Vector2.One && control.OffsetTransformRotation == 0
+            && control.OffsetTransformPivot == Vector2.Zero && control.OffsetTransformPivotRatio == new Vector2(.5f, .5f),
+            "Default pivot and additional-transform state matches the pinned identities.");
+        control.OffsetTransformPosition = new(30, 0);
+        Check(control.GetTransform().Origin == new Vector2(10, 10)
+            && control.GetVisualTransform().Origin == new Vector2(10, 10),
+            "Disabled additional-transform values stay stored without changing geometry.");
+        control.OffsetTransformEnabled = true;
+        Check(control.GetTransform().Origin == new Vector2(10, 10)
+            && control.GetVisualTransform().Origin == new Vector2(40, 10),
+            "Visual-only translation moves drawing without changing the logical transform.");
+        Check(control.HitTest(new Vector2(12, 12)) && !control.HitTest(new Vector2(42, 12)),
+            "Visual-only movement does not move the GUI hit region.");
+        control.OffsetTransformVisualOnly = false;
+        Check(control.GetTransform().Origin == new Vector2(40, 10)
+            && control.GetVisualTransform().Origin == new Vector2(40, 10),
+            "A nonvisual-only offset participates in the logical and rendering transforms.");
+        Check(!control.HitTest(new Vector2(12, 12)) && control.HitTest(new Vector2(42, 12)),
+            "A logical additional translation moves the GUI hit region.");
+        control.OffsetTransformEnabled = false;
+        Check(control.OffsetTransformPosition == new Vector2(30, 0)
+            && control.GetTransform().Origin == new Vector2(10, 10),
+            "Disabling the transform retains its configured values but restores placement.");
+        control.OffsetTransformVisualOnly = true;
+        control.OffsetTransformPositionRatio = new(.5f, 0);
+        control.OffsetTransformEnabled = true;
+        Check(control.GetVisualTransform().Origin == new Vector2(50, 10),
+            "Relative translation uses the current width.");
+        control.Size = new(40, 20);
+        Check(control.GetVisualTransform().Origin == new Vector2(60, 10),
+            "A later size change updates relative additional translation.");
+
+        control.PivotOffset = new(2, 3);
+        control.PivotOffsetRatio = new(.5f, .25f);
+        Check(control.GetCombinedPivotOffset() == new Vector2(22, 8),
+            "The ordinary pivot combines absolute and current-size relative parts.");
+        control.Size = new(60, 20);
+        Check(control.GetCombinedPivotOffset() == new Vector2(32, 8),
+            "A later width change updates the size-relative ordinary pivot.");
+        control.Size = new(40, 20);
+        control.RotationDegrees = 90;
+        Near(control.GetTransform().Origin, new Vector2(40, -4));
+        control.OffsetTransformPosition = new(4, 5);
+        control.OffsetTransformPositionRatio = new(.25f, .5f);
+        control.OffsetTransformPivot = new(3, 4);
+        control.OffsetTransformPivotRatio = new(.5f, .5f);
+        control.OffsetTransformScale = new(2, 1);
+        control.OffsetTransformRotation = Mathf.Pi / 2;
+        var additionalPivot = new Vector2(23, 14);
+        var additional = new Transform(Mathf.Pi / 2, new Vector2(2, 1), 0, additionalPivot + new Vector2(14, 15));
+        additional.Origin -= additional.BasisXform(additionalPivot);
+        Check(control.GetVisualTransform().IsEqualApprox(control.GetTransform() * additional),
+            "Absolute/relative translation, pivot, rotation and scale compose after the base pivot transform.");
+        control.OffsetTransformVisualOnly = false;
+        Check(control.GetVisualTransform().IsEqualApprox(control.GetTransform()),
+            "A logical additional transform is also the rendering transform.");
+        var beforeScale = control.OffsetTransformScale;
+        Reject<ArgumentOutOfRangeException>(() => control.OffsetTransformScale = new(float.NaN, 1));
+        Reject<ArgumentOutOfRangeException>(() => control.OffsetTransformRotation = float.PositiveInfinity);
+        Reject<ArgumentOutOfRangeException>(() => control.PivotOffsetRatio = new(0, float.NaN));
+        Check(control.OffsetTransformScale == beforeScale && control.OffsetTransformRotation == Mathf.Pi / 2
+            && control.PivotOffsetRatio == new Vector2(.5f, .25f),
+            "Nonfinite additional-transform edits leave the previous values intact.");
+        control.OffsetTransformScale = Vector2.Zero;
+        Reject<InvalidOperationException>(() => control.GetTransform().AffineInverse());
+        control.OffsetTransformScale = beforeScale;
+
+        using var packed = new PackedScene();
+        packed.Pack(control);
+        using var copy = (Control)packed.Instantiate();
+        Check(copy.OffsetTransformEnabled && !copy.OffsetTransformVisualOnly
+            && copy.OffsetTransformPosition == control.OffsetTransformPosition
+            && copy.OffsetTransformPositionRatio == control.OffsetTransformPositionRatio
+            && copy.OffsetTransformPivot == control.OffsetTransformPivot
+            && copy.OffsetTransformPivotRatio == control.OffsetTransformPivotRatio
+            && copy.OffsetTransformScale == control.OffsetTransformScale
+            && copy.OffsetTransformRotation == control.OffsetTransformRotation
+            && copy.PivotOffsetRatio == control.PivotOffsetRatio
+            && copy.GetTransform().IsEqualApprox(control.GetTransform()),
+            "PackedScene recreates all additional-transform and pivot settings with equivalent logical geometry.");
     }
 
     private sealed class DirectionControl(string tag, List<string> notifications) : Control

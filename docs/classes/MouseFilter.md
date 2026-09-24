@@ -11,6 +11,8 @@ Last updated: 2026-09-24
 
 Controls pointer targeting and bubbling in a root viewport. The enum is stored by `Control` and has the numeric identities of the corresponding UI filter modes.
 
+`Control.GetMouseFilterWithOverride()` applies [`MouseBehaviorRecursive`](ControlMouseBehaviorRecursive.md) and returns `Ignore` when a direct Control ancestor disables pointer input, unless the descendant explicitly enables it.
+
 | Value | Number | Behavior |
 | --- | ---: | --- |
 | `Stop` | 0 | Receives pointer input and handles it automatically, except wheel events when the wheel-pass property is enabled. Default. |

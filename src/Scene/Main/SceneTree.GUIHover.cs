@@ -101,10 +101,10 @@ public sealed partial class SceneTree
         for (CanvasItem? item = target; item is not null; item = item.GetParentItem())
         {
             if (item is Control control && !control.IsDisposed && control.IsVisibleInTree &&
-                control.MouseFilter != MouseFilter.Ignore && ReferenceEquals(control.GetViewport(), viewport))
+                control.EffectiveMouseFilter != MouseFilter.Ignore && ReferenceEquals(control.GetViewport(), viewport))
             {
                 chain.Add(control);
-                if (control.MouseFilter == MouseFilter.Stop) break;
+                if (control.EffectiveMouseFilter == MouseFilter.Stop) break;
             }
             if (item.TopLevel) break;
         }
@@ -169,7 +169,7 @@ public sealed partial class SceneTree
                 {
                     var local = control.MakeCanvasPositionLocal(_guiHoverPosition);
                     shape = (Input.CursorShape)control.GetCursorShape(local);
-                    if (shape != Input.CursorShape.Arrow || control.MouseFilter == MouseFilter.Stop) break;
+                    if (shape != Input.CursorShape.Arrow || control.EffectiveMouseFilter == MouseFilter.Stop) break;
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
             }

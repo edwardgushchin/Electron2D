@@ -16,8 +16,10 @@ internal static partial class RenderingRuntimeTests
         var observer = new CanvasNode { Name = "observer" };
         var ui = new Control { Position = new(48, 8), Size = new(24, 24) };
         ui.AddChild(new Sprite { Texture = texture, Centered = false, Position = new(2, 2), Scale = new(8, 8) });
+        var visual = new Control { Name = "visual", Position = new(72, 40), Size = new(16, 16), YSortEnabled = true, OffsetTransformEnabled = true, OffsetTransformPosition = new(10, 0) };
+        visual.AddChild(new Sprite { Texture = texture, Centered = false, Scale = new(8, 8) });
         window.AddChild(parent); parent.AddChild(direct); parent.AddChild(bridge); bridge.AddChild(separate);
-        window.AddChild(canvas); window.AddChild(ui); window.AddChild(observer);
+        window.AddChild(canvas); window.AddChild(ui); window.AddChild(visual); window.AddChild(observer);
         var frames = 0;
         observer.ReadyAction = n =>
         {
@@ -31,18 +33,23 @@ internal static partial class RenderingRuntimeTests
                 Pixel(image, 52, 12, Colors.White);
                 if (++frames == 1)
                 {
+                    Pixel(image, 74, 42, Colors.Black);
+                    Pixel(image, 84, 42, Colors.White);
                     Pixel(image, 34, 10, Colors.Red);
                     parent.Hide();
+                    visual.OffsetTransformPosition = Vector2.Zero;
                 }
                 else
                 {
+                    Pixel(image, 74, 42, Colors.White);
+                    Pixel(image, 84, 42, Colors.Black);
                     Pixel(image, 34, 10, Colors.Black);
                     n.Tree!.Quit();
                 }
             };
         };
         Engine.Instance.Run(window);
-        Check(frames == 2 && bridge.IsDisposed && separate.IsDisposed && !texture.IsDisposed, "Mixed hierarchy disposal and borrowed texture.");
+        Check(frames == 2 && bridge.IsDisposed && separate.IsDisposed && visual.IsDisposed && !texture.IsDisposed, "Mixed hierarchy disposal and borrowed texture.");
         Released(window);
         Console.WriteLine($"Scene hierarchy pixel checks passed: {backend}.");
     }

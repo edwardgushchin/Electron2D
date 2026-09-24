@@ -17,6 +17,9 @@ public abstract partial class CanvasItem : Node
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public abstract Transform GetTransform();
 
+    /// <summary>Returns the rendering transform, which may include a visual-only control offset.</summary>
+    internal virtual Transform GetVisualTransform() => GetTransform();
+
     /// <summary>Returns the transform composed through the direct canvas-parent chain.</summary>
     /// <returns>The local transform when the parent is non-canvas or TopLevel is enabled.</returns>
     /// <remarks>Resolves global invalidation without consuming an already queued notification. Global values are

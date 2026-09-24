@@ -162,6 +162,7 @@ RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();
 ControlFocusNavigationTests.Run();
+ControlRecursiveBehaviorTests.Run();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();
