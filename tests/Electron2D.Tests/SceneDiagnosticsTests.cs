@@ -50,7 +50,7 @@ internal static class SceneDiagnosticsTests
         var settings = ProjectSettings.Instance; var color = settings.Get(ProjectSettings.DebugPathsColor);
         try { Reject<System.Text.Json.JsonException>(() => settings.Set(ProjectSettings.DebugPathsColor, new Color(float.NaN, 0, 0))); Check(settings.Get(ProjectSettings.DebugPathsColor) == color, "Invalid color leaves state unchanged."); }
         finally { settings.Set(ProjectSettings.DebugPathsColor, color); }
-        using var huge = new PathCurve(); huge.AddPoint(Vector2.Zero); huge.AddPoint(new(11_000_000, 0));
+        using var huge = new Curve2D(); huge.AddPoint(Vector2.Zero); huge.AddPoint(new(11_000_000, 0));
         var debugPath = new ScenePath { Name = "Debug", Curve = huge }; root.AddChild(debugPath); tree.DebugPathsHint = true;
         Reject<InvalidOperationException>(debugPath.PrepareCanvas); tree.DebugPathsHint = false; debugPath.PrepareCanvas();
         tree.Dispose(); Reject<ObjectDisposedException>(() => tree.DebugPathsHint = false); Reject<ObjectDisposedException>(() => _ = tree.EditedSceneRoot);

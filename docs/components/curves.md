@@ -1,10 +1,10 @@
 # Curves component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 ## Scope and owned types
 
-Resources domain curve data and generated textures: [Curve](../classes/Curve.md), [Curve.TangentMode](../classes/Curve.TangentMode.md) [PathCurve](../classes/PathCurve.md), [CurveTexture](../classes/CurveTexture.md), [CurveXYZTexture](../classes/CurveXYZTexture.md), [CurveTexture.TextureModeEnum](../classes/CurveTexture.TextureModeEnum.md) and internal [CurveTextureData](../classes/CurveTextureData.md). Sources live in `src/Scene/Resources/`. Curve describes scalar y(x); PathCurve describes spatial Bézier paths. Curves and textures are resources, not Nodes. Entity consumers remain in the separate spatial scene branch; Control remains a sibling under CanvasItem.
+Resources domain curve data and generated textures: [Curve](../classes/Curve.md), [Curve.TangentMode](../classes/Curve.TangentMode.md), [Curve2D](../classes/Curve2D.md), [CurveTexture](../classes/CurveTexture.md), [CurveXYZTexture](../classes/CurveXYZTexture.md), [CurveTexture.TextureModeEnum](../classes/CurveTexture.TextureModeEnum.md) and internal [CurveTextureData](../classes/CurveTextureData.md). Sources live in `src/Scene/Resources/`. Curve describes scalar y(x); Curve2D describes spatial Bézier paths. Curves and textures are resources, not Nodes. Entity consumers remain in the separate spatial scene branch; Control remains a sibling under CanvasItem.
 
 ## Runtime flow and dependencies
 

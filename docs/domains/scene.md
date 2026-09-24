@@ -34,7 +34,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 - `Polygon`: spatial filled and inverted contours with color and texture coordinates, indexed subcontours, and copied packed state; skeletal deformation remains absent.
 - `Parallax`: camera-relative spatial canvas subtree with manual and automatic scroll, limits, repeated drawing and stored scene settings.
 - `ParallaxBackground : CanvasLayer` and `ParallaxLayer : Entity`: independent canvas and direct spatial children with camera/manual scroll, zoom policy, limits and one additional retained drawing copy per enabled mirror axis. The layer restores its original transform on exit.
-- `Path` / `PathFollow`: borrowed PathCurve containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
+- `Path` / `PathFollow`: borrowed Curve2D containment, attached direct-parent sampling, loop/clamp and ratio controls, offsets, rotation, deferred worker resource changes and packed state.
 - `AnimatedSprite`: named SpriteFrames playback through the internal idle lane, reverse/custom speed, loop and progress events, retained texture/atlas drawing and packed state. Its [timing contract](../classes/AnimatedSprite.md#timing-contract-and-source-audit) includes exact-boundary and ping-pong details.
 - `ProcessMode`: inherited, pausable, paused-only, always, and disabled process policies.
 - `NodeAutoTranslateMode`: inherited, always-on, and disabled automatic translation policies.

@@ -10,7 +10,6 @@
     "PropertyTweener": "PropertyTweener<TValue>",
     "Sprite2D": "Sprite",
     "AnimatedSprite2D": "AnimatedSprite",
-    "Curve2D": "PathCurve",
     "Path2D": "Path",
     "PathFollow2D": "PathFollow",
     "RemoteTransform2D": "RemoteTransform",

@@ -10,7 +10,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-Samples its direct [Path](Path.md) parent while inside a SceneTree. Descendants inherit its position/rotation through the ordinary Entity transform. A parent Path has to hold a nonzero-length [PathCurve](PathCurve.md) before sampling can move the follower. Detached followers retain raw Progress; neutral intermediaries and other parent types do not bind. Entry/reentry samples the retained value, exit clears the binding. Manual notification dispatch does not forge membership.
+Samples its direct [Path](Path.md) parent while inside a SceneTree. Descendants inherit its position/rotation through the ordinary Entity transform. A parent Path has to hold a nonzero-length [Curve2D](Curve2D.md) before sampling can move the follower. Detached followers retain raw Progress; neutral intermediaries and other parent types do not bind. Entry/reentry samples the retained value, exit clears the binding. Manual notification dispatch does not forge membership.
 
 Progress is local distance. Assignments wrap when Loop is true and clamp otherwise. Nonzero input wrapping approximately to zero selects the final endpoint; both positive and negative exact multiples select the end. The canonical Mathf.Epsilon policy applies. Entering a tree and replacing/editing a curve resample without renormalizing stored progress, so ProgressRatio can exceed one. Null/zero-length curves retain the transform; a Progress assignment on a zero-length curve becomes zero. Ratio reads return zero without a positive-length attached curve; ratio writes require one and throw otherwise.
 
@@ -25,7 +25,7 @@ Setters require the scene owner thread and reject scene capture; finite values a
 Standalone managed setup using the public API and `using Electron2D;`.
 
 ```csharp
-using var curve = new PathCurve();
+using var curve = new Curve2D();
 curve.AddPoint(Vector2.Zero, outHandle: new(10, 0));
 curve.AddPoint(new(30, 0), inHandle: new(-10, 0));
 var path = new Electron2D.Path { Curve = curve };
@@ -223,7 +223,7 @@ Supplies a static factory for this exact node type. Derived types must supply th
 
 ## Dependencies, audit and verification limits
 
-Depends on Entity/CanvasItem/Node membership and transforms, PathCurve sampling, Resource.Changed, typed PropertyDescriptor, PackedScene and the existing SceneTree deferred queue. No native dependency or independent scheduling API is added. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) covers analytic geometry, defaults, wrapping/clamping, policy timing, offsets, rotation/scale/skew, reparenting, scene ownership, resource changes, callback reentry/failures, worker delivery, stale queued work and zero warmed movement allocation with descendants. Canvas transform snapshots use the standard shared array pool; pool growth, resource edits and user callbacks can allocate.
+Depends on Entity/CanvasItem/Node membership and transforms, Curve2D sampling, Resource.Changed, typed PropertyDescriptor, PackedScene and the existing SceneTree deferred queue. No native dependency or independent scheduling API is added. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) covers analytic geometry, defaults, wrapping/clamping, policy timing, offsets, rotation/scale/skew, reparenting, scene ownership, resource changes, callback reentry/failures, worker delivery, stale queued work and zero warmed movement allocation with descendants. Canvas transform snapshots use the standard shared array pool; pool growth, resource edits and user callbacks can allocate.
 
 [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies pixel movement, curve replacement, worker edits, offsets and inherited visibility on Linux Wayland compatibility/GPU and dummy/software. This is automated native evidence, not owner visual acceptance, other-platform or published/AOT verification. The [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/path_2d.cpp) was compared with the complete XML. Typed errors, membership safety, thread delivery and failure aggregation follow the existing Electron2D decisions. Reference identities remain on the coverage pages.
 

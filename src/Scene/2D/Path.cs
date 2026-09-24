@@ -6,11 +6,11 @@ namespace Electron2D;
 /// no scene transform is changed on the worker. Disposing this node disconnects but does not dispose its curve.</remarks>
 public class Path : Entity
 {
-    private PathCurve? _curve;
+    private Curve2D? _curve;
     private int _membershipVersion;
     private static readonly PropertyDescriptor[] PathProperties =
     [
-        new PropertyDescriptor<Path, PathCurve?>(nameof(Curve), n => n.Curve, (n, v) => n.Curve = v, _ => null, stored: true),
+        new PropertyDescriptor<Path, Curve2D?>(nameof(Curve), n => n.Curve, (n, v) => n.Curve = v, _ => null, stored: true),
     ];
 
     /// <summary>Creates a detached path with no curve.</summary>
@@ -24,7 +24,7 @@ public class Path : Entity
     /// <exception cref="ObjectDisposedException">This node or the assigned curve is disposed.</exception>
     /// <exception cref="InvalidOperationException">Scene mutation is unavailable or curve geometry is invalid.</exception>
     /// <exception cref="AggregateException">A follower update fails after the curve has been assigned.</exception>
-    public PathCurve? Curve
+    public Curve2D? Curve
     {
         get { ThrowIfDisposed(); return _curve; }
         set

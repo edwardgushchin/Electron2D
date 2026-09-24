@@ -10,7 +10,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-A spatial parent containing a borrowed [PathCurve](PathCurve.md). Only direct attached [PathFollow](PathFollow.md) children sample it. Path starts with a null curve and draws diagnostic geometry only when SceneTree.DebugPathsHint is enabled. Its transform affects descendants through Entity/CanvasItem; neutral intermediary nodes do not bind followers.
+A spatial parent containing a borrowed [Curve2D](Curve2D.md). Only direct attached [PathFollow](PathFollow.md) children sample it. Path starts with a null curve and draws diagnostic geometry only when SceneTree.DebugPathsHint is enabled. Its transform affects descendants through Entity/CanvasItem; neutral intermediary nodes do not bind followers.
 
 Assigning Curve always disconnects/reconnects its Changed subscription and resamples attached followers, including assignment of the same resource. Detached changes do not move detached followers; tree entry samples current state. Null or zero-length curves retain existing transforms. Curve replacement/edits do not wrap or clamp stored progress. External disposal of a borrowed curve is caller error; later resource access throws.
 
@@ -25,7 +25,7 @@ The public name projects Path2D without a redundant dimension suffix under ADR 0
 Standalone managed setup using the public API and `using Electron2D;`.
 
 ```csharp
-using var curve = new PathCurve();
+using var curve = new Curve2D();
 curve.AddPoint(Vector2.Zero, outHandle: new(10, 0));
 curve.AddPoint(new(30, 0), inHandle: new(-10, 0));
 var path = new Electron2D.Path { Curve = curve };
@@ -48,7 +48,7 @@ tree.ProcessFrame(.5); // Embedding caller supplies time; Engine.Run normally dr
 
 | Declaration | Contract |
 | --- | --- |
-| [`public PathCurve? Curve { get; set; }`](#curve) | Gets or sets the borrowed local curve. |
+| [`public Curve2D? Curve { get; set; }`](#curve) | Gets or sets the borrowed local curve. |
 
 ## Protected hooks
 
@@ -71,7 +71,7 @@ Creates a detached path with no curve.
 
 ### Curve
 
-`public PathCurve? Curve { get; set; }`
+`public Curve2D? Curve { get; set; }`
 
 Gets or sets the borrowed local curve.
 
@@ -119,7 +119,7 @@ Disconnects the borrowed curve when disposing is true, invalidates pending membe
 
 ## Dependencies, audit and verification limits
 
-Depends on Entity/CanvasItem/Node membership and transforms, PathCurve sampling, Resource.Changed, typed PropertyDescriptor, PackedScene and the existing SceneTree deferred queue. No native dependency or independent scheduling API is added. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) covers analytic geometry, defaults, wrapping/clamping, policy timing, offsets, rotation/scale/skew, reparenting, scene ownership, resource changes, callback reentry/failures, worker delivery, stale queued work and zero warmed movement allocation with descendants. Canvas transform snapshots use the standard shared array pool; pool growth, resource edits and user callbacks can allocate.
+Depends on Entity/CanvasItem/Node membership and transforms, Curve2D sampling, Resource.Changed, typed PropertyDescriptor, PackedScene and the existing SceneTree deferred queue. No native dependency or independent scheduling API is added. [PathTests](../../tests/Electron2D.Tests/PathTests.cs) covers analytic geometry, defaults, wrapping/clamping, policy timing, offsets, rotation/scale/skew, reparenting, scene ownership, resource changes, callback reentry/failures, worker delivery, stale queued work and zero warmed movement allocation with descendants. Canvas transform snapshots use the standard shared array pool; pool growth, resource edits and user callbacks can allocate.
 
 [PathRenderingTests](../../tests/Electron2D.Tests/PathRenderingTests.cs) verifies pixel movement, curve replacement, worker edits, offsets and inherited visibility on Linux Wayland compatibility/GPU and dummy/software. This is automated native evidence, not owner visual acceptance, other-platform or published/AOT verification. The [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/path_2d.cpp) was compared with the complete XML. Typed errors, membership safety, thread delivery and failure aggregation follow the existing Electron2D decisions. Reference identities remain on the coverage pages.
 

@@ -7,12 +7,12 @@ namespace Electron2D;
 /// <remarks>Coordinates and distances are local, normally pixels. Point order is explicit; handles are relative
 /// to their vertex. State access is serialized and Changed is synchronous outside the lock after commitment.
 /// Returned arrays and duplicated resources own their storage. Warm cached sampling and closest queries allocate nothing.</remarks>
-public sealed class PathCurve : Resource
+public sealed class Curve2D : Resource
 {
     private static readonly PropertyDescriptor[] Properties =
     [
-        new PropertyDescriptor<PathCurve, int>(nameof(PointCount), c => c.PointCount, (c, v) => c.PointCount = v, _ => 0),
-        new PropertyDescriptor<PathCurve, float>(nameof(BakeInterval), c => c.BakeInterval, (c, v) => c.BakeInterval = v, _ => 5),
+        new PropertyDescriptor<Curve2D, int>(nameof(PointCount), c => c.PointCount, (c, v) => c.PointCount = v, _ => 0),
+        new PropertyDescriptor<Curve2D, float>(nameof(BakeInterval), c => c.BakeInterval, (c, v) => c.BakeInterval = v, _ => 5),
     ];
 
     // ponytail: one lock serializes readers; publish immutable cache snapshots if measured contention warrants it.
@@ -24,7 +24,7 @@ public sealed class PathCurve : Resource
     private bool _dirty;
 
     /// <summary>Creates an empty spatial curve with a bake interval of five local units.</summary>
-    public PathCurve() { }
+    public Curve2D() { }
 
     /// <summary>Gets or sets the number of vertices.</summary>
     /// <value>Zero initially; must be nonnegative.</value>
@@ -318,20 +318,20 @@ public sealed class PathCurve : Resource
         for (var i = 0; i < count; i++)
         {
             var index = i;
-            yield return new PropertyDescriptor<PathCurve, Vector2>($"Point[{index}].Position", c => c.GetPointPosition(index), (c, v) => c.SetPointPosition(index, v), _ => Vector2.Zero);
-            if (index > 0) yield return new PropertyDescriptor<PathCurve, Vector2>($"Point[{index}].In", c => c.GetPointIn(index), (c, v) => c.SetPointIn(index, v), _ => Vector2.Zero);
-            if (index == 0 || index + 1 < count) yield return new PropertyDescriptor<PathCurve, Vector2>($"Point[{index}].Out", c => c.GetPointOut(index), (c, v) => c.SetPointOut(index, v), _ => Vector2.Zero);
+            yield return new PropertyDescriptor<Curve2D, Vector2>($"Point[{index}].Position", c => c.GetPointPosition(index), (c, v) => c.SetPointPosition(index, v), _ => Vector2.Zero);
+            if (index > 0) yield return new PropertyDescriptor<Curve2D, Vector2>($"Point[{index}].In", c => c.GetPointIn(index), (c, v) => c.SetPointIn(index, v), _ => Vector2.Zero);
+            if (index == 0 || index + 1 < count) yield return new PropertyDescriptor<Curve2D, Vector2>($"Point[{index}].Out", c => c.GetPointOut(index), (c, v) => c.SetPointOut(index, v), _ => Vector2.Zero);
         }
     }
 
     /// <inheritdoc />
-    protected override Resource CreateDuplicateInstance() => new PathCurve();
+    protected override Resource CreateDuplicateInstance() => new Curve2D();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         PathPoint[] points; float interval;
         lock (_gate) { ThrowIfDisposed(); points = _points.ToArray(); interval = _bakeInterval; }
-        var copy = (PathCurve)target;
+        var copy = (Curve2D)target;
         lock (copy._gate) { copy.ThrowIfDisposed(); copy._points.Clear(); copy._points.AddRange(points); copy._bakeInterval = interval; copy._baked = []; copy._forward = []; copy._distances = []; copy._dirty = true; }
     }
     /// <inheritdoc />

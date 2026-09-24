@@ -6,8 +6,8 @@ internal static partial class RenderingRuntimeTests
 {
     private static void VerifyScenePaths(string backend)
     {
-        using var horizontal = new PathCurve(); horizontal.AddPoint(Vector2.Zero); horizontal.AddPoint(new(32, 0));
-        using var vertical = new PathCurve(); vertical.AddPoint(Vector2.Zero); vertical.AddPoint(new(0, 32));
+        using var horizontal = new Curve2D(); horizontal.AddPoint(Vector2.Zero); horizontal.AddPoint(new(32, 0));
+        using var vertical = new Curve2D(); vertical.AddPoint(Vector2.Zero); vertical.AddPoint(new(0, 32));
         var path = new ScenePath { Curve = horizontal, Position = new(16, 16) };
         var follower = new PathFollow { CubicInterp = false };
         var box = new CanvasNode { DrawAction = n => n.DrawRect(new(-3, -3, 6, 6), Colors.Red) };
@@ -52,9 +52,9 @@ internal static partial class RenderingRuntimeTests
         try
         {
             settings.Set(ProjectSettings.DebugPathsColor, Colors.Red);
-            using var curve = new PathCurve(); curve.AddPoint(Vector2.Zero); curve.AddPoint(new(40, 0));
-            using var zero = new PathCurve(); zero.AddPoint(Vector2.Zero); zero.AddPoint(Vector2.Zero);
-            using var single = new PathCurve(); single.AddPoint(Vector2.Zero);
+            using var curve = new Curve2D(); curve.AddPoint(Vector2.Zero); curve.AddPoint(new(40, 0));
+            using var zero = new Curve2D(); zero.AddPoint(Vector2.Zero); zero.AddPoint(Vector2.Zero);
+            using var single = new Curve2D(); single.AddPoint(Vector2.Zero);
             var path = new ScenePath { Curve = curve, Position = new(20.5f, 20.5f) };
             var window = new Window { Size = new(96, 96) }; window.AddChild(path);
             var observer = new CanvasNode { Name = "observer" }; window.AddChild(observer); var stage = 0;

@@ -1517,123 +1517,123 @@
     },
     {
       "godot": "Curve2D::method:add_point(Vector2:,Vector2:,Vector2:,int:)",
-      "electron2d": "method:Electron2D.PathCurve.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:clear_points()",
-      "electron2d": "method:Electron2D.PathCurve.ClearPoints()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.ClearPoints()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_baked_length()",
-      "electron2d": "method:Electron2D.PathCurve.GetBakedLength()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetBakedLength()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_baked_points()",
-      "electron2d": "method:Electron2D.PathCurve.GetBakedPoints()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetBakedPoints()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_closest_offset(Vector2:)",
-      "electron2d": "method:Electron2D.PathCurve.GetClosestOffset(Electron2D.Vector2)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetClosestOffset(Electron2D.Vector2)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_closest_point(Vector2:)",
-      "electron2d": "method:Electron2D.PathCurve.GetClosestPoint(Electron2D.Vector2)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetClosestPoint(Electron2D.Vector2)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_point_in(int:)",
-      "electron2d": "method:Electron2D.PathCurve.GetPointIn(System.Int32)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPointIn(System.Int32)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_point_out(int:)",
-      "electron2d": "method:Electron2D.PathCurve.GetPointOut(System.Int32)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPointOut(System.Int32)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:get_point_position(int:)",
-      "electron2d": "method:Electron2D.PathCurve.GetPointPosition(System.Int32)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPointPosition(System.Int32)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:remove_point(int:)",
-      "electron2d": "method:Electron2D.PathCurve.RemovePoint(System.Int32)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.RemovePoint(System.Int32)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:sample(int:,float:)",
-      "electron2d": "method:Electron2D.PathCurve.Sample(System.Int32,System.Single)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.Sample(System.Int32,System.Single)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:sample_baked(float:,bool:)",
-      "electron2d": "method:Electron2D.PathCurve.SampleBaked(System.Single,System.Boolean)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.SampleBaked(System.Single,System.Boolean)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:sample_baked_with_rotation(float:,bool:)",
-      "electron2d": "method:Electron2D.PathCurve.SampleBakedWithRotation(System.Single,System.Boolean)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.SampleBakedWithRotation(System.Single,System.Boolean)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:samplef(float:)",
-      "electron2d": "method:Electron2D.PathCurve.Samplef(System.Single)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.Samplef(System.Single)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:set_point_in(int:,Vector2:)",
-      "electron2d": "method:Electron2D.PathCurve.SetPointIn(System.Int32,Electron2D.Vector2)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.SetPointIn(System.Int32,Electron2D.Vector2)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:set_point_out(int:,Vector2:)",
-      "electron2d": "method:Electron2D.PathCurve.SetPointOut(System.Int32,Electron2D.Vector2)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.SetPointOut(System.Int32,Electron2D.Vector2)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:set_point_position(int:,Vector2:)",
-      "electron2d": "method:Electron2D.PathCurve.SetPointPosition(System.Int32,Electron2D.Vector2)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.SetPointPosition(System.Int32,Electron2D.Vector2)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:tessellate(int:,float:)",
-      "electron2d": "method:Electron2D.PathCurve.Tessellate(System.Int32,System.Single)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.Tessellate(System.Int32,System.Single)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::method:tessellate_even_length(int:,float:)",
-      "electron2d": "method:Electron2D.PathCurve.TessellateEvenLength(System.Int32,System.Single)",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.TessellateEvenLength(System.Int32,System.Single)",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::property:bake_interval",
-      "electron2d": "property:Electron2D.PathCurve.BakeInterval()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "property:Electron2D.Curve2D.BakeInterval()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::property:point_count",
-      "electron2d": "property:Electron2D.PathCurve.PointCount()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "property:Electron2D.Curve2D.PointCount()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::property:point_{index}/in",
-      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPropertyDescriptors()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::property:point_{index}/out",
-      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPropertyDescriptors()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "godot": "Curve2D::property:point_{index}/position",
-      "electron2d": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md."
+      "electron2d": "method:Electron2D.Curve2D.GetPropertyDescriptors()",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md."
     },
     {
       "electron2d": "constructor:Electron2D.Vector3..ctor(Electron2D.Vector3i)",
@@ -2383,27 +2383,27 @@
       "adr": "ADRs 0003/0004/0013/0014"
     },
     {
-      "electron2d": "constructor:Electron2D.PathCurve..ctor()",
+      "electron2d": "constructor:Electron2D.Curve2D..ctor()",
       "reason": "Explicit C# construction of the existing curve resource with the audited reference defaults.",
       "adr": "ADRs 0003/0004/0013/0014"
     },
     {
-      "electron2d": "method:Electron2D.PathCurve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "electron2d": "method:Electron2D.Curve2D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Existing Resource typed copying hook preserves exact point/handle/limit state without setter reclamping; copies own containers and lazily rebuilt caches.",
       "adr": "ADRs 0003/0004/0013/0014"
     },
     {
-      "electron2d": "method:Electron2D.PathCurve.CreateDuplicateInstance()",
+      "electron2d": "method:Electron2D.Curve2D.CreateDuplicateInstance()",
       "reason": "Existing Resource exact-type duplication factory; constructs an empty curve target.",
       "adr": "ADRs 0003/0004/0013/0014"
     },
     {
-      "electron2d": "method:Electron2D.PathCurve.Dispose(System.Boolean)",
+      "electron2d": "method:Electron2D.Curve2D.Dispose(System.Boolean)",
       "reason": "Managed lifetime hook releases owned point/cache containers and event subscriptions under the accepted Resource lifetime policy.",
       "adr": "ADRs 0003/0004/0013/0014"
     },
     {
-      "electron2d": "method:Electron2D.PathCurve.OnResetState()",
+      "electron2d": "method:Electron2D.Curve2D.OnResetState()",
       "reason": "Existing Resource reset hook clears transient sample caches while preserving stored curve state.",
       "adr": "ADRs 0003/0004/0013/0014"
     },
@@ -3329,7 +3329,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "PathCurve implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/PathCurve.md.",
+      "reason": "Curve2D implements the spatial curve resource under ADRs 0004/0013: relative handles, segment/fraction samples, distance/tangent caching, cubic/linear baked queries, closest projection and both tessellations. CurveTests verifies analytic and degenerate geometry, closed segments, cache failure recovery, copies, typed descriptors, scene-local ownership, callbacks, concurrency and warm allocation. ADR 0013 records closed-segment and zero-length corrections, finite-input exceptions and bounded 0..20 subdivision depth; default cache depth is ten. No native backend is needed. See docs/classes/Curve2D.md.",
       "godot": [
         "class:Curve2D",
         "Curve2D::method:add_point(Vector2:,Vector2:,Vector2:,int:)",

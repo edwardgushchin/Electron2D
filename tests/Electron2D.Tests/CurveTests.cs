@@ -68,7 +68,7 @@ internal static class CurveTests
 
     private static void Spatial()
     {
-        using var p = new PathCurve(); var trace = new List<string>(); p.Changed += _ => trace.Add("changed"); p.PropertyListChanged += _ => trace.Add("list");
+        using var p = new Curve2D(); var trace = new List<string>(); p.Changed += _ => trace.Add("changed"); p.PropertyListChanged += _ => trace.Add("list");
         Check(p.PointCount == 0 && p.BakeInterval == 5 && p.GetBakedLength() == 0 && p.GetBakedPoints().Length == 0 && p.Tessellate().Length == 0 && p.TessellateEvenLength().Length == 0, "Spatial defaults.");
         Reject<InvalidOperationException>(() => p.Sample(0, 0)); Reject<InvalidOperationException>(() => p.SampleBaked()); Reject<InvalidOperationException>(() => p.GetClosestPoint(Vector2.Zero));
         p.AddPoint(new(3, 4)); Check(string.Join(',', trace) == "changed,list", "Spatial add notifications."); trace.Clear();
@@ -94,7 +94,7 @@ internal static class CurveTests
         Check(p.SampleBakedWithRotation().IsFinite(), "Zero-length leading interval has finite posture.");
         p.PointCount = 2; Near(p.GetClosestPoint(new(5, 6)), Vector2.Zero); Near(p.GetClosestOffset(new(5, 6)), 0); Check(p.SampleBakedWithRotation() == Transform.Identity, "Entirely degenerate curve stays well-defined.");
         p.AddPoint(new(2, 3), index: 100); Check(p.GetPointPosition(2) == new Vector2(2, 3), "Past-end insertion appends.");
-        p.GetPropertyList().OfType<PropertyDescriptor<PathCurve, Vector2>>().Single(d => d.Name == "Point[1].Out").SetValue(p, new(1, 2));
+        p.GetPropertyList().OfType<PropertyDescriptor<Curve2D, Vector2>>().Single(d => d.Name == "Point[1].Out").SetValue(p, new(1, 2));
         Check(p.GetPointOut(1) == new Vector2(1, 2), "Typed handle descriptors.");
         Reject<ArgumentOutOfRangeException>(() => p.BakeInterval = 0); Reject<ArgumentOutOfRangeException>(() => p.Tessellate(21));
         Reject<ArgumentOutOfRangeException>(() => p.TessellateEvenLength(toleranceLength: float.NaN)); Reject<ArgumentOutOfRangeException>(() => p.Tessellate(toleranceDegrees: -1));
@@ -111,16 +111,16 @@ internal static class CurveTests
     {
         using var scalar = new Curve { MinDomain = -2, MaxDomain = 3, MinValue = -4, MaxValue = 5, BakeResolution = 77 };
         scalar.AddPoint(new(-1, 2), 3, 4); scalar.AddPoint(new(2, 3), 5, 6); scalar.SetPointValue(1, 99);
-        using var path = new PathCurve { BakeInterval = 2 }; path.AddPoint(Vector2.Zero, new(-2, 0), new(3, 0)); path.AddPoint(new(9, 2), new(-4, 0), new(5, 0));
+        using var path = new Curve2D { BakeInterval = 2 }; path.AddPoint(Vector2.Zero, new(-2, 0), new(3, 0)); path.AddPoint(new(9, 2), new(-4, 0), new(5, 0));
         foreach (var deep in new[] { false, true })
         {
-            using var s = (Curve)scalar.Duplicate(deep); using var p = (PathCurve)path.Duplicate(deep);
+            using var s = (Curve)scalar.Duplicate(deep); using var p = (Curve2D)path.Duplicate(deep);
             Check(s.MinDomain == -2 && s.MaxDomain == 3 && s.MinValue == -4 && s.MaxValue == 5 && s.BakeResolution == 77 && s.GetPointPosition(1).Y == 99 && s.GetPointRightTangent(1) == 6, "Scalar copy retains exact state without setter reclamping.");
             Check(p.BakeInterval == 2 && p.GetPointIn(1) == new Vector2(-4, 0) && p.GetPointOut(1) == new Vector2(5, 0), "Spatial copy retains handles and bake policy.");
             s.ClearPoints(); p.ClearPoints(); Check(scalar.PointCount == 2 && path.PointCount == 2, "Copies own point containers.");
         }
         using var target = new Curve(); target.CopyFromResource(scalar); Check(target.GetPointPosition(1).Y == 99, "CopyFromResource preserves exact scalar state.");
-        using var targetPath = new PathCurve(); targetPath.CopyFromResource(path); Check(targetPath.GetBakedPoints().SequenceEqual(path.GetBakedPoints()), "Spatial CopyFromResource rebuilds matching cache.");
+        using var targetPath = new Curve2D(); targetPath.CopyFromResource(path); Check(targetPath.GetBakedPoints().SequenceEqual(path.GetBakedPoints()), "Spatial CopyFromResource rebuilds matching cache.");
         using var node = new CurveConsumer { Scalar = scalar, Path = path }; using var packed = new PackedScene(); packed.Pack(node);
         using var shared = (CurveConsumer)packed.Instantiate(); Check(ReferenceEquals(shared.Path, path) && ReferenceEquals(shared.Scalar, scalar), "Packed resources are borrowed by default.");
         scalar.ResourceLocalToScene = path.ResourceLocalToScene = true; packed.Pack(node); using var local = (CurveConsumer)packed.Instantiate();
@@ -131,26 +131,26 @@ internal static class CurveTests
 
     private static void FailureAndConcurrency()
     {
-        using var scalar = new Curve(); using var path = new PathCurve(); scalar.AddPoint(Vector2.Zero); scalar.AddPoint(Vector2.One); path.AddPoint(Vector2.Zero); path.AddPoint(new(10, 0));
+        using var scalar = new Curve(); using var path = new Curve2D(); scalar.AddPoint(Vector2.Zero); scalar.AddPoint(Vector2.One); path.AddPoint(Vector2.Zero); path.AddPoint(new(10, 0));
         Action<Resource> fail = _ => throw new ApplicationException("curve observer"); scalar.Changed += fail; Reject<ApplicationException>(() => scalar.SetPointValue(1, 2)); scalar.Changed -= fail;
         Check(scalar.GetPointPosition(1).Y == 2, "Scalar callback exception retains committed edit."); path.Changed += fail; Reject<ApplicationException>(() => path.SetPointIn(1, new(-1, 0))); path.Changed -= fail;
         Check(path.GetPointIn(1) == new Vector2(-1, 0), "Spatial callback exception retains edit.");
         Task.WaitAll(Task.Run(() => { for (var i = 0; i < 300; i++) { scalar.SetPointValue(1, i % 3); path.SetPointIn(1, new(-i % 3, 0)); } }),
             Task.Run(() => { for (var i = 0; i < 300; i++) { Check(float.IsFinite(scalar.SampleBaked(.5f)), "Concurrent scalar sample."); Check(path.SampleBaked(2).IsFinite(), "Concurrent path sample."); } }));
         using var dying = new Curve(); dying.Changed += c => c.Dispose(); dying.PointCount = 3; Check(dying.IsDisposed, "Disposal during growing point notifications stops safely.");
-        using var dyingPath = new PathCurve(); dyingPath.Changed += c => c.Dispose(); dyingPath.PointCount = 3; Check(dyingPath.IsDisposed, "Path disposal during growth stops safely.");
+        using var dyingPath = new Curve2D(); dyingPath.Changed += c => c.Dispose(); dyingPath.PointCount = 3; Check(dyingPath.IsDisposed, "Path disposal during growth stops safely.");
         scalar.Dispose(); path.Dispose(); Reject<ObjectDisposedException>(() => scalar.Sample(0)); Reject<ObjectDisposedException>(() => path.GetBakedLength());
     }
 
     private sealed class CurveConsumer : Entity
     {
         internal Curve? Scalar;
-        internal PathCurve? Path;
+        internal Curve2D? Path;
         protected override void OnProcess(double delta) { Position = Path!.SampleBaked(Scalar!.Sample((float)delta)); }
         protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(new PropertyDescriptor[]
         {
             new PropertyDescriptor<CurveConsumer, Curve?>(nameof(Scalar), n => n.Scalar, (n, v) => n.Scalar = v, stored: true),
-            new PropertyDescriptor<CurveConsumer, PathCurve?>(nameof(Path), n => n.Path, (n, v) => n.Path = v, stored: true),
+            new PropertyDescriptor<CurveConsumer, Curve2D?>(nameof(Path), n => n.Path, (n, v) => n.Path = v, stored: true),
         });
         protected override Func<Node> CreateSceneInstanceFactory() => Create;
         private static Node Create() => new CurveConsumer();

@@ -10,7 +10,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-A scalar cubic function y(x), with points ordered by horizontal offset, independent incoming/outgoing tangent slopes, and an evenly spaced sample cache. This is distinct from [PathCurve](PathCurve.md), which describes spatial paths. Tangents are dy/dx slopes, not angles. Defaults are no points, domain/value limits [0,1], and BakeResolution 100.
+A scalar cubic function y(x), with points ordered by horizontal offset, independent incoming/outgoing tangent slopes, and an evenly spaced sample cache. This is distinct from [Curve2D](Curve2D.md), which describes spatial paths. Tangents are dy/dx slopes, not angles. Defaults are no points, domain/value limits [0,1], and BakeResolution 100.
 
 Insertion clamps both coordinates. SetPointValue allows values outside insertion limits; moving a point horizontally reinserts it and clamps its current value again. Sampling extrapolates constantly outside the endpoint offsets, uses cubic Bézier interpolation inside, and does not clamp overshoot. Near-zero spans use the next value. Linear tangents follow adjacent points; duplicate offsets may produce IEEE nonfinite slopes. Extreme slope/value arithmetic follows the existing float math contract and may overflow. Explicit input coordinates and slopes must be finite.
 

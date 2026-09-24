@@ -10,9 +10,9 @@ internal static class PathTests
         Console.WriteLine("Scene path and follower checks passed.");
     }
 
-    private static PathCurve Line(Vector2 end)
+    private static Curve2D Line(Vector2 end)
     {
-        var curve = new PathCurve(); curve.AddPoint(Vector2.Zero, outHandle: end / 3); curve.AddPoint(end, inHandle: -end / 3); return curve;
+        var curve = new Curve2D(); curve.AddPoint(Vector2.Zero, outHandle: end / 3); curve.AddPoint(end, inHandle: -end / 3); return curve;
     }
 
     private static void Sampling()
@@ -35,7 +35,7 @@ internal static class PathTests
         using var shortCurve = Line(new(0, 10)); path.Curve = shortCurve; Near(f.Progress, 25); Near(f.ProgressRatio, 2.5f); Near(f.Position, new(0, 10));
         f.Loop = true; Near(f.Progress, 25); f.Progress = f.Progress; Near(f.Progress, 5);
         var position = f.Position; path.Curve = null; f.Progress = 90; Near(f.Position, position); Near(f.ProgressRatio, 0);
-        using var empty = new PathCurve(); path.Curve = empty; f.Progress = 5; Near(f.Progress, 0); Near(f.Position, position); Reject<InvalidOperationException>(() => f.ProgressRatio = 0);
+        using var empty = new Curve2D(); path.Curve = empty; f.Progress = 5; Near(f.Progress, 0); Near(f.Position, position); Reject<InvalidOperationException>(() => f.ProgressRatio = 0);
         path.Curve = curve; f.Rotates = false; f.CubicInterp = false; f.Progress = 0;
         f.CreateTween().TweenProperty(f, n => n.Progress, (n, value) => n.Progress = value, 30f, 1);
         tree.ProcessFrame(.5); Near(f.Progress, 15); Near(f.Position, new(15, 0));
@@ -45,7 +45,7 @@ internal static class PathTests
         Reject<ArgumentOutOfRangeException>(() => f.Progress = float.NaN); Reject<ArgumentOutOfRangeException>(() => f.ProgressRatio = float.PositiveInfinity);
         Reject<ArgumentOutOfRangeException>(() => f.HOffset = float.NaN); Reject<ArgumentOutOfRangeException>(() => f.VOffset = float.NegativeInfinity);
         f.Position = new(7, 9); path.Curve = curve; Near(f.Position, new(15, 0));
-        using var bent = new PathCurve { BakeInterval = 20 }; bent.AddPoint(Vector2.Zero, outHandle: new(0, 30)); bent.AddPoint(new(30, 0), inHandle: new(0, 30));
+        using var bent = new Curve2D { BakeInterval = 20 }; bent.AddPoint(Vector2.Zero, outHandle: new(0, 30)); bent.AddPoint(new(30, 0), inHandle: new(0, 30));
         path.Curve = bent; f.CubicInterp = false; f.Progress = 7.3f; var linear = f.Position;
         Near(linear, bent.SampleBaked(7.3f, false)); f.CubicInterp = true; Near(f.Position, linear); f.Progress = 7.3f;
         Near(f.Position, bent.SampleBaked(7.3f, true)); Check(f.Position.DistanceTo(linear) > .1f, "Cubic policy changes actual curved-path sampling on the next update.");
@@ -76,7 +76,7 @@ internal static class PathTests
         Check(localCurve.IsDisposed && !a.IsDisposed, "Root owns local curve copies only.");
         f.Dispose(); a.SetPointPosition(1, new(20, 0)); Check(!a.IsDisposed, "Disposed followers disconnect through parent membership.");
         using var detached = new ScenePath { Curve = a }; detached.Dispose(); a.SetPointPosition(1, new(21, 0));
-        using var dead = new PathCurve(); dead.Dispose(); Reject<ObjectDisposedException>(() => p.Curve = dead);
+        using var dead = new Curve2D(); dead.Dispose(); Reject<ObjectDisposedException>(() => p.Curve = dead);
     }
 
     private static void FailureAndThreads()

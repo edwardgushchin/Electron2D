@@ -177,7 +177,7 @@ def reason_for_type(item, lookup):
         ({"Curve", "Curve2D", "FastNoiseLite", "Noise"},
          "first procedural 2D curve or noise resource slice after typed resource storage (ADR 0013)"),
         ({"Path2D", "PathFollow2D"},
-         "first scene path/follower slice using the implemented PathCurve and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
+         "first scene path/follower slice using the implemented Curve2D and Entity; include progress, rotation, looping, change subscriptions and packing (ADRs 0008 and 0013); navigation is not a prerequisite"),
         ({"Line2D", "Marker2D", "Parallax2D", "ParallaxBackground", "ParallaxLayer", "Polygon2D", "RemoteTransform2D"},
          "next 2D scene-node slice using the existing Entity, CanvasItem, canvas layers and polygon renderer (ADRs 0008 and 0028)"),
         ({"CurveTexture", "CurveXYZTexture"},

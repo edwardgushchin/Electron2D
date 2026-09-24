@@ -4,7 +4,7 @@ Last updated: 2026-09-23
 
 ## Scope and owned types
 
-[Path](../classes/Path.md) and [PathFollow](../classes/PathFollow.md) are direct Entity subclasses in `src/Scene/2D/`. They implement spatial path containment, optional debug drawing and point sampling; they do not implement navigation or route search. Path owns a borrowed PathCurve reference; followers use only their direct parent while attached. Resources stay outside the Node hierarchy.
+[Path](../classes/Path.md) and [PathFollow](../classes/PathFollow.md) are direct Entity subclasses in `src/Scene/2D/`. They implement spatial path containment, optional debug drawing and point sampling; they do not implement navigation or route search. Path owns a borrowed Curve2D reference; followers use only their direct parent while attached. Resources stay outside the Node hierarchy.
 
 ## Runtime flow
 
@@ -16,7 +16,7 @@ Last updated: 2026-09-23
 
 ## Invariants and dependencies
 
-Uses only Entity, CanvasItem, Node, PathCurve, Resource, typed descriptors, PackedScene and SceneTree. Positions/distances/offsets use local units. Canonical epsilon governs wrapped endpoint selection. Null/zero-length curves retain transforms, while progress assignment on a zero-length curve clamps to zero. Curve edits/entry do not renormalize progress; ProgressRatio can exceed one. Rotates=false keeps rotation and makes offsets local X/Y; true uses tangent/perpendicular directions. Reparent keepGlobalTransform=true preserves the original global transform until another path update.
+Uses only Entity, CanvasItem, Node, Curve2D, Resource, typed descriptors, PackedScene and SceneTree. Positions/distances/offsets use local units. Canonical epsilon governs wrapped endpoint selection. Null/zero-length curves retain transforms, while progress assignment on a zero-length curve clamps to zero. Curve edits/entry do not renormalize progress; ProgressRatio can exceed one. Rotates=false keeps rotation and makes offsets local X/Y; true uses tangent/perpendicular directions. Reparent keepGlobalTransform=true preserves the original global transform until another path update.
 
 Mutation and transform callbacks stay on the owner thread. Worker changes allocate deferred actions rather than updating scene state directly. Bulk editing should be coordinated by the caller; no atomic multi-resource transaction or queue coalescing is claimed. Warm repeated progress updates allocate no managed memory in the measured path. The shared CanvasItem transform traversal now uses pooled child snapshots, returned with cleared references even after callback failures; this preserves mutation-safe traversal without an array allocation per moved ancestor.
 

@@ -380,6 +380,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Curve2D",
+    "kind": "type",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "Curve2D",
+    "signature": "public sealed class Electron2D.Curve2D",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CurveTexture",
     "kind": "type",
     "declaringType": "Electron2D.CurveTexture",
@@ -2075,21 +2090,6 @@
     "signature": "public class Electron2D.Path",
     "visibility": "public",
     "baseType": "Electron2D.Entity",
-    "interfaces": [
-      "System.IDisposable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.PathCurve",
-    "kind": "type",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "PathCurve",
-    "signature": "public sealed class Electron2D.PathCurve",
-    "visibility": "public",
-    "baseType": "Electron2D.Resource",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -4553,6 +4553,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Curve2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Curve2D",
+    "name": ".ctor",
+    "signature": "public Curve2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CurveTexture..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CurveTexture",
@@ -5091,19 +5104,6 @@
     "declaringType": "Electron2D.Path",
     "name": ".ctor",
     "signature": "public Path()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "constructor:Electron2D.PathCurve..ctor()",
-    "kind": "constructor",
-    "declaringType": "Electron2D.PathCurve",
-    "name": ".ctor",
-    "signature": "public PathCurve()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -22248,6 +22248,501 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Curve2D.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "AddPoint",
+    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, Electron2D.Vector2 inHandle = default, Electron2D.Vector2 outHandle = default, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      },
+      {
+        "name": "outHandle",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.ClearPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "ClearPoints",
+    "signature": "public System.Void ClearPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetBakedLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetBakedLength",
+    "signature": "public System.Single GetBakedLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetBakedPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetBakedPoints",
+    "signature": "public Electron2D.Vector2[] GetBakedPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetClosestOffset(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetClosestOffset",
+    "signature": "public System.Single GetClosestOffset(Electron2D.Vector2 toPoint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPoint",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetClosestPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetClosestPoint",
+    "signature": "public Electron2D.Vector2 GetClosestPoint(Electron2D.Vector2 toPoint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPoint",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetPointIn(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetPointIn",
+    "signature": "public Electron2D.Vector2 GetPointIn(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetPointOut(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetPointOut",
+    "signature": "public Electron2D.Vector2 GetPointOut(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetPointPosition(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.RemovePoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "RemovePoint",
+    "signature": "public System.Void RemovePoint(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.Sample(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "Sample",
+    "signature": "public Electron2D.Vector2 Sample(System.Int32 index, System.Single t)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "t",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.SampleBaked(System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "SampleBaked",
+    "signature": "public Electron2D.Vector2 SampleBaked(System.Single offset = 0f, System.Boolean cubic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "cubic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.SampleBakedWithRotation(System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "SampleBakedWithRotation",
+    "signature": "public Electron2D.Transform SampleBakedWithRotation(System.Single offset = 0f, System.Boolean cubic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "cubic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.Samplef(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "Samplef",
+    "signature": "public Electron2D.Vector2 Samplef(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.SetPointIn(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "SetPointIn",
+    "signature": "public System.Void SetPointIn(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.SetPointOut(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "SetPointOut",
+    "signature": "public System.Void SetPointOut(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.SetPointPosition(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "SetPointPosition",
+    "signature": "public System.Void SetPointPosition(System.Int32 index, Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.Tessellate(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "Tessellate",
+    "signature": "public Electron2D.Vector2[] Tessellate(System.Int32 maxStages = 5, System.Single toleranceDegrees = 4f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxStages",
+        "type": "System.Int32",
+        "default": "5"
+      },
+      {
+        "name": "toleranceDegrees",
+        "type": "System.Single",
+        "default": "4f"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Curve2D.TessellateEvenLength(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "TessellateEvenLength",
+    "signature": "public Electron2D.Vector2[] TessellateEvenLength(System.Int32 maxStages = 5, System.Single toleranceLength = 20f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxStages",
+        "type": "System.Int32",
+        "default": "5"
+      },
+      {
+        "name": "toleranceLength",
+        "type": "System.Single",
+        "default": "20f"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CurveTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.CurveTexture",
@@ -37387,501 +37882,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.AddPoint(Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "AddPoint",
-    "signature": "public System.Void AddPoint(Electron2D.Vector2 position, Electron2D.Vector2 inHandle = default, Electron2D.Vector2 outHandle = default, System.Int32 index = -1)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      },
-      {
-        "name": "inHandle",
-        "type": "Electron2D.Vector2",
-        "default": "default"
-      },
-      {
-        "name": "outHandle",
-        "type": "Electron2D.Vector2",
-        "default": "default"
-      },
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": "-1"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.ClearPoints()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "ClearPoints",
-    "signature": "public System.Void ClearPoints()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "CopyCustomStateTo",
-    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "target",
-        "type": "Electron2D.Resource",
-        "default": null
-      },
-      {
-        "name": "deep",
-        "type": "System.Boolean",
-        "default": null
-      },
-      {
-        "name": "subresourceMode",
-        "type": "Electron2D.DeepDuplicateMode",
-        "default": null
-      },
-      {
-        "name": "duplicateSubresource",
-        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
-        "default": null
-      },
-      {
-        "name": "forceDuplicateSubresource",
-        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.CreateDuplicateInstance()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "CreateDuplicateInstance",
-    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Resource",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.Dispose(System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "Dispose",
-    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "disposing",
-        "type": "System.Boolean",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetBakedLength()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetBakedLength",
-    "signature": "public System.Single GetBakedLength()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetBakedPoints()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetBakedPoints",
-    "signature": "public Electron2D.Vector2[] GetBakedPoints()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Vector2[]",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetClosestOffset(Electron2D.Vector2)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetClosestOffset",
-    "signature": "public System.Single GetClosestOffset(Electron2D.Vector2 toPoint)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "toPoint",
-        "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetClosestPoint(Electron2D.Vector2)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetClosestPoint",
-    "signature": "public Electron2D.Vector2 GetClosestPoint(Electron2D.Vector2 toPoint)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "toPoint",
-        "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetPointIn(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetPointIn",
-    "signature": "public Electron2D.Vector2 GetPointIn(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetPointOut(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetPointOut",
-    "signature": "public Electron2D.Vector2 GetPointOut(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetPointPosition(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetPointPosition",
-    "signature": "public Electron2D.Vector2 GetPointPosition(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.GetPropertyDescriptors()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "GetPropertyDescriptors",
-    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.OnResetState()",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "OnResetState",
-    "signature": "protected override System.Void OnResetState()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.RemovePoint(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "RemovePoint",
-    "signature": "public System.Void RemovePoint(System.Int32 index)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.Sample(System.Int32,System.Single)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "Sample",
-    "signature": "public Electron2D.Vector2 Sample(System.Int32 index, System.Single t)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "t",
-        "type": "System.Single",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.SampleBaked(System.Single,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "SampleBaked",
-    "signature": "public Electron2D.Vector2 SampleBaked(System.Single offset = 0f, System.Boolean cubic = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "offset",
-        "type": "System.Single",
-        "default": "0f"
-      },
-      {
-        "name": "cubic",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.SampleBakedWithRotation(System.Single,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "SampleBakedWithRotation",
-    "signature": "public Electron2D.Transform SampleBakedWithRotation(System.Single offset = 0f, System.Boolean cubic = false)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "offset",
-        "type": "System.Single",
-        "default": "0f"
-      },
-      {
-        "name": "cubic",
-        "type": "System.Boolean",
-        "default": "false"
-      }
-    ],
-    "returnType": "Electron2D.Transform",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.Samplef(System.Single)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "Samplef",
-    "signature": "public Electron2D.Vector2 Samplef(System.Single offset)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "offset",
-        "type": "System.Single",
-        "default": null
-      }
-    ],
-    "returnType": "Electron2D.Vector2",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.SetPointIn(System.Int32,Electron2D.Vector2)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "SetPointIn",
-    "signature": "public System.Void SetPointIn(System.Int32 index, Electron2D.Vector2 position)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.SetPointOut(System.Int32,Electron2D.Vector2)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "SetPointOut",
-    "signature": "public System.Void SetPointOut(System.Int32 index, Electron2D.Vector2 position)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.SetPointPosition(System.Int32,Electron2D.Vector2)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "SetPointPosition",
-    "signature": "public System.Void SetPointPosition(System.Int32 index, Electron2D.Vector2 position)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "index",
-        "type": "System.Int32",
-        "default": null
-      },
-      {
-        "name": "position",
-        "type": "Electron2D.Vector2",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.Tessellate(System.Int32,System.Single)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "Tessellate",
-    "signature": "public Electron2D.Vector2[] Tessellate(System.Int32 maxStages = 5, System.Single toleranceDegrees = 4f)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "maxStages",
-        "type": "System.Int32",
-        "default": "5"
-      },
-      {
-        "name": "toleranceDegrees",
-        "type": "System.Single",
-        "default": "4f"
-      }
-    ],
-    "returnType": "Electron2D.Vector2[]",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.PathCurve.TessellateEvenLength(System.Int32,System.Single)",
-    "kind": "method",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "TessellateEvenLength",
-    "signature": "public Electron2D.Vector2[] TessellateEvenLength(System.Int32 maxStages = 5, System.Single toleranceLength = 20f)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "maxStages",
-        "type": "System.Int32",
-        "default": "5"
-      },
-      {
-        "name": "toleranceLength",
-        "type": "System.Single",
-        "default": "20f"
-      }
-    ],
-    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {
@@ -56784,6 +56784,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Curve2D.BakeInterval()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "BakeInterval",
+    "signature": "public System.Single BakeInterval { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Curve2D.PointCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.Curve2D",
+    "name": "PointCount",
+    "signature": "public System.Int32 PointCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CurveTexture.Curve()",
     "kind": "property",
     "declaringType": "Electron2D.CurveTexture",
@@ -60116,38 +60142,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Path",
     "name": "Curve",
-    "signature": "public Electron2D.PathCurve Curve { get; set; }",
+    "signature": "public Electron2D.Curve2D Curve { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.PathCurve",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.PathCurve.BakeInterval()",
-    "kind": "property",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "BakeInterval",
-    "signature": "public System.Single BakeInterval { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.PathCurve.PointCount()",
-    "kind": "property",
-    "declaringType": "Electron2D.PathCurve",
-    "name": "PointCount",
-    "signature": "public System.Int32 PointCount { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
+    "returnType": "Electron2D.Curve2D",
     "value": null
   },
   {

@@ -1,16 +1,16 @@
-# PathCurve
+# Curve2D
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 **Inherits:** [Resource](Resource.md), [ElectronObject](ElectronObject.md)
 
-- **Declaration:** `public sealed class PathCurve : Resource`
-- **Source:** [PathCurve.cs](../../src/Scene/Resources/PathCurve.cs)
+- **Declaration:** `public sealed class Curve2D : Resource`
+- **Source:** [Curve2D.cs](../../src/Scene/Resources/Curve2D.cs)
 - **Component:** [Curves](../components/curves.md), [Resources domain](../domains/resources.md)
 
 ## Description
 
-A spatial cubic Bézier path. Each ordered vertex has a local position and relative incoming/outgoing handles. It is the renamed Curve2D resource in the internal comparison; scalar [Curve](Curve.md) keeps its distinct y(x) role. Coordinates and distances are local, normally pixels. Empty by default, with BakeInterval 5.
+A spatial cubic Bézier curve. Each ordered vertex has a local position and relative incoming/outgoing handles. Scalar [Curve](Curve.md) keeps its distinct y(x) role; neither resource derives from the other. Coordinates and distances are local, normally pixels. Empty by default, with BakeInterval 5.
 
 Sample evaluates one segment and allows finite extrapolation parameters. Samplef combines segment index and fraction. Baked queries use a distance-indexed polyline; cubic sampling interpolates neighboring cached positions. SampleBakedWithRotation uses interpolated normalized analytic tangents, independent of the position interpolation mode. A one-point or fully degenerate curve has identity orientation. Closest queries project onto cached segments, retain degenerate point candidates and choose the earliest segment on ties.
 
@@ -27,7 +27,7 @@ Typed property descriptors expose cache policy and indexed points; they address 
 Standalone managed resource usage with `using Electron2D;`.
 
 ```csharp
-using var path = new PathCurve();
+using var path = new Curve2D();
 path.AddPoint(Vector2.Zero, outHandle: new(10, 0));
 path.AddPoint(new(30, 0), inHandle: new(-10, 0));
 Vector2 position = path.SampleBaked(15); // (15, 0)
@@ -38,7 +38,7 @@ Transform pose = path.SampleBakedWithRotation(15);
 
 | Declaration | Contract |
 | --- | --- |
-| [`public PathCurve()`](#pathcurve) | Creates an empty spatial curve with a bake interval of five local units. |
+| [`public Curve2D()`](#curve2d) | Creates an empty spatial curve with a bake interval of five local units. |
 
 ## Properties
 
@@ -83,9 +83,9 @@ Transform pose = path.SampleBakedWithRotation(15);
 
 ## Constructors descriptions
 
-### PathCurve
+### Curve2D
 
-`public PathCurve()`
+`public Curve2D()`
 
 Creates an empty spatial curve with a bake interval of five local units.
 
