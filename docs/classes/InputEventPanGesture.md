@@ -1,6 +1,6 @@
 # InputEventPanGesture
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventGesture](InputEventGesture.md)
 
@@ -16,10 +16,10 @@ Last updated: 2026-09-21
 
 Represents a two-contact panning gesture.
 
-- Responsibility: finite two-dimensional pan delta around a local gesture position.
+- Responsibility: two-dimensional pan delta around a local gesture position.
 - Complete declared API: `Delta`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. `Delta` is a stored typed descriptor.
 - Transform: returns an independent duplicate and transforms its position affinely; the platform-reported pan delta is copied unchanged.
-- Errors/threading/verification: non-finite vectors and disposed access fail; copy, text, and transform are covered.
+- Errors/threading/verification: source delta components, including non-finite values, are retained; disposed access fails. `VerifyInputEvents` checks storage/copy and `CanvasCoordinateTests` checks transform behavior.
 
 ## Examples
 
@@ -65,11 +65,10 @@ Initializes a new InputEventPanGesture instance.
 
 Gets or sets the local panning amount since the previous gesture event.
 
-**Value:** A finite local-space delta.
+**Value:** The source local-space delta, retained without normalization; the pan transform copies it unchanged.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

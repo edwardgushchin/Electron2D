@@ -1,6 +1,6 @@
 # InputEventPanGesture API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 Godot source: [doc/classes/InputEventPanGesture.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputEventPanGesture.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class InputEventPanGesture`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputEventPanGesture.xml) | [`public sealed class Electron2D.InputEventPanGesture`](../../classes/InputEventPanGesture.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
-| [`property Vector2 delta = Vector2(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputEventPanGesture.xml) | [`public Electron2D.Vector2 Delta { get; set; }`](../../classes/InputEventPanGesture.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
+| [`class InputEventPanGesture`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputEventPanGesture.xml) | [`public sealed class Electron2D.InputEventPanGesture`](../../classes/InputEventPanGesture.md) | Partial | The managed gesture hierarchy, stored values, inherited device default, duplication and positional transforms are executable. The current SDL host delivers touch/drag but does not create magnify/pan events. Trigger: first native touch/trackpad recognition slice must supply gesture position, pan delta, scale and window/device identity with owner-thread delivery and native checks; inherited base rows retain their own gaps. |
+| [`property Vector2 delta = Vector2(0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/InputEventPanGesture.xml) | [`public Electron2D.Vector2 Delta { get; set; }`](../../classes/InputEventPanGesture.md) | Implemented | The pinned setter stores its Vector2 delta directly. The C# property defaults to zero and retains non-finite source components; VerifyInputEvents checks duplication, while CanvasCoordinateTests checks that XformedBy preserves pan delta. Native producer remains on the type row. |

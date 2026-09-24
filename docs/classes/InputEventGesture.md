@@ -1,6 +1,6 @@
 # InputEventGesture
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -16,10 +16,10 @@ Last updated: 2026-09-21
 
 Provides local position and modifier state shared by multi-touch gesture events.
 
-- Responsibility: common finite local `Position` plus modifier/window/device data for multi-touch gestures; constructor changes the inherited keyboard default device to touch device zero.
+- Responsibility: local `Position` plus modifier/window/device data for multi-touch gestures; constructor changes the inherited keyboard default device to touch device zero. The inherited `Device` descriptor also reverts to zero for gestures.
 - Complete declared API: protected constructor; `Position`; protected overrides `CopyEventStateTo` and `GetPropertyDescriptors`. `Position` is a stored typed descriptor.
-- Lifecycle/threading: caller-owned mutable Resource; disposed/non-finite access fails; no internal synchronization.
-- Verification: concrete magnify/pan copy and transform tests exercise the base contract.
+- Lifecycle/threading: caller-owned mutable Resource; arbitrary position components are retained, while positional transforms reject non-finite input or result coordinates. Disposed access fails; no internal synchronization.
+- Verification: `VerifyInputEvents` checks inherited device defaults and revert, source-value storage and duplication; `CanvasCoordinateTests` checks concrete transforms.
 
 ## Examples
 
@@ -63,11 +63,10 @@ Initializes a gesture event with the primary touch-device identifier.
 
 Gets or sets the gesture position in the current local coordinate space.
 
-**Value:** A finite position in pixels.
+**Value:** The source position in pixels, retained without normalization; non-finite components are rejected if a positional transform is requested.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value contains NaN or infinity.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

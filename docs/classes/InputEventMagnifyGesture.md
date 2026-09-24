@@ -1,6 +1,6 @@
 # InputEventMagnifyGesture
 
-Last updated: 2026-09-21
+Last updated: 2026-09-24
 
 **Inherits:** [InputEventGesture](InputEventGesture.md)
 
@@ -17,9 +17,9 @@ Last updated: 2026-09-21
 Represents a two-contact magnification gesture.
 
 - Responsibility: pinch magnification around a local position.
-- Complete declared API: finite positive `Factor` (default `1`); overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. `Factor` is a stored typed descriptor.
+- Complete declared API: source `Factor` (default `1`); overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. `Factor` is a stored typed descriptor.
 - Transform: returns an independent duplicate with transformed position; factor/modifiers/window/device are preserved.
-- Errors/threading/verification: zero, negative, non-finite, or disposed access fails; factor boundaries, copy, text, and transform are covered.
+- Errors/threading/verification: zero, negative, and non-finite factors are retained as source values; disposed access fails. `VerifyInputEvents` checks these boundaries, copy and committed change delivery; coordinate transforms retain their separate finite guard.
 
 ## Examples
 
@@ -65,11 +65,10 @@ Initializes a new InputEventMagnifyGesture instance.
 
 Gets or sets the magnification delta.
 
-**Value:** A finite positive factor; values above one magnify and values below one reduce.
+**Value:** The source factor; normally values above one magnify and values between zero and one reduce. Zero, negative and non-finite values are retained without normalization.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is not finite or is less than or equal to zero.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 

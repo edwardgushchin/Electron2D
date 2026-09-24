@@ -337,14 +337,13 @@ public abstract class InputEventGesture : InputEventWithModifiers
     }
 
     /// <summary>Gets or sets the gesture position in the current local coordinate space.</summary>
-    /// <value>A finite position in pixels.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>A position in pixels; source values are retained, including non-finite components.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Position
     {
         get { ThrowIfDisposed(); return _position; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _position = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _position = value; EmitInputChanged(); }
     }
 
     /// <inheritdoc />
@@ -371,8 +370,7 @@ public sealed class InputEventMagnifyGesture : InputEventGesture
     private float _factor = 1f;
 
     /// <summary>Gets or sets the magnification delta.</summary>
-    /// <value>A finite positive factor; values above one magnify and values below one reduce.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value is not finite or is less than or equal to zero.</exception>
+    /// <value>The source factor, normally above one to magnify or between zero and one to reduce; arbitrary values are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public float Factor
@@ -381,8 +379,6 @@ public sealed class InputEventMagnifyGesture : InputEventGesture
         set
         {
             ThrowIfDisposed();
-            if (!float.IsFinite(value) || value <= 0f)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "A magnification factor must be finite and positive.");
             _factor = value;
             EmitInputChanged();
         }
@@ -436,14 +432,13 @@ public sealed class InputEventPanGesture : InputEventGesture
     private Vector2 _delta;
 
     /// <summary>Gets or sets the local panning amount since the previous gesture event.</summary>
-    /// <value>A finite local-space delta.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The value contains NaN or infinity.</exception>
+    /// <value>The source local-space delta; arbitrary components are retained.</value>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public Vector2 Delta
     {
         get { ThrowIfDisposed(); return _delta; }
-        set { ThrowIfDisposed(); ValidateFinite(value, nameof(value)); _delta = value; EmitInputChanged(); }
+        set { ThrowIfDisposed(); _delta = value; EmitInputChanged(); }
     }
 
     /// <inheritdoc />

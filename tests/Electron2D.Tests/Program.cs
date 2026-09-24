@@ -4392,7 +4392,6 @@ static void VerifyInput()
         using (var invalidKey = new InputEventKey())
         using (var invalidMotion = new InputEventMouseMotion())
         using (var invalidTouch = new InputEventScreenTouch())
-        using (var invalidMagnify = new InputEventMagnifyGesture())
         {
             Expect<ArgumentOutOfRangeException>(() => invalidAction.EventIndex = Input.MaxEventsPerAction,
                 "Direct action indexes must enforce the source ceiling.");
@@ -4417,8 +4416,49 @@ static void VerifyInput()
             Require(invalidTouch.Index == int.MinValue && copiedTouch.Index == int.MinValue &&
                     signedDrag.Index == int.MinValue && copiedDrag.Index == int.MinValue,
                 "Touch and drag indexes must preserve signed values across duplication.");
-            Expect<ArgumentOutOfRangeException>(() => invalidMagnify.Factor = 0f,
-                "Magnification factors must be positive.");
+        }
+
+        using (var magnify = new InputEventMagnifyGesture())
+        using (var pan = new InputEventPanGesture())
+        {
+            var deviceProperty = magnify.GetPropertyList()
+                .OfType<PropertyDescriptor<InputEvent, int>>()
+                .Single(property => property.Name == nameof(InputEvent.Device));
+            Require(magnify.Device == 0 && pan.Device == 0 && magnify.Position == Vector2.Zero &&
+                    pan.Position == Vector2.Zero && magnify.Factor == 1f && pan.Delta == Vector2.Zero &&
+                    !magnify.PropertyCanRevert(deviceProperty),
+                "Both gesture types use the overridden touch-device default and pinned value defaults.");
+            magnify.Device = 7;
+            using var copiedDeviceGesture = (InputEventMagnifyGesture)magnify.Duplicate();
+            Require(copiedDeviceGesture.Device == 7 && magnify.PropertyCanRevert(deviceProperty),
+                "The inherited device value survives gesture duplication.");
+            magnify.RevertProperty(deviceProperty);
+            Require(magnify.Device == 0, "The inherited device descriptor reverts to the gesture default.");
+
+            var observedFactor = 1f;
+            magnify.Changed += _ => observedFactor = magnify.Factor;
+            magnify.Factor = -2f;
+            Require(observedFactor == -2f, "Factor change observers see the committed source value.");
+            magnify.Factor = 0f;
+            using var zeroFactorCopy = (InputEventMagnifyGesture)magnify.Duplicate();
+            Require(zeroFactorCopy.Factor == 0f, "Zero magnification factors are stored and copied.");
+            magnify.Factor = float.PositiveInfinity;
+            using var infiniteFactorCopy = (InputEventMagnifyGesture)magnify.Duplicate();
+            Require(float.IsPositiveInfinity(infiniteFactorCopy.Factor),
+                "The event retains a non-finite source factor without altering it.");
+            magnify.Factor = float.NaN;
+            Require(float.IsNaN(magnify.Factor), "The event retains a NaN source factor.");
+
+            magnify.Position = new Vector2(float.NaN, 3f);
+            using var positionCopy = (InputEventMagnifyGesture)magnify.Duplicate();
+            Require(float.IsNaN(positionCopy.Position.X) && positionCopy.Position.Y == 3f,
+                "Gesture position stores and duplicates source components verbatim.");
+            Expect<ArgumentOutOfRangeException>(() => magnify.XformedBy(Transform.Identity),
+                "A non-finite source position is rejected when entering the positional transform boundary.");
+            pan.Delta = new Vector2(float.PositiveInfinity, float.NaN);
+            using var deltaCopy = (InputEventPanGesture)pan.Duplicate();
+            Require(float.IsPositiveInfinity(deltaCopy.Delta.X) && float.IsNaN(deltaCopy.Delta.Y),
+                "Pan delta is stored and duplicated without normalization.");
         }
 
         map.AddAction(jump, 0.25f);
