@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Electron2D;
 
 /// <summary>Represents one touch contact beginning, ending, or being canceled.</summary>
@@ -81,12 +83,17 @@ public sealed class InputEventScreenTouch : InputEventFromWindow
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a localized touched, released or canceled contact description.</summary>
+    /// <returns>The touch state, local position and signed contact index.</returns>
+    /// <remarks>Cancellation takes precedence over the stored press flag. Double-tap metadata is not part of this text.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        var state = IsCanceled() ? "canceled" : IsPressed() ? "pressed" : "released";
-        return $"Touch {_index} {state} at {_position}";
+        const string source = "Screen %s at (%s) with %s touch points";
+        var state = IsCanceled() ? Tr("canceled") : IsPressed() ? Tr("touched") : Tr("released");
+        return FormatTextTemplate(Tr(source), source, state, FormatTextVector2(_position),
+            _index.ToString(CultureInfo.InvariantCulture));
     }
 
     /// <inheritdoc />
@@ -263,11 +270,16 @@ public sealed class InputEventScreenDrag : InputEventFromWindow
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a localized drag description.</summary>
+    /// <returns>The signed contact index, local position and local velocity.</returns>
+    /// <remarks>Pressure, relative motion and screen-space values are not part of this text.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return $"Touch {_index} dragged at {_position} with velocity {_velocity}";
+        const string source = "Screen dragged with %s touch points at position (%s) with velocity of (%s)";
+        return FormatTextTemplate(Tr(source), source, _index.ToString(CultureInfo.InvariantCulture),
+            FormatTextVector2(_position), FormatTextVector2(_velocity));
     }
 
     /// <inheritdoc />
@@ -373,11 +385,16 @@ public sealed class InputEventMagnifyGesture : InputEventGesture
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a localized magnification-gesture description.</summary>
+    /// <returns>The local position and source factor.</returns>
+    /// <remarks>The factor is formatted from its stored float as a full real value; exact all-float rounding remains under audit.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return $"Magnify gesture at {Position} with factor {_factor:0.##}";
+        const string source = "Magnify Gesture at (%s) with factor %s";
+        return FormatTextTemplate(Tr(source), source, FormatTextVector2(Position),
+            FormatTextFloatAsDouble(_factor));
     }
 
     /// <inheritdoc />
@@ -430,11 +447,14 @@ public sealed class InputEventPanGesture : InputEventGesture
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a localized panning-gesture description.</summary>
+    /// <returns>The local position and unscaled source delta.</returns>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return $"Pan gesture at {Position} with delta {_delta}";
+        const string source = "Pan Gesture at (%s) with delta (%s)";
+        return FormatTextTemplate(Tr(source), source, FormatTextVector2(Position), FormatTextVector2(_delta));
     }
 
     /// <inheritdoc />

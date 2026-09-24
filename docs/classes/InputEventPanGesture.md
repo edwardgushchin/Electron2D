@@ -19,6 +19,7 @@ Represents a two-contact panning gesture.
 - Responsibility: two-dimensional pan delta around a local gesture position.
 - Complete declared API: `Delta`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. `Delta` is a stored typed descriptor.
 - Transform: returns an independent duplicate and transforms its position affinely; the platform-reported pan delta is copied unchanged.
+- Text: `AsText` translates the source sentence with local position and unscaled platform delta.
 - Errors/threading/verification: source delta components, including non-finite values, are retained; disposed access fails. `VerifyInputEvents` checks storage/copy and `CanvasCoordinateTests` checks transform behavior.
 
 ## Examples
@@ -95,9 +96,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventpangesture-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the localized panning sentence with local position and platform delta.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The panning text; exact all-float vector rounding remains under audit.
 
 **Exceptions**
 

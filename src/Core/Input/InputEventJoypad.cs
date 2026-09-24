@@ -228,7 +228,7 @@ public sealed class InputEventJoypadButton : InputEvent
         if (index < ButtonDescriptions.Length)
             text = string.Concat(text, " (", Tr(ButtonDescriptions[index]), ")");
         if (_pressure != 0f)
-            text = string.Concat(text, ", ", Tr("Pressure:"), " ", FormatTextPressure(_pressure));
+            text = string.Concat(text, ", ", Tr("Pressure:"), " ", FormatTextFloatAsDouble(_pressure));
         return text;
     }
 

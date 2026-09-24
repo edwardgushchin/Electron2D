@@ -210,6 +210,7 @@ VerifyInputMapMatching();
 VerifyInputEventActionValues();
 VerifyInputText();
 VerifyControllerText();
+VerifyTouchGestureText();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4881,6 +4882,93 @@ static void VerifyControllerText()
         Require(button.AsText() == "Joypad Button 0 (Bottom Action, Sony Cross, Xbox A, Nintendo B)" &&
                 axis.AsText() == "Joypad Motion on Axis 0 (Left Stick X-Axis, Joystick 0 X-Axis) with Value -0.26",
             "Disabling translation on controller events must restore source descriptions.");
+    }
+    finally
+    {
+        TranslationServer.Clear();
+        TranslationServer.Culture = previousCulture;
+        TranslationServer.Enabled = previousEnabled;
+    }
+}
+
+static void VerifyTouchGestureText()
+{
+    using var touch = new InputEventScreenTouch
+    {
+        Index = 3,
+        Position = new Vector2(1f, 2f),
+        Pressed = true,
+        DoubleTap = true,
+    };
+    using var drag = new InputEventScreenDrag
+    {
+        Index = 4,
+        Position = new Vector2(1f, 2f),
+        Velocity = new Vector2(3f, 4f),
+    };
+    using var magnify = new InputEventMagnifyGesture { Position = new Vector2(1f, 2f), Factor = 0.1f };
+    using var nonfiniteMagnify = new InputEventMagnifyGesture
+    {
+        Position = new Vector2(float.NaN, 0f),
+        Factor = float.PositiveInfinity,
+    };
+    using var pan = new InputEventPanGesture { Position = new Vector2(1f, 2f), Delta = new Vector2(3f, 4f) };
+    Require(touch.AsText() == "Screen touched at ((1.0, 2.0)) with 3 touch points" &&
+            drag.AsText() == "Screen dragged with 4 touch points at position ((1.0, 2.0)) with velocity of ((3.0, 4.0))" &&
+            magnify.AsText() == "Magnify Gesture at ((1.0, 2.0)) with factor 0.10000000149012" &&
+            nonfiniteMagnify.AsText() == "Magnify Gesture at ((nan, 0.0)) with factor inf" &&
+            pan.AsText() == "Pan Gesture at ((1.0, 2.0)) with delta ((3.0, 4.0))",
+        "Touch and gesture text must retain source status, signed index, vector and factor formats.");
+    touch.Canceled = true;
+    Require(touch.AsText() == "Screen canceled at ((1.0, 2.0)) with 3 touch points",
+        "Cancellation must take precedence over a stored touch press in text.");
+    touch.Canceled = false;
+    touch.Pressed = false;
+    touch.Index = -2;
+    Require(touch.AsText() == "Screen released at ((1.0, 2.0)) with -2 touch points",
+        "Touch text must preserve signed contact indexes and release state.");
+    touch.Index = 3;
+    touch.Pressed = true;
+    drag.Index = -4;
+    Require(drag.AsText() == "Screen dragged with -4 touch points at position ((1.0, 2.0)) with velocity of ((3.0, 4.0))",
+        "Drag text must preserve a signed contact index.");
+    drag.Index = 4;
+
+    var previousCulture = TranslationServer.Culture;
+    var previousEnabled = TranslationServer.Enabled;
+    try
+    {
+        TranslationServer.Clear();
+        TranslationServer.Enabled = true;
+        TranslationServer.Culture = CultureInfo.GetCultureInfo("fr-FR");
+        var french = CultureInfo.GetCultureInfo("fr");
+        TranslationServer.AddTranslation(french, "", "touched", "touché");
+        TranslationServer.AddTranslation(french, "", "canceled", "annulé");
+        TranslationServer.AddTranslation(french, "", "released", "relâché");
+        TranslationServer.AddTranslation(french, "", "Screen %s at (%s) with %s touch points", "Écran %s à (%s), contact %s");
+        TranslationServer.AddTranslation(french, "", "Screen dragged with %s touch points at position (%s) with velocity of (%s)",
+            "Glissé %s à (%s), vitesse (%s)");
+        TranslationServer.AddTranslation(french, "", "Magnify Gesture at (%s) with factor %s", "Zoom à (%s), facteur %s");
+        TranslationServer.AddTranslation(french, "", "Pan Gesture at (%s) with delta (%s)", "Panoramique à (%s), delta (%s)");
+        Require(touch.AsText() == "Écran touché à ((1.0, 2.0)), contact 3" &&
+                drag.AsText() == "Glissé 4 à ((1.0, 2.0)), vitesse ((3.0, 4.0))" &&
+                magnify.AsText() == "Zoom à ((1.0, 2.0)), facteur 0.10000000149012" &&
+                pan.AsText() == "Panoramique à ((1.0, 2.0)), delta ((3.0, 4.0))",
+            "Touch and gesture descriptions must resolve translated source templates.");
+        touch.Canceled = true;
+        Require(touch.AsText() == "Écran annulé à ((1.0, 2.0)), contact 3",
+            "Translated cancellation must take precedence over a stored touch press.");
+        touch.Canceled = false;
+        touch.Pressed = false;
+        Require(touch.AsText() == "Écran relâché à ((1.0, 2.0)), contact 3",
+            "Translated touch release must use its own status word.");
+        touch.Pressed = true;
+        TranslationServer.AddTranslation(french, "", "Pan Gesture at (%s) with delta (%s)", "Pan sans arguments");
+        Require(pan.AsText() == "Pan Gesture at ((1.0, 2.0)) with delta ((3.0, 4.0))",
+            "An invalid translated gesture template must fall back to source wording.");
+        touch.CanTranslateMessages = false;
+        Require(touch.AsText() == "Screen touched at ((1.0, 2.0)) with 3 touch points",
+            "Disabling translation on a touch event must restore its source text.");
     }
     finally
     {

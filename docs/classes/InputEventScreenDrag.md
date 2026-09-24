@@ -19,6 +19,7 @@ Represents movement of one active touch or stylus contact.
 - Responsibility: movement/stylus data for one active touch contact.
 - Complete declared API: `Index`, `PenInverted`, `Position`, `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All nine declared values are stored typed descriptors.
 - Accumulation/transform: equal contact indexes merge atomically, retain arithmetic overflow in both relative sums, adopt newest position/velocities, and emit one change notification. Only local position/relative/velocity transform; screen values remain unchanged.
+- Text: `AsText` translates the source sentence containing signed index, local position and local velocity; pressure, relative motion and screen-space values do not appear.
 - Invariants/errors: index is a signed identifier; source vectors, pressure and tilt are retained without range checks; positional transforms still require finite derived local coordinates, and disposed access fails.
 - Verification: managed checks cover signed index, non-finite copies, accumulation overflow, compatible/incompatible events and transforms. A focused Wayland SDL test covers contact indexes, finite native input recovery, pressure, physical drag deltas and timestamp velocity; native pen eraser/tilt delivery and nested viewport scaling remain absent.
 
@@ -216,9 +217,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventscreendrag-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns a localized sentence containing signed contact index, local position and local velocity.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The drag sentence; exact all-float vector rounding remains under audit.
 
 **Exceptions**
 

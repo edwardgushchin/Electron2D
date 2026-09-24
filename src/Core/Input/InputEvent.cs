@@ -254,7 +254,7 @@ public abstract class InputEvent : Resource
     internal static string FormatTextVector2(Vector2 value) =>
         string.Concat("(", FormatTextReal(value.X, 6), ", ", FormatTextReal(value.Y, 6), ")");
 
-    internal static string FormatTextPressure(float value) => FormatTextReal(value, 14);
+    internal static string FormatTextFloatAsDouble(float value) => FormatTextReal(value, 14);
 
     internal static string FormatTextTemplate(string translated, string source, params string[] values) =>
         TryFormatTextTemplate(translated, values) ?? TryFormatTextTemplate(source, values) ??

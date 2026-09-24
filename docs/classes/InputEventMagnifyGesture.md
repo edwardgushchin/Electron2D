@@ -19,6 +19,7 @@ Represents a two-contact magnification gesture.
 - Responsibility: pinch magnification around a local position.
 - Complete declared API: source `Factor` (default `1`); overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. `Factor` is a stored typed descriptor.
 - Transform: returns an independent duplicate with transformed position; factor/modifiers/window/device are preserved.
+- Text: `AsText` translates the source sentence with local position and the stored factor promoted to full real text, including zero, negative and non-finite values.
 - Errors/threading/verification: zero, negative, and non-finite factors are retained as source values; disposed access fails. `VerifyInputEvents` checks these boundaries, copy and committed change delivery; coordinate transforms retain their separate finite guard.
 
 ## Examples
@@ -95,9 +96,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventmagnifygesture-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the localized magnification sentence with local position and factor.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The magnification text; exact all-float factor rounding remains under audit.
 
 **Exceptions**
 

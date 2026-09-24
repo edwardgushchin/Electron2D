@@ -19,6 +19,7 @@ Represents one touch contact beginning, ending, or being canceled.
 - Responsibility: begin/end/cancel state for one touch contact.
 - Complete declared API: signed `Index`, source `Position`, `Pressed`, `Canceled`, `DoubleTap`; overrides `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All five declared values are stored typed descriptors.
 - Transform/lifecycle: returns an independent duplicate with transformed position. A canceled contact is neither pressed nor released. Caller owns/disposes event resources.
+- Text: `AsText` translates the touched/released/canceled status and the source-format sentence with local position and signed index; cancellation takes precedence over a stored press. Double-tap metadata is not printed.
 - Errors/threading/verification: caller-supplied position values are retained; `XformedBy` rejects non-finite derived coordinates. Disposed access fails. Managed checks cover signed index, cancellation, double-tap state, copying and transform; the Wayland SDL test covers contact indexes, press/cancel/release and invalid-event recovery. The adapter does not detect native double taps; that remains a separate touch-recognition obligation.
 
 ## Examples
@@ -147,9 +148,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventscreentouch-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the localized touched, released or canceled status with the local position and signed contact index.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The touch-state sentence; exact all-float coordinate rounding remains under audit.
 
 **Exceptions**
 
