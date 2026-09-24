@@ -536,8 +536,8 @@
     {
       "electron2d": "method:Electron2D.InputMap.GetActions()",
       "godot": "InputMap::method:get_actions()",
-      "state": "Partial",
-      "reason": "Typed read-only action-name collection; ADR 0038."
+      "state": "Implemented",
+      "reason": "Typed immutable registration-order snapshot; ADR 0038 and VerifyInputMapConfiguration."
     },
     {
       "electron2d": "method:Electron2D.MainLoop.NotifyRequestPermissionsResult(System.String,System.Boolean)",
@@ -2613,6 +2613,13 @@
     }
   ],
   "statusGroups": [
+    {"state": "Partial", "reason": "Action registration, deadzones, removal and snapshot collections are audited. Exact binding lookup and event matching still depend on the five concrete IsMatch/action_match families; descriptions need localized text and LoadFromProjectSettings retains its separately documented event-family/platform limits under ADR 0038.", "godot": ["class:InputMap"]},
+    {"state": "Implemented", "reason": "VerifyInputMapConfiguration checks default 0.2 and explicit zero/one deadzones, ordinal names, duplicate/missing registration errors, immutable registration-order snapshots and action-state removal. Typed exception and ordered collection adaptations follow ADR 0038.", "godot": ["InputMap::method:add_action(StringName:,float:)", "InputMap::method:erase_action(StringName:)", "InputMap::method:get_actions()", "InputMap::method:has_action(StringName:)"]},
+    {"state": "Implemented", "reason": "The finite [0,1] deadzone boundary, default value, rejected-change rollback and analog action effect are checked by VerifyInputMapConfiguration and VerifyInput; typed exceptions follow ADR 0038.", "godot": ["InputMap::method:action_get_deadzone(StringName:)", "InputMap::method:action_set_deadzone(StringName:,float:)"]},
+    {"state": "Implemented", "reason": "ActionGetEvents returns an immutable ordered snapshot retaining borrowed event references after map changes. VerifyInputMapConfiguration checks duplicate collapse, snapshot immutability and retained references; InputActionSettingsTests checks loaded-event retention under ADR 0038.", "godot": ["InputMap::method:action_get_events(StringName:)"]},
+    {"state": "Implemented", "reason": "ActionEraseEvents removes every binding and invalidates cached pressed contributions, including direct action state. VerifyInputMapConfiguration checks the resulting empty snapshot and release; missing actions throw a typed exception under ADR 0038.", "godot": ["InputMap::method:action_erase_events(StringName:)"]},
+    {"state": "Partial", "reason": "Duplicate collapse, 32-binding capacity and wildcard-device lookup execute, but exact add/has parity still depends on the five concrete IsMatch/action_match families under ADR 0038.", "godot": ["InputMap::method:action_add_event(StringName:,InputEvent:)", "InputMap::method:action_has_event(StringName:,InputEvent:)"]},
+    {"state": "Partial", "reason": "The return is now void as in the pinned declaration; exact no-op/removal state effects and retained snapshots are checked by VerifyInputMapConfiguration. Final exact-match parity depends on the five concrete IsMatch/action_match families and wildcard-device audit under ADR 0038.", "godot": ["InputMap::method:action_erase_event(StringName:,InputEvent:)"]},
     {"state": "Partial", "reason": "The base device, state predicates, action-family classification, non-positional identity transform and motion/drag accumulation are audited. Action lookup/strength/release depends on remaining InputMap and derived binding parity; IsMatch and localized AsText require their descendant audits. Those are explicit member rows below; inherited Resource lifecycle remains separately classified.", "godot": ["class:InputEvent"]},
     {"state": "Implemented", "reason": "The base Device property stores signed identifiers directly, defaults to zero and emits Changed after assignment. VerifyInput checks int.MinValue duplication and descriptor revert; derived keyboard/mouse/gesture defaults remain on their own coverage rows.", "godot": ["InputEvent::property:device"]},
     {"state": "Implemented", "reason": "The pinned predicates read independent pressed/canceled flags: canceled events are neither raw pressed nor raw released. VerifyInput checks all four combinations on mouse-button events, and the other event families use the shared base path.", "godot": ["InputEvent::method:is_canceled()", "InputEvent::method:is_pressed()", "InputEvent::method:is_released()"]},

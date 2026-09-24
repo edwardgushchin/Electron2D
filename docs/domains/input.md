@@ -17,7 +17,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 ## Public surface
 
 - `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, native mouse mode/cursor controls and warp, and release-all.
-- `InputMap`: action registration, default `ui_*` focus navigation bindings, typed project-action loading and its loaded event, deadzones, binding management, matching, and descriptions.
+- `InputMap`: case-sensitive action registration, default `ui_*` focus navigation bindings, typed project-action loading and its loaded event, validated deadzones, immutable collection snapshots of borrowed binding references, binding management, matching, and descriptions.
 - `InputEvent` hierarchy: typed stored property discovery, action matching, text, duplication, accumulation, coordinate transforms, device/window/modifier data, and concrete keyboard, pointer, touch, gesture, controller, and direct-action payloads. Gesture and mouse payloads retain source values; native magnify/pan recognition remains absent. Root GUI mouse copies use CanvasLayer-global coordinates.
 - Mouse-button and motion source values are retained; the SDL adapter validates native pointer coordinates and wheel amounts before dispatch. Native stylus fields and some viewport/mode paths still need their named integrations and checks.
 - Touch and drag source values are retained; SDL touch input validates native coordinates and movement before contact tracking. Native double-tap recognition, pen data and nested viewport routing remain open.

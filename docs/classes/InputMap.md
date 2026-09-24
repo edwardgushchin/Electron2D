@@ -54,7 +54,7 @@ map.ActionAddEvent("jump", new InputEventKey { Keycode = Key.Space });
 | [`public void ActionSetDeadzone(string action, float deadzone)`](#m-electron2d-inputmap-actionsetdeadzone-system-string-system-single) | Changes an action's analog deadzone. |
 | [`public void ActionAddEvent(string action, InputEvent event)`](#m-electron2d-inputmap-actionaddevent-system-string-electron2d-inputevent) | Adds an event binding to an action. |
 | [`public bool ActionHasEvent(string action, InputEvent event)`](#m-electron2d-inputmap-actionhasevent-system-string-electron2d-inputevent) | Gets whether an action contains an exact event binding. |
-| [`public bool ActionEraseEvent(string action, InputEvent event)`](#m-electron2d-inputmap-actioneraseevent-system-string-electron2d-inputevent) | Removes the first exact matching binding from an action. |
+| [`public void ActionEraseEvent(string action, InputEvent event)`](#m-electron2d-inputmap-actioneraseevent-system-string-electron2d-inputevent) | Removes the first exact matching binding from an action, if present. |
 | [`public void ActionEraseEvents(string action)`](#m-electron2d-inputmap-actioneraseevents-system-string) | Removes every binding from an action. |
 | [`public IReadOnlyList<InputEvent> ActionGetEvents(string action)`](#m-electron2d-inputmap-actiongetevents-system-string) | Gets an action's bindings in registration order. |
 | [`public bool EventIsAction(InputEvent event, string action, bool exactMatch = false)`](#m-electron2d-inputmap-eventisaction-electron2d-inputevent-system-string-system-boolean) | Tests whether an event belongs to an action. |
@@ -222,16 +222,14 @@ Gets whether an action contains an exact event binding.
 - `ObjectDisposedException`: `event` is disposing or disposed.
 
 <a id="m-electron2d-inputmap-actioneraseevent-system-string-electron2d-inputevent"></a>
-### `public bool ActionEraseEvent(string action, InputEvent event)`
+### `public void ActionEraseEvent(string action, InputEvent event)`
 
-Removes the first exact matching binding from an action.
+Removes the first exact matching binding from an action, if present. An absent binding leaves the action and its pressed state unchanged; removing one invalidates cached action contributions. Existing binding snapshots retain their original event references.
 
 **Parameters**
 
 - `action`: The registered action name.
 - `event`: The binding configuration to remove.
-
-**Returns:** `true` when a binding was removed.
 
 **Exceptions**
 

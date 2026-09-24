@@ -30713,7 +30713,7 @@
     "kind": "method",
     "declaringType": "Electron2D.InputMap",
     "name": "ActionEraseEvent",
-    "signature": "public System.Boolean ActionEraseEvent(System.String action, Electron2D.InputEvent event)",
+    "signature": "public System.Void ActionEraseEvent(System.String action, Electron2D.InputEvent event)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -30729,7 +30729,7 @@
         "default": null
       }
     ],
-    "returnType": "System.Boolean",
+    "returnType": "System.Void",
     "value": null
   },
   {

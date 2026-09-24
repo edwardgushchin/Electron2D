@@ -256,15 +256,15 @@ public sealed class InputMap : ElectronObject
             return FindEventIndex(GetActionUnderLock(action), @event, exactMatch: true) >= 0;
     }
 
-    /// <summary>Removes the first exact matching binding from an action.</summary>
+    /// <summary>Removes the first exact matching binding from an action, if present.</summary>
     /// <param name="action">The registered action name.</param>
     /// <param name="event">The binding configuration to remove.</param>
-    /// <returns><see langword="true"/> when a binding was removed.</returns>
     /// <exception cref="ArgumentException"><paramref name="action"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> or <paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="KeyNotFoundException">The action is not registered.</exception>
     /// <exception cref="ObjectDisposedException"><paramref name="event"/> is disposing or disposed.</exception>
-    public bool ActionEraseEvent(string action, InputEvent @event)
+    /// <remarks>An absent binding leaves the action unchanged. Removing a binding invalidates its cached action state.</remarks>
+    public void ActionEraseEvent(string action, InputEvent @event)
     {
         InputEvent.ValidateActionName(action, nameof(action));
         ArgumentNullException.ThrowIfNull(@event);
@@ -285,7 +285,6 @@ public sealed class InputMap : ElectronObject
 
         if (removed)
             Input.Instance.OnActionMapChanged(action, removed: false);
-        return removed;
     }
 
     /// <summary>Removes every binding from an action.</summary>

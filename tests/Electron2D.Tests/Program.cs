@@ -205,6 +205,7 @@ VerifyDirAccess();
 VerifyProjectSettings();
 VerifyResources();
 VerifyPackedScenes();
+VerifyInputMapConfiguration();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4300,6 +4301,88 @@ static void VerifyProjectSettings()
     }
 }
 
+static void VerifyInputMapConfiguration()
+{
+    const string action = "tests.input.map.configuration";
+    var map = InputMap.Instance;
+    var input = Input.Instance;
+    input.ReleasePressedEvents();
+    if (map.HasAction(action))
+        map.EraseAction(action);
+
+    var before = map.GetActions();
+    using var binding = new InputEventKey { Keycode = Key.F1 };
+    using var duplicate = new InputEventKey { Keycode = Key.F1 };
+    using var absent = new InputEventKey { Keycode = Key.F2 };
+    using var incompatible = new InputEventMouseMotion();
+    try
+    {
+        map.AddAction(action);
+        Require(map.HasAction(action) && !map.HasAction(action.ToUpperInvariant()) &&
+                map.ActionGetDeadzone(action) == 0.2f &&
+                !before.Contains(action) && map.GetActions().Last() == action,
+            "Action registration must preserve case, default deadzone and snapshot order.");
+        Expect<NotSupportedException>(() => ((IList<string>)map.GetActions()).Add("invalid"),
+            "The action-name snapshot must be immutable.");
+        Expect<InvalidOperationException>(() => map.AddAction(action),
+            "Duplicate action registration must fail without changing the existing action.");
+        Expect<ArgumentOutOfRangeException>(() => map.ActionSetDeadzone(action, -0.01f),
+            "Negative deadzones must be rejected before mutation.");
+        Expect<ArgumentOutOfRangeException>(() => map.ActionSetDeadzone(action, float.PositiveInfinity),
+            "Infinite deadzones must be rejected before mutation.");
+        Require(map.ActionGetDeadzone(action) == 0.2f,
+            "Failed deadzone changes must leave the action intact.");
+        map.ActionSetDeadzone(action, 0f);
+        Require(map.ActionGetDeadzone(action) == 0f, "Zero is a valid action deadzone.");
+        input.ActionPress(action);
+        map.ActionSetDeadzone(action, 1f);
+        Require(map.ActionGetDeadzone(action) == 1f && !input.IsActionPressed(action),
+            "One is a valid deadzone and changing it invalidates prior action state.");
+
+        Expect<ArgumentException>(() => map.ActionAddEvent(action, incompatible),
+            "Only action-compatible events may be registered.");
+        map.ActionAddEvent(action, binding);
+        var snapshot = map.ActionGetEvents(action);
+        map.ActionAddEvent(action, duplicate);
+        Require(map.ActionHasEvent(action, duplicate) && map.ActionGetEvents(action).Count == 1 &&
+                snapshot.Count == 1 && ReferenceEquals(snapshot[0], binding),
+            "Exact duplicate bindings must collapse while snapshots retain live references.");
+        Expect<NotSupportedException>(() => ((IList<InputEvent>)snapshot).Clear(),
+            "The binding snapshot must be immutable.");
+        input.ActionPress(action);
+        map.ActionEraseEvent(action, absent);
+        Require(input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 1,
+            "Erasing an absent binding must not change the map or pressed state.");
+        map.ActionEraseEvent(action, duplicate);
+        Require(!input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 0 &&
+                snapshot.Count == 1 && ReferenceEquals(snapshot[0], binding),
+            "Erasing an exact binding must invalidate action state and preserve old snapshots.");
+        map.ActionAddEvent(action, binding);
+        input.ActionPress(action);
+        map.ActionEraseEvents(action);
+        Require(!input.IsActionPressed(action) && map.ActionGetEvents(action).Count == 0,
+            "Erasing every binding must invalidate action state.");
+        input.ActionPress(action);
+        map.EraseAction(action);
+        Require(!map.HasAction(action) && !map.GetActions().Contains(action) && !input.IsAnythingPressed(),
+            "Erasing an action must remove its registration and pressed contribution.");
+        Expect<KeyNotFoundException>(() => map.EraseAction(action),
+            "Erasing an unknown action must report the missing registration.");
+        Expect<KeyNotFoundException>(() => map.ActionGetDeadzone(action),
+            "Deadzone lookup must report a missing action.");
+        Expect<KeyNotFoundException>(() => map.ActionGetEvents(action),
+            "Binding lookup must report a missing action.");
+        Expect<KeyNotFoundException>(() => map.ActionEraseEvents(action),
+            "Binding removal must report a missing action.");
+    }
+    finally
+    {
+        if (map.HasAction(action))
+            map.EraseAction(action);
+        input.ReleasePressedEvents();
+    }
+}
+
 static void VerifyInput()
 {
     const string jump = "tests.input.jump";
@@ -4690,6 +4773,11 @@ static void VerifyInput()
             bindings.Add(binding);
             map.ActionAddEvent(full, binding);
         }
+        using (var overflowBinding = new InputEventKey { Keycode = Key.F12 })
+            Expect<InvalidOperationException>(() => map.ActionAddEvent(full, overflowBinding),
+                "A 33rd distinct binding must fail without changing the action.");
+        Require(map.ActionGetEvents(full).Count == Input.MaxEventsPerAction,
+            "Rejected binding overflow must preserve the existing 32 bindings.");
         using (var overflowAction = new InputEventAction { Action = full, Pressed = true })
         {
             Expect<InvalidOperationException>(() => input.ParseInputEvent(overflowAction),
