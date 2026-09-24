@@ -646,13 +646,19 @@
       "electron2d": "method:Electron2D.Node.GetNode(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "reason": "Ordinary and owner-scoped unique paths resolve, and absolute paths now require an active tree and root-name segment. NodeUniqueNameTests covers those transitions. The typed string mapping still needs the full NodePath subname and error-surface audit."
     },
     {
       "electron2d": "method:Electron2D.Node.GetNode`1(System.String)",
       "godot": "Node::method:get_node(NodePath:)",
       "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "reason": "Typed generic lookup projects get_node through ordinary and owner-scoped unique paths, including attached absolute roots. NodeUniqueNameTests covers the shared resolver; NodePath subnames and exact typed failure behavior remain to audit."
+    },
+    {
+      "electron2d": "method:Electron2D.Node.GetNodeOrNull(System.String)",
+      "godot": "Node::method:get_node_or_null(NodePath:)",
+      "state": "Partial",
+      "reason": "Relative and owner-scoped unique paths resolve in detached and active trees; absolute paths require an active root-name segment, and attached queries enforce the owner thread. NodeUniqueNameTests covers these paths. Full NodePath subname and malformed-path parity remains to audit."
     },
     {
       "electron2d": "method:Electron2D.Node.GetPath()",
@@ -661,10 +667,10 @@
       "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
+      "electron2d": "method:Electron2D.Node.GetPathTo(Electron2D.Node,System.Boolean)",
       "godot": "Node::method:get_path_to(Node:,bool:)",
-      "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "state": "Implemented",
+      "reason": "Default relative paths and the source-side or target-side owner-scoped unique shortcut follow the pinned node.cpp algorithm. NodeUniqueNameTests covers both branches, shared-root errors, packed instances and path resolution; typed strings and exceptions are the accepted NodePath adaptation."
     },
     {
       "electron2d": "method:Electron2D.Node.OnEnterTree()",
@@ -2626,6 +2632,8 @@
     }
   ],
   "statusGroups": [
+    {"godot": ["Node::method:get_path_to(Node:,bool:)"], "state": "Implemented", "reason": "Default relative paths and the source-side or target-side owner-scoped unique shortcut follow the pinned node.cpp algorithm. NodeUniqueNameTests covers both branches, shared-root errors, packed instances and path resolution; typed strings and exceptions are the accepted NodePath adaptation."},
+    {"godot": ["Node::property:unique_name_in_owner"], "state": "Implemented", "reason": "Owner-scoped percent-name lookup follows the pinned node.cpp claimant rule: the first active claim wins, while a later conflicting setter, rename or owner assignment clears the later flag. NodeUniqueNameTests covers paths, owner boundaries, rename, detach/reparent, PackedScene and owner-thread guards. The lookup uses a subtree scan in the current typed runtime; indexing is a performance follow-up if measured."},
     {"godot": ["Control::property:clip_contents"], "state": "Implemented", "reason": "Direct canvas descendants are clipped by the transformed, axis-aligned Control rectangle; nested clips intersect and top-level or neutral parents end inheritance. The root GUI picker excludes hits outside clipping ancestors, while the parent's own drawing/input remains available for a nonempty clip; an empty clip culls the item. ControlClipTests checks hover, targeting and packed state; ControlClipRenderingTests checks nested, rotated and repeated clipping on dummy compatibility and Linux Wayland compatibility/GPU. General canvas masks and nested viewport routing remain separate gaps."},
     {
       "state": "Implemented",

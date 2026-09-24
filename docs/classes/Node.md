@@ -14,6 +14,8 @@ Last updated: 2026-09-24
 
 The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Attached mutation runs on the tree owner thread; frame callbacks remain explicitly enabled. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
+`UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.
+
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
@@ -43,6 +45,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public bool IsQueuedForDeletion { get; }`](#p-electron2d-node-isqueuedfordeletion) | Gets whether deletion has been requested through `Node.QueueFree`. |
 | [`public string Name { get; set; }`](#p-electron2d-node-name) | Gets or sets the node name used in sibling lookup and paths. |
 | [`public Node? Owner { get; set; }`](#p-electron2d-node-owner) | Gets or sets the ancestor that owns this node for packed-scene storage. |
+| [`public bool UniqueNameInOwner { get; set; }`](#p-electron2d-node-uniquenameinowner) | Enables owner-scoped `%Name` lookup when this name is unclaimed. |
 | [`public Node? Parent { get; }`](#p-electron2d-node-parent) | Gets the direct parent. |
 | [`public double PhysicsProcessDeltaTime { get; }`](#p-electron2d-node-physicsprocessdeltatime) | Gets the delta from the most recent SceneTree-managed physics-process frame delivered to this node. |
 | [`public bool PhysicsProcessEnabled { get; set; }`](#p-electron2d-node-physicsprocessenabled) | Gets or sets whether this node participates in host-driven physics-process frames. |
@@ -89,7 +92,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public Node GetNodeOrNull(string path)`](#m-electron2d-node-getnodeornull-system-string) | Attempts to resolve a relative or absolute node path. |
 | [`public TNode GetNode<TNode>(string path)`](#m-electron2d-node-getnode-1-system-string) | Resolves a required relative or absolute path to a requested node type. |
 | [`public string GetPath()`](#m-electron2d-node-getpath) | Builds this node's absolute path from the root of its current hierarchy. |
-| [`public string GetPathTo(Node node)`](#m-electron2d-node-getpathto-electron2d-scenenode) | Builds a relative path from this node to another node in the same hierarchy. |
+| [`public string GetPathTo(Node node, bool useUniquePath = false)`](#m-electron2d-node-getpathto-electron2d-node-system-boolean) | Builds a relative path, optionally using owner-scoped unique names. |
 | [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#m-electron2d-node-getpropertydescriptors) | Extends base typed descriptors with neutral name, process, input and automatic translation state for inspection and packed scenes. |
 | [`public Viewport GetViewport()`](#m-electron2d-node-getviewport) | Finds this node's nearest viewport, including itself. |
 | [`public Window GetWindow()`](#m-electron2d-node-getwindow) | Finds this node's containing window, including itself. |
@@ -246,7 +249,7 @@ Gets or sets the node name used in sibling lookup and paths.
 
 **Value:** The nonblank name, initialized to `ElectronObject.ClassName`.
 
-**Remarks:** Names use ordinal equality among siblings and cannot be ., .., or contain /. Renaming an active node propagates `Node.NotificationPathRenamed` through its subtree and then raises `Node.Renamed` on this node.
+**Remarks:** Names use ordinal equality among siblings and cannot be ., .., or contain /. Renaming to a name already claimed in the same owner scope clears `UniqueNameInOwner`. Renaming an active node propagates `Node.NotificationPathRenamed` through its subtree and then raises `Node.Renamed` on this node.
 
 **System.ArgumentException:** The assigned name is invalid.
 
@@ -263,13 +266,22 @@ Gets or sets the ancestor that owns this node for packed-scene storage.
 
 **Value:** An ancestor node, or `null` when this node is not stored by an ancestor scene root.
 
-**Remarks:** A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that no longer point to an ancestor.
+**Remarks:** A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that no longer point to an ancestor. Assigning an owner can clear a conflicting unique-name claim.
 
 **System.ArgumentException:** The assigned node is this node or is not an ancestor.
 
 **System.InvalidOperationException:** An attached node is mutated off the tree owner thread or scene capture is active.
 
 **System.ObjectDisposedException:** This node or the assigned owner is disposing or disposed.
+
+<a id="p-electron2d-node-uniquenameinowner"></a>
+### `public bool UniqueNameInOwner { get; set; }`
+
+Allows `%Name` lookup from this node's owner and nodes sharing that owner. False by default. The flag can be set before an owner is assigned. A later node with the same owner and name loses its attempted claim and reads false; after the first claim is removed, the later node must set this property again. Changing the owner or name rechecks the claim. PackedScene stores the flag and restores owner-scoped lookup after instantiation.
+
+**System.InvalidOperationException:** An attached mutation is off the scene owner thread or occurs during scene capture.
+
+**System.ObjectDisposedException:** The node is disposed.
 
 <a id="p-electron2d-node-parent"></a>
 ### `public Node? Parent { get; }`
@@ -428,7 +440,7 @@ Clears an explicit domain override so this node resolves its parent's current do
 <a id="m-electron2d-node-hasnode-system-string"></a>
 ### `public bool HasNode(string path)`
 
-Returns whether `path` resolves through the existing relative or absolute node-path rules. Detached hierarchies are supported. Rejects blank paths and off-owner attached queries.
+Returns whether `path` resolves through the relative or absolute node-path rules, including owner-scoped `%Name`. Detached hierarchies support relative paths; absolute paths require active tree membership and a root-name segment. Rejects blank paths and off-owner attached queries.
 
 <a id="m-electron2d-node-isgreaterthan-electron2d-node"></a>
 ### `public bool IsGreaterThan(Node node)`
@@ -728,17 +740,19 @@ Gets this node's index in its parent's ordered child list.
 <a id="m-electron2d-node-getnode-system-string"></a>
 ### `public Node GetNode(string path)`
 
-Resolves a required relative or absolute node path.
+Resolves a required relative or absolute node path, including owner-scoped `%Name` segments.
 
-**Parameter `path`:** A nonblank slash-separated path supporting ., .., and an optional absolute root-name segment.
+**Parameter `path`:** A nonblank slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
 
 **Returns:** The resolved node.
 
-**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths.
 
 **System.ArgumentException:** `path` is empty or whitespace.
 
 **System.ArgumentNullException:** `path` is `null`.
+
+**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
 
 **KeyNotFoundException:** No node exists at the requested path.
 
@@ -747,17 +761,19 @@ Resolves a required relative or absolute node path.
 <a id="m-electron2d-node-getnodeornull-system-string"></a>
 ### `public Node GetNodeOrNull(string path)`
 
-Attempts to resolve a relative or absolute node path.
+Attempts to resolve a relative or absolute node path, including owner-scoped `%Name` segments.
 
-**Parameter `path`:** A nonblank slash-separated path supporting ., .., and an optional absolute root-name segment.
+**Parameter `path`:** A nonblank slash-separated path supporting ., .., `%Name`, and an optional absolute root-name segment.
 
 **Returns:** The resolved node, or `null` when traversal cannot continue.
 
-**Remarks:** Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.
+**Remarks:** Absolute paths require an active scene tree and the root-name segment; detached hierarchies support relative paths.
 
 **System.ArgumentException:** `path` is empty or whitespace.
 
 **System.ArgumentNullException:** `path` is `null`.
+
+**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
@@ -778,6 +794,8 @@ Resolves a required relative or absolute path to a requested node type.
 
 **System.InvalidCastException:** The resolved node is not a `TNode`.
 
+**System.InvalidOperationException:** An attached lookup runs off the scene owner thread.
+
 **KeyNotFoundException:** No node exists at the requested path.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
@@ -793,14 +811,16 @@ Builds this node's absolute path from the root of its current hierarchy.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
-<a id="m-electron2d-node-getpathto-electron2d-scenenode"></a>
-### `public string GetPathTo(Node node)`
+<a id="m-electron2d-node-getpathto-electron2d-node-system-boolean"></a>
+### `public string GetPathTo(Node node, bool useUniquePath = false)`
 
-Builds a relative path from this node to another node in the same hierarchy.
+Builds a relative path from this node to another node in the same hierarchy. With `useUniquePath`, an eligible owner-scoped unique destination replaces the preceding route; otherwise an eligible unique source may prefix the upward route, even if it makes the path longer.
 
 **Parameter `node`:** The destination node.
 
-**Returns:** . for this node, otherwise a slash-separated sequence of .. and child names.
+**Parameter `useUniquePath`:** Whether to use owner-scoped `%Name` segments.
+
+**Returns:** . for this node, otherwise a slash-separated sequence of .., child names and optional unique names.
 
 **System.ArgumentNullException:** `node` is `null`.
 
@@ -811,7 +831,7 @@ Builds a relative path from this node to another node in the same hierarchy.
 <a id="m-electron2d-node-getpropertydescriptors"></a>
 ### `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
 
-Extends base typed descriptors with neutral name, process and input state for inspection and packed scenes.
+Extends base typed descriptors with neutral name, unique-name, process and input state for inspection and packed scenes.
 
 **Remarks:** Appends this class's typed hierarchy, ownership, and processing descriptors to the inherited descriptors.
 

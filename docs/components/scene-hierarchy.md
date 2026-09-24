@@ -8,7 +8,7 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 
 | Type | Base | Responsibility |
 | --- | --- | --- |
-| [Node](../classes/Node.md) | ElectronObject | Hierarchy, lifecycle, paths/groups, tree diagnostics and notification propagation, process/input callbacks, ownership and deletion. |
+| [Node](../classes/Node.md) | ElectronObject | Hierarchy, lifecycle, owner-scoped unique paths, groups, tree diagnostics and notification propagation, process/input callbacks, ownership and deletion. |
 | [CanvasItem](../classes/CanvasItem.md) | Node | Abstract drawing base, visibility, Z/Y order, behind-parent drawing, modulation/materials and transform queries/notifications. |
 | [Entity](../classes/Entity.md) | CanvasItem | Concrete position, rotation, scale, skew and spatial helpers. |
 | [Control](../classes/Control.md) | CanvasItem | Rectangular layout, pivot transform, resize, root viewport pointer/focus/hover and action navigation, plus cursor policy and descendant clipping; remaining GUI behavior is incomplete. |
@@ -38,6 +38,8 @@ Control's ordinary pivot now combines `PivotOffset` with `PivotOffsetRatio * Siz
 ## Runtime flow
 
 Node owns ordered children of any Node subtype. SceneTree activates the tree parent-first, delivers ready child-first and exits child-first. Paths, groups, Owner metadata, process/input settings, typed child events and factories use Node. Node also reports depth-first tree order, prints subtree paths or Unicode branches, and propagates manual notifications parent-first. Propagation prevents direct child-list changes while visiting a node and collects callback failures after attempting other descendants. Engine supplies scaled/original deltas; Timer and Tween reuse these scheduling lanes. Frame/input/lifecycle mutation guards and failure-continuing cleanup remain in the neutral layer.
+
+`Node.UniqueNameInOwner` registers a `%Name` path within the node's owner scope. A second claim of the same name loses; renaming, owner changes and detach update lookup immediately. `GetPathTo(useUniquePath: true)` uses the pinned target-side shortcut first and then the source-side rule. PackedScene restores flags before owners and resolves them when ownership is assigned. [NodeUniqueNameTests](../../tests/Electron2D.Tests/NodeUniqueNameTests.cs) covers scope, conflicts, path generation, packing and attached thread guards. The current owner-scope lookup scans the subtree; index it only if profiling establishes a problem.
 
 Node inherits its translation domain and automatic-translation mode from the nearest parent unless either is explicitly overridden. SceneTree samples the typed root setting before entry; entry and later mode/domain changes notify affected nodes. PackedScene stores explicit domain overrides and the auto-translation mode, preserving live inheritance for other descendants.
 

@@ -17,6 +17,8 @@ public class Node : ElectronObject
             node => node.ClassName,
             (_, value) => IsValidNodeName(value),
             stored: true),
+        new PropertyDescriptor<Node, bool>(nameof(UniqueNameInOwner), node => node.UniqueNameInOwner,
+            (node, value) => node.UniqueNameInOwner = value, _ => false, stored: true),
         new PropertyDescriptor<Node, ProcessMode>(
             nameof(ProcessMode),
             node => node.ProcessMode,
@@ -142,6 +144,7 @@ public class Node : ElectronObject
     private string _sceneFilePath = string.Empty;
 
     private Node? _owner;
+    private bool _uniqueNameInOwner;
 
     private List<Resource>? _ownedSceneResources;
 
@@ -198,7 +201,8 @@ public class Node : ElectronObject
     /// <summary>Gets or sets the node name used in sibling lookup and paths.</summary>
     /// <value>The nonblank name, initialized to <see cref="ElectronObject.ClassName"/>.</value>
     /// <remarks>
-    /// Names use ordinal equality among siblings and cannot be <c>.</c>, <c>..</c>, or contain <c>/</c>. Renaming an
+    /// Names use ordinal equality among siblings and cannot be <c>.</c>, <c>..</c>, or contain <c>/</c>. Renaming may revoke
+    /// <see cref="UniqueNameInOwner"/> when the new name is already claimed by another node with the same owner. Renaming an
     /// active node propagates <see cref="NotificationPathRenamed"/> through its subtree and then raises
     /// <see cref="Renamed"/> on this node.
     /// </remarks>
@@ -225,6 +229,7 @@ public class Node : ElectronObject
 
             Parent?.EnsureChildNameAvailable(value, this);
             _name = value;
+            ClaimUniqueName();
 
             if (IsInsideTree)
             {
@@ -421,7 +426,7 @@ public class Node : ElectronObject
     /// <value>An ancestor node, or <see langword="null"/> when this node is not stored by an ancestor scene root.</value>
     /// <remarks>
     /// A scene root does not own itself. Removing or reparenting a subtree automatically clears owner references that
-    /// no longer point to an ancestor.
+    /// no longer point to an ancestor. Assigning a new owner may revoke <see cref="UniqueNameInOwner"/> when the name is already claimed in that owner's scope.
     /// </remarks>
     /// <exception cref="ArgumentException">The assigned node is this node or is not an ancestor.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the tree owner thread or scene capture is active.</exception>
@@ -451,6 +456,24 @@ public class Node : ElectronObject
             }
 
             _owner = value;
+            ClaimUniqueName();
+        }
+    }
+
+    /// <summary>Gets or sets whether this node can be addressed as <c>%Name</c> within its owner's scene.</summary>
+    /// <value>False by default. When another node already claims the same name for the same owner, enabling this property leaves it false.</value>
+    /// <remarks>The flag may be set before an owner is assigned. Renaming or changing the owner can revoke it on a conflict. PackedScene stores the flag with the node.</remarks>
+    /// <exception cref="InvalidOperationException">An attached mutation is off the scene owner thread or occurs during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
+    public bool UniqueNameInOwner
+    {
+        get { ThrowIfDisposed(); return _uniqueNameInOwner; }
+        set
+        {
+            EnsureMutable();
+            if (_uniqueNameInOwner == value) return;
+            _uniqueNameInOwner = value;
+            ClaimUniqueName();
         }
     }
 
@@ -880,7 +903,10 @@ public class Node : ElectronObject
                 foreach (var (node, owner) in retainedOwners)
                 {
                     if (owner.IsAncestorOf(node))
+                    {
                         node._owner = owner;
+                        node.ClaimUniqueName();
+                    }
                 }
             }
         }
@@ -1045,13 +1071,15 @@ public class Node : ElectronObject
 
     /// <summary>Builds a relative path from this node to another node in the same hierarchy.</summary>
     /// <param name="node">The destination node.</param>
-    /// <returns><c>.</c> for this node, otherwise a slash-separated sequence of <c>..</c> and child names.</returns>
+    /// <param name="useUniquePath">Whether to shorten the path through eligible owner-scoped unique names.</param>
+    /// <returns><c>.</c> for this node, otherwise a slash-separated sequence of <c>..</c>, child names and optional owner-scoped unique names.</returns>
+    /// <remarks>With <paramref name="useUniquePath"/>, the first eligible unique node on the target side replaces the preceding path. Otherwise an eligible source-side unique node may prefix the upward path, even when that makes the result longer.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">The nodes do not share a hierarchy root.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="node"/> has started.
     /// </exception>
-    public string GetPathTo(Node node)
+    public string GetPathTo(Node node, bool useUniquePath = false)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(node);
@@ -1070,16 +1098,55 @@ public class Node : ElectronObject
         if (common == 0)
             throw new InvalidOperationException("Nodes do not share a hierarchy root.");
 
-        var parts = Enumerable.Repeat("..", from.Count - common).Concat(to.Skip(common).Select(item => item.Name));
-        return string.Join('/', parts);
+        var commonParent = from[common - 1];
+        var reversed = new List<string>();
+        if (useUniquePath)
+        {
+            var current = node;
+            var detected = false;
+            while (!ReferenceEquals(current, commonParent))
+            {
+                if (current._uniqueNameInOwner && ReferenceEquals(current._owner, _owner))
+                {
+                    reversed.Add('%' + current.Name);
+                    detected = true;
+                    break;
+                }
+                reversed.Add(current.Name);
+                current = current.Parent!;
+            }
+            if (!detected)
+            {
+                current = this;
+                string? detectedName = null;
+                var upCount = 0;
+                while (!ReferenceEquals(current, commonParent))
+                {
+                    if (current._uniqueNameInOwner && ReferenceEquals(current._owner, _owner))
+                    { detectedName = current.Name; upCount = 0; }
+                    upCount++;
+                    current = current.Parent!;
+                }
+                for (var i = 0; i < upCount; i++) reversed.Add("..");
+                if (detectedName is not null) reversed.Add('%' + detectedName);
+            }
+        }
+        else
+        {
+            for (var index = to.Count - 1; index >= common; index--) reversed.Add(to[index].Name);
+            for (var index = from.Count - 1; index >= common; index--) reversed.Add("..");
+        }
+        reversed.Reverse();
+        return string.Join('/', reversed);
     }
 
     /// <summary>Resolves a required relative or absolute node path.</summary>
-    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, and an optional absolute root-name segment.</param>
+    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
     /// <returns>The resolved node.</returns>
-    /// <remarks>Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.</remarks>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name.</remarks>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public Node GetNode(string path) => GetNodeOrNull(path) ?? throw new KeyNotFoundException($"Node path '{path}' was not found from '{GetPath()}'.");
@@ -1091,27 +1158,32 @@ public class Node : ElectronObject
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidCastException">The resolved node is not a <typeparamref name="TNode"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
     /// <exception cref="KeyNotFoundException">No node exists at the requested path.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public TNode GetNode<TNode>(string path)
         where TNode : Node => GetNode(path) as TNode ?? throw new InvalidCastException($"Node at '{path}' is not a {typeof(TNode).Name}.");
 
     /// <summary>Attempts to resolve a relative or absolute node path.</summary>
-    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, and an optional absolute root-name segment.</param>
+    /// <param name="path">A nonblank slash-separated path supporting <c>.</c>, <c>..</c>, owner-scoped <c>%Name</c>, and an optional absolute root-name segment.</param>
     /// <returns>The resolved node, or <see langword="null"/> when traversal cannot continue.</returns>
-    /// <remarks>Absolute paths are resolved from the hierarchy root even when the hierarchy is detached.</remarks>
+    /// <remarks>Absolute paths require active scene membership and start with the scene root's name.</remarks>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or whitespace.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">An attached lookup runs off the scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
     public Node? GetNodeOrNull(string path)
     {
         ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         var absolute = path.StartsWith('/');
+        if (absolute && Tree is null) return null;
         var current = absolute ? GetHierarchyRoot() : this;
         var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        var start = absolute && parts.Length > 0 && StringComparer.Ordinal.Equals(parts[0], current.Name) ? 1 : 0;
+        if (absolute && (parts.Length == 0 || !StringComparer.Ordinal.Equals(parts[0], current.Name))) return null;
+        var start = absolute ? 1 : 0;
 
         for (var index = start; index < parts.Length; index++)
         {
@@ -1129,7 +1201,9 @@ public class Node : ElectronObject
                 continue;
             }
 
-            current = current._children.FirstOrDefault(child => StringComparer.Ordinal.Equals(child.Name, part));
+            current = part[0] == '%'
+                ? current.FindUniqueOwned(part[1..]) ?? current._owner?.FindUniqueOwned(part[1..])
+                : current._children.FirstOrDefault(child => StringComparer.Ordinal.Equals(child.Name, part));
             if (current is null)
                 return null;
         }
@@ -2355,6 +2429,22 @@ public class Node : ElectronObject
             if (node._owner is not null && !node._owner.IsAncestorOf(node))
                 node._owner = null;
         }
+    }
+
+    private void ClaimUniqueName()
+    {
+        if (_uniqueNameInOwner && _owner?.FindUniqueOwned(_name, this) is not null)
+            _uniqueNameInOwner = false;
+    }
+
+    private Node? FindUniqueOwned(string name, Node? except = null)
+    {
+        // ponytail: owner-scoped lookup scans the subtree; add an index if path profiling makes this significant.
+        foreach (var node in EnumerateDepthFirst())
+            if (!ReferenceEquals(node, except) && ReferenceEquals(node._owner, this) && node._uniqueNameInOwner &&
+                StringComparer.Ordinal.Equals(node._name, name))
+                return node;
+        return null;
     }
 
     private void FindChildrenCore<TNode>(string pattern, bool recursive, List<TNode> result)

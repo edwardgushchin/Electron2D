@@ -158,6 +158,7 @@ RenderingRuntimeTests.VerifyAtlasResources();
 SceneHierarchyTests.Run();
 SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();
+NodeUniqueNameTests.Run();
 RemoteTransformTests.Run();
 ControlLayoutTests.Run();
 ControlInputTests.Run();

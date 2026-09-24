@@ -10,7 +10,8 @@ internal static class NodeTreeDiagnosticsTests
         var last = new Probe("B");
         root.AddChild(first); first.AddChild(grandchild); root.AddChild(last);
 
-        Check(root.HasNode("A/A1") && root.HasNode("/Root/A/A1") && !root.HasNode("A/Absent"), "Node path presence.");
+        Check(root.HasNode("A/A1") && !root.HasNode("/Root/A/A1") && !root.HasNode("A/Absent"),
+            "Detached hierarchies resolve relative paths but not active-tree absolute paths.");
         Check(root.GetTreeString() == ".\nA\nA/A1\nB\n", "Relative tree paths and order.");
         Check(root.GetTreeStringPretty() == " ┖╴Root\n    ┠╴A\n    ┃  ┖╴A1\n    ┖╴B\n", "Indented tree glyphs and branches.");
         using (var output = new StringWriter())
@@ -28,6 +29,8 @@ internal static class NodeTreeDiagnosticsTests
 
         using (var tree = new SceneTree(root))
         {
+            Check(root.HasNode("/Root/A/A1") && !root.HasNode("/A/A1"),
+                "Attached absolute paths start with the active root name.");
             Check(last.IsGreaterThan(first) && last.IsGreaterThan(grandchild) && grandchild.IsGreaterThan(first) &&
                   !first.IsGreaterThan(last) && !first.IsGreaterThan(first), "Attached depth-first order.");
             root.MoveChild(last, 0);

@@ -36742,11 +36742,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetPathTo(Electron2D.Node)",
+    "id": "method:Electron2D.Node.GetPathTo(Electron2D.Node,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "GetPathTo",
-    "signature": "public System.String GetPathTo(Electron2D.Node node)",
+    "signature": "public System.String GetPathTo(Electron2D.Node node, System.Boolean useUniquePath = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36755,6 +36755,11 @@
         "name": "node",
         "type": "Electron2D.Node",
         "default": null
+      },
+      {
+        "name": "useUniquePath",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.String",
@@ -60036,6 +60041,19 @@
     "declaringType": "Electron2D.Node",
     "name": "UnhandledKeyInputEnabled",
     "signature": "public System.Boolean UnhandledKeyInputEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.UniqueNameInOwner()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "UniqueNameInOwner",
+    "signature": "public System.Boolean UniqueNameInOwner { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
