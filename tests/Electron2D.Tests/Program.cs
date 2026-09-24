@@ -4692,6 +4692,11 @@ static void VerifyInputText()
         Position = new Vector2(1.2345678f, 12.345678f),
         Velocity = new Vector2(0.0000001f, -0f),
     };
+    using var boundaryMotion = new InputEventMouseMotion
+    {
+        Position = new Vector2(BitConverter.Int32BitsToSingle(0x4479ffff),
+            BitConverter.Int32BitsToSingle(unchecked((int)0x5c4bef60))),
+    };
     using var physical = new InputEventKey { PhysicalKeycode = Key.A };
     using var physicalFunction = new InputEventKey { PhysicalKeycode = Key.F1 };
     using var label = new InputEventKey { KeyLabel = Key.A };
@@ -4750,6 +4755,9 @@ static void VerifyInputText()
             nonfiniteMotion.AsText() == "Mouse motion at position ((nan, inf)) with velocity ((-inf, 0.0))" &&
             fractionalMotion.AsText() == "Mouse motion at position ((1.234568, 12.34568)) with velocity ((0.0, 0.0))",
         "Mouse text must retain named/unknown buttons, double clicks and positional motion wording.");
+    Require(boundaryMotion.AsText() ==
+            "Mouse motion at position ((1000.0, 229610463472648192.0)) with velocity ((0.0, 0.0))",
+        "Vector text must use float precision at decimal powers and retain large integral digits.");
 
     var previousCulture = TranslationServer.Culture;
     var previousEnabled = TranslationServer.Enabled;
@@ -4919,6 +4927,10 @@ static void VerifyTouchGestureText()
             nonfiniteMagnify.AsText() == "Magnify Gesture at ((nan, 0.0)) with factor inf" &&
             pan.AsText() == "Pan Gesture at ((1.0, 2.0)) with delta ((3.0, 4.0))",
         "Touch and gesture text must retain source status, signed index, vector and factor formats.");
+    magnify.Factor = BitConverter.Int32BitsToSingle(unchecked((int)0x5c4bef60));
+    Require(magnify.AsText() == "Magnify Gesture at ((1.0, 2.0)) with factor 229610463472648192.0",
+        "Float-to-double factor text must retain every large integral digit.");
+    magnify.Factor = 0.1f;
     touch.Canceled = true;
     Require(touch.AsText() == "Screen canceled at ((1.0, 2.0)) with 3 touch points",
         "Cancellation must take precedence over a stored touch press in text.");

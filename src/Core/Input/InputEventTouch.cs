@@ -387,7 +387,7 @@ public sealed class InputEventMagnifyGesture : InputEventGesture
 
     /// <summary>Gets a localized magnification-gesture description.</summary>
     /// <returns>The local position and source factor.</returns>
-    /// <remarks>The factor is formatted from its stored float as a full real value; exact all-float rounding remains under audit.</remarks>
+    /// <remarks>The factor is formatted from its stored float as a full real value, retaining large integral digits.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {

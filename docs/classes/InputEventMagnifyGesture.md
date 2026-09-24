@@ -98,7 +98,7 @@ Returns this event transformed into another local coordinate space.
 
 Returns the localized magnification sentence with local position and factor.
 
-**Returns:** The magnification text; exact all-float factor rounding remains under audit.
+**Returns:** The magnification text with the stored factor promoted to double for formatting.
 
 **Exceptions**
 

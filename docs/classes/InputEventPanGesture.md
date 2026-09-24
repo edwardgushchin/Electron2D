@@ -98,7 +98,7 @@ Returns this event transformed into another local coordinate space.
 
 Returns the localized panning sentence with local position and platform delta.
 
-**Returns:** The panning text; exact all-float vector rounding remains under audit.
+**Returns:** The panning text with source-format float vectors.
 
 **Exceptions**
 

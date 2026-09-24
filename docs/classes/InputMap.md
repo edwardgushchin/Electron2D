@@ -22,6 +22,7 @@ The registry starts from six typed `input/ui_*` definitions in [`ProjectSettings
 
 Collection operations are lock-serialized and return snapshots. Binding resources remain caller-owned and mutable;
 callers must not mutate or dispose a binding concurrently with matching. Action names use ordinal comparison.
+`GetActionDescription` uses each concrete binding's audited localized `AsText` result, including the shared float formatter for motion, touch and gesture coordinates. Native delivery and other-platform text remain separate verification limits.
 
 ## Examples
 

@@ -150,7 +150,7 @@ Returns this event transformed into another local coordinate space.
 
 Returns the localized touched, released or canceled status with the local position and signed contact index.
 
-**Returns:** The touch-state sentence; exact all-float coordinate rounding remains under audit.
+**Returns:** The touch-state sentence with source-format float coordinates.
 
 **Exceptions**
 

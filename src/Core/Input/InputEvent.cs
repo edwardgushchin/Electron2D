@@ -289,11 +289,14 @@ public abstract class InputEvent : Resource
         if (double.IsNegativeInfinity(value)) return "-inf";
         if (value == 0d) return "0.0";
         if (Math.Abs(value) < long.MaxValue && value == Math.Truncate(value))
-            return value.ToString("0.0", CultureInfo.InvariantCulture);
+            return string.Concat(((long)value).ToString(CultureInfo.InvariantCulture), ".0");
 
         var decimals = precision;
         var absolute = Math.Abs(value);
-        if (absolute > 10d) decimals -= (int)Math.Floor(Math.Log10(absolute));
+        // Vector components use float precision; promoted factors use double precision.
+        if (absolute > 10d)
+            decimals -= precision == 6 ? (int)MathF.Floor(MathF.Log10((float)absolute)) :
+                (int)Math.Floor(Math.Log10(absolute));
         if (decimals < 0) decimals = 6;
         var text = value.ToString($"F{decimals}", CultureInfo.InvariantCulture);
         if (!text.Contains('.')) return text;

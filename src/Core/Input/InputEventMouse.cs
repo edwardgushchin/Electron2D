@@ -361,7 +361,7 @@ public sealed class InputEventMouseMotion : InputEventMouse
 
     /// <summary>Gets a localized description of position and velocity.</summary>
     /// <returns>The source-format motion sentence with invariant position and velocity values.</returns>
-    /// <remarks>Integral components retain <c>.0</c>, fractional components use a six-decimal real policy, and non-finite components use <c>nan</c>/<c>inf</c>. Exact all-float rounding parity remains under audit. The source template has two <c>%s</c> placeholders; translated templates require two supported placeholders or fall back to the source sentence.</remarks>
+    /// <remarks>Integral components retain <c>.0</c> and exact decimal digits, fractional components use a six-decimal float real policy, and non-finite components use <c>nan</c>/<c>inf</c>. The source template has two <c>%s</c> placeholders; translated templates require two supported placeholders or fall back to the source sentence.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {

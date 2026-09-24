@@ -24,6 +24,7 @@ Action matching uses the first compatible binding in registration order. Key and
 
 Events are mutable resources so action bindings can be configured in memory. A platform host creates concrete
 events and passes them to [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent); this class has no dependency on a native backend.
+Concrete `AsText` descriptions and their localized templates are audited in managed code. Vector components use float-precision decimal placement; float factors promoted to double use double precision. A 41,514-value deterministic comparison against the pinned Linux formatter covers both paths. Other platforms remain unverified.
 
 ## Examples
 

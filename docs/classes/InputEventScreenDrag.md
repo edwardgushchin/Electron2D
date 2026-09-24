@@ -219,7 +219,7 @@ Returns this event transformed into another local coordinate space.
 
 Returns a localized sentence containing signed contact index, local position and local velocity.
 
-**Returns:** The drag sentence; exact all-float vector rounding remains under audit.
+**Returns:** The drag sentence with source-format float vectors.
 
 **Exceptions**
 
