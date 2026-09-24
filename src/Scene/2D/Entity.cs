@@ -80,7 +80,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets the affine transform relative to the parent.</summary>
     /// <value>A finite <see cref="Electron2D.Transform"/>; the default is <see cref="Electron2D.Transform.Identity"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">An assigned transform component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated from a thread other than the tree owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read or mutated from a thread other than the tree owner.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the transform changes.</exception>
     public Transform Transform
@@ -88,6 +88,7 @@ public class Entity : CanvasItem
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _transform;
         }
         set
@@ -121,7 +122,7 @@ public class Entity : CanvasItem
     /// <summary>Gets or sets local translation in pixels or other host-defined 2D units.</summary>
     /// <value>The translation component of <see cref="Transform"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An enabled local-transform notification or event handler throws after the position changes.</exception>
     public Vector2 Position
@@ -129,6 +130,7 @@ public class Entity : CanvasItem
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureOwnerThread();
             return _transform.Origin;
         }
         set
@@ -144,6 +146,8 @@ public class Entity : CanvasItem
 
     /// <summary>Gets or sets translation in hierarchy-global coordinates.</summary>
     /// <value>The translation component of <see cref="GlobalTransform"/>.</value>
+    /// <remarks>Assignment converts only the point through the direct canvas parent's inverse and preserves the
+    /// local basis exactly. A neutral parent or TopLevel node uses the point directly.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An assigned component is NaN or infinite.</exception>
     /// <exception cref="InvalidOperationException">The parent transform is singular, or an attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">This node or an ancestor is disposing on another thread, or has finished disposing.</exception>
@@ -156,9 +160,10 @@ public class Entity : CanvasItem
             EnsureMutable();
             EnsureFinite(value, nameof(value));
 
-            var transform = GlobalTransform;
-            transform.Origin = value;
-            GlobalTransform = transform;
+            var local = GetParentItem() is { } parent
+                ? parent.GetGlobalTransform().AffineInverse() * value
+                : value;
+            Position = local;
         }
     }
 
@@ -438,9 +443,11 @@ public class Entity : CanvasItem
     /// <summary>Returns the product of local transforms up to a spatial ancestor.</summary>
     /// <param name="parent">This node itself or an ancestor connected through spatial nodes.</param>
     /// <returns>Identity for this node; otherwise the ordered product of local spatial transforms up to the ancestor.</returns>
-    /// <remarks>TopLevel does not interrupt this query. Neutral and non-spatial canvas ancestors do interrupt it; no matrix inversion is needed.</remarks>
+    /// <remarks>TopLevel does not interrupt this query. Neutral and non-spatial canvas ancestors do interrupt it; no
+    /// matrix inversion is needed. Invalid ancestry throws a typed exception instead of returning identity.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="parent"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="parent"/> is not connected by an uninterrupted spatial-parent chain.</exception>
+    /// <exception cref="InvalidOperationException">An attached node is queried off the scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">
     /// This node, <paramref name="parent"/>, or a queried ancestor is disposing on another thread or has finished disposing.
     /// </exception>
@@ -448,6 +455,9 @@ public class Entity : CanvasItem
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parent);
+        if (parent.IsDisposed)
+            throw new ObjectDisposedException(nameof(parent));
+        Tree?.EnsureOwnerThread();
 
         if (ReferenceEquals(parent, this))
             return Transform.Identity;

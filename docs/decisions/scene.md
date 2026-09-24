@@ -49,7 +49,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Preserve scene inheritance with Node and Entity names
 
-Last updated: 2026-09-23
+Last updated: 2026-09-24
 
 - Status: Accepted by the user on 2026-09-23.
 - Scope: Scene inheritance, type naming, and preservation of the corresponding API and responsibilities.
@@ -78,6 +78,8 @@ Last updated: 2026-09-23
 | `Window : Viewport` | `Window : Viewport` | Window behavior under the viewport contract. |
 
 The complete chain is `ElectronObject → Node → CanvasItem → Entity → Sprite`; the UI branch is `CanvasItem → Control`. Resources stay outside the scene hierarchy. The former `SceneNode` name is retired. No `Node2D`, `Node3D`, `TransformNode`, duplicate compatibility base, or second public game-object hierarchy is introduced.
+
+`Entity.GetRelativeTransformToParent` preserves the source's ordered local-transform product through a direct spatial-parent chain, including across `TopLevel`. A null, disposed or unconnected ancestor fails with a typed C# exception instead of the native diagnostic plus identity fallback, because identity is also the valid result for a self query. Attached queries enforce the scene owner thread. This error adaptation does not change valid hierarchy results.
 
 The target hierarchy is:
 

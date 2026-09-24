@@ -16,6 +16,8 @@ A concrete spatial canvas item with engine-owned Vector2 and Transform values. P
 
 The pinned `Node2D` scale and local-axis slice has managed Linux/.NET 8 behavioral coverage for five members. Setting local or global scale replaces components with magnitude below `1e-5` by positive `1e-5`; global scale preserves the directions of reflected basis axes before converting through the parent. Assigning a raw `Transform` can still store a singular basis. `MoveLocalX` and `MoveLocalY` normalize nonzero basis axes with representable squared length unless `scaled` is true; a zero axis still assigns the unchanged position and emits enabled local notification. The remaining `Node2D` rows retain their separate semantic audits.
 
+The coordinate slice audits nine more mapped members. `GlobalPosition` converts only the point through the direct canvas parent's inverse, preserving the local basis exactly; `GlobalTranslate` uses the same setter. Local `Translate` adds in parent coordinates. `Transform` and `GlobalTransform` retain raw finite matrices, including a singular local basis; `ToLocal` requires an invertible global basis. `GetRelativeTransformToParent` multiplies the uninterrupted spatial chain across `TopLevel`, with the typed invalid-ancestor boundary in ADR 0008. Attached reads enforce the scene owner thread. Nine member rows and the class row remain Partial.
+
 ## Examples
 
 The snippet uses the Electron2D namespace; attach the hierarchy to a SceneTree or an Engine.Run window to activate it.
@@ -85,6 +87,8 @@ Creates a detached spatial node with an identity transform.
 Gets or sets translation in hierarchy-global coordinates.
 
 **Value:** The translation component of `Entity.GlobalTransform`.
+
+**Remarks:** Assignment converts only the point through the direct canvas parent's inverse and preserves the local basis exactly. A neutral parent or TopLevel node uses the point directly.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
@@ -180,7 +184,7 @@ Gets or sets local translation in pixels or other host-defined 2D units.
 
 **System.ArgumentOutOfRangeException:** An assigned component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -257,7 +261,7 @@ Gets or sets the affine transform relative to the parent.
 
 **System.ArgumentOutOfRangeException:** An assigned transform component is NaN or infinite.
 
-**System.InvalidOperationException:** An attached node is mutated from a thread other than the tree owner.
+**System.InvalidOperationException:** An attached node is read or mutated from a thread other than the tree owner.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -319,6 +323,8 @@ Returns the product of local transforms up to a spatial ancestor.
 **System.ArgumentNullException:** `parent` is `null`.
 
 **System.ArgumentException:** `parent` is not connected by an uninterrupted spatial-parent chain.
+
+**System.InvalidOperationException:** An attached node is queried off the scene owner thread.
 
 **System.ObjectDisposedException:** This node, `parent`, or a queried ancestor is disposing on another thread or has finished disposing.
 

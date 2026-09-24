@@ -8003,6 +8003,90 @@ static void VerifyNodeHierarchyAndTransforms()
     first.GlobalPosition = new Vector2(4f, 9f);
     Require(VectorNearlyEqual(first.Position, new Vector2(4f, 6f)), "Setting GlobalPosition must solve the local position.");
 
+    using var coordinateParent = new Entity
+    {
+        Transform = new Transform(new Vector2(3f, 1f), new Vector2(-2f, 5f), new Vector2(4f, -6f)),
+    };
+    var coordinateChild = new Entity
+    {
+        Transform = new Transform(new Vector2(1.3f, 0.2f), new Vector2(-0.4f, 0.7f), new Vector2(2f, 3f)),
+    };
+    coordinateParent.AddChild(coordinateChild);
+    var originalBasis = coordinateChild.Transform;
+    coordinateChild.GlobalPosition = new Vector2(17.3f, -9.7f);
+    Require(coordinateChild.Transform.X == originalBasis.X &&
+            coordinateChild.Transform.Y == originalBasis.Y &&
+            VectorNearlyEqual(coordinateChild.GlobalPosition, new Vector2(17.3f, -9.7f)),
+        "GlobalPosition changes only local translation under a nonorthogonal parent.");
+    coordinateChild.GlobalTranslate(new Vector2(2f, -3f));
+    Require(coordinateChild.Transform.X == originalBasis.X &&
+            coordinateChild.Transform.Y == originalBasis.Y &&
+            VectorNearlyEqual(coordinateChild.GlobalPosition, new Vector2(19.3f, -12.7f)),
+        "GlobalTranslate preserves the local basis and adds a world-space offset.");
+    var localBeforeTranslate = coordinateChild.Position;
+    var globalBeforeTranslate = coordinateChild.GlobalPosition;
+    var localOffset = new Vector2(1f, -2f);
+    coordinateChild.Translate(localOffset);
+    Require(coordinateChild.Position == localBeforeTranslate + localOffset &&
+            VectorNearlyEqual(coordinateChild.GlobalPosition,
+                globalBeforeTranslate + coordinateParent.Transform.BasisXform(localOffset)),
+        "Translate adds in parent coordinates while the parent's basis determines global displacement.");
+    var localPoint = new Vector2(3f, -2f);
+    Require(VectorNearlyEqual(coordinateChild.ToLocal(coordinateChild.ToGlobal(localPoint)), localPoint),
+        "ToGlobal and ToLocal compose through a nonsingular nonorthogonal ancestor.");
+    var desiredGlobal = new Transform(new Vector2(0.6f, 0.8f), new Vector2(-1f, 2f),
+        new Vector2(11f, -2f));
+    coordinateChild.GlobalTransform = desiredGlobal;
+    Require(TransformNearlyEqual(coordinateChild.GlobalTransform, desiredGlobal) &&
+            TransformNearlyEqual(coordinateChild.GetRelativeTransformToParent(coordinateParent),
+                coordinateChild.Transform) &&
+            coordinateChild.GetRelativeTransformToParent(coordinateChild) == Transform.Identity,
+        "GlobalTransform solves the parent-local matrix and relative queries preserve the local product.");
+    coordinateChild.TopLevel = true;
+    coordinateChild.GlobalPosition = new Vector2(5f, 7f);
+    Require(coordinateChild.Position == new Vector2(5f, 7f) &&
+            coordinateChild.GetRelativeTransformToParent(coordinateParent) == coordinateChild.Transform,
+        "TopLevel bypasses global parent coordinates without breaking the structural relative-transform query.");
+    coordinateChild.GlobalTransform = desiredGlobal;
+    Require(coordinateChild.Transform == desiredGlobal,
+        "TopLevel global transform assignment writes the local matrix directly.");
+    using var relativeRoot = new Entity
+    {
+        Transform = new Transform(new Vector2(2f, 0f), new Vector2(0f, 3f), new Vector2(6f, 8f)),
+    };
+    relativeRoot.AddChild(coordinateParent);
+    Require(TransformNearlyEqual(coordinateChild.GetRelativeTransformToParent(relativeRoot),
+            coordinateParent.Transform * coordinateChild.Transform),
+        "Relative transform multiplies the full spatial ancestor chain even across TopLevel.");
+    var beforeInvalidPosition = coordinateChild.Transform;
+    Expect<ArgumentOutOfRangeException>(() => coordinateChild.GlobalPosition = new Vector2(float.NaN, 0f),
+        "GlobalPosition rejects non-finite input before mutation.");
+    Require(coordinateChild.Transform == beforeInvalidPosition,
+        "Rejected GlobalPosition assignment preserves the local transform.");
+    Expect<ArgumentOutOfRangeException>(() => coordinateChild.Transform = new Transform(
+        new Vector2(float.NaN, 0f), Vector2.Down, Vector2.Zero),
+        "Raw Transform rejects non-finite columns before mutation.");
+    Expect<ArgumentOutOfRangeException>(() => coordinateChild.ToGlobal(new Vector2(float.NaN, 0f)),
+        "ToGlobal rejects a non-finite point before projection.");
+    Require(coordinateChild.Transform == beforeInvalidPosition,
+        "Rejected transform and point operations preserve local state.");
+    Expect<ArgumentNullException>(() => coordinateChild.GetRelativeTransformToParent(null!),
+        "Relative transform requires an explicit ancestor.");
+    using var disposedAncestor = new Entity();
+    disposedAncestor.Dispose();
+    Expect<ObjectDisposedException>(() => coordinateChild.GetRelativeTransformToParent(disposedAncestor),
+        "Relative transform rejects a disposed ancestor before traversing the chain.");
+    using (var coordinateTree = new SceneTree(relativeRoot))
+    {
+        Expect<InvalidOperationException>(() => Task.Run(() => _ = coordinateChild.Position).GetAwaiter().GetResult(),
+            "Attached Position reads run on the scene owner thread.");
+        Expect<InvalidOperationException>(() => Task.Run(() => _ = coordinateChild.Transform).GetAwaiter().GetResult(),
+            "Attached Transform reads run on the scene owner thread.");
+        Expect<InvalidOperationException>(() => Task.Run(() =>
+            coordinateChild.GetRelativeTransformToParent(coordinateParent)).GetAwaiter().GetResult(),
+            "Attached relative-transform queries run on the scene owner thread.");
+    }
+
     first.Scale = new Vector2(2f, 3f);
     first.Skew = 0.2f;
     first.Rotation = 0.4f;
@@ -8159,6 +8243,10 @@ static void VerifyNodeHierarchyAndTransforms()
         "A singular parent must reject global transform assignment.");
     Require(singularChild.Transform == originalLocalTransform,
         "A failed global transform assignment must preserve local state.");
+    Expect<InvalidOperationException>(() => singularChild.GlobalPosition = new Vector2(8f, 9f),
+        "A singular parent must reject global position assignment.");
+    Require(singularChild.Transform == originalLocalTransform,
+        "A failed global position assignment must preserve local state.");
 }
 
 static void VerifyProcessing()
