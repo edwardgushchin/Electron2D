@@ -5237,8 +5237,20 @@ static void VerifyDisplayServerPointerModifiers()
             (SDL3.SDL.Scancode.LGUI, SDL3.SDL.Keymod.GUI, SDL3.SDL.Keymod.Shift, KeyModifierMask.Meta, KeyModifierMask.Shift),
             (SDL3.SDL.Scancode.RGUI, SDL3.SDL.Keymod.GUI, SDL3.SDL.Keymod.Shift, KeyModifierMask.Meta, KeyModifierMask.Shift),
         };
-        foreach (var (scancode, ownNative, otherNative, _, _) in selfModifiers)
+        foreach (var (scancode, _, otherNative, _, _) in selfModifiers)
         {
+            var ownSide = scancode switch
+            {
+                SDL3.SDL.Scancode.LShift => SDL3.SDL.Keymod.LShift,
+                SDL3.SDL.Scancode.RShift => SDL3.SDL.Keymod.RShift,
+                SDL3.SDL.Scancode.LCtrl => SDL3.SDL.Keymod.LCtrl,
+                SDL3.SDL.Scancode.RCtrl => SDL3.SDL.Keymod.RCtrl,
+                SDL3.SDL.Scancode.LAlt => SDL3.SDL.Keymod.LAlt,
+                SDL3.SDL.Scancode.RAlt => SDL3.SDL.Keymod.RAlt,
+                SDL3.SDL.Scancode.LGUI => SDL3.SDL.Keymod.LGUI,
+                SDL3.SDL.Scancode.RGUI => SDL3.SDL.Keymod.RGUI,
+                _ => throw new InvalidOperationException(),
+            };
             var modifierKey = new SDL3.SDL.Event
             {
                 Key = new SDL3.SDL.KeyboardEvent
@@ -5247,7 +5259,7 @@ static void VerifyDisplayServerPointerModifiers()
                     WindowID = id,
                     Key = SDL3.SDL.GetKeyFromScancode(scancode, SDL3.SDL.Keymod.None, false),
                     Scancode = scancode,
-                    Mod = ownNative | otherNative,
+                    Mod = ownSide | otherNative,
                     Down = true,
                 },
             };
@@ -5266,6 +5278,36 @@ static void VerifyDisplayServerPointerModifiers()
                     (keyEvent.GetModifiersMask() & own) == 0 &&
                     (keyEvent.GetModifiersMask() & other) != 0,
                 "A modifier key never marks itself as its own modifier while preserving other held modifiers.");
+        }
+        probe.Clear();
+        foreach (var (scancode, ownNative, _, _, _) in selfModifiers)
+        {
+            var modifierKey = new SDL3.SDL.Event
+            {
+                Key = new SDL3.SDL.KeyboardEvent
+                {
+                    Type = SDL3.SDL.EventType.KeyDown,
+                    WindowID = id,
+                    Key = SDL3.SDL.GetKeyFromScancode(scancode, SDL3.SDL.Keymod.None, false),
+                    Scancode = scancode,
+                    Mod = ownNative,
+                    Down = true,
+                },
+            };
+            Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts an opposite-side modifier press.");
+            modifierKey.Key.Type = SDL3.SDL.EventType.KeyUp;
+            modifierKey.Key.Down = false;
+            Require(SDL3.SDL.PushEvent(ref modifierKey), "The native queue accepts an opposite-side modifier release.");
+        }
+        display.ProcessEvents();
+        Require(probe.Events.Count == selfModifiers.Length * 2,
+            "Every opposite-side modifier probe reaches both key callback phases.");
+        for (var i = 0; i < selfModifiers.Length * 2; i++)
+        {
+            var own = selfModifiers[i / 2].Own;
+            Require(probe.Events[i] is InputEventKey keyEvent &&
+                    (keyEvent.GetModifiersMask() & own) != 0,
+                "The opposite-side held key keeps its shared modifier family active.");
         }
         probe.Clear();
         SDL3.SDL.SetModState(SDL3.SDL.Keymod.Shift | SDL3.SDL.Keymod.Ctrl);

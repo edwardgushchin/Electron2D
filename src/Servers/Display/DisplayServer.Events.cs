@@ -401,10 +401,14 @@ public sealed partial class DisplayServer
         _hasEventKeyModifiers = true;
         var ownModifier = source.Scancode switch
         {
-            SDL.Scancode.LShift or SDL.Scancode.RShift => SDL.Keymod.Shift,
-            SDL.Scancode.LCtrl or SDL.Scancode.RCtrl => SDL.Keymod.Ctrl,
-            SDL.Scancode.LAlt or SDL.Scancode.RAlt => SDL.Keymod.Alt,
-            SDL.Scancode.LGUI or SDL.Scancode.RGUI => SDL.Keymod.GUI,
+            SDL.Scancode.LShift => SDL.Keymod.LShift,
+            SDL.Scancode.RShift => SDL.Keymod.RShift,
+            SDL.Scancode.LCtrl => SDL.Keymod.LCtrl,
+            SDL.Scancode.RCtrl => SDL.Keymod.RCtrl,
+            SDL.Scancode.LAlt => SDL.Keymod.LAlt,
+            SDL.Scancode.RAlt => SDL.Keymod.RAlt,
+            SDL.Scancode.LGUI => SDL.Keymod.LGUI,
+            SDL.Scancode.RGUI => SDL.Keymod.RGUI,
             _ => SDL.Keymod.None,
         };
         var modifiers = source.Mod & ~ownModifier;
