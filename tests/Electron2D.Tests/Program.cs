@@ -207,6 +207,7 @@ VerifyResources();
 VerifyPackedScenes();
 VerifyInputMapConfiguration();
 VerifyInputMapMatching();
+VerifyInputEventActionValues();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();
@@ -4552,6 +4553,103 @@ static void VerifyInputMapMatching()
     }
 }
 
+static void VerifyInputEventActionValues()
+{
+    const string name = "tests.input.action.values";
+    var map = InputMap.Instance;
+    if (map.HasAction(name))
+        map.EraseAction(name);
+
+    using var action = new InputEventAction();
+    using var selfBinding = new InputEventAction { Action = name };
+    using var firstKey = new InputEventKey { Keycode = Key.F10 };
+    using var secondKey = new InputEventKey { Keycode = Key.F11 };
+    var properties = action.GetPropertyList();
+    var actionProperty = properties.Single(property => property.Name == nameof(InputEventAction.Action));
+    var indexProperty = properties.Single(property => property.Name == nameof(InputEventAction.EventIndex));
+    var pressedProperty = properties.Single(property => property.Name == nameof(InputEventAction.Pressed));
+    var strengthProperty = properties.Single(property => property.Name == nameof(InputEventAction.Strength));
+    Require(action.Action == string.Empty && action.EventIndex == -1 && !action.Pressed &&
+            action.Strength == 1f && action.AsText() == string.Empty &&
+            !action.PropertyCanRevert(actionProperty) && !action.PropertyCanRevert(indexProperty) &&
+            !action.PropertyCanRevert(pressedProperty) && !action.PropertyCanRevert(strengthProperty),
+        "Direct action defaults and stored-property revert values must match construction.");
+
+    var changes = 0;
+    action.Changed += _ => changes++;
+    action.Action = name;
+    action.EventIndex = 31;
+    action.Pressed = true;
+    action.Strength = 0.25f;
+    using var copy = (InputEventAction)action.Duplicate();
+    Require(changes == 4 && copy.Action == name && copy.EventIndex == 31 && copy.Pressed &&
+            copy.Strength == 0.25f && action.PropertyCanRevert(actionProperty) &&
+            action.PropertyCanRevert(indexProperty) && action.PropertyCanRevert(pressedProperty) &&
+            action.PropertyCanRevert(strengthProperty),
+        "Direct action values must notify, duplicate and expose their stored revert state.");
+
+    Expect<ArgumentNullException>(() => action.Action = null!, "An action name cannot be null.");
+    Expect<ArgumentOutOfRangeException>(() => action.Strength = float.NaN, "NaN strength must fail.");
+    Expect<ArgumentOutOfRangeException>(() => action.Strength = float.PositiveInfinity,
+        "Infinite strength must fail.");
+    Require(changes == 4 && action.Action == name && action.EventIndex == 31 &&
+            action.Strength == 0.25f,
+        "Invalid assignments must leave the event and change count intact.");
+    action.Strength = -4f;
+    Require(action.Strength == 0f && action.Pressed, "A zero-strength direct press remains pressed.");
+    action.Strength = 4f;
+    Require(action.Strength == 1f, "Finite action strength clamps to one.");
+    action.EventIndex = int.MinValue;
+    using var negativeIndexCopy = (InputEventAction)action.Duplicate();
+    Require(action.EventIndex == int.MinValue && negativeIndexCopy.EventIndex == int.MinValue,
+        "The event retains and copies a signed negative index before dispatch interprets it.");
+    action.EventIndex = int.MaxValue;
+    Require(action.EventIndex == int.MaxValue,
+        "The event retains a large positive index before the input source-capacity boundary.");
+    action.EventIndex = 0;
+    Require(action.EventIndex == 0, "The first explicit binding index is valid.");
+    action.EventIndex = -1;
+    Require(action.EventIndex == -1, "The unindexed source sentinel is valid.");
+
+    try
+    {
+        Require(action.AsText() == name, "An unregistered action description falls back to its name.");
+        map.AddAction(name);
+        map.ActionAddEvent(name, selfBinding);
+        Require(action.AsText() == name, "A synthetic self-binding must not recurse into its description.");
+        Input.Instance.ActionPress(name);
+        selfBinding.Action = name + ".other";
+        Require(!Input.Instance.IsActionPressed(name),
+            "Editing a registered direct-action binding must invalidate its cached action state.");
+        selfBinding.Action = name;
+        map.ActionAddEvent(name, firstKey);
+        map.ActionAddEvent(name, secondKey);
+        Require(action.AsText() == firstKey.AsText(),
+            "A direct action description uses its first concrete binding.");
+        map.ActionEraseEvent(name, firstKey);
+        Require(action.AsText() == secondKey.AsText(),
+            "Removing the first concrete binding exposes the next description.");
+        map.ActionEraseEvents(name);
+        Require(action.AsText() == name, "Removing all bindings restores the action-name fallback.");
+    }
+    finally
+    {
+        if (map.HasAction(name))
+            map.EraseAction(name);
+    }
+
+    action.RevertProperty(actionProperty);
+    action.RevertProperty(indexProperty);
+    action.RevertProperty(pressedProperty);
+    action.RevertProperty(strengthProperty);
+    Require(action.Action == string.Empty && action.EventIndex == -1 && !action.Pressed &&
+            action.Strength == 1f && action.AsText() == string.Empty,
+        "Reverting all direct action descriptors must restore the constructor state.");
+    using var disposed = new InputEventAction();
+    disposed.Dispose();
+    Expect<ObjectDisposedException>(() => disposed.AsText(), "Disposed direct action text must fail.");
+}
+
 static void VerifyInput()
 {
     const string jump = "tests.input.jump";
@@ -4789,8 +4887,6 @@ static void VerifyInput()
         using (var invalidMotion = new InputEventMouseMotion())
         using (var invalidTouch = new InputEventScreenTouch())
         {
-            Expect<ArgumentOutOfRangeException>(() => invalidAction.EventIndex = Input.MaxEventsPerAction,
-                "Direct action indexes must enforce the source ceiling.");
             Expect<ArgumentOutOfRangeException>(() => invalidAction.Strength = float.NaN,
                 "Direct action strength must reject NaN.");
             Expect<ArgumentOutOfRangeException>(() => invalidKey.Unicode = 0xD800,
@@ -4953,6 +5049,18 @@ static void VerifyInput()
                 "An unindexed direct action event must not exceed the 32-source action limit.");
             Require(!input.IsActionPressed(full),
                 "A rejected direct action event must not mutate action state.");
+        }
+        using (var explicitOverflow = new InputEventAction
+        {
+            Action = jump,
+            EventIndex = Input.MaxEventsPerAction,
+            Pressed = true,
+        })
+        {
+            Expect<InvalidOperationException>(() => input.ParseInputEvent(explicitOverflow),
+                "Parsing an explicit index outside the 32-source range must fail before state mutation.");
+            Require(!input.IsActionPressed(jump),
+                "A rejected indexed direct event must leave its action released.");
         }
 
         var syntheticBinding = new InputEventAction { Action = up };
@@ -5177,6 +5285,33 @@ static void VerifyInput()
             direct.Pressed = false;
             input.ParseInputEvent(direct);
             Require(!input.IsActionPressed(jump), "A direct action release must remove its synthetic event source.");
+        }
+        using (var negative = new InputEventAction { Action = jump, Device = 4, EventIndex = int.MinValue, Pressed = true })
+        using (var release = new InputEventAction { Action = jump, Device = 4, EventIndex = -1 })
+        {
+            input.ParseInputEvent(negative);
+            Require(input.IsActionPressed(jump), "A negative index selects the action's post-binding source slot.");
+            input.ParseInputEvent(release);
+            Require(!input.IsActionPressed(jump),
+                "Another negative index on the same device must release that source slot.");
+        }
+        using (var weak = new InputEventAction { Action = jump, Device = 10, EventIndex = 0, Pressed = true, Strength = 0f })
+        using (var strong = new InputEventAction { Action = jump, Device = 10, EventIndex = 1, Pressed = true, Strength = 0.6f })
+        {
+            input.ParseInputEvent(weak);
+            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0f,
+                "A zero-strength indexed action source remains logically pressed.");
+            input.ParseInputEvent(strong);
+            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.6f,
+                "Independent direct action indexes combine their maximum strength.");
+            weak.Pressed = false;
+            input.ParseInputEvent(weak);
+            Require(input.IsActionPressed(jump) && input.GetActionStrength(jump) == 0.6f,
+                "Releasing one direct action index must preserve another pressed source.");
+            strong.Pressed = false;
+            input.ParseInputEvent(strong);
+            Require(!input.IsActionPressed(jump),
+                "Releasing the final indexed source must clear the action press.");
         }
 
         using (var motion = new InputEventMouseMotion

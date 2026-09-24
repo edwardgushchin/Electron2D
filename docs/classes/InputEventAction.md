@@ -17,10 +17,10 @@ Last updated: 2026-09-24
 Represents a named input action being pressed or released.
 
 - Responsibility: injects a named registered action independently of hardware bindings.
-- Complete declared API: `Action`, `EventIndex` (`-1` or `0..31`), `Pressed`, clamped finite `Strength`; overrides `IsAction`, `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All four values are stored typed descriptors. An unindexed direct event uses the slot after mapped bindings and is rejected before mutation when all 32 slots are occupied.
-- Lifecycle/state: parsing a press adds one device/index source and parsing a release removes it; a zero-strength press remains logically pressed. Public `IsMatch` can recognize a physical event through the named action, while exact map binding lookup only equates synthetic events with the same action name. `AsText` prefers the action's first non-action binding text and falls back to its own name, avoiding recursive descriptions when synthetic events are registered as bindings.
-- Errors/threading: null action assignment, invalid index/non-finite strength, disposed use, or parsing an unregistered action throws. Caller coordinates mutation.
-- Verification: direct press/release/strength, source identity, duplication, and descriptions are covered.
+- Complete declared API: `Action`, signed `EventIndex` (default `-1`), `Pressed`, clamped finite `Strength`; overrides `IsAction`, `IsMatch`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All four values are stored typed descriptors. A negative index uses the slot after mapped bindings; parsing rejects a resolved index beyond the 32-source capacity before mutation.
+- Lifecycle/state: parsing a press adds one device/index source and parsing a release removes it; a zero-strength press remains logically pressed. Negative `EventIndex` values select the slot after configured bindings, while nonnegative indexes and the device identify independent pressed sources. Public `IsMatch` can recognize a physical event through the named action, while exact map binding lookup only equates synthetic events with the same action name. `AsText` prefers the action's first non-action binding text and falls back to its own name, avoiding recursive descriptions when synthetic events are registered as bindings.
+- Errors/threading: null action assignment, non-finite strength, disposed use, parsing an unregistered action or exceeding the 32-source capacity throws. Caller coordinates mutation.
+- Verification: constructor and descriptor defaults, notification and revert behavior, invalid strength rollback, signed index storage with dispatch capacity failure, finite clamping, zero-strength press, independent indexed sources, duplication, binding invalidation and description order are covered by managed checks. Concrete binding wording and localization retain their own coverage limits.
 
 This event is useful for deterministic simulation and remapping. Parsing it updates action state directly and does
 not require a hardware binding, but the action itself must already exist in [`InputMap`](InputMap.md).
@@ -87,15 +87,14 @@ Gets or sets the action name.
 
 Gets or sets the corresponding binding index.
 
-**Value:** Minus one for an independent synthetic source, or zero through 31 for a mapped binding.
+**Value:** Any signed integer is retained. Negative values select the slot after configured bindings; the default is `-1`.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: The value is below minus one or above 31.
 - `ObjectDisposedException`: The event is disposing or disposed.
 - `Exception`: A [`Resource.Changed`](Resource.md#e-electron2d-resource-changed) handler throws after the value is assigned.
 
-**Remarks:** An unindexed event has no available source slot when its action already contains 32 bindings and is then rejected by [`Input.ParseInputEvent(InputEvent)`](Input.md#m-electron2d-input-parseinputevent-electron2d-inputevent).
+**Remarks:** `Input.ParseInputEvent` rejects a resolved index of 32 or greater before mutating input state. Action name, device and selected index identify the source that a later event releases.
 
 <a id="p-electron2d-inputeventaction-pressed"></a>
 ### `public bool Pressed { get; set; }`
@@ -164,9 +163,9 @@ Tests whether another event matches this event's named action, including a physi
 <a id="m-electron2d-inputeventaction-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the first concrete binding's text. If no concrete binding exists, returns the action name; an unnamed action returns an empty string. Synthetic bindings are skipped to prevent recursive descriptions.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The first concrete binding's text, the action name, or an empty string when unnamed.
 
 **Exceptions**
 

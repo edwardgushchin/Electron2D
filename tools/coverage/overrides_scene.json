@@ -357,7 +357,7 @@
       "electron2d": "method:Electron2D.InputEventAction.AsText()",
       "godot": "InputEvent::method:as_text()",
       "state": "Partial",
-      "reason": "Derived override of inherited InputEvent virtual contract; ADR 0038."
+      "reason": "ADR 0038 intentionally skips synthetic indirection and falls back to the action name. VerifyInputEventActionValues checks ordering, fallback, removal and recursion avoidance; complete localized wording depends on each concrete binding's pending AsText audit."
     },
     {
       "electron2d": "method:Electron2D.InputEventAction.IsAction(System.String,System.Boolean)",
@@ -2613,6 +2613,11 @@
     }
   ],
   "statusGroups": [
+    {"state": "Partial", "reason": "All four declared value rows and direct action source identity are audited under ADR 0038. AsText selects the first concrete binding or falls back to the action name, but that concrete event's localized wording remains Partial on the inherited InputEvent::as_text row; do not infer full type parity from value storage.", "godot": ["class:InputEventAction"]},
+    {"state": "Implemented", "reason": "VerifyInputEventActionValues checks empty/ordinal names, null rejection, notifications, registered-binding invalidation, typed descriptors, revert and duplication. Direct IsAction name comparison is audited on the inherited row under ADR 0038.", "godot": ["InputEventAction::property:action"]},
+    {"state": "Implemented", "reason": "The pinned setter retains signed indexes, including int.MinValue and int.MaxValue, with typed copy/revert. Negative indexes select the post-binding slot; VerifyInput checks the 32-source rejection before dispatch mutation and two explicit indexes whose press/release contributions remain independent by action, device and index under ADR 0038.", "godot": ["InputEventAction::property:event_index"]},
+    {"state": "Implemented", "reason": "The false default, raw press/release transitions, typed descriptor revert/copy and a logically pressed zero-strength source are checked by VerifyInputEventActionValues and VerifyInput under ADR 0038.", "godot": ["InputEventAction::property:pressed"]},
+    {"state": "Implemented", "reason": "The 1.0 default, finite clamp to [0,1], NaN/infinity rejection before mutation, copy/revert and zero effective strength on release are checked by VerifyInputEventActionValues, VerifyInputMapMatching and indexed VerifyInput sources under ADR 0038.", "godot": ["InputEventAction::property:strength"]},
     {"state": "Partial", "reason": "Registration, deadzones, exact binding lookup, event action status and snapshot collections are audited. Localized action descriptions and LoadFromProjectSettings retain separately documented text, event-family and platform limits under ADR 0038.", "godot": ["class:InputMap"]},
     {"state": "Implemented", "reason": "VerifyInputMapConfiguration checks default 0.2 and explicit zero/one deadzones, ordinal names, duplicate/missing registration errors, immutable registration-order snapshots and action-state removal. Typed exception and ordered collection adaptations follow ADR 0038.", "godot": ["InputMap::method:add_action(StringName:,float:)", "InputMap::method:erase_action(StringName:)", "InputMap::method:get_actions()", "InputMap::method:has_action(StringName:)"]},
     {"state": "Implemented", "reason": "The finite [0,1] deadzone boundary, default value, rejected-change rollback and analog action effect are checked by VerifyInputMapConfiguration and VerifyInput; typed exceptions follow ADR 0038.", "godot": ["InputMap::method:action_get_deadzone(StringName:)", "InputMap::method:action_set_deadzone(StringName:,float:)"]},

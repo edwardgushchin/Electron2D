@@ -22,6 +22,7 @@ public sealed class InputEventAction : InputEvent
 
     /// <summary>Gets or sets the action name.</summary>
     /// <value>A case-sensitive name; the default is empty until configured.</value>
+    /// <remarks>Changing a registered binding invalidates its cached action contribution before public change handlers run.</remarks>
     /// <exception cref="ArgumentNullException">The assigned value is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
@@ -32,9 +33,8 @@ public sealed class InputEventAction : InputEvent
     }
 
     /// <summary>Gets or sets the corresponding binding index.</summary>
-    /// <value>Minus one for an independent synthetic source, or zero through 31 for a mapped binding.</value>
-    /// <remarks>An unindexed event has no available source slot when its action already contains 32 bindings and is then rejected by <see cref="Input.ParseInputEvent"/>.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">The value is below minus one or above 31.</exception>
+    /// <value>The signed index; negative values select the slot after configured bindings. The default is minus one.</value>
+    /// <remarks>The same action, device and resolved index identify a press/release source. <see cref="Input.ParseInputEvent"/> rejects a resolved index outside its 32-source capacity before state mutation.</remarks>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>
     public int EventIndex
@@ -43,8 +43,6 @@ public sealed class InputEventAction : InputEvent
         set
         {
             ThrowIfDisposed();
-            if (value < -1 || value >= Input.MaxEventsPerAction)
-                throw new ArgumentOutOfRangeException(nameof(value), value, "An event index must be -1 or between 0 and 31.");
             _eventIndex = value;
             EmitInputChanged();
         }
@@ -102,7 +100,10 @@ public sealed class InputEventAction : InputEvent
         return _action.Length != 0 && @event.IsAction(_action, exactMatch);
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a concrete binding description for this action, or the action name when none exists.</summary>
+    /// <returns>The first non-action binding's text, the action name, or an empty string when unnamed.</returns>
+    /// <remarks>Synthetic bindings are skipped so action descriptions cannot recurse.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
