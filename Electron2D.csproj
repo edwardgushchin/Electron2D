@@ -18,4 +18,9 @@
     <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.9" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
     <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.11" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="LICENSE;THIRD_PARTY_NOTICES.md" CopyToPublishDirectory="Always" />
+    <None Update="src/Vendor/SDL3-CS/UPSTREAM-LICENSE.txt;src/Vendor/Box2D.NET/LICENSE;src/Vendor/Clipper2/LICENSE;src/Vendor/FastNoiseLite/LICENSE" CopyToPublishDirectory="Always" />
+    <None Update="docs/licenses/PCG32-LICENSE.txt;docs/licenses/PolyPartition-LICENSE.txt;docs/coverage/GODOT-LICENSE.txt;docs/licenses/native/*" CopyToPublishDirectory="Always" />
+  </ItemGroup>
 </Project>

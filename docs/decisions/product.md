@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -140,7 +140,7 @@ Native SDL deployment remains a separate platform constraint outside the verifie
 <a id="adr-0012"></a>
 ## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-09-23
+Last updated: 2026-09-25
 
 - Status: Accepted
 - Scope: Managed dependency ownership, deployment packaging, and future 2D physics, text and audio
@@ -160,6 +160,7 @@ SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1
 - Image decoding uses SDL_image through the complete SDL3-CS Image binding module from that same release. The user-approved Linux dependency is `SDL3-CS.Linux.Image`, pinned to `3.4.6.9` (SDL_image 3.4.6), owned by `Electron2D.csproj` and delivered transitively to consumers. This adds native libraries while keeping managed bindings internal to `Electron2D.dll`; public codec integration and platform acceptance are tracked under [ADR 0039](resources.md#adr-0039). On Linux all SDL bindings and native extensions must share one core library; the engine resolves core imports by `libSDL3.so.0` and loads that core before SDL_image or SDL_shadercross.
 - The first text slice vendors the complete SDL3-CS TTF binding module and packages SDL_ttf 3 with HarfBuzz under [ADR 0046](rendering.md#adr-0046). The first audio slice compiles its selected managed FAudio binding into `Electron2D.dll` and packages native FAudio over SDL3 under [ADR 0047](audio.md#adr-0047). Neither backend is a production dependency until its executable slice is integrated and verified; both retain the one-managed-assembly and target-platform rules.
 - Pin each vendored source to an upstream release and commit, retain its required license notices, record local patches, and make upgrades explicit reviewable changes. Verify the compiled assembly, dependent behavior, and target-specific packaging after each update.
+- License Electron2D-authored code under the root MIT license with Eduard Gushchin's copyright notice. Vendored code, adapted algorithms, reference data, native packages, and self-contained runtime files retain their own terms. Publish the applicable third-party license texts alongside a current `THIRD_PARTY_NOTICES.md`; the checked Linux inventory and remaining Vkd3d LGPL source-provenance requirement are recorded there. A change of RID, runtime pack, native package, or published native payload requires a renewed artifact audit before release.
 - Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS, Box2D.NET or FAudio binding types; verify the exported assembly surface when integrating each source tree. Physics, text and audio APIs use Electron2D types.
 - Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, FAudio or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
 - Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
