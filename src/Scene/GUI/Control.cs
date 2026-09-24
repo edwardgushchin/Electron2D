@@ -50,39 +50,15 @@ public partial class Control : CanvasItem
     public Vector2 Position
     {
         get { ThrowIfDisposed(); return _position; }
-        set
-        {
-            EnsureMutable(); EnsureFinite(value, nameof(value));
-            if (value == _position) return;
-            var parentRect = GetParentAnchorRect();
-            var area = parentRect.Size;
-            var logicalX = IsLayoutRTL() ? area.X + 2 * parentRect.Position.X - value.X - _size.X : value.X;
-            _offsets[0] = logicalX - _anchors[0] * area.X;
-            _offsets[1] = value.Y - _anchors[1] * area.Y;
-            _offsets[2] = logicalX + _size.X - _anchors[2] * area.X;
-            _offsets[3] = value.Y + _size.Y - _anchors[3] * area.Y;
-            Reflow();
-        }
+        set => SetPosition(value);
     }
 
     /// <summary>Gets or sets the local rectangle's size before rotation and scale.</summary>
-    /// <value>A finite, nonnegative size.</value>
+    /// <value>A finite requested size clamped to the effective minimum and maximum.</value>
     public Vector2 Size
     {
         get { ThrowIfDisposed(); return _size; }
-        set
-        {
-            EnsureMutable(); EnsureFinite(value, nameof(value));
-            if (value.X < 0 || value.Y < 0) throw new ArgumentOutOfRangeException(nameof(value));
-            if (value == _size) return;
-            var parentRect = GetParentAnchorRect();
-            var area = parentRect.Size;
-            var logicalX = IsLayoutRTL() ? area.X + 2 * parentRect.Position.X - _position.X - value.X : _position.X;
-            _offsets[0] = logicalX - _anchors[0] * area.X;
-            _offsets[2] = logicalX + value.X - _anchors[2] * area.X;
-            _offsets[3] = _position.Y + value.Y - _anchors[3] * area.Y;
-            Reflow();
-        }
+        set => SetSize(value);
     }
 
     /// <summary>Gets or sets the caller-supplied lower bound for layout size.</summary>
@@ -308,12 +284,69 @@ public partial class Control : CanvasItem
     public Vector2 GlobalPosition
     {
         get => GetGlobalTransform().Origin;
-        set
+        set => SetGlobalPosition(value);
+    }
+
+    /// <summary>Sets physical local position by changing offsets or, when requested, anchors.</summary>
+    /// <param name="position">The finite upper-left point.</param>
+    /// <param name="keepOffsets">Keep offsets and recompute anchors; requires a nonzero parent area.</param>
+    public void SetPosition(Vector2 position, bool keepOffsets = false) => SetLayoutRect(position, _size, keepOffsets);
+
+    /// <summary>Sets physical global position while keeping the local pivot transform.</summary>
+    /// <param name="position">The finite global canvas point.</param>
+    /// <param name="keepOffsets">Keep offsets and recompute anchors; requires a nonzero parent area.</param>
+    public void SetGlobalPosition(Vector2 position, bool keepOffsets = false)
+    {
+        EnsureMutable(); EnsureFinite(position, nameof(position));
+        var local = GetParentItem() is { } parent ? parent.GetGlobalTransform().AffineInverse() * position : position;
+        SetPosition(_position + local - GetTransform().Origin, keepOffsets);
+    }
+
+    /// <summary>Sets size within its minimum and maximum bounds, changing offsets or anchors.</summary>
+    /// <param name="size">The finite requested size, clamped to the current bounds.</param>
+    /// <param name="keepOffsets">Keep offsets and recompute anchors; requires a nonzero parent area.</param>
+    public void SetSize(Vector2 size, bool keepOffsets = false)
+    {
+        EnsureMutable(); EnsureFinite(size, nameof(size));
+        var minimum = GetCombinedMinimumSize();
+        var maximum = GetCombinedMaximumSize();
+        size = new(Mathf.Max(size.X, minimum.X), Mathf.Max(size.Y, minimum.Y));
+        if (maximum.X >= 0) size.X = Mathf.Min(size.X, maximum.X);
+        if (maximum.Y >= 0) size.Y = Mathf.Min(size.Y, maximum.Y);
+        SetLayoutRect(_position, size, keepOffsets);
+    }
+
+    /// <summary>Resets size to its effective minimum, capped by any maximum.</summary>
+    public void ResetSize() => SetSize(Vector2.Zero);
+
+    private void SetLayoutRect(Vector2 position, Vector2 size, bool keepOffsets)
+    {
+        EnsureMutable(); EnsureFinite(position, nameof(position)); EnsureFinite(size, nameof(size));
+        if (size.X < 0 || size.Y < 0) throw new ArgumentOutOfRangeException(nameof(size));
+        var parentRect = GetParentAnchorRect();
+        var area = parentRect.Size;
+        if (keepOffsets && (area.X == 0 || area.Y == 0))
+            throw new InvalidOperationException("Anchors require a nonzero parent area on both axes.");
+        var logicalX = IsLayoutRTL() ? area.X + 2 * parentRect.Position.X - position.X - size.X : position.X;
+        Span<float> values = stackalloc float[4];
+        if (keepOffsets)
         {
-            EnsureMutable(); EnsureFinite(value, nameof(value));
-            var local = GetParentItem() is { } parent ? parent.GetGlobalTransform().AffineInverse() * value : value;
-            Position += local - GetTransform().Origin;
+            values[0] = (logicalX - _offsets[0]) / area.X;
+            values[1] = (position.Y - _offsets[1]) / area.Y;
+            values[2] = (logicalX + size.X - _offsets[2]) / area.X;
+            values[3] = (position.Y + size.Y - _offsets[3]) / area.Y;
         }
+        else
+        {
+            values[0] = logicalX - _anchors[0] * area.X;
+            values[1] = position.Y - _anchors[1] * area.Y;
+            values[2] = logicalX + size.X - _anchors[2] * area.X;
+            values[3] = position.Y + size.Y - _anchors[3] * area.Y;
+        }
+        foreach (var value in values) EnsureFinite(value, nameof(position));
+        for (var index = 0; index < 4; index++)
+            if (keepOffsets) _anchors[index] = values[index]; else _offsets[index] = values[index];
+        Reflow();
     }
 
     /// <summary>Gets or sets the left anchor fraction.</summary>
@@ -332,6 +365,30 @@ public partial class Control : CanvasItem
     public float OffsetRight { get => GetOffset(Side.Right); set => SetOffset(Side.Right, value); }
     /// <summary>Gets or sets the bottom offset.</summary>
     public float OffsetBottom { get => GetOffset(Side.Bottom); set => SetOffset(Side.Bottom, value); }
+
+    /// <summary>Gets the left and top offsets as a pair.</summary>
+    public Vector2 GetBegin() { ThrowIfDisposed(); return new(_offsets[0], _offsets[1]); }
+
+    /// <summary>Gets the right and bottom offsets as a pair.</summary>
+    public Vector2 GetEnd() { ThrowIfDisposed(); return new(_offsets[2], _offsets[3]); }
+
+    /// <summary>Sets the left and top offsets together and resolves the rectangle once.</summary>
+    public void SetBegin(Vector2 position)
+    {
+        EnsureMutable(); EnsureFinite(position, nameof(position));
+        if (_offsets[0] == position.X && _offsets[1] == position.Y) return;
+        _offsets[0] = position.X; _offsets[1] = position.Y;
+        Reflow();
+    }
+
+    /// <summary>Sets the right and bottom offsets together and resolves the rectangle once.</summary>
+    public void SetEnd(Vector2 position)
+    {
+        EnsureMutable(); EnsureFinite(position, nameof(position));
+        if (_offsets[2] == position.X && _offsets[3] == position.Y) return;
+        _offsets[2] = position.X; _offsets[3] = position.Y;
+        Reflow();
+    }
 
     /// <summary>Gets the anchor for a rectangle side.</summary>
     /// <param name="side">The side to query.</param>

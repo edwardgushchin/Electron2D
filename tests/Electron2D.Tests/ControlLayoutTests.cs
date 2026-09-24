@@ -63,7 +63,9 @@ internal static class ControlLayoutTests
             Check(movable.Parent == destination, "Singular destination rejects before hierarchy mutation.");
             Reject<ArgumentOutOfRangeException>(() => child.SetAnchor((Side)10, 0));
             Reject<ArgumentOutOfRangeException>(() => child.SetOffset(Side.Left, float.NaN));
-            Reject<ArgumentOutOfRangeException>(() => child.Size = new(-1, 0));
+            using var negative = new Control { Size = new(5, 5) };
+            negative.Size = new(-1, 0);
+            Check(negative.Size == Vector2.Zero, "Negative finite size requests clamp to the effective minimum.");
             Reject<InvalidOperationException>(() => Task.Run(() => child.Position = Vector2.Zero).GetAwaiter().GetResult());
         }
         VerifyAnchorPresets();
@@ -71,6 +73,7 @@ internal static class ControlLayoutTests
         VerifyMaximumSize();
         VerifyLayoutDirection();
         VerifyOffsetPresets();
+        VerifyLayoutEditing();
         Check(child.IsDisposed && parent.IsDisposed, "Tree disposal releases controls.");
         Console.WriteLine("Control layout checks passed.");
     }
@@ -524,6 +527,105 @@ internal static class ControlLayoutTests
             _ => 3
         };
         return (new Vector2(rtl ? 100 - x - width : x, y), new Vector2(width, height));
+    }
+
+    private static void VerifyLayoutEditing()
+    {
+        using var viewport = new TestViewport();
+        var parent = new Control { Name = "editing-parent", Position = new(20, 30), Size = new(100, 80) };
+        var child = new Control { Name = "editing-child", Position = new(10, 12), Size = new(20, 10) };
+        viewport.AddChild(parent);
+        parent.AddChild(child);
+        using var tree = new SceneTree(viewport);
+        var originalOffsets = (child.OffsetLeft, child.OffsetTop, child.OffsetRight, child.OffsetBottom);
+        child.SetPosition(new(30, 20), keepOffsets: true);
+        Check(child.Position == new Vector2(30, 20) && child.Size == new Vector2(20, 10)
+            && child.AnchorLeft == .2f && child.AnchorRight == .2f && child.AnchorTop == .1f && child.AnchorBottom == .1f,
+            "Keeping offsets moves anchors to place the unchanged rectangle.");
+        Check(originalOffsets == (child.OffsetLeft, child.OffsetTop, child.OffsetRight, child.OffsetBottom),
+            "Keep-offset position edits preserve all four stored offsets.");
+        parent.Size = new(200, 160);
+        Check(child.Position == new Vector2(50, 28) && child.Size == new Vector2(20, 10),
+            "Recomputed anchors keep their adaptive position on a later parent resize.");
+        child.SetSize(new(40, 20), keepOffsets: true);
+        Check(child.Position == new Vector2(50, 28) && child.Size == new Vector2(40, 20)
+            && originalOffsets == (child.OffsetLeft, child.OffsetTop, child.OffsetRight, child.OffsetBottom),
+            "Keep-offset size edits change anchors while retaining the physical upper-left point.");
+        var anchors = (child.AnchorLeft, child.AnchorTop, child.AnchorRight, child.AnchorBottom);
+        child.SetPosition(new(15, 25));
+        child.SetSize(new(45, 25));
+        Check(child.Position == new Vector2(15, 25) && child.Size == new Vector2(45, 25)
+            && anchors == (child.AnchorLeft, child.AnchorTop, child.AnchorRight, child.AnchorBottom),
+            "Default position and size methods edit offsets without moving anchors.");
+
+        parent.Scale = new(2, 3);
+        var beforeGlobalOffsets = (child.OffsetLeft, child.OffsetTop, child.OffsetRight, child.OffsetBottom);
+        child.SetGlobalPosition(new(100, 90), keepOffsets: true);
+        Near(child.GlobalPosition, new(100, 90));
+        Check(beforeGlobalOffsets == (child.OffsetLeft, child.OffsetTop, child.OffsetRight, child.OffsetBottom),
+            "Global keep-offset placement converts through the parent transform into new anchors.");
+
+        var edge = new Control { Name = "edge", Position = new(5, 6), Size = new(10, 10) };
+        parent.AddChild(edge);
+        edge.SetBegin(new(8, 9));
+        Check(edge.GetBegin() == new Vector2(8, 9) && edge.Position == new Vector2(8, 9) && edge.Size == new Vector2(7, 7),
+            "Begin edits both leading offsets and resolves one rectangle.");
+        edge.SetEnd(new(25, 29));
+        Check(edge.GetEnd() == new Vector2(25, 29) && edge.Size == new Vector2(17, 20),
+            "End edits both trailing offsets and resolves one rectangle.");
+        var beforeEdge = (edge.GetBegin(), edge.GetEnd());
+        Reject<ArgumentOutOfRangeException>(() => edge.SetBegin(new(float.PositiveInfinity, 1)));
+        Reject<ArgumentOutOfRangeException>(() => edge.SetEnd(new(1, float.NaN)));
+        Check(beforeEdge == (edge.GetBegin(), edge.GetEnd()), "Invalid edge pairs leave all offsets unchanged.");
+
+        var bounded = new Control { Name = "bounded", Size = new(10, 10), CustomMinimumSize = new(30, 20), CustomMaximumSize = new(40, 25) };
+        parent.AddChild(bounded);
+        bounded.SetSize(new(5, 50));
+        Check(bounded.Size == new Vector2(30, 25), "Explicit size clamps minimum before maximum per axis.");
+        bounded.ResetSize();
+        Check(bounded.Size == new Vector2(30, 20), "ResetSize resolves the effective minimum under current bounds.");
+
+        using var detached = new Control { Position = new(3, 4), Size = new(5, 6) };
+        var beforeDetached = (detached.AnchorLeft, detached.AnchorTop, detached.AnchorRight, detached.AnchorBottom);
+        Reject<InvalidOperationException>(() => detached.SetPosition(new(10, 20), keepOffsets: true));
+        Reject<InvalidOperationException>(() => detached.SetSize(new(8, 9), keepOffsets: true));
+        Check(detached.Position == new Vector2(3, 4) && detached.Size == new Vector2(5, 6)
+            && beforeDetached == (detached.AnchorLeft, detached.AnchorTop, detached.AnchorRight, detached.AnchorBottom),
+            "A detached zero-area control rejects anchor recomputation before mutation.");
+        Reject<ArgumentOutOfRangeException>(() => child.SetPosition(new(float.NaN, 0)));
+        Reject<ArgumentOutOfRangeException>(() => child.SetSize(new(float.NaN, 0)));
+        child.SetSize(new(-1, 0));
+        Check(child.Size == Vector2.Zero, "The method and property share negative-size clamping.");
+        Reject<ArgumentOutOfRangeException>(() => child.SetGlobalPosition(new(0, float.PositiveInfinity)));
+
+        var zeroWidthParent = new Control { Name = "zero-width", Size = new(0, 40) };
+        var zeroWidthChild = new Control { Name = "zero-width-child", Position = new(3, 4), Size = new(5, 6) };
+        viewport.AddChild(zeroWidthParent);
+        zeroWidthParent.AddChild(zeroWidthChild);
+        var zeroWidthAnchors = (zeroWidthChild.AnchorLeft, zeroWidthChild.AnchorTop, zeroWidthChild.AnchorRight, zeroWidthChild.AnchorBottom);
+        Reject<InvalidOperationException>(() => zeroWidthChild.SetPosition(new(7, 8), keepOffsets: true));
+        Reject<InvalidOperationException>(() => zeroWidthChild.SetSize(new(9, 10), keepOffsets: true));
+        Reject<InvalidOperationException>(() => zeroWidthChild.SetGlobalPosition(new(11, 12), keepOffsets: true));
+        Check(zeroWidthChild.Position == new Vector2(3, 4) && zeroWidthChild.Size == new Vector2(5, 6)
+            && zeroWidthAnchors == (zeroWidthChild.AnchorLeft, zeroWidthChild.AnchorTop, zeroWidthChild.AnchorRight, zeroWidthChild.AnchorBottom),
+            "An attached zero-width parent rejects every keep-offset edit without changing geometry or anchors.");
+
+        using var singular = new Entity { Name = "singular", Transform = new Transform(Vector2.Zero, Vector2.Down, Vector2.Zero) };
+        var underSingular = new Control { Name = "under-singular", Position = new(3, 4), Size = new(5, 6) };
+        viewport.AddChild(singular);
+        singular.AddChild(underSingular);
+        Reject<InvalidOperationException>(() => underSingular.SetGlobalPosition(new(11, 12)));
+        Check(underSingular.Position == new Vector2(3, 4),
+            "A singular parent transform rejects global placement before mutating local geometry.");
+
+        using var offsetViewport = new OffsetViewport();
+        var root = new Control { Name = "rtl-edit-root", Size = new(20, 10), LayoutDirection = ControlLayoutDirection.RTL };
+        offsetViewport.AddChild(root);
+        using var offsetTree = new SceneTree(offsetViewport);
+        root.SetPosition(new(35, 10), keepOffsets: true);
+        root.SetSize(new(30, 20), keepOffsets: true);
+        Check(root.Position == new Vector2(35, 10) && root.Size == new Vector2(30, 20),
+            "RTL keep-offset edits preserve physical coordinates under a translated viewport rectangle.");
     }
 
     private sealed class DirectionControl(string tag, List<string> notifications) : Control

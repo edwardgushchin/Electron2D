@@ -20988,6 +20988,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetBegin()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetBegin",
+    "signature": "public Electron2D.Vector2 GetBegin()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetBoundMinimumSize()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21043,6 +21056,19 @@
       }
     ],
     "returnType": "Electron2D.Control.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetEnd()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetEnd",
+    "signature": "public Electron2D.Vector2 GetEnd()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -21378,6 +21404,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.ResetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "ResetSize",
+    "signature": "public System.Void ResetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.SetAnchor(Electron2D.Side,System.Single,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21499,6 +21538,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.SetBegin(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetBegin",
+    "signature": "public System.Void SetBegin(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetEnd(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetEnd",
+    "signature": "public System.Void SetEnd(Electron2D.Vector2 position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.SetFocusNeighbor(Electron2D.Side,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -21517,6 +21594,30 @@
         "name": "neighbor",
         "type": "System.String",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetGlobalPosition(Electron2D.Vector2,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetGlobalPosition",
+    "signature": "public System.Void SetGlobalPosition(Electron2D.Vector2 position, System.Boolean keepOffsets = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "keepOffsets",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",
@@ -21570,6 +21671,54 @@
         "name": "margin",
         "type": "System.Int32",
         "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetPosition(Electron2D.Vector2,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetPosition",
+    "signature": "public System.Void SetPosition(Electron2D.Vector2 position, System.Boolean keepOffsets = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "keepOffsets",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetSize(Electron2D.Vector2,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetSize",
+    "signature": "public System.Void SetSize(Electron2D.Vector2 size, System.Boolean keepOffsets = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "keepOffsets",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "System.Void",
