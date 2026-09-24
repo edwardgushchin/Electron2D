@@ -28,7 +28,7 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks rectangle and circle geometry, falling/contact response, impulse, filter changes, live shape edits, freeze and velocity, rejected transforms, tree exit/re-entry, managed shape copying, PackedScene state, disposal and the warmed allocation boundary. [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks coupled capsule geometry, body contact, area detection and warmed allocation. [AnimatableBodyTests](../../tests/Electron2D.Tests/AnimatableBodyTests.cs) checks moving platforms, mode switching, recovery, packing and warmed idle/active kinematic frames. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) checks defaults, mixing, live updates and disposal, duplication and PackedScene ownership. [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional detection, events, geometry changes and lifecycle. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, signed damping, sampled project settings, sleep wakeup, packing and failure recovery. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks force/torque semantics, first-step mass geometry, packing and invalid rollback. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks contact points, multi-shape deduplication, removal/callback failure, sleep, packing and warmed allocations. Release build and the public-surface exporter verify the single-DLL boundary. Other platforms, owner visual acceptance, native allocator accounting and larger-world performance remain unverified.
 
-The shape-query family, other shape resources, kinematic bodies, area audio integration, joints, direct-space state, public `PhysicsServer2D`/RID services, shape-index contact events and remaining RigidBody modes retain exact incomplete coverage rows. An executing node and backend do not make those rows complete.
+The shape-query family, other shape resources, kinematic bodies, area audio integration, joints, direct-space state, public `PhysicsServer2D`/RID services, shape-index contact events and remaining RigidBody modes retain exact incomplete coverage rows. [ADR 0062](../decisions/physics.md#adr-0062) accepts a shared opaque RID, one server-owned registry for the scene's existing physics space, World2D access and typed results that preserve RID and shape index. This is an architecture decision, not implemented query behavior. An executing node and backend do not make those rows complete.
 
 ## Decisions
 
@@ -38,6 +38,7 @@ The shape-query family, other shape resources, kinematic bodies, area audio inte
 - [0057: Positioned and persistent rigid-body forces](../decisions/physics.md#adr-0057)
 - [0058: Rigid-body contact and sleep snapshots](../decisions/physics.md#adr-0058)
 - [0059: Capsule collision resource](../decisions/physics.md#adr-0059)
+- [0062: Shared RID and world-scoped queries](../decisions/physics.md#adr-0062)
 - [0060: Fixed-step kinematic platform motion](../decisions/physics.md#adr-0060)
 - [0012: Managed dependency vendoring](../decisions/product.md#adr-0012)
 - [0008: Spatial scene inheritance](../decisions/scene.md#adr-0008)

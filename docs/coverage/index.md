@@ -79,6 +79,8 @@ The [RigidBody2D](classes/RigidBody2D.md) contact slice under [ADR 0058](../deci
 
 [AnimatableBody2D](classes/AnimatableBody2D.md) now maps both own rows to executable [AnimatableBody](../classes/AnimatableBody.md) under [ADR 0060](../decisions/physics.md#adr-0060). The StaticBody-derived kinematic body derives linear and angular contact velocity from a target transform each nonzero fixed step. `SyncToPhysics=true` defers scene presentation until the solved pose, while false presents an edit immediately; both modes affect a rigid rider. AnimatableBodyTests checks contact transfer, mode changes, rotation, zero delta, invalid rollback, callback failure, reentry, owner-thread access, PackedScene and 64 warmed stationary and moving frames without managed allocations on Linux/.NET 8. Inherited StaticBody conveyor properties, kinematic sweep queries and CharacterBody platform following remain separate rows. Native allocation, other platforms and owner acceptance remain unverified.
 
+The shared RID, PhysicsServer2D ownership and World2D direct-query access model is accepted in [ADR 0062](../decisions/physics.md#adr-0062). It will use the scene's existing solver space and typed C# results with both collider RID and shape index. This decision changes no implementation status: RID, World2D, server and direct-query rows stay Blocked until their executable slices pass behavioral and lifetime checks. Renderer and navigation RID consumers retain separate triggers.
+
 ## State vocabulary
 
 Each row has exactly one state. Typed-C# adaptation is a *mapping description* and may accompany any state.

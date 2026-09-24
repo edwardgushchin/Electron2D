@@ -99,7 +99,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 3 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
-| Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 2 |
 | Trigger: first audio decoding and playback slice. | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028). | 2 |
@@ -117,8 +116,10 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: first 2D skeleton bone and physics-body ownership integration. | 1 |
-| Trigger: first backend-neutral 2D renderer resource-identity and lifetime slice (ADR 0028). | 1 |
+| Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first concrete typed resource file format and serializer with ownership and rollback (ADRs 0013 and 0023). | 1 |
+| Trigger: first executable owned world-resource slice: physics space and direct state under ADR 0062, canvas and navigation under ADRs 0028 and 0052. | 1 |
+| Trigger: first executable shared server resource-identity and lifetime slice under ADR 0062; renderer and navigation consumers retain their own domain gates. | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first public typed loader-plugin registration and callback slice after the concrete internal image-texture loader (ADR 0013). | 1 |

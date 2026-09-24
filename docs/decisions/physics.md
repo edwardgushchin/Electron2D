@@ -182,3 +182,34 @@ Static bodies constrain a rigid body but teleport when their scene transform cha
 ### Consequences
 
 Games can animate moving platforms and doors that push or carry dynamic bodies, using typed scene transforms. CharacterBody platform following and kinematic sweeps remain future slices. Native allocation, other platforms and owner visual acceptance remain unverified.
+
+<a id="adr-0062"></a>
+## ADR 0062: Shared RID identity and world-scoped physics queries
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: Public identity, ownership and access model for 2D physics server resources and direct queries
+- Depends on: [0001](product.md#adr-0001), [0004](product.md#adr-0004), [0008](scene.md#adr-0008), [0054](#adr-0054), [0028](rendering.md#adr-0028)
+
+### Context
+
+The scene already runs an internal Box2D world, but has no public RID, PhysicsServer2D, World2D or direct-space state. The applicable reference query parameters exclude RIDs and may select a shape by RID; results identify a collider by both object and RID, plus a shape index. Server-created physics resources need an identity even without scene nodes. A scene-object-only query surface would leave those contracts and later renderer/navigation RID consumers unresolved.
+
+### Decision
+
+- Introduce one public opaque, backend-neutral RID value type shared by server domains. Its default/zero value is empty; identity is session-local and never exposes a Box2D ID. The owning server validates resource kind and liveness separately from the value type's nonzero validity test. Released IDs must not resolve to a later resource after internal slot reuse. Fixture rebuilds do not change the owning collision object's RID.
+- PhysicsServer2D owns the physics resource registry and real spaces, bodies, areas and shapes. Register the existing SceneTree physics world as a server space; scene membership and teardown retain the lifetime of scene-owned resources. Explicitly created server resources have an executable creation/use/free lifecycle. The scene and server access the same solver state; no parallel scene-only physics world is introduced.
+- Expose that scene space through the applicable World2D.Space and World2D.DirectSpaceState roles and CanvasItem world access. These physics members may execute before World2D canvas and navigation-map members, which retain their own exact coverage gaps. A direct-space state is a view of its owning live space, not a second world.
+- Keep ordinary gameplay object-oriented: scene nodes and typed ray/shape query objects expose collider references where available. Direct query parameters also retain RID exclusions and shape RID selection; typed C# result values retain collider RID and stable shape-owner index even when no scene CollisionObject exists. Specify each operation's no-hit, ordering, copy and maximum-result behavior in its implementing slice. Do not add Variant, dynamic dictionaries, public Box2D types or backend IDs.
+- Build the public server and query layer in connected executable slices: shared RID/space/body/shape lifetime, world access and ray/point queries first, then shape sweeps, scene query nodes, shape-index events and the remaining applicable server methods. An accepted architecture does not mark any absent declaration Implemented. Attached queries respect scene owner-thread and backend world-lock boundaries.
+
+### Consequences
+
+Game code can eventually query its current world through typed scene access without manually managing RIDs, while advanced code can use the same space through PhysicsServer2D. Server-only colliders remain representable in query results. Renderer and navigation may adopt the shared RID identity through their own resource-lifetime slices. This ADR records the approved contract; no RID, World2D, PhysicsServer2D or direct-space runtime behavior is implemented by this documentation change.
+
+### Rejected alternatives
+
+- Replace RID parameters and results with only CollisionObject/Shape references: server-created resources have no required scene object, and this would remove applicable API under ADR 0004.
+- Add a physics-only PhysicsRID: it duplicates the reference's cross-server identity role needed by rendering and navigation.
+- Publish inert RID/PhysicsServer2D placeholders or wait for every server method before the first query: either choice delays an executable, auditable physics-query slice without changing its required ownership contract.
