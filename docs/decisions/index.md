@@ -14,7 +14,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Resources | [resources.md](resources.md) | 0013, 0014, 0039 |
 | Localization | [localization.md](localization.md) | 0007 |
 | Rendering | [rendering.md](rendering.md) | 0028, 0046 |
-| Navigation | [navigation.md](navigation.md) | 0052 |
+| Navigation | [navigation.md](navigation.md) | 0052, 0053 |
 | Audio | [audio.md](audio.md) | 0047 |
 | Input | [input.md](input.md) | 0038 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |

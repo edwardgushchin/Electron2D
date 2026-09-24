@@ -34,3 +34,26 @@ Games can compute directed, weighted and partial paths without native backend se
 - Expose only a simplified shortest-path method: it omits directed links, disabled points, weights, partial paths, callbacks and capacity behavior already applicable to the reference API.
 - Route the point graph through NavigationServer2D: it adds a missing map/RID lifetime dependency to a standalone graph and delays usable game pathfinding.
 - Add a general graph framework or a second managed dependency: the typed point graph and .NET collections cover this contract directly.
+
+<a id="adr-0053"></a>
+## ADR 0053: Standalone typed 2D grid search
+
+Last updated: 2026-09-24
+
+- Status: Accepted
+- Scope: `AStarGrid2D` geometry, cell data and path queries
+
+### Context
+
+The point graph from ADR 0052 requires callers to build every edge. The pinned 4.7.2 `AStarGrid2D` is an independent rectangular grid with automatic neighbors, four diagonal policies, four heuristics and optional jump-point search. It requires no navigation-server map or native backend. Its dictionary-array cell query needs a typed C# representation under ADR 0001.
+
+### Decision
+
+- Add `AStarGrid2D : ElectronObject` with nested `CellShape`, `DiagonalMode` and `Heuristic` enums retaining all pinned numeric identities. The `Shape` and `Diagonals` properties avoid name collisions with their nested enum types. `GetIDPath` and `IsInBoundsV` retain uppercase acronyms under ADR 0045.
+- `Region`, legacy `Size`, `Offset`, `CellSize` and `Shape` mark geometry dirty; `Update` atomically rebuilds positions and resets cell solidity and weights. Solidity and weight writes act immediately. `Clear` resets the region and points while retaining the pinned dirty flag. A row-major `GetPointDataInRegion` returns caller-owned arrays of named `(ID, Position, Solid, WeightScale)` tuples instead of dynamic dictionaries.
+- Keep the pinned cardinal/diagonal neighbor order, entry-weight multiplication, custom protected cost/estimate hooks, closest-reached partial path and A-star priority. Jumping uses the pinned forced-successor algorithm, emits only jump points, and does not apply intermediate cell weights. It remains opt-in, as in the reference.
+- Reject negative or overflowing region bounds, nonfinite geometry or weights, invalid enum values and out-of-bounds cell access with typed exceptions. Large grid allocations may fail before state replacement. Callback results must be finite and nonnegative. Search callbacks may inspect but cannot mutate, dispose or re-enter the grid. Calls are not synchronized across threads.
+
+### Consequences
+
+Games can query full or partial cell paths without constructing point-edge graphs. The grid is a managed standalone algorithm with no renderer, physics, SDL or native platform verification requirement. Returned paths and cell data are snapshots. Large grid performance and owner game acceptance remain separate verification work; navigation-server maps, regions and avoidance retain their own backend trigger.

@@ -12,7 +12,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AESContext](classes/AESContext.md) | RefCounted | Blocked | 10 |
 | [AStar2D](classes/AStar2D.md) | RefCounted | Implemented | 27 |
 | [AStar3D](classes/AStar3D.md) | RefCounted | Excluded | 27 |
-| [AStarGrid2D](classes/AStarGrid2D.md) | RefCounted | Unimplemented | 43 |
+| [AStarGrid2D](classes/AStarGrid2D.md) | RefCounted | Implemented | 43 |
 | [AcceptDialog](classes/AcceptDialog.md) | Window | Blocked | 26 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | Object | Blocked | 178 |
 | [AimModifier3D](classes/AimModifier3D.md) | BoneConstraint3D | Excluded | 11 |

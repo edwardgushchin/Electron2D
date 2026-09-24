@@ -69,7 +69,9 @@ def main():
     astar_rows = [row for row in pages[CLASS_PAGES / "AStar2D.md"].splitlines()
                   if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(astar_rows) == 28 and all(" | Implemented | " in row for row in astar_rows)
-    assert " | Unimplemented | Accepted 2D capability" in class_rows["AStarGrid2D"]
+    grid_rows = [row for row in pages[CLASS_PAGES / "AStarGrid2D.md"].splitlines()
+                 if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "cryptography utility contract" in class_rows["AESContext"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
     assert "GUI/editor Shortcut" in class_rows["Shortcut"]

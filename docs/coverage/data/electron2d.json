@@ -15,6 +15,75 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AStarGrid2D",
+    "kind": "type",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "AStarGrid2D",
+    "signature": "public class Electron2D.AStarGrid2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AStarGrid2D.CellShape",
+    "kind": "type",
+    "declaringType": "Electron2D.AStarGrid2D.CellShape",
+    "name": "CellShape",
+    "signature": "public enum Electron2D.AStarGrid2D.CellShape",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AStarGrid2D.DiagonalMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "DiagonalMode",
+    "signature": "public enum Electron2D.AStarGrid2D.DiagonalMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AStarGrid2D.Heuristic",
+    "kind": "type",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Heuristic",
+    "signature": "public enum Electron2D.AStarGrid2D.Heuristic",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnchorMode",
     "kind": "type",
     "declaringType": "Electron2D.AnchorMode",
@@ -4355,6 +4424,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AStarGrid2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": ".ctor",
+    "signature": "public AStarGrid2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AnimatedSprite..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AnimatedSprite",
@@ -6302,6 +6384,188 @@
     "parameters": [],
     "returnType": null,
     "value": null
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.CellShape.IsometricDown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.CellShape",
+    "name": "IsometricDown",
+    "signature": "public const Electron2D.AStarGrid2D.CellShape IsometricDown = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.CellShape",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.CellShape.IsometricRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.CellShape",
+    "name": "IsometricRight",
+    "signature": "public const Electron2D.AStarGrid2D.CellShape IsometricRight = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.CellShape",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.CellShape.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.CellShape",
+    "name": "Max",
+    "signature": "public const Electron2D.AStarGrid2D.CellShape Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.CellShape",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.CellShape.Square()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.CellShape",
+    "name": "Square",
+    "signature": "public const Electron2D.AStarGrid2D.CellShape Square = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.CellShape",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.DiagonalMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "Always",
+    "signature": "public const Electron2D.AStarGrid2D.DiagonalMode Always = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.DiagonalMode.AtLeastOneWalkable()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "AtLeastOneWalkable",
+    "signature": "public const Electron2D.AStarGrid2D.DiagonalMode AtLeastOneWalkable = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.DiagonalMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "Max",
+    "signature": "public const Electron2D.AStarGrid2D.DiagonalMode Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.DiagonalMode.Never()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "Never",
+    "signature": "public const Electron2D.AStarGrid2D.DiagonalMode Never = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.DiagonalMode.OnlyIfNoObstacles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "name": "OnlyIfNoObstacles",
+    "signature": "public const Electron2D.AStarGrid2D.DiagonalMode OnlyIfNoObstacles = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.Heuristic.Chebyshev()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Chebyshev",
+    "signature": "public const Electron2D.AStarGrid2D.Heuristic Chebyshev = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.Heuristic.Euclidean()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Euclidean",
+    "signature": "public const Electron2D.AStarGrid2D.Heuristic Euclidean = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.Heuristic.Manhattan()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Manhattan",
+    "signature": "public const Electron2D.AStarGrid2D.Heuristic Manhattan = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.Heuristic.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Max",
+    "signature": "public const Electron2D.AStarGrid2D.Heuristic Max = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AStarGrid2D.Heuristic.Octile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AStarGrid2D.Heuristic",
+    "name": "Octile",
+    "signature": "public const Electron2D.AStarGrid2D.Heuristic Octile = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.AnchorMode.DragCenter()",
@@ -18072,6 +18336,398 @@
     "id": "method:Electron2D.AStar2D.ValidateDisposal()",
     "kind": "method",
     "declaringType": "Electron2D.AStar2D",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.FillSolidRegion(Electron2D.Rect2i,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "FillSolidRegion",
+    "signature": "public System.Void FillSolidRegion(Electron2D.Rect2i region, System.Boolean solid = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      },
+      {
+        "name": "solid",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.FillWeightScaleRegion(Electron2D.Rect2i,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "FillWeightScaleRegion",
+    "signature": "public System.Void FillWeightScaleRegion(Electron2D.Rect2i region, System.Single weightScale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      },
+      {
+        "name": "weightScale",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.GetIDPath(Electron2D.Vector2i,Electron2D.Vector2i,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "GetIDPath",
+    "signature": "public Electron2D.Vector2i[] GetIDPath(Electron2D.Vector2i fromID, Electron2D.Vector2i toID, System.Boolean allowPartialPath = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "allowPartialPath",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.GetPointDataInRegion(Electron2D.Rect2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "GetPointDataInRegion",
+    "signature": "public System.ValueTuple\u003CElectron2D.Vector2i, Electron2D.Vector2, System.Boolean, System.Single\u003E[] GetPointDataInRegion(Electron2D.Rect2i region)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CElectron2D.Vector2i, Electron2D.Vector2, System.Boolean, System.Single\u003E[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.GetPointPath(Electron2D.Vector2i,Electron2D.Vector2i,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "GetPointPath",
+    "signature": "public Electron2D.Vector2[] GetPointPath(Electron2D.Vector2i fromID, Electron2D.Vector2i toID, System.Boolean allowPartialPath = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "allowPartialPath",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.GetPointPosition(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "GetPointPosition",
+    "signature": "public Electron2D.Vector2 GetPointPosition(Electron2D.Vector2i id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.GetPointWeightScale(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "GetPointWeightScale",
+    "signature": "public System.Single GetPointWeightScale(Electron2D.Vector2i id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.IsDirty()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "IsDirty",
+    "signature": "public System.Boolean IsDirty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.IsInBounds(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "IsInBounds",
+    "signature": "public System.Boolean IsInBounds(System.Int32 x, System.Int32 y)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "x",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "y",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.IsInBoundsV(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "IsInBoundsV",
+    "signature": "public System.Boolean IsInBoundsV(Electron2D.Vector2i id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.IsPointSolid(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "IsPointSolid",
+    "signature": "public System.Boolean IsPointSolid(Electron2D.Vector2i id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.OnComputeCost(Electron2D.Vector2i,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "OnComputeCost",
+    "signature": "protected virtual System.Single OnComputeCost(Electron2D.Vector2i fromID, Electron2D.Vector2i toID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "toID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.OnEstimateCost(Electron2D.Vector2i,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "OnEstimateCost",
+    "signature": "protected virtual System.Single OnEstimateCost(Electron2D.Vector2i fromID, Electron2D.Vector2i endID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "endID",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.SetPointSolid(Electron2D.Vector2i,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "SetPointSolid",
+    "signature": "public System.Void SetPointSolid(Electron2D.Vector2i id, System.Boolean solid = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "solid",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.SetPointWeightScale(Electron2D.Vector2i,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "SetPointWeightScale",
+    "signature": "public System.Void SetPointWeightScale(Electron2D.Vector2i id, System.Single weightScale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "weightScale",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.Update()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Update",
+    "signature": "public System.Void Update()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AStarGrid2D.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.AStarGrid2D",
     "name": "ValidateDisposal",
     "signature": "protected override System.Void ValidateDisposal()",
     "visibility": "protected",
@@ -54547,6 +55203,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.CellSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "CellSize",
+    "signature": "public Electron2D.Vector2 CellSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.DefaultComputeHeuristic()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "DefaultComputeHeuristic",
+    "signature": "public Electron2D.AStarGrid2D.Heuristic DefaultComputeHeuristic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.DefaultEstimateHeuristic()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "DefaultEstimateHeuristic",
+    "signature": "public Electron2D.AStarGrid2D.Heuristic DefaultEstimateHeuristic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.Heuristic",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.Diagonals()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Diagonals",
+    "signature": "public Electron2D.AStarGrid2D.DiagonalMode Diagonals { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.DiagonalMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.JumpingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "JumpingEnabled",
+    "signature": "public System.Boolean JumpingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.Region()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Region",
+    "signature": "public Electron2D.Rect2i Region { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.Shape()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Shape",
+    "signature": "public Electron2D.AStarGrid2D.CellShape Shape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AStarGrid2D.CellShape",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AStarGrid2D.Size()",
+    "kind": "property",
+    "declaringType": "Electron2D.AStarGrid2D",
+    "name": "Size",
+    "signature": "public Electron2D.Vector2i Size { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {
