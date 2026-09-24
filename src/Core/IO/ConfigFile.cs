@@ -298,7 +298,7 @@ public sealed class ConfigFile : ElectronObject
     /// <summary>Loads and merges a configuration document encrypted with a 256-bit key.</summary>
     /// <param name="path">The nonempty encrypted file path.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
-    /// <remarks>The authenticated encryption envelope must have been produced by <see cref="SaveEncrypted"/>.</remarks>
+    /// <remarks>The authenticated encryption envelope must have been produced by <see cref="SaveEncrypted"/>. Decrypted bytes are cleared after parsing, including on failure.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid, or <paramref name="key"/> is not 32 bytes.</exception>
     /// <exception cref="IOException">The file cannot be read.</exception>
@@ -332,7 +332,8 @@ public sealed class ConfigFile : ElectronObject
     /// <param name="password">The nonempty password.</param>
     /// <remarks>
     /// The authenticated envelope must have been produced by <see cref="SaveEncryptedPass"/>. A per-file random salt
-    /// and PBKDF2-HMAC-SHA-256 are used before AES-256-GCM authentication and decryption.
+    /// and PBKDF2-HMAC-SHA-256 are used before AES-256-GCM authentication and decryption. Derived keys and decrypted
+    /// bytes are cleared after use, including on failure.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> or <paramref name="password"/> is empty, or the path is invalid.</exception>
@@ -414,7 +415,7 @@ public sealed class ConfigFile : ElectronObject
     /// <summary>Saves the current document using authenticated AES-256-GCM encryption.</summary>
     /// <param name="path">The nonempty destination path.</param>
     /// <param name="key">Exactly 32 key bytes.</param>
-    /// <remarks>A fresh random nonce is generated for every save. The binary envelope is Electron2D-specific.</remarks>
+    /// <remarks>A fresh random nonce is generated for every save. The binary envelope is Electron2D-specific; encoded plaintext bytes are cleared after encryption or failure.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> is empty or invalid, or <paramref name="key"/> is not 32 bytes.</exception>
     /// <exception cref="IOException">The temporary or destination file cannot be written or replaced.</exception>
@@ -445,7 +446,8 @@ public sealed class ConfigFile : ElectronObject
     /// <param name="password">The nonempty password.</param>
     /// <remarks>
     /// A fresh random salt and nonce are generated for every save. PBKDF2-HMAC-SHA-256 derives a 256-bit key before
-    /// AES-256-GCM encryption. The binary envelope is Electron2D-specific.
+    /// AES-256-GCM encryption. The binary envelope is Electron2D-specific. Owned salt, derived key and plaintext
+    /// buffers are cleared after use or failure.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> or <paramref name="password"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> or <paramref name="password"/> is empty, or the path is invalid.</exception>
@@ -462,22 +464,23 @@ public sealed class ConfigFile : ElectronObject
         EnsureAuthenticatedEncryptionSupported();
 
         var salt = CryptographicRandomNumberGenerator.GetBytes(EncryptionSaltSize);
-        var derivedKey = Rfc2898DeriveBytes.Pbkdf2(
-            password,
-            salt,
-            PasswordIterations,
-            HashAlgorithmName.SHA256,
-            EncryptionKeySize);
-        var plaintext = StrictUtf8.GetBytes(EncodeToText());
-
+        byte[]? derivedKey = null;
+        byte[]? plaintext = null;
         try
         {
+            derivedKey = Rfc2898DeriveBytes.Pbkdf2(
+                password,
+                salt,
+                PasswordIterations,
+                HashAlgorithmName.SHA256,
+                EncryptionKeySize);
+            plaintext = StrictUtf8.GetBytes(EncodeToText());
             AtomicFile.Write(path, Encrypt(plaintext, derivedKey, PasswordEncryption, salt));
         }
         finally
         {
-            CryptographicOperations.ZeroMemory(plaintext);
-            CryptographicOperations.ZeroMemory(derivedKey);
+            if (plaintext is not null) CryptographicOperations.ZeroMemory(plaintext);
+            if (derivedKey is not null) CryptographicOperations.ZeroMemory(derivedKey);
             CryptographicOperations.ZeroMemory(salt);
         }
     }

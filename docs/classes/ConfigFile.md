@@ -287,7 +287,7 @@ Loads and merges a configuration document encrypted with a 256-bit key.
 - `FormatException`: The decrypted configuration document is malformed.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** The authenticated encryption envelope must have been produced by [`ConfigFile.SaveEncrypted(String,ReadOnlySpan{Byte})`](ConfigFile.md#m-electron2d-configfile-saveencrypted-system-string-system-readonlyspan-system-byte).
+**Remarks:** The authenticated envelope must have been produced by [`ConfigFile.SaveEncrypted(String,ReadOnlySpan{Byte})`](ConfigFile.md#m-electron2d-configfile-saveencrypted-system-string-system-readonlyspan-system-byte). Decrypted bytes are cleared after parsing or failure.
 
 <a id="m-electron2d-configfile-loadencryptedpass-system-string-system-string"></a>
 ### `public void LoadEncryptedPass(string path, string password)`
@@ -311,8 +311,7 @@ Loads and merges a configuration document encrypted with a password-derived key.
 - `FormatException`: The decrypted configuration document is malformed.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** The authenticated envelope must have been produced by [`ConfigFile.SaveEncryptedPass(String,String)`](ConfigFile.md#m-electron2d-configfile-saveencryptedpass-system-string-system-string). A per-file random salt
-and PBKDF2-HMAC-SHA-256 are used before AES-256-GCM authentication and decryption.
+**Remarks:** The authenticated envelope must have been produced by [`ConfigFile.SaveEncryptedPass(String,String)`](ConfigFile.md#m-electron2d-configfile-saveencryptedpass-system-string-system-string). A per-file random salt and PBKDF2-HMAC-SHA-256 precede AES-256-GCM authentication. Derived keys and decrypted bytes are cleared after use or failure.
 
 <a id="m-electron2d-configfile-parse-system-string"></a>
 ### `public void Parse(string data)`
@@ -370,7 +369,7 @@ Saves the current document using authenticated AES-256-GCM encryption.
 - `PlatformNotSupportedException`: AES-GCM is unavailable on the current platform.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** A fresh random nonce is generated for every save. The binary envelope is Electron2D-specific.
+**Remarks:** A fresh random nonce is generated for every save. The binary envelope is Electron2D-specific; encoded plaintext bytes are cleared after encryption or failure.
 
 <a id="m-electron2d-configfile-saveencryptedpass-system-string-system-string"></a>
 ### `public void SaveEncryptedPass(string path, string password)`
@@ -392,8 +391,7 @@ Saves the current document using password-derived authenticated encryption.
 - `PlatformNotSupportedException`: AES-GCM is unavailable on the current platform.
 - `ObjectDisposedException`: The configuration file is disposing or disposed.
 
-**Remarks:** A fresh random salt and nonce are generated for every save. PBKDF2-HMAC-SHA-256 derives a 256-bit key before
-AES-256-GCM encryption. The binary envelope is Electron2D-specific.
+**Remarks:** A fresh random salt and nonce are generated for every save. PBKDF2-HMAC-SHA-256 derives a 256-bit key before AES-256-GCM encryption. The binary envelope is Electron2D-specific; owned salt, derived key and plaintext buffers are cleared after use or failure.
 
 <a id="m-electron2d-configfile-setvalue-1-electron2d-configkey-0-0"></a>
 ### `public void SetValue<T>(ConfigKey<T> key, T value)`
@@ -511,7 +509,7 @@ The class depends on `ElectronObject`, `System.Text.Json`, UTF-8/file primitives
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, parameter/type rejection, scalar/vector/collection/color/floating-rectangle/integer-rectangle/transform round trips, exact schemas for all six vector types and both rectangle types, malformed-field failures, copy isolation, missing/default/try-get behavior, insertion order, null deletion, section cleanup, incompatible types, failed serialization rollback, comments/BOM/quoted identifiers, stable encoding, transactional parse failure, concurrent writes and disposal, strict UTF-8, merge behavior, atomic overwrite, temporary cleanup, raw-key and password encryption, random salt/nonce behavior, wrong keys/passwords/modes, tampering, malformed envelopes, and access after disposal.
 
-The in-memory state audit also checks empty entry names, quoted-text round trips, replacement without reordering, stable enumeration snapshots, last-key section removal, sectionless priority, reinsertion order and caller-owned fallback values. The text audit checks quoted complex names, BOM/CRLF/comments, duplicate-section merge, stable encoding and rollback after malformed lines. Plain file checks cover BOM/CRLF load, strict UTF-8, merge, malformed/missing-file rollback, empty and replacing saves, missing directories and temporary cleanup. Those thirteen own state/text/plain-file members are Implemented in [coverage](../coverage/classes/ConfigFile.md); the class aggregate and encrypted file methods retain separate Partial audits.
+The in-memory state audit also checks empty entry names, quoted-text round trips, replacement without reordering, stable enumeration snapshots, last-key section removal, sectionless priority, reinsertion order and caller-owned fallback values. The text audit checks quoted complex names, BOM/CRLF/comments, duplicate-section merge, stable encoding and rollback after malformed lines. Plain file checks cover BOM/CRLF load, strict UTF-8, merge, malformed/missing-file rollback, empty and replacing saves, missing directories and temporary cleanup. Encrypted checks cover raw/password round trips, an independent PBKDF2/AES-GCM decoder, fresh nonce/salt, wrong credentials, mode/version/salt-length errors, tampered ciphertext/header, authenticated malformed text/UTF-8, atomic-save failure and cleanup. All eighteen own rows are Implemented in [coverage](../coverage/classes/ConfigFile.md) under ADR 0018; filesystem crash durability and other platforms remain separate verification limits.
 
 There is no comment preservation, direct virtual path resolution, asynchronous or streaming I/O, external binary-envelope compatibility, or custom public serializer registry. Feature overrides and virtual paths belong to `ProjectSettings`. JSON models must be supported by the built-in serializer and should be stable data contracts rather than live engine types.
 

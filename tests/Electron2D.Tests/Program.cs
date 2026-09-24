@@ -3912,8 +3912,15 @@ static void VerifyConfigFiles()
         var rawEncryptedPath = IOPath.Combine(directory, "settings-key.bin");
         config.SaveEncrypted(rawEncryptedPath, rawKey);
         var encryptedBytes = File.ReadAllBytes(rawEncryptedPath);
-        Require(encryptedBytes.AsSpan().IndexOf(Encoding.UTF8.GetBytes("classified-value")) < 0,
-            "Encrypted saves must not expose plaintext values.");
+        Require(encryptedBytes.AsSpan().StartsWith("E2DCFG"u8) &&
+                encryptedBytes[6] == 1 && encryptedBytes[7] == 0 && encryptedBytes[8] == 0 &&
+                encryptedBytes.Length >= 37 &&
+                encryptedBytes.AsSpan().IndexOf(Encoding.UTF8.GetBytes("classified-value")) < 0,
+            "Raw-key saves must use the versioned authenticated header without exposing plaintext.");
+        var secondRawPath = IOPath.Combine(directory, "settings-key-2.bin");
+        config.SaveEncrypted(secondRawPath, rawKey);
+        Require(!encryptedBytes.AsSpan(9, 12).SequenceEqual(File.ReadAllBytes(secondRawPath).AsSpan(9, 12)),
+            "Raw-key saves must generate an independent nonce even when the key and document are unchanged.");
 
         using (var loaded = new ConfigFile())
         {
@@ -3932,23 +3939,97 @@ static void VerifyConfigFiles()
         }
 
         var tamperedPath = IOPath.Combine(directory, "settings-tampered.bin");
-        encryptedBytes[^1] ^= 0x01;
-        File.WriteAllBytes(tamperedPath, encryptedBytes);
+        var tamperedBytes = (byte[])encryptedBytes.Clone();
+        tamperedBytes[^1] ^= 0x01;
+        File.WriteAllBytes(tamperedPath, tamperedBytes);
         using (var tampered = new ConfigFile())
         {
             Expect<CryptographicException>(() => tampered.LoadEncrypted(tamperedPath, rawKey),
                 "Authenticated loading must reject modified ciphertext.");
         }
+        tamperedBytes = (byte[])encryptedBytes.Clone();
+        tamperedBytes[21] ^= 0x01;
+        File.WriteAllBytes(tamperedPath, tamperedBytes);
+        using (var tamperedTag = new ConfigFile())
+        {
+            Expect<CryptographicException>(() => tamperedTag.LoadEncrypted(tamperedPath, rawKey),
+                "Authenticated loading must reject a modified tag.");
+        }
+
+        var malformedHeaderPath = IOPath.Combine(directory, "settings-bad-header.bin");
+        var malformedHeader = (byte[])encryptedBytes.Clone();
+        malformedHeader[6] = 2;
+        File.WriteAllBytes(malformedHeaderPath, malformedHeader);
+        Expect<InvalidDataException>(() => config.LoadEncrypted(malformedHeaderPath, rawKey),
+            "Unsupported encrypted-envelope versions must fail before decryption.");
+        malformedHeader[6] = 1;
+        malformedHeader[8] = 1;
+        File.WriteAllBytes(malformedHeaderPath, malformedHeader);
+        Expect<InvalidDataException>(() => config.LoadEncrypted(malformedHeaderPath, rawKey),
+            "Raw-key envelopes must reject an unexpected salt length.");
+        File.WriteAllBytes(malformedHeaderPath, encryptedBytes[..20]);
+        Expect<InvalidDataException>(() => config.LoadEncrypted(malformedHeaderPath, rawKey),
+            "Truncated authenticated headers must fail before state changes.");
+
+        byte[] AuthenticatedRawEnvelope(byte[] content)
+        {
+            const int headerLength = 21;
+            const int tagLength = 16;
+            var fixture = new byte[headerLength + tagLength + content.Length];
+            encryptedBytes.AsSpan(0, headerLength).CopyTo(fixture);
+            System.Security.Cryptography.RandomNumberGenerator.Fill(fixture.AsSpan(9, 12));
+            using var cipher = new AesGcm(rawKey, tagLength);
+            cipher.Encrypt(fixture.AsSpan(9, 12), content,
+                fixture.AsSpan(headerLength + tagLength, content.Length),
+                fixture.AsSpan(headerLength, tagLength), fixture.AsSpan(0, headerLength));
+            return fixture;
+        }
+
+        var authenticatedBadTextPath = IOPath.Combine(directory, "settings-authenticated-bad-text.bin");
+        File.WriteAllBytes(authenticatedBadTextPath, AuthenticatedRawEnvelope("fresh=1\nnot-an-assignment"u8.ToArray()));
+        var beforeAuthenticatedFailure = config.EncodeToText();
+        Expect<FormatException>(() => config.LoadEncrypted(authenticatedBadTextPath, rawKey),
+            "Authenticated but malformed text must fail parsing after decryption.");
+        File.WriteAllBytes(authenticatedBadTextPath, AuthenticatedRawEnvelope([0xff]));
+        Expect<InvalidDataException>(() => config.LoadEncrypted(authenticatedBadTextPath, rawKey),
+            "Authenticated but invalid UTF-8 must fail decoding after decryption.");
+        Require(config.EncodeToText() == beforeAuthenticatedFailure &&
+                !config.HasSectionKey(new ConfigKey<int>(string.Empty, "fresh")),
+            "Authenticated plaintext errors must not publish partial configuration state.");
 
         Expect<ArgumentException>(() => config.SaveEncrypted(rawEncryptedPath, new byte[31]),
             "Raw-key encryption must require exactly 256 key bits.");
+        Expect<ArgumentException>(() => config.LoadEncrypted(rawEncryptedPath, new byte[31]),
+            "Raw-key decryption must require exactly 256 key bits before file access.");
 
         var passwordPath = IOPath.Combine(directory, "settings-password.bin");
         var secondPasswordPath = IOPath.Combine(directory, "settings-password-2.bin");
         config.SaveEncryptedPass(passwordPath, "correct horse battery staple");
         config.SaveEncryptedPass(secondPasswordPath, "correct horse battery staple");
-        Require(!File.ReadAllBytes(passwordPath).SequenceEqual(File.ReadAllBytes(secondPasswordPath)),
-            "Password encryption must generate fresh salt and nonce material for every save.");
+        var passwordEnvelope = File.ReadAllBytes(passwordPath);
+        var secondPasswordEnvelope = File.ReadAllBytes(secondPasswordPath);
+        Require(passwordEnvelope.AsSpan().StartsWith("E2DCFG"u8) &&
+                passwordEnvelope[6] == 1 && passwordEnvelope[7] == 1 && passwordEnvelope[8] == 16 &&
+                !passwordEnvelope.AsSpan(9, 16).SequenceEqual(secondPasswordEnvelope.AsSpan(9, 16)) &&
+                !passwordEnvelope.AsSpan(25, 12).SequenceEqual(secondPasswordEnvelope.AsSpan(25, 12)),
+            "Password saves must use the versioned mode with fresh salt and nonce material.");
+        var independentlyDerived = Rfc2898DeriveBytes.Pbkdf2(
+            "correct horse battery staple", passwordEnvelope.AsSpan(9, 16), 600_000,
+            HashAlgorithmName.SHA256, 32);
+        var independentlyDecoded = new byte[passwordEnvelope.Length - 53];
+        try
+        {
+            using var cipher = new AesGcm(independentlyDerived, 16);
+            cipher.Decrypt(passwordEnvelope.AsSpan(25, 12), passwordEnvelope.AsSpan(53),
+                passwordEnvelope.AsSpan(37, 16), independentlyDecoded, passwordEnvelope.AsSpan(0, 37));
+            Require(Encoding.UTF8.GetString(independentlyDecoded) == config.EncodeToText(),
+                "An independent PBKDF2/AES-GCM decoder must recover the saved text from the documented envelope.");
+        }
+        finally
+        {
+            CryptographicOperations.ZeroMemory(independentlyDecoded);
+            CryptographicOperations.ZeroMemory(independentlyDerived);
+        }
 
         using (var loaded = new ConfigFile())
         {
@@ -3967,8 +4048,25 @@ static void VerifyConfigFiles()
                 "Password loading must reject a raw-key envelope.");
         }
 
+        var tamperedPasswordPath = IOPath.Combine(directory, "settings-password-tampered.bin");
+        var tamperedPassword = (byte[])passwordEnvelope.Clone();
+        tamperedPassword[9] ^= 0x01;
+        File.WriteAllBytes(tamperedPasswordPath, tamperedPassword);
+        Expect<CryptographicException>(() => config.LoadEncryptedPass(tamperedPasswordPath, "correct horse battery staple"),
+            "A changed authenticated salt must invalidate a password envelope.");
+        var invalidPasswordHeader = (byte[])passwordEnvelope.Clone();
+        invalidPasswordHeader[8] = 15;
+        File.WriteAllBytes(tamperedPasswordPath, invalidPasswordHeader);
+        Expect<InvalidDataException>(() => config.LoadEncryptedPass(tamperedPasswordPath, "correct horse battery staple"),
+            "An invalid password salt length must fail before key derivation.");
+
         Expect<ArgumentException>(() => config.SaveEncryptedPass(passwordPath, string.Empty),
             "Password encryption must reject an empty password.");
+        Expect<ArgumentException>(() => config.LoadEncryptedPass(passwordPath, string.Empty),
+            "Password decryption must reject an empty password before file access.");
+        Expect<DirectoryNotFoundException>(() => config.SaveEncryptedPass(
+            IOPath.Combine(directory, "missing", "encrypted.cfg"), "correct horse battery staple"),
+            "Failed encrypted replacement must report an absent directory after clearing owned buffers.");
 
         var malformedEnvelopePath = IOPath.Combine(directory, "malformed.bin");
         File.WriteAllBytes(malformedEnvelopePath, [1, 2, 3]);

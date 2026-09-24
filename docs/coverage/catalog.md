@@ -196,7 +196,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | Shape2D | Blocked | 1 |
 | [ConcavePolygonShape3D](classes/ConcavePolygonShape3D.md) | Shape3D | Excluded | 3 |
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
-| [ConfigFile](classes/ConfigFile.md) | RefCounted | Partial | 17 |
+| [ConfigFile](classes/ConfigFile.md) | RefCounted | Implemented | 17 |
 | [ConfirmationDialog](classes/ConfirmationDialog.md) | AcceptDialog | Blocked | 5 |
 | [Container](classes/Container.md) | Control | Blocked | 11 |
 | [Control](classes/Control.md) | CanvasItem | Partial | 267 |
