@@ -2557,6 +2557,48 @@
       "reason": "ADRs 0029/0033 map the operand-directed rectangular transform to Transform. VerifyTransforms checks rotation, nonuniform scaling, inverse orthonormal direction, negative size normalization and four-corner bounds on Linux/.NET 8."
     },
     {
+      "godot": ["class:Rect2i"],
+      "state": "Implemented",
+      "reason": "All 23 declared members have a pinned rect2i.h/.cpp and ADR 0033/0035 managed-boundary audit in VerifyIntegerRectangles, including strict typed persistence and packed-scene copying on Linux/.NET 8. Native ABI and other platforms remain unverified."
+    },
+    {
+      "godot": [
+        "Rect2i::constructor:Rect2i()", "Rect2i::constructor:Rect2i(Rect2:)",
+        "Rect2i::constructor:Rect2i(Rect2i:)",
+        "Rect2i::constructor:Rect2i(Vector2i:,Vector2i:)",
+        "Rect2i::constructor:Rect2i(int:,int:,int:,int:)",
+        "Rect2i::property:end", "Rect2i::property:position", "Rect2i::property:size"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyIntegerRectangles checks zero state, 16-byte layout, independent mutable copies, all mapped constructors, derived End and wrapped End assignment, and float-to-int truncation and range failure. Large int-to-float precision loss is explicit under ADR 0033/0035."
+    },
+    {
+      "godot": [
+        "Rect2i::method:abs()", "Rect2i::method:encloses(Rect2i:)",
+        "Rect2i::method:expand(Vector2i:)", "Rect2i::method:get_area()",
+        "Rect2i::method:get_center()", "Rect2i::method:has_area()",
+        "Rect2i::method:has_point(Vector2i:)",
+        "Rect2i::method:intersection(Rect2i:)",
+        "Rect2i::method:intersects(Rect2i:)", "Rect2i::method:merge(Rect2i:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned rect2i.h geometry and ADR 0033/0035 behavior are checked in VerifyIntegerRectangles: source-order normalization across wraparound, typed Int32.MinValue Abs failure, wrapped area/end, signed center truncation, half-open points, edge/empty overlaps, enclosure and merge."
+    },
+    {
+      "godot": [
+        "Rect2i::method:grow(int:)",
+        "Rect2i::method:grow_individual(int:,int:,int:,int:)",
+        "Rect2i::method:grow_side(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyIntegerRectangles checks positive/negative growth, every Side identity, undefined-side no-op and 32-bit wrapping under ADR 0033. Integer modular addition makes the GrowIndividual reuse equivalent to the pinned source order."
+    },
+    {
+      "godot": ["Rect2i::operator:operator !=(Rect2i:)", "Rect2i::operator:operator ==(Rect2i:)"],
+      "state": "Implemented",
+      "reason": "VerifyIntegerRectangles checks exact position/size equality and inequality, equal-copy hashing and independent value copies on Linux/.NET 8."
+    },
+    {
       "godot": [
         "class:Geometry2D"
       ],

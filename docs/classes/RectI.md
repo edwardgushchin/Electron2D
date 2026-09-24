@@ -1,6 +1,6 @@
 # RectI
 
-Last updated: 2026-09-22
+Last updated: 2026-09-24
 
 **Inherits:** —
 
@@ -24,6 +24,8 @@ The rectangle is defined by a position and size and is commonly used for pixel, 
 atlas, and grid bounds. Most geometric operations assume non-negative size components. Call
 [`RectI.Abs`](RectI.md#m-electron2d-recti-abs) before those operations when a rectangle may have a negative width or height.
 Integer arithmetic uses unchecked 32-bit wraparound except where a documented managed operation throws.
+
+All 23 mapped members and the type row have a pinned-source, ADR 0033/0035 and Linux/.NET 8 managed audit. `Abs` adds the negative part of each size component before taking its magnitude, preserving wrapped positions even if a positive component makes `End` wrap. A size of `int.MinValue` raises `OverflowException` under the accepted managed boundary. `VerifyIntegerRectangles` covers copy/mutation, wrapped area/end/growth, signed center rounding, half-open edges, empty intersection, typed conversion and failures, strict persistence, packed-scene copying and warmed allocation behavior. Native ABI and other platforms remain unverified.
 
 ## Examples
 

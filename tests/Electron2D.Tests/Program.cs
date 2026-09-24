@@ -3160,13 +3160,19 @@ static void VerifyIntegerRectangles()
         "Zero initialization and every RectI constructor must preserve position and size.");
 
     var mutable = new RectI(new Vector2I(1, 2), new Vector2I(3, 4));
+    var independentCopy = mutable;
     mutable.Position = new Vector2I(2, 3);
     mutable.Size = new Vector2I(5, 6);
-    Require(mutable.End == new Vector2I(7, 9),
+    Require(mutable.End == new Vector2I(7, 9) && independentCopy == new RectI(1, 2, 3, 4),
         "RectI Position and Size mutation must update the computed end.");
     mutable.End = new Vector2I(10, 12);
     Require(mutable.Position == new Vector2I(2, 3) && mutable.Size == new Vector2I(8, 9),
         "Assigning RectI.End must preserve Position and derive Size.");
+    var wrappedEnd = new RectI(int.MaxValue, int.MinValue, 0, 0);
+    wrappedEnd.End = new Vector2I(int.MinValue, int.MaxValue);
+    Require(wrappedEnd.Position == new Vector2I(int.MaxValue, int.MinValue) &&
+            wrappedEnd.Size == new Vector2I(1, -1),
+        "Assigning RectI.End wraps the derived size without moving Position.");
     Require(new RectI(0, 0, 3, 4).Area == 12 && new RectI(0, 0, -3, -4).Area == 12 &&
             !new RectI(0, 0, -3, -4).HasArea() &&
             new RectI(int.MaxValue, 0, 1, 1).End.X == int.MinValue &&
@@ -3176,6 +3182,9 @@ static void VerifyIntegerRectangles()
     var normalized = new RectI(25, 25, -100, -50).Abs();
     Require(normalized == new RectI(-75, -25, 100, 50),
         "RectI.Abs must move the origin and normalize both size components.");
+    Require(new RectI(int.MaxValue, 0, 1, 2).Abs() == new RectI(int.MaxValue, 0, 1, 2) &&
+            new RectI(int.MinValue, 0, -1, 2).Abs() == new RectI(int.MaxValue, 0, 1, 2),
+        "RectI.Abs must select negative size before position addition, even across wraparound.");
     Expect<OverflowException>(() => _ = new RectI(0, 0, int.MinValue, 1).Abs(),
         "RectI.Abs must expose minimum-integer absolute-value overflow.");
 
@@ -3186,7 +3195,8 @@ static void VerifyIntegerRectangles()
         "RectI.Encloses must accept coincident edges and reject an escaped edge.");
     Require(new RectI(0, 0, 5, 5).Expand(new Vector2I(-2, 7)) == new RectI(-2, 0, 7, 7) &&
             outer.Expand(new Vector2I(10, 10)) == outer &&
-            new RectI(1, 2, 3, 5).GetCenter() == new Vector2I(2, 4),
+            new RectI(1, 2, 3, 5).GetCenter() == new Vector2I(2, 4) &&
+            new RectI(0, 0, -3, -5).GetCenter() == new Vector2I(-1, -2),
         "RectI expansion and integer center rounding must preserve edge semantics.");
 
     var baseRect = new RectI(1, 2, 3, 4);
@@ -3227,7 +3237,10 @@ static void VerifyIntegerRectangles()
             exact.GetHashCode() == new RectI(1, 2, 3, 4).GetHashCode(),
         "RectI exact equality and hashing must use position and size.");
     Require((Rect)exact == new Rect(1f, 2f, 3f, 4f) &&
-            (RectI)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new RectI(1, -2, 3, -4),
+            (RectI)new Rect(1.9f, -2.9f, 3.9f, -4.9f) == new RectI(1, -2, 3, -4) &&
+            (RectI)new Rect(int.MinValue, 0f, 1f, 1f) == new RectI(int.MinValue, 0, 1, 1) &&
+            (Rect)new RectI(16_777_217, 0, int.MaxValue, 1) ==
+                new Rect(16_777_216f, 0f, 2_147_483_648f, 1f),
         "Rect and RectI conversions must widen implicitly and truncate explicitly.");
     Expect<ArgumentOutOfRangeException>(() => _ = (RectI)new Rect(float.NaN, 0f, 1f, 1f),
         "Rect to RectI conversion must reject non-finite components.");

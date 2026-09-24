@@ -87,8 +87,10 @@ public struct RectI : IEquatable<RectI>
 
     /// <summary>Returns an equivalent integer rectangle with a non-negative size and top-left position.</summary>
     /// <returns>The normalized rectangle.</returns>
+    /// <remarks>The position adds the negative part of each size component before the size is made absolute.
+    /// This order preserves unchecked position wraparound independently of positive size components.</remarks>
     /// <exception cref="OverflowException">A size component is <see cref="int.MinValue"/>.</exception>
-    public readonly RectI Abs() => new(End.Min(_position), _size.Abs());
+    public readonly RectI Abs() => new(_position + _size.Min(0), _size.Abs());
 
     /// <summary>Tests whether this integer rectangle completely encloses another rectangle.</summary>
     /// <param name="other">The candidate enclosed rectangle.</param>
