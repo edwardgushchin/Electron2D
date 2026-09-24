@@ -1059,7 +1059,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |
 | [WorldEnvironment](classes/WorldEnvironment.md) | Node | Blocked | 3 |
 | [X509Certificate](classes/X509Certificate.md) | Resource | Blocked | 4 |
-| [XMLParser](classes/XMLParser.md) | RefCounted | Partial | 25 |
+| [XMLParser](classes/XMLParser.md) | RefCounted | Implemented | 25 |
 | [XRAnchor3D](classes/XRAnchor3D.md) | XRNode3D | Excluded | 2 |
 | [XRBodyModifier3D](classes/XRBodyModifier3D.md) | SkeletonModifier3D | Excluded | 11 |
 | [XRBodyTracker](classes/XRBodyTracker.md) | XRPositionalTracker | Excluded | 105 |

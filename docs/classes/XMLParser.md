@@ -13,7 +13,7 @@ Last updated: 2026-09-24
 
 ## Description
 
-`XMLParser` reads tokens from a copied UTF-8 byte buffer. It keeps the current token, attribute list, byte offset and count of consumed newline bytes. It accepts incomplete markup and does not validate the nesting or expand external entities. `Open` composes with `FileAccess` path resolution, including directory-backed `res://` and `user://`. Reading, seeking and inspection are serialized per instance. The entire input is held in memory; it is unsuitable for a frame callback or unbounded external input.
+`XMLParser` reads tokens from a copied UTF-8 byte buffer. It keeps the current token, attribute list, byte offset and count of consumed newline bytes. It accepts incomplete markup and does not validate the nesting or expand external entities. `Open` composes with `FileAccess` path resolution, including directory-backed `res://` and `user://`. Reading, seeking and inspection are serialized per instance. The entire input is held in memory; it is unsuitable for a frame callback or unbounded external input. See [ADR 0049](../decisions/core-data-io.md#adr-0049) for the byte-cursor and managed string boundaries.
 
 ## Example
 
@@ -42,7 +42,7 @@ while (parser.Read())
 | --- | --- |
 | [`public void OpenBuffer(byte[] buffer)`](#openbuffer) | Copies and opens UTF-8 bytes. |
 | [`public void Open(string path)`](#open) | Opens an ordinary or directory-backed virtual path. |
-| [`public bool Read()`](#read) | Advances one token; false at EOF. |
+| [`public bool Read()`](#read) | Advances the byte cursor; short trailing whitespace can return true without a new token. |
 | [`public bool Seek(long position)`](#seek) | Reads from a byte offset. |
 | [`public void SkipSection()`](#skipsection) | Reads to the matching closing token. |
 | [`public NodeType GetNodeType()`](#getnodetype) | Current token kind. |
@@ -50,7 +50,7 @@ while (parser.Read())
 | [`public string GetNodeData()`](#getnodedata) | Current text content; other token types return empty with a trace diagnostic. |
 | [`public long GetNodeOffset()`](#getnodeoffset) | Start offset of the current read. |
 | [`public int GetCurrentLine()`](#getcurrentline) | Count of consumed newlines. |
-| [`public bool IsEmpty()`](#isempty) | Whether the current element is self-closing. |
+| [`public bool IsEmpty()`](#isempty) | Whether the most recently opened element was self-closing; non-element tokens can retain the flag. |
 | [`public int GetAttributeCount()`](#getattributecount) | Current or last element's attribute count. |
 | [`public string GetAttributeName(int index)`](#getattributename) | Ordered name, or empty with a trace diagnostic for an invalid index. |
 | [`public string GetAttributeValue(int index)`](#getattributevalue) | Ordered value, or empty with a trace diagnostic for an invalid index. |
@@ -71,15 +71,15 @@ Reads the complete file through `FileAccess.GetFileAsBytes`, then performs the s
 
 ### Read
 
-Reads one token, including comments, CDATA and declarations. `false` means EOF. A short whitespace run before markup is skipped; longer whitespace is returned as text. Text and attribute values decode five XML predefined entities and valid numeric character references. An unopened parser throws `InvalidOperationException`.
+Reads a permissive token, including comments, bracket declarations as CDATA and question-mark declarations. The final byte alone does not start a token. A short trailing whitespace scan can return `true` without replacing the prior token; the next call returns `false` at EOF. Text and attribute values decode predefined entities, lowercase-`x` numeric references and malformed UTF-8 replacement. Invalid zero references stay literal. Values above the Unicode maximum stay literal under ADR 0049. An unopened parser throws `InvalidOperationException`.
 
 ### Seek
 
-Positions at a byte offset within the copied input, then reads once. An offset outside the input throws `ArgumentOutOfRangeException`. Line count reflects consumed bytes since the last open; seeking does not recompute line numbers from the beginning.
+Positions at a byte offset within the copied input, then reads once. A valid offset at the final byte returns `false` without changing the prior token; an offset outside the input throws `ArgumentOutOfRangeException`. Line count reflects bytes consumed since the last open and is not recomputed from the beginning.
 
 ### SkipSection
 
-For a nonempty opening element, reads nested opening and closing tokens until the matching closing level. On a self-closing element or another token kind, it does nothing. At EOF it stops without fabricating a closing token.
+When the retained empty-element flag is false, reads nested opening and closing tokens starting at depth one until the next matching closing level. This also applies when called from text or another non-element token. It does nothing before opening or while the empty flag is true. At EOF it stops without fabricating a closing token.
 
 ### GetNodeType
 
@@ -103,7 +103,7 @@ Returns the zero-based number of newline bytes consumed since the last open. It 
 
 ### IsEmpty
 
-True only for a self-closing current opening element.
+True for a self-closing opening element; text, comment, CDATA and unknown tokens can retain that flag until another element updates it.
 
 ### GetAttributeCount
 
@@ -135,9 +135,10 @@ Deterministic disposal releases the copied input and rejects later operations th
 
 ## Verification and limitations
 
-[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers all seven token identities, getter values and invalid-call diagnostics, ordered/duplicate attributes, retained attributes across non-element tokens, byte offsets and lines, seeking, section skipping, ordinary/virtual file reads, input copying, failed/open reopening and disposal. Getter, enum and open rows are Implemented in [coverage](../coverage/classes/XMLParser.md). Read, Seek, SkipSection and the class aggregate remain Partial until malformed byte, declaration, entity and cursor edges are compared. This type does not provide a DTD, external-entity resolver, document tree or streaming input.
+[`XMLParserTests`](../../tests/Electron2D.Tests/XMLParserTests.cs) covers token identities, getter diagnostics, retained attributes, byte offsets/lines, short whitespace and final-byte EOF, seeking across line history, skip from element/text/empty/unfinished sections, malformed attributes/declarations/CDATA, numeric entities, BOM slices, invalid UTF-8, ordinary/virtual file reads and disposal. All own rows are [Implemented](../coverage/classes/XMLParser.md) under ADR 0049. This type does not provide a DTD, external-entity resolver, document tree or streaming input. Other platforms and native-host behavior remain separate verification limits.
 
 ## Decisions
 
 - [ADR 0003: Managed object lifetime](../decisions/core-object-runtime.md#adr-0003)
 - [ADR 0020: File access and exceptions](../decisions/core-data-io.md#adr-0020)
+- [ADR 0049: Managed XML token cursor](../decisions/core-data-io.md#adr-0049)

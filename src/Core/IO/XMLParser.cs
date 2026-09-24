@@ -74,8 +74,9 @@ public sealed class XMLParser : ElectronObject
         OpenBuffer(buffer);
     }
 
-    /// <summary>Reads the next token.</summary>
-    /// <returns>True when a token was read; false at end of input.</returns>
+    /// <summary>Advances the byte cursor and reads the next available token.</summary>
+    /// <returns>True when scanning was performed; false at the input boundary. A short trailing whitespace scan can return true without replacing the prior token.</returns>
+    /// <remarks>The final byte alone is not a new token. Text and attributes decode malformed UTF-8 with replacement; invalid numeric entities outside Unicode remain literal.</remarks>
     /// <exception cref="InvalidOperationException">No buffer is open.</exception>
     /// <exception cref="ObjectDisposedException">The parser is disposed.</exception>
     public bool Read()
@@ -84,12 +85,9 @@ public sealed class XMLParser : ElectronObject
         {
             ThrowIfDisposed();
             var data = _data ?? throw new InvalidOperationException("No XML buffer is open.");
-            if (AtEnd(data)) return false;
+            if (_position >= data.Length - 1 || AtEnd(data)) return false;
 
             _nodeOffset = _position;
-            _nodeType = NodeType.None;
-            _nodeText = string.Empty;
-            _empty = false;
 
             var textStart = _position;
             while (!AtEnd(data) && data[_position] != (byte)'<') Next(data);
@@ -107,10 +105,9 @@ public sealed class XMLParser : ElectronObject
                 }
             }
 
-            if (AtEnd(data)) return false;
+            if (AtEnd(data)) return true;
             Next(data); // '<'
-            if (AtEnd(data)) return false;
-            switch (data[_position])
+            switch (AtEnd(data) ? (byte)0 : data[_position])
             {
                 case (byte)'/': ReadEnd(data); break;
                 case (byte)'?': ReadUnknown(data); break;
@@ -123,7 +120,8 @@ public sealed class XMLParser : ElectronObject
 
     /// <summary>Reads the token beginning at a byte offset.</summary>
     /// <param name="position">A zero-based offset inside the current buffer.</param>
-    /// <returns>True when a token was read.</returns>
+    /// <returns>The result of one <see cref="Read"/> at the requested offset; the final byte can yield false.</returns>
+    /// <remarks>Seeking does not recompute the consumed-line counter or change the prior token when the read reaches EOF.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The offset is outside the buffer.</exception>
     /// <exception cref="InvalidOperationException">No buffer is open.</exception>
     /// <exception cref="ObjectDisposedException">The parser is disposed.</exception>
@@ -139,14 +137,14 @@ public sealed class XMLParser : ElectronObject
         }
     }
 
-    /// <summary>Advances past the closing token of the current nonempty element.</summary>
-    /// <remarks>Leaves the closing token current; stops at EOF if none exists.</remarks>
+    /// <summary>Advances through nested tokens until the next matching closing level.</summary>
+    /// <remarks>Does nothing when the parser is unopened or the retained empty-element flag is set. Otherwise starts at depth one even on a non-element token; leaves the closing token current and stops at EOF if none exists.</remarks>
     public void SkipSection()
     {
         lock (_gate)
         {
             ThrowIfDisposed();
-            if (_nodeType != NodeType.Element || _empty) return;
+            if (_data is null || _empty) return;
             var depth = 1;
             while (depth > 0 && Read())
             {
@@ -194,8 +192,9 @@ public sealed class XMLParser : ElectronObject
     /// <returns>The number of newline bytes consumed since opening.</returns>
     public int GetCurrentLine() { lock (_gate) { ThrowIfDisposed(); return _currentLine; } }
 
-    /// <summary>Gets whether the current element has a self-closing slash.</summary>
-    /// <returns>True for a self-closing opening element.</returns>
+    /// <summary>Gets whether the most recently opened element has a self-closing slash.</summary>
+    /// <returns>True for a self-closing opening element, or a retained value on a later non-element token.</returns>
+    /// <remarks>Text, comment, CDATA and unknown tokens can retain the preceding element's flag.</remarks>
     public bool IsEmpty() { lock (_gate) { ThrowIfDisposed(); return _empty; } }
 
     /// <summary>Gets the number of attributes of the current or last element.</summary>
@@ -308,6 +307,7 @@ public sealed class XMLParser : ElectronObject
     private void ReadEnd(byte[] data)
     {
         _nodeType = NodeType.ElementEnd;
+        _empty = false;
         _attributes.Clear();
         Next(data);
         var start = _position;
@@ -329,10 +329,11 @@ public sealed class XMLParser : ElectronObject
     {
         _nodeType = NodeType.Comment;
         Next(data); // '!'
-        if (_position + 6 < data.Length && data.AsSpan(_position).StartsWith("[CDATA["u8))
+        if (!AtEnd(data) && data[_position] == (byte)'[')
         {
             _nodeType = NodeType.CDATA;
-            _position += 7;
+            for (var skipped = 0; skipped < 7 && !AtEnd(data); skipped++) Next(data);
+            if (AtEnd(data)) { _nodeText = string.Empty; return; }
             var start = _position;
             while (!AtEnd(data) && !data.AsSpan(_position).StartsWith("]]>"u8)) Next(data);
             _nodeText = Decode(data, start, _position - start);
@@ -365,6 +366,7 @@ public sealed class XMLParser : ElectronObject
     private void ReadElement(byte[] data)
     {
         _nodeType = NodeType.Element;
+        _empty = false;
         _attributes.Clear();
         var nameStart = _position;
         while (!AtEnd(data) && data[_position] != (byte)'>' && !IsWhitespace(data[_position])) Next(data);
@@ -375,12 +377,14 @@ public sealed class XMLParser : ElectronObject
         while (!AtEnd(data) && data[_position] != (byte)'>')
         {
             if (IsWhitespace(data[_position])) { Next(data); continue; }
-            if (data[_position] == (byte)'/') { _empty = true; Next(data); continue; }
+            if (data[_position] == (byte)'/') { _empty = true; Next(data); break; }
             var attributeStart = _position;
-            while (!AtEnd(data) && data[_position] != (byte)'>' && data[_position] != (byte)'=' && !IsWhitespace(data[_position])) Next(data);
+            while (!AtEnd(data) && data[_position] != (byte)'=' && !IsWhitespace(data[_position])) Next(data);
+            if (AtEnd(data)) break;
             var attributeEnd = _position;
-            while (!AtEnd(data) && data[_position] != (byte)'>' && data[_position] != (byte)'\'' && data[_position] != (byte)'"') Next(data);
-            if (AtEnd(data) || data[_position] == (byte)'>') break;
+            Next(data);
+            while (!AtEnd(data) && data[_position] != (byte)'\'' && data[_position] != (byte)'"') Next(data);
+            if (AtEnd(data)) break;
             var quote = data[_position];
             Next(data);
             var valueStart = _position;
@@ -396,6 +400,11 @@ public sealed class XMLParser : ElectronObject
 
     private static string Decode(byte[] data, int start, int count, bool unescape = false)
     {
+        if (count >= 3 && data[start] == 0xEF && data[start + 1] == 0xBB && data[start + 2] == 0xBF)
+        {
+            start += 3;
+            count -= 3;
+        }
         var value = Encoding.UTF8.GetString(data, start, count);
         return unescape ? Unescape(value) : value;
     }
@@ -421,11 +430,11 @@ public sealed class XMLParser : ElectronObject
             };
             if (replacement is null && entity.Length > 1 && entity[0] == '#')
             {
-                var hex = entity.Length > 2 && (entity[1] is 'x' or 'X');
+                var hex = entity.Length > 2 && entity[1] == 'x';
                 var digits = entity[(hex ? 2 : 1)..];
                 if (int.TryParse(digits, hex ? NumberStyles.AllowHexSpecifier : NumberStyles.None,
-                        CultureInfo.InvariantCulture, out var scalar) && Rune.IsValid(scalar))
-                    replacement = char.ConvertFromUtf32(scalar);
+                        CultureInfo.InvariantCulture, out var scalar) && scalar > 0 && scalar <= 0x10FFFF)
+                    replacement = scalar <= 0xFFFF ? ((char)scalar).ToString() : char.ConvertFromUtf32(scalar);
             }
             if (replacement is null) { result.Append('&'); continue; }
             result.Append(replacement);

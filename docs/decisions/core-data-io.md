@@ -316,3 +316,35 @@ The document parser follows the reference token grammar for trailing commas, raw
 - [0018: Typed configuration files](core-data-io.md#adr-0018)
 - [0019: Typed project settings](core-data-io.md#adr-0019)
 - [0014: Managed Resource lifetime](resources.md#adr-0014)
+
+<a id="adr-0049"></a>
+## ADR 0049: Managed XML token cursor and character boundary
+
+Last updated: 2026-09-24
+
+### Status
+
+Accepted.
+
+### Context
+
+The XML token reader operates on UTF-8 bytes and exposes offsets, permissive markup tokens and integer error results. Electron2D exposes this reader directly to typed C# callers, shares directory-backed path resolution with `FileAccess`, and cannot place a numeric entity above the Unicode maximum into a managed string.
+
+### Decision
+
+`XMLParser : ElectronObject` owns a copied byte buffer. `Open` uses the existing `FileAccess` path resolver; `OpenBuffer` copies caller bytes. Both reset the byte cursor and line counter but leave the prior token visible immediately after a successful reopen. `Read` and `Seek` return `bool` for success/EOF, while invalid calls and I/O failures use C# exceptions instead of numeric error codes. `SkipSection` traverses the token cursor until the matching closing level or EOF.
+
+Token identities, source-order attributes, retained attributes on non-element tokens, byte offsets, line counting, permissive malformed markup and predefined/numeric entity decoding follow the pinned implementation. Getter error results remain empty strings and report through managed trace listeners. Numeric entities with a value outside the representable Unicode range remain literal text; this is the accepted managed string boundary for invalid source data. No DTD validation, external-entity resolution, document tree or streaming input is introduced.
+
+### Consequences and verification limits
+
+- Whole-buffer allocation and text decoding remain outside frame-critical callbacks.
+- A short whitespace scan near EOF can return success without replacing the prior token; the next call reports EOF.
+- Malformed UTF-8 is decoded with replacement characters while byte offsets still refer to the original input.
+- The managed executable harness verifies tokens, malformed cases, offsets, seeking and section skipping. Native hosts and other platforms remain separate acceptance gates under ADR 0021.
+
+### Related decisions
+
+- [0003: Managed object lifetime](core-object-runtime.md#adr-0003)
+- [0020: Typed file access](core-data-io.md#adr-0020)
+- [0021: Current platform gate](product.md#adr-0021)

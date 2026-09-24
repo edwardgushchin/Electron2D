@@ -131,9 +131,98 @@ internal static class XMLParserTests
         }
         finally { File.Delete(virtualPath); }
 
+        VerifyCursorEdges();
         parser.Dispose();
         Reject<ObjectDisposedException>(() => parser.Read());
         Console.WriteLine("XML token, offset, entity, seek, file and lifetime checks passed.");
+    }
+
+    private static void VerifyCursorEdges()
+    {
+        using var parser = new XMLParser();
+        parser.SkipSection();
+        Reject<InvalidOperationException>(() => parser.Seek(0));
+        parser.OpenBuffer("x"u8.ToArray());
+        Check(!parser.Read() && parser.GetNodeType() == XMLParser.NodeType.None,
+            "A single-byte input must return EOF without producing a token.");
+        parser.OpenBuffer("ab"u8.ToArray());
+        Check(parser.Read() && parser.GetNodeData() == "ab" && !parser.Read(),
+            "A two-byte non-whitespace input must still produce text.");
+
+        parser.OpenBuffer("<x/> \n"u8.ToArray());
+        Check(parser.Read() && parser.GetNodeName() == "x" && parser.IsEmpty() &&
+              parser.Read() && parser.GetNodeName() == "x" && parser.GetNodeOffset() == 4 &&
+              parser.GetCurrentLine() == 1 && !parser.Read(),
+            "Short trailing whitespace must advance the cursor successfully without replacing the prior token.");
+        parser.OpenBuffer("<a/>b"u8.ToArray());
+        Check(parser.Read() && !parser.Seek(4) && parser.GetNodeName() == "a" && parser.IsEmpty(),
+            "Seeking to the final byte is valid but its subsequent read reports EOF without changing the token.");
+        Reject<ArgumentOutOfRangeException>(() => parser.Seek(5));
+        Check(parser.GetNodeName() == "a" && parser.IsEmpty(),
+            "An invalid seek must preserve the prior token.");
+        parser.OpenBuffer("<a>\n<b/></a>"u8.ToArray());
+        Check(parser.Read() && parser.Read() && parser.GetNodeName() == "b" &&
+              parser.GetCurrentLine() == 1 && parser.Seek(0) && parser.GetNodeName() == "a" &&
+              parser.GetCurrentLine() == 1,
+            "Seeking backward must read from the requested byte while preserving consumed-line history.");
+
+        parser.OpenBuffer("<a/><b/>"u8.ToArray());
+        Check(parser.Read() && parser.IsEmpty(), "A self-closing element must be current before SkipSection.");
+        parser.SkipSection();
+        Check(parser.GetNodeName() == "a" && parser.Read() && parser.GetNodeName() == "b",
+            "SkipSection must leave an empty element current without consuming its sibling.");
+        parser.OpenBuffer("<a/>t</b>"u8.ToArray());
+        Check(parser.Read() && parser.IsEmpty() && parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Text,
+            "Text following an empty element retains the previous empty flag.");
+        parser.SkipSection();
+        Check(parser.GetNodeType() == XMLParser.NodeType.Text && parser.Read() && parser.GetNodeName() == "b",
+            "SkipSection must not consume another token while the retained empty flag is set.");
+        parser.OpenBuffer("<a>t<b/></a>"u8.ToArray());
+        Check(parser.Read() && parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Text,
+            "Text inside a section must be readable before skipping.");
+        parser.SkipSection();
+        Check(parser.GetNodeType() == XMLParser.NodeType.ElementEnd && parser.GetNodeName() == "a",
+            "Skipping from an interior text token must reach the section's first closing level.");
+        parser.OpenBuffer("<a><b>"u8.ToArray());
+        Check(parser.Read(), "An incomplete outer element must open.");
+        parser.SkipSection();
+        Check(parser.GetNodeType() == XMLParser.NodeType.Element && parser.GetNodeName() == "b" && !parser.Read(),
+            "Missing closing tags must stop section skipping at EOF without fabricating a close.");
+
+        parser.OpenBuffer("<x a>tail</x>"u8.ToArray());
+        Check(parser.Read() && parser.GetNodeName() == "x" && parser.GetAttributeCount() == 0 && !parser.Read(),
+            "An unterminated attribute can consume malformed trailing markup without a fabricated token.");
+        parser.OpenBuffer("<![notdata"u8.ToArray());
+        Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.CDATA && parser.GetNodeName() == "a" && !parser.Read(),
+            "A bracket declaration follows the permissive fixed-prefix CDATA path.");
+        parser.OpenBuffer("<!DOCTYPE a <b>><?unfinished"u8.ToArray());
+        Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Comment &&
+              parser.GetNodeName() == "DOCTYPE a <b>" &&
+              parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Unknown &&
+              parser.GetNodeName() == "?unfinished" && !parser.Read(),
+            "Nested declaration brackets and an incomplete instruction remain independent permissive tokens.");
+        parser.OpenBuffer("<a></a"u8.ToArray());
+        Check(parser.Read() && parser.Read() && parser.GetNodeType() == XMLParser.NodeType.ElementEnd &&
+              parser.GetNodeName() == "a" && !parser.Read(),
+            "A closing element without a final bracket remains readable before EOF.");
+        parser.OpenBuffer("<x>&#0;&#x0;&#X41;&#x41;&#xD800;&#x110000;&bogus;&amp;</x>"u8.ToArray());
+        Check(parser.Read() && parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Text &&
+              parser.GetNodeData() == "&#0;&#x0;&#X41;A\uD800&#x110000;&bogus;&",
+            "Numeric entities preserve invalid zero and unrepresentable scalar text while decoding valid scalar and surrogate values.");
+        parser.OpenBuffer(Encoding.UTF8.GetBytes("<x a='\uFEFFvalue'>\uFEFFtext</x>"));
+        Check(parser.Read() && parser.GetAttributeValue(0) == "value" &&
+              parser.Read() && parser.GetNodeData() == "text",
+            "UTF-8 byte-order marks at the start of decoded attribute and text slices are skipped.");
+        parser.OpenBuffer(Encoding.UTF8.GetBytes("\uFEFF<x/>"));
+        Check(parser.Read() && parser.GetNodeType() == XMLParser.NodeType.Text &&
+              parser.GetNodeData() == string.Empty && parser.Read() && parser.GetNodeName() == "x",
+            "A leading byte-order mark remains a token boundary while its decoded text is empty.");
+        parser.OpenBuffer([(byte)'<', (byte)'x', (byte)'>', 0xE2, 0x82, (byte)'<', (byte)'/', (byte)'x', (byte)'>']);
+        Check(parser.Read() && parser.Read() && parser.GetNodeData() == "\uFFFD",
+            "An incomplete UTF-8 sequence is replaced once without changing byte cursor positions.");
+        parser.OpenBuffer([(byte)'<', (byte)'x', (byte)'>', (byte)'a', 0, (byte)'<', (byte)'y', (byte)'/', (byte)'>']);
+        Check(parser.Read() && parser.Read() && parser.GetNodeData() == "a" && !parser.Read(),
+            "An embedded zero byte terminates the token stream before later markup.");
     }
 
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
