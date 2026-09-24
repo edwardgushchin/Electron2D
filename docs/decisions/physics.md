@@ -182,3 +182,28 @@ Static bodies constrain a rigid body but teleport when their scene transform cha
 ### Consequences
 
 Games can animate moving platforms and doors that push or carry dynamic bodies, using typed scene transforms. CharacterBody platform following and kinematic sweeps remain future slices. Native allocation, other platforms and owner visual acceptance remain unverified.
+
+<a id="adr-0061"></a>
+## ADR 0061: Two-sided segment fixtures and zero-area body mass
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: SegmentShape resource and executable static, dynamic and area fixtures
+- Depends on: [0054](#adr-0054), [0059](#adr-0059), [0013](resources.md#adr-0013)
+
+### Context
+
+Circle, capsule and rectangle fixtures cannot form a zero-width sloped terrain edge. The pinned SegmentShape2D stores two independent local endpoints, emits only on a changed endpoint, and reports their tight bounds. Box2D.NET provides a two-sided segment fixture, but rejects an endpoint separation at or below its linear slop. A segment has zero area in that backend, so a dynamic body with only segments otherwise receives zero mass and cannot advance under gravity.
+
+Joint2D/PinJoint2D was compared as another gameplay slice. Its public RID needs typed joint/body/world identity, and the current Box2D revolute API has no verified direct mapping for Joint2D positional `bias` or PinJoint2D linear-anchor `softness`; its angular spring controls a different degree of freedom. Typed kinematic sweeps need an owned result with stable shape indices and an initial-overlap recovery rule. These exact member triggers remain in coverage while independent segment collision can execute now.
+
+### Decision
+
+- Map SegmentShape2D to `SegmentShape : Shape` with A=(0,0), B=(0,10), exact tight local bounds, independent Resource copying and finite endpoints. Reject values whose endpoint subtraction would overflow before mutation. An equal endpoint assignment has no change event. Rotate and translate both endpoints through a direct CollisionShape child before creating a two-sided backend fixture.
+- Represent zero or sub-slop segments with a zero-radius point fixture at the midpoint, while retaining the exact public endpoints and bounds. Never keep the backend's null segment ID. At the current unit scale, its 0.005 m slop is 0.5 scene units. The same resource can be borrowed by static/dynamic bodies and areas.
+- For dynamic bodies whose fixtures all have zero area, retain the requested positive mass. Segment mass is distributed by segment length; the center is length-weighted and rotational inertia follows the thin-rod and parallel-axis formulas. A body without fixtures keeps its requested mass with zero inertia. Reject mass/inertia whose inverse exceeds the finite solver range before backend mutation. Warmed unchanged segment contact/area paths allocate zero managed bytes on the checked Linux/.NET 8 profile.
+
+### Consequences
+
+Games can construct two-sided terrain edges and line sensors and attach segments to moving bodies. Live edits, rotation, short/point limits, resource copying, scene packing and dynamic mass/inertia have executable checks. Compound chain geometry, joint tuning/RID, direct-space sweeps, native allocator accounting, other platforms and owner acceptance remain separate work.

@@ -39,7 +39,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 <a id="shape"></a>
 ### `Shape`
 
-Accepts a live CircleShape, CapsuleShape, RectangleShape or null. A disposed shape throws before assignment. The old resource's change/disposal listeners are removed and the new one's installed; the node does not dispose either. Successful assignment marks its parent's fixtures dirty and refreshes configuration warnings. A Changed callback failure from a warning observer may propagate after assignment.
+Accepts a live CircleShape, CapsuleShape, SegmentShape, RectangleShape or null. A disposed shape throws before assignment. The old resource's change/disposal listeners are removed and the new one's installed; the node does not dispose either. Successful assignment marks its parent's fixtures dirty and refreshes configuration warnings. A Changed callback failure from a warning observer may propagate after assignment.
 
 <a id="disabled"></a>
 ### `Disabled`
@@ -50,4 +50,4 @@ Changing it marks the parent fixture set dirty. A disabled child remains in the 
 
 The child registers during tree entry and unregisters before its exit finishes; scene disposal disconnects resource listeners. A disposed borrowed Shape becomes ineligible at the next step. A scale or skew change on an active shape fails before replacing the parent's existing fixtures; correction permits a later step. Owner-thread scene mutation follows Node and Entity. One-way collision and debug color are unfinished on [CollisionShape2D coverage](../coverage/classes/CollisionShape2D.md).
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks parent/shape diagnostics, live shape edits, disablement, PackedScene restoration and borrowed lifetime. [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks area ownership and sensor fixture edits. [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks borrowed capsule edits, rotation and area sensors. [ADRs 0055 and 0059](../decisions/physics.md#adr-0059) record the area and capsule extensions.
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks parent/shape diagnostics, live shape edits, disablement, PackedScene restoration and borrowed lifetime. [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks area ownership and sensor fixture edits. [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks borrowed capsule edits, rotation and area sensors. [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks line fixtures and live edits. [ADRs 0055 and 0059](../decisions/physics.md#adr-0059) record the area and capsule extensions.

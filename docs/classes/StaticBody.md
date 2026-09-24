@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A stationary scene collider and base of [AnimatableBody](AnimatableBody.md), which moves kinematically. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle, capsule or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
+A stationary scene collider and base of [AnimatableBody](AnimatableBody.md), which moves kinematically. Add one or more direct [CollisionShape](CollisionShape.md) children with caller-owned circle, capsule, segment or rectangle resources; its fixtures participate in the SceneTree's fixed physics world and constrain RigidBody movement. Manual position and rotation changes reach the backend before the next step. The body itself has no visual geometry; a Sprite child or another CanvasItem may show it.
 
 ## Example
 
