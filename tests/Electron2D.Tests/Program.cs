@@ -3589,8 +3589,58 @@ static bool TransformNearlyEqual(Transform left, Transform right, float epsilon 
     VectorNearlyEqual(left.X, right.X, epsilon) && VectorNearlyEqual(left.Y, right.Y, epsilon) &&
     VectorNearlyEqual(left.Origin, right.Origin, epsilon);
 
+static void VerifyConfigText()
+{
+    var root = new ConfigKey<int>(string.Empty, "root");
+    var repeated = new ConfigKey<int>("Alpha", "id");
+    var empty = new ConfigKey<string>("Alpha", string.Empty);
+    var escaped = new ConfigKey<string>("section]=;\"\\\n", "key=;\"\\\n");
+    using var config = new ConfigFile();
+    config.SetValue(repeated, 1);
+    config.SetValue(empty, "empty name");
+    config.SetValue(escaped, "line\nbreak;=]");
+    config.SetValue(root, 2);
+    var encoded = config.EncodeToText();
+    Require(encoded.StartsWith("root=2\n\n[Alpha]\n\n", StringComparison.Ordinal) &&
+            encoded.Contains("\"\"=\"empty name\"", StringComparison.Ordinal) &&
+            encoded.Contains("[\"section", StringComparison.Ordinal) &&
+            !encoded.Contains('\r'),
+        "Text encoding must put sectionless entries first, quote unsafe names and normalize line endings.");
+
+    using var decoded = new ConfigFile();
+    decoded.Parse("\uFEFF; ignored\r\n" + encoded.Replace("\n", "\r\n", StringComparison.Ordinal));
+    Require(decoded.GetValue(root) == 2 && decoded.GetValue(repeated) == 1 &&
+            decoded.GetValue(empty) == "empty name" && decoded.GetValue(escaped) == "line\nbreak;=]" &&
+            decoded.EncodeToText() == encoded,
+        "Parsing must discard comments and BOM while preserving complex names, values and stable encoding.");
+
+    decoded.Parse("; ignored\n[Alpha]\nid=3\n[Alpha]\nid=4\nnew=5\n");
+    Require(decoded.GetValue(repeated) == 4 && decoded.GetValue(empty) == "empty name" &&
+            decoded.GetValue(new ConfigKey<int>("Alpha", "new")) == 5 &&
+            decoded.GetSections().SequenceEqual([string.Empty, "Alpha", escaped.Section]) &&
+            decoded.GetSectionKeys("Alpha").SequenceEqual(["id", string.Empty, "new"]),
+        "Repeated sections and keys merge last values without reordering surviving entries.");
+    var beforeFailure = decoded.EncodeToText();
+    foreach (var invalid in new[]
+             {
+                 "fresh=1\n[unclosed", "fresh=1\nnot-an-assignment", "fresh=1\n\"bad=name=1",
+                 "fresh=1\nname=", "fresh=1\nname={",
+             })
+    {
+        Expect<FormatException>(() => decoded.Parse(invalid),
+            "Malformed headers, identifiers, assignments and JSON values must fail.");
+        Require(decoded.EncodeToText() == beforeFailure &&
+                !decoded.HasSectionKey(new ConfigKey<int>(string.Empty, "fresh")),
+            "A later text error must leave the entire prior document unchanged.");
+    }
+    decoded.Parse(string.Empty);
+    Require(decoded.EncodeToText() == beforeFailure,
+        "Parsing an empty document must merge no entries and preserve current state.");
+}
+
 static void VerifyConfigFiles()
 {
+    VerifyConfigText();
     var rootKey = new ConfigKey<int>(string.Empty, "root");
     var answerKey = new ConfigKey<int>("gameplay", "answer");
     var enabledKey = new ConfigKey<bool>("gameplay", "enabled");

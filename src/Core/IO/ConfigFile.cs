@@ -115,7 +115,7 @@ public sealed class ConfigFile : ElectronObject
     /// A snapshot using LF line endings. Values are compact JSON tokens; unsafe section and key names are JSON-quoted.
     /// The empty document is encoded as an empty string.
     /// </returns>
-    /// <remarks>Comments read by <see cref="Parse"/> are intentionally not retained.</remarks>
+    /// <remarks>Comments and input line endings read by <see cref="Parse"/> are normalized away. Empty entry names are quoted.</remarks>
     /// <exception cref="ObjectDisposedException">The configuration file is disposing or disposed.</exception>
     public string EncodeToText()
     {
@@ -379,8 +379,9 @@ public sealed class ConfigFile : ElectronObject
     /// <summary>Parses and merges an in-memory configuration document.</summary>
     /// <param name="data">The complete sectioned document.</param>
     /// <remarks>
-    /// Blank lines and lines whose first non-whitespace character is a semicolon are ignored. Parsing is transactional:
-    /// malformed input leaves the current document unchanged. Existing entries not mentioned by the input are retained.
+    /// A leading BOM, CRLF, blank lines and lines whose first non-whitespace character is a semicolon are accepted.
+    /// Repeated section/key assignments replace values without reordering existing entries. Parsing is transactional:
+    /// malformed input leaves the current document unchanged, and unmentioned entries are retained.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
     /// <exception cref="FormatException">A section, assignment, identifier, or JSON value is malformed.</exception>
