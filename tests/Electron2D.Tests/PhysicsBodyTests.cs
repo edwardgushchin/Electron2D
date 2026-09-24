@@ -93,7 +93,9 @@ internal static class PhysicsBodyTests
         Reject<ArgumentOutOfRangeException>(() => body.GetCollisionLayerValue(0));
         Reject<ArgumentOutOfRangeException>(() => body.SetCollisionMaskValue(33, true));
         Reject<ArgumentOutOfRangeException>(() => body.Mass = 0);
-        Reject<ArgumentOutOfRangeException>(() => body.LinearDamp = -1);
+        body.LinearDamp = -1;
+        Check(body.LinearDamp == -1, "Signed damping remains available for the area/body field contract.");
+        body.LinearDamp = 0;
         Reject<ArgumentOutOfRangeException>(() => body.GravityScale = float.NaN);
         Reject<ArgumentOutOfRangeException>(() => body.LinearVelocity = new(float.NaN, 0));
         Reject<InvalidOperationException>(() => body.ApplyCentralImpulse(new(0, 1)));
@@ -151,7 +153,14 @@ internal static class PhysicsBodyTests
     private static void VerifyMotionSettingsAndRecovery()
     {
         var root = new Node();
-        var body = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0), CanSleep = false };
+        var body = new RigidBody
+        {
+            GravityScale = 0,
+            LinearVelocity = new(60, 0),
+            CanSleep = false,
+            LinearDampMode = RigidBody.DampMode.Replace,
+            AngularDampMode = RigidBody.DampMode.Replace
+        };
         root.AddChild(body);
         using var tree = new SceneTree(root);
         for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);

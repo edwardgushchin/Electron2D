@@ -14,6 +14,11 @@
       "godot": "Area2D::method:get_overlapping_bodies()",
       "electron2d": "method:Electron2D.Area.GetOverlappingBodies()",
       "reason": "Typed array preserves the spatial Node2D-to-Entity mapping and last fixed-step overlap snapshot."
+    },
+    {
+      "godot": "PhysicsBody2D::method:get_gravity()",
+      "electron2d": "method:Electron2D.PhysicsBody.GetGravity()",
+      "reason": "Typed last-step gravity vector from resolved world and area fields, zero for detached or static bodies."
     }
   ],
   "extras": [
@@ -305,12 +310,10 @@
       "godot": [
         "RigidBody2D::method:apply_central_force(Vector2:)",
         "RigidBody2D::method:apply_central_impulse(Vector2:)",
-        "RigidBody2D::property:angular_damp",
         "RigidBody2D::property:angular_velocity",
         "RigidBody2D::property:can_sleep",
         "RigidBody2D::property:freeze",
         "RigidBody2D::property:gravity_scale",
-        "RigidBody2D::property:linear_damp",
         "RigidBody2D::property:linear_velocity",
         "RigidBody2D::property:lock_rotation",
         "RigidBody2D::property:mass",
@@ -375,13 +378,6 @@
     },
     {
       "godot": [
-        "PhysicsBody2D::method:get_gravity()"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: Area2D gravity override integration with the physics space."
-    },
-    {
-      "godot": [
         "PhysicsBody2D::method:move_and_collide(Vector2:,bool:,float:,bool:)",
         "PhysicsBody2D::method:test_move(Transform2D:,Vector2:,KinematicCollision2D:,float:,bool:)"
       ],
@@ -402,14 +398,6 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: PhysicsDirectBodyState2D typed solver state and callback timing contract."
-    },
-    {
-      "godot": [
-        "RigidBody2D::property:angular_damp_mode",
-        "RigidBody2D::property:linear_damp_mode"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: Area2D damping overrides and combine/replace integration with body damping."
     },
     {
       "godot": [
@@ -466,7 +454,7 @@
         "class:Area2D"
       ],
       "state": "Partial",
-      "reason": "Directional sensor monitoring and object-level events execute under ADR 0055; gravity/damping, audio and shape-index members retain exact gaps below."
+      "reason": "Directional monitoring and priority gravity/damping fields execute under ADRs 0055/0056; tile-map virtual bodies, audio routing and shape-index events retain gaps below."
     },
     {
       "godot": [
@@ -509,18 +497,11 @@
         "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_REPLACE_COMBINE",
         "Area2D::property:angular_damp",
         "Area2D::property:angular_damp_space_override",
-        "Area2D::property:gravity",
-        "Area2D::property:gravity_direction",
-        "Area2D::property:gravity_point",
-        "Area2D::property:gravity_point_center",
-        "Area2D::property:gravity_point_unit_distance",
-        "Area2D::property:gravity_space_override",
         "Area2D::property:linear_damp",
-        "Area2D::property:linear_damp_space_override",
-        "Area2D::property:priority"
+        "Area2D::property:linear_damp_space_override"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: complete area field-priority reduction into rigid-body gravity and damping, including point falloff and combine/replace order; sensor snapshots now provide the overlap prerequisite."
+      "state": "Implemented",
+      "reason": "Pinned enum identities and linear/angular area damping modes execute over current rigid bodies; PhysicsAreaFieldTests verifies priority, signed rates and warm allocation."
     },
     {
       "godot": [
@@ -532,6 +513,49 @@
       ],
       "state": "Partial",
       "reason": "Current PhysicsBody nodes work, but the reference also reports tile-map virtual collision bodies; trigger: tile collision-owner integration with the area space."
+    },
+    {
+      "godot": [
+        "PhysicsBody2D::method:get_gravity()"
+      ],
+      "state": "Partial",
+      "reason": "RigidBody last-step area/world gravity and StaticBody zero execute; CharacterBody is absent, so its inherited area-gravity query remains a dependency."
+    },
+    {
+      "godot": [
+        "RigidBody2D::enum:DampMode",
+        "RigidBody2D::enum_value:DampMode.DAMP_MODE_COMBINE",
+        "RigidBody2D::enum_value:DampMode.DAMP_MODE_REPLACE",
+        "RigidBody2D::property:linear_damp_mode",
+        "RigidBody2D::property:angular_damp_mode",
+        "RigidBody2D::property:linear_damp",
+        "RigidBody2D::property:angular_damp"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned Combine/Replace identities and signed per-step linear/angular damping execute with area and world defaults; PhysicsAreaFieldTests covers modes and edge values."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/default_gravity",
+        "ProjectSettings::property:physics/2d/default_gravity_vector",
+        "ProjectSettings::property:physics/2d/default_linear_damp",
+        "ProjectSettings::property:physics/2d/default_angular_damp"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite world defaults retain pinned values and are sampled with feature overrides when the SceneTree physics world is created; PhysicsAreaFieldTests verifies startup and existing-world boundaries."
+    },
+    {
+      "godot": [
+        "Area2D::property:gravity",
+        "Area2D::property:gravity_direction",
+        "Area2D::property:gravity_point",
+        "Area2D::property:gravity_point_center",
+        "Area2D::property:gravity_point_unit_distance",
+        "Area2D::property:gravity_space_override",
+        "Area2D::property:priority"
+      ],
+      "state": "Partial",
+      "reason": "Gravity and priority execute for current RigidBody with point falloff and live edits; CharacterBody is absent and must inherit the same area field through GetGravity."
     }
   ]
 }

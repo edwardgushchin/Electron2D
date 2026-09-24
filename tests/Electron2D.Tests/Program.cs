@@ -190,6 +190,7 @@ PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
 PhysicsMaterialTests.Run();
 AreaTests.Run();
+PhysicsAreaFieldTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

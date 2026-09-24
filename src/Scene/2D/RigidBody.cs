@@ -9,6 +9,15 @@ namespace Electron2D;
 /// step; caller code can change forces and velocity during a physics callback before that step.</remarks>
 public sealed class RigidBody : PhysicsBody
 {
+    /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>
+    public enum DampMode
+    {
+        /// <summary>Adds body damping to area and world damping.</summary>
+        Combine = 0,
+        /// <summary>Uses only body damping.</summary>
+        Replace = 1
+    }
+
     private static readonly PropertyDescriptor[] BodyProperties =
     [
         new PropertyDescriptor<RigidBody, float>(nameof(Mass), body => body.Mass, (body, value) => body.Mass = value, _ => 1f, stored: true),
@@ -17,6 +26,10 @@ public sealed class RigidBody : PhysicsBody
         new PropertyDescriptor<RigidBody, float>(nameof(AngularVelocity), body => body.AngularVelocity, (body, value) => body.AngularVelocity = value, _ => 0f, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(LinearDamp), body => body.LinearDamp, (body, value) => body.LinearDamp = value, _ => 0f, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(AngularDamp), body => body.AngularDamp, (body, value) => body.AngularDamp = value, _ => 0f, stored: true),
+        new PropertyDescriptor<RigidBody, DampMode>(nameof(LinearDampMode), body => body.LinearDampMode,
+            (body, value) => body.LinearDampMode = value, _ => DampMode.Combine, stored: true),
+        new PropertyDescriptor<RigidBody, DampMode>(nameof(AngularDampMode), body => body.AngularDampMode,
+            (body, value) => body.AngularDampMode = value, _ => DampMode.Combine, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(Freeze), body => body.Freeze, (body, value) => body.Freeze = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(LockRotation), body => body.LockRotation, (body, value) => body.LockRotation = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, PhysicsMaterial?>(nameof(PhysicsMaterialOverride), body => body.PhysicsMaterialOverride,
@@ -29,6 +42,12 @@ public sealed class RigidBody : PhysicsBody
     private float _angularVelocity;
     private float _linearDamp;
     private float _angularDamp;
+    private DampMode _linearDampMode;
+    private DampMode _angularDampMode;
+    private Vector2 _effectiveGravity;
+    private float _effectiveLinearDamp;
+    private float _effectiveAngularDamp;
+    private bool _fieldsInitialized;
     private bool _freeze;
     private bool _lockRotation;
     private bool _canSleep = true;
@@ -89,22 +108,40 @@ public sealed class RigidBody : PhysicsBody
         set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze) b2Body_SetAngularVelocity(BackendID, value); }
     }
 
-    /// <summary>Gets or sets finite nonnegative linear damping per second.</summary>
+    /// <summary>Gets or sets finite signed linear damping per second.</summary>
     /// <value>Zero by default.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative or nonfinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float LinearDamp
     {
         get { ThrowIfDisposed(); return _linearDamp; }
-        set { EnsureMutable(); Nonnegative(value); _linearDamp = value; if (HasBackend) b2Body_SetLinearDamping(BackendID, value); }
+        set { EnsureMutable(); Finite(value); _linearDamp = value; }
     }
 
-    /// <summary>Gets or sets finite nonnegative angular damping per second.</summary>
+    /// <summary>Gets or sets finite signed angular damping per second.</summary>
     /// <value>Zero by default.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned value is negative or nonfinite.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float AngularDamp
     {
         get { ThrowIfDisposed(); return _angularDamp; }
-        set { EnsureMutable(); Nonnegative(value); _angularDamp = value; if (HasBackend) b2Body_SetAngularDamping(BackendID, value); }
+        set { EnsureMutable(); Finite(value); _angularDamp = value; }
+    }
+
+    /// <summary>Gets or sets whether linear damping combines with or replaces area and world damping.</summary>
+    /// <value><see cref="DampMode.Combine"/> by default.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned mode is undefined.</exception>
+    public DampMode LinearDampMode
+    {
+        get { ThrowIfDisposed(); return _linearDampMode; }
+        set { EnsureMutable(); ValidateDampMode(value); _linearDampMode = value; }
+    }
+
+    /// <summary>Gets or sets whether angular damping combines with or replaces area and world damping.</summary>
+    /// <value><see cref="DampMode.Combine"/> by default.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned mode is undefined.</exception>
+    public DampMode AngularDampMode
+    {
+        get { ThrowIfDisposed(); return _angularDampMode; }
+        set { EnsureMutable(); ValidateDampMode(value); _angularDampMode = value; }
     }
 
     /// <summary>Gets or sets whether simulation treats this body as static.</summary>
@@ -179,15 +216,17 @@ public sealed class RigidBody : PhysicsBody
     }
 
     internal override bool MovesWithSimulation => !_freeze;
+    internal override Vector2 EffectiveGravity => _effectiveGravity;
 
     internal override B2BodyDef CreateBodyDefinition()
     {
+        _fieldsInitialized = false;
         var definition = b2DefaultBodyDef();
         definition.type = _freeze ? B2BodyType.b2_staticBody : B2BodyType.b2_dynamicBody;
         definition.linearVelocity = Shape.ToBackend(_linearVelocity);
         definition.angularVelocity = _angularVelocity;
-        definition.linearDamping = _linearDamp;
-        definition.angularDamping = _angularDamp;
+        definition.linearDamping = 0;
+        definition.angularDamping = 0;
         definition.gravityScale = _gravityScale;
         definition.enableSleep = _canSleep;
         definition.isAwake = !_sleeping;
@@ -203,6 +242,45 @@ public sealed class RigidBody : PhysicsBody
         _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter, velocity.Y * PhysicsSpace.UnitsPerMeter);
         _angularVelocity = b2Body_GetAngularVelocity(BackendID);
         _sleeping = !b2Body_IsAwake(BackendID);
+    }
+
+    internal void ApplyAreaFields(Vector2 gravity, float linearDamp, float angularDamp,
+        Vector2 defaultGravity, double delta)
+    {
+        var scaledGravity = gravity * _gravityScale;
+        var resolvedLinear = _linearDampMode == DampMode.Replace ? _linearDamp : linearDamp + _linearDamp;
+        var resolvedAngular = _angularDampMode == DampMode.Replace ? _angularDamp : angularDamp + _angularDamp;
+        var linearFactor = MathF.Max(0, 1 - (float)delta * resolvedLinear);
+        var angularFactor = MathF.Max(0, 1 - (float)delta * resolvedAngular);
+        var extraAcceleration = scaledGravity - defaultGravity * _gravityScale;
+        if (!scaledGravity.IsFinite() || !extraAcceleration.IsFinite() ||
+            !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
+            throw new InvalidOperationException("The resolved physics field exceeds the finite simulation range.");
+
+        var changed = _fieldsInitialized && (scaledGravity != _effectiveGravity ||
+            resolvedLinear != _effectiveLinearDamp || resolvedAngular != _effectiveAngularDamp);
+        var active = !_freeze && HasBackend && (changed || b2Body_IsAwake(BackendID));
+        var dampedVelocity = default(B2Vec2);
+        var dampedAngularVelocity = 0f;
+        var force = default(B2Vec2);
+        if (active)
+        {
+            dampedVelocity = b2Body_GetLinearVelocity(BackendID) * linearFactor;
+            dampedAngularVelocity = b2Body_GetAngularVelocity(BackendID) * angularFactor;
+            force = Shape.ToBackend(extraAcceleration) * b2Body_GetMass(BackendID);
+            if (!float.IsFinite(dampedVelocity.X) || !float.IsFinite(dampedVelocity.Y) ||
+                !float.IsFinite(dampedAngularVelocity) || !float.IsFinite(force.X) || !float.IsFinite(force.Y))
+                throw new InvalidOperationException("The resolved physics field would produce nonfinite motion.");
+        }
+        _effectiveGravity = scaledGravity;
+        _effectiveLinearDamp = resolvedLinear;
+        _effectiveAngularDamp = resolvedAngular;
+        _fieldsInitialized = true;
+        if (!active) return;
+        if (changed) b2Body_SetAwake(BackendID, true);
+        if (linearFactor != 1) b2Body_SetLinearVelocity(BackendID, dampedVelocity);
+        if (angularFactor != 1) b2Body_SetAngularVelocity(BackendID, dampedAngularVelocity);
+        if (force.X != 0 || force.Y != 0) b2Body_ApplyForceToCenter(BackendID, force, wake: false);
     }
 
     /// <inheritdoc />
@@ -234,13 +312,14 @@ public sealed class RigidBody : PhysicsBody
         if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
     }
 
-    private static void Nonnegative(float value)
-    {
-        if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
-    }
-
     private static void Positive(float value)
     {
         if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
+    }
+
+    private static void ValidateDampMode(DampMode value)
+    {
+        if (value is not DampMode.Combine and not DampMode.Replace)
+            throw new ArgumentOutOfRangeException(nameof(value));
     }
 }

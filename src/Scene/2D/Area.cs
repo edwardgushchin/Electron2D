@@ -9,7 +9,7 @@ namespace Electron2D;
 /// <summary>A two-dimensional region that reports physics bodies and other areas crossing its shapes.</summary>
 /// <remarks>Attach direct <see cref="CollisionShape"/> children and add the area to a scene tree.
 /// Overlap snapshots update after each nonzero fixed physics step; changing a transform does not update a snapshot immediately.</remarks>
-public sealed class Area : CollisionObject
+public sealed partial class Area : CollisionObject
 {
     private static readonly PropertyDescriptor[] AreaProperties =
     [
@@ -250,7 +250,7 @@ public sealed class Area : CollisionObject
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(AreaProperties);
+        base.GetPropertyDescriptors().Concat(AreaProperties).Concat(FieldProperties);
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Area)

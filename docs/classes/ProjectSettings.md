@@ -55,6 +55,10 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<string> ApplicationName { get; }`](#p-electron2d-projectsettings-applicationname) | Defines the human-readable application name. |
 | [`public static ProjectSetting<string> ApplicationVersion { get; }`](#p-electron2d-projectsettings-applicationversion) | Defines the application version string. |
 | [`public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`](#p-electron2d-projectsettings-physicstickspersecond) | Defines the fixed-step callback frequency used by [`Engine`](Engine.md). |
+| [`public static ProjectSetting<float> Physics2DDefaultGravity { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravity) | Default 2D gravity strength, 980 scene units/s². |
+| [`public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravityvector) | Default 2D gravity direction, (0, 1) without normalization. |
+| [`public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultlineardamp) | Default 2D linear damping, 0.1/s. |
+| [`public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultangulardamp) | Default 2D angular damping, 1/s. |
 | [`public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`](#p-electron2d-projectsettings-maxphysicsstepsperframe) | Defines the maximum fixed-step callbacks processed during one frame. |
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
 | [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
@@ -208,6 +212,27 @@ Defines the application version string.
 ### `public static ProjectSetting<int> PhysicsTicksPerSecond { get; }`
 
 Defines the fixed-step callback frequency used by [`Engine`](Engine.md).
+
+<a id="physics2ddefaults"></a>
+<a id="p-electron2d-projectsettings-physics2ddefaultgravity"></a>
+### `Physics2DDefaultGravity`
+
+Defines `physics/2d/default_gravity`, default 980 scene units/s². Finite signed strengths are accepted; a nonfinite value is rejected before registry mutation.
+
+<a id="p-electron2d-projectsettings-physics2ddefaultgravityvector"></a>
+### `Physics2DDefaultGravityVector`
+
+Defines `physics/2d/default_gravity_vector`, default (0, 1). Finite components are required; the vector is not normalized before multiplication by the gravity strength.
+
+<a id="p-electron2d-projectsettings-physics2ddefaultlineardamp"></a>
+### `Physics2DDefaultLinearDamp`
+
+Defines `physics/2d/default_linear_damp`, default 0.1/s. Finite signed rates are accepted; the body's damping mode can combine or replace this value.
+
+<a id="p-electron2d-projectsettings-physics2ddefaultangulardamp"></a>
+### `Physics2DDefaultAngularDamp`
+
+Defines `physics/2d/default_angular_damp`, default 1/s. Finite signed rates are accepted independently of linear damping. A SceneTree physics world samples active feature overrides for all four keys when its first body or area attaches; later setting changes do not retroactively alter that world. Areas can override the sampled values by field and priority. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks default identities, world sampling, behavior and restoration.
 
 <a id="p-electron2d-projectsettings-maxphysicsstepsperframe"></a>
 ### `public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`

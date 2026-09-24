@@ -31,6 +31,8 @@ floor.AddChild(new CollisionShape { Shape = floorGeometry });
 
 The inherited [CollisionObject](CollisionObject.md) layer/mask properties and bit methods control which dynamic bodies collide with this fixture. The inherited [PhysicsBody](PhysicsBody.md) role registers and releases backend state on scene entry, exit and disposal. No empty public method is exposed for missing material/conveyor behavior.
 
+The inherited `GetGravity()` returns zero for this stationary body; area fields act on simulated dynamic bodies.
+
 ## Property description
 
 <a id="physicsmaterialoverride"></a>

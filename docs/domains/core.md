@@ -48,7 +48,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `DirAccess`: scoped current-directory state, streaming/sorted enumeration, file/directory mutation, links, temporary-directory ownership, drive/capacity/type/case/identity queries, and static absolute helpers.
 - `FileAccessModeFlags`, `FileCompressionMode`, and `UnixPermissionFlags`: exact typed mode, codec, and Unix mode-bit identities.
 - `ProjectSetting<T>`: immutable typed setting identity, default snapshot, and optional validator.
-- `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, directory-backed virtual paths, and typed input-action defaults consumed by explicit InputMap reload.
+- `ProjectSettings`: process and isolated registries, feature overrides, metadata, dirty/event state, project persistence/discovery, directory-backed virtual paths, typed input-action defaults, and typed 2D gravity/damping world defaults consumed by SceneTree physics.
 - `MainLoop`: explicit initialization, variable/fixed frame callbacks, host-stop results, finalization, system notification IDs, typed permission results, internal original-delta context, and Input transition/dispatch integration.
 - `Engine`: singleton runtime configuration, bounded host-driven scheduling, scaled/original delta delivery, callback metrics, architecture/version data, and typed named-singleton lookup including permanent Input/InputMap services.
 - `EngineVersionInfo`: immutable typed assembly version metadata.
@@ -133,6 +133,8 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 Built-in rendering settings now include canvas mip interpolation and viewport anisotropy defaults; their consumption and native evidence are documented in [project settings](../components/project-settings.md) and [canvas rendering](../components/canvas-rendering.md).
 
 The typed `physics/common/physics_interpolation` setting initializes each new SceneTree's 2D presentation policy. Scene and Rendering own its execution; Core continues to own only the typed setting and Engine's fixed-step fraction.
+
+Four typed `physics/2d/default_*` keys define finite gravity strength/vector and linear/angular damping. The Physics domain samples them for each new world and owns priority reduction with Area fields; Core owns validation, persistence and feature overrides. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) verifies default identities and world sampling.
 
 [`JsonTests`](../../tests/Electron2D.Tests/JsonTests.cs) verifies document parsing, formatting, diagnostics, typed conversion, duplicate ownership and disposal; exact reference parity remains Partial.
 

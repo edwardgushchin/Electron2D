@@ -67,7 +67,7 @@ The [Physics domain](physics.md) now supplies RigidBody, StaticBody and Collisio
 
 - `Node` hierarchies are the primary public game-object and world model. Reusable objects and complete levels use the same `PackedScene` capture and instantiation boundary; Scene does not expose a competing entity hierarchy.
 - Physics interpolation changes only presentation transforms. Logical spatial, viewport and input values remain current; enabled scene trees capture previous/current canvas and camera values around each fixed tick and reset stale history after pause, scene changes and process-time edits.
-- A nonzero fixed frame advances scene bodies after node callbacks and commits area overlap snapshots before timers and tweens. Area callbacks run after backend stepping so they can remove nodes; the Physics domain owns collision semantics.
+- A nonzero fixed frame resolves current area fields after node callbacks, advances scene bodies, then commits area monitoring snapshots before timers and tweens. Area callbacks run after backend stepping so they can remove nodes; the Physics domain owns collision and field semantics.
 - A node has at most one parent and one active `SceneTree`; cycles and cross-tree insertion are rejected before mutation.
 - Replacing a node keeps the active tree root stable, preserves its old sibling index, moves children and eligible owners, and leaves the original node alive but detached. Scene-local resources transfer to the replacement root.
 - An active root can be disposed only by its owning `SceneTree`.

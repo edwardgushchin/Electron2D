@@ -139,6 +139,26 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
         new("physics/common/physics_ticks_per_second", 60, value => value > 0);
 
+    /// <summary>Defines the two-dimensional world's default gravity strength in scene units per second squared.</summary>
+    /// <value>The typed setting with default 980; finite signed values are accepted by the registry.</value>
+    public static ProjectSetting<float> Physics2DDefaultGravity { get; } =
+        new("physics/2d/default_gravity", 980f, float.IsFinite);
+
+    /// <summary>Defines the two-dimensional world's default gravity direction without implicit normalization.</summary>
+    /// <value>The typed setting with default (0, 1); components must be finite.</value>
+    public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; } =
+        new("physics/2d/default_gravity_vector", new Vector2(0, 1), value => value.IsFinite());
+
+    /// <summary>Defines the two-dimensional world's default linear damping per second.</summary>
+    /// <value>The typed setting with default 0.1; finite signed values are accepted by the registry.</value>
+    public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; } =
+        new("physics/2d/default_linear_damp", 0.1f, float.IsFinite);
+
+    /// <summary>Defines the two-dimensional world's default angular damping per second.</summary>
+    /// <value>The typed setting with default one; finite signed values are accepted by the registry.</value>
+    public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; } =
+        new("physics/2d/default_angular_damp", 1f, float.IsFinite);
+
     /// <summary>Defines the maximum fixed-step callbacks processed during one frame.</summary>
     public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; } =
         new("physics/common/max_physics_steps_per_frame", 8, value => value > 0);
@@ -342,6 +362,10 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
+        RegisterInternal(Physics2DDefaultGravity, isBasic: true);
+        RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
+        RegisterInternal(Physics2DDefaultLinearDamp, isBasic: false);
+        RegisterInternal(Physics2DDefaultAngularDamp, isBasic: false);
         RegisterInternal(MaxPhysicsStepsPerFrame, isBasic: false);
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
@@ -1705,6 +1729,10 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
+        ReferenceEquals(setting, Physics2DDefaultGravity) ||
+        ReferenceEquals(setting, Physics2DDefaultGravityVector) ||
+        ReferenceEquals(setting, Physics2DDefaultLinearDamp) ||
+        ReferenceEquals(setting, Physics2DDefaultAngularDamp) ||
         ReferenceEquals(setting, MaxPhysicsStepsPerFrame) ||
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||

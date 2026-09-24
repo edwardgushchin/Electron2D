@@ -147,6 +147,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Area.SpaceOverride",
+    "kind": "type",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "SpaceOverride",
+    "signature": "public enum Electron2D.Area.SpaceOverride",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AtlasTexture",
     "kind": "type",
     "declaringType": "Electron2D.AtlasTexture",
@@ -2649,6 +2667,24 @@
     "baseType": "Electron2D.PhysicsBody",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RigidBody.DampMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RigidBody.DampMode",
+    "name": "DampMode",
+    "signature": "public enum Electron2D.RigidBody.DampMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -6903,6 +6939,71 @@
     "parameters": [],
     "returnType": "Electron2D.AnchorMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Area.SpaceOverride.Combine()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "Combine",
+    "signature": "public const Electron2D.Area.SpaceOverride Combine = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Area.SpaceOverride.CombineReplace()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "CombineReplace",
+    "signature": "public const Electron2D.Area.SpaceOverride CombineReplace = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Area.SpaceOverride.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "Disabled",
+    "signature": "public const Electron2D.Area.SpaceOverride Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Area.SpaceOverride.Replace()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "Replace",
+    "signature": "public const Electron2D.Area.SpaceOverride Replace = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Area.SpaceOverride.ReplaceCombine()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Area.SpaceOverride",
+    "name": "ReplaceCombine",
+    "signature": "public const Electron2D.Area.SpaceOverride ReplaceCombine = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.BlendMode.Add()",
@@ -15027,6 +15128,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ResourceLoader.CacheMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidBody.DampMode.Combine()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidBody.DampMode",
+    "name": "Combine",
+    "signature": "public const Electron2D.RigidBody.DampMode Combine = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidBody.DampMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidBody.DampMode.Replace()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidBody.DampMode",
+    "name": "Replace",
+    "signature": "public const Electron2D.RigidBody.DampMode Replace = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidBody.DampMode",
     "value": "1"
   },
   {
@@ -40732,6 +40859,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsBody.GetGravity()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "GetGravity",
+    "signature": "public Electron2D.Vector2 GetGravity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsBody.OnEnterTree()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsBody",
@@ -56766,6 +56906,136 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Area.AngularDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "AngularDamp",
+    "signature": "public System.Single AngularDamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.AngularDampSpaceOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "AngularDampSpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride AngularDampSpaceOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.Gravity()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "Gravity",
+    "signature": "public System.Single Gravity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.GravityDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "GravityDirection",
+    "signature": "public Electron2D.Vector2 GravityDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.GravityPoint()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "GravityPoint",
+    "signature": "public System.Boolean GravityPoint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.GravityPointCenter()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "GravityPointCenter",
+    "signature": "public Electron2D.Vector2 GravityPointCenter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.GravityPointUnitDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "GravityPointUnitDistance",
+    "signature": "public System.Single GravityPointUnitDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.GravitySpaceOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "GravitySpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride GravitySpaceOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.LinearDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "LinearDamp",
+    "signature": "public System.Single LinearDamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.LinearDampSpaceOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "LinearDampSpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride LinearDampSpaceOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Area.Monitorable()",
     "kind": "property",
     "declaringType": "Electron2D.Area",
@@ -56789,6 +57059,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Area.Priority()",
+    "kind": "property",
+    "declaringType": "Electron2D.Area",
+    "name": "Priority",
+    "signature": "public System.Int32 Priority { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -64358,6 +64641,58 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultAngularDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultAngularDamp",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultAngularDamp { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultGravity()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultGravity",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultGravity { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultGravityVector()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultGravityVector",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Vector2\u003E Physics2DDefaultGravityVector { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultLinearDamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultLinearDamp",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultLinearDamp { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.PhysicsInterpolation()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -65138,6 +65473,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RigidBody.AngularDampMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "AngularDampMode",
+    "signature": "public Electron2D.RigidBody.DampMode AngularDampMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidBody.DampMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RigidBody.AngularVelocity()",
     "kind": "property",
     "declaringType": "Electron2D.RigidBody",
@@ -65200,6 +65548,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.LinearDampMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "LinearDampMode",
+    "signature": "public Electron2D.RigidBody.DampMode LinearDampMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidBody.DampMode",
     "value": null
   },
   {

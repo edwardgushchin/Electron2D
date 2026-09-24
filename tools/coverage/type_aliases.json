@@ -34,6 +34,8 @@
     "StaticBody2D": "StaticBody"
   },
   "enums": {
+    "Area2D.SpaceOverride": "Area.SpaceOverride",
+    "RigidBody2D.DampMode": "RigidBody.DampMode",
     "CanvasItemMaterial.BlendMode": "BlendMode",
     "Control.FocusMode": "FocusMode",
     "Control.FocusBehaviorRecursive": "ControlFocusBehaviorRecursive",

@@ -82,7 +82,11 @@ def main():
     assert len(area_rows) == 36
     assert {state: sum(f" | {state} | " in row for row in area_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 7, "Partial": 6, "Unimplemented": 17, "Blocked": 6}
+                "Implemented": 17, "Partial": 13, "Unimplemented": 0, "Blocked": 6}
+    body_rows = pages[CLASS_PAGES / "RigidBody2D.md"]
+    assert "../../classes/RigidBody.DampMode.md" in body_rows
+    assert "| Implemented |" in next(row for row in body_rows.splitlines()
+                                       if row.startswith("| [`property int linear_damp_mode"))
     loader_rows = [row for row in pages[CLASS_PAGES / "ResourceLoader.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(loader_rows) == 26

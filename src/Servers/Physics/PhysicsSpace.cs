@@ -17,8 +17,12 @@ internal sealed class PhysicsSpace : IDisposable
 
     private readonly List<PhysicsBody> _bodies = [];
     private readonly List<Area> _areas = [];
+    private readonly List<Area> _fieldAreas = [];
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly B2WorldId _worldID;
+    private readonly Vector2 _defaultGravity;
+    private readonly float _defaultLinearDamp;
+    private readonly float _defaultAngularDamp;
     private bool _stepping;
     private bool _dispatching;
     private bool _disposed;
@@ -27,8 +31,14 @@ internal sealed class PhysicsSpace : IDisposable
 
     internal PhysicsSpace()
     {
+        var settings = ProjectSettings.Instance;
+        _defaultGravity = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector) *
+            settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
+        _defaultLinearDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
+        _defaultAngularDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
+        if (!_defaultGravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var definition = b2DefaultWorldDef();
-        definition.gravity = new B2Vec2(0, 9.8f);
+        definition.gravity = Shape.ToBackend(_defaultGravity);
         definition.restitutionThreshold = 0;
         definition.frictionCallback = CombineFriction;
         definition.restitutionCallback = CombineBounce;
@@ -87,6 +97,7 @@ internal sealed class PhysicsSpace : IDisposable
         {
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
+            ApplyAreaFields(delta);
             b2World_Step(_worldID, (float)delta, 4);
             foreach (var body in _bodies)
             {
@@ -110,6 +121,7 @@ internal sealed class PhysicsSpace : IDisposable
         foreach (var area in _areas) { area.DetachBackend(); area.ClearOverlaps(); }
         _bodies.Clear();
         _areas.Clear();
+        _fieldAreas.Clear();
         _overlapEvents.Clear();
         b2DestroyWorld(_worldID);
         _disposed = true;
@@ -132,6 +144,71 @@ internal sealed class PhysicsSpace : IDisposable
                         area.Observe(other);
             }
             area.CommitOverlapScan(_overlapEvents);
+        }
+    }
+
+    private void ApplyAreaFields(double delta)
+    {
+        // ponytail: Stable insertion order is quadratic in field areas; use indexed sorting if large-world profiling needs it.
+        _fieldAreas.Clear();
+        foreach (var area in _areas)
+        {
+            if (!area.HasFieldOverrides) continue;
+            var index = _fieldAreas.Count;
+            _fieldAreas.Add(area);
+            while (index > 0 && _fieldAreas[index - 1].Priority < area.Priority)
+            {
+                _fieldAreas[index] = _fieldAreas[index - 1];
+                index--;
+            }
+            _fieldAreas[index] = area;
+        }
+
+        foreach (var body in _bodies)
+        {
+            if (body is not RigidBody rigid) continue;
+            var gravity = Vector2.Zero;
+            var linearDamp = 0f;
+            var angularDamp = 0f;
+            var gravityDone = false;
+            var linearDone = false;
+            var angularDone = false;
+            foreach (var area in _fieldAreas)
+            {
+                if ((area.CollisionMask & body.CollisionLayer) == 0 || !ShapesOverlap(area, body)) continue;
+                if (!gravityDone)
+                {
+                    var mode = area.GravitySpaceOverride;
+                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                        gravity += area.ComputeGravity(body.GlobalPosition);
+                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                        gravity = area.ComputeGravity(body.GlobalPosition);
+                    gravityDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+                }
+                if (!linearDone)
+                {
+                    var mode = area.LinearDampSpaceOverride;
+                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                        linearDamp += area.LinearDamp;
+                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                        linearDamp = area.LinearDamp;
+                    linearDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+                }
+                if (!angularDone)
+                {
+                    var mode = area.AngularDampSpaceOverride;
+                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                        angularDamp += area.AngularDamp;
+                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                        angularDamp = area.AngularDamp;
+                    angularDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+                }
+                if (gravityDone && linearDone && angularDone) break;
+            }
+            if (!gravityDone) gravity += _defaultGravity;
+            if (!linearDone) linearDamp += _defaultLinearDamp;
+            if (!angularDone) angularDamp += _defaultAngularDamp;
+            rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
         }
     }
 

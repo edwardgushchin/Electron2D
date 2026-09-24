@@ -52,17 +52,19 @@ Implemented and covered by the executable harness. The process singleton is regi
 
 The typed `physics/common/physics_interpolation` setting defaults false and initializes each new SceneTree. An active tree retains its own flag when the setting changes; callers can set `SceneTree.PhysicsInterpolation` immediately. Its renderer integration affects displayed 2D transforms and camera scroll without changing logical values.
 
+Four typed `physics/2d/default_*` settings supply the new physics world's gravity strength (980), unnormalized direction (0, 1), linear damping (0.1/s) and angular damping (1/s). The world samples feature overrides when its first body or area attaches; existing worlds retain those values after later setting changes. The [physics bodies component](physics-bodies.md) owns their fixed-step use. Finite values are required; signed strength and damping are accepted.
+
 ## Exclusions and deferred integration
 
 - Global script-class discovery requires a scripting domain.
 - Resource pack loading, exported archive mounts, and non-directory `res://` require file-access/resource-pack domains.
 - Editor-specific hints, override layers, hidden-prefix UI, and settings dialogs require an editor.
-- Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Remaining settings enter with their owning input, audio, networking, physics or other domain capabilities; three-dimensional settings will never be added.
+- Rendering registers backend selection, startup fallback, clear color and the implemented canvas mip/anisotropy defaults with its executable canvas integration. Four 2D physics world defaults are implemented; remaining settings enter with their owning input, audio, networking, physics or other domain capabilities. Three-dimensional settings will never be added.
 - Symbolic-link resolution and hostile-filesystem confinement are outside the current lexical resolver contract.
 
 ## Verification
 
-`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `LocalizationProjectSettingsTests` verifies typed locale and pseudolocalization defaults, project-file round trip, startup sampling, and reload; `WindowRuntimeTests` checks native startup sampling with the SDL dummy driver. `CanvasSamplingTests` checks the sampling keys and viewport construction; `PhysicsInterpolationTests` checks tree construction sampling and runtime changes, with native pixels in [canvas rendering](canvas-rendering.md#physics-interpolation). Temporary directory-backed projects are used; resource packs, editor UI and crash-time filesystem behavior remain untested.
+`tests/Electron2D.Tests/Program.cs` verifies registration, values, snapshots, validation, metadata, feature selection, changes/events, persistence/ordering, virtual paths, root-pair consumption by directory operations, failures, concurrency, disposal, and Engine integration. `LocalizationProjectSettingsTests` verifies typed locale and pseudolocalization defaults, project-file round trip, startup sampling, and reload; `WindowRuntimeTests` checks native startup sampling with the SDL dummy driver. `CanvasSamplingTests` checks the sampling keys and viewport construction; `PhysicsInterpolationTests` checks tree construction sampling and runtime changes, with native pixels in [canvas rendering](canvas-rendering.md#physics-interpolation). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks 2D physics default identities and new-world sampling. Temporary directory-backed projects are used; resource packs, editor UI and crash-time filesystem behavior remain untested.
 
 ## Decisions
 
