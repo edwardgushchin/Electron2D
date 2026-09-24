@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Electron2D;
 
 /// <summary>Provides position, button-mask, and modifier state shared by mouse events.</summary>
@@ -166,13 +168,29 @@ public sealed class InputEventMouseButton : InputEventMouse
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets the localized button or wheel name with modifiers and double-click state.</summary>
+    /// <returns>A known button description, or <c>Button #n</c> for an unknown numeric identifier.</returns>
+    /// <remarks>Names and the optional double-click label use this event's translation domain.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
         var modifiers = base.AsText();
-        var button = Enum.GetName(_buttonIndex) ?? $"Button({(int)_buttonIndex})";
-        return modifiers.Length == 0 ? button : string.Concat(modifiers, "+", button);
+        var button = _buttonIndex switch
+        {
+            MouseButton.Left => Tr("Left Mouse Button"),
+            MouseButton.Right => Tr("Right Mouse Button"),
+            MouseButton.Middle => Tr("Middle Mouse Button"),
+            MouseButton.WheelUp => Tr("Mouse Wheel Up"),
+            MouseButton.WheelDown => Tr("Mouse Wheel Down"),
+            MouseButton.WheelLeft => Tr("Mouse Wheel Left"),
+            MouseButton.WheelRight => Tr("Mouse Wheel Right"),
+            MouseButton.XButton1 => Tr("Mouse Thumb Button 1"),
+            MouseButton.XButton2 => Tr("Mouse Thumb Button 2"),
+            _ => string.Concat(Tr("Button"), " #", ((int)_buttonIndex).ToString(CultureInfo.InvariantCulture)),
+        };
+        var text = modifiers.Length == 0 ? button : string.Concat(modifiers, "+", button);
+        return _doubleClick ? string.Concat(text, " (", Tr("Double Click"), ")") : text;
     }
 
     /// <inheritdoc />
@@ -341,11 +359,25 @@ public sealed class InputEventMouseMotion : InputEventMouse
         return result;
     }
 
-    /// <inheritdoc />
+    /// <summary>Gets a localized description of position and velocity.</summary>
+    /// <returns>The source-format motion sentence with invariant position and velocity values.</returns>
+    /// <remarks>Integral components retain <c>.0</c>, fractional components use a six-decimal real policy, and non-finite components use <c>nan</c>/<c>inf</c>. Exact all-float rounding parity remains under audit. A translated template must contain exactly two <c>%s</c> placeholders; malformed templates fall back to the source sentence.</remarks>
+    /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     public override string AsText()
     {
         ThrowIfDisposed();
-        return $"Mouse motion at {Position} with velocity {Velocity}";
+        const string source = "Mouse motion at position (%s) with velocity (%s)";
+        var template = Tr(source);
+        var first = template.IndexOf("%s", StringComparison.Ordinal);
+        var second = first < 0 ? -1 : template.IndexOf("%s", first + 2, StringComparison.Ordinal);
+        if (second < 0 || template.IndexOf("%s", second + 2, StringComparison.Ordinal) >= 0)
+        {
+            template = source;
+            first = template.IndexOf("%s", StringComparison.Ordinal);
+            second = template.IndexOf("%s", first + 2, StringComparison.Ordinal);
+        }
+        return string.Concat(template[..first], FormatTextVector2(Position), template[(first + 2)..second],
+            FormatTextVector2(Velocity), template[(second + 2)..]);
     }
 
     /// <inheritdoc />

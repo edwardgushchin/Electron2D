@@ -4664,6 +4664,32 @@ static void VerifyInputText()
     using var space = new InputEventKey { Keycode = Key.Space };
     using var function = new InputEventKey { Keycode = Key.F1 };
     using var mouseBinding = new InputEventMouseButton { ButtonIndex = MouseButton.Left };
+    using var mouseDouble = new InputEventMouseButton
+    {
+        ButtonIndex = MouseButton.Left,
+        ControlPressed = true,
+        DoubleClick = true,
+    };
+    using var wheel = new InputEventMouseButton { ButtonIndex = MouseButton.WheelUp };
+    using var thumb = new InputEventMouseButton { ButtonIndex = MouseButton.XButton1 };
+    using var noButton = new InputEventMouseButton();
+    using var unknownButton = new InputEventMouseButton { ButtonIndex = (MouseButton)10 };
+    using var negativeButton = new InputEventMouseButton { ButtonIndex = (MouseButton)(-4) };
+    using var mouseMotion = new InputEventMouseMotion
+    {
+        Position = new Vector2(1f, 2f),
+        Velocity = new Vector2(3f, 4f),
+    };
+    using var nonfiniteMotion = new InputEventMouseMotion
+    {
+        Position = new Vector2(float.NaN, float.PositiveInfinity),
+        Velocity = new Vector2(float.NegativeInfinity, 0f),
+    };
+    using var fractionalMotion = new InputEventMouseMotion
+    {
+        Position = new Vector2(1.2345678f, 12.345678f),
+        Velocity = new Vector2(0.0000001f, -0f),
+    };
     using var physical = new InputEventKey { PhysicalKeycode = Key.A };
     using var physicalFunction = new InputEventKey { PhysicalKeycode = Key.F1 };
     using var label = new InputEventKey { KeyLabel = Key.A };
@@ -4682,6 +4708,23 @@ static void VerifyInputText()
     using var left = new InputEventKey { Location = KeyLocation.Left };
     using var right = new InputEventKey { Location = KeyLocation.Right };
     using var synthetic = new InputEventAction { Action = keys };
+    foreach (var (button, expected) in new (MouseButton Button, string Text)[]
+    {
+        (MouseButton.Left, "Left Mouse Button"),
+        (MouseButton.Right, "Right Mouse Button"),
+        (MouseButton.Middle, "Middle Mouse Button"),
+        (MouseButton.WheelUp, "Mouse Wheel Up"),
+        (MouseButton.WheelDown, "Mouse Wheel Down"),
+        (MouseButton.WheelLeft, "Mouse Wheel Left"),
+        (MouseButton.WheelRight, "Mouse Wheel Right"),
+        (MouseButton.XButton1, "Mouse Thumb Button 1"),
+        (MouseButton.XButton2, "Mouse Thumb Button 2"),
+    })
+    {
+        using var knownButton = new InputEventMouseButton { ButtonIndex = button };
+        Require(knownButton.AsText() == expected,
+            "Each defined mouse button must use its pinned display name.");
+    }
     Require(unset.AsText() == "(unset)" && unset.AsTextKeycode() == "(unset)" &&
             unset.AsTextPhysicalKeycode() == "(unset)" && unset.AsTextKeyLabel() == "(unset)" &&
             space.AsText() == "Space" && physical.AsText() == "A - Physical" &&
@@ -4696,6 +4739,15 @@ static void VerifyInputText()
             unset.AsTextLocation() == string.Empty && left.AsTextLocation() == "left" &&
             right.AsTextLocation() == "right",
         "Key text must preserve the pinned names, unset fallback, origin suffixes and location casing.");
+    Require(mouseBinding.AsText() == "Left Mouse Button" &&
+            mouseDouble.AsText() == "Ctrl+Left Mouse Button (Double Click)" &&
+            wheel.AsText() == "Mouse Wheel Up" && thumb.AsText() == "Mouse Thumb Button 1" &&
+            noButton.AsText() == "Button #0" && unknownButton.AsText() == "Button #10" &&
+            negativeButton.AsText() == "Button #-4" &&
+            mouseMotion.AsText() == "Mouse motion at position ((1.0, 2.0)) with velocity ((3.0, 4.0))" &&
+            nonfiniteMotion.AsText() == "Mouse motion at position ((nan, inf)) with velocity ((-inf, 0.0))" &&
+            fractionalMotion.AsText() == "Mouse motion at position ((1.234568, 12.34568)) with velocity ((0.0, 0.0))",
+        "Mouse text must retain named/unknown buttons, double clicks and positional motion wording.");
 
     var previousCulture = TranslationServer.Culture;
     var previousEnabled = TranslationServer.Enabled;
@@ -4730,10 +4782,28 @@ static void VerifyInputText()
         TranslationServer.AddTranslation(french, "", " or ", " ou ");
         TranslationServer.AddTranslation(french, "", "unset", "non défini");
         TranslationServer.AddTranslation(french, "", "Physical", "Physique");
+        TranslationServer.AddTranslation(french, "", "Left Mouse Button", "Bouton gauche");
+        TranslationServer.AddTranslation(french, "", "Double Click", "Double clic");
+        TranslationServer.AddTranslation(french, "", "Button", "Bouton");
+        TranslationServer.AddTranslation(french, "", "Mouse motion at position (%s) with velocity (%s)",
+            "Mouvement à (%s), vitesse (%s)");
         Require(map.GetActionDescription(empty) == "Action sans touche" &&
                 map.GetActionDescription(keys) == $"Space ou F1 ou {mouseBinding.AsText()}" &&
-                unset.AsText() == "(non défini)" && physical.AsText() == "A - Physique",
+                unset.AsText() == "(non défini)" && physical.AsText() == "A - Physique" &&
+                mouseBinding.AsText() == "Bouton gauche" &&
+                mouseDouble.AsText() == "Ctrl+Bouton gauche (Double clic)" &&
+                unknownButton.AsText() == "Bouton #10" &&
+                mouseMotion.AsText() == "Mouvement à ((1.0, 2.0)), vitesse ((3.0, 4.0))",
             "Runtime descriptions must resolve engine words through the active translation catalog.");
+        TranslationServer.AddTranslation(french, "", "Mouse motion at position (%s) with velocity (%s)",
+            "Mouvement sans arguments");
+        Require(mouseMotion.AsText() == "Mouse motion at position ((1.0, 2.0)) with velocity ((3.0, 4.0))",
+            "A malformed translated motion template must fall back to the source wording.");
+        mouseBinding.CanTranslateMessages = false;
+        mouseMotion.CanTranslateMessages = false;
+        Require(mouseBinding.AsText() == "Left Mouse Button" &&
+                mouseMotion.AsText() == "Mouse motion at position ((1.0, 2.0)) with velocity ((3.0, 4.0))",
+            "Disabling translation on mouse events must restore source descriptions.");
         map.CanTranslateMessages = false;
         unset.CanTranslateMessages = false;
         Require(map.GetActionDescription(empty) == "Action has no bound inputs" &&

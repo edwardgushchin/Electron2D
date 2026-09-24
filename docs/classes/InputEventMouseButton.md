@@ -20,7 +20,7 @@ Represents a mouse button or wheel press and release.
 - Complete declared API: `ButtonIndex`, `Pressed`, `Canceled`, `DoubleClick`, and source `Factor`; overrides `IsMatch`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. Inherited `IsActionType` classifies this sealed built-in as bindable. All five declared values are stored typed descriptors.
 - Matching/state: binding identity is button plus optional exact modifiers. Canceled is neither press nor release. Wheel directions never enter the held-button mask.
 - Transform: returns an independent duplicate with transformed local position; global position is preserved.
-- Errors/threading/verification: caller-supplied numeric button IDs and factor values are retained, including negative and non-finite values. Disposed access and disposed peers fail. Managed tests cover defaults, cancellation, duplication and transforms; Wayland synthetic events cover fractional wheel factor and invalid native input recovery. Text/localization, Wear OS rotary mapping and other platforms remain separate gaps.
+- Errors/threading/verification: caller-supplied numeric button IDs and factor values are retained, including negative and non-finite values. Disposed access and disposed peers fail. Managed tests cover defaults, cancellation, duplication, transforms and localized button descriptions; Wayland synthetic events cover fractional wheel factor and invalid native input recovery. Wear OS rotary mapping and other platforms remain separate gaps.
 
 ## Examples
 
@@ -167,9 +167,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventmousebutton-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns the button or wheel name with active modifiers and an optional double-click suffix. The nine known names and fallback `Button #n` are resolved through this event's translation domain.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** A known button description or numeric fallback with applicable modifiers and double-click state.
 
 **Exceptions**
 

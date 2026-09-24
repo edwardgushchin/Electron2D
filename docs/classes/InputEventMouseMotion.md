@@ -20,7 +20,8 @@ Represents mouse or stylus motion.
 - Complete declared API: `PenInverted`, `Pressure`, `Relative`, `ScreenRelative`, `Velocity`, `ScreenVelocity`, `Tilt`; overrides `Accumulate`, `XformedBy`, `AsText`; protected creation/copy/property-descriptor hooks. All seven declared values are stored typed descriptors.
 - Accumulation: requires equal window, press/cancel, buttons, and modifiers; retains arithmetic overflow, atomically adopts newest positions/velocities and both sums, then emits one change notification.
 - Transform: transforms local position/relative/velocity only, preserving global/screen values.
-- Errors/threading/verification: source values are retained without range checks; positional transforms still require finite derived local coordinates. Disposed access fails. Managed tests cover defaults, non-finite copies, overflow accumulation and throwing-observer post-commit state; Wayland synthetic input checks pixel deltas, timed velocity, captured-mode zero velocity and rejection of malformed native input. Native pen pressure/eraser/tilt delivery remains absent.
+- Text: `AsText` emits the source-format position/velocity sentence and translates its two-slot template through this event's domain. Integral components retain `.0`, fractional components use six-decimal real formatting, and non-finite values use `nan`/`inf`. A translated template without exactly two `%s` placeholders falls back to the source sentence.
+- Errors/threading/verification: source values are retained without range checks; positional transforms still require finite derived local coordinates. Disposed access fails. Managed tests cover defaults, non-finite copies, overflow accumulation, representative text formatting and throwing-observer post-commit state; Wayland synthetic input checks pixel deltas, timed velocity, captured-mode zero velocity and rejection of malformed native input. Exact all-float text rounding remains unaudited, and native pen pressure/eraser/tilt delivery remains absent.
 
 ## Examples
 
@@ -191,9 +192,9 @@ Returns this event transformed into another local coordinate space.
 <a id="m-electron2d-inputeventmousemotion-astext"></a>
 ### `public override string AsText()`
 
-Returns a concise, human-readable representation of the event.
+Returns a localized position-and-velocity description. The source sentence uses invariant real components in parenthesized vector slots; a malformed translated template falls back to the source sentence.
 
-**Returns:** A non-null description suitable for bindings and diagnostics.
+**Returns:** The motion sentence with current position and velocity.
 
 **Exceptions**
 

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Electron2D;
 
 /// <summary>Provides the abstract base contract for all engine input events.</summary>
@@ -246,6 +248,28 @@ public abstract class InputEvent : Resource
     {
         match = default;
         return false;
+    }
+
+    internal static string FormatTextVector2(Vector2 value) =>
+        string.Concat("(", FormatTextReal(value.X), ", ", FormatTextReal(value.Y), ")");
+
+    private static string FormatTextReal(float value)
+    {
+        if (float.IsNaN(value)) return "nan";
+        if (float.IsPositiveInfinity(value)) return "inf";
+        if (float.IsNegativeInfinity(value)) return "-inf";
+        if (value == 0f) return "0.0";
+        if (MathF.Abs(value) < long.MaxValue && value == MathF.Truncate(value))
+            return value.ToString("0.0", CultureInfo.InvariantCulture);
+
+        var decimals = 6;
+        var absolute = MathF.Abs(value);
+        if (absolute > 10f) decimals -= (int)MathF.Floor(MathF.Log10(absolute));
+        if (decimals < 0) decimals = 6;
+        var text = value.ToString($"F{decimals}", CultureInfo.InvariantCulture);
+        if (!text.Contains('.')) return text;
+        text = text.TrimEnd('0');
+        return text.EndsWith('.') ? string.Concat(text, "0") : text;
     }
 
     internal void EnsureUsable() => ThrowIfDisposed();
