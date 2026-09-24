@@ -164,7 +164,13 @@ internal static class TweenValue<TValue>
         if (typeof(TValue) == typeof(int))
             return Cast((int from, int to, double weight) => RoundToInt(from + ((to - (double)from) * weight)));
         if (typeof(TValue) == typeof(long))
-            return Cast((long from, long to, double weight) => RoundToLong(from + ((to - (double)from) * weight)));
+            return Cast((long from, long to, double weight) =>
+            {
+                if (weight == 0d) return from;
+                if (weight == 1d) return to;
+                var result = (decimal)from + (((decimal)to - from) * (decimal)weight);
+                return checked((long)Math.Round(result, 0, MidpointRounding.AwayFromZero));
+            });
         if (typeof(TValue) == typeof(Vector2))
             return Cast((Vector2 from, Vector2 to, double weight) => from.Lerp(to, (float)weight));
         if (typeof(TValue) == typeof(Vector2I))
@@ -280,6 +286,4 @@ internal static class TweenValue<TValue>
     private static int RoundToInt(double value) =>
         checked((int)Math.Round(value, MidpointRounding.AwayFromZero));
 
-    private static long RoundToLong(double value) =>
-        checked((long)Math.Round(value, MidpointRounding.AwayFromZero));
 }

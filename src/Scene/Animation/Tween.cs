@@ -237,11 +237,12 @@ public sealed class Tween : ElectronObject
     /// <param name="initialValue">The starting value.</param>
     /// <param name="deltaValue">The change from the start to the final value.</param>
     /// <param name="elapsedTime">Finite elapsed seconds; values outside the duration extrapolate.</param>
-    /// <param name="duration">Finite non-negative total duration.</param>
+    /// <param name="duration">Finite signed total duration; zero returns the exact final value.</param>
     /// <param name="transition">The transition curve.</param>
     /// <param name="ease">The easing direction.</param>
-    /// <returns>The interpolated value; a zero duration always returns the final value.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">A time is non-finite, duration is negative, or an enum value is undefined.</exception>
+    /// <returns>The interpolated value; a zero duration always returns the exact final value.</returns>
+    /// <remarks>The built-in value families are booleans, scalar numbers, and current engine math types. Strings and collections have no static typed interpolation contract. Int64 intermediate results use wide arithmetic before checked rounding.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">A time is non-finite or an enum value is undefined.</exception>
     /// <exception cref="NotSupportedException"><typeparamref name="TValue"/> has no built-in interpolation and addition contract.</exception>
     /// <exception cref="OverflowException">An integer result is outside its destination type.</exception>
     public static TValue InterpolateValue<TValue>(
@@ -254,12 +255,15 @@ public sealed class Tween : ElectronObject
     {
         if (!double.IsFinite(elapsedTime))
             throw new ArgumentOutOfRangeException(nameof(elapsedTime), elapsedTime, "Elapsed time must be finite.");
-        ValidateDuration(duration, nameof(duration));
+        if (!double.IsFinite(duration))
+            throw new ArgumentOutOfRangeException(nameof(duration), duration, "Duration must be finite.");
         TweenMath.Validate(transition, ease);
         var add = TweenValue<TValue>.Add ?? throw TweenValue<TValue>.Unsupported();
         var interpolate = TweenValue<TValue>.Interpolate ?? throw TweenValue<TValue>.Unsupported();
         var finalValue = add(initialValue, deltaValue);
-        var weight = duration == 0d ? 1d : TweenMath.Ease(elapsedTime / duration, transition, ease);
+        if (duration == 0d)
+            return finalValue;
+        var weight = TweenMath.Ease(elapsedTime / duration, transition, ease);
         return interpolate(initialValue, finalValue, weight);
     }
 
@@ -991,12 +995,6 @@ public sealed class Tween : ElectronObject
     {
         if (Environment.CurrentManagedThreadId != _ownerThreadId)
             throw new InvalidOperationException("Tween mutation and processing must run on its SceneTree owner thread.");
-    }
-
-    internal static void ValidateDuration(double value, string parameterName)
-    {
-        if (!double.IsFinite(value) || value < 0d)
-            throw new ArgumentOutOfRangeException(parameterName, value, "Time must be finite and non-negative.");
     }
 
     private static void CollectException(ref List<Exception>? errors, Exception error)

@@ -194,17 +194,19 @@ Interpolates a typed value from an initial value by a delta.
 - `initialValue`: The starting value.
 - `deltaValue`: The change from the start to the final value.
 - `elapsedTime`: Finite elapsed seconds; values outside the duration extrapolate.
-- `duration`: Finite non-negative total duration.
+- `duration`: Finite signed total duration; zero returns the exact final value.
 - `transition`: The transition curve.
 - `ease`: The easing direction.
 
-**Returns:** The interpolated value; a zero duration always returns the final value.
+**Returns:** The interpolated value; a zero duration always returns the exact final value.
 
 **Exceptions**
 
-- `ArgumentOutOfRangeException`: A time is non-finite, duration is negative, or an enum value is undefined.
+- `ArgumentOutOfRangeException`: A time is non-finite or an enum value is undefined.
 - `NotSupportedException`: `TValue` has no built-in interpolation and addition contract.
 - `OverflowException`: An integer result is outside its destination type.
+
+**Remarks:** The built-in value families are booleans, scalar numbers, and current engine math types. Strings and collections have no static typed interpolation contract. Int64 intermediate results use wide arithmetic before checked rounding.
 
 <a id="m-electron2d-tween-isrunning"></a>
 ### `public bool IsRunning()`

@@ -18,6 +18,8 @@ Defines one task executed as part of a [`Tween`](Tween.md) step.
 
 `Tweener` is the non-constructible public base for one task owned by a [`Tween`](Tween.md). Its sole declared public member is `event Action<Tweener>? Finished`, raised synchronously after successful task completion or loss/disposal of a task target. Killing a parent does not report unfinished tweeners as finished. Inherited `ElectronObject` API remains available.
 
+Its abstract ownership role and shared signal have been checked across all six concrete task types. Explicit disposal requires the owning thread, cancels owned subscriptions, and makes the parent skip a disposed task.
+
 The parent assigns ownership and controls start, elapsed time, stepping, cancellation, and disposal. A tweener resets when its step is replayed by a parent loop. Explicit disposal uses the parent owner thread, cancels subscriptions, clears subscribers, and makes later parent processing treat the tweener as inactive.
 
 User completion subscriber exceptions propagate into the parent step. Parallel siblings are still attempted; the parent tween is then invalidated and SceneTree aggregates the failure. Tweener instances cannot be constructed or attached independently, moved between parents, or processed on another thread.

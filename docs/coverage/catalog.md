@@ -892,8 +892,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TreeItem](classes/TreeItem.md) | Object | Blocked | 127 |
 | [TriangleMesh](classes/TriangleMesh.md) | RefCounted | Blocked | 4 |
 | [TubeTrailMesh](classes/TubeTrailMesh.md) | PrimitiveMesh | Excluded | 8 |
-| [Tween](classes/Tween.md) | RefCounted | Partial | 56 |
-| [Tweener](classes/Tweener.md) | RefCounted | Partial | 1 |
+| [Tween](classes/Tween.md) | RefCounted | Implemented | 56 |
+| [Tweener](classes/Tweener.md) | RefCounted | Implemented | 1 |
 | [TwoBoneIK3D](classes/TwoBoneIK3D.md) | IKModifier3D | Excluded | 29 |
 | [UDPServer](classes/UDPServer.md) | RefCounted | Blocked | 8 |
 | [UDSServer](classes/UDSServer.md) | SocketServer | Blocked | 2 |

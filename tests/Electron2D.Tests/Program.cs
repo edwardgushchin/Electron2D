@@ -225,6 +225,8 @@ VerifySceneTreeGroupsEventsAndTimers();
 SceneTreeTimerTests.Run();
 VerifyTimers();
 VerifyTweens();
+VerifyTweenInterpolation();
+VerifyTweenTypeLifetime();
 VerifyTweenCallbackIntervals();
 VerifyTweenMethods();
 VerifyTweenProperties();
@@ -9757,6 +9759,233 @@ static void VerifyTweens()
         $"A warmed active-tween frame path must not allocate managed memory; observed {allocated} bytes.");
 }
 
+static void VerifyTweenInterpolation()
+{
+    // Pinned easing equations sampled at elapsed fractions 0.25 and 0.75 in enum order.
+    double[] expected =
+    [
+        0.25d, 0.25d, 0.25d, 0.25d,
+        0.076120467488713262d, 0.38268343236508978d, 0.14644660940672621d, 0.35355339059327373d,
+        0.0009765625d, 0.7626953125d, 0.015625d, 0.484375d,
+        0.00390625d, 0.68359375d, 0.03125d, 0.46875d,
+        0.0625d, 0.4375d, 0.125d, 0.375d,
+        0.0045242717280199029d, 0.82404652800806644d, 0.015125d, 0.48485937499999993d,
+        -0.0055242716334749425d, 0.91161168420415184d, 0.011969447209942691d, 0.5078125056307734d,
+        0.015625d, 0.578125d, 0.0625d, 0.4375d,
+        0.031754163448145745d, 0.66143782776614768d, 0.066987298107780702d, 0.4330127018922193d,
+        0.027343755587935226d, 0.47265625d, 0.11718749441206355d, 0.38281250558793645d,
+        -0.0641365647315979d, 0.8174096941947937d, -0.099681839346885681d, 0.54384875297546387d,
+        0.013654858548767468d, 0.66333670901566d, -0.02550790093275257d, 0.52550790093275257d,
+        0.75d, 0.75d, 0.75d, 0.75d,
+        0.61731656763491016d, 0.92387953251128674d, 0.85355339059327373d, 0.64644660940672627d,
+        0.2373046875d, 0.9990234375d, 0.984375d, 0.515625d,
+        0.31640625d, 0.99609375d, 0.96875d, 0.53125d,
+        0.5625d, 0.9375d, 0.875d, 0.625d,
+        0.17577669529663689d, 0.99547020400025188d, 0.98486718749999991d, 0.51512500000000006d,
+        0.08838831428314653d, 1.0055242717280188d, 0.98803055279005736d, 0.4921874943692266d,
+        0.421875d, 0.984375d, 0.9375d, 0.5625d,
+        0.33856217223385232d, 0.96824583655185426d, 0.9330127018922193d, 0.5669872981077807d,
+        0.52734375d, 0.97265624441206477d, 0.88281250558793645d, 0.61718749441206355d,
+        0.1825903058052063d, 1.0641365647315979d, 1.0996818393468857d, 0.45615124702453613d,
+        0.33666329098434d, 0.98634514145123253d, 1.0255079009327526d, 0.47449209906724743d,
+    ];
+    var index = 0;
+    foreach (var elapsed in new[] { 0.25d, 0.75d })
+    {
+        foreach (var transition in Enum.GetValues<Tween.TransitionType>())
+        {
+            foreach (var ease in Enum.GetValues<Tween.EaseType>())
+            {
+                var actual = Tween.InterpolateValue(0d, 1d, elapsed, 1d, transition, ease);
+                Require(double.IsFinite(actual) && Math.Abs(actual - expected[index]) <= 0.00001d,
+                    $"Curve {transition}/{ease} at {elapsed} differed from pinned easing sample {index}.");
+                index++;
+            }
+        }
+    }
+
+    Require(Tween.InterpolateValue(1f, 2f, 0.25d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == 1.5f &&
+            DoubleNearlyEqual(Tween.InterpolateValue(1d, 2d, 0.25d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.Out), 1.5d) &&
+            Tween.InterpolateValue(false, true, 0.49d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == false &&
+            Tween.InterpolateValue(false, true, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) &&
+            Tween.InterpolateValue(true, false, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) &&
+            !Tween.InterpolateValue(true, false, 0.51d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In),
+        "Scalar and boolean interpolation must use the declared starting value, delta and half threshold.");
+    Require(Tween.InterpolateValue(0, 1, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == 1 &&
+            Tween.InterpolateValue(0, -1, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == -1 &&
+            Tween.InterpolateValue(0L, 1L, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == 1L &&
+            Tween.InterpolateValue(0L, -1L, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == -1L,
+        "Signed integer midpoint interpolation must round away from zero.");
+    Require(Tween.InterpolateValue(long.MaxValue - 1, 1L, 0d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == long.MaxValue - 1 &&
+            Tween.InterpolateValue(long.MaxValue - 1, 1L, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == long.MaxValue &&
+            Tween.InterpolateValue(long.MaxValue - 1, 1L, 1d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == long.MaxValue &&
+            Tween.InterpolateValue(long.MinValue + 1, -1L, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == long.MinValue,
+        "Long interpolation near the upper boundary must retain exact endpoints and midpoint rounding.");
+
+    using (var longTree = new SceneTree(new Entity()))
+    using (var longTarget = new TweenValueHolder { LargeInteger = long.MaxValue - 1 })
+    {
+        var methodValue = 0L;
+        longTree.CreateTween().TweenMethod(value => methodValue = value,
+            long.MaxValue - 1, long.MaxValue, 1d).SetDelay(0.25d);
+        longTree.CreateTween().TweenProperty(longTarget, static value => value.LargeInteger,
+            static (value, current) => value.LargeInteger = current, long.MaxValue, 1d);
+        longTree.ProcessFrame(0.25d);
+        Require(methodValue == long.MaxValue - 1 && longTarget.LargeInteger == long.MaxValue - 1,
+            "Long method start and property quarter-step must retain exact near-boundary values.");
+        longTree.ProcessFrame(0.5d);
+        Require(methodValue == long.MaxValue && longTarget.LargeInteger == long.MaxValue,
+            "Method and property tweeners must share exact near-boundary long interpolation.");
+    }
+
+    Require(Tween.InterpolateValue(new Vector2(1f, 2f), new Vector2(2f, 4f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2(2f, 4f) &&
+            Tween.InterpolateValue(new Vector2I(1, 2), new Vector2I(1, 3), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector2I(2, 4) &&
+            Tween.InterpolateValue(new Vector3(1f, 2f, 3f), new Vector3(2f, 4f, 6f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3(2f, 4f, 6f) &&
+            Tween.InterpolateValue(new Vector3I(1, 2, 3), Vector3I.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector3I(2, 3, 4) &&
+            Tween.InterpolateValue(new Vector4(1f, 2f, 3f, 4f), new Vector4(2f, 4f, 6f, 8f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector4(2f, 4f, 6f, 8f) &&
+            Tween.InterpolateValue(new Vector4I(1, 2, 3, 4), Vector4I.One, 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Vector4I(2, 3, 4, 5),
+        "All declared vector families must interpolate by initial value plus delta.");
+
+    Require(Tween.InterpolateValue(new Color(0f, 0.2f, 0.4f, 1f),
+                new Color(1f, 0.2f, -0.2f, 0f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In)
+            .IsEqualApprox(new Color(0.5f, 0.3f, 0.3f, 1f)) &&
+            Tween.InterpolateValue(new Rect(0f, 0f, 2f, 4f), new Rect(4f, 6f, 2f, 2f), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new Rect(2f, 3f, 3f, 5f) &&
+            Tween.InterpolateValue(new RectI(0, 0, 2, 4), new RectI(3, 5, 3, 5), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In) == new RectI(2, 3, 4, 7) &&
+            Tween.InterpolateValue(Transform.Identity, new Transform(0f, new Vector2(4f, 6f)), 0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In).Origin == new Vector2(2f, 3f),
+        "Color, rectangle and 2D affine values must follow their typed interpolation and composition contracts.");
+
+    var skewedFinal = new Transform(new Vector2(1f, 2f), new Vector2(3f, 4f), new Vector2(5f, 6f));
+    Require(Tween.InterpolateValue(Transform.Identity, skewedFinal, -100d, 0d,
+                Tween.TransitionType.Bounce, Tween.EaseType.Out) == skewedFinal &&
+            Tween.InterpolateValue(2, 6, 0d, 0d,
+                Tween.TransitionType.Bounce, Tween.EaseType.Out) == 8 &&
+            DoubleNearlyEqual(Tween.InterpolateValue(10d, 20d, 0.25d, -1d,
+                Tween.TransitionType.Linear, Tween.EaseType.Out), 5d) &&
+            DoubleNearlyEqual(Tween.InterpolateValue(0d, 10d, -0.5d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In), -5d) &&
+            DoubleNearlyEqual(Tween.InterpolateValue(0d, 10d, 2d, 1d,
+                Tween.TransitionType.Linear, Tween.EaseType.In), 20d),
+        "Zero duration must return the exact final value; signed duration and out-of-range elapsed time extrapolate.");
+
+    Expect<ArgumentOutOfRangeException>(() => Tween.InterpolateValue(0d, 1d, double.NaN, 1d,
+            Tween.TransitionType.Linear, Tween.EaseType.In),
+        "Manual interpolation must reject non-finite elapsed time.");
+    Expect<ArgumentOutOfRangeException>(() => Tween.InterpolateValue(0d, 1d, 0d, double.PositiveInfinity,
+            Tween.TransitionType.Linear, Tween.EaseType.In),
+        "Manual interpolation must reject non-finite duration.");
+    Expect<ArgumentOutOfRangeException>(() => Tween.InterpolateValue(0d, 1d, 0d, 1d,
+            (Tween.TransitionType)99, Tween.EaseType.In),
+        "Manual interpolation must reject an undefined transition.");
+    Expect<ArgumentOutOfRangeException>(() => Tween.InterpolateValue(0d, 1d, 0d, 1d,
+            Tween.TransitionType.Linear, (Tween.EaseType)99),
+        "Manual interpolation must reject an undefined ease.");
+    Expect<NotSupportedException>(() => Tween.InterpolateValue(DateTime.UnixEpoch, DateTime.UnixEpoch, 0d, 1d,
+            Tween.TransitionType.Linear, Tween.EaseType.In),
+        "A value without built-in addition and interpolation must be rejected.");
+    Expect<NotSupportedException>(() => Tween.InterpolateValue("start", "delta", 0d, 0d,
+            Tween.TransitionType.Linear, Tween.EaseType.In),
+        "Zero duration must not invent an untyped string interpolation contract.");
+    Expect<OverflowException>(() => Tween.InterpolateValue(int.MaxValue, 1, 0d, 0d,
+            Tween.TransitionType.Linear, Tween.EaseType.In),
+        "Typed integer addition must reject a final value outside Int32.");
+    Expect<OverflowException>(() => Tween.InterpolateValue(int.MaxValue - 100, 100, 0.75d, 1d,
+            Tween.TransitionType.Back, Tween.EaseType.InOut),
+        "A curve overshoot outside Int32 must fail at the integer result boundary.");
+    Require(double.IsNaN(Tween.InterpolateValue(0d, 1d, 2d, 1d,
+            Tween.TransitionType.Circ, Tween.EaseType.In)),
+        "An out-of-domain circular extrapolation must retain its non-finite mathematical result.");
+
+    for (var warmup = 0; warmup < 16; warmup++)
+        _ = Tween.InterpolateValue(0d, 1d, 0.25d, 1d, Tween.TransitionType.Quad, Tween.EaseType.In);
+    var allocationBefore = GC.GetAllocatedBytesForCurrentThread();
+    var sum = 0d;
+    for (var sample = 0; sample < 128; sample++)
+        sum += Tween.InterpolateValue(0d, 1d, 0.25d, 1d, Tween.TransitionType.Quad, Tween.EaseType.In);
+    Require(sum > 0d && GC.GetAllocatedBytesForCurrentThread() == allocationBefore,
+        "Warmed typed scalar interpolation must not allocate managed memory.");
+    for (var warmup = 0; warmup < 16; warmup++)
+        _ = Tween.InterpolateValue(long.MaxValue - 1, 1L, 0.5d, 1d,
+            Tween.TransitionType.Linear, Tween.EaseType.In);
+    allocationBefore = GC.GetAllocatedBytesForCurrentThread();
+    var longSum = 0L;
+    for (var sample = 0; sample < 128; sample++)
+        longSum ^= Tween.InterpolateValue(long.MaxValue - 1, 1L, 0.5d, 1d,
+            Tween.TransitionType.Linear, Tween.EaseType.In);
+    Require(longSum == 0L && GC.GetAllocatedBytesForCurrentThread() == allocationBefore,
+        "Warmed near-boundary long interpolation must not allocate managed memory.");
+}
+
+static void VerifyTweenTypeLifetime()
+{
+    using var tree = new SceneTree(new Entity());
+    var callbackCalls = 0;
+    var owner = tree.CreateTween();
+    var ownedTask = owner.TweenCallback(() => callbackCalls++);
+    Expect<InvalidOperationException>(() => Task.Run(owner.Dispose).GetAwaiter().GetResult(),
+        "Tween disposal must require its creating scene-tree thread.");
+    Require(owner.IsValid() && tree.GetProcessedTweens().Contains(owner),
+        "Rejecting off-thread disposal must preserve the live tween and registry entry.");
+    owner.Dispose();
+    Require(owner.IsDisposed && ownedTask.IsDisposed && !tree.GetProcessedTweens().Contains(owner),
+        "Explicit tween disposal must release owned tweeners and unregister immediately.");
+    tree.ProcessFrame(0.1d);
+    Require(callbackCalls == 0, "Disposed tweens must not invoke queued callbacks.");
+
+    var individualCalls = 0;
+    var individualOwner = tree.CreateTween();
+    var individualTask = individualOwner.TweenCallback(() => individualCalls++);
+    Expect<InvalidOperationException>(() => Task.Run(individualTask.Dispose).GetAwaiter().GetResult(),
+        "Attached tweener disposal must require its owner's thread.");
+    Require(!individualTask.IsDisposed, "Rejected tweener disposal must leave its state intact.");
+    individualTask.Dispose();
+    tree.ProcessFrame(0.1d);
+    Require(individualCalls == 0 && individualTask.IsDisposed && !individualOwner.IsRunning(),
+        "An explicitly disposed tweener must be skipped without invoking its callback.");
+
+    using var source = new TweenEventSource();
+    var removalCount = 0;
+    var waitOwner = tree.CreateTween();
+    var wait = waitOwner.TweenAwait(source, handler => source.Fired += handler,
+        handler => { removalCount++; source.Fired -= handler; });
+    wait.Dispose();
+    Require(removalCount == 1 && wait.IsDisposed,
+        "Direct await-tweener disposal must disconnect its owned subscription once.");
+    tree.ProcessFrame(0.1d);
+    Require(!waitOwner.IsRunning(), "A disposed await tweener must not hold its parent step open.");
+
+    var reentryOwner = tree.CreateTween();
+    Exception? disposalInCallback = null;
+    reentryOwner.TweenCallback(() => disposalInCallback = Capture(reentryOwner.Dispose));
+    tree.ProcessFrame(0.1d);
+    Require(disposalInCallback is InvalidOperationException && !reentryOwner.IsDisposed &&
+            reentryOwner.IsValid() && !reentryOwner.IsRunning(),
+        "Disposal from a tween callback must be rejected before mutation while completion continues.");
+}
+
 static void VerifyTweenCallbackIntervals()
 {
     using var tree = new SceneTree(new Entity());
@@ -13193,6 +13422,8 @@ sealed class TweenValueHolder : ElectronObject
     public bool Flag { get; set; }
 
     public int Integer { get; set; }
+
+    public long LargeInteger { get; set; }
 
     public void SetValue(double value) => Value = value;
 }

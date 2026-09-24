@@ -22,6 +22,8 @@ Default execution captures the property when the step starts if the delay magnit
 
 The target is held while the parent exists, but logical target disposal completes the tweener without writing. Getter, setter, interpolator, arithmetic, and event exceptions invalidate the parent after parallel siblings are attempted. Duration and delay accept finite signed seconds; negative values finish or begin on the first positive step. Non-finite times and undefined enums are rejected. Calls use the parent owner thread. Built-in supported values and threading are documented in the [Tweening component](../components/tweening.md).
 
+Built-in Int64 interpolation uses wide intermediate arithmetic and checked rounding, retaining valid near-limit property values without a false floating-point overflow.
+
 The tweener completes without writing when its target has been disposed.
 
 ## Examples

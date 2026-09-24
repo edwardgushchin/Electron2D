@@ -65,6 +65,8 @@ The subtween audit checks signed/live delay, source-tree detachment including cr
 
 The await audit checks all three typed event arities, append-time subscription and rollback, pre-start receipt reset, cross-thread receipt with owner-thread completion, same-frame timeout priority, negative/zero/live timeout, source disposal, loop replay, cancellation and completion subscriber failure. Its own rows are Implemented under the accepted typed-event scope; event arities above two and publisher-side invocation-list inspection remain explicit future boundaries.
 
+The static interpolation audit checks 96 numeric samples from the pinned easing equations across all 12 transitions, four eases and two elapsed fractions, plus every supported typed value family, signed and zero durations, extrapolation, invalid inputs, overflow and zero warmed managed allocations. Int64 interpolation now uses wide intermediates for exact near-limit endpoints. All own Tween and Tweener declaration and type rows are Implemented; inherited managed-lifetime roles and platform acceptance retain their separate evidence limits.
+
 ## Decisions
 
 - [0002: C# events for signals](../decisions/product.md#adr-0002)

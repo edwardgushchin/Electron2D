@@ -20,6 +20,8 @@ Interpolates a typed value and supplies it to a callback over time.
 
 Delay and duration use finite signed seconds. A non-positive duration delivers the final value on the first positive step; a negative delay begins on that step. Transition/ease defaults are captured when appended, and per-tweener overrides may change during playback. Built-in interpolation supports the values listed by the [Tweening component](../components/tweening.md), and the append method accepts an explicit interpolator for other types. If the delegate's direct target is an `ElectronObject` and becomes disposed, the tweener completes without another call. Delegate, interpolation, completion-event, and arithmetic failures invalidate the parent after parallel siblings are attempted.
 
+Built-in Int64 interpolation retains exact values near its limits through wide intermediate arithmetic and checked rounding; valid midpoint and final values do not overflow from floating-point conversion alone.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
