@@ -2562,6 +2562,7 @@ static void VerifyVector3Geometry()
 
 static void VerifyVector4Values()
 {
+    VerifyVector4RemainingValues();
     Require(Marshal.SizeOf<Vector4>() == 16 && typeof(Vector4).IsDefined(typeof(SerializableAttribute), false) &&
             Vector4.Zero == default && Vector4.One == new Vector4(1f, 1f, 1f, 1f) && float.IsPositiveInfinity(Vector4.Inf.W),
         "Vector4 layout and constants must be stable.");
@@ -2643,6 +2644,139 @@ static void VerifyVector4Values()
         "ConfigFile must reject non-finite Vector4 values.");
     config.Parse("[math]\nvector4={\"X\":1,\"Y\":2,\"Z\":3}\n");
     Expect<InvalidDataException>(() => config.GetValue(key), "ConfigFile must reject incomplete Vector4 values.");
+}
+
+static void VerifyVector4RemainingValues()
+{
+    Require(Vector4.Zero == default && Vector4.One == new Vector4(1f, 1f, 1f, 1f) &&
+            float.IsPositiveInfinity(Vector4.Inf.X) && float.IsPositiveInfinity(Vector4.Inf.Y) &&
+            float.IsPositiveInfinity(Vector4.Inf.Z) && float.IsPositiveInfinity(Vector4.Inf.W) &&
+            (int)Vector4.Axis.X == 0 && (int)Vector4.Axis.Y == 1 &&
+            (int)Vector4.Axis.Z == 2 && (int)Vector4.Axis.W == 3,
+        "Vector4 constants and axis identities retain every pinned component.");
+    var value = new Vector4(1.5f, -2f, 0f, 4f);
+    var copy = value;
+    copy[0] = -3f;
+    copy[1] = 4f;
+    copy[2] = .5f;
+    copy[3] = -2f;
+    Require(value == new Vector4(1.5f, -2f, 0f, 4f) &&
+            copy == new Vector4(-3f, 4f, .5f, -2f) &&
+            copy.X == -3f && copy.Y == 4f && copy.Z == .5f && copy.W == -2f &&
+            new Vector4(new Vector4I(16_777_217, int.MinValue, int.MaxValue, -2)) ==
+                new Vector4(16_777_216f, int.MinValue, 2_147_483_648f, -2f),
+        "Vector4 copies, mutable indexes and integer construction retain W and float rounding.");
+    Expect<ArgumentOutOfRangeException>(() => _ = copy[-1], "Negative Vector4 indexes fail explicitly.");
+    Expect<ArgumentOutOfRangeException>(() => copy[4] = 1f, "A fifth Vector4 component cannot be assigned.");
+    Require(copy == new Vector4(-3f, 4f, .5f, -2f), "Rejected indexing leaves Vector4 copies intact.");
+
+    Require(value + copy == new Vector4(-1.5f, 2f, .5f, 2f) &&
+            value - copy == new Vector4(4.5f, -6f, -.5f, 6f) &&
+            value * copy == new Vector4(-4.5f, -8f, 0f, -8f) &&
+            value / copy == new Vector4(-.5f, -.5f, 0f, -2f) &&
+            value * -2f == new Vector4(-3f, 4f, 0f, -8f) &&
+            -2f * value == value * -2f && value * int.MaxValue == value * (float)int.MaxValue &&
+            value / int.MaxValue == value / (float)int.MaxValue &&
+            +value == value && -value == new Vector4(-1.5f, 2f, 0f, -4f),
+        "Vector4 component/scalar arithmetic and integer scalar conversion use float operations.");
+    var divided = value / 0f;
+    var componentDivided = value / Vector4.Zero;
+    Require(float.IsPositiveInfinity(divided.X) && float.IsNegativeInfinity(divided.Y) &&
+            float.IsNaN(divided.Z) && float.IsPositiveInfinity(divided.W) &&
+            float.IsPositiveInfinity(componentDivided.X) &&
+            float.IsNegativeInfinity(componentDivided.Y) && float.IsNaN(componentDivided.Z) &&
+            float.IsPositiveInfinity(componentDivided.W) &&
+            BitConverter.SingleToInt32Bits((-Vector4.Zero).W) == int.MinValue,
+        "Vector4 division by zero and unary negation retain IEEE infinity, NaN and signed zero.");
+
+    var lower = new Vector4(1f, 2f, 3f, 4f);
+    var higherW = new Vector4(1f, 2f, 3f, 5f);
+    var higherZ = new Vector4(1f, 2f, 4f, -100f);
+    var higherY = new Vector4(1f, 3f, -100f, -100f);
+    var higherX = new Vector4(2f, -100f, -100f, -100f);
+    var same = new Vector4(1f, 2f, 3f, 4f);
+    var unordered = new Vector4(float.NaN, 2f, 3f, 4f);
+    var unorderedCopy = unordered;
+    Require(lower < higherW && lower < higherZ && lower < higherY && lower < higherX &&
+            higherX > higherY && lower <= same && lower >= same &&
+            lower == same && lower != higherW && new Vector4(-0f, 0f, 0f, 0f) == Vector4.Zero &&
+            unordered != unorderedCopy && !(unordered == unorderedCopy) &&
+            !(unordered < lower) && !(unordered > lower) &&
+            !(unordered <= lower) && !(unordered >= lower),
+        "Vector4 relational operators compare X/Y/Z/W lexicographically with IEEE NaN and zero rules.");
+
+    var signed = new Vector4(-0f, -1.5f, 2.5f, float.NaN).Abs();
+    Require(BitConverter.SingleToInt32Bits(signed.X) == 0 && signed.Y == 1.5f &&
+            signed.Z == 2.5f && float.IsNaN(signed.W) &&
+            new Vector4(-1.5f, 1.5f, 2.5f, -2.5f).Floor() == new Vector4(-2f, 1f, 2f, -3f) &&
+            new Vector4(-1.5f, 1.5f, 2.5f, -2.5f).Ceil() == new Vector4(-1f, 2f, 3f, -2f) &&
+            new Vector4(-1.5f, 1.5f, 2.5f, -2.5f).Round() == new Vector4(-2f, 2f, 2f, -2f) &&
+            new Vector4(-2f, 0f, 3f, -4f).Sign() == new Vector4(-1f, 0f, 1f, -1f),
+        "Vector4 componentwise rounding and signs follow accepted Mathf behavior on W as well.");
+
+    var bounds = new Vector4(-2f, .5f, 5f, 8f);
+    Require(bounds.Clamp(new Vector4(-1f, 0f, 1f, 2f), new Vector4(1f, 1f, 4f, 6f)) ==
+                new Vector4(-1f, .5f, 4f, 6f) &&
+            bounds.Max(2f) == new Vector4(2f, 2f, 5f, 8f) &&
+            bounds.Min(2f) == new Vector4(-2f, .5f, 2f, 2f) &&
+            bounds.Max(new Vector4(0f, -1f, 4f, 9f)) == new Vector4(0f, .5f, 5f, 9f) &&
+            bounds.Min(new Vector4(0f, -1f, 4f, 9f)) == new Vector4(-2f, -1f, 4f, 8f) &&
+            float.IsNaN(new Vector4(0f, 0f, 0f, float.NaN).Min(Vector4.One).W),
+        "Vector4 clamp and scalar/vector extrema retain all components and accepted NaN policy.");
+    Expect<ArgumentException>(() => bounds.Clamp(new Vector4(0f, 0f, 0f, 5f), Vector4.One),
+        "A reversed bound on W fails before returning a value.");
+    Require(Vector4.One.MaxAxisIndex() == Vector4.Axis.X &&
+            Vector4.One.MinAxisIndex() == Vector4.Axis.W &&
+            new Vector4(1f, 2f, 2f, 1f).MaxAxisIndex() == Vector4.Axis.Y &&
+            new Vector4(float.NaN, 1f, 2f, 3f).MinAxisIndex() == Vector4.Axis.X &&
+            new Vector4(1f, 2f, 3f, float.NaN).MaxAxisIndex() == Vector4.Axis.Z,
+        "Vector4 axis selection follows its pinned loop for ties and NaN, unlike the Vector3 branch.");
+
+    var reciprocal = new Vector4(2f, -4f, 0f, -0f).Inverse();
+    Require(reciprocal.X == .5f && reciprocal.Y == -.25f &&
+            float.IsPositiveInfinity(reciprocal.Z) && float.IsNegativeInfinity(reciprocal.W) &&
+            new Vector4(0f, 0f, 0f, 3f).LengthSquared() == 9f &&
+            new Vector4(0f, 0f, 0f, 3f).Dot(new Vector4(0f, 0f, 0f, 4f)) == 12f &&
+            new Vector4(0f, 0f, 0f, 3f).DistanceSquaredTo(Vector4.Zero) == 9f &&
+            new Vector4(0f, 0f, 0f, 3f).DistanceTo(Vector4.Zero) == 3f &&
+            new Vector4(0f, 0f, 0f, 2f).Normalized() == new Vector4(0f, 0f, 0f, 1f) &&
+            Vector4.Zero.DirectionTo(new Vector4(0f, 0f, 0f, 2f)) == new Vector4(0f, 0f, 0f, 1f) &&
+            float.IsPositiveInfinity(new Vector4(0f, 0f, 0f, float.MaxValue).Length()) &&
+            Vector4.Zero.Lerp(Vector4.One, -1f) == -Vector4.One,
+        "Vector4 reciprocal, norms, dot, direction and interpolation include W and IEEE overflow.");
+    Require(Vector4.One.IsFinite() && !new Vector4(0f, 0f, 0f, float.NaN).IsFinite() &&
+            !new Vector4(0f, 0f, 0f, float.PositiveInfinity).IsFinite() &&
+            new Vector4(MathF.Sqrt(1.0005f), 0f, 0f, 0f).IsNormalized() &&
+            !new Vector4(MathF.Sqrt(1.002f), 0f, 0f, 0f).IsNormalized() &&
+            new Vector4(0f, 0f, 0f, .5e-6f).IsZeroApprox() &&
+            !new Vector4(0f, 0f, 0f, 1e-6f).IsZeroApprox() &&
+            Vector4.One.IsEqualApprox(new Vector4(1f, 1f, 1f, 1f + .5e-6f)) &&
+            !Vector4.One.IsEqualApprox(new Vector4(1f, 1f, 1f, 1f + 2e-6f)) &&
+            Vector4.Inf.IsEqualApprox(Vector4.Inf) &&
+            !new Vector4(float.NaN, 0f, 0f, 0f).IsEqualApprox(new Vector4(float.NaN, 0f, 0f, 0f)),
+        "Vector4 finite, unit and strict approximate predicates retain all components and infinity identity.");
+
+    var modded = new Vector4(-1f, 7f, -7f, 9f).PosMod(new Vector4(4f, -4f, 3f, 0f));
+    Require(modded.X == 3f && modded.Y == -1f && modded.Z == 2f && float.IsNaN(modded.W) &&
+            new Vector4(1.25f, -1.25f, 2.6f, -2.6f).Snapped(.5f) ==
+                new Vector4(1.5f, -1f, 2.5f, -2.5f) &&
+            new Vector4(1.25f, -1.25f, 2.6f, -2.6f).Snapped(new Vector4(.5f, 0f, 2f, 0f)) ==
+                new Vector4(1.5f, -1.25f, 2f, -2.6f),
+        "Vector4 modulus and snapping preserve signed divisors, zero and midpoint behavior per component.");
+    var zeroStep = new Vector4(float.NaN, 1f, 2f, -0f).Snapped(0f);
+    Require(float.IsNaN(zeroStep.X) && zeroStep.Y == 1f && zeroStep.Z == 2f &&
+            BitConverter.SingleToInt32Bits(zeroStep.W) == int.MinValue,
+        "Zero-step Vector4 snapping retains NaN and W signed zero.");
+
+    var pre = new Vector4(-1f, 0f, 1f, 10f);
+    var start = new Vector4(0f, 1f, 2f, 11f);
+    var end = new Vector4(1f, 2f, 3f, 12f);
+    var post = new Vector4(2f, 3f, 4f, 13f);
+    Require(start.CubicInterpolate(end, pre, post, .5f) == new Vector4(.5f, 1.5f, 2.5f, 11.5f) &&
+            start.CubicInterpolateInTime(end, pre, post, .5f, 1f, -1f, 2f) ==
+                new Vector4(.5f, 1.5f, 2.5f, 11.5f) &&
+            start.CubicInterpolateInTime(end, pre, post, .5f, 0f, 0f, 0f).IsFinite(),
+        "Vector4 cubic paths preserve distinct W values and degenerate time fallback.");
 }
 
 static void VerifyVector4IValues()

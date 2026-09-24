@@ -3453,6 +3453,95 @@
       "reason": "Pinned vector3i.h orders X, Y, then Z and compares components exactly. VerifyVector3IValues checks equality, less/equal/greater boundaries, high-X precedence and copy hashing on Linux/.NET 8."
     },
     {
+      "godot": ["class:Vector4"],
+      "state": "Implemented",
+      "reason": "All 65 applicable declared members have pinned vector4.h/.cpp and typed C# audits in VerifyVector4Values/VerifyVector4RemainingValues under ADRs 0033/0034. The Projection operator alone is Excluded by the strict 2D boundary of ADR 0004; Linux/.NET 8 managed checks do not establish native ABI or other-platform parity."
+    },
+    {
+      "godot": ["Vector4::constant:INF", "Vector4::constant:ONE", "Vector4::constant:ZERO"],
+      "state": "Implemented",
+      "reason": "VerifyVector4Values and VerifyVector4RemainingValues check zero/one and four positive-infinity channels against pinned constants on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::constructor:Vector4()", "Vector4::constructor:Vector4(Vector4:)",
+        "Vector4::constructor:Vector4(Vector4i:)", "Vector4::constructor:Vector4(float:,float:,float:,float:)",
+        "Vector4::enum:Axis", "Vector4::operator:operator [](int:)",
+        "Vector4::property:w", "Vector4::property:x", "Vector4::property:y", "Vector4::property:z"
+      ],
+      "state": "Implemented",
+      "reason": "VerifyVector4Values and VerifyVector4RemainingValues check 16-byte sequential zero state, value-copy independence, all four mutable indexes and typed bad-index errors, enum identities and Vector4i-to-float rounding at 2^24/int.MaxValue; Linux/.NET 8 under ADR 0033."
+    },
+    {
+      "godot": [
+        "Vector4::operator:operator *(Vector4:)", "Vector4::operator:operator *(float:)",
+        "Vector4::operator:operator +(Vector4:)", "Vector4::operator:operator -(Vector4:)",
+        "Vector4::operator:operator /(Vector4:)", "Vector4::operator:operator /(float:)",
+        "Vector4::operator:operator unary+()", "Vector4::operator:operator unary-()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.h uses independent IEEE float component arithmetic. VerifyVector4Values/VerifyVector4RemainingValues check signed values, scalar/vector operations, zero-division inf/NaN, signed-zero negation and integer scalar conversion through the existing float operators under ADR 0033 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::operator:operator !=(Vector4:)", "Vector4::operator:operator <(Vector4:)",
+        "Vector4::operator:operator <=(Vector4:)", "Vector4::operator:operator ==(Vector4:)",
+        "Vector4::operator:operator >(Vector4:)", "Vector4::operator:operator >=(Vector4:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.h orders X, Y, Z then W with exact IEEE equality. VerifyVector4Values/VerifyVector4RemainingValues check each decisive component, equal ties, signed zero and unordered NaN across all six operators on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::method:abs()", "Vector4::method:ceil()", "Vector4::method:floor()",
+        "Vector4::method:round()", "Vector4::method:sign()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.cpp applies scalar operations independently to X/Y/Z/W. VerifyVector4Values/VerifyVector4RemainingValues check signed-zero Abs, negative floor/ceil, midpoint-to-even Round and signed/NaN Sign through canonical Mathf under ADR 0034 on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::method:clamp(Vector4:,Vector4:)", "Vector4::method:clampf(float:,float:)",
+        "Vector4::method:max(Vector4:)", "Vector4::method:maxf(float:)",
+        "Vector4::method:min(Vector4:)", "Vector4::method:minf(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Four independent components follow the audited Mathf scalar policy under ADR 0034. VerifyVector4Values/VerifyVector4RemainingValues check vector/scalar bounds, reversed W-bound error, extrema and accepted NaN behavior on Linux/.NET 8."
+    },
+    {
+      "godot": ["Vector4::method:max_axis_index()", "Vector4::method:min_axis_index()"],
+      "state": "Implemented",
+      "reason": "Pinned vector4.cpp uses a four-component loop with first-maximum/last-minimum ties. VerifyVector4Values/VerifyVector4RemainingValues check ties and NaN in X/W; unlike Vector3, the existing C# loops already match this source path on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::method:distance_squared_to(Vector4:)", "Vector4::method:distance_to(Vector4:)",
+        "Vector4::method:dot(Vector4:)", "Vector4::method:inverse()",
+        "Vector4::method:is_equal_approx(Vector4:)", "Vector4::method:is_finite()",
+        "Vector4::method:is_normalized()", "Vector4::method:is_zero_approx()",
+        "Vector4::method:length()", "Vector4::method:length_squared()"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.cpp uses ordered squared terms, dot products, sqrt and reciprocal; ADR 0034 supplies strict approximate/unit tolerances. VerifyVector4Values/VerifyVector4RemainingValues check W-only values, signed-zero reciprocals, float overflow, NaN/infinity, strict epsilon and unit boundaries on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::method:posmod(float:)", "Vector4::method:posmodv(Vector4:)",
+        "Vector4::method:snapped(Vector4:)", "Vector4::method:snappedf(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.cpp applies independent positive-modulus and snapping scalar functions. Canonical Mathf supplies accepted C# behavior under ADR 0034; VerifyVector4Values/VerifyVector4RemainingValues check mixed-sign/zero divisors, scalar/vector steps, midpoint and zero-step NaN/signed-zero retention on Linux/.NET 8."
+    },
+    {
+      "godot": [
+        "Vector4::method:cubic_interpolate(Vector4:,Vector4:,Vector4:,float:)",
+        "Vector4::method:cubic_interpolate_in_time(Vector4:,Vector4:,Vector4:,float:,float:,float:,float:)",
+        "Vector4::method:lerp(Vector4:,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Pinned vector4.cpp delegates independent X/Y/Z/W interpolation to the audited Mathf scalar formulas under ADR 0034. VerifyVector4Values/VerifyVector4RemainingValues check linear extrapolation, distinct W cubic values, uniform timestamps and degenerate-time finite fallback on Linux/.NET 8."
+    },
+    {
       "godot": [
         "Vector4::operator:operator *(int:)",
         "Vector4::operator:operator /(int:)"

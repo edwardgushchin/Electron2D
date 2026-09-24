@@ -21,6 +21,8 @@ Represents a four-component floating-point vector for numeric tuples.
 Ordinary arithmetic preserves IEEE 754 NaN and infinity values. The zero-initialized value is [`Vector4.Zero`](Vector4.md#p-electron2d-vector4-zero).
 Numeric operations do not allocate managed memory; string formatting allocates a string.
 
+All 65 applicable declared members and the type row have managed semantic audits on Linux/.NET 8. `VerifyVector4Values` and `VerifyVector4RemainingValues` cover constructor/copy/index boundaries, X/Y/Z/W constants and ordering, IEEE arithmetic, componentwise scalar operations, strict approximation, cubic interpolation with distinct W and degenerate times, and typed conversion/persistence. The one Projection operator is Excluded by ADR 0004's strictly 2D scene boundary. Native ABI and other platforms remain unverified.
+
 ## Examples
 
 The following focused snippet uses the current public API. Names not declared in the snippet are supplied by the surrounding application or callback context.
