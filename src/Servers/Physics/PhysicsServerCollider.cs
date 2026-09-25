@@ -30,6 +30,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     internal RID RID { get; } = rid;
     internal bool IsArea { get; } = isArea;
     internal RID SpaceRID { get; private set; }
+    internal PhysicsSpace? Space => _space;
     internal IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
     internal PhysicsServer2D.BodyMode Mode => _mode;
     internal int ShapeCount => _slots.Count;

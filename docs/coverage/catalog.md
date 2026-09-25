@@ -176,7 +176,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Blocked | 21 |
 | [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Partial | 45 |
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
-| [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Partial | 9 |
+| [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Implemented | 9 |
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |
 | [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Partial | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |
@@ -417,7 +417,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Joint3D](classes/Joint3D.md) | Node3D | Excluded | 5 |
 | [JointLimitation3D](classes/JointLimitation3D.md) | Resource | Excluded | 0 |
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
-| [KinematicCollision2D](classes/KinematicCollision2D.md) | RefCounted | Blocked | 13 |
+| [KinematicCollision2D](classes/KinematicCollision2D.md) | RefCounted | Partial | 13 |
 | [KinematicCollision3D](classes/KinematicCollision3D.md) | RefCounted | Excluded | 14 |
 | [Label](classes/Label.md) | Control | Blocked | 42 |
 | [Label3D](classes/Label3D.md) | GeometryInstance3D | Excluded | 49 |
@@ -632,9 +632,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsServer3DRenderingServerHandler](classes/PhysicsServer3DRenderingServerHandler.md) | Object | Excluded | 6 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | RefCounted | Implemented | 9 |
 | [PhysicsShapeQueryParameters3D](classes/PhysicsShapeQueryParameters3D.md) | RefCounted | Excluded | 9 |
-| [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Blocked | 7 |
+| [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Partial | 7 |
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
-| [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Blocked | 13 |
+| [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Partial | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
 | [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Unimplemented | 6 |
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |

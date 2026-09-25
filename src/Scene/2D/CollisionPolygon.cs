@@ -26,6 +26,8 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
             (node, value) => node.Disabled = value, _ => false, stored: true),
         new PropertyDescriptor<CollisionPolygon, bool>(nameof(OneWayCollision), node => node.OneWayCollision,
             (node, value) => node.OneWayCollision = value, _ => false, stored: true),
+        new PropertyDescriptor<CollisionPolygon, float>(nameof(OneWayCollisionMargin), node => node.OneWayCollisionMargin,
+            (node, value) => node.OneWayCollisionMargin = value, _ => 1f, stored: true),
         new PropertyDescriptor<CollisionPolygon, Vector2>(nameof(OneWayCollisionDirection), node => node.OneWayCollisionDirection,
             (node, value) => node.OneWayCollisionDirection = value, _ => Vector2.Down, stored: true)
     ];
@@ -36,6 +38,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     private PolygonBuildMode _buildMode;
     private bool _disabled;
     private bool _oneWayCollision;
+    private float _oneWayCollisionMargin = 1f;
     private Vector2 _oneWayCollisionDirection = Vector2.Down;
     private ulong _geometryRevision;
 
@@ -43,7 +46,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     bool ICollisionGeometry.IsActive => !_disabled && _generatedShapes.Length != 0;
     ulong ICollisionGeometry.GeometryRevision => _geometryRevision;
     OneWayContactData? ICollisionGeometry.OneWayContact => _oneWayCollision
-        ? new OneWayContactData(_oneWayCollisionDirection.Rotated(Rotation)) : null;
+        ? new OneWayContactData(_oneWayCollisionDirection.Rotated(Rotation), _oneWayCollisionMargin) : null;
 
     void ICollisionGeometry.AppendToBody(B2BodyId bodyID, in B2ShapeDef definition, List<B2ShapeId> fixtures)
     {
@@ -113,6 +116,22 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     {
         get { ThrowIfDisposed(); return _oneWayCollision; }
         set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; _owner?.MarkShapesDirty(); UpdateConfigurationWarnings(); }
+    }
+
+    /// <summary>Gets or sets the maximum accepted one-way recovery depth in scene units.</summary>
+    /// <value>One by default; body motion uses at least its own recovery margin.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
+    public float OneWayCollisionMargin
+    {
+        get { ThrowIfDisposed(); return _oneWayCollisionMargin; }
+        set
+        {
+            EnsureMutable();
+            if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_oneWayCollisionMargin == value) return;
+            _oneWayCollisionMargin = value;
+            _owner?.MarkShapesDirty();
+        }
     }
 
     /// <summary>Gets or sets the local pass-through direction for one-way body contacts.</summary>

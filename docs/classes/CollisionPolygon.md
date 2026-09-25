@@ -32,6 +32,7 @@ ground.AddChild(new CollisionPolygon
 | `public Vector2[] Polygon { get; set; }` | Copied local vertices; empty by default. |
 | `public bool Disabled { get; set; }` | Removes fixtures while retaining the contour; false by default. |
 | `public bool OneWayCollision { get; set; }` | Selects the side of body contact; false by default. |
+| `public float OneWayCollisionMargin { get; set; }` | Maximum accepted one-way recovery depth; one scene unit by default. |
 | `public Vector2 OneWayCollisionDirection { get; set; }` | Local pass-through direction; `(0, 1)` by default. |
 | `public override string[] GetConfigurationWarnings()` | Reports an absent direct owner, empty/invalid geometry or ineffective Area one-way setting. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores mode, contour, disabled and one-way state. |
@@ -66,8 +67,13 @@ On a physics-body child, true uses the first contact's side to allow the face op
 
 The pass-through direction rotates with this node and its parent body. It defaults to `(0, 1)`; finite nonzero input is normalized, zero rejects all contacts while one-way mode is enabled, and nonfinite input throws `ArgumentOutOfRangeException` before mutation. Changing it rebuilds active body fixtures before the next step. It is stored in PackedScene.
 
+<a id="onewaycollisionmargin"></a>
+### `OneWayCollisionMargin`
+
+The default one scene unit bounds accepted recovery depth against this polygon's one-way body fixtures. Body motion uses at least its own safe margin; deeper initial overlap is ignored for one-way recovery. The property is finite and nonnegative, rejects invalid writes before mutation, rebuilds active fixtures before the next query or step and survives PackedScene. Area sensors ignore it.
+
 ## Lifecycle, errors and limits
 
-The node registers only under a direct CollisionObject parent during scene entry and removes that slot on exit or disposal. Generated ConvexPolygonShape or ConcavePolygonShape resources are private and owned by this node; callers own only the scene node and vertex arrays they pass. Polygon resources are regenerated before replacement, so invalid numeric writes retain the former state. The owning body or Area rejects active scale/skew before destroying its existing fixtures, and a corrected transform allows a later step. Scene mutation follows Node's owner-thread rule. One-way margin remains [Blocked](../coverage/classes/CollisionPolygon2D.md) until typed CharacterBody/direct-space sweep and initial-overlap recovery use it; no inert margin property is exposed.
+The node registers only under a direct CollisionObject parent during scene entry and removes that slot on exit or disposal. Generated ConvexPolygonShape or ConcavePolygonShape resources are private and owned by this node; callers own only the scene node and vertex arrays they pass. Polygon resources are regenerated before replacement, so invalid numeric writes retain the former state. The owning body or Area rejects active scale/skew before destroying its existing fixtures, and a corrected transform allows a later step. Scene mutation follows Node's owner-thread rule. All own [coverage rows](../coverage/classes/CollisionPolygon2D.md) now have executable behavior; inherited body and Shape gaps remain separate.
 
-[CollisionPolygonTests](../../tests/Electron2D.Tests/CollisionPolygonTests.cs) checks defaults, copies, malformed contour, errors, solid concavity, hollow edges, direct mixed owners, one-way traversal, live rebuild after callback failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. Native allocator counts, other platforms and owner visual acceptance remain unverified. See [ADR 0066](../decisions/physics.md#adr-0066).
+[CollisionPolygonTests](../../tests/Electron2D.Tests/CollisionPolygonTests.cs) checks defaults, copies, malformed contour, errors, solid concavity, hollow edges, direct mixed owners, one-way traversal, live rebuild after callback failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) verifies its one-way margin in recovery. Native allocator counts, other platforms and owner visual acceptance remain unverified. See [ADR 0066](../decisions/physics.md#adr-0066).

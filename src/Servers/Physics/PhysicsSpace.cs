@@ -9,7 +9,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed class PhysicsSpace : IDisposable
+internal sealed partial class PhysicsSpace : IDisposable
 {
     internal const float MetersPerUnit = 0.01f;
     internal const float UnitsPerMeter = 100f;

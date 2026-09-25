@@ -1,6 +1,131 @@
 {
   "mappings": [
     {
+      "godot": "KinematicCollision2D::method:get_collider()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetCollider()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_collider_id()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderID()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_collider_rid()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderRID()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_collider_shape()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderShape()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_collider_shape_index()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderShapeIndex()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_collider_velocity()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetColliderVelocity()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_depth()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetDepth()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_local_shape()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetLocalShape()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_normal()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetNormal()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_position()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetPosition()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_remainder()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetRemainder()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "KinematicCollision2D::method:get_travel()",
+      "electron2d": "method:Electron2D.KinematicCollision2D.GetTravel()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collider()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollider()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collider_id()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderID()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collider_rid()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderRID()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collider_shape()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderShape()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collider_velocity()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderVelocity()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_depth()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionDepth()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_local_shape()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionLocalShape()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_normal()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionNormal()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_point()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionPoint()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_safe_fraction()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionSafeFraction()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_collision_unsafe_fraction()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionUnsafeFraction()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_remainder()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetRemainder()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
+      "godot": "PhysicsTestMotionResult2D::method:get_travel()",
+      "electron2d": "method:Electron2D.PhysicsTestMotionResult2D.GetTravel()",
+      "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
+    },
+    {
       "godot": "ShapeCast2D::method:get_closest_collision_safe_fraction()",
       "electron2d": "method:Electron2D.ShapeCast.GetClosestCollisionSafeFraction()",
       "reason": "Typed cached safe fraction of the spatial shape sweep."
@@ -107,6 +232,21 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.KinematicCollision2D..ctor()",
+      "reason": "Caller-owned typed output construction for TestMove, with an empty initial snapshot.",
+      "adr": "ADRs 0001, 0003, 0063"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsTestMotionParameters2D..ctor()",
+      "reason": "Managed parameter construction projects the pinned motion-test defaults.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsTestMotionResult2D..ctor()",
+      "reason": "Caller-owned typed result construction for server motion tests.",
+      "adr": "ADRs 0001, 0003, 0063"
+    },
     {
       "electron2d": "constructor:Electron2D.ShapeCast..ctor()",
       "reason": "Managed scene construction projects the reference default shape cast options.",
@@ -700,6 +840,83 @@
   ],
   "statusGroups": [
     {
+      "godot": ["class:KinematicCollision2D"],
+      "state": "Partial",
+      "reason": "Typed travel, remainder, contact and scene shape owners execute; virtual tile collision-object and shape owners await typed tile-body integration (ADR 0063)."
+    },
+    {
+      "godot": ["KinematicCollision2D::method:get_collider()", "KinematicCollision2D::method:get_collider_shape()"],
+      "state": "Partial",
+      "reason": "Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063)."
+    },
+    {
+      "godot": [
+        "KinematicCollision2D::method:get_angle(Vector2:)",
+        "KinematicCollision2D::method:get_collider_id()",
+        "KinematicCollision2D::method:get_collider_rid()",
+        "KinematicCollision2D::method:get_collider_shape_index()",
+        "KinematicCollision2D::method:get_collider_velocity()",
+        "KinematicCollision2D::method:get_depth()",
+        "KinematicCollision2D::method:get_local_shape()",
+        "KinematicCollision2D::method:get_normal()",
+        "KinematicCollision2D::method:get_position()",
+        "KinematicCollision2D::method:get_remainder()",
+        "KinematicCollision2D::method:get_travel()"
+      ],
+      "state": "Implemented",
+      "reason": "Typed body motion snapshot exposes contact geometry, RID/instance/shape identity, point velocity and safe travel (ADR 0063, PhysicsMotionTests)."
+    },
+    {
+      "godot": ["class:PhysicsTestMotionParameters2D"],
+      "state": "Partial",
+      "reason": "Pose, motion, margin, recovery and exclusions execute; separation-ray participation requires the absent separation-ray shape resource (ADR 0063)."
+    },
+    {
+      "godot": ["PhysicsTestMotionParameters2D::property:collide_separation_ray"],
+      "state": "Blocked",
+      "reason": "Trigger: an executable SeparationRayShape2D resource and its special floor-snapping motion behavior (ADR 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsTestMotionParameters2D::property:exclude_bodies",
+        "PhysicsTestMotionParameters2D::property:exclude_objects",
+        "PhysicsTestMotionParameters2D::property:from",
+        "PhysicsTestMotionParameters2D::property:margin",
+        "PhysicsTestMotionParameters2D::property:motion",
+        "PhysicsTestMotionParameters2D::property:recovery_as_collision"
+      ],
+      "state": "Implemented",
+      "reason": "Typed motion defaults, finite pose/displacement, copied RID/instance exclusions and margin recovery execute (ADR 0063, PhysicsMotionTests)."
+    },
+    {
+      "godot": ["class:PhysicsTestMotionResult2D"],
+      "state": "Partial",
+      "reason": "Typed motion result fields execute; collider object projection remains Partial for virtual tile collision bodies (ADR 0063)."
+    },
+    {
+      "godot": ["PhysicsTestMotionResult2D::method:get_collider()"],
+      "state": "Partial",
+      "reason": "Scene bodies resolve and server-only bodies return null; virtual tile collision bodies require typed tile-owner integration (ADR 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsTestMotionResult2D::method:get_collider_id()",
+        "PhysicsTestMotionResult2D::method:get_collider_rid()",
+        "PhysicsTestMotionResult2D::method:get_collider_shape()",
+        "PhysicsTestMotionResult2D::method:get_collider_velocity()",
+        "PhysicsTestMotionResult2D::method:get_collision_depth()",
+        "PhysicsTestMotionResult2D::method:get_collision_local_shape()",
+        "PhysicsTestMotionResult2D::method:get_collision_normal()",
+        "PhysicsTestMotionResult2D::method:get_collision_point()",
+        "PhysicsTestMotionResult2D::method:get_collision_safe_fraction()",
+        "PhysicsTestMotionResult2D::method:get_collision_unsafe_fraction()",
+        "PhysicsTestMotionResult2D::method:get_remainder()",
+        "PhysicsTestMotionResult2D::method:get_travel()"
+      ],
+      "state": "Implemented",
+      "reason": "Server body motion returns typed RID, shape indices, contact point/normal/depth/velocity and safe/unsafe travel (ADR 0063, PhysicsMotionTests)."
+    },
+    {
       "godot": ["class:ShapeCast2D"],
       "state": "Partial",
       "reason": "Cached scene shape sweeps and typed contacts execute; physics-debug gizmo drawing and virtual tile collision-owner results retain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
@@ -982,15 +1199,15 @@
       "godot": [
         "class:CollisionPolygon2D"
       ],
-      "state": "Partial",
-      "reason": "Eight own enum/property rows execute through the direct polygon owner; the one-way margin remains Blocked until typed kinematic sweep and penetration recovery use it (ADR 0066)."
+      "state": "Implemented",
+      "reason": "All own enum/property rows execute, including one-way margin in typed body motion recovery (ADRs 0063 and 0066, CollisionPolygonTests and PhysicsMotionTests)."
     },
     {
       "godot": [
         "CollisionPolygon2D::property:one_way_collision_margin"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the margin; the direct polygon owner and one-way body-contact direction now execute (ADRs 0063 and 0066)."
+      "state": "Implemented",
+      "reason": "Finite nonnegative depth margin gates one-way body motion recovery and survives PackedScene (ADRs 0063 and 0066, PhysicsMotionTests)."
     },
     {
       "godot": [
@@ -1096,7 +1313,7 @@
         "class:CollisionShape2D"
       ],
       "state": "Partial",
-      "reason": "Body geometry and one-way contact side selection execute; margin-based kinematic sweep and debug color retain exact dependency triggers."
+      "reason": "Body geometry, one-way contact side and margin-based motion recovery execute; physics debug color still requires renderer canvas integration."
     },
     {
       "godot": [
@@ -1195,8 +1412,8 @@
       "godot": [
         "CollisionShape2D::property:one_way_collision_margin"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the one-way penetration margin (ADRs 0063 and 0065)."
+      "state": "Implemented",
+      "reason": "Finite nonnegative depth margin gates one-way body motion recovery and survives PackedScene (ADRs 0063 and 0065, PhysicsMotionTests)."
     },
     {
       "godot": [
@@ -1227,8 +1444,13 @@
         "PhysicsBody2D::method:move_and_collide(Vector2:,bool:,float:,bool:)",
         "PhysicsBody2D::method:test_move(Transform2D:,Vector2:,KinematicCollision2D:,float:,bool:)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: typed kinematic sweep queries, safe-margin recovery and KinematicCollision result."
+      "state": "Implemented",
+      "reason": "Scene body movement and test-only probes execute with safe-margin recovery, earliest body contact, one-way surfaces and typed KinematicCollision snapshots (ADR 0063, PhysicsMotionTests)."
+    },
+    {
+      "godot": ["PhysicsServer2D::method:body_test_motion(RID:,PhysicsTestMotionParameters2D:,PhysicsTestMotionResult2D:)"],
+      "state": "Partial",
+      "reason": "Scene/server body sweeps, recovery, filters, exclusions and typed results execute; the collide-separation-ray option requires an executable separation-ray shape resource (ADR 0063, PhysicsMotionTests)."
     },
     {
       "godot": [

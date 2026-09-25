@@ -181,7 +181,7 @@ public sealed partial class PhysicsDirectSpaceState2D
         }
     }
 
-    private static bool Overlaps(in B2ShapeProxy query, in B2ShapeProxy other, in B2Transform otherTransform)
+    internal static bool Overlaps(in B2ShapeProxy query, in B2ShapeProxy other, in B2Transform otherTransform)
     {
         var input = new B2DistanceInput
         {
@@ -202,7 +202,7 @@ public sealed partial class PhysicsDirectSpaceState2D
         return Cast(query, other, otherTransform, motion, maxFraction).hit;
     }
 
-    private static B2CastOutput Cast(in B2ShapeProxy query, in B2ShapeProxy other,
+    internal static B2CastOutput Cast(in B2ShapeProxy query, in B2ShapeProxy other,
         in B2Transform otherTransform, in B2Vec2 motion, float maxFraction)
     {
         var cast = new B2ShapeCastPairInput

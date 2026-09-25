@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -96,10 +96,7 @@ def main():
     polygon_node_rows = [row for row in pages[CLASS_PAGES / "CollisionPolygon2D.md"].splitlines()
                          if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(polygon_node_rows) == 10
-    assert {state: sum(f" | {state} | " in row for row in polygon_node_rows)
-            for state in ("Implemented", "Partial", "Blocked")} == {
-                "Implemented": 8, "Partial": 1, "Blocked": 1}
-    assert " | Blocked | " in next(row for row in polygon_node_rows if "one_way_collision_margin" in row)
+    assert all(" | Implemented | " in row for row in polygon_node_rows)
     ray_node_rows = [row for row in pages[CLASS_PAGES / "RayCast2D.md"].splitlines()
                      if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(ray_node_rows) == 22
@@ -137,7 +134,8 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 31, "Partial": 8, "Unimplemented": 171, "Blocked": 5}
+                "Implemented": 31, "Partial": 9, "Unimplemented": 170, "Blocked": 5}
+    assert " | Partial | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_set_shape_disabled", "area_set_shape_disabled", "body_remove_shape", "area_remove_shape"))
@@ -145,7 +143,21 @@ def main():
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows
                if "one_way_collision" in row and "margin" not in row)
-    assert " | Blocked | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
+    assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
+    physics_body_rows = pages[CLASS_PAGES / "PhysicsBody2D.md"].splitlines()
+    assert all(" | Implemented | " in next(row for row in physics_body_rows
+                                          if row.startswith(f"| [`method {name}("))
+               for name in ("move_and_collide", "test_move"))
+    for name, count, implemented, partial, blocked in (
+        ("KinematicCollision2D", 14, 11, 3, 0),
+        ("PhysicsTestMotionParameters2D", 8, 6, 1, 1),
+        ("PhysicsTestMotionResult2D", 14, 12, 2, 0)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                if row.startswith("| [`") and "github.com/godotengine" in row]
+        assert len(rows) == count
+        assert {state: sum(f" | {state} | " in row for row in rows)
+                for state in ("Implemented", "Partial", "Blocked")} == {
+                    "Implemented": implemented, "Partial": partial, "Blocked": blocked}
     joint_rows = pages[CLASS_PAGES / "Joint2D.md"].splitlines()
     pin_rows = pages[CLASS_PAGES / "PinJoint2D.md"].splitlines()
     assert all(" | Blocked | " in next(row for row in joint_rows if row.startswith(f"| [`{prefix}"))

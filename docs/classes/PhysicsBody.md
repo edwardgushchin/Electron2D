@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, one-way side, local pose and collision-filter changes are applied before the next physics step. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. `GetGravity()` exposes the last resolved field for a dynamic body.
+The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, one-way side, local pose and collision-filter changes are applied before the next physics step or motion query. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. `MoveAndCollide` and `TestMove` run kinematic sweeps over the registered space for all concrete body types; `GetGravity()` exposes the last resolved field for a dynamic body.
 
 ## API summary
 
@@ -22,6 +22,8 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable
 | --- | --- |
 | `protected PhysicsBody()` | Creates a detached body with no fixtures. |
 | `public Vector2 GetGravity()` | Returns the last area/world gravity after body scaling; zero for detached or stationary bodies. |
+| `public KinematicCollision2D? MoveAndCollide(Vector2 motion, bool testOnly = false, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Move to safe travel or test without moving; return a caller-owned contact or null. |
+| `public bool TestMove(Transform from, Vector2 motion, KinematicCollision2D? collision = null, float safeMargin = 0.08f, bool recoveryAsCollision = false)` | Query from an arbitrary global pose without moving; optionally fill a caller-owned result. |
 | `protected override void OnEnterTree()` / `OnExitTree()` | Attaches or detaches the backend body from this SceneTree's world. |
 | `protected override void Dispose(bool disposing)` | Releases any remaining backend body and shape slots before inherited cleanup. |
 
@@ -34,4 +36,9 @@ The first profile accepts unit global scale and zero skew; a transformed active 
 
 A dynamic [RigidBody](RigidBody.md) reports its most recently resolved [Area](Area.md) and world gravity vector after `GravityScale`. The value is zero before its first fixed step, when detached, and for [StaticBody](StaticBody.md). Area edits update it on the next nonzero physics step. An attached read requires the scene owner thread; a disposed body throws. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks priority, point falloff, body scaling and restoration of world gravity. The inherited query is Partial until the absent `CharacterBody` executes the same field contract.
 
-The inherited standalone `MoveAndCollide`, `TestMove`, collision exceptions and input-pickable policy remain incomplete until typed sweep or picking integrations. See [PhysicsBody2D coverage](../coverage/classes/PhysicsBody2D.md), [component](../components/physics-bodies.md) and [ADR 0056](../decisions/physics.md#adr-0056).
+<a id="motion"></a>
+### `MoveAndCollide` and `TestMove`
+
+Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. Reciprocal layer/mask bits, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` also reports that depenetration. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision2D](KinematicCollision2D.md) objects.
+
+[PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) covers scene and server colliders, contact owners/angle, test-only and actual travel, alternate starting pose, masks, disabled fixtures, one-way approach and margin, deep overlap, owner-thread rejection and 64 warmed unchanged `TestMove` calls with zero managed allocation on Linux/.NET 8. Collision exception management, input picking and CharacterBody sliding retain their own [coverage](../coverage/classes/PhysicsBody2D.md); native allocation, other platforms and owner acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).

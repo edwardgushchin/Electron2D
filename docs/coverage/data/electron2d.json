@@ -1944,6 +1944,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.KinematicCollision2D",
+    "kind": "type",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "KinematicCollision2D",
+    "signature": "public sealed class Electron2D.KinematicCollision2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.LayoutDirection",
     "kind": "type",
     "declaringType": "Electron2D.LayoutDirection",
@@ -2589,6 +2604,36 @@
     "visibility": "public",
     "baseType": "System.ValueType",
     "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsTestMotionParameters2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "PhysicsTestMotionParameters2D",
+    "signature": "public sealed class Electron2D.PhysicsTestMotionParameters2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsTestMotionResult2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "PhysicsTestMotionResult2D",
+    "signature": "public sealed class Electron2D.PhysicsTestMotionResult2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -5809,6 +5854,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.KinematicCollision2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": ".ctor",
+    "signature": "public KinematicCollision2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Line..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Line",
@@ -6022,6 +6080,32 @@
     "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
     "name": ".ctor",
     "signature": "public PhysicsShapeQueryParameters2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsTestMotionParameters2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": ".ctor",
+    "signature": "public PhysicsTestMotionParameters2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsTestMotionResult2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": ".ctor",
+    "signature": "public PhysicsTestMotionResult2D()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36507,6 +36591,181 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.KinematicCollision2D.GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetAngle",
+    "signature": "public System.Single GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E upDirection = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "upDirection",
+        "type": "System.Nullable\u003CElectron2D.Vector2\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetCollider()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetCollider",
+    "signature": "public Electron2D.ElectronObject GetCollider()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetColliderID()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetColliderID",
+    "signature": "public System.UInt64 GetColliderID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetColliderRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetColliderRID",
+    "signature": "public Electron2D.RID GetColliderRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetColliderShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetColliderShape",
+    "signature": "public Electron2D.ElectronObject GetColliderShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetColliderShapeIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetColliderShapeIndex",
+    "signature": "public System.Int32 GetColliderShapeIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetColliderVelocity()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetColliderVelocity",
+    "signature": "public Electron2D.Vector2 GetColliderVelocity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetDepth()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetDepth",
+    "signature": "public System.Single GetDepth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetLocalShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetLocalShape",
+    "signature": "public Electron2D.ElectronObject GetLocalShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetNormal()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetNormal",
+    "signature": "public Electron2D.Vector2 GetNormal()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetPosition",
+    "signature": "public Electron2D.Vector2 GetPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetRemainder()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetRemainder",
+    "signature": "public Electron2D.Vector2 GetRemainder()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.KinematicCollision2D.GetTravel()",
+    "kind": "method",
+    "declaringType": "Electron2D.KinematicCollision2D",
+    "name": "GetTravel",
+    "signature": "public Electron2D.Vector2 GetTravel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Line.AddPoint(Electron2D.Vector2,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.Line",
@@ -41894,6 +42153,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsBody.MoveAndCollide(Electron2D.Vector2,System.Boolean,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "MoveAndCollide",
+    "signature": "public Electron2D.KinematicCollision2D MoveAndCollide(Electron2D.Vector2 motion, System.Boolean testOnly = false, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "testOnly",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "safeMargin",
+        "type": "System.Single",
+        "default": "0.08f"
+      },
+      {
+        "name": "recoveryAsCollision",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.KinematicCollision2D",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsBody.OnEnterTree()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsBody",
@@ -41917,6 +42210,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsBody.TestMove(Electron2D.Transform,Electron2D.Vector2,Electron2D.KinematicCollision2D,System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "TestMove",
+    "signature": "public System.Boolean TestMove(Electron2D.Transform from, Electron2D.Vector2 motion, Electron2D.KinematicCollision2D collision = null, System.Single safeMargin = 0.08f, System.Boolean recoveryAsCollision = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "collision",
+        "type": "Electron2D.KinematicCollision2D",
+        "default": "null"
+      },
+      {
+        "name": "safeMargin",
+        "type": "System.Single",
+        "default": "0.08f"
+      },
+      {
+        "name": "recoveryAsCollision",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -42665,6 +42997,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer2D.BodyTestMotion(Electron2D.RID,Electron2D.PhysicsTestMotionParameters2D,Electron2D.PhysicsTestMotionResult2D)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyTestMotion",
+    "signature": "public System.Boolean BodyTestMotion(Electron2D.RID body, Electron2D.PhysicsTestMotionParameters2D parameters, Electron2D.PhysicsTestMotionResult2D result = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsTestMotionParameters2D",
+        "default": null
+      },
+      {
+        "name": "result",
+        "type": "Electron2D.PhysicsTestMotionResult2D",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer2D.CapsuleShapeCreate()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer2D",
@@ -42871,6 +43232,175 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollider()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollider",
+    "signature": "public Electron2D.ElectronObject GetCollider()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderID()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetColliderID",
+    "signature": "public System.UInt64 GetColliderID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetColliderRID",
+    "signature": "public Electron2D.RID GetColliderRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetColliderShape",
+    "signature": "public System.Int32 GetColliderShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetColliderVelocity()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetColliderVelocity",
+    "signature": "public Electron2D.Vector2 GetColliderVelocity()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionDepth()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionDepth",
+    "signature": "public System.Single GetCollisionDepth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionLocalShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionLocalShape",
+    "signature": "public System.Int32 GetCollisionLocalShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionNormal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionNormal",
+    "signature": "public Electron2D.Vector2 GetCollisionNormal()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionPoint()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionPoint",
+    "signature": "public Electron2D.Vector2 GetCollisionPoint()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionSafeFraction()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionSafeFraction",
+    "signature": "public System.Single GetCollisionSafeFraction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetCollisionUnsafeFraction()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetCollisionUnsafeFraction",
+    "signature": "public System.Single GetCollisionUnsafeFraction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetRemainder()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetRemainder",
+    "signature": "public Electron2D.Vector2 GetRemainder()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult2D.GetTravel()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult2D",
+    "name": "GetTravel",
+    "signature": "public Electron2D.Vector2 GetTravel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -61128,6 +61658,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CollisionPolygon.OneWayCollisionMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "OneWayCollisionMargin",
+    "signature": "public System.Single OneWayCollisionMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CollisionPolygon.Polygon()",
     "kind": "property",
     "declaringType": "Electron2D.CollisionPolygon",
@@ -61177,6 +61720,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionShape.OneWayCollisionMargin()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "OneWayCollisionMargin",
+    "signature": "public System.Single OneWayCollisionMargin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -68080,6 +68636,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.ExcludeBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "ExcludeBodies",
+    "signature": "public Electron2D.RID[] ExcludeBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.ExcludeObjects()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "ExcludeObjects",
+    "signature": "public System.UInt64[] ExcludeObjects { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.From()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "From",
+    "signature": "public Electron2D.Transform From { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.Margin()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "Margin",
+    "signature": "public System.Single Margin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.Motion()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "Motion",
+    "signature": "public Electron2D.Vector2 Motion { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.RecoveryAsCollision()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "RecoveryAsCollision",
+    "signature": "public System.Boolean RecoveryAsCollision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

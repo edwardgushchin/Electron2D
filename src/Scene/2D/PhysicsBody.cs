@@ -24,8 +24,11 @@ public abstract class PhysicsBody : CollisionObject
     protected PhysicsBody() { }
 
     internal B2BodyId BackendID => _bodyID;
+    internal PhysicsSpace? Space => _space;
     internal bool HasBackend => _space is not null;
     internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
+
+    internal Entity? GetShapeNode(int index) => (uint)index < (uint)_shapes.Count ? _shapes[index].Node : null;
 
     internal override void AttachShape(ICollisionGeometry shape)
     {
@@ -144,6 +147,55 @@ public abstract class PhysicsBody : CollisionObject
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
         return HasBackend ? EffectiveGravity : Vector2.Zero;
+    }
+
+    /// <summary>Moves this body along a global displacement until its first eligible body collision.</summary>
+    /// <param name="motion">Finite global displacement in scene units.</param>
+    /// <param name="testOnly">When true, report without changing the scene pose.</param>
+    /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
+    /// <param name="recoveryAsCollision">Whether initial depenetration can produce a collision result.</param>
+    /// <returns>A caller-owned collision snapshot, or null when motion is unobstructed.</returns>
+    public KinematicCollision2D? MoveAndCollide(Vector2 motion, bool testOnly = false,
+        float safeMargin = 0.08f, bool recoveryAsCollision = false)
+    {
+        EnsureMutable();
+        ValidateMotion(motion, safeMargin);
+        if (!HasBackend) throw new InvalidOperationException("A body must be attached before moving through physics.");
+        var from = GlobalTransform;
+        var data = PhysicsServer2D.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+            recoveryAsCollision, [], []);
+        if (!testOnly && data.Travel != Vector2.Zero)
+            GlobalTransform = new Transform(from.Rotation, Vector2.One, 0, from.Origin + data.Travel);
+        return data.Collided ? new KinematicCollision2D(data) : null;
+    }
+
+    /// <summary>Tests motion from a supplied global pose without moving this body.</summary>
+    /// <param name="from">Finite unit-scale global starting pose.</param>
+    /// <param name="motion">Finite global displacement in scene units.</param>
+    /// <param name="collision">Optional caller-owned result updated on a completed test.</param>
+    /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
+    /// <param name="recoveryAsCollision">Whether initial depenetration counts as a collision.</param>
+    /// <returns>Whether motion or requested recovery reaches a body contact.</returns>
+    public bool TestMove(Transform from, Vector2 motion, KinematicCollision2D? collision = null,
+        float safeMargin = 0.08f, bool recoveryAsCollision = false)
+    {
+        EnsureMutable();
+        if (!HasBackend) return false;
+        ValidateMotion(motion, safeMargin);
+        if (!from.IsFinite() || !from.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(from.Skew))
+            throw new ArgumentException("Body motion requires finite translation, unit scale and zero skew.", nameof(from));
+        if (collision?.IsDisposed == true) throw new ObjectDisposedException(nameof(collision));
+        var data = PhysicsServer2D.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+            recoveryAsCollision, [], []);
+        collision?.Set(data);
+        return data.Collided;
+    }
+
+    private static void ValidateMotion(Vector2 motion, float margin)
+    {
+        if (!motion.IsFinite() || !float.IsFinite(motion.Length()))
+            throw new ArgumentOutOfRangeException(nameof(motion));
+        if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
     }
 
     internal override void OnCollisionFilterChanged() => MarkShapesDirty();

@@ -170,7 +170,7 @@ public sealed partial class PhysicsDirectSpaceState2D
         return manifold.pointCount != 0;
     }
 
-    private static B2Manifold GetManifold(in B2ShapeProxy query, in B2ShapeProxy other,
+    internal static B2Manifold GetManifold(in B2ShapeProxy query, in B2ShapeProxy other,
         in B2Transform otherTransform)
     {
         var identity = b2Transform_identity;
