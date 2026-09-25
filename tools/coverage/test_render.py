@@ -134,7 +134,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 31, "Partial": 9, "Unimplemented": 170, "Blocked": 5}
+                "Implemented": 33, "Partial": 9, "Unimplemented": 168, "Blocked": 5}
     assert " | Partial | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -145,6 +145,10 @@ def main():
                if "one_way_collision" in row and "margin" not in row)
     assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
     physics_body_rows = pages[CLASS_PAGES / "PhysicsBody2D.md"].splitlines()
+    assert all(" | Implemented | " in next(row for row in physics_body_rows
+                                          if row.startswith(f"| [`method {name}("))
+               for name in ("add_collision_exception_with", "get_collision_exceptions",
+                            "remove_collision_exception_with"))
     assert all(" | Implemented | " in next(row for row in physics_body_rows
                                           if row.startswith(f"| [`method {name}("))
                for name in ("move_and_collide", "test_move"))

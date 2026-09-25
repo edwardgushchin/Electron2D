@@ -1,6 +1,6 @@
 # Scene physics bodies component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 ## Scope and owned types
 
@@ -16,6 +16,8 @@ One or more direct CollisionShape children provide independent circle/capsule/se
 
 `TestMove` and `MoveAndCollide` prepare those same fixtures and scan body contacts before a solver step. They recover from initial penetration, test a supplied or current global pose with reciprocal masks, skip pass-through one-way contacts, then bracket the first new hit. `TestMove` and `testOnly` leave the scene pose unchanged; a regular move applies travel before collision. Typed contact snapshots include both direct shape-owner indices, point, normal, depth, point velocity, travel and remainder. A deep residual overlap stops motion rather than tunneling. A one-way child margin limits accepted recovery depth, while ordinary fixed-step pair contacts continue their established side decision.
 
+A PhysicsBody can list another scene body as a collision exception. The server exposes the same one-sided RID operation for scene or explicit bodies; either side's entry suppresses that pair in fixed-step solver contacts and body motion tests. Exception edits mark the owner fixtures dirty, so even an already touching pair uses the new rule at the next query or step. Scene enumeration copies insertion order and maps server-only or freed RIDs to null scene slots. Areas remain independent sensors; exception lists stay with body identity through fixture rebuild and tree reentry.
+
 Explicit force and impulse calls synchronize any pending body pose and child fixtures first, including mass and center of mass. A positioned argument is an unrotated world-axis offset from the body's current backend origin. Linear forces/impulses convert by 0.01 and torque/angular impulses by 0.0001; constant totals persist until cleared and are serialized with scene state. Solver rotation and translation return through one unit-scale global transform assignment so repeated angle updates do not accumulate decomposition scale error.
 
 ## Current contract and limits
@@ -26,7 +28,7 @@ An enabled one-way CollisionShape labels its body fixtures for the world pre-sol
 
 RigidBody defaults to mass 1 kg, gravity scale 1, zero velocity/body damping and constant force/torque, sleeping allowed, unfrozen and rotation unlocked. It supports finite signed gravity scaling and damping, positive finite mass, typed linear/angular velocity, sleep/freeze/rotation policy, two body damping modes, central and positioned force/impulse, torque/torque impulse, persistent force/torque, axis velocity, bounded contact-point counts, opt-in object contact reports and solver sleep events. Area fields resolve each gravity/damping channel by priority; a changed field wakes an affected sleeping body. `PhysicsBody.GetGravity()` returns the last resolved scaled field for a dynamic body. Dynamic segment-only bodies use length-weighted thin-rod mass and inertia; unshaped bodies retain mass without fixtures. StaticBody supplies a stationary collision base; AnimatableBody moves that role kinematically with a stored synchronization policy. Stationary conveyor velocities remain separate rows. Null material overrides use friction one and bounce zero. Direct-space sweeps, shape-index/RID events, joints and public server methods remain incomplete, with exact triggers in coverage.
 
-Box2D.NET 3.1.654 source and the scoped hot-path patch record live in [`src/Vendor/Box2D.NET`](../../src/Vendor/Box2D.NET/VENDOR.md). The compiled public surface contains no Box2D type. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks scene/server body sweeps, contact ownership, filters, exclusions, one-way recovery, deep overlap and 64 warmed scene tests without managed allocations. Existing [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs), shape, area, material and RigidBody tests cover fixed-step responses and lifecycle. Native allocator counts, other platforms and owner visual acceptance remain unverified.
+Box2D.NET 3.1.654 source and the scoped hot-path patch record live in [`src/Vendor/Box2D.NET`](../../src/Vendor/Box2D.NET/VENDOR.md). The compiled public surface contains no Box2D type. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks scene/server body sweeps; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral exceptions, live solver contacts, motion filtering, lifetime and 64 warmed frames without managed allocation. Existing [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs), shape, area, material and RigidBody tests cover other fixed-step responses and lifecycle. Native allocator counts, other platforms and owner visual acceptance remain unverified.
 
 ## Decision
 

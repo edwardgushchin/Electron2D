@@ -195,6 +195,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         definition.filter.categoryBits = _layer;
         definition.filter.maskBits = _mask;
         definition.isSensor = IsArea;
+        definition.enablePreSolveEvents = !IsArea && PhysicsServer2D.Instance.HasBodyCollisionExceptions(RID);
         definition.density = !IsArea && _mode is PhysicsServer2D.BodyMode.Rigid or PhysicsServer2D.BodyMode.RigidLinear ? 1 : 0;
         for (var index = 0; index < _slots.Count; index++)
         {

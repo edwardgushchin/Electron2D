@@ -346,7 +346,11 @@ public sealed partial class PhysicsServer2D
         {
             EnsureColliderSpaceAccessible(collider);
             if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider);
-            lock (_registryGate) _serverColliders.Remove(rid);
+            lock (_registryGate)
+            {
+                _serverColliders.Remove(rid);
+                _bodyExceptions.Remove(rid);
+            }
         }
         else if (shape is not null)
         {

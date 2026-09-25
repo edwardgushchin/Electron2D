@@ -1,6 +1,6 @@
 # PhysicsServer2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer2D.cs](../../src/Servers/Physics/PhysicsServer2D.cs), [PhysicsServer2D.Resources.cs](../../src/Servers/Physics/PhysicsServer2D.Resources.cs)
 
@@ -37,6 +37,7 @@ server.FreeRID(space);
 | `public void SpaceStep(RID space, double delta)` | Advance only an explicitly created space; zero delta is inert. |
 | `public PhysicsDirectSpaceState2D SpaceGetDirectState(RID space)` | Cached query view of any live server/scene space. |
 | `public bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
+| `public void BodyAddCollisionException(RID body, RID exceptedBody)` / `BodyRemoveCollisionException(RID body, RID exceptedBody)` | Change a one-sided body-owned RID exception affecting both solver contacts and motion tests. |
 | `public RID BodyCreate()` / `AreaCreate()` | Detached rigid body or sensor Area with default layer/mask one. |
 | `public RID CircleShapeCreate()` / `RectangleShapeCreate()` | Default concrete geometry RIDs. |
 | `public RID CapsuleShapeCreate()` / `SegmentShapeCreate()` | Default concrete geometry RIDs. |
@@ -78,6 +79,8 @@ server.FreeRID(space);
 
 `BodyTestMotion` prepares pending scene and server fixtures, then tests the supplied body's own shapes from a typed global pose. Reciprocal body filters, RID and managed-instance exclusions, one-way surfaces, recovery margin and initial overlap are applied. It returns false on a miss and updates an optional [PhysicsTestMotionResult2D](PhysicsTestMotionResult2D.md) with full travel and cleared contact fields. On a hit it reports contact identity, point, normal, depth, velocity, local/collider shape-owner indices and safe/unsafe fractions. It never changes the actual body pose. A detached body or wrong RID rejects; off-owner and in-step calls reject. [PhysicsTestMotionParameters2D](PhysicsTestMotionParameters2D.md) names the input. The separation-ray option remains an exact [coverage gap](../coverage/classes/PhysicsServer2D.md) until that shape family exists.
 
+`BodyAddCollisionException` and `BodyRemoveCollisionException` edit only the owner's RID list. Either body's entry suppresses the pair in fixed-step solver contacts and `BodyTestMotion`, independent of reciprocal collision masks; Area monitoring is unaffected. Duplicates and absent removals do nothing. The owner must be a live scene or server body; an arbitrary excepted RID, including an empty or later freed one, is retained but cannot match a live pair. An attached owner requires its space thread and cannot change exceptions while stepping. A list change marks that owner's fixtures for rebuilding before the next query or step, including when the pair is already touching. Freeing an owner removes its own entries; other bodies can retain its RID as an inert exception until explicitly removed.
+
 <a id="free"></a>
 ### `FreeRID`
 
@@ -85,4 +88,4 @@ Frees only caller-owned server resources. A shape free removes its slots from li
 
 ## Verification and limits
 
-[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion against scene/server fixtures, reciprocal filters, exclusions, recovery, one-way margins, result reset and warmed scene tests. Existing physics tests verify the scene body's hot-path allocation baseline. Remaining server methods, world-boundary/separation-ray/custom shapes, joints and direct body state remain separate slices. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Remaining server methods, world-boundary/separation-ray/custom shapes, joints and direct body state remain separate slices. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).

@@ -54,7 +54,11 @@ public sealed partial class PhysicsServer2D : ElectronObject
 
     internal void UnregisterSceneObject(RID rid)
     {
-        lock (_registryGate) _sceneObjects.Remove(rid);
+        lock (_registryGate)
+        {
+            _sceneObjects.Remove(rid);
+            _bodyExceptions.Remove(rid);
+        }
     }
 
     internal CollisionObject? ResolveSceneObject(RID rid)

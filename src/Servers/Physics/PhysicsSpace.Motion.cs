@@ -155,7 +155,8 @@ internal sealed partial class PhysicsSpace
         {
             var shape = shapes[shapeIndex];
             var tag = b2Shape_GetUserData(shape).GetRef<PhysicsFixtureTag>();
-            if (tag is null || tag.ColliderRID == ownerRID || Array.IndexOf(excludedBodies, tag.ColliderRID) >= 0)
+            if (tag is null || tag.ColliderRID == ownerRID || Array.IndexOf(excludedBodies, tag.ColliderRID) >= 0 ||
+                PhysicsServer2D.Instance.BodiesExcepted(ownerRID, tag.ColliderRID))
                 continue;
             var scene = PhysicsServer2D.Instance.ResolveSceneObject(tag.ColliderRID);
             if (scene is not null && Array.IndexOf(excludedObjects, scene.InstanceID) >= 0) continue;

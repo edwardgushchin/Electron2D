@@ -149,6 +149,40 @@ public abstract class PhysicsBody : CollisionObject
         return HasBackend ? EffectiveGravity : Vector2.Zero;
     }
 
+    /// <summary>Adds another physics body to this body's collision-exception list.</summary>
+    /// <param name="body">A live scene physics body.</param>
+    /// <exception cref="ArgumentNullException">The body is null.</exception>
+    public void AddCollisionExceptionWith(PhysicsBody body)
+    {
+        EnsureMutable();
+        ArgumentNullException.ThrowIfNull(body);
+        PhysicsServer2D.Instance.BodyAddCollisionException(GetRID(), body.GetRID());
+    }
+
+    /// <summary>Removes another body from this body's collision-exception list.</summary>
+    /// <param name="body">A live scene physics body.</param>
+    /// <exception cref="ArgumentNullException">The body is null.</exception>
+    public void RemoveCollisionExceptionWith(PhysicsBody body)
+    {
+        EnsureMutable();
+        ArgumentNullException.ThrowIfNull(body);
+        PhysicsServer2D.Instance.BodyRemoveCollisionException(GetRID(), body.GetRID());
+    }
+
+    /// <summary>Returns current scene body exceptions in insertion order.</summary>
+    /// <returns>A caller-owned array; server-only or freed entries have null scene objects.</returns>
+    /// <exception cref="InvalidOperationException">An attached body is read off its scene owner thread.</exception>
+    public PhysicsBody?[] GetCollisionExceptions()
+    {
+        ThrowIfDisposed();
+        Tree?.EnsureOwnerThread();
+        var entries = PhysicsServer2D.Instance.GetBodyCollisionExceptions(GetRID());
+        var result = new PhysicsBody?[entries.Length];
+        for (var index = 0; index < entries.Length; index++)
+            result[index] = PhysicsServer2D.Instance.ResolveSceneObject(entries[index]) as PhysicsBody;
+        return result;
+    }
+
     /// <summary>Moves this body along a global displacement until its first eligible body collision.</summary>
     /// <param name="motion">Finite global displacement in scene units.</param>
     /// <param name="testOnly">When true, report without changing the scene pose.</param>
@@ -254,7 +288,8 @@ public abstract class PhysicsBody : CollisionObject
             if (!node.IsActive) continue;
             var contact = node.OneWayContact;
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
-            definition.enablePreSolveEvents = contact is not null;
+            definition.enablePreSolveEvents = contact is not null ||
+                PhysicsServer2D.Instance.HasBodyCollisionExceptions(GetRID());
             node.AppendToBody(_bodyID, definition, _backendShapes);
         }
 

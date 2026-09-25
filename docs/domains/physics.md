@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 ## Responsibility
 
@@ -25,6 +25,8 @@ Each scene CollisionObject registers one opaque RID, independent of Box2D fixtur
 
 Body motion queries use the same registered space and current body fixtures but apply reciprocal response filters. A test pose recovers from initial penetration, then sweeps to the first eligible body contact. Safe/unsafe fractions and contact data retain both direct shape-owner indices; scene `MoveAndCollide` applies only safe travel. One-way child margins govern accepted recovery depth. Server `BodyTestMotion` leaves the body in place and accepts RID/instance exclusions. Separation-ray participation remains blocked until that resource exists.
 
+Body collision-exception lists use stable scene/server RIDs. Either body's entry suppresses a pair from ordinary solver contacts and body motion tests while Area sensing stays independent. A list edit rebuilds the owner's fixtures before a later query or step so active contacts adopt the new rule. Scene enumeration returns an insertion-order copy with null entries for server-only or freed RIDs.
+
 One scene unit maps to 0.01 Box2D meters. Typed project defaults provide downward gravity 980 scene units/s² and linear/angular damping 0.1/1 per second, sampled when a physics world is created. The scene physics callback lane runs first; current area/body shape overlaps then resolve gravity and damping by descending priority, and persistent body force/torque joins the accumulator before a four-substep backend step. Body damping applies `max(0, 1 - delta * totalDamp)` before force integration. Linear forces/impulses convert by 0.01 and torque/angular impulses by 0.0001. Updated positions and velocities reach scene nodes through one unit-scale global transform. AnimatableBody sends a kinematic target before the solver and optionally presents its solved pose afterward. Current touching manifolds then produce capped contact-point counts and object-level transitions; sleep and contact callbacks precede area monitoring events, timers, tweens and interpolation capture. Bodies and areas register on tree entry and leave on exit/disposal. Shape, collision-filter and material edits rebuild fixtures before the next step, or immediately before an explicit force/impulse action. Shape and material resources remain caller-owned; a disposed borrowed shape stops contributing a fixture, while a disposed material restores default friction and bounce.
 
 The current geometry profile accepts translated/rotated bodies and areas with unit global scale and zero skew. Active scaled/skewed body, area or shape transforms fail explicitly and can be corrected before a later step. Invalid mass, dimensions, velocity, damping and bit indices reject before changing state. Engine-owned warmed resting-contact, active-contact, freely moving and steady area-monitoring frames in the checked Linux/.NET 8 setup allocate zero managed bytes. Backend types do not appear in the public/protected Electron2D assembly surface.
@@ -34,6 +36,8 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape RID/resource selection, live edits, swept overlap, safe/unsafe motion, manifold contact pairs, rest velocity, compound and hollow geometry, filters, off-owner rejection and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server and scene body travel, typed local/collider shape identities, instance exclusions, reciprocal masks, one-way recovery and deep-overlap stopping, plus warmed unchanged motion tests without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.
+
+[PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server RID lists, regular contacts, active-pair edits, motion-test filtering, stale targets, thread ownership and warmed steady frames without managed allocation. Native allocator and other platforms remain unverified.
 
 [ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) checks fixed-frame and forced shape sampling, multiple contacts, caps, exceptions, filters, Area/body results, packing, rotation, zero motion, failure recovery and warmed active frames. Scene query debug drawing and virtual tile collision owners remain separate coverage gaps.
 

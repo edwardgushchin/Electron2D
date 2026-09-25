@@ -207,12 +207,16 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
 
     private static bool PreSolveContact(B2ShapeId first, B2ShapeId second, B2Vec2 point,
-        B2Vec2 normal, object context) => ((PhysicsSpace)context).AllowOneWayContact(first, second, normal);
+        B2Vec2 normal, object context) => ((PhysicsSpace)context).AllowBodyContact(first, second, normal);
 
-    private bool AllowOneWayContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)
+    private bool AllowBodyContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)
     {
-        var firstData = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>()?.OneWay;
-        var secondData = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>()?.OneWay;
+        var firstTag = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>();
+        var secondTag = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>();
+        if (firstTag is not null && secondTag is not null &&
+            PhysicsServer2D.Instance.BodiesExcepted(firstTag.ColliderRID, secondTag.ColliderRID)) return false;
+        var firstData = firstTag?.OneWay;
+        var secondData = secondTag?.OneWay;
         if (firstData is null && secondData is null) return true;
 
         var firstKey = PackShapeID(first);

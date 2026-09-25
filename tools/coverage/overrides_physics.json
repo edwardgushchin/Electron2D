@@ -1,6 +1,11 @@
 {
   "mappings": [
     {
+      "godot": "PhysicsBody2D::method:get_collision_exceptions()",
+      "electron2d": "method:Electron2D.PhysicsBody.GetCollisionExceptions()",
+      "reason": "Typed scene body array preserves insertion order and null slots for server-only RID exceptions."
+    },
+    {
       "godot": "KinematicCollision2D::method:get_collider()",
       "electron2d": "method:Electron2D.KinematicCollision2D.GetCollider()",
       "reason": "Typed motion-result field preserving collider identity, contact geometry and requested travel."
@@ -839,6 +844,17 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "PhysicsBody2D::method:add_collision_exception_with(Node:)",
+        "PhysicsBody2D::method:get_collision_exceptions()",
+        "PhysicsBody2D::method:remove_collision_exception_with(Node:)",
+        "PhysicsServer2D::method:body_add_collision_exception(RID:,RID:)",
+        "PhysicsServer2D::method:body_remove_collision_exception(RID:,RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Unilateral RID exception lists suppress body pairs from solver contacts and motion tests in either direction; live toggles rebuild fixture contacts, scene enumeration keeps insertion order and server-only null slots (ADR 0063, PhysicsCollisionExceptionTests)."
+    },
     {
       "godot": ["class:KinematicCollision2D"],
       "state": "Partial",

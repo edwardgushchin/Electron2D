@@ -42121,6 +42121,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsBody.AddCollisionExceptionWith(Electron2D.PhysicsBody)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "AddCollisionExceptionWith",
+    "signature": "public System.Void AddCollisionExceptionWith(Electron2D.PhysicsBody body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.PhysicsBody",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsBody.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsBody",
@@ -42137,6 +42156,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsBody.GetCollisionExceptions()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "GetCollisionExceptions",
+    "signature": "public Electron2D.PhysicsBody[] GetCollisionExceptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsBody[]",
     "value": null
   },
   {
@@ -42209,6 +42241,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsBody.RemoveCollisionExceptionWith(Electron2D.PhysicsBody)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "RemoveCollisionExceptionWith",
+    "signature": "public System.Void RemoveCollisionExceptionWith(Electron2D.PhysicsBody body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.PhysicsBody",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -42677,6 +42728,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer2D.BodyAddCollisionException(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyAddCollisionException",
+    "signature": "public System.Void BodyAddCollisionException(Electron2D.RID body, Electron2D.RID exceptedBody)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "exceptedBody",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer2D.BodyAddShape(Electron2D.RID,Electron2D.RID,System.Nullable\u003CElectron2D.Transform\u003E,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer2D",
@@ -42797,6 +42872,30 @@
       }
     ],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyRemoveCollisionException(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyRemoveCollisionException",
+    "signature": "public System.Void BodyRemoveCollisionException(Electron2D.RID body, Electron2D.RID exceptedBody)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "exceptedBody",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
