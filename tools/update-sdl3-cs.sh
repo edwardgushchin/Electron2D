@@ -18,7 +18,7 @@ mv "$scratch/SDL3-CS/Image" "$scratch/Image"
 find "$scratch/SDL" "$scratch/ShaderCross" "$scratch/Image" -name '*.cs' -print0 | xargs -0 perl -pi -e 's/^public /internal /'
 sed -i '1s/^\xEF\xBB\xBF/#pragma warning disable CS0649 \/\/ Native SDL initializes this callback table.\n/' \
     "$scratch/SDL/File and IO Abstractions/storage/StorageInterface.cs"
-mv "$scratch/LICENSE" "$scratch/UPSTREAM-LICENSE.txt"
+mv "$scratch/LICENSE" "$scratch/SDL3-CS-LICENSE.txt"
 cat > "$scratch/UPSTREAM.md" <<EOF
 # SDL3-CS core, shadercross and image binding source
 
@@ -34,5 +34,6 @@ run the engine, test, coverage, and native example checks.
 EOF
 rm -rf "$root/src/Vendor/SDL3-CS"
 mkdir -p "$root/src/Vendor/SDL3-CS"
-mv "$scratch/SDL" "$scratch/ShaderCross" "$scratch/Image" "$scratch/UPSTREAM-LICENSE.txt" "$scratch/UPSTREAM.md" "$root/src/Vendor/SDL3-CS/"
+mv "$scratch/SDL" "$scratch/ShaderCross" "$scratch/Image" "$scratch/UPSTREAM.md" "$root/src/Vendor/SDL3-CS/"
+mv "$scratch/SDL3-CS-LICENSE.txt" "$root/licence/SDL3-CS-LICENSE.txt"
 echo "Imported $1 ($revision)"

@@ -63,7 +63,7 @@ The typed C# empty-span behavior of `FromHTML` returning opaque black is retaine
 
 `tests/Electron2D.Tests/Program.cs` covers 16-byte layout/default semantics; constructors and mutable components; HSV/OKHSL anchors and round trips; color-space transfer; source-over blend; unbounded operations; failures; integer/HTML formats including non-finite quantization; all 146 public named properties and concurrent lookup; arithmetic, exact/approximate/NaN comparisons; invariant formatting; strict `ConfigFile` schema/rollback; `PackedScene` stored-property restoration; and zero allocations in a warmed numeric loop.
 
-Verification is currently Linux/.NET 8. Renderer/native pixel equivalence and the full target platform matrix remain unavailable until their respective domains and hosts exist.
+Verification is currently Linux/.NET 10. Renderer/native pixel equivalence and the full target platform matrix remain unavailable until their respective domains and hosts exist.
 
 <a id="adr-0025"></a>
 ## ADR 0025: Typed axis-aligned rectangle geometry
@@ -123,7 +123,7 @@ No renderer, UI, physics, or platform abstraction is created by this decision.
 
 `tests/Electron2D.Tests/Program.cs` covers layout/defaults, every implemented constructor/member/operator, negative/zero size boundaries, all side values and undefined input, half-open containment, overlap and border behavior, IEEE values, invariant formatting, strict configuration shape and failure rollback, packed-scene copying, and zero allocations in a warmed geometry loop.
 
-Verification is currently Linux/.NET 8. ADR 0029 has since delivered transform multiplication, and ADR 0035 has delivered the integer rectangle and typed conversions. Native structure equivalence, renderer/physics use, and the full six-target matrix remain unavailable.
+Verification is currently Linux/.NET 10. ADR 0029 has since delivered transform multiplication, and ADR 0035 has delivered the integer rectangle and typed conversions. Native structure equivalence, renderer/physics use, and the full complete target matrix remain unavailable.
 
 ### Related decision
 
@@ -223,7 +223,7 @@ The final Transform/Rect2 operators and Entity.Transform/GlobalTransform integra
 
 The executable harness covers every implemented member family, matrix/composition order, reflection/skew decomposition, singular and malformed failures, config and packed-scene integration, IEEE boundaries, and warmed allocation behavior. Release compilation also emits XML documentation with warnings treated as errors.
 
-Value-math verification is Linux/.NET 8. ADR 0033 and the current geometry/scene documents cover Rect2 transformation and Entity integration. Value checks do not establish native rendering, cross-platform builds or visual user acceptance.
+Value-math verification is Linux/.NET 10. ADR 0033 and the current geometry/scene documents cover Rect2 transformation and Entity integration. Value checks do not establish native rendering, cross-platform builds or visual user acceptance.
 
 ### Related decisions
 
@@ -327,7 +327,7 @@ Integer-vector type names use the lowercase `i` suffix. This naming rule applies
 - The completed migration is source-breaking from both the former external numerics surface and ADR 0032's unimplemented `Vector` spelling. The repository is pre-release and retains only the final contract.
 - `Vector2i`, `Vector3i`, and `Vector4i` use explicit managed integer behavior: ordinary component arithmetic wraps, invalid division throws, and float-to-integer conversion rejects non-finite or out-of-range components. Their squared length and distance return signed 64-bit values after widening before multiplication; they throw `OverflowException` if the exact result exceeds `long.MaxValue`. Distance widens coordinate differences before subtraction. Length and distance use widened floating-point arithmetic independently of the squared-return limit and remain finite for every 32-bit input. This corrects the pre-release 32-bit squared wrap, which made moderate lengths NaN.
 - Their floating-scalar division returns a floating vector with IEEE 754 results, including infinity or NaN for a zero divisor. The typed API has no dynamic `Variant` error state under ADR 0001.
-- The current executable verification is Linux/.NET 8 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
+- The current executable verification is Linux/.NET 10 only. Sequential managed layout is verified, but native ABI and the full five-target matrix are not.
 
 ### Rejected alternatives
 
@@ -341,7 +341,7 @@ Integer-vector type names use the lowercase `i` suffix. This naming rule applies
 
 The executable harness covers all six layouts, constants, index failures, methods and operators, float/integer conversions, interpolation, IEEE values, NaN ordering, integer wrap/overflow/division failures, invariant formatting, strict configuration schemas, direct packed-scene storage, and warmed allocation-free numeric loops. Existing rectangle, transform, and node tests exercise the completed `Vector2` migration.
 
-The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or six-target acceptance.
+The post-implementation checks also audit production/test sources for old vector, rectangle, transform, and external-numerics names. Passing local checks do not establish native ABI, rendering/shader integration, visual behavior, mobile/desktop packaging, or acceptance on all targets.
 
 ### Related decisions
 
@@ -400,7 +400,7 @@ Earlier Electron2D values used a `0.00001f` component tolerance. The audited cur
 
 The executable harness reflects exactly seven constants and 127 method overloads; exercises every family across float and double paths; verifies positive, negative, NaN, infinity, exception, overflow, degenerate, angle-tie, and strict-epsilon cases; verifies migrated downstream values; and measures zero warmed allocations. Release XML generation and repository-wide identity checks remain part of the full gate.
 
-Verification is Linux/.NET 8 only. It does not establish bit-identical transcendental results, AOT behavior, or native execution across Windows, macOS, Android, or iOS.
+Verification is Linux/.NET 10 only. It does not establish bit-identical transcendental results, AOT behavior, or native execution across Windows, macOS, Android, or iOS.
 
 ### Related decisions
 
@@ -450,7 +450,7 @@ Some paired value types have distinct storage and behavior but form one predicta
 
 ### Verification
 
-The executable harness covers the complete audited member surface, signed and overflowing arithmetic, minimum-integer normalization failure, edge and empty intersections, both conversions and invalid inputs, invariant formatting, exact configuration schema and malformed data, packed-scene restoration, and warmed allocation behavior. Verification is currently Linux/.NET 8; native ABI and the full host matrix remain unverified.
+The executable harness covers the complete audited member surface, signed and overflowing arithmetic, minimum-integer normalization failure, edge and empty intersections, both conversions and invalid inputs, invariant formatting, exact configuration schema and malformed data, packed-scene restoration, and warmed allocation behavior. Verification is currently Linux/.NET 10; native ABI and the full host matrix remain unverified.
 
 ### Related decisions
 

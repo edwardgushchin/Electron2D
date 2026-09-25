@@ -13,7 +13,7 @@ internal static partial class RenderingRuntimeTests
 
     private static byte[] WidenMatrixLayout(Shader shader)
     {
-        var bytes = shader.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(bytes);
+        var bytes = shader.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(bytes.AsSpan());
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
         {
             if ((words[at] & 0xffff) == 72 && (words[at] >> 16) == 5 && words[at + 3] is 7 or 35) words[at + 4] *= 2;

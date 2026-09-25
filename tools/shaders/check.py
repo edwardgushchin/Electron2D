@@ -19,14 +19,14 @@ if args.tool:
     tool = [str(args.tool.resolve())]
     packaged = args.tool.resolve().parent / 'toolchain'
     assert (packaged / 'toolchain.lock.json').read_bytes() == (root / 'tools/shaders/toolchain.lock.json').read_bytes()
-    assert all((packaged / 'licenses' / name).is_dir() for name in ('glslang', 'SPIRV-Tools', 'SPIRV-Headers'))
+    assert all(any((args.tool.resolve().parent / 'licence').glob(name + '-LICENSE*')) for name in ('glslang', 'SPIRV-Tools', 'SPIRV-Headers'))
     revision = next(entry['commit'] for entry in json.loads((packaged / 'toolchain.lock.json').read_bytes())
                     if entry['name'] == 'SPIRV-Tools')
     assert revision in subprocess.check_output([str(packaged / 'bin/spirv-val'), '--version'], text=True)
 else:
     subprocess.run([sys.executable, str(root / 'tools/shaders/build_toolchain.py')], check=True)
     subprocess.run(['dotnet', 'build', str(root / 'tools/shaders/ShaderImport.csproj'), '-c', 'Release'], check=True)
-    tool = ['dotnet', str(root / 'tools/shaders/bin/Release/net8.0/Electron2D.ShaderImport.dll')]
+    tool = ['dotnet', str(root / 'tools/shaders/bin/Release/net10.0/Electron2D.ShaderImport.dll')]
 
 def invoke(source, output, stage='fragment', success=True):
     run = subprocess.run([*tool, str(source), stage, str(output)], text=True, capture_output=True)
@@ -143,7 +143,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         assert output.read_bytes() == previous
     # External producers enter the exact same TIME validation path as source languages.
     invalid.write_text(clock.replace('float TIME;', 'int TIME;'))
-    compiler = (args.tool.resolve().parent / 'toolchain' if args.tool else root / 'tools/shaders/bin/Release/net8.0/toolchain') / 'bin/glslangValidator'
+    compiler = (args.tool.resolve().parent / 'toolchain' if args.tool else root / 'tools/shaders/bin/Release/net10.0/toolchain') / 'bin/glslangValidator'
     subprocess.run([str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', 'frag', '-e', 'main', '-o', str(external), str(invalid)], check=True, capture_output=True)
     assert 'TIME' in invoke(external, output, success=False)
     assert output.read_bytes() == previous

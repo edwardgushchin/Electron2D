@@ -1,13 +1,13 @@
 # Electron2D documentation
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
 ## Current snapshot
 
 - Product boundary: exclusively 2D; 3D is out of scope.
-- Game runtime target matrix: Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web. Editor target matrix: Windows, macOS, and Linux on X11 and Wayland. These are product boundaries, not claims of completed delivery.
+- Game runtime target matrix: Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web. Editor target matrix: Windows, macOS, and Linux on X11 and Wayland. These are product boundaries, not claims of completed delivery.
 - Game-object model: Node-based and scene-oriented. `Node` is the primary public game object, `SceneTree` owns the active hierarchy, and `PackedScene` packages any reusable Node hierarchy—from one composed object to a complete level—for independent instantiation. The current packing implementation is typed and in-memory; disk and editor workflows are not implemented.
 - Public engine assembly: one managed `Electron2D.dll` class library, including internal SDL3-CS core, Image and ShaderCross bindings. Box2D.NET source will join that assembly with the first physics slice.
 - Product source boundary: runtime engine code lives in `src/`; the future self-hosted editor belongs to a separate executable project under `editor/Electron2D.Editor/`; first-party example games and templates belong under `examples/<Game>/`. Editor and games depend on the public runtime API, never the reverse.

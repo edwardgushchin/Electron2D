@@ -125,7 +125,7 @@ internal static partial class RenderingRuntimeTests
         var uniform = shader.GetProgram().Uniforms["rgb"];
         foreach (var offset in new[] { 4u, 16u })
         {
-            var malformed = shader.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(malformed); var changed = false;
+            var malformed = shader.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(malformed.AsSpan()); var changed = false;
             for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
                 if ((words[at] & 0xffff) == 72 && (words[at] >> 16) == 5 && words[at + 3] == 35 && words[at + 4] == uniform.Offset)
                 { words[at + 4] = offset; changed = true; }
@@ -133,7 +133,7 @@ internal static partial class RenderingRuntimeTests
             if (offset == 4) Reject<NotSupportedException>(() => shader.SetSPIRV(malformed));
             else Reject<ArgumentException>(() => shader.SetSPIRV(malformed));
         }
-        var badStride = shader.GetSPIRV(); var strideWords = MemoryMarshal.Cast<byte, uint>(badStride); var changedStride = false;
+        var badStride = shader.GetSPIRV(); var strideWords = MemoryMarshal.Cast<byte, uint>(badStride.AsSpan()); var changedStride = false;
         for (var at = 5; at < strideWords.Length; at += (int)(strideWords[at] >> 16))
             if ((strideWords[at] & 0xffff) == 71 && (strideWords[at] >> 16) == 4 && strideWords[at + 2] == 6 && strideWords[at + 3] == 16)
             { strideWords[at + 3] = 12; changedStride = true; }

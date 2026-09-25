@@ -1,0 +1,3 @@
+[src/Vendor/Box2D.NET/B2Distances.cs]
+# The pinned backend compares an optional span with null; .NET 10 diagnoses it as CA2265.
+dotnet_diagnostic.CA2265.severity = none

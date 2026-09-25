@@ -319,7 +319,7 @@ public static class Geometry
         for (var i = 0; i < triangles.Length; i += 3)
             parts.Add([triangles[i], triangles[i + 1], triangles[i + 2]]);
 
-        // Convex-part merging adapts Ivan Fratric's PolyPartition algorithm; see docs/licenses/PolyPartition-LICENSE.txt.
+        // Convex-part merging adapts Ivan Fratric's PolyPartition algorithm; see licence/PolyPartition-LICENSE.txt.
         // ponytail: pairwise edge search is cubic; use an edge index only if large contour decomposition needs it.
         for (var first = 0; first < parts.Count; first++)
         {

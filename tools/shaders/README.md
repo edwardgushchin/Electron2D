@@ -18,8 +18,8 @@ dotnet publish tools/shaders/ShaderImport.csproj -c Release -r linux-x64 --self-
 /tmp/electron2d-shader-import/Electron2D.ShaderImport shader.frag.glsl fragment shader.spv
 ```
 
-The published tool carries glslang, `spirv-val`, their source lock and licenses in
-`toolchain/`. It invokes those exact paths without searching `PATH`. HLSL uses
+The published tool carries glslang, `spirv-val`, and their source lock in
+`toolchain/`, with all license texts in the single top-level `licence/` directory. It invokes those exact paths without searching `PATH`. HLSL uses
 SDL3-CS ShaderCross/DXC from the engine's pinned native package. GLSL uses glslang;
 all three inputs pass `spirv-val` and the shared runtime interface check before
 an atomic output replacement. Identical output bytes preserve the existing file

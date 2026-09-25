@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework Condition="'$(RuntimeIdentifier)' == 'android-arm' or '$(RuntimeIdentifier)' == 'android-arm64' or '$(RuntimeIdentifier)' == 'android-x86' or '$(RuntimeIdentifier)' == 'android-x64'">net10.0-android</TargetFramework>
+    <TargetFramework Condition="'$(RuntimeIdentifier)' == 'ios-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-x64'">net10.0-ios</TargetFramework>
+    <TargetFramework Condition="'$(RuntimeIdentifier)' == 'tvos-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-x64'">net10.0-tvos</TargetFramework>
+    <AndroidGenerateResourceDesigner Condition="'$(TargetFramework)' == 'net10.0-android'">false</AndroidGenerateResourceDesigner>
     <AssemblyName>Electron2D</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -8,19 +12,34 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">Windows</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Linux'))">Linux</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">MacOS</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'win-x86' or '$(RuntimeIdentifier)' == 'win-x64' or '$(RuntimeIdentifier)' == 'win-arm64'">Windows</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'linux-x64' or '$(RuntimeIdentifier)' == 'linux-arm64'">Linux</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'osx-x64' or '$(RuntimeIdentifier)' == 'osx-arm64'">MacOS</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'android-arm' or '$(RuntimeIdentifier)' == 'android-arm64' or '$(RuntimeIdentifier)' == 'android-x86' or '$(RuntimeIdentifier)' == 'android-x64'">Android</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'ios-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-arm64' or '$(RuntimeIdentifier)' == 'iossimulator-x64'">iOS</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'tvos-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-arm64' or '$(RuntimeIdentifier)' == 'tvossimulator-x64'">tvOS</Electron2DNativePlatform>
+    <Electron2DNativePlatform Condition="'$(RuntimeIdentifier)' == 'browser-wasm'">Web</Electron2DNativePlatform>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SDL3-CS.Linux" Version="3.4.16.0" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
-    <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.9" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
-    <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.11" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' != '' and '$(Electron2DNativePlatform)' != 'Web'">
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.9" />
+    <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
+    <AndroidNativeLibrary Remove="**/bin/**/*.so" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="LICENSE;THIRD_PARTY_NOTICES.md" CopyToPublishDirectory="Always" />
-    <None Update="src/Vendor/SDL3-CS/UPSTREAM-LICENSE.txt;src/Vendor/Box2D.NET/LICENSE;src/Vendor/Clipper2/LICENSE;src/Vendor/FastNoiseLite/LICENSE" CopyToPublishDirectory="Always" />
-    <None Update="docs/licenses/PCG32-LICENSE.txt;docs/licenses/PolyPartition-LICENSE.txt;docs/coverage/GODOT-LICENSE.txt;docs/licenses/native/*" CopyToPublishDirectory="Always" />
+    <None Update="licence/*" CopyToPublishDirectory="Always" />
+    <None Update="licence/ReferenceData-LICENSE.txt" CopyToPublishDirectory="Never" />
   </ItemGroup>
+  <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">
+    <Error Text="Electron2D has no native package mapping for RuntimeIdentifier '$(RuntimeIdentifier)'." />
+  </Target>
 </Project>

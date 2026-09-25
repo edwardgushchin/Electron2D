@@ -67,12 +67,13 @@ for name, built in [('glslangValidator', 'StandAlone/glslang'),
                     ('spirv-val', 'External/spirv-tools/tools/spirv-val')]:
     shutil.copy2(work / 'build' / built, output / 'bin' / name)
 for entry in sources:
-    license_directory = output / 'licenses' / entry['name']
+    license_directory = output / 'licence'
     license_directory.mkdir(parents=True, exist_ok=True)
-    for license in (source / entry['directory']).glob('LICENSE*'):
-        if license.is_file():
-            shutil.copy2(license, license_directory / license.name)
-        elif license.is_dir():
-            shutil.copytree(license, license_directory / license.name, dirs_exist_ok=True)
+    upstream = source / entry['directory']
+    for candidate in upstream.glob('LICENSE*'):
+        for license_file in (candidate.rglob('*') if candidate.is_dir() else (candidate,)):
+            if license_file.is_file():
+                name = entry['name'] + '-' + '-'.join(license_file.relative_to(upstream).parts)
+                shutil.copy2(license_file, license_directory / name)
 (output / 'toolchain.lock.json').write_bytes(lock)
 print(f'Shader import toolchain: {output}')

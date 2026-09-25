@@ -1,6 +1,6 @@
 # Color values component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-25
 
 ## Scope
 
@@ -55,7 +55,7 @@ Implemented and verified. The pinned reference audit covers all 206 Color member
 
 ## Verification
 
-The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, the strict internal tolerance comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. These color-value checks are Linux/.NET 8 checks. Native canvas/material output is verified separately by the Rendering component; six-target runtime output remains unverified.
+The executable harness covers construction, mutation, conversions, primary/interior/saturated-boundary OKHSL fixtures, arithmetic, the strict internal tolerance comparison boundaries, exhaustive byte and packing/HTML boundary cases, the complete named-property count and lookup mapping, concurrency, strict JSON persistence, packed-scene value copying, and warmed allocation behavior. These color-value checks are Linux/.NET 10 checks. Native canvas/material output is verified separately by the Rendering component; runtime output on all targets remains unverified.
 
 ## Decisions
 

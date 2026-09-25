@@ -14,18 +14,9 @@ PACKAGES = {
     "SDL3-CS.Linux.Image/3.4.6.9",
     "SDL3-CS.Linux.Shadercross/3.0.0.11",
 }
-SOURCE_NOTICES = (
-    "src/Vendor/SDL3-CS/UPSTREAM-LICENSE.txt",
-    "src/Vendor/Box2D.NET/LICENSE",
-    "src/Vendor/Clipper2/LICENSE",
-    "src/Vendor/FastNoiseLite/LICENSE",
-    "docs/licenses/PCG32-LICENSE.txt",
-    "docs/licenses/PolyPartition-LICENSE.txt",
-    "docs/coverage/GODOT-LICENSE.txt",
-)
 NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
-               "libcoreclr.so", "libcoreclrtraceptprovider.so", "libhostfxr.so",
+               "libclrgcexp.so", "libcoreclr.so", "libcoreclrtraceptprovider.so", "libhostfxr.so",
                "libhostpolicy.so", "libmscordaccore.so", "libmscordbi.so"),
     "SDL": ("libSDL3.so*",),
     "SDL_image": ("libSDL3_image.so*",),
@@ -48,14 +39,11 @@ def check(publish: Path) -> None:
     app = deps_files[0].name.removesuffix(".deps.json")
     packages = set(json.loads(deps_files[0].read_text())["libraries"])
     runtime = [p for p in packages if p.startswith("runtimepack.Microsoft.NETCore.App.Runtime.")]
-    assert len(runtime) == 1 and runtime[0] in {
-        "runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/8.0.22",
-        "runtimepack.Microsoft.NETCore.App.Runtime.linux-arm64/8.0.22",
-    }, f"Unreviewed runtime pack: {runtime}"
+    assert runtime == ["runtimepack.Microsoft.NETCore.App.Runtime.linux-x64/10.0.1"], f"Unreviewed runtime pack: {runtime}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.iterdir() if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 62, f"Expected 62 audited ELF files, found {len(elf)}"
+    assert len(elf) == 63, f"Expected 63 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()
@@ -66,18 +54,19 @@ def check(publish: Path) -> None:
     for group, patterns in NATIVE_GROUPS.items():
         assert any(any(fnmatch.fnmatchcase(name, pattern) for pattern in patterns) for name in elf), group
 
-    notices = {"LICENSE": "LICENSE", "THIRD_PARTY_NOTICES.md": "THIRD_PARTY_NOTICES.md"}
-    notices.update({p: p for p in SOURCE_NOTICES})
-    notices.update({f"docs/licenses/native/{p.name}": f"docs/licenses/native/{p.name}"
-                    for p in (ROOT / "docs/licenses/native").iterdir() if p.is_file()})
-    assert len(notices) == 29, f"Expected 29 license and notice files, found {len(notices)}"
-    for delivered, source in notices.items():
-        target = publish / delivered
-        assert target.is_file() and target.read_bytes() == (ROOT / source).read_bytes(), delivered
-    for link in re.findall(r"\]\(([^)]+)\)", (publish / "THIRD_PARTY_NOTICES.md").read_text()):
+    source = ROOT / "licence"
+    expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
+    delivered = publish / "licence"
+    assert len(expected) == 28, f"Expected 28 license and notice files, found {len(expected)}"
+    assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
+    for name in expected:
+        assert (delivered / name).read_bytes() == (source / name).read_bytes(), name
+    for stale in ("LICENSE", "THIRD_PARTY_NOTICES.md", "docs/licenses", "docs/coverage/ReferenceData-LICENSE.txt", "src/Vendor"):
+        assert not (publish / stale).exists(), f"License outside licence/: {stale}"
+    for link in re.findall(r"\]\(([^)]+)\)", (delivered / "THIRD_PARTY_NOTICES.md").read_text()):
         if not link.startswith(("http:", "https:")):
-            assert (publish / link.split("#", 1)[0]).exists(), f"Broken published notice link: {link}"
-    print(f"{runtime[0]}: {len(elf)} audited ELF files, {len(notices)} matching notices")
+            assert (delivered / link.split("#", 1)[0]).exists(), f"Broken published notice link: {link}"
+    print(f"{runtime[0]}: {len(elf)} audited ELF files, {len(expected)} matching notices")
 
 
 if __name__ == "__main__":

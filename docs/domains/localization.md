@@ -1,10 +1,10 @@
 # Localization domain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Responsibility
 
-Localization owns process-wide direct and resource-backed translation catalogs, UI culture selection, domain/context lookup, scored resource-locale and configured fallback selection, and caller-supplied plural selection for the Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web runtime targets.
+Localization owns process-wide direct and resource-backed translation catalogs, UI culture selection, domain/context lookup, scored resource-locale and configured fallback selection, and caller-supplied plural selection for the Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web runtime targets.
 
 Its production source lives under `src/Core/String/`, matching its low-level engine module while the living architecture retains Localization as a separate logical domain. The public namespace remains `Electron2D`.
 
@@ -42,7 +42,7 @@ Production types are [`TranslationServer`](../classes/TranslationServer.md), [`T
 - Optimized translation payloads use an internal Brotli representation; reference Smaz file compatibility and editor-only generation gating remain absent.
 - No operating-system locale discovery, number formatting, interpolation, or full Unicode bidirectional-text implementation. Pseudolocalization includes only test direction-control marks; locale alias/default-script tables and exact Unicode parity remain partial.
 - No built-in CLDR plural-rule database or textual plural-rule evaluator; non-English resource catalogs with multiple forms require a typed selector.
-- No native locale-discovery or six-target localization verification exists yet.
+- No native locale-discovery or localization verification on all targets exists yet.
 
 ## Verification
 

@@ -106,4 +106,4 @@ Scans the clipped `rect` in row-major order, joins touching opaque pixels, trace
 
 [BitMapTests](../../tests/Electron2D.Tests/BitMapTests.cs) checks bit order, clipped writes, alpha threshold equality, L8 output, resize, dilation and erosion, simple and diagonal contours, reduction termination, independent duplication, failures and disposal on managed Linux/.NET. Other platforms and physics integration are not verified. [Coverage](../coverage/classes/BitMap.md) accounts for the complete pinned class surface and C# lifecycle projections.
 
-The mask and contour behavior follows the [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/bit_map.cpp); its [MIT notice](../coverage/GODOT-LICENSE.txt) is retained in this repository.
+The mask and contour behavior follows the [pinned implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/bit_map.cpp); its [MIT notice](../../licence/ReferenceData-LICENSE.txt) is retained in this repository.

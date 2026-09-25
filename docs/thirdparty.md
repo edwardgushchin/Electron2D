@@ -9,14 +9,14 @@ This page lists Electron2D's direct third-party integrations and backends select
 | Software | Role and delivery | Version source |
 | --- | --- | --- |
 | SDL3-CS (SDL, Image and ShaderCross bindings) | Complete managed source modules compiled internally into the single `Electron2D.dll`; no public SDL types or separate managed binding assembly. | [Vendor provenance](../src/Vendor/SDL3-CS/UPSTREAM.md): `v3.4.16.1` |
-| SDL3 | Native window, input and rendering foundation. The Linux native package is a runtime project dependency. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux` `3.4.16.0` |
-| SDL_image 3 | Native image decoding and encoding through the vendored Image bindings. The Linux native package is a runtime project dependency. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux.Image` `3.4.6.9` |
-| SDL_shadercross 3 | Native SPIR-V translation and reflection through the vendored ShaderCross bindings; its Linux package also supplies the DXC and SPIRV-Cross libraries used by the shader path. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.Linux.Shadercross` `3.0.0.11`; [shader component](components/shader-materials.md) |
-| Clipper2 | Polygon clipping and offset operations; seven C# source files compiled internally into `Electron2D.dll`. | [Vendor provenance](../src/Vendor/Clipper2/UPSTREAM.txt): `1.5.4`; [license](../src/Vendor/Clipper2/LICENSE) |
-| PolyPartition algorithm | Adapted convex polygon part merging; no separate package or binary. | [Geometry component](components/geometry-values.md); [notice and license](licenses/PolyPartition-LICENSE.txt) |
-| PCG32 algorithm | Adapted random number generator core; no separate package or binary. | [Random generation component](components/random-generation.md); [notice and license](licenses/PCG32-LICENSE.txt) |
+| SDL3 | Native window, input and rendering foundation. The runtime project selects a platform package by target RID. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.{platform}` `3.4.16.0` |
+| SDL_image 3 | Native image decoding and encoding through the vendored Image bindings. The runtime project selects a platform package by target RID. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.{platform}.Image` `3.4.6.9` |
+| SDL_shadercross 3 | Native SPIR-V translation and reflection through the vendored ShaderCross bindings; the Linux package also supplies the DXC and SPIRV-Cross libraries used by the shader path. | [`Electron2D.csproj`](../Electron2D.csproj): `SDL3-CS.{platform}.Shadercross` `3.0.0.11`; [shader component](components/shader-materials.md) |
+| Clipper2 | Polygon clipping and offset operations; seven C# source files compiled internally into `Electron2D.dll`. | [Vendor provenance](../src/Vendor/Clipper2/UPSTREAM.txt): `1.5.4`; [license](../licence/Clipper2-LICENSE.txt) |
+| PolyPartition algorithm | Adapted convex polygon part merging; no separate package or binary. | [Geometry component](components/geometry-values.md); [notice and license](../licence/PolyPartition-LICENSE.txt) |
+| PCG32 algorithm | Adapted random number generator core; no separate package or binary. | [Random generation component](components/random-generation.md); [notice and license](../licence/PCG32-LICENSE.txt) |
 
-These are direct integrations. On Linux, the three pinned native SDL packages are delivered separately from `Electron2D.dll`; the single-assembly rule applies to managed code, not native binaries. Other target platforms have no equivalent verified native package matrix yet. See [ADR 0012](decisions/product.md#adr-0012) and [ADR 0021](decisions/product.md#adr-0021).
+These are direct integrations. The three pinned native SDL packages are delivered separately from `Electron2D.dll`; the single-assembly rule applies to managed code, not native binaries. Package selection covers desktop, Android, iOS, and tvOS RIDs; Android TV uses Android packages. Only Linux x64 has a current self-contained artifact audit. Browser WASM selects no SDL package until its host is implemented. See [ADR 0012](decisions/product.md#adr-0012) and [ADR 0021](decisions/product.md#adr-0021).
 
 ## Shader import and build tools
 

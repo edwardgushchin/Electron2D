@@ -4,7 +4,7 @@ Last updated: 2026-09-25
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
-Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.
+Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web; its editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. All currently implemented production rows in this inventory are runtime types belonging to `Electron2D.dll`. Approved managed SDL3-CS bindings are internal source in that assembly under ADR 0012; native libraries remain platform deployment files. The future first-party editor is a separate executable consumer under ADR 0027 and has no implemented production rows yet.
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
@@ -222,7 +222,7 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | --- | --- | --- | --- |
 | `Electron2D.dll` | [`Electron2D.csproj`](../Electron2D.csproj) | `net8.0` | The public engine assembly, including internal SDL3-CS source; the user example has a separate executable assembly |
 
-This assembly row records the current build, not complete platform delivery. The user-facing executable example starts under Linux Wayland with packaged SDL; user-assisted real arrow-key input and Escape exit passed; a six-target build/package/test matrix, Web browser host/build, and Android/iOS host projects do not exist yet.
+This assembly row records the current build, not complete platform delivery. The user-facing executable example starts under Linux Wayland with packaged SDL; user-assisted real arrow-key input and Escape exit passed; a complete target build/package/test matrix, Web browser host/build, and Android/iOS host projects do not exist yet.
 
 ## Repository product boundaries
 

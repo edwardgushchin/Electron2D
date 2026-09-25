@@ -6,7 +6,7 @@ Last updated: 2026-09-23
 
 Core provides [RandomNumberGenerator](../classes/RandomNumberGenerator.md), one independent PCG32 stream for games and procedural systems. It inherits managed identity and disposal from ElectronObject. It does not replace the .NET cryptographic generator used by encryption, temporary names and resource IDs.
 
-The PCG32 core is adapted from M.E. O'Neill's Apache-2.0 implementation ([notice and license](../licenses/PCG32-LICENSE.txt)). Sampling behavior follows the pinned upstream implementation covered by the existing [MIT notice](../coverage/GODOT-LICENSE.txt).
+The PCG32 core is adapted from M.E. O'Neill's Apache-2.0 implementation ([notice and license](../../licence/PCG32-LICENSE.txt)). Sampling behavior follows the pinned upstream implementation covered by the existing [MIT notice](../../licence/ReferenceData-LICENSE.txt).
 
 ## Runtime flow and invariants
 

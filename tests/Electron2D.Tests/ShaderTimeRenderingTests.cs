@@ -26,7 +26,7 @@ internal static partial class RenderingRuntimeTests
         state = material.GetCanvasState()!; clock = state.Program.TimeUniform!;
         Check(clock.Buffer == 1 && clock.Offset == 0 && material.GetShaderParameter<float>("time") == .5f, "Reload resolves TIME in its new binding while preserving user parameters.");
         using var integer = LoadShader("MaterialHlsl");
-        var malformed = integer.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(malformed); var renamed = false;
+        var malformed = integer.GetSPIRV(); var words = MemoryMarshal.Cast<byte, uint>(malformed.AsSpan()); var renamed = false;
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
             if ((words[at] & 0xffff) == 6 && (words[at] >> 16) == 5 && words[at + 3] == 0x65646f6d)
             { words[at + 3] = 0x454d4954; renamed = true; }

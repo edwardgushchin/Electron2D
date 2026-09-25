@@ -4,7 +4,7 @@ using System.Numerics;
 namespace Electron2D;
 
 // PCG32 core adapted from M.E. O'Neill's 2014 Apache-2.0 implementation.
-// See docs/licenses/PCG32-LICENSE.txt for its notice and license.
+// See licence/PCG32-LICENSE.txt for its notice and license.
 /// <summary>Generates independent pseudo-random number streams with restorable state.</summary>
 /// <remarks>The stream uses PCG32. Set <see cref="Seed"/> for a reproducible sequence, or save
 /// <see cref="State"/> and restore it after setting the seed to resume a sequence.</remarks>

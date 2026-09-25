@@ -1,6 +1,6 @@
 # Scalar math component
 
-Last updated: 2026-09-23
+Last updated: 2026-09-25
 
 ## Scope
 
@@ -43,7 +43,7 @@ Implemented and verified. The complete audited 4.7.2 stable typed scalar surface
 - Random generation is a separate [Core component](random-generation.md). This scalar-math component has no noise, generic numeric abstraction, vector overload, configurable global epsilon, approximate fast-trigonometry mode, or public SIMD contract.
 - Cube root and truncation remain direct internal `System.MathF` operations because they are not part of the audited public surface.
 - Transcendental bit-for-bit equivalence across every supported OS/architecture is not claimed; only contract-level behavior is fixed.
-- Verification currently executes on Linux/.NET 8. Windows, macOS, Android, iOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
+- Verification currently executes on Linux/.NET 10. Windows, macOS, Android, iOS, Android TV, tvOS, and Web remain unverified; this scalar component has no X11/Wayland-specific behavior.
 
 ## Verification
 

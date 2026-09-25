@@ -6,7 +6,7 @@ This guide describes the implementation and documentation checks used during cod
 
 ## Release license audit
 
-The root [MIT license](../LICENSE) covers Electron2D-authored code. Preserve each vendor's original license and the [third-party notices](../THIRD_PARTY_NOTICES.md). Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The check compares the current 62 ELF names, pinned NuGet/runtime versions and 29 published notice files; a change requires updating the inventory and notices together. It does not establish the exact source provenance of packaged Vkd3d or audit other platforms. Resolve the outstanding LGPL source/replacement obligations in `THIRD_PARTY_NOTICES.md` before release.
+The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored code. Keep each vendor's original license text and the [third-party notices](../licence/THIRD_PARTY_NOTICES.md) in `licence/`. The pinned comparison-data [license](../licence/ReferenceData-LICENSE.txt) stays in the source repository but is excluded from game publishes. Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The current check compares the 63 ELF files, pinned NuGet/runtime versions and 28 published notice files for `linux-x64`; a change requires updating the inventory and notices together. It does not establish the exact source provenance of packaged Vkd3d or audit other platforms. Resolve the outstanding LGPL source/replacement obligations in `licence/THIRD_PARTY_NOTICES.md` before release.
 
 ## Public API and coverage
 

@@ -160,7 +160,7 @@ SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1
 - Image decoding uses SDL_image through the complete SDL3-CS Image binding module from that same release. The user-approved Linux dependency is `SDL3-CS.Linux.Image`, pinned to `3.4.6.9` (SDL_image 3.4.6), owned by `Electron2D.csproj` and delivered transitively to consumers. This adds native libraries while keeping managed bindings internal to `Electron2D.dll`; public codec integration and platform acceptance are tracked under [ADR 0039](resources.md#adr-0039). On Linux all SDL bindings and native extensions must share one core library; the engine resolves core imports by `libSDL3.so.0` and loads that core before SDL_image or SDL_shadercross.
 - The first text slice vendors the complete SDL3-CS TTF binding module and packages SDL_ttf 3 with HarfBuzz under [ADR 0046](rendering.md#adr-0046). The first audio slice compiles its selected managed FAudio binding into `Electron2D.dll` and packages native FAudio over SDL3 under [ADR 0047](audio.md#adr-0047). Neither backend is a production dependency until its executable slice is integrated and verified; both retain the one-managed-assembly and target-platform rules.
 - Pin each vendored source to an upstream release and commit, retain its required license notices, record local patches, and make upgrades explicit reviewable changes. Verify the compiled assembly, dependent behavior, and target-specific packaging after each update.
-- License Electron2D-authored code under the root MIT license with Eduard Gushchin's copyright notice. Vendored code, adapted algorithms, reference data, native packages, and self-contained runtime files retain their own terms. Publish the applicable third-party license texts alongside a current `THIRD_PARTY_NOTICES.md`; the checked Linux inventory and remaining Vkd3d LGPL source-provenance requirement are recorded there. A change of RID, runtime pack, native package, or published native payload requires a renewed artifact audit before release.
+- License Electron2D-authored code under `licence/Electron2D-LICENSE.txt` with Eduard Gushchin's copyright notice. Keep all vendored, adapted, reference-data, native-package, and runtime license texts in `licence/`; the reference-data notice is source-only. Publish applicable texts and `licence/THIRD_PARTY_NOTICES.md` in that single directory. Its Linux inventory records the remaining Vkd3d LGPL source-provenance requirement. A change of RID, runtime pack, native package, or published native payload requires a renewed artifact audit before release.
 - Keep vendored types behind internal implementation boundaries. The public and protected Electron2D API must not expose SDL3-CS, Box2D.NET or FAudio binding types; verify the exported assembly surface when integrating each source tree. Physics, text and audio APIs use Electron2D types.
 - Engine consumers, including examples, games, and the editor, use only Electron2D's public API. They must not reference, import, or call SDL3-CS, Box2D.NET, FAudio or their native APIs, and must not declare backend package dependencies in their projects. Platform packages required by the engine flow from `Electron2D.csproj` into published applications. This rule applies to bootstrap code as well as scene code; backend probes belong in engine tests.
 - Native SDL remains a target-specific deployment dependency. Its binary packaging, host lifecycle, and native verification belong to the SDL integration and platform slices under ADR 0021. Vendor source does not imply a single physical deployment file.
@@ -241,24 +241,24 @@ Accepted.
 
 ### Context
 
-The product is a 2D engine whose games must run on desktop and mobile systems and in browsers. Its separately shipped editor has a desktop host boundary. An explicit matrix prevents platform-specific code from turning a development host into the product boundary or making unverified portability claims.
+The product is a 2D engine whose games must run on desktop, mobile, Android TV, Apple TV, and browser targets. Its separately shipped editor has a desktop host boundary. An explicit matrix prevents platform-specific code from turning a development host into the product boundary or making unverified portability claims.
 
 ### Decision
 
 | Product | Target platforms |
 | --- | --- |
-| Game runtime | Windows, macOS, Linux on X11 and Wayland, Android, iOS, Web |
+| Game runtime | Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, Web |
 | Editor | Windows, macOS, Linux on X11 and Wayland |
 
-Web is a browser game target rather than an operating system. The editor has no Android, iOS, or Web target. Its desktop-only dependencies must stay outside `Electron2D.dll`.
+Web is a browser game target rather than an operating system. Android TV shares Android RIDs and packages but needs its own TV host and input/lifecycle verification. tvOS uses tvOS RIDs and native packages. Tizen and webOS are outside this accepted target matrix. The editor has no mobile, TV, or Web target. Its desktop-only dependencies must stay outside `Electron2D.dll`.
 
-One public runtime API and one set of documented semantics applies across all six targets. Platform-specific implementation belongs behind internal backends or host integration boundaries and must not create divergent public type sets. Host, display, storage, input, audio, graphics, lifecycle, and packaging differences must be handled explicitly. Neither Linux display protocol may be treated as covered solely because the other works.
+One public runtime API and one set of documented semantics applies across all listed targets. Platform-specific implementation belongs behind internal backends or host integration boundaries and must not create divergent public type sets. Host, display, storage, input, audio, graphics, lifecycle, and packaging differences must be handled explicitly. Neither Linux display protocol may be treated as covered solely because the other works.
 
 An unavailable platform capability must fail explicitly with the documented exception or capability result. Empty implementations, silent no-ops, and success results without performed work are prohibited.
 
 Target intent, implemented code, successful compilation, host integration, application packaging, automated tests, and native or browser verification are separate states. Documentation must state each state accurately. A feature may be described as cross-platform verified only after it has run on every applicable target, including X11 and Wayland when Linux display behavior applies.
 
-For the current development and release-readiness stage, Linux under Wayland is the only required platform for executable native behavior, application-host packaging, and release verification. X11, Windows, macOS, Android, iOS, and Web remain product targets, but their host integration and native or browser checks do not block completion at this stage. Each additional platform becomes a release gate when its integration is explicitly taken into scope. A Linux/Wayland result must be reported as such, never as verification of X11 or the full target matrix.
+For the current development and release-readiness stage, Linux under Wayland is the only required platform for executable native behavior, application-host packaging, and release verification. X11, Windows, macOS, Android, iOS, Android TV, tvOS, and Web remain product targets, but their host integration and native or browser checks do not block completion at this stage. Each additional platform becomes a release gate when its integration is explicitly taken into scope. A Linux/Wayland result must be reported as such, never as verification of X11 or the full target matrix.
 
 The one-assembly rule covers Electron2D-owned runtime code and the selected vendored managed dependencies. Native libraries, platform application hosts, signing, and store packaging remain deployment concerns and are not implied to be contained in `Electron2D.dll`.
 
@@ -266,7 +266,7 @@ The editor targets the three desktop operating systems and both Linux display pr
 
 ### Current implementation boundary
 
-The project targets `net8.0`. A self-contained Linux x64 example starts on Wayland with its packaged SDL and advances its scene; user-assisted physical arrow-key input and Escape exit passed in the compositor-focused window. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no Web browser host/build/package/test pipeline, mobile target project, Android package, iOS application bundle, editor executable, signing pipeline, or six-target CI matrix. The current Wayland-only gate does not establish distributable applications on other targets.
+The project targets `net10.0`, with `net10.0-android`, `net10.0-ios`, and `net10.0-tvos` selected for Android, iOS, and tvOS RIDs. Project package selection maps supported Windows, macOS, Linux, Android, iOS, and tvOS RIDs to pinned native SDL packages; Android TV uses the Android selection. `browser-wasm` is accepted without an SDL package until the Web host and dependency model are implemented. A self-contained Linux x64 example publishes with its packaged SDL and .NET 10 runtime; the previous Wayland scene/input observation was made before this migration and needs renewal. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no Web browser host/build/package/test pipeline, mobile or TV host application, iOS or tvOS application bundle, editor executable, signing pipeline, or complete target CI matrix. The current Wayland-only gate does not establish distributable applications on other targets.
 
 The first Web runtime vertical slice must choose and verify a browser-compatible host and dependency model, then integrate the required rendering, input, storage, lifecycle, and packaging capabilities. No placeholder API or unverified browser package is authorized by this target decision.
 
@@ -274,7 +274,7 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 
 ### Consequences
 
-- Every runtime domain and component must preserve the six-target contract as it evolves.
+- Every runtime domain and component must preserve the accepted target contract as it evolves.
 - Current feature and release-readiness reviews require Linux/Wayland execution and packaging evidence for applicable native behavior; they do not require the rest of the target matrix until its integration is taken into scope.
 - The editor retains its three-desktop-operating-system target, but current-stage verification requires only Linux/Wayland when editor work exists.
 - Platform-specific dependencies require an accepted packaging and lifecycle decision before integration.
@@ -341,7 +341,7 @@ Game/example executable ─────┘
 
 `Electron2D.dll` must never reference the editor or any game/example assembly. The editor must not receive blanket friend-assembly access, use reflection to bypass runtime encapsulation, or link runtime source directly. When editor work exposes a missing reusable capability, that capability must be designed and implemented in its owning runtime domain through the normal production-ready process. Truly editor-only behavior remains in the editor project.
 
-The editor is a separately shipped first-party product assembly and therefore does not violate the one-runtime-DLL rule. Its packaging may contain its executable assembly, `Electron2D.dll`, approved managed/native dependencies, and content. The game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, and Web; the editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. The editor's desktop-only dependencies cannot change runtime semantics.
+The editor is a separately shipped first-party product assembly and therefore does not violate the one-runtime-DLL rule. Its packaging may contain its executable assembly, `Electron2D.dll`, approved managed/native dependencies, and content. The game runtime targets Windows, macOS, Linux on X11 and Wayland, Android, iOS, Android TV, tvOS, and Web; the editor targets Windows, macOS, and Linux on X11 and Wayland under ADR 0021. The editor's desktop-only dependencies cannot change runtime semantics.
 
 No editor project, executable, domain, component, or production type is implemented by this ADR. The tracked directory is only a repository boundary. The first editor implementation must add its real project, tests, XML documentation, living class/component/domain documents, inventory rows, build verification, and packaging status atomically.
 

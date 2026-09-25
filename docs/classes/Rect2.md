@@ -1,6 +1,6 @@
 # Rect2
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** —
 
@@ -24,7 +24,7 @@ The rectangle is defined by a position and size and is commonly used for fast ov
 Most geometric operations assume non-negative size components. Call [`Rect2.Abs`](Rect2.md#m-electron2d-rect2-abs) before those
 operations when a rectangle may have a negative width or height.
 
-All 27 mapped members and the type row have a pinned-source, ADR 0025/0029/0034 and Linux/.NET 8 managed audit. `Abs` adds the negative part of size before taking its magnitude; `Grow` doubles its amount before size addition, while `GrowIndividual` sums opposite side amounts first. `HasPoint` and `Intersects` reject positions beyond each edge, so a NaN component alone does not reject a point or rectangle. `VerifyRectangles`, `VerifyIntegerRectangles` and `VerifyTransforms` cover layout, copies, edge rules, IEEE boundaries, typed conversion, affine bounds, strict persistence and packed-scene storage. Native ABI and other platforms remain unverified.
+All 27 mapped members and the type row have a pinned-source, ADR 0025/0029/0034 and Linux/.NET 10 managed audit. `Abs` adds the negative part of size before taking its magnitude; `Grow` doubles its amount before size addition, while `GrowIndividual` sums opposite side amounts first. `HasPoint` and `Intersects` reject positions beyond each edge, so a NaN component alone does not reject a point or rectangle. `VerifyRectangles`, `VerifyIntegerRectangles` and `VerifyTransforms` cover layout, copies, edge rules, IEEE boundaries, typed conversion, affine bounds, strict persistence and packed-scene storage. Native ABI and other platforms remain unverified.
 
 ## Examples
 
@@ -445,7 +445,7 @@ There is no dependency on Scene, rendering, SDL, input, audio, physics, resource
 
 `tests/Electron2D.Tests/Program.cs` verifies layout and defaults, all four constructors, mutable properties, signed area, normalization, enclosure, expansion, center/support mapping, every growth mode and undefined side, half-open containment, overlap/border/separation behavior, intersection and merge, exact/approximate/NaN/infinity behavior, hashing, both `Rect2i` conversions and invalid conversion, invariant formatting and failure, strict configuration serialization and malformed-input rollback, packed-scene storage, and zero warmed numeric allocation.
 
-Execution is currently verified on Linux/.NET 8. Native backend interop and the full six-target matrix remain unverified.
+Execution is currently verified on Linux/.NET 10. Native backend interop and the full complete target matrix remain unverified.
 
 ## Decisions
 

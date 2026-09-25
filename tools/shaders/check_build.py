@@ -42,7 +42,7 @@ with tempfile.TemporaryDirectory(prefix="electron2d shader build '&-") as tempor
     shutil.copyfile(root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv', external)
     project = XML.Element('Project', Sdk='Microsoft.NET.Sdk')
     properties = XML.SubElement(project, 'PropertyGroup')
-    for key, value in [('OutputType', 'Exe'), ('TargetFramework', 'net8.0'), ('ImplicitUsings', 'enable'),
+    for key, value in [('OutputType', 'Exe'), ('TargetFramework', 'net10.0'), ('ImplicitUsings', 'enable'),
                        ('TreatWarningsAsErrors', 'true')]:
         XML.SubElement(properties, key).text = value
     items = XML.SubElement(project, 'ItemGroup')
@@ -74,7 +74,7 @@ Console.WriteLine("Public shader consumer passed");
         return diagnostic
 
     run('build')
-    generated = directory / 'obj/Release/net8.0/Electron2D/shaders/Shaders'
+    generated = directory / 'obj/Release/net10.0/Electron2D/shaders/Shaders'
     artifacts = sorted(generated.glob('*.spv'))
     assert len(artifacts) == 4
     previous = {path.name: (path.read_bytes(), path.stat().st_mtime_ns) for path in artifacts}

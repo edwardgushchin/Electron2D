@@ -616,7 +616,7 @@ internal static partial class RenderingRuntimeTests
         replaceTarget.CopyFromResource(copy);
         Check(replaceTarget.GetShaderParameter<Color>("tint") == Colors.Green, "CopyFromResource copies the material parameter state.");
         var malformed = shader.GetSPIRV();
-        var words = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, uint>(malformed);
+        var words = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, uint>(malformed.AsSpan());
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
             if ((words[at] & 0xffff) == 71 && (words[at] >> 16) == 4 && words[at + 2] == 34) words[at + 3] = 0;
         Reject<NotSupportedException>(() => shader.SetSPIRV(malformed));

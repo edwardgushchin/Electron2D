@@ -1,12 +1,12 @@
 # Core domain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Responsibility
 
 Core owns behavior shared by engine objects independently of scene, rendering, audio, physics, asset, or platform backends, plus the MainLoop/Engine integration points used by the separate typed Input domain.
 
-The domain is part of the 2D-only runtime for Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web and is compiled into the single production assembly `Electron2D.dll`.
+The domain is part of the 2D-only runtime for Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web and is compiled into the single production assembly `Electron2D.dll`.
 
 Its production sources are grouped by upstream module under `src/Core/`: `Config`, `IO`, `Math`, `Object`, `OS`, and `String`. These directories do not alter the flat public `Electron2D` namespace.
 
@@ -87,7 +87,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - Future engine domains may depend on Core.
 - Core must not acquire dependencies on scene, rendering, or other higher-level domains. The accepted MainLoop/Engine-to-Input integration is the narrow exception recorded by ADR 0038; native backends still depend inward rather than reversing ownership.
 - Core must not introduce 3D concepts or require a second production assembly.
-- Core public semantics must remain portable across Windows, macOS, Linux (X11/Wayland), Android, iOS, and Web; platform-specific work stays behind explicit backend or host boundaries.
+- Core public semantics must remain portable across Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web; platform-specific work stays behind explicit backend or host boundaries.
 
 ## Domain invariants
 
@@ -120,7 +120,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
-- No six-target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current native verification is Linux-only: the root host and canvas have Wayland checks, with narrower XWayland display/context probes. This does not establish complete X11 or other-target acceptance.
+- No complete target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current native verification is Linux-only: the root host and canvas have Wayland checks, with narrower XWayland display/context probes. This does not establish complete X11 or other-target acceptance.
 - No resource-pack mount, exported/archive-backed virtual filesystem, resource-UID resolver, or platform-pipe backend exists. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` and `pipe://` fail explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard are not implemented. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
 - No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
 

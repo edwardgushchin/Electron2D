@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Electron2D.ShaderImport</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -12,7 +12,9 @@
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
   <ItemGroup>
     <Content Include="Electron2D.Shaders.targets" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <Content Include="$(ShaderToolchainDirectory)/**/*" Link="toolchain/%(RecursiveDir)%(Filename)%(Extension)"
+    <Content Include="$(ShaderToolchainDirectory)/**/*" Exclude="$(ShaderToolchainDirectory)/licence/**/*" Link="toolchain/%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(ShaderToolchainDirectory)/licence/*" Link="licence/%(Filename)%(Extension)"
              CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <Target Name="RequireShaderToolchain" BeforeTargets="ComputeFilesToPublish">
