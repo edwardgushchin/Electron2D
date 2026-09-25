@@ -2,6 +2,7 @@ using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2Constants;
 using static Box2D.NET.B2Distances;
+using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Types;
 using static Box2D.NET.B2Worlds;
@@ -21,6 +22,8 @@ internal sealed class PhysicsSpace : IDisposable
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly List<ContactEvent> _contactEvents = [];
     private readonly List<RigidBody> _sleepEvents = [];
+    private readonly Dictionary<(ulong, ulong), OneWayPair> _oneWayPairs = [];
+    private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly B2WorldId _worldID;
     private readonly Vector2 _defaultGravity;
     private readonly float _defaultLinearDamp;
@@ -29,9 +32,11 @@ internal sealed class PhysicsSpace : IDisposable
     private bool _dispatching;
     private bool _dispatchingContacts;
     private bool _disposed;
+    private long _contactStep;
 
     internal readonly record struct OverlapEvent(Area Area, CollisionObject Other, bool Entered);
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsBody Other, bool Entered);
+    private readonly record struct OneWayPair(bool Allowed, long SeenStep);
 
     internal PhysicsSpace()
     {
@@ -47,6 +52,7 @@ internal sealed class PhysicsSpace : IDisposable
         definition.frictionCallback = CombineFriction;
         definition.restitutionCallback = CombineBounce;
         _worldID = b2CreateWorld(definition);
+        b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
     }
 
     internal B2WorldId WorldID => _worldID;
@@ -111,6 +117,7 @@ internal sealed class PhysicsSpace : IDisposable
                 if (body is RigidBody rigid) rigid.ApplyConstantForces();
                 else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
             }
+            _contactStep++;
             b2World_Step(_worldID, (float)delta, 4);
             foreach (var body in _bodies)
             {
@@ -130,7 +137,7 @@ internal sealed class PhysicsSpace : IDisposable
             ScanAreas();
         }
         catch (Exception error) { (errors ??= []).Add(error); }
-        finally { _stepping = false; }
+        finally { PruneOneWayPairs(); _stepping = false; }
         try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
@@ -153,8 +160,53 @@ internal sealed class PhysicsSpace : IDisposable
         _overlapEvents.Clear();
         _contactEvents.Clear();
         _sleepEvents.Clear();
+        _oneWayPairs.Clear();
+        _staleOneWayPairs.Clear();
         b2DestroyWorld(_worldID);
         _disposed = true;
+    }
+
+    private static bool PreSolveContact(B2ShapeId first, B2ShapeId second, B2Vec2 point,
+        B2Vec2 normal, object context) => ((PhysicsSpace)context).AllowOneWayContact(first, second, normal);
+
+    private bool AllowOneWayContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)
+    {
+        var firstData = b2Shape_GetUserData(first).GetRef<OneWayContactData>();
+        var secondData = b2Shape_GetUserData(second).GetRef<OneWayContactData>();
+        if (firstData is null && secondData is null) return true;
+
+        var firstKey = PackShapeID(first);
+        var secondKey = PackShapeID(second);
+        var key = firstKey < secondKey ? (firstKey, secondKey) : (secondKey, firstKey);
+        if (_oneWayPairs.TryGetValue(key, out var previous))
+        {
+            _oneWayPairs[key] = previous with { SeenStep = _contactStep };
+            return previous.Allowed;
+        }
+
+        var allowed = (firstData is null || FacesContact(first, firstData, normal, firstSurface: true)) &&
+            (secondData is null || FacesContact(second, secondData, normal, firstSurface: false));
+        _oneWayPairs.Add(key, new(allowed, _contactStep));
+        return allowed;
+    }
+
+    private static bool FacesContact(B2ShapeId shape, OneWayContactData data, B2Vec2 normal, bool firstSurface)
+    {
+        var local = data.LocalDirection;
+        var direction = b2RotateVector(b2Body_GetRotation(b2Shape_GetBody(shape)), new(local.X, local.Y));
+        var facing = normal.X * direction.X + normal.Y * direction.Y;
+        return firstSurface ? facing < -1e-6f : facing > 1e-6f;
+    }
+
+    private static ulong PackShapeID(B2ShapeId shape) =>
+        ((ulong)(uint)shape.index1 << 32) | ((ulong)shape.world0 << 16) | shape.generation;
+
+    private void PruneOneWayPairs()
+    {
+        _staleOneWayPairs.Clear();
+        foreach (var pair in _oneWayPairs)
+            if (pair.Value.SeenStep != _contactStep) _staleOneWayPairs.Add(pair.Key);
+        foreach (var key in _staleOneWayPairs) _oneWayPairs.Remove(key);
     }
 
     private void ScanAreas()

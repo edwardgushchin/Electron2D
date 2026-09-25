@@ -358,11 +358,17 @@
     {
       "godot": [
         "CollisionPolygon2D::property:one_way_collision",
-        "CollisionPolygon2D::property:one_way_collision_direction",
+        "CollisionPolygon2D::property:one_way_collision_direction"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: a direct polygon owner that applies the existing one-way body-contact callback to its fixtures (ADR 0065)."
+    },
+    {
+      "godot": [
         "CollisionPolygon2D::property:one_way_collision_margin"
       ],
       "state": "Blocked",
-      "reason": "Trigger: typed one-way pre-solve contact filtering with direction and margin on polygon-owner fixtures (ADR 0064)."
+      "reason": "Trigger: a direct polygon owner plus typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the margin (ADRs 0063 and 0065)."
     },
     {
       "godot": [
@@ -468,7 +474,7 @@
         "class:CollisionShape2D"
       ],
       "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "reason": "Body geometry and one-way contact side selection execute; margin-based kinematic sweep and debug color retain exact dependency triggers."
     },
     {
       "godot": [
@@ -558,11 +564,17 @@
     {
       "godot": [
         "CollisionShape2D::property:one_way_collision",
-        "CollisionShape2D::property:one_way_collision_direction",
+        "CollisionShape2D::property:one_way_collision_direction"
+      ],
+      "state": "Implemented",
+      "reason": "Body fixtures use ADR 0065 pre-solve side selection with local direction and contact-pair lifetime; OneWayCollisionTests covers opposite approaches, rotation, live updates, Area nonresponse, packing and warm allocation."
+    },
+    {
+      "godot": [
         "CollisionShape2D::property:one_way_collision_margin"
       ],
       "state": "Blocked",
-      "reason": "Trigger: one-way contact filtering with direction/margin in a typed pre-solve physics callback."
+      "reason": "Trigger: typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the one-way penetration margin (ADRs 0063 and 0065)."
     },
     {
       "godot": [

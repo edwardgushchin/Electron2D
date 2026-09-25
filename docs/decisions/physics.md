@@ -286,3 +286,26 @@ CollisionPolygon2D was compared as the adjacent scene-node feature. ConvexPolygo
 ### Consequences
 
 Games can use reusable multi-edge terrain, open contours and hollow line sensors. The geometry and owning resource are executable; CollisionPolygon scene integration, one-way filtering, native allocator accounting, other platforms and owner acceptance remain separate work.
+
+<a id="adr-0065"></a>
+## ADR 0065: One-way scene-body contacts
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: CollisionShape one-way flag and local direction on scene physics bodies
+- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0008](scene.md#adr-0008)
+
+### Context
+
+Two-sided fixtures prevent a body from passing through a platform and landing on its opposite face. The pinned scene shape permits a local one-way direction, while the selected backend provides a pre-solve callback for awake dynamic-body contacts. The pinned rigid-body pair chooses the valid side when contact first appears and retains that decision until separation. Its one-way margin participates in kinematic motion/recovery queries, not in the rigid-body contact-side test.
+
+### Decision
+
+- `CollisionShape.OneWayCollision` defaults to false and `OneWayCollisionDirection` defaults to `(0, 1)`. A finite nonzero direction is normalized before mutation; zero rejects contact from every side when the flag is enabled. Direction rotates with the shape's local pose and its parent body. Area children retain these scene properties for packing but remain sensor-only and warn that one-way response does not apply.
+- Mark only enabled body fixtures for Box2D pre-solve. Per-fixture user data carries the local contact direction; the world callback compares the first contact normal to its current body rotation. Keep the initial allowed/denied decision for the shape pair until no contact is observed. Fixture rebuilds change backend IDs and therefore discard old pair decisions without changing public node identity. The current world uses its default single-worker task system; callback state is world-owned and unavailable to user code.
+- Do not expose `OneWayCollisionMargin` until the typed `CharacterBody`/direct-space sweep and initial-overlap recovery use it. That declaration retains a precise Blocked coverage trigger rather than an inert stored property. The same margin dependency remains on a future `CollisionPolygon` owner. No vendored source changes are needed.
+
+### Consequences
+
+Static, kinematic and dynamic scene-body fixtures can accept contacts from the configured side and allow traversal from the other side. Existing contact reports see only solved contacts, and Area monitoring continues to sense crossings. OneWayCollisionTests verifies side selection, local rotation, live changes, packed state, sensor behavior and 64 warmed active frames without managed allocation on Linux/.NET 8. Native allocator counts, other platforms, margin-based kinematic sweeps and owner visual acceptance remain unverified.

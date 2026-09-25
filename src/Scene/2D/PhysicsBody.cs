@@ -199,6 +199,9 @@ public abstract class PhysicsBody : CollisionObject
         foreach (var node in _shapes)
         {
             if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
+            var contact = node.OneWayContact;
+            definition.userData = contact is null ? default : new B2UserData(contact);
+            definition.enablePreSolveEvents = contact is not null;
             shape.AppendToBody(_bodyID, node.Position, node.Rotation, definition, _backendShapes);
         }
 

@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A manually moved 2D body for moving platforms and doors. Direct [CollisionShape](CollisionShape.md) children provide borrowed collision geometry; the inherited [PhysicsMaterialOverride](StaticBody.md#physicsmaterialoverride) controls surface friction and bounce. The body has zero backend mass and cannot be displaced by contacts or external forces. Its scene target creates linear and angular velocity over the next nonzero fixed step, affecting dynamic bodies it touches. With synchronization enabled, the scene presents that target after the solver step; otherwise the scene changes immediately.
+A manually moved 2D body for moving platforms and doors. Direct [CollisionShape](CollisionShape.md) children provide borrowed collision geometry and may select a one-way contact side; the inherited [PhysicsMaterialOverride](StaticBody.md#physicsmaterialoverride) controls surface friction and bounce. The body has zero backend mass and cannot be displaced by contacts or external forces. Its scene target creates linear and angular velocity over the next nonzero fixed step, affecting dynamic bodies it touches. With synchronization enabled, the scene presents that target after the solver step; otherwise the scene changes immediately.
 
 ## Example
 

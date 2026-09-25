@@ -96,7 +96,12 @@ def main():
     polygon_node_rows = [row for row in pages[CLASS_PAGES / "CollisionPolygon2D.md"].splitlines()
                          if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(polygon_node_rows) == 10 and all(" | Blocked | " in row for row in polygon_node_rows)
-    assert all("one-way pre-solve" in row for row in polygon_node_rows if "one_way_collision" in row)
+    assert all("one-way body-contact" in row for row in polygon_node_rows if "one_way_collision_direction" in row)
+    shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
+                       if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert all(" | Implemented | " in row for row in shape_node_rows
+               if "one_way_collision" in row and "margin" not in row)
+    assert " | Blocked | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
     joint_rows = pages[CLASS_PAGES / "Joint2D.md"].splitlines()
     pin_rows = pages[CLASS_PAGES / "PinJoint2D.md"].splitlines()
     assert all(" | Blocked | " in next(row for row in joint_rows if row.startswith(f"| [`{prefix}"))

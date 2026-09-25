@@ -14,6 +14,8 @@ Before that backend step, each dynamic body resolves currently overlapping area 
 
 ## Dependencies, invariants and limits
 
+An Area uses nonresponding sensor fixtures; a child CollisionShape's one-way body-contact setting does not filter either approach side. The child warns about the ineffective setting, while its scene properties remain packable.
+
 The current profile accepts unit global scale and zero skew while active. Shape/resource, filtering, monitoring and field edits take effect on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Tile-map virtual collision bodies, absent CharacterBody gravity queries, audio-bus routing and typed shape/RID events remain separate coverage work.
 
 [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks monitoring, directional masks, snapshot/event timing, multi-shape deduplication, moving-body passage without response, scene packing, lifecycle, callback exceptions and 64 warmed steady and empty frames each with zero managed allocations. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, sampled defaults, signed damping, sleep wakeup, packing, failure recovery and 64 warmed moving and sleeping-body frames each with zero managed allocations on Linux/.NET 8. Native allocator counts, other platforms and owner visual acceptance remain unverified. [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the execution boundary.

@@ -58668,6 +58668,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CollisionShape.OneWayCollision()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "OneWayCollision",
+    "signature": "public System.Boolean OneWayCollision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionShape.OneWayCollisionDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionShape",
+    "name": "OneWayCollisionDirection",
+    "signature": "public Electron2D.Vector2 OneWayCollisionDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CollisionShape.Shape()",
     "kind": "property",
     "declaringType": "Electron2D.CollisionShape",
