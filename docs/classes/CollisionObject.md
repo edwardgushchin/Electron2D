@@ -14,13 +14,14 @@ The spatial collision-filter base used by scene physics bodies and areas. Its ca
 
 ## API summary
 
-Direct [CollisionPolygon](CollisionPolygon.md) children now contribute owned solid or hollow fixture sets beside borrowed [CollisionShape](CollisionShape.md) children. The shared internal owner path does not expose the reference's public shape-owner methods or a backend RID.
+Direct [CollisionPolygon](CollisionPolygon.md) children contribute owned solid or hollow fixture sets beside borrowed [CollisionShape](CollisionShape.md) children. The shared internal owner path exposes a stable opaque RID, while public shape-owner mutation methods remain separate coverage gaps.
 
 | Member | Contract |
 | --- | --- |
 | `protected CollisionObject()` | Initializes layer and mask to bit one. |
 | `public uint CollisionLayer { get; set; }` | Category bits; default 1. |
 | `public uint CollisionMask { get; set; }` | Accepted category bits; default 1. |
+| `public RID GetRID()` | Stable server identity from construction to disposal. |
 | `public bool GetCollisionLayerValue(int layerNumber)` | Tests one-based layer 1–32. |
 | `public void SetCollisionLayerValue(int layerNumber, bool value)` | Changes one layer bit. |
 | `public bool GetCollisionMaskValue(int layerNumber)` | Tests one-based mask bit 1–32. |
@@ -28,6 +29,11 @@ Direct [CollisionPolygon](CollisionPolygon.md) children now contribute owned sol
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits to inherited Entity descriptors. |
 
 ## Member descriptions
+
+<a id="getrid"></a>
+### `GetRID()`
+
+Returns the collider's opaque [RID](RID.md) even while detached. Fixture rebuild and scene exit/reentry retain the value; disposal removes the server registration, and later server lookups reject the held RID. A query result also carries this RID and shape-owner index. The method throws after object disposal. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) verifies identity across rebuild and free.
 
 <a id="collisionlayer"></a>
 ### `CollisionLayer`
@@ -46,4 +52,4 @@ The two getters and two setters take a one-based bit number from 1 through 32. V
 
 ## Limits and verification
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. Shape-owner management, disable modes, collision priority, backend RID and viewport mouse-picking callbacks/events retain distinct [coverage gaps](../coverage/classes/CollisionObject2D.md).
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Public shape-owner management, collision priority and viewport mouse-picking callbacks/events retain distinct [coverage gaps](../coverage/classes/CollisionObject2D.md).

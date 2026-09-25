@@ -2434,6 +2434,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsDirectSpaceState2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState2D",
+    "name": "PhysicsDirectSpaceState2D",
+    "signature": "public sealed class Electron2D.PhysicsDirectSpaceState2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsInterpolationMode",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsInterpolationMode",
@@ -2461,6 +2476,95 @@
     "baseType": "Electron2D.Resource",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsPointQueryParameters2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "PhysicsPointQueryParameters2D",
+    "signature": "public sealed class Electron2D.PhysicsPointQueryParameters2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsPointResult2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "name": "PhysicsPointResult2D",
+    "signature": "public struct Electron2D.PhysicsPointResult2D",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsRayQueryParameters2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "PhysicsRayQueryParameters2D",
+    "signature": "public sealed class Electron2D.PhysicsRayQueryParameters2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsRayResult2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "PhysicsRayResult2D",
+    "signature": "public struct Electron2D.PhysicsRayResult2D",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsServer2D",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "PhysicsServer2D",
+    "signature": "public sealed class Electron2D.PhysicsServer2D",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsServer2D.BodyMode",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer2D.BodyMode",
+    "name": "BodyMode",
+    "signature": "public enum Electron2D.PhysicsServer2D.BodyMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -2563,6 +2667,22 @@
     "baseType": "Electron2D.Tweener",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RID",
+    "kind": "type",
+    "declaringType": "Electron2D.RID",
+    "name": "RID",
+    "signature": "public struct Electron2D.RID",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IComparable\u003CElectron2D.RID\u003E",
+      "System.IEquatable\u003CElectron2D.RID\u003E"
     ],
     "parameters": null,
     "returnType": null,
@@ -3594,6 +3714,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.World2D",
+    "kind": "type",
+    "declaringType": "Electron2D.World2D",
+    "name": "World2D",
+    "signature": "public sealed class Electron2D.World2D",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -5785,6 +5920,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PhysicsPointQueryParameters2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": ".ctor",
+    "signature": "public PhysicsPointQueryParameters2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsRayQueryParameters2D..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": ".ctor",
+    "signature": "public PhysicsRayQueryParameters2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Polygon..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Polygon",
@@ -5947,6 +6108,38 @@
         "name": "stored",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RID..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RID",
+    "name": ".ctor",
+    "signature": "public RID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RID..ctor(Electron2D.RID)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RID",
+    "name": ".ctor",
+    "signature": "public RID(Electron2D.RID from)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.RID",
+        "default": null
       }
     ],
     "returnType": null,
@@ -15176,6 +15369,58 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.PhysicsServer2D.BodyMode.Kinematic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer2D.BodyMode",
+    "name": "Kinematic",
+    "signature": "public const Electron2D.PhysicsServer2D.BodyMode Kinematic = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer2D.BodyMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer2D.BodyMode.Rigid()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer2D.BodyMode",
+    "name": "Rigid",
+    "signature": "public const Electron2D.PhysicsServer2D.BodyMode Rigid = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer2D.BodyMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer2D.BodyMode.RigidLinear()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer2D.BodyMode",
+    "name": "RigidLinear",
+    "signature": "public const Electron2D.PhysicsServer2D.BodyMode RigidLinear = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer2D.BodyMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer2D.BodyMode.Static()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer2D.BodyMode",
+    "name": "Static",
+    "signature": "public const Electron2D.PhysicsServer2D.BodyMode Static = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer2D.BodyMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.ProcessMode.Always()",
     "kind": "enumValue",
     "declaringType": "Electron2D.ProcessMode",
@@ -22125,6 +22370,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetWorld2D()",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetWorld2D",
+    "signature": "public Electron2D.World2D GetWorld2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.World2D",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.Hide()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -22582,6 +22840,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CollisionObject.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CollisionObject.GetCollisionLayerValue(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.CollisionObject",
@@ -22630,6 +22907,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetRID",
+    "signature": "public Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -41520,6 +41810,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsDirectSpaceState2D.IntersectPoint(Electron2D.PhysicsPointQueryParameters2D,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState2D",
+    "name": "IntersectPoint",
+    "signature": "public Electron2D.PhysicsPointResult2D[] IntersectPoint(Electron2D.PhysicsPointQueryParameters2D parameters, System.Int32 maxResults = 32)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsPointQueryParameters2D",
+        "default": null
+      },
+      {
+        "name": "maxResults",
+        "type": "System.Int32",
+        "default": "32"
+      }
+    ],
+    "returnType": "Electron2D.PhysicsPointResult2D[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceState2D.IntersectRay(Electron2D.PhysicsRayQueryParameters2D)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceState2D",
+    "name": "IntersectRay",
+    "signature": "public System.Nullable\u003CElectron2D.PhysicsRayResult2D\u003E IntersectRay(Electron2D.PhysicsRayQueryParameters2D parameters)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameters",
+        "type": "Electron2D.PhysicsRayQueryParameters2D",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.PhysicsRayResult2D\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsMaterial",
@@ -41569,6 +41902,779 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsRayQueryParameters2D.Create(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,Electron2D.RID[])",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "Create",
+    "signature": "public static Electron2D.PhysicsRayQueryParameters2D Create(Electron2D.Vector2 from, Electron2D.Vector2 to, System.UInt32 collisionMask = 4294967295, Electron2D.RID[] exclude = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": "4294967295"
+      },
+      {
+        "name": "exclude",
+        "type": "Electron2D.RID[]",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.PhysicsRayQueryParameters2D",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaAddShape(Electron2D.RID,Electron2D.RID,System.Nullable\u003CElectron2D.Transform\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaAddShape",
+    "signature": "public System.Void AreaAddShape(Electron2D.RID area, Electron2D.RID shape, System.Nullable\u003CElectron2D.Transform\u003E transform = null, System.Boolean disabled = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "System.Nullable\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaCreate",
+    "signature": "public Electron2D.RID AreaCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaGetShapeCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaGetShapeCount",
+    "signature": "public System.Int32 AreaGetShapeCount(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaGetSpace(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaGetSpace",
+    "signature": "public Electron2D.RID AreaGetSpace(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaRemoveShape(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaRemoveShape",
+    "signature": "public System.Void AreaRemoveShape(Electron2D.RID area, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaSetCollisionLayer(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaSetCollisionLayer",
+    "signature": "public System.Void AreaSetCollisionLayer(Electron2D.RID area, System.UInt32 layer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layer",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaSetShapeDisabled(Electron2D.RID,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaSetShapeDisabled",
+    "signature": "public System.Void AreaSetShapeDisabled(Electron2D.RID area, System.Int32 index, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaSetSpace(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaSetSpace",
+    "signature": "public System.Void AreaSetSpace(Electron2D.RID area, Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.AreaSetTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "AreaSetTransform",
+    "signature": "public System.Void AreaSetTransform(Electron2D.RID area, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyAddShape(Electron2D.RID,Electron2D.RID,System.Nullable\u003CElectron2D.Transform\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyAddShape",
+    "signature": "public System.Void BodyAddShape(Electron2D.RID body, Electron2D.RID shape, System.Nullable\u003CElectron2D.Transform\u003E transform = null, System.Boolean disabled = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "System.Nullable\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyCreate",
+    "signature": "public Electron2D.RID BodyCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyGetMode(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyGetMode",
+    "signature": "public Electron2D.PhysicsServer2D.BodyMode BodyGetMode(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsServer2D.BodyMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyGetShapeCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyGetShapeCount",
+    "signature": "public System.Int32 BodyGetShapeCount(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyGetSpace(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyGetSpace",
+    "signature": "public Electron2D.RID BodyGetSpace(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyGetTransform(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyGetTransform",
+    "signature": "public Electron2D.Transform BodyGetTransform(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodyRemoveShape(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodyRemoveShape",
+    "signature": "public System.Void BodyRemoveShape(Electron2D.RID body, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetCollisionLayer(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetCollisionLayer",
+    "signature": "public System.Void BodySetCollisionLayer(Electron2D.RID body, System.UInt32 layer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layer",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetCollisionMask(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetCollisionMask",
+    "signature": "public System.Void BodySetCollisionMask(Electron2D.RID body, System.UInt32 mask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mask",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetLinearVelocity",
+    "signature": "public System.Void BodySetLinearVelocity(Electron2D.RID body, Electron2D.Vector2 velocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetMode(Electron2D.RID,Electron2D.PhysicsServer2D.BodyMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetMode",
+    "signature": "public System.Void BodySetMode(Electron2D.RID body, Electron2D.PhysicsServer2D.BodyMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.PhysicsServer2D.BodyMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetShapeDisabled(Electron2D.RID,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetShapeDisabled",
+    "signature": "public System.Void BodySetShapeDisabled(Electron2D.RID body, System.Int32 index, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetSpace(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetSpace",
+    "signature": "public System.Void BodySetSpace(Electron2D.RID body, Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "BodySetTransform",
+    "signature": "public System.Void BodySetTransform(Electron2D.RID body, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.CapsuleShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "CapsuleShapeCreate",
+    "signature": "public Electron2D.RID CapsuleShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.CircleShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "CircleShapeCreate",
+    "signature": "public Electron2D.RID CircleShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.ConcavePolygonShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "ConcavePolygonShapeCreate",
+    "signature": "public Electron2D.RID ConcavePolygonShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.ConvexPolygonShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "ConvexPolygonShapeCreate",
+    "signature": "public Electron2D.RID ConvexPolygonShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.FreeRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "FreeRID",
+    "signature": "public System.Void FreeRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.RectangleShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "RectangleShapeCreate",
+    "signature": "public Electron2D.RID RectangleShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.SegmentShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "SegmentShapeCreate",
+    "signature": "public Electron2D.RID SegmentShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.ShapeGetData(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "ShapeGetData",
+    "signature": "public Electron2D.Shape ShapeGetData(Electron2D.RID shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Shape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.ShapeSetData(Electron2D.RID,Electron2D.Shape)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "ShapeSetData",
+    "signature": "public System.Void ShapeSetData(Electron2D.RID shape, Electron2D.Shape data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "Electron2D.Shape",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.SpaceCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "SpaceCreate",
+    "signature": "public Electron2D.RID SpaceCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.SpaceGetDirectState(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "SpaceGetDirectState",
+    "signature": "public Electron2D.PhysicsDirectSpaceState2D SpaceGetDirectState(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsDirectSpaceState2D",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.SpaceStep(Electron2D.RID,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "SpaceStep",
+    "signature": "public System.Void SpaceStep(Electron2D.RID space, System.Double delta)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer2D.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -42645,6 +43751,115 @@
       }
     ],
     "returnType": "Electron2D.PropertyTweener\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.CompareTo(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "CompareTo",
+    "signature": "public virtual System.Int32 CompareTo(Electron2D.RID other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.Equals(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.RID other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.GetID()",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "GetID",
+    "signature": "public System.Int64 GetID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.IsValid()",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "IsValid",
+    "signature": "public System.Boolean IsValid()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RID.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.RID",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -53607,6 +54822,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.World2D.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.World2D",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.XMLParser.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.XMLParser",
@@ -54286,6 +55514,150 @@
       {
         "name": "right",
         "type": "Electron2D.ImageMetrics",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_Equality(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_GreaterThan(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_GreaterThan",
+    "signature": "public static System.Boolean op_GreaterThan(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_GreaterThanOrEqual(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_GreaterThanOrEqual",
+    "signature": "public static System.Boolean op_GreaterThanOrEqual(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_Inequality(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_LessThan(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_LessThan",
+    "signature": "public static System.Boolean op_LessThan(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.RID.op_LessThanOrEqual(Electron2D.RID,Electron2D.RID)",
+    "kind": "operator",
+    "declaringType": "Electron2D.RID",
+    "name": "op_LessThanOrEqual",
+    "signature": "public static System.Boolean op_LessThanOrEqual(Electron2D.RID left, Electron2D.RID right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.RID",
         "default": null
       }
     ],
@@ -65261,6 +66633,305 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollideWithAreas()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "CollideWithAreas",
+    "signature": "public System.Boolean CollideWithAreas { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollideWithBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "CollideWithBodies",
+    "signature": "public System.Boolean CollideWithBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointQueryParameters2D.CollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "CollisionMask",
+    "signature": "public System.UInt32 CollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointQueryParameters2D.Exclude()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "Exclude",
+    "signature": "public Electron2D.RID[] Exclude { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointQueryParameters2D.Position()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters2D",
+    "name": "Position",
+    "signature": "public Electron2D.Vector2 Position { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointResult2D.Collider()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "name": "Collider",
+    "signature": "public Electron2D.CollisionObject Collider { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionObject",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointResult2D.ColliderID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "name": "ColliderID",
+    "signature": "public System.UInt64 ColliderID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointResult2D.ColliderRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "name": "ColliderRID",
+    "signature": "public Electron2D.RID ColliderRID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointResult2D.ShapeIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointResult2D",
+    "name": "ShapeIndex",
+    "signature": "public System.Int32 ShapeIndex { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollideWithAreas()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "CollideWithAreas",
+    "signature": "public System.Boolean CollideWithAreas { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollideWithBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "CollideWithBodies",
+    "signature": "public System.Boolean CollideWithBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.CollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "CollisionMask",
+    "signature": "public System.UInt32 CollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.Exclude()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "Exclude",
+    "signature": "public Electron2D.RID[] Exclude { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.From()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "From",
+    "signature": "public Electron2D.Vector2 From { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.HitFromInside()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "HitFromInside",
+    "signature": "public System.Boolean HitFromInside { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayQueryParameters2D.To()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayQueryParameters2D",
+    "name": "To",
+    "signature": "public Electron2D.Vector2 To { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.Collider()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "Collider",
+    "signature": "public Electron2D.CollisionObject Collider { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionObject",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.ColliderID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "ColliderID",
+    "signature": "public System.UInt64 ColliderID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.ColliderRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "ColliderRID",
+    "signature": "public Electron2D.RID ColliderRID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.Normal()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "Normal",
+    "signature": "public Electron2D.Vector2 Normal { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.Position()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "Position",
+    "signature": "public Electron2D.Vector2 Position { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRayResult2D.ShapeIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult2D",
+    "name": "ShapeIndex",
+    "signature": "public System.Int32 ShapeIndex { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsServer2D.Instance()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsServer2D",
+    "name": "Instance",
+    "signature": "public static Electron2D.PhysicsServer2D Instance { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer2D",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Polygon.Color()",
     "kind": "property",
     "declaringType": "Electron2D.Polygon",
@@ -68261,6 +69932,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.World2D.DirectSpaceState()",
+    "kind": "property",
+    "declaringType": "Electron2D.World2D",
+    "name": "DirectSpaceState",
+    "signature": "public Electron2D.PhysicsDirectSpaceState2D DirectSpaceState { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsDirectSpaceState2D",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.World2D.Space()",
+    "kind": "property",
+    "declaringType": "Electron2D.World2D",
+    "name": "Space",
+    "signature": "public Electron2D.RID Space { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   }
 ]

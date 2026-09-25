@@ -18,6 +18,7 @@ internal sealed class PhysicsSpace : IDisposable
 
     private readonly List<PhysicsBody> _bodies = [];
     private readonly List<Area> _areas = [];
+    private readonly List<PhysicsServerCollider> _serverColliders = [];
     private readonly List<Area> _fieldAreas = [];
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly List<ContactEvent> _contactEvents = [];
@@ -26,6 +27,7 @@ internal sealed class PhysicsSpace : IDisposable
     private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly B2WorldId _worldID;
     private readonly Vector2 _defaultGravity;
+    private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
     private readonly float _defaultLinearDamp;
     private readonly float _defaultAngularDamp;
     private bool _stepping;
@@ -56,6 +58,24 @@ internal sealed class PhysicsSpace : IDisposable
     }
 
     internal B2WorldId WorldID => _worldID;
+    internal IReadOnlyList<PhysicsBody> Bodies => _bodies;
+    internal IReadOnlyList<Area> Areas => _areas;
+    internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
+
+    internal void EnsureQueryAccess()
+    {
+        if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
+        if (Environment.CurrentManagedThreadId != _ownerThreadID)
+            throw new InvalidOperationException("Physics queries require the space owner thread.");
+        if (_stepping) throw new InvalidOperationException("A physics space cannot be queried while stepping.");
+    }
+
+    internal void PrepareForQuery()
+    {
+        EnsureQueryAccess();
+        foreach (var body in _bodies) body.PrepareBackend();
+        foreach (var area in _areas) area.PrepareBackend();
+    }
 
     internal void Add(PhysicsBody body)
     {
@@ -89,6 +109,22 @@ internal sealed class PhysicsSpace : IDisposable
         _areas.Add(area);
     }
 
+    internal void Add(PhysicsServerCollider collider, RID spaceRID)
+    {
+        if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
+        if (_stepping) throw new InvalidOperationException("Server colliders cannot enter while stepping.");
+        _serverColliders.EnsureCapacity(_serverColliders.Count + 1);
+        collider.AttachBackend(this, spaceRID);
+        _serverColliders.Add(collider);
+    }
+
+    internal void Remove(PhysicsServerCollider collider)
+    {
+        if (_disposed) return;
+        if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
+        if (_serverColliders.Remove(collider)) collider.DetachBackend();
+    }
+
     internal void Remove(Area area)
     {
         if (_disposed) return;
@@ -103,7 +139,7 @@ internal sealed class PhysicsSpace : IDisposable
     internal void Step(double delta)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
-        if (delta == 0 || (_bodies.Count == 0 && _areas.Count == 0)) return;
+        if (delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
         if (_stepping) throw new InvalidOperationException("A physics world cannot step recursively.");
         _stepping = true;
         List<Exception>? errors = null;
@@ -154,8 +190,10 @@ internal sealed class PhysicsSpace : IDisposable
             if (body is RigidBody rigid) rigid.ClearContactState();
         }
         foreach (var area in _areas) { area.DetachBackend(); area.ClearOverlaps(); }
+        foreach (var collider in _serverColliders) collider.DetachBackend();
         _bodies.Clear();
         _areas.Clear();
+        _serverColliders.Clear();
         _fieldAreas.Clear();
         _overlapEvents.Clear();
         _contactEvents.Clear();
@@ -171,8 +209,8 @@ internal sealed class PhysicsSpace : IDisposable
 
     private bool AllowOneWayContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)
     {
-        var firstData = b2Shape_GetUserData(first).GetRef<OneWayContactData>();
-        var secondData = b2Shape_GetUserData(second).GetRef<OneWayContactData>();
+        var firstData = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>()?.OneWay;
+        var secondData = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>()?.OneWay;
         if (firstData is null && secondData is null) return true;
 
         var firstKey = PackShapeID(first);

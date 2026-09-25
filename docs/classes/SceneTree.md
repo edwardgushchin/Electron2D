@@ -6,7 +6,7 @@ Last updated: 2026-09-25
 
 **Inherited By:** —
 
-- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs), [`src/Scene/Main/SceneTree.PhysicsInterpolation.cs`](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
+- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs), [`src/Scene/Main/SceneTree.Physics.cs`](../../src/Scene/Main/SceneTree.Physics.cs), [`src/Scene/Main/SceneTree.PhysicsInterpolation.cs`](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class SceneTree : MainLoop`
 
@@ -19,6 +19,8 @@ AnimatedSprite uses the existing internal idle lane and tree pause/process polic
 Owns one active node hierarchy and coordinates its lifecycle, input, frames, groups, timers, tweens, and deferred work.
 
 `SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
+
+The tree registers its existing physics world with [PhysicsServer2D](PhysicsServer2D.md) when the first body/Area enters or a CanvasItem asks for [World2D](World2D.md). Its fixed physics lane steps that same space; `World2D.Space` and its direct query view have stable identities until tree teardown. A query prepares pending shape/pose edits even before the first fixed step.
 
 Before entry, a root still set to `NodeAutoTranslateMode.Inherit` samples `ProjectSettings.RootNodeAutoTranslate` and becomes `Always` or `Disabled`. Each automatically translating node receives `NotificationTranslationChanged` during entry; the setting is not re-read for an active tree.
 
@@ -782,7 +784,7 @@ The creating thread owns lifecycle, hierarchy reads and mutation, input dispatch
 
 ## Dependencies and interactions
 
-The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.md) values, `Node`, `ProcessMode`, [`Timer`](Timer.md), [`SceneTreeTimer`](SceneTreeTimer.md), [`Tween`](Tween.md), [`GroupCallFlags`](GroupCallFlags.md), reusable scheduler/input/timer/tween lists, concurrent queues, and a single queue-lifetime lock. `Node` supplies input/internal lanes plus the construction/factory barriers that keep [`PackedScene`](PackedScene.md) reconstruction detached. Core's [`Engine`](Engine.md) can drive the tree through the base contract, and [`EventConnection`](EventConnection.md) supports deferred delivery and typed tween waits. Root-window rendering is invoked through the internal RenderingServer after scene processing; SDL stays behind the native backend. There is no audio, collision-physics, asset loader/serializer, networking or editor dependency.
+The class depends on [`MainLoop`](MainLoop.md), typed [`InputEvent`](InputEvent.md) values, `Node`, `ProcessMode`, [`Timer`](Timer.md), [`SceneTreeTimer`](SceneTreeTimer.md), [`Tween`](Tween.md), [`GroupCallFlags`](GroupCallFlags.md), reusable scheduler/input/timer/tween lists, concurrent queues, and a single queue-lifetime lock. `Node` supplies input/internal lanes plus the construction/factory barriers that keep [`PackedScene`](PackedScene.md) reconstruction detached. Core's [`Engine`](Engine.md) can drive the tree through the base contract, and [`EventConnection`](EventConnection.md) supports deferred delivery and typed tween waits. Root-window rendering is invoked through the internal RenderingServer after scene processing; SDL stays behind the native backend. The lazily owned physics space shares PhysicsServer2D identity; audio, asset loader/serializer, networking and editor services retain separate dependencies.
 
 ## Verification and remaining limits
 

@@ -1,6 +1,36 @@
 {
   "mappings": [
     {
+      "godot": "CanvasItem::method:get_world_2d()",
+      "electron2d": "method:Electron2D.CanvasItem.GetWorld2D()",
+      "reason": "Typed scene-tree world access; independent viewport world changes remain a separate scene/renderer dependency."
+    },
+    {
+      "godot": "CollisionObject2D::method:get_rid()",
+      "electron2d": "method:Electron2D.CollisionObject.GetRID()",
+      "reason": "Stable server-owned RID identity for a scene collision object, unchanged by fixture rebuild."
+    },
+    {
+      "godot": "RID::method:get_id()",
+      "electron2d": "method:Electron2D.RID.GetID()",
+      "reason": "The reference integer identity maps to a session-local signed 64-bit C# integer without exposing backend IDs."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer2D.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "Typed transform branch of body_set_state; other BodyState branches remain incomplete."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer2D.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed linear-velocity branch of body_set_state; other BodyState branches remain incomplete."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer2D.BodyGetTransform(Electron2D.RID)",
+      "reason": "Typed transform branch of body_get_state; other BodyState branches remain incomplete."
+    },
+    {
       "godot": "ConvexPolygonShape2D::method:set_point_cloud(PackedVector2Array:)",
       "electron2d": "method:Electron2D.ConvexPolygonShape.SetPointCloud(System.ReadOnlySpan<Electron2D.Vector2>)",
       "reason": "ReadOnlySpan input projects the packed point cloud to a typed C# hull operation without retaining caller storage."
@@ -37,6 +67,126 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "T:Electron2D.PhysicsPointResult2D",
+      "reason": "Typed C# value projects the dictionary entries of direct-space point hits without Variant or dynamic lookup.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsRayResult2D",
+      "reason": "Typed C# value projects the dictionary entries of direct-space ray hits without Variant or dynamic lookup.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsPointQueryParameters2D..ctor()",
+      "reason": "Managed construction projects the reference mutable point-parameter defaults.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsRayQueryParameters2D..ctor()",
+      "reason": "Managed construction projects the reference mutable ray-parameter defaults.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionObject.Dispose(System.Boolean)",
+      "reason": "Managed scene-object disposal releases its stable server identity after the inherited collision lifetime.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer2D.SpaceStep(Electron2D.RID,System.Double)",
+      "reason": "Explicit space stepping projects the host lifecycle needed to execute server-only spaces outside a SceneTree.",
+      "adr": "ADRs 0003, 0054, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer2D.ValidateDisposal()",
+      "reason": "Managed singleton lifetime prevents a consumer from disposing the shared physics registry.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RID.CompareTo(Electron2D.RID)",
+      "reason": "IComparable projects the reference RID ordering into typed C# sorting.",
+      "adr": "ADRs 0004, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RID.Equals(Electron2D.RID)",
+      "reason": "IEquatable projects RID equality to typed C# collections.",
+      "adr": "ADRs 0004, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RID.Equals(System.Object)",
+      "reason": "BCL object equality agrees with the reference RID equality operators.",
+      "adr": "ADRs 0004, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RID.GetHashCode()",
+      "reason": "BCL hash contract follows the immutable RID numeric identity.",
+      "adr": "ADRs 0004, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RID.ToString()",
+      "reason": "BCL diagnostic formatting of the backend-neutral RID value.",
+      "adr": "ADRs 0004, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.World2D.CreateDuplicateInstance()",
+      "reason": "Managed Resource duplication retains the same borrowed live space RID without copying a solver world.",
+      "adr": "ADRs 0013, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult2D.Collider()",
+      "reason": "Typed projection of the collider object in a point-result dictionary; null for server-only colliders.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult2D.ColliderID()",
+      "reason": "Typed projection of point-result collider_id; zero for server-only colliders.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult2D.ColliderRID()",
+      "reason": "Typed projection of the point-result RID, including server-only objects.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult2D.ShapeIndex()",
+      "reason": "Typed projection of the point-result stable shape-owner index.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.Collider()",
+      "reason": "Typed projection of the collider object in a ray-result dictionary; null for server-only colliders.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.ColliderID()",
+      "reason": "Typed projection of ray-result collider_id; zero for server-only colliders.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.ColliderRID()",
+      "reason": "Typed projection of the ray-result RID, including server-only objects.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.Normal()",
+      "reason": "Typed projection of the global contact normal; zero on inside hits.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.Position()",
+      "reason": "Typed projection of the global ray-hit position.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult2D.ShapeIndex()",
+      "reason": "Typed projection of the ray-result stable shape-owner index.",
+      "adr": "ADRs 0001, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsServer2D.Instance()",
+      "reason": "C# singleton accessor for the shared PhysicsServer2D resource registry.",
+      "adr": "ADRs 0004, 0063"
+    },
     {
       "electron2d": "constructor:Electron2D.CollisionPolygon..ctor()",
       "reason": "Managed construction projects an empty direct scene collision polygon with a solid default.",
@@ -371,6 +521,169 @@
   "statusGroups": [
     {
       "godot": [
+        "class:RID",
+        "RID::constructor:RID()",
+        "RID::constructor:RID(RID:)",
+        "RID::method:get_id()",
+        "RID::method:is_valid()",
+        "RID::operator:operator !=(RID:)",
+        "RID::operator:operator <(RID:)",
+        "RID::operator:operator <=(RID:)",
+        "RID::operator:operator ==(RID:)",
+        "RID::operator:operator >(RID:)",
+        "RID::operator:operator >=(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Opaque session-local RID preserves zero/default, copy, ordering and numeric identity; freed values remain nonzero but cannot resolve to reused server resources (ADR 0063, PhysicsQueryTests)."
+    },
+    {
+      "godot": ["class:World2D"],
+      "state": "Partial",
+      "reason": "SceneTree-shared Space and DirectSpaceState execute; Canvas and NavigationMap still require renderer/navigation resource ownership (ADR 0063)."
+    },
+    {
+      "godot": ["World2D::property:space", "World2D::property:direct_space_state"],
+      "state": "Implemented",
+      "reason": "The live SceneTree world exposes one stable physics-space RID and the same typed direct query view returned by PhysicsServer2D (ADR 0063, PhysicsQueryTests)."
+    },
+    {
+      "godot": ["World2D::property:canvas", "World2D::property:navigation_map"],
+      "state": "Blocked",
+      "reason": "Trigger: renderer canvas RID and navigation-map RID lifetimes must be attached to the same World2D; physics space identity alone does not implement those server domains (ADRs 0028, 0052 and 0063)."
+    },
+    {
+      "godot": [
+        "class:PhysicsRayQueryParameters2D",
+        "PhysicsRayQueryParameters2D::method:create(Vector2:,Vector2:,int:,RID[]:)",
+        "PhysicsRayQueryParameters2D::property:collide_with_areas",
+        "PhysicsRayQueryParameters2D::property:collide_with_bodies",
+        "PhysicsRayQueryParameters2D::property:collision_mask",
+        "PhysicsRayQueryParameters2D::property:exclude",
+        "PhysicsRayQueryParameters2D::property:from",
+        "PhysicsRayQueryParameters2D::property:hit_from_inside",
+        "PhysicsRayQueryParameters2D::property:to"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite global endpoints, copied RID exclusions, all-layer mask, Area/body flags, inside hits and Create defaults execute in PhysicsQueryTests (ADR 0063)."
+    },
+    {
+      "godot": ["class:PhysicsPointQueryParameters2D"],
+      "state": "Partial",
+      "reason": "Point, copied exclusions, mask and Area/body flags execute; CanvasInstanceID requires independent canvas/world identity (ADRs 0028 and 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsPointQueryParameters2D::property:collide_with_areas",
+        "PhysicsPointQueryParameters2D::property:collide_with_bodies",
+        "PhysicsPointQueryParameters2D::property:collision_mask",
+        "PhysicsPointQueryParameters2D::property:exclude",
+        "PhysicsPointQueryParameters2D::property:position"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite global point, copied RID exclusions, all-layer mask and Area/body flags execute for scene and server colliders (ADR 0063, PhysicsQueryTests)."
+    },
+    {
+      "godot": ["PhysicsPointQueryParameters2D::property:canvas_instance_id"],
+      "state": "Blocked",
+      "reason": "Trigger: independent viewport canvas instance identity and query filtering across multiple World2D resources (ADRs 0028 and 0063)."
+    },
+    {
+      "godot": ["class:PhysicsDirectSpaceState2D"],
+      "state": "Partial",
+      "reason": "Typed ray and point views execute over the shared server/scene solver space; shape sweeps and casts require typed shape-query parameters and recovery results (ADR 0063)."
+    },
+    {
+      "godot": ["PhysicsDirectSpaceState2D::method:intersect_ray(PhysicsRayQueryParameters2D:)"],
+      "state": "Implemented",
+      "reason": "Nearest typed ray hit preserves collider RID/object/instance ID, stable shape-owner index, position, normal, exclusions, masks, Area flags and inside behavior (ADR 0063, PhysicsQueryTests)."
+    },
+    {
+      "godot": ["PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"],
+      "state": "Partial",
+      "reason": "Typed point hits, RID ordering, deduplicated shape-owner indices and max-results execute; CanvasInstanceID filtering awaits independent viewport canvas identity (ADRs 0028 and 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsDirectSpaceState2D::method:cast_motion(PhysicsShapeQueryParameters2D:)",
+        "PhysicsDirectSpaceState2D::method:collide_shape(PhysicsShapeQueryParameters2D:,int:)",
+        "PhysicsDirectSpaceState2D::method:get_rest_info(PhysicsShapeQueryParameters2D:)",
+        "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: typed shape RID/query parameters, sweeps, overlap recovery and stable manifold results over the registered physics space (ADR 0063)."
+    },
+    {
+      "godot": ["class:PhysicsServer2D"],
+      "state": "Partial",
+      "reason": "Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:BodyMode",
+        "PhysicsServer2D::enum_value:BodyMode.BODY_MODE_KINEMATIC",
+        "PhysicsServer2D::enum_value:BodyMode.BODY_MODE_RIGID",
+        "PhysicsServer2D::enum_value:BodyMode.BODY_MODE_RIGID_LINEAR",
+        "PhysicsServer2D::enum_value:BodyMode.BODY_MODE_STATIC",
+        "PhysicsServer2D::method:space_create()",
+        "PhysicsServer2D::method:space_get_direct_state(RID:)",
+        "PhysicsServer2D::method:body_create()",
+        "PhysicsServer2D::method:area_create()",
+        "PhysicsServer2D::method:circle_shape_create()",
+        "PhysicsServer2D::method:rectangle_shape_create()",
+        "PhysicsServer2D::method:capsule_shape_create()",
+        "PhysicsServer2D::method:segment_shape_create()",
+        "PhysicsServer2D::method:convex_polygon_shape_create()",
+        "PhysicsServer2D::method:concave_polygon_shape_create()",
+        "PhysicsServer2D::method:body_set_space(RID:,RID:)",
+        "PhysicsServer2D::method:area_set_space(RID:,RID:)",
+        "PhysicsServer2D::method:body_get_space(RID:)",
+        "PhysicsServer2D::method:area_get_space(RID:)",
+        "PhysicsServer2D::method:body_set_mode(RID:,int:PhysicsServer2D.BodyMode)",
+        "PhysicsServer2D::method:body_get_mode(RID:)",
+        "PhysicsServer2D::method:body_set_collision_layer(RID:,int:)",
+        "PhysicsServer2D::method:body_set_collision_mask(RID:,int:)",
+        "PhysicsServer2D::method:area_set_collision_layer(RID:,int:)",
+        "PhysicsServer2D::method:body_get_shape_count(RID:)",
+        "PhysicsServer2D::method:area_get_shape_count(RID:)",
+        "PhysicsServer2D::method:body_set_shape_disabled(RID:,int:,bool:)",
+        "PhysicsServer2D::method:area_set_shape_disabled(RID:,int:,bool:)",
+        "PhysicsServer2D::method:body_remove_shape(RID:,int:)",
+        "PhysicsServer2D::method:area_remove_shape(RID:,int:)",
+        "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "Real shared Box2D spaces and six existing shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests)."
+    },
+    {
+      "godot": ["PhysicsServer2D::method:area_set_collision_mask(RID:,int:)"],
+      "state": "Blocked",
+      "reason": "Trigger: server-only Area overlap monitoring and field/event consumers must use the mask; direct ray/point queries filter by Area layer, so a stored mask alone would be inert (ADR 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_add_shape(RID:,RID:,Transform2D:,bool:)",
+        "PhysicsServer2D::method:area_add_shape(RID:,RID:,Transform2D:,bool:)",
+        "PhysicsServer2D::method:shape_set_data(RID:,Variant:)",
+        "PhysicsServer2D::method:shape_get_data(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "Typed Shape resources and local transforms execute for six implemented families; world boundary, separation ray and custom shapes still need concrete shape/backend slices (ADRs 0004 and 0063)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+        "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
+      ],
+      "state": "Partial",
+      "reason": "Typed transform and linear-velocity server branches execute; remaining BodyState values need corresponding typed solver-state methods and callback integration (ADR 0063)."
+    },
+    {
+      "godot": ["PhysicsServer2D::method:free_rid(RID:)"],
+      "state": "Partial",
+      "reason": "Scene-owned identities and explicit physics spaces/bodies/Areas/shapes have tested lifetime; joint, world-boundary, custom and other server resource kinds remain unimplemented (ADR 0063)."
+    },
+    {
+      "godot": [
         "class:ConcavePolygonShape2D",
         "ConcavePolygonShape2D::property:segments"
       ],
@@ -615,8 +928,8 @@
       "godot": [
         "CollisionObject2D::method:get_rid()"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: typed PhysicsServer2D resource identity, body/space lifetime and RID projection."
+      "state": "Implemented",
+      "reason": "Stable server RID exists for every scene body and Area from construction through disposal; fixture rebuilds and scene reentry preserve identity (ADR 0063, PhysicsQueryTests)."
     },
     {
       "godot": [

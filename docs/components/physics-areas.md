@@ -16,6 +16,8 @@ Before that backend step, each dynamic body resolves currently overlapping area 
 
 ## Dependencies, invariants and limits
 
+An Area owns a stable [RID](../classes/RID.md). A [direct ray or point query](physics-queries.md) includes its sensor fixtures only when `CollideWithAreas` is enabled; the query's layer mask tests this area's layer even when its own mask is zero. Server-created Areas share the Box2D space for direct queries, while this component's typed object-level overlap events still cover scene collision objects only.
+
 An Area uses nonresponding sensor fixtures; a child CollisionShape's one-way body-contact setting does not filter either approach side. The child warns about the ineffective setting, while its scene properties remain packable.
 
 The current profile accepts unit global scale and zero skew while active. Shape/resource, filtering, monitoring and field edits take effect on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Tile-map virtual collision bodies, absent CharacterBody gravity queries, audio-bus routing and typed shape/RID events remain separate coverage work.

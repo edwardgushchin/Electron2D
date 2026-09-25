@@ -26,6 +26,8 @@ trigger.BodyEntered += body => Console.WriteLine(body.Name);
 
 ## API summary
 
+The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies this sensor across fixture rebuilds. Direct [PhysicsDirectSpaceState2D](PhysicsDirectSpaceState2D.md) queries can include Area fixtures when their parameters enable `CollideWithAreas`; object-level area monitoring continues on its fixed-step snapshot path.
+
 | Member | Default | Contract |
 | --- | --- | --- |
 | `public Area()` | — | Creates a detached monitoring, monitorable area. |

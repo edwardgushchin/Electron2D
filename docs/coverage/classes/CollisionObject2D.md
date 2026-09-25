@@ -1,6 +1,6 @@
 # CollisionObject2D API coverage
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 Godot source: [doc/classes/CollisionObject2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -23,7 +23,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`method create_shape_owner(Object owner) -> int`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete CollisionObject2D API slice. |
 | [`method get_collision_layer_value(int layer_number) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | [`public System.Boolean GetCollisionLayerValue(System.Int32 layerNumber)`](../../classes/CollisionObject.md) | Implemented | Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. |
 | [`method get_collision_mask_value(int layer_number) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | [`public System.Boolean GetCollisionMaskValue(System.Int32 layerNumber)`](../../classes/CollisionObject.md) | Implemented | Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal. |
-| [`method get_rid() -> RID`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | — | Blocked | Trigger: typed PhysicsServer2D resource identity, body/space lifetime and RID projection. |
+| [`method get_rid() -> RID`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | [`public Electron2D.RID GetRID()`](../../classes/CollisionObject.md) | Implemented | Stable server RID exists for every scene body and Area from construction through disposal; fixture rebuilds and scene reentry preserve identity (ADR 0063, PhysicsQueryTests). |
 | [`method get_shape_owner_one_way_collision_direction(int owner_id) -> Vector2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete CollisionObject2D API slice. |
 | [`method get_shape_owner_one_way_collision_margin(int owner_id) -> float`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete CollisionObject2D API slice. |
 | [`method get_shape_owners() -> PackedInt32Array`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/CollisionObject2D.xml) | — | Unimplemented | No mapped C# declaration; trigger: next complete CollisionObject2D API slice. |

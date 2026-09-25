@@ -13,9 +13,18 @@ public abstract class CollisionObject : Entity
 
     private uint _collisionLayer = 1;
     private uint _collisionMask = 1;
+    private readonly RID _rid;
 
     /// <summary>Creates an object in collision layer one with mask one.</summary>
-    protected CollisionObject() { }
+    protected CollisionObject() => _rid = PhysicsServer2D.Instance.RegisterSceneObject(this);
+
+    /// <summary>Gets the stable server identity of this collision object.</summary>
+    /// <returns>A nonempty RID unchanged by fixture rebuilds or scene attachment.</returns>
+    public RID GetRID()
+    {
+        ThrowIfDisposed();
+        return _rid;
+    }
 
     /// <summary>Gets or sets the 32-bit collision category mask.</summary>
     /// <value>One by default.</value>
@@ -71,6 +80,13 @@ public abstract class CollisionObject : Entity
     internal abstract void AttachShape(ICollisionGeometry shape);
     internal abstract void DetachShape(ICollisionGeometry shape);
     internal abstract void MarkShapesDirty();
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        try { base.Dispose(disposing); }
+        finally { if (disposing) PhysicsServer2D.Instance.UnregisterSceneObject(_rid); }
+    }
 
     private static uint LayerBit(int number)
     {

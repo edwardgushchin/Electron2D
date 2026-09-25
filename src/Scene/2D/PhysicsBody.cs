@@ -196,11 +196,12 @@ public abstract class PhysicsBody : CollisionObject
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
         PhysicsSpace.SetMaterial(ref definition, _materialOverride);
-        foreach (var node in _shapes)
+        for (var index = 0; index < _shapes.Count; index++)
         {
+            var node = _shapes[index];
             if (!node.IsActive) continue;
             var contact = node.OneWayContact;
-            definition.userData = contact is null ? default : new B2UserData(contact);
+            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
             definition.enablePreSolveEvents = contact is not null;
             node.AppendToBody(_bodyID, definition, _backendShapes);
         }
