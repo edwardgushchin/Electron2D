@@ -1,6 +1,6 @@
 # Android platform probe
 
-This test-only SDLActivity exercises Electron2D through five independent scenarios selected by the Android intent extra `scenario`. It is not a production application host.
+This test-only SDLActivity exercises Electron2D through five engine scenarios and one standalone GLES2 shader probe selected by the Android intent extra `scenario`. It is not a production application host.
 
 | Scenario | Check |
 | --- | --- |
@@ -9,6 +9,7 @@ This test-only SDLActivity exercises Electron2D through five independent scenari
 | `auto` | Request the GPU with fallback enabled; verify which renderer actually produced the pixel. |
 | `shader` | Load the pinned HLSL SPIR-V fixture, disable fallback, draw through `ShaderMaterial`, and read back the pixel. |
 | `physics` | Step a dynamic Box2D body onto a static floor for 120 frames; require `75 < Y < 85` and nearly zero velocity. |
+| `gles_shader` | Compile and draw a GLES2 fragment shader directly; read back a red pixel. This probes hardware and does not implement Electron2D ShaderMaterial on GLES2. |
 
 Publish separately for each device ABI from the repository root:
 

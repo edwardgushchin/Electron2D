@@ -20,6 +20,7 @@ public sealed class MainActivity : SDLActivity
         try
         {
             if (scenario == "physics") VerifyPhysics();
+            else if (scenario == "gles_shader") Gles2Probe.Run();
             else VerifyCanvas(scenario);
             Log.Info("Electron2DProbe", $"DONE {scenario}");
         }

@@ -1,0 +1,26 @@
+<!doctype html><html><body><h1>WebGPU fragment shader probe</h1><canvas id="canvas" width="640" height="360"></canvas><p id="status">Starting</p><script>
+(async () => {
+  const adapter = await navigator.gpu.requestAdapter();
+  if (!adapter) throw new Error('No WebGPU adapter');
+  const device = await adapter.requestDevice();
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('webgpu');
+  const format = navigator.gpu.getPreferredCanvasFormat();
+  context.configure({device, format, alphaMode:'opaque'});
+  const shader = device.createShaderModule({code:`
+    @vertex fn vertex(@builtin(vertex_index) i:u32) -> @builtin(position) vec4f {
+      var points = array<vec2f,3>(vec2f(-1,-1), vec2f(3,-1), vec2f(-1,3));
+      return vec4f(points[i], 0, 1);
+    }
+    @fragment fn fragment() -> @location(0) vec4f { return vec4f(1,0,0,1); }
+  `});
+  const info = await shader.getCompilationInfo();
+  if (info.messages.some(m => m.type === 'error')) throw new Error(info.messages.map(m=>m.message).join('; '));
+  const pipeline = device.createRenderPipeline({layout:'auto', vertex:{module:shader,entryPoint:'vertex'}, fragment:{module:shader,entryPoint:'fragment',targets:[{format}]}, primitive:{topology:'triangle-list'}});
+  const encoder = device.createCommandEncoder();
+  const pass = encoder.beginRenderPass({colorAttachments:[{view:context.getCurrentTexture().createView(), clearValue:{r:0,g:0,b:0,a:1}, loadOp:'clear', storeOp:'store'}]});
+  pass.setPipeline(pipeline); pass.draw(3); pass.end(); device.queue.submit([encoder.finish()]);
+  await device.queue.onSubmittedWorkDone();
+  document.getElementById('status').textContent = 'WebGPU fragment shader submitted';
+})().catch(e => document.getElementById('status').textContent = e.name + ': ' + e.message);
+</script></body></html>
