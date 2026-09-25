@@ -1,0 +1,46 @@
+name: Apple library builds
+
+on:
+  push:
+    paths:
+      - Electron2D.csproj
+      - src/**
+      - .github/workflows/apple-library.yml
+  pull_request:
+    paths:
+      - Electron2D.csproj
+      - src/**
+      - .github/workflows/apple-library.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apple-library:
+    runs-on: macos-26
+    timeout-minutes: 90
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Check Apple toolchain
+        run: |
+          test -d "$DEVELOPER_DIR"
+          dotnet --version
+          xcodebuild -version
+      - name: Install Apple workloads
+        run: |
+          dotnet workload install ios tvos
+          dotnet workload list
+      - name: Build iOS and tvOS libraries
+        shell: bash
+        run: |
+          set -euo pipefail
+          for rid in ios-arm64 iossimulator-arm64 iossimulator-x64 tvos-arm64 tvossimulator-arm64 tvossimulator-x64; do
+            echo "Building $rid"
+            dotnet build Electron2D.csproj -c Release -r "$rid" -p:NuGetAudit=false --nologo
+          done
