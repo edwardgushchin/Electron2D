@@ -3085,6 +3085,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ShapeCast",
+    "kind": "type",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "ShapeCast",
+    "signature": "public sealed class Electron2D.ShapeCast",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Side",
     "kind": "type",
     "declaringType": "Electron2D.Side",
@@ -6634,6 +6649,19 @@
     "name": ".ctor",
     "signature": "protected Shape()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ShapeCast..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": ".ctor",
+    "signature": "public ShapeCast()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -47720,6 +47748,388 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShapeCast.AddException(Electron2D.CollisionObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "AddException",
+    "signature": "public System.Void AddException(Electron2D.CollisionObject node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.CollisionObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.AddExceptionRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "AddExceptionRID",
+    "signature": "public System.Void AddExceptionRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.ClearExceptions()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "ClearExceptions",
+    "signature": "public System.Void ClearExceptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.ForceShapecastUpdate()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "ForceShapecastUpdate",
+    "signature": "public System.Void ForceShapecastUpdate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetClosestCollisionSafeFraction()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetClosestCollisionSafeFraction",
+    "signature": "public System.Single GetClosestCollisionSafeFraction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetClosestCollisionUnsafeFraction()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetClosestCollisionUnsafeFraction",
+    "signature": "public System.Single GetClosestCollisionUnsafeFraction()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetCollider(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetCollider",
+    "signature": "public Electron2D.ElectronObject GetCollider(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetColliderRID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetColliderRID",
+    "signature": "public Electron2D.RID GetColliderRID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetColliderShape(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetColliderShape",
+    "signature": "public System.Int32 GetColliderShape(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetCollisionCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetCollisionCount",
+    "signature": "public System.Int32 GetCollisionCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetCollisionMaskValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetCollisionMaskValue",
+    "signature": "public System.Boolean GetCollisionMaskValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetCollisionNormal(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetCollisionNormal",
+    "signature": "public Electron2D.Vector2 GetCollisionNormal(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetCollisionPoint(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetCollisionPoint",
+    "signature": "public Electron2D.Vector2 GetCollisionPoint(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.IsColliding()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "IsColliding",
+    "signature": "public System.Boolean IsColliding()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.RemoveException(Electron2D.CollisionObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "RemoveException",
+    "signature": "public System.Void RemoveException(Electron2D.CollisionObject node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.CollisionObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.RemoveExceptionRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "RemoveExceptionRID",
+    "signature": "public System.Void RemoveExceptionRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCast.SetCollisionMaskValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "SetCollisionMaskValue",
+    "signature": "public System.Void SetCollisionMaskValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
@@ -69386,6 +69796,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Shader",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.CollideWithAreas()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "CollideWithAreas",
+    "signature": "public System.Boolean CollideWithAreas { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.CollideWithBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "CollideWithBodies",
+    "signature": "public System.Boolean CollideWithBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.CollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "CollisionMask",
+    "signature": "public System.UInt32 CollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.CollisionResult()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "CollisionResult",
+    "signature": "public Electron2D.PhysicsRestInfo2D[] CollisionResult { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsRestInfo2D[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.ExcludeParent()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "ExcludeParent",
+    "signature": "public System.Boolean ExcludeParent { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.Margin()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "Margin",
+    "signature": "public System.Single Margin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.MaxResults()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "MaxResults",
+    "signature": "public System.Int32 MaxResults { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.Shape()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "Shape",
+    "signature": "public Electron2D.Shape Shape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shape",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeCast.TargetPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeCast",
+    "name": "TargetPosition",
+    "signature": "public Electron2D.Vector2 TargetPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

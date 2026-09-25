@@ -190,6 +190,15 @@ internal static class RayCastTests
         ray.CollideWithBodies = false;
         ray.ForceRaycastUpdate();
         Check(!ray.IsColliding(), "Area/body flags independently gate ray targets.");
+        parent.RemoveChild(ray);
+        root.AddChild(ray);
+        ray.CollideWithBodies = true;
+        ray.CollideWithAreas = false;
+        ray.CollisionMask = 1;
+        ray.TargetPosition = Vector2.Zero;
+        ray.ForceRaycastUpdate();
+        Check(ray.GetColliderRID() == parent.GetRID(),
+            "Leaving a collision parent removes its automatic RID exception before a new attachment.");
     }
 
     private static void VerifyRotatedTarget()

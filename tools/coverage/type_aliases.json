@@ -35,6 +35,7 @@
     "CollisionShape2D": "CollisionShape",
     "CollisionPolygon2D": "CollisionPolygon",
     "RayCast2D": "RayCast",
+    "ShapeCast2D": "ShapeCast",
     "CollisionObject2D": "CollisionObject",
     "PhysicsBody2D": "PhysicsBody",
     "RigidBody2D": "RigidBody",

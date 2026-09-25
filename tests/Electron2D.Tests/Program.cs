@@ -195,6 +195,7 @@ CollisionPolygonTests.Run();
 PhysicsQueryTests.Run();
 PhysicsShapeQueryTests.Run();
 RayCastTests.Run();
+ShapeCastTests.Run();
 ConvexPolygonShapeTests.Run();
 ConcavePolygonShapeTests.Run();
 AnimatableBodyTests.Run();

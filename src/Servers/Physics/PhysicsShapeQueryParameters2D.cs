@@ -17,6 +17,12 @@ public sealed class PhysicsShapeQueryParameters2D : ElectronObject
 
     internal RID[] ExclusionsArray => _exclude;
 
+    internal void BorrowExclusions(RID[] exclusions)
+    {
+        ThrowIfDisposed();
+        _exclude = exclusions;
+    }
+
     /// <summary>Creates an empty query with all layers and body detection enabled.</summary>
     public PhysicsShapeQueryParameters2D() { }
 

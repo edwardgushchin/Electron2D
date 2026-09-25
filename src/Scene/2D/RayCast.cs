@@ -255,6 +255,8 @@ public sealed class RayCast : Entity
     protected override void OnExitTree()
     {
         SetInternalProcessing(false, false);
+        if (_excludeParent && Parent is CollisionObject parent && _exceptions.Remove(parent.GetRID()))
+            RefreshExclusions();
         base.OnExitTree();
     }
 

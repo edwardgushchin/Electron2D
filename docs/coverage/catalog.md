@@ -772,7 +772,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
 | [Shape2D](classes/Shape2D.md) | Resource | Partial | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
-| [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Blocked | 27 |
+| [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Partial | 27 |
 | [ShapeCast3D](classes/ShapeCast3D.md) | Node3D | Excluded | 29 |
 | [Shortcut](classes/Shortcut.md) | Resource | Blocked | 4 |
 | [Signal](classes/Signal.md) | — | Excluded | 15 |

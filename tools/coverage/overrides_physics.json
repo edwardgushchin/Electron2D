@@ -1,6 +1,21 @@
 {
   "mappings": [
     {
+      "godot": "ShapeCast2D::method:get_closest_collision_safe_fraction()",
+      "electron2d": "method:Electron2D.ShapeCast.GetClosestCollisionSafeFraction()",
+      "reason": "Typed cached safe fraction of the spatial shape sweep."
+    },
+    {
+      "godot": "ShapeCast2D::method:get_closest_collision_unsafe_fraction()",
+      "electron2d": "method:Electron2D.ShapeCast.GetClosestCollisionUnsafeFraction()",
+      "reason": "Typed cached unsafe fraction of the spatial shape sweep."
+    },
+    {
+      "godot": "ShapeCast2D::method:get_collision_count()",
+      "electron2d": "method:Electron2D.ShapeCast.GetCollisionCount()",
+      "reason": "Typed count of cached rest contacts."
+    },
+    {
       "godot": "RayCast2D::method:get_collider()",
       "electron2d": "method:Electron2D.RayCast.GetCollider()",
       "reason": "Typed ElectronObject result preserves the reference object role; server-only colliders have no scene object."
@@ -92,6 +107,41 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ShapeCast..ctor()",
+      "reason": "Managed scene construction projects the reference default shape cast options.",
+      "adr": "ADRs 0003, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene construction restores the exact spatial cast node.",
+      "adr": "ADRs 0005, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.Dispose(System.Boolean)",
+      "reason": "Managed node disposal releases its owned query-parameter object without disposing the borrowed Shape.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.GetPropertyDescriptors()",
+      "reason": "Typed scene descriptors store the borrowed shape and query options without transient contacts.",
+      "adr": "ADRs 0005, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.OnEnterTree()",
+      "reason": "Scene entry enables fixed-frame sampling and parent RID filtering.",
+      "adr": "ADRs 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.OnExitTree()",
+      "reason": "Scene exit stops automatic sampling while retaining the previous snapshot.",
+      "adr": "ADRs 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCast.OnNotification(System.Int32)",
+      "reason": "The internal fixed-physics notification samples the spatial shape query.",
+      "adr": "ADRs 0008, 0063"
+    },
     {
       "electron2d": "property:Electron2D.PhysicsRestInfo2D.Collider()",
       "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
@@ -649,6 +699,48 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["class:ShapeCast2D"],
+      "state": "Partial",
+      "reason": "Cached scene shape sweeps and typed contacts execute; physics-debug gizmo drawing and virtual tile collision-owner results retain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
+    },
+    {
+      "godot": ["ShapeCast2D::method:get_collider(int:)"],
+      "state": "Partial",
+      "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
+    },
+    {
+      "godot": [
+        "ShapeCast2D::method:add_exception(CollisionObject2D:)",
+        "ShapeCast2D::method:add_exception_rid(RID:)",
+        "ShapeCast2D::method:clear_exceptions()",
+        "ShapeCast2D::method:force_shapecast_update()",
+        "ShapeCast2D::method:get_closest_collision_safe_fraction()",
+        "ShapeCast2D::method:get_closest_collision_unsafe_fraction()",
+        "ShapeCast2D::method:get_collider_rid(int:)",
+        "ShapeCast2D::method:get_collider_shape(int:)",
+        "ShapeCast2D::method:get_collision_count()",
+        "ShapeCast2D::method:get_collision_mask_value(int:)",
+        "ShapeCast2D::method:get_collision_normal(int:)",
+        "ShapeCast2D::method:get_collision_point(int:)",
+        "ShapeCast2D::method:is_colliding()",
+        "ShapeCast2D::method:remove_exception(CollisionObject2D:)",
+        "ShapeCast2D::method:remove_exception_rid(RID:)",
+        "ShapeCast2D::method:set_collision_mask_value(int:,bool:)",
+        "ShapeCast2D::property:collide_with_areas",
+        "ShapeCast2D::property:collide_with_bodies",
+        "ShapeCast2D::property:collision_mask",
+        "ShapeCast2D::property:collision_result",
+        "ShapeCast2D::property:enabled",
+        "ShapeCast2D::property:exclude_parent",
+        "ShapeCast2D::property:margin",
+        "ShapeCast2D::property:max_results",
+        "ShapeCast2D::property:shape",
+        "ShapeCast2D::property:target_position"
+      ],
+      "state": "Implemented",
+      "reason": "Spatial shape casts execute fixed-frame and forced first-impact queries, typed multi-collider contacts, RID exclusions, filtering, zero motion, rotation, caps, PackedScene and warmed allocation checks (ADR 0063, ShapeCastTests)."
+    },
     {
       "godot": ["class:RayCast2D"],
       "state": "Partial",
