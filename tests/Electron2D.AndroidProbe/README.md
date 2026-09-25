@@ -1,14 +1,22 @@
-# Android display and canvas probe
+# Android platform probe
 
-This test-only SDLActivity runs the public Electron2D `Engine.Run` path. It draws one red rectangle for 900 process frames, then quits with code zero. It is an executable device smoke, not a production application host.
+This test-only SDLActivity exercises Electron2D through five independent scenarios selected by the Android intent extra `scenario`. It is not a production application host.
 
-From the repository root, publish for the device ABI:
+| Scenario | Check |
+| --- | --- |
+| `compatibility` (default) | Force SDL_Renderer, draw a red rectangle, read back pixel `(4, 4)`, and quit. |
+| `gpu` | Disable fallback, enumerate SDL GPU drivers, attempt a GPU canvas and read back the same pixel. |
+| `auto` | Request the GPU with fallback enabled; verify which renderer actually produced the pixel. |
+| `shader` | Load the pinned HLSL SPIR-V fixture, disable fallback, draw through `ShaderMaterial`, and read back the pixel. |
+| `physics` | Step a dynamic Box2D body onto a static floor for 120 frames; require `75 < Y < 85` and nearly zero velocity. |
+
+Publish separately for each device ABI from the repository root:
 
 ```bash
 dotnet publish tests/Electron2D.AndroidProbe/Electron2D.AndroidProbe.csproj -c Release -r android-arm64 --self-contained true
-# Use -r android-arm for a 32-bit Android TV.
+# For 32-bit Android TV use -r android-arm.
 ```
 
-Install `tests/Electron2D.AndroidProbe/bin/Release/net10.0-android/<RID>/publish/org.electron2d.probe-Signed.apk` with `adb -s SERIAL install -r`, launch `org.electron2d.probe` with `adb -s SERIAL shell monkey -p org.electron2d.probe 1`, and inspect `adb -s SERIAL logcat -d -s Electron2DProbe:I` for `RUN`, `DRAW`, and `DONE 0`. Capture a device screenshot while it runs to verify the red rectangle. The TV used for the initial check had 32-bit `armeabi-v7a` userspace, so a 64-bit APK would not exercise it.
+Install the signed APK under `tests/Electron2D.AndroidProbe/bin/Release/net10.0-android/<RID>/publish/` with `adb -s SERIAL install -r`. Resolve its launcher component using `adb -s SERIAL shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER org.electron2d.probe`. Run each scenario with `adb -s SERIAL shell am start -S -n COMPONENT --es scenario SCENARIO`, then inspect `adb -s SERIAL logcat -d -s Electron2DProbe:I`. A successful stage ends with `DONE SCENARIO`; `FAIL SCENARIO` records the exception. The GPU/shader stages must not be counted as passed when the device reports no suitable SDL GPU device.
 
-When switching between `android-arm` and `android-arm64` in one checkout, remove the previous RID directory under `tests/Electron2D.AndroidProbe/obj/Release/net10.0-android/` if the Android Java compiler reports stale generated sources. The APK may emit Android warning `XA4301` about a duplicate `libSDL3.so` path; the tested APK installed and ran. This probe does not cover suspend/resume, controller input, audio, storage, store packaging, or release signing.
+On 2026-09-25 the Samsung SM-A256E (`android-arm64`, API 36) and MiTV-MSSP3 Android TV (`android-arm`, API 30) passed compatibility pixel and physics checks. With the relaxed Vulkan feature set, the phone passed GPU and shader pixels. The TV rejected SDL GPU creation even with those optional features disabled; its `auto` scenario uses SDL_Renderer. The tested TV advertises OpenGL ES 2 but no Vulkan feature. See the [platform verification matrix](../../docs/platform-verification.md). An APK build may emit XA4301 for a duplicate `libSDL3.so` path; the tested APK installed and ran.

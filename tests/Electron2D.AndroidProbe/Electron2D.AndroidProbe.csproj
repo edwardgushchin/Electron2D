@@ -12,5 +12,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" SetTargetFramework="TargetFramework=net10.0-android" />
+    <EmbeddedResource Include="../Electron2D.Tests/Shaders/CanvasHLSL.spv" LogicalName="Probe.CanvasHLSL.spv" />
+    <AndroidLibrary Remove="obj/**/*;bin/**/*" />
+    <AndroidNativeLibrary Remove="obj/**/*.so;bin/**/*.so" />
+    <AndroidJavaSource Remove="obj/**/*.java" />
   </ItemGroup>
 </Project>

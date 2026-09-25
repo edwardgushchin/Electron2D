@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-09-23
+Last updated: 2026-09-25
 
 ## Scope and implementation state
 
@@ -165,7 +165,7 @@ bool enabled = material.GetShaderParameter<bool>("enabled");
 int triple = material.GetShaderParameter<int>("triple");
 ```
 
-[ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies descriptors/defaults/reverts, scalar/vector/array values, adjacent uint integrity, type errors and atomic updates, independent graph copies, layout migration and logical-type resets, malformed external metadata and 2,000 warm update/read iterations with zero managed bytes. Both language fixtures render forty native Wayland/Vulkan frames with shared/distinct/default materials, live updates/reload, twenty checked pixels per frame and zero managed bytes over the last twenty rendering intervals. Compatibility rejects these shader materials and releases resources. [Importer checks](../../tools/shaders/check.py) reproduce all three boolean artifacts and exercise include/macros, aliases, one-element arrays, unused resources, HLSL ConstantBuffer and Vulkan binding attributes, external metadata validation and failed-output preservation. Other platforms and owner visual acceptance remain unverified.
+[ShaderBooleanRenderingTests](../../tests/Electron2D.Tests/ShaderBooleanRenderingTests.cs) verifies descriptors/defaults/reverts, scalar/vector/array values, adjacent uint integrity, type errors and atomic updates, independent graph copies, layout migration and logical-type resets, malformed external metadata and 2,000 warm update/read iterations with zero managed bytes. Both language fixtures render forty native Wayland/Vulkan frames with shared/distinct/default materials, live updates/reload, twenty checked pixels per frame and zero managed bytes over the last twenty rendering intervals. Compatibility rejects these shader materials and releases resources. [Importer checks](../../tools/shaders/check.py) reproduce all three boolean artifacts and exercise include/macros, aliases, one-element arrays, unused resources, HLSL ConstantBuffer and Vulkan binding attributes, external metadata validation and failed-output preservation. The full renderer suite also passed on XWayland/X11. On the tested Android phone, disabling four optional Vulkan features let the HLSL SPIR-V material render a checked red pixel. The tested Android TV still rejects SDL GPU device creation; the isolated browser build has no SDL GPU driver. See the [platform matrix](../platform-verification.md). Other hosts and owner visual acceptance remain unverified.
 
 Boolean delivery checks passed: `dotnet publish tools/shaders/ShaderImport.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-booleans-import`, then `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin python3 -B tools/shaders/check.py --tool /tmp/electron2d-booleans-import/Electron2D.ShaderImport`. The SDK-dependent project test passed with `env -u LD_LIBRARY_PATH python3 -B tools/shaders/check_build.py --tool /tmp/electron2d-booleans-import/Electron2D.ShaderImport`; its generated consumer now qualifies System.IO.Path to avoid the existing engine Path name. Packaged versions/licenses, unchanged existing shader fixtures, atomic failures, public consumption, build/publish and Clean were checked.
 

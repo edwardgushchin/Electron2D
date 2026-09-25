@@ -9,7 +9,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, HLSL/GLSL import and a shared SPIR-V shader path, and SDL_Renderer fallback
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ### Status
 
@@ -78,7 +78,7 @@ The Linux x64 import tool packages glslang 16.4.0 and SPIRV-Tools v2026.3, built
 
 CanvasItem/Viewport sampling policies now cover texel filtering, ordinary/mirrored repeat, uploaded mipmaps and GPU anisotropy. [Canvas rendering](../components/canvas-rendering.md#texture-sampling) records native backend restrictions; unsupported fallback modes fail explicitly under this ADR. Named material samplers currently implement linear/base-level/clamp defaults independently of canvas policies; their configuration remains pending.
 
-The Web target has no browser graphics host or verified mapping to these SDL backends. Its first rendering/host slice must establish that mapping and explicit capability behavior before claiming browser output.
+The tested Android arm64 phone now runs the GPU canvas and HLSL/SPIR-V material when four optional Vulkan features are disabled; the pipeline enables depth clipping because depth clamping is then unavailable. The tested Android TV exposes OpenGL ES 2 but no Vulkan hardware feature, so SDL_GPU remains unavailable and only the shaderless SDL_Renderer fallback works. The isolated Chrome probe has WebGL2 and WebGPU devices and a direct SDL_Renderer frame, but SDL 3.4.16/Emscripten exposes no SDL_GPU driver. [The platform matrix](../platform-verification.md) records the exact checks and limits. A shader-capable path for the tested TV and browser remains unimplemented and must receive its own backend, shader translation, lifecycle and pixel verification before claiming the common shader contract there.
 
 ### Related decisions
 

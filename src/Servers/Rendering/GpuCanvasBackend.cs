@@ -26,6 +26,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private Vector2i _targetSize;
     private bool _hasFrame;
     private bool _disposed;
+    private readonly bool _relaxedAndroidDevice;
     internal override string Method => "gpu";
     internal override string Driver { get; }
     private nint Device => _device.DangerousGetHandle();
@@ -33,7 +34,9 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     internal GpuCanvasBackend(SafeHandle window)
     {
         _window = window.DangerousGetHandle();
-        _device = new RenderHandle(SDL.CreateGPUDevice(ShaderCompiler.GetFormats(), false, null), SDL.DestroyGPUDevice, window);
+        var (device, relaxed) = CreateDevice();
+        _relaxedAndroidDevice = relaxed;
+        _device = new RenderHandle(device, SDL.DestroyGPUDevice, window);
         var claimed = false;
         RenderHandle? vertex = null;
         try
@@ -53,6 +56,29 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             _device.Dispose();
             throw;
         }
+    }
+
+    private static (nint Device, bool Relaxed) CreateDevice()
+    {
+        var formats = ShaderCompiler.GetFormats();
+        var device = SDL.CreateGPUDevice(formats, false, null);
+        if (device != 0 || !OperatingSystem.IsAndroid() || (formats & SDL.GPUShaderFormat.SPIRV) == 0)
+            return (device, false);
+
+        // The canvas does not use these optional Vulkan features; older Android GPUs may lack them.
+        var props = SDL.CreateProperties();
+        if (props == 0) throw Failure("configure an Android GPU device");
+        try
+        {
+            if (!SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateShadersSPIRVBoolean, true) ||
+                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureClipDistanceBoolean, false) ||
+                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureDepthClampingBoolean, false) ||
+                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) ||
+                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false))
+                throw Failure("configure optional Android GPU features");
+            return (SDL.CreateGPUDeviceWithProperties(props), true);
+        }
+        finally { SDL.DestroyProperties(props); }
     }
 
     internal override Vector2i GetPixelSize()
@@ -102,6 +128,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             VertexShader = _vertexShader.DangerousGetHandle(),
             FragmentShader = fragment.DangerousGetHandle(),
             PrimitiveType = SDL.GPUPrimitiveType.TriangleList,
+            // Required when the Android device does not support depth clamping.
+            RasterizerState = new() { EnableDepthClip = true },
             VertexInputState = new() { VertexBufferDescriptions = (nint)(&buffer), NumVertexBuffers = 1, VertexAttributes = (nint)attributes, NumVertexAttributes = 3 },
             TargetInfo = new() { ColorTargetDescriptions = (nint)(&color), NumColorTargets = 1 }
         };
@@ -228,6 +256,8 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1)
     {
         var anisotropic = filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1;
+        if (_relaxedAndroidDevice && anisotropic)
+            throw new NotSupportedException("Anisotropic texture filtering is unavailable on this Android GPU device.");
         var key = (filter, repeat, anisotropic ? anisotropy : 1, _nearestMipmaps);
         if (!_samplers.TryGetValue(key, out var sampler))
         {

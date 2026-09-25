@@ -44,7 +44,10 @@
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
   </ItemGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android'">
-    <AndroidNativeLibrary Remove="**/bin/**/*.so" />
+    <!-- The Android SDK scans this root project recursively; nested app outputs are not engine assets. -->
+    <AndroidLibrary Remove="**/obj/**/*;**/bin/**/*" />
+    <AndroidNativeLibrary Remove="**/obj/**/*.so;**/bin/**/*.so" />
+    <AndroidJavaSource Remove="**/obj/**/*.java" />
   </ItemGroup>
   <ItemGroup>
     <None Update="licence/*" CopyToPublishDirectory="Always" />

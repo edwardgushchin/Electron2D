@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Scope and owned types
 
@@ -282,3 +282,5 @@ The pinned [CanvasItem methods](https://github.com/godotengine/godot/blob/ed1daf
 CanvasTimingTests checks inclusive/exclusive boundaries, offsets, signed/zero periods, reset/replacement, hidden resources, validation/rollback, thread/disposal guards, normalized/wide/degenerate rectangles, identical closed-polyline outlines, local/small-core feathers and 1,000 allocation-free warmed redraw/replay cycles. CanvasTimingRenderingTests runs at least twelve frames: both retained phases become visible, hidden transforms stay inactive, unrestricted sibling geometry remains visible, time scaling/pause/disabled frames and live base/feature rollover changes are checked, and only explicit QueueRedraw invokes a second recording. Rectangle fill/outline/AA pixels are checked simultaneously. The test driver reads software's adjacent feather boundary explicitly.
 
 Delivery verification: `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-timing-publish` passed. From that directory, `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests` passed the full rendering suite, including twelve interval/rectangle frames on compatibility, GPU/default, HLSL and GLSL. The same packaged executable with `ELECTRON2D_TEST_CANVAS_TIMING=1 SDL_VIDEODRIVER=dummy` passed software compatibility and warmed renderer-allocation checks. Managed checks, formatting, warning-free Release build and the pinned bidirectional coverage check passed. GTK locale warnings remain an existing nonfatal host condition. Other platforms, exact hardware thin-line coverage and owner visual acceptance remain unverified.
+
+The [platform verification matrix](../platform-verification.md) records separate SDL_Renderer, SDL_GPU and shader results on Wayland, XWayland, Android phone/TV and the isolated browser probe. Android fallback pixels passed on both devices; the phone also passed relaxed Vulkan GPU and shader pixels, while the TV still rejected SDL GPU creation. The relaxed Android device explicitly rejects anisotropic texture filtering instead of claiming it was applied. The Web probe proved a direct SDL_Renderer canvas frame but is not a persistent Engine.Run host.
