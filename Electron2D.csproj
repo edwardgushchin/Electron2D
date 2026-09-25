@@ -27,7 +27,18 @@
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Electron2DNativePlatform)' != '' and '$(Electron2DNativePlatform)' != 'Web'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
+    <PackageReference Include="SDL3-CS.Windows" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.9" />
+    <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.MacOS" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.MacOS.Image" Version="3.4.6.9" />
+    <PackageReference Include="SDL3-CS.MacOS.Shadercross" Version="3.0.0.11" />
+    <PackageReference Include="SDL3-CS.Linux" Version="3.4.16.0" />
+    <PackageReference Include="SDL3-CS.Linux.Image" Version="3.4.6.9" />
+    <PackageReference Include="SDL3-CS.Linux.Shadercross" Version="3.0.0.11" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Android' or '$(Electron2DNativePlatform)' == 'iOS' or '$(Electron2DNativePlatform)' == 'tvOS'">
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="3.4.16.0" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.11" />
