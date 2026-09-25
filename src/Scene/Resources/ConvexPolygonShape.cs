@@ -1,5 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Constants;
+using static Box2D.NET.B2Distances;
 using static Box2D.NET.B2Geometries;
 using static Box2D.NET.B2Hulls;
 using static Box2D.NET.B2MathFunction;
@@ -78,6 +79,13 @@ public sealed class ConvexPolygonShape : Shape
             var polygon = b2MakeOffsetPolygon(hull, position, rotation);
             fixtures.Add(b2CreatePolygonShape(bodyID, definition, polygon));
         }
+    }
+
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        foreach (ref readonly var hull in _hulls.AsSpan())
+            proxies.Add(b2MakeProxy(hull.points.AsSpan(), hull.count, 0));
     }
 
     /// <inheritdoc />

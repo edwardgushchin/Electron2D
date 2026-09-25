@@ -37,3 +37,5 @@ Returns `(-Size.X/2, -Size.Y/2, Size.X, Size.Y)` in local scene units, independe
 ## Verification and limits
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies default/invalid geometry, falling box versus floor, collision filtering and borrowed resource lifetime. Inherited standalone shape queries remain separate [coverage rows](../coverage/classes/Shape2D.md).
+
+Direct [shape queries](PhysicsDirectSpaceState2D.md) use the current filled rectangle and support swept overlap, contact pairs and rest normals; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks these paths.

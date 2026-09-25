@@ -56,3 +56,5 @@ Resource duplication copies endpoint storage independently. A CollisionShape bor
 ## Verification and limits
 
 [ConcavePolygonShapeTests](../../tests/Electron2D.Tests/ConcavePolygonShapeTests.cs) checks paired endpoints, exact bounds, invalid/equal writes, independent copying, PackedScene borrowing, multi-edge terrain contact, dynamic zero-area mass and torque, a body fully inside versus touching a hollow area, point fallback, live edits after callback failure and 64 warmed unchanged body/area frames without managed allocations on Linux/.NET 8. [ADR 0064](../decisions/physics.md#adr-0064) records the hollow resource and [CollisionPolygon2D coverage](../coverage/classes/CollisionPolygon2D.md) names the separate scene-node and one-way contact dependencies. Native allocator, other platforms, owner visual acceptance and inherited standalone shape queries remain unverified or incomplete.
+
+Direct [shape queries](PhysicsDirectSpaceState2D.md) test only paired hollow edges, so a body wholly inside them yields no overlap; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers interior and edge cases.

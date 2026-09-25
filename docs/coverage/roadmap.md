@@ -91,9 +91,9 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
-| Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space. | 5 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
 | Trigger: first SDL_ttf/HarfBuzz text-shaping, font import and renderer slice (ADR 0046). | 4 |
+| Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space. | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |

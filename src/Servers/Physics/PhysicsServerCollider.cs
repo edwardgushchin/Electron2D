@@ -6,10 +6,11 @@ using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
-internal sealed class PhysicsServerShape(RID rid, Shape geometry)
+internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeometry = true)
 {
     internal RID RID { get; } = rid;
     internal Shape Geometry { get; set; } = geometry;
+    internal bool OwnsGeometry { get; } = ownsGeometry;
 }
 
 internal sealed class PhysicsServerCollider(RID rid, bool isArea)
@@ -32,6 +33,14 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     internal IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
     internal PhysicsServer2D.BodyMode Mode => _mode;
     internal int ShapeCount => _slots.Count;
+    private volatile bool _shapesDirty;
+
+    internal void MarkShapesDirty() => _shapesDirty = true;
+
+    internal void PrepareBackend()
+    {
+        if (_shapesDirty) RebuildShapes();
+    }
 
     internal void AttachBackend(PhysicsSpace space, RID spaceRID)
     {
@@ -189,11 +198,12 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         for (var index = 0; index < _slots.Count; index++)
         {
             var slot = _slots[index];
-            if (slot.Disabled) continue;
+            if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
             definition.userData = new B2UserData(new PhysicsFixtureTag(RID, index, null));
             slot.Shape.Geometry.AppendToBody(_bodyID, slot.LocalTransform.Origin,
                 slot.LocalTransform.Rotation, definition, _backendShapes);
         }
+        _shapesDirty = false;
     }
 
     private B2BodyType BackendType => IsArea || _mode == PhysicsServer2D.BodyMode.Static

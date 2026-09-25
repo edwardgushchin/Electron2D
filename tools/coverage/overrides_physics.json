@@ -93,6 +93,81 @@
   ],
   "extras": [
     {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Collider()",
+      "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ColliderID()",
+      "reason": "Typed projection of the ColliderID field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ColliderRID()",
+      "reason": "Typed projection of the ColliderRID field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.LinearVelocity()",
+      "reason": "Typed projection of the LinearVelocity field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Normal()",
+      "reason": "Typed projection of the Normal field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.Point()",
+      "reason": "Typed projection of the Point field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo2D.ShapeIndex()",
+      "reason": "Typed projection of the ShapeIndex field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsShapeResult2D.Collider()",
+      "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ColliderID()",
+      "reason": "Typed projection of the ColliderID field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ColliderRID()",
+      "reason": "Typed projection of the ColliderRID field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsShapeResult2D.ShapeIndex()",
+      "reason": "Typed projection of the ShapeIndex field in a direct-space result dictionary.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsShapeQueryParameters2D..ctor()",
+      "reason": "Managed construction supplies the mutable shape-query defaults.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.Dispose(System.Boolean)",
+      "reason": "Managed Shape disposal releases its lazily borrowed physics RID and attached server fixtures.",
+      "adr": "ADRs 0003, 0063"
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsShapeResult2D",
+      "reason": "Typed value projects direct shape-result dictionary fields without Variant.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsRestInfo2D",
+      "reason": "Typed value projects direct rest-result dictionary fields without Variant.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
       "electron2d": "constructor:Electron2D.RayCast..ctor()",
       "reason": "Managed scene construction projects the enabled local ray and default query options.",
       "adr": "ADRs 0003, 0008, 0063"
@@ -681,7 +756,7 @@
     {
       "godot": ["class:PhysicsDirectSpaceState2D"],
       "state": "Partial",
-      "reason": "Typed ray and point views execute over the shared server/scene solver space; shape sweeps and casts require typed shape-query parameters and recovery results (ADR 0063)."
+      "reason": "Typed ray, point, shape-overlap, sweep, contact and rest views execute; point canvas-instance filtering and remaining direct-space methods retain separate prerequisites (ADR 0063)."
     },
     {
       "godot": ["PhysicsDirectSpaceState2D::method:intersect_ray(PhysicsRayQueryParameters2D:)"],
@@ -700,8 +775,24 @@
         "PhysicsDirectSpaceState2D::method:get_rest_info(PhysicsShapeQueryParameters2D:)",
         "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: typed shape RID/query parameters, sweeps, overlap recovery and stable manifold results over the registered physics space (ADR 0063)."
+      "state": "Implemented",
+      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures (ADR 0063, PhysicsShapeQueryTests)."
+    },
+    {
+      "godot": [
+        "class:PhysicsShapeQueryParameters2D",
+        "PhysicsShapeQueryParameters2D::property:collide_with_areas",
+        "PhysicsShapeQueryParameters2D::property:collide_with_bodies",
+        "PhysicsShapeQueryParameters2D::property:collision_mask",
+        "PhysicsShapeQueryParameters2D::property:exclude",
+        "PhysicsShapeQueryParameters2D::property:margin",
+        "PhysicsShapeQueryParameters2D::property:motion",
+        "PhysicsShapeQueryParameters2D::property:shape",
+        "PhysicsShapeQueryParameters2D::property:shape_rid",
+        "PhysicsShapeQueryParameters2D::property:transform"
+      ],
+      "state": "Implemented",
+      "reason": "Mutable typed defaults, live Shape/RID selection, copied exclusions, finite pose/motion/margin validation and body/Area/layer filters execute (ADR 0063, PhysicsShapeQueryTests)."
     },
     {
       "godot": ["class:PhysicsServer2D"],

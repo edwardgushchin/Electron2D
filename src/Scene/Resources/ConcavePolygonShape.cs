@@ -1,4 +1,7 @@
 using Box2D.NET;
+using static Box2D.NET.B2Constants;
+using static Box2D.NET.B2Distances;
+using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
@@ -67,6 +70,20 @@ public sealed class ConcavePolygonShape : Shape
             var first = ToBackend(localPosition + _segments[index].Rotated(localRotation));
             var second = ToBackend(localPosition + _segments[index + 1].Rotated(localRotation));
             fixtures.Add(CreateSegmentOrPoint(bodyID, definition, first, second));
+        }
+    }
+
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        for (var index = 0; index < _segments.Length; index += 2)
+        {
+            var first = ToBackend(_segments[index]);
+            var second = ToBackend(_segments[index + 1]);
+            proxies.Add(b2DistanceSquared(first, second) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP
+                ? b2MakeProxy(new B2Vec2(first.X + (second.X - first.X) * 0.5f,
+                        first.Y + (second.Y - first.Y) * 0.5f), 1, 0)
+                : b2MakeProxy(first, second, 2, 0));
         }
     }
 

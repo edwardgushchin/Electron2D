@@ -72,6 +72,8 @@ public sealed partial class PhysicsServer2D
         ArgumentNullException.ThrowIfNull(data);
         if (data.IsDisposed) throw new ObjectDisposedException(nameof(data));
         var entry = GetShape(shape);
+        if (!entry.OwnsGeometry)
+            throw new InvalidOperationException("A Shape resource owns this RID and must be edited through the resource.");
         if (entry.Geometry.GetType() != data.GetType())
             throw new ArgumentException("Shape data must have the server shape's concrete type.", nameof(data));
         var users = new List<PhysicsServerCollider>();
@@ -348,6 +350,8 @@ public sealed partial class PhysicsServer2D
         }
         else if (shape is not null)
         {
+            if (!shape.OwnsGeometry)
+                throw new InvalidOperationException("A Shape resource owns this RID and its lifetime.");
             var users = SnapshotColliders();
             foreach (var user in users)
                 if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user);
@@ -382,6 +386,33 @@ public sealed partial class PhysicsServer2D
         lock (_registryGate)
             return _serverShapes.TryGetValue(rid, out var shape) ? shape :
                 throw new ArgumentException("The RID is not a live server shape.", nameof(rid));
+    }
+
+    internal Shape GetShapeGeometry(RID rid) => GetShape(rid).Geometry;
+
+    internal RID RegisterBorrowedShape(Shape geometry)
+    {
+        var rid = RID.Allocate();
+        lock (_registryGate) _serverShapes.Add(rid, new(rid, geometry, ownsGeometry: false));
+        return rid;
+    }
+
+    internal void MarkBorrowedShapeDirty(RID rid)
+    {
+        var shape = GetShape(rid);
+        foreach (var user in SnapshotColliders())
+            if (user.UsesShape(shape)) user.MarkShapesDirty();
+    }
+
+    internal void UnregisterBorrowedShape(RID rid)
+    {
+        PhysicsServerShape? shape;
+        lock (_registryGate)
+        {
+            if (!_serverShapes.Remove(rid, out shape)) return;
+        }
+        foreach (var user in SnapshotColliders())
+            if (user.UsesShape(shape)) user.MarkShapesDirty();
     }
 
     private PhysicsServerCollider GetCollider(RID rid, bool isArea)

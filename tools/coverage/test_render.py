@@ -119,6 +119,12 @@ def main():
                                        if row.startswith("| [`method intersect_ray("))
     assert "| Partial |" in next(row for row in direct_rows.splitlines()
                                    if row.startswith("| [`method intersect_point("))
+    assert all(" | Implemented | " in next(row for row in direct_rows.splitlines()
+                                          if row.startswith(f"| [`method {name}("))
+               for name in ("intersect_shape", "cast_motion", "collide_shape", "get_rest_info"))
+    shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
+                        if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(server_rows) == 215

@@ -193,6 +193,7 @@ SegmentShapeTests.Run();
 OneWayCollisionTests.Run();
 CollisionPolygonTests.Run();
 PhysicsQueryTests.Run();
+PhysicsShapeQueryTests.Run();
 RayCastTests.Run();
 ConvexPolygonShapeTests.Run();
 ConcavePolygonShapeTests.Run();

@@ -1,5 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Constants;
+using static Box2D.NET.B2Distances;
 using static Box2D.NET.B2Geometries;
 using static Box2D.NET.B2Shapes;
 
@@ -10,6 +11,8 @@ namespace Electron2D;
 public abstract class Shape : Resource
 {
     private ulong _revision;
+    private readonly object _queryRIDGate = new();
+    private RID _queryRID;
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
     /// <returns>The tight local-axis bounds; a shape need not be centered on its origin.</returns>
@@ -17,13 +20,39 @@ public abstract class Shape : Resource
 
     internal abstract void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
         in B2ShapeDef definition, List<B2ShapeId> fixtures);
+    internal abstract void AppendQueryProxies(List<B2ShapeProxy> proxies);
 
     internal ulong GeometryRevision => _revision;
+
+    internal RID GetQueryRID()
+    {
+        lock (_queryRIDGate)
+        {
+            ThrowIfDisposed();
+            return _queryRID.IsValid() ? _queryRID :
+                _queryRID = PhysicsServer2D.Instance.RegisterBorrowedShape(this);
+        }
+    }
 
     internal void EmitGeometryChanged()
     {
         _revision++;
+        RID rid;
+        lock (_queryRIDGate) rid = _queryRID;
+        if (rid.IsValid()) PhysicsServer2D.Instance.MarkBorrowedShapeDirty(rid);
         EmitChanged();
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            RID rid;
+            lock (_queryRIDGate) { rid = _queryRID; _queryRID = default; }
+            if (rid.IsValid()) PhysicsServer2D.Instance.UnregisterBorrowedShape(rid);
+        }
+        base.Dispose(disposing);
     }
 
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
@@ -73,6 +102,12 @@ public sealed class CircleShape : Shape
         ThrowIfDisposed();
         var circle = new B2Circle { center = ToBackend(localPosition), radius = _radius * PhysicsSpace.MetersPerUnit };
         fixtures.Add(b2CreateCircleShape(bodyID, definition, circle));
+    }
+
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        proxies.Add(b2MakeProxy(new B2Vec2(0, 0), 1, _radius * PhysicsSpace.MetersPerUnit));
     }
 
     /// <inheritdoc />
@@ -174,6 +209,17 @@ public sealed class CapsuleShape : Shape
         fixtures.Add(id.index1 == 0 ? b2CreateCircleShape(bodyID, definition, circle) : id);
     }
 
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        var midHeight = (_height - 2 * _radius) * PhysicsSpace.MetersPerUnit;
+        var radius = _radius * PhysicsSpace.MetersPerUnit;
+        proxies.Add(midHeight <= B2_LINEAR_SLOP
+            ? b2MakeProxy(new B2Vec2(0, 0), 1, radius)
+            : b2MakeProxy(new B2Vec2(0, -midHeight * 0.5f),
+                new B2Vec2(0, midHeight * 0.5f), 2, radius));
+    }
+
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new CapsuleShape();
 
@@ -245,6 +291,17 @@ public sealed class SegmentShape : Shape
         fixtures.Add(CreateSegmentOrPoint(bodyID, definition, pointA, pointB));
     }
 
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        var first = ToBackend(_a);
+        var second = ToBackend(_b);
+        proxies.Add(B2MathFunction.b2DistanceSquared(first, second) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP
+            ? b2MakeProxy(new B2Vec2(first.X + (second.X - first.X) * 0.5f,
+                    first.Y + (second.Y - first.Y) * 0.5f), 1, 0)
+            : b2MakeProxy(first, second, 2, 0));
+    }
+
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new SegmentShape();
 
@@ -296,6 +353,19 @@ public sealed class RectangleShape : Shape
         var polygon = b2MakeOffsetBox(_size.X * PhysicsSpace.MetersPerUnit / 2,
             _size.Y * PhysicsSpace.MetersPerUnit / 2, ToBackend(localPosition), B2MathFunction.b2MakeRot(localRotation));
         fixtures.Add(b2CreatePolygonShape(bodyID, definition, polygon));
+    }
+
+    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
+    {
+        ThrowIfDisposed();
+        var halfWidth = _size.X * PhysicsSpace.MetersPerUnit * 0.5f;
+        var halfHeight = _size.Y * PhysicsSpace.MetersPerUnit * 0.5f;
+        Span<B2Vec2> points = stackalloc B2Vec2[4]
+        {
+            new(-halfWidth, -halfHeight), new(halfWidth, -halfHeight),
+            new(halfWidth, halfHeight), new(-halfWidth, halfHeight)
+        };
+        proxies.Add(b2MakeProxy(points, 4, 0));
     }
 
     /// <inheritdoc />

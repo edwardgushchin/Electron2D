@@ -62,7 +62,7 @@ public readonly struct PhysicsPointResult2D
 /// <summary>Queries the live solver state of one two-dimensional physics space.</summary>
 /// <remarks>A view becomes unusable when its owning space is freed. Queries require that space's owner thread
 /// and cannot run during its solver step.</remarks>
-public sealed class PhysicsDirectSpaceState2D : ElectronObject
+public sealed partial class PhysicsDirectSpaceState2D : ElectronObject
 {
     private readonly RID _spaceRID;
 

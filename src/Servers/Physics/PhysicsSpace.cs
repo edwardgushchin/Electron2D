@@ -75,6 +75,7 @@ internal sealed class PhysicsSpace : IDisposable
         EnsureQueryAccess();
         foreach (var body in _bodies) body.PrepareBackend();
         foreach (var area in _areas) area.PrepareBackend();
+        foreach (var collider in _serverColliders) collider.PrepareBackend();
     }
 
     internal void Add(PhysicsBody body)
@@ -147,6 +148,7 @@ internal sealed class PhysicsSpace : IDisposable
         {
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
+            foreach (var collider in _serverColliders) collider.PrepareBackend();
             ApplyAreaFields(delta);
             foreach (var body in _bodies)
             {

@@ -37,3 +37,5 @@ Returns local bounds in scene units as a copied Rect2. It remains usable without
 ## Verification and limits
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) covers defaults, bounds, invalid rollback, independent duplication, a live radius change and contact response on a static floor. Inherited standalone shape queries retain their [separate coverage](../coverage/classes/Shape2D.md); other shapes and platforms remain separate.
+
+Direct [shape queries](PhysicsDirectSpaceState2D.md) use the current circle radius for overlap, sweep and contact tests; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies this geometry family.

@@ -630,7 +630,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsServer3DExtension](classes/PhysicsServer3DExtension.md) | PhysicsServer3D | Excluded | 196 |
 | [PhysicsServer3DManager](classes/PhysicsServer3DManager.md) | Object | Excluded | 2 |
 | [PhysicsServer3DRenderingServerHandler](classes/PhysicsServer3DRenderingServerHandler.md) | Object | Excluded | 6 |
-| [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | RefCounted | Blocked | 9 |
+| [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | RefCounted | Implemented | 9 |
 | [PhysicsShapeQueryParameters3D](classes/PhysicsShapeQueryParameters3D.md) | RefCounted | Excluded | 9 |
 | [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Blocked | 7 |
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
