@@ -14,6 +14,8 @@ A stationary scene collider and base of [AnimatableBody](AnimatableBody.md), whi
 
 ## Example
 
+A direct [CollisionPolygon](CollisionPolygon.md) child can build a solid concave boundary or closed hollow terrain without a separately retained Shape resource.
+
 ```csharp
 using var floorGeometry = new RectangleShape { Size = new Vector2(200, 20) };
 var floor = new StaticBody { Position = new Vector2(0, 100) };

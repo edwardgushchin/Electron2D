@@ -14,6 +14,8 @@ A manually moved 2D body for moving platforms and doors. Direct [CollisionShape]
 
 ## Example
 
+The inherited collision owner also accepts a direct [CollisionPolygon](CollisionPolygon.md) child; its convex pieces or hollow edges move with the kinematic target.
+
 ```csharp
 using var platformShape = new RectangleShape { Size = new Vector2(120, 20) };
 var platform = new AnimatableBody();

@@ -14,6 +14,8 @@ Places one borrowed [Shape](Shape.md) as a direct child of a [PhysicsBody](Physi
 
 ## Example
 
+The direct [CollisionPolygon](CollisionPolygon.md) sibling creates and owns its geometry from vertices; this node continues to borrow one reusable Shape resource.
+
 ```csharp
 using var geometry = new RectangleShape { Size = new Vector2(20, 20) };
 var body = new RigidBody();
@@ -31,7 +33,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public bool OneWayCollision { get; set; }` | Accepts body contact only from the side opposite the local direction; false by default. |
 | `public Vector2 OneWayCollisionDirection { get; set; }` | Direction through the surface; `(0, 1)` by default. |
 | `public override string[] GetConfigurationWarnings()` | Reports missing direct collision-object parent and/or live geometry. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored Shape and Disabled descriptors to spatial state. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores Shape, Disabled and one-way properties with spatial state. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Restores this exact node type in PackedScene. |
 | `protected override void OnEnterTree()` / `OnExitTree()` | Registers or unregisters the direct body or area slot. |
 | `protected override void Dispose(bool disposing)` | Disconnects borrowed resource events and removes the slot. |

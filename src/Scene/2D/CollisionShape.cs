@@ -1,9 +1,11 @@
+using Box2D.NET;
+
 namespace Electron2D;
 
 /// <summary>Places a borrowed collision shape beneath a physics body or area.</summary>
 /// <remarks>The direct parent must be a <see cref="CollisionObject"/> for this shape to participate in physics.
 /// A shape resource remains caller-owned. Geometry changes are applied before the next physics step.</remarks>
-public sealed class CollisionShape : Entity
+public sealed class CollisionShape : Entity, ICollisionGeometry
 {
     private static readonly PropertyDescriptor[] ShapeProperties =
     [
@@ -23,6 +25,14 @@ public sealed class CollisionShape : Entity
     internal ulong GeometryRevision => _shape is { IsDisposed: false } shape ? shape.GeometryRevision : ulong.MaxValue;
     internal OneWayContactData? OneWayContact => _oneWayCollision
         ? new OneWayContactData(_oneWayCollisionDirection.Rotated(Rotation)) : null;
+
+    Entity ICollisionGeometry.Node => this;
+    bool ICollisionGeometry.IsActive => !_disabled && _shape is { IsDisposed: false };
+    ulong ICollisionGeometry.GeometryRevision => GeometryRevision;
+    OneWayContactData? ICollisionGeometry.OneWayContact => OneWayContact;
+
+    void ICollisionGeometry.AppendToBody(B2BodyId bodyID, in B2ShapeDef definition, List<B2ShapeId> fixtures) =>
+        _shape!.AppendToBody(bodyID, Position, Rotation, definition, fixtures);
 
     /// <summary>Creates a detached node with no shape and an enabled collision slot.</summary>
     public CollisionShape()
@@ -83,9 +93,7 @@ public sealed class CollisionShape : Entity
         set
         {
             EnsureMutable();
-            if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
-            var length = Math.Sqrt((double)value.X * value.X + (double)value.Y * value.Y);
-            var direction = length == 0 ? Vector2.Zero : new Vector2((float)(value.X / length), (float)(value.Y / length));
+            var direction = NormalizeOneWayDirection(value);
             if (_oneWayCollisionDirection == direction) return;
             _oneWayCollisionDirection = direction;
             _owner?.MarkShapesDirty();
@@ -159,6 +167,13 @@ public sealed class CollisionShape : Entity
     private void OnShapeDisposed(ElectronObject _)
     {
         _owner?.MarkShapesDirty();
+    }
+
+    internal static Vector2 NormalizeOneWayDirection(Vector2 value)
+    {
+        if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
+        var length = Math.Sqrt((double)value.X * value.X + (double)value.Y * value.Y);
+        return length == 0 ? Vector2.Zero : new Vector2((float)(value.X / length), (float)(value.Y / length));
     }
 }
 

@@ -14,6 +14,8 @@ A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) chi
 
 ## Example
 
+A direct [CollisionPolygon](CollisionPolygon.md) child can sense an entire solid concave region or only the closed hollow contour. Its one-way flag does not filter this Area's sensor overlaps.
+
 ```csharp
 using var region = new RectangleShape { Size = new Vector2(80, 80) };
 var trigger = new Area { GravitySpaceOverride = Area.SpaceOverride.Replace, Gravity = 0 };

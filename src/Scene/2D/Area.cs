@@ -19,7 +19,7 @@ public sealed partial class Area : CollisionObject
             (area, value) => area.Monitorable = value, _ => true, stored: true)
     ];
 
-    private readonly List<CollisionShape> _shapes = [];
+    private readonly List<ICollisionGeometry> _shapes = [];
     private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private HashSet<CollisionObject> _overlaps = new(ReferenceEqualityComparer.Instance);
@@ -147,14 +147,14 @@ public sealed partial class Area : CollisionObject
 
     internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
-    internal override void AttachShape(CollisionShape shape)
+    internal override void AttachShape(ICollisionGeometry shape)
     {
         if (_shapes.Contains(shape)) return;
         _shapes.Add(shape);
         MarkShapesDirty();
     }
 
-    internal override void DetachShape(CollisionShape shape)
+    internal override void DetachShape(ICollisionGeometry shape)
     {
         if (_shapes.Remove(shape)) MarkShapesDirty();
     }
@@ -288,8 +288,8 @@ public sealed partial class Area : CollisionObject
     {
         foreach (var node in _shapes)
         {
-            if (node.Disabled || node.Shape is null || node.Shape.IsDisposed) continue;
-            if (!node.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Skew))
+            if (!node.IsActive) continue;
+            if (!node.Node.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Node.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
 
@@ -302,8 +302,8 @@ public sealed partial class Area : CollisionObject
         definition.isSensor = true;
         foreach (var node in _shapes)
         {
-            if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
-            shape.AppendToBody(_bodyID, node.Position, node.Rotation, definition, _backendShapes);
+            if (!node.IsActive) continue;
+            node.AppendToBody(_bodyID, definition, _backendShapes);
         }
         _appliedShapeRevisions.Clear();
         foreach (var node in _shapes) _appliedShapeRevisions.Add(node.GeometryRevision);

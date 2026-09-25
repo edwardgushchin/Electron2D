@@ -275,7 +275,7 @@ Last updated: 2026-09-25
 
 SegmentShape supplies one two-sided edge, while a level boundary or line sensor needs several independent edges in one reusable resource. The pinned ConcavePolygonShape2D stores an array of endpoint pairs and has no solid interior, even if those pairs enclose an area. The current internal Shape contract can append several fixture IDs to one body or area. Box2D.NET rejects short segment fixtures, so the same numerical fallback used by SegmentShape is required for each pair.
 
-CollisionPolygon2D was compared as the adjacent scene-node feature. ConvexPolygonShape and ConcavePolygonShape now supply its two build geometries; the node still needs a direct CollisionObject polygon slot with live mode/contour rebuild and PackedScene state. Its one-way properties additionally require typed pre-solve direction/margin contact filtering. Coverage records these separate exact triggers rather than continuing to claim the polygon resources are missing.
+CollisionPolygon2D was compared as the adjacent scene-node feature. ConvexPolygonShape and ConcavePolygonShape supply its two build geometries. ADR 0066 now owns the direct scene slot and conversion; ADR 0065 supplies one-way body contacts. The one-way margin still requires typed kinematic sweep and recovery.
 
 ### Decision
 
@@ -285,7 +285,7 @@ CollisionPolygon2D was compared as the adjacent scene-node feature. ConvexPolygo
 
 ### Consequences
 
-Games can use reusable multi-edge terrain, open contours and hollow line sensors. The geometry and owning resource are executable; CollisionPolygon scene integration, one-way filtering, native allocator accounting, other platforms and owner acceptance remain separate work.
+Games can use reusable multi-edge terrain, open contours and hollow line sensors. The geometry and owning resource are executable; ADR 0066 integrates the separate CollisionPolygon scene node. Native allocator accounting, other platforms and owner acceptance remain unverified.
 
 <a id="adr-0065"></a>
 ## ADR 0065: One-way scene-body contacts
@@ -304,8 +304,31 @@ Two-sided fixtures prevent a body from passing through a platform and landing on
 
 - `CollisionShape.OneWayCollision` defaults to false and `OneWayCollisionDirection` defaults to `(0, 1)`. A finite nonzero direction is normalized before mutation; zero rejects contact from every side when the flag is enabled. Direction rotates with the shape's local pose and its parent body. Area children retain these scene properties for packing but remain sensor-only and warn that one-way response does not apply.
 - Mark only enabled body fixtures for Box2D pre-solve. Per-fixture user data carries the local contact direction; the world callback compares the first contact normal to its current body rotation. Keep the initial allowed/denied decision for the shape pair until no contact is observed. Fixture rebuilds change backend IDs and therefore discard old pair decisions without changing public node identity. The current world uses its default single-worker task system; callback state is world-owned and unavailable to user code.
-- Do not expose `OneWayCollisionMargin` until the typed `CharacterBody`/direct-space sweep and initial-overlap recovery use it. That declaration retains a precise Blocked coverage trigger rather than an inert stored property. The same margin dependency remains on a future `CollisionPolygon` owner. No vendored source changes are needed.
+- Do not expose `OneWayCollisionMargin` until the typed `CharacterBody`/direct-space sweep and initial-overlap recovery use it. That declaration retains a precise Blocked coverage trigger rather than an inert stored property. The same margin dependency also applies to the `CollisionPolygon` owner from ADR 0066. No vendored source changes are needed.
 
 ### Consequences
 
 Static, kinematic and dynamic scene-body fixtures can accept contacts from the configured side and allow traversal from the other side. Existing contact reports see only solved contacts, and Area monitoring continues to sense crossings. OneWayCollisionTests verifies side selection, local rotation, live changes, packed state, sensor behavior and 64 warmed active frames without managed allocation on Linux/.NET 8. Native allocator counts, other platforms, margin-based kinematic sweeps and owner visual acceptance remain unverified.
+
+<a id="adr-0066"></a>
+## ADR 0066: Direct scene collision polygons
+
+Last updated: 2026-09-25
+
+- Status: Accepted
+- Scope: CollisionPolygon scene node, solid convex decomposition and closed hollow edges
+- Depends on: [0008](scene.md#adr-0008), [0054](#adr-0054), [0062](#adr-0062), [0064](#adr-0064), [0065](#adr-0065)
+
+### Context
+
+Games need an editable concave or convex polygon child directly under a physics body or Area. The two resource geometries and one-way body-contact callback exist, but CollisionObject previously accepted only CollisionShape children. Nesting a hidden CollisionShape under the polygon would not provide a direct owner and would introduce scene state that users did not request. C# cannot declare a nested enum and a property with the same `BuildMode` identifier in one class.
+
+### Decision
+
+- Map the reference node to `CollisionPolygon : Entity` as a sibling of CollisionShape. A small internal `ICollisionGeometry` contract lets both direct children register with the same body/Area fixture lists; no public backend type or shape-owner stub is added. Name the typed enum `CollisionPolygonBuildMode` with Solids=0 and Segments=1, preserving the public `BuildMode` property name.
+- Copy the caller's finite local `Polygon` array and validate finite overall bounds before mutation. Empty/insufficient or undecomposable contours remain editable and contribute no fixture in the affected mode, with configuration warnings. Solid mode uses `Geometry.DecomposePolygonInConvex` and owned ConvexPolygonShape resources for every part; Segments mode closes the contour into consecutive endpoint pairs in one owned ConcavePolygonShape. Both modes reuse the existing resource-to-Box2D fixture path, child translation/rotation and pre-rebuild scale/skew validation.
+- Rebuild live fixtures for contour, mode, disabled and transform edits. A body child can use the existing one-way flag/direction pre-solve behavior; Area remains a two-sided sensor and warns when one-way is enabled. The node owns/disposes generated resources and stores only the typed contour/mode/options in PackedScene. A warning subscriber failure after a valid setter does not prevent the next fixture rebuild. The one-way margin remains Blocked until typed CharacterBody/direct-space sweep and penetration recovery consume it.
+
+### Consequences
+
+One node now supplies solid concave terrain, hollow closed boundaries or sensors without a hidden scene child. CollisionPolygonTests checks array ownership, errors, malformed editable contours, solid/segment mode, concave missing space, body contact, one-way traversal, live edits, warning failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. Native allocator counts, other platforms and owner visual acceptance remain unverified.

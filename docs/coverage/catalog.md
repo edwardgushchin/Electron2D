@@ -176,7 +176,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Blocked | 21 |
 | [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Partial | 45 |
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
-| [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Blocked | 9 |
+| [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Partial | 9 |
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |
 | [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Partial | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |

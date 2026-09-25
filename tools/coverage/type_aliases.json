@@ -33,6 +33,7 @@
     "ConcavePolygonShape2D": "ConcavePolygonShape",
     "RectangleShape2D": "RectangleShape",
     "CollisionShape2D": "CollisionShape",
+    "CollisionPolygon2D": "CollisionPolygon",
     "CollisionObject2D": "CollisionObject",
     "PhysicsBody2D": "PhysicsBody",
     "RigidBody2D": "RigidBody",
@@ -41,6 +42,7 @@
   "enums": {
     "Area2D.SpaceOverride": "Area.SpaceOverride",
     "RigidBody2D.DampMode": "RigidBody.DampMode",
+    "CollisionPolygon2D.BuildMode": "CollisionPolygonBuildMode",
     "CanvasItemMaterial.BlendMode": "BlendMode",
     "Control.FocusMode": "FocusMode",
     "Control.FocusBehaviorRecursive": "ControlFocusBehaviorRecursive",

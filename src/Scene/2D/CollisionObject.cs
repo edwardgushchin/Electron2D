@@ -68,8 +68,8 @@ public abstract class CollisionObject : Entity
     internal virtual void OnCollisionFilterChanged() { }
 
     internal abstract IReadOnlyList<B2ShapeId> BackendShapes { get; }
-    internal abstract void AttachShape(CollisionShape shape);
-    internal abstract void DetachShape(CollisionShape shape);
+    internal abstract void AttachShape(ICollisionGeometry shape);
+    internal abstract void DetachShape(ICollisionGeometry shape);
     internal abstract void MarkShapesDirty();
 
     private static uint LayerBit(int number)
@@ -77,4 +77,13 @@ public abstract class CollisionObject : Entity
         if (number is < 1 or > 32) throw new ArgumentOutOfRangeException(nameof(number));
         return 1u << (number - 1);
     }
+}
+
+internal interface ICollisionGeometry
+{
+    Entity Node { get; }
+    bool IsActive { get; }
+    ulong GeometryRevision { get; }
+    OneWayContactData? OneWayContact { get; }
+    void AppendToBody(B2BodyId bodyID, in B2ShapeDef definition, List<B2ShapeId> fixtures);
 }

@@ -38,6 +38,41 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.CollisionPolygon..ctor()",
+      "reason": "Managed construction projects an empty direct scene collision polygon with a solid default.",
+      "adr": "ADRs 0003, 0008, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.CreateSceneInstanceFactory()",
+      "reason": "PackedScene restores the exact direct polygon scene-node type.",
+      "adr": "ADRs 0005, 0008, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.Dispose(System.Boolean)",
+      "reason": "Node teardown removes the direct collision slot and disposes owned generated geometry.",
+      "adr": "ADRs 0003, 0008, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.GetConfigurationWarnings()",
+      "reason": "Typed scene diagnostics project the reference polygon-owner and invalid-contour warnings.",
+      "adr": "ADRs 0008, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.GetPropertyDescriptors()",
+      "reason": "Typed scene descriptors store contour, mode, disabled and one-way state.",
+      "adr": "ADRs 0005, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.OnEnterTree()",
+      "reason": "Direct scene entry registers one polygon geometry slot with a body or Area.",
+      "adr": "ADRs 0008, 0066"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionPolygon.OnExitTree()",
+      "reason": "Scene exit removes the direct polygon slot without discarding editable contour state.",
+      "adr": "ADRs 0008, 0066"
+    },
+    {
       "electron2d": "constructor:Electron2D.ConcavePolygonShape..ctor()",
       "reason": "Managed C# construction projects the empty paired-segment resource default.",
       "adr": "ADRs 0003, 0013, 0064"
@@ -344,31 +379,31 @@
     },
     {
       "godot": [
-        "class:CollisionPolygon2D",
         "CollisionPolygon2D::enum:BuildMode",
         "CollisionPolygon2D::enum_value:BuildMode.BUILD_SEGMENTS",
         "CollisionPolygon2D::enum_value:BuildMode.BUILD_SOLIDS",
         "CollisionPolygon2D::property:build_mode",
         "CollisionPolygon2D::property:disabled",
-        "CollisionPolygon2D::property:polygon"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: a direct CollisionObject polygon slot with live convex/paired-segment BuildMode conversion, transform ownership and PackedScene state; both shape resources now exist (ADR 0064)."
-    },
-    {
-      "godot": [
+        "CollisionPolygon2D::property:polygon",
         "CollisionPolygon2D::property:one_way_collision",
         "CollisionPolygon2D::property:one_way_collision_direction"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: a direct polygon owner that applies the existing one-way body-contact callback to its fixtures (ADR 0065)."
+      "state": "Implemented",
+      "reason": "ADR 0066 direct polygon slot executes solid convex decomposition, closed hollow edges, live mode and contour edits, PackedScene and existing one-way body contacts; CollisionPolygonTests covers body/Area behavior, errors and warm allocation."
+    },
+    {
+      "godot": [
+        "class:CollisionPolygon2D"
+      ],
+      "state": "Partial",
+      "reason": "Eight own enum/property rows execute through the direct polygon owner; the one-way margin remains Blocked until typed kinematic sweep and penetration recovery use it (ADR 0066)."
     },
     {
       "godot": [
         "CollisionPolygon2D::property:one_way_collision_margin"
       ],
       "state": "Blocked",
-      "reason": "Trigger: a direct polygon owner plus typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the margin (ADRs 0063 and 0065)."
+      "reason": "Trigger: typed CharacterBody/direct-space sweep and initial-overlap recovery that consume the margin; the direct polygon owner and one-way body-contact direction now execute (ADRs 0063 and 0066)."
     },
     {
       "godot": [

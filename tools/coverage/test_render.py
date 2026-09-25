@@ -95,8 +95,11 @@ def main():
     assert len(concave_rows) == 2 and all(" | Implemented | " in row for row in concave_rows)
     polygon_node_rows = [row for row in pages[CLASS_PAGES / "CollisionPolygon2D.md"].splitlines()
                          if row.startswith("| [`") and "github.com/godotengine" in row]
-    assert len(polygon_node_rows) == 10 and all(" | Blocked | " in row for row in polygon_node_rows)
-    assert all("one-way body-contact" in row for row in polygon_node_rows if "one_way_collision_direction" in row)
+    assert len(polygon_node_rows) == 10
+    assert {state: sum(f" | {state} | " in row for row in polygon_node_rows)
+            for state in ("Implemented", "Partial", "Blocked")} == {
+                "Implemented": 8, "Partial": 1, "Blocked": 1}
+    assert " | Blocked | " in next(row for row in polygon_node_rows if "one_way_collision_margin" in row)
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows

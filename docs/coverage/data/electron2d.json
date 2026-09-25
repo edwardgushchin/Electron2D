@@ -435,6 +435,40 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CollisionPolygon",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "CollisionPolygon",
+    "signature": "public sealed class Electron2D.CollisionPolygon",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "Electron2D.ICollisionGeometry",
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CollisionPolygonBuildMode",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionPolygonBuildMode",
+    "name": "CollisionPolygonBuildMode",
+    "signature": "public enum Electron2D.CollisionPolygonBuildMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CollisionShape",
     "kind": "type",
     "declaringType": "Electron2D.CollisionShape",
@@ -443,6 +477,7 @@
     "visibility": "public",
     "baseType": "Electron2D.Entity",
     "interfaces": [
+      "Electron2D.ICollisionGeometry",
       "System.IDisposable"
     ],
     "parameters": null,
@@ -4898,6 +4933,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CollisionPolygon..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": ".ctor",
+    "signature": "public CollisionPolygon()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CollisionShape..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CollisionShape",
@@ -7404,6 +7452,32 @@
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CollisionPolygonBuildMode.Segments()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CollisionPolygonBuildMode",
+    "name": "Segments",
+    "signature": "public const Electron2D.CollisionPolygonBuildMode Segments = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionPolygonBuildMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CollisionPolygonBuildMode.Solids()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CollisionPolygonBuildMode",
+    "name": "Solids",
+    "signature": "public const Electron2D.CollisionPolygonBuildMode Solids = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionPolygonBuildMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Control.CursorShape.Arrow()",
@@ -22603,6 +22677,90 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionPolygon.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -58652,6 +58810,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionPolygon.BuildMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "BuildMode",
+    "signature": "public Electron2D.CollisionPolygonBuildMode BuildMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionPolygonBuildMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionPolygon.Disabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "Disabled",
+    "signature": "public System.Boolean Disabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionPolygon.OneWayCollision()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "OneWayCollision",
+    "signature": "public System.Boolean OneWayCollision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionPolygon.OneWayCollisionDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "OneWayCollisionDirection",
+    "signature": "public Electron2D.Vector2 OneWayCollisionDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionPolygon.Polygon()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionPolygon",
+    "name": "Polygon",
+    "signature": "public Electron2D.Vector2[] Polygon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {

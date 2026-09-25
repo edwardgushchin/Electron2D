@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -13,6 +13,8 @@ Last updated: 2026-09-24
 The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture; changing layer or mask marks fixtures for reconstruction before the next fixed step. Bodies use reciprocal filters for contact response. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class does not expose a backend ID or implement mouse picking yet.
 
 ## API summary
+
+Direct [CollisionPolygon](CollisionPolygon.md) children now contribute owned solid or hollow fixture sets beside borrowed [CollisionShape](CollisionShape.md) children. The shared internal owner path does not expose the reference's public shape-owner methods or a backend RID.
 
 | Member | Contract |
 | --- | --- |

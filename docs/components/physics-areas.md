@@ -8,6 +8,8 @@ Last updated: 2026-09-25
 
 ## Runtime flow
 
+Direct CollisionPolygon children contribute owned solid convex pieces or closed hollow edge sensors alongside borrowed CollisionShape children. Polygon one-way settings do not change Area overlap detection.
+
 Body callbacks and the four-substep backend world advance before areas scan. An area's mask tests each candidate's layer, regardless of the candidate's mask. Another area also needs to be monitorable. Backend bounding boxes reject separated shape pairs; backend shape distance checks candidates exactly. Multiple overlapping shape pairs produce one object-level result. Snapshots and entered/exited transitions are committed once per nonzero fixed step. Event delivery runs after backend stepping so handlers can change the scene; removal of an object clears other areas' snapshots immediately.
 
 Before that backend step, each dynamic body resolves currently overlapping area fields by greatest priority first. Gravity, linear damping and angular damping have independent Disabled/Combine/CombineReplace/Replace/ReplaceCombine modes. An unstopped channel includes the sampled world default; body gravity scale and damping modes apply afterward. Point gravity transforms the area's local point and supports constant strength or inverse-square falloff. Field participation does not require `Monitoring` or `Monitorable` and does not wait for the event snapshot.

@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -69,6 +69,7 @@ Last updated: 2026-09-24
 | `PathFollow2D : Node2D` | `PathFollow : Entity` | Distance/ratio sampling, offsets and tangent rotation for descendant nodes. |
 | `Camera2D : Node2D` | `Camera : Entity` | Viewport camera selection and spatial tracking, including zoom, limits, drag margins and smoothing. |
 | `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Borrowed collision-shape placement as a direct physics-body child; first executable profile under ADR 0054. |
+| `CollisionPolygon2D : Node2D` | `CollisionPolygon : Entity` | Owned solid or hollow polygon placement as a direct physics-body or Area child under ADR 0066. |
 | `CollisionObject2D : Node2D` | `abstract CollisionObject : Entity` | Collision filtering and shape ownership above physics-body specializations. |
 | `PhysicsBody2D : CollisionObject2D` | `abstract PhysicsBody : CollisionObject` | Shared fixed-step body and shape lifecycle. |
 | `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic Box2D-backed motion and contact response. |
@@ -101,6 +102,7 @@ ElectronObject
         │   ├── Sprite
         │   ├── Camera
         │   ├── CollisionShape
+        │   ├── CollisionPolygon
         │   ├── CollisionObject
         │   │   └── PhysicsBody
         │   │       ├── RigidBody

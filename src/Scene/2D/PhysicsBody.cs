@@ -9,7 +9,7 @@ namespace Electron2D;
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
 public abstract class PhysicsBody : CollisionObject
 {
-    private readonly List<CollisionShape> _shapes = [];
+    private readonly List<ICollisionGeometry> _shapes = [];
     private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private PhysicsSpace? _space;
@@ -27,14 +27,14 @@ public abstract class PhysicsBody : CollisionObject
     internal bool HasBackend => _space is not null;
     internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
-    internal override void AttachShape(CollisionShape shape)
+    internal override void AttachShape(ICollisionGeometry shape)
     {
         if (_shapes.Contains(shape)) return;
         _shapes.Add(shape);
         MarkShapesDirty();
     }
 
-    internal override void DetachShape(CollisionShape shape)
+    internal override void DetachShape(ICollisionGeometry shape)
     {
         if (_shapes.Remove(shape)) MarkShapesDirty();
     }
@@ -183,8 +183,8 @@ public abstract class PhysicsBody : CollisionObject
     {
         foreach (var node in _shapes)
         {
-            if (node.Disabled || node.Shape is null || node.Shape.IsDisposed) continue;
-            if (!node.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Skew))
+            if (!node.IsActive) continue;
+            if (!node.Node.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Node.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
 
@@ -198,11 +198,11 @@ public abstract class PhysicsBody : CollisionObject
         PhysicsSpace.SetMaterial(ref definition, _materialOverride);
         foreach (var node in _shapes)
         {
-            if (node.Disabled || node.Shape is not { IsDisposed: false } shape) continue;
+            if (!node.IsActive) continue;
             var contact = node.OneWayContact;
             definition.userData = contact is null ? default : new B2UserData(contact);
             definition.enablePreSolveEvents = contact is not null;
-            shape.AppendToBody(_bodyID, node.Position, node.Rotation, definition, _backendShapes);
+            node.AppendToBody(_bodyID, definition, _backendShapes);
         }
 
         OnShapesRebuilt();

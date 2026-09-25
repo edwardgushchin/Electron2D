@@ -14,6 +14,8 @@ A dynamic 2D scene body backed by the internal fixed-step physics world. A direc
 
 ## Example
 
+A direct [CollisionPolygon](CollisionPolygon.md) child supplies owned solid or hollow fixtures. Solid convex pieces carry mass and inertia; hollow segments use the existing zero-area body policy.
+
 ```csharp
 using var geometry = new RectangleShape { Size = new Vector2(20, 20) };
 var body = new RigidBody { Position = new Vector2(0, 0), Mass = 1 };

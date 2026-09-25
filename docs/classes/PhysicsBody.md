@@ -14,6 +14,8 @@ The shared scene-body role. It registers a backend body when entering a SceneTre
 
 ## API summary
 
+A direct [CollisionPolygon](CollisionPolygon.md) child supplies owned solid or hollow fixtures through the same body lifetime, filtering and material path as a direct CollisionShape child. Its contour and mode can change while attached; the next fixed step rebuilds its fixtures.
+
 | Member | Contract |
 | --- | --- |
 | `protected PhysicsBody()` | Creates a detached body with no fixtures. |

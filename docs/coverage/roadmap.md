@@ -4,7 +4,7 @@ Last updated: 2026-09-25
 
 The order follows concrete dependencies. `Partial` rows need either a semantic audit or resolution of a documented behavior gap; `Unmapped` Electron2D rows need an exact upstream link or a documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Review 1259 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
+1. Review 1260 partially implemented rows and 0 unmapped Electron2D declarations, beginning with the existing core, input, scene, resource and image domains.
 2. Complete 956 missing declarations in already represented type families; split each type by its documented dependency trigger. Start with the independent [CharacterBody2D](classes/CharacterBody2D.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [SeparationRayShape2D](classes/SeparationRayShape2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) class slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -114,7 +114,6 @@ These classes already have an Electron2D type. Sort by missing member count, the
 | Trigger: scene query nodes consuming the typed direct-space ray/shape query slice. | 2 |
 | Trigger: typed live body-state callback and solver ownership over the PhysicsServer2D space. | 2 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
-| Trigger: a direct CollisionObject polygon slot with live convex/paired-segment BuildMode conversion, transform ownership and PackedScene state; both shape resources now exist (ADR 0064). | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: first 2D skeleton bone and physics-body ownership integration. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
