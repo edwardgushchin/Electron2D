@@ -78,30 +78,39 @@ public sealed class PhysicsDirectSpaceState2D : ElectronObject
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
+        return IntersectRay(parameters.From, parameters.To, parameters.CollisionMask, parameters.Exclude,
+            parameters.CollideWithAreas, parameters.CollideWithBodies, parameters.HitFromInside);
+    }
+
+    internal PhysicsRayResult2D? IntersectRay(Vector2 from, Vector2 to, uint mask, RID[] excluded,
+        bool collideWithAreas, bool collideWithBodies, bool hitFromInside)
+    {
+        ThrowIfDisposed();
+        if (!from.IsFinite() || !to.IsFinite())
+            throw new ArgumentOutOfRangeException(nameof(from), "Ray endpoints must be finite.");
         var space = PhysicsServer2D.Instance.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
-        var from = parameters.From;
-        var to = parameters.To;
         var motion = to - from;
-        if (!motion.IsFinite()) throw new ArgumentOutOfRangeException(nameof(parameters), "Ray span exceeds the finite range.");
-        if (motion == Vector2.Zero || parameters.CollisionMask == 0 ||
-            !parameters.CollideWithBodies && !parameters.CollideWithAreas) return null;
+        if (!motion.IsFinite()) throw new ArgumentOutOfRangeException(nameof(to), "Ray span exceeds the finite range.");
+        if (motion == Vector2.Zero || mask == 0 || !collideWithBodies && !collideWithAreas) return null;
 
         var input = new B2RayCastInput(Shape.ToBackend(from), Shape.ToBackend(motion), 1);
-        var excluded = parameters.Exclude;
-        var mask = parameters.CollisionMask;
-        var inside = parameters.HitFromInside;
         PhysicsRayResult2D? best = null;
         var bestFraction = float.PositiveInfinity;
-        if (parameters.CollideWithBodies)
-            foreach (var body in space.Bodies)
-                ScanRayShapes(body.BackendShapes, input, from, mask, excluded, inside, ref best, ref bestFraction);
-        if (parameters.CollideWithAreas)
-            foreach (var area in space.Areas)
-                ScanRayShapes(area.BackendShapes, input, from, mask, excluded, inside, ref best, ref bestFraction);
-        foreach (var collider in space.ServerColliders)
-            if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
-                ScanRayShapes(collider.BackendShapes, input, from, mask, excluded, inside, ref best, ref bestFraction);
+        if (collideWithBodies)
+            for (var index = 0; index < space.Bodies.Count; index++)
+                ScanRayShapes(space.Bodies[index].BackendShapes, input, from, mask, excluded, hitFromInside,
+                    ref best, ref bestFraction);
+        if (collideWithAreas)
+            for (var index = 0; index < space.Areas.Count; index++)
+                ScanRayShapes(space.Areas[index].BackendShapes, input, from, mask, excluded, hitFromInside,
+                    ref best, ref bestFraction);
+        for (var index = 0; index < space.ServerColliders.Count; index++)
+        {
+            var collider = space.ServerColliders[index];
+            if (collider.IsArea ? collideWithAreas : collideWithBodies)
+                ScanRayShapes(collider.BackendShapes, input, from, mask, excluded, hitFromInside, ref best, ref bestFraction);
+        }
         return best;
     }
 
@@ -128,12 +137,17 @@ public sealed class PhysicsDirectSpaceState2D : ElectronObject
         var mask = parameters.CollisionMask;
         var hits = new List<PhysicsPointResult2D>();
         if (parameters.CollideWithBodies)
-            foreach (var body in space.Bodies) ScanPointShapes(body.BackendShapes, point, mask, excluded, hits);
+            for (var index = 0; index < space.Bodies.Count; index++)
+                ScanPointShapes(space.Bodies[index].BackendShapes, point, mask, excluded, hits);
         if (parameters.CollideWithAreas)
-            foreach (var area in space.Areas) ScanPointShapes(area.BackendShapes, point, mask, excluded, hits);
-        foreach (var collider in space.ServerColliders)
+            for (var index = 0; index < space.Areas.Count; index++)
+                ScanPointShapes(space.Areas[index].BackendShapes, point, mask, excluded, hits);
+        for (var index = 0; index < space.ServerColliders.Count; index++)
+        {
+            var collider = space.ServerColliders[index];
             if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
                 ScanPointShapes(collider.BackendShapes, point, mask, excluded, hits);
+        }
         hits.Sort(static (left, right) =>
         {
             var order = left.ColliderRID.CompareTo(right.ColliderRID);
@@ -154,8 +168,9 @@ public sealed class PhysicsDirectSpaceState2D : ElectronObject
         uint mask, RID[] excluded, bool hitFromInside, ref PhysicsRayResult2D? best, ref float bestFraction)
     {
         // ponytail: Scene fixture scans are linear; use a query broad phase when large-world profiling needs it.
-        foreach (var shape in shapes)
+        for (var index = 0; index < shapes.Count; index++)
         {
+            var shape = shapes[index];
             if (!Eligible(shape, mask, excluded, out var tag)) continue;
             var startsInside = b2Shape_TestPoint(shape, input.origin);
             if (startsInside && !hitFromInside) continue;
@@ -177,8 +192,9 @@ public sealed class PhysicsDirectSpaceState2D : ElectronObject
     private static void ScanPointShapes(IReadOnlyList<B2ShapeId> shapes, B2Vec2 point, uint mask,
         RID[] excluded, List<PhysicsPointResult2D> hits)
     {
-        foreach (var shape in shapes)
+        for (var index = 0; index < shapes.Count; index++)
         {
+            var shape = shapes[index];
             if (!Eligible(shape, mask, excluded, out var tag) || !b2Shape_TestPoint(shape, point)) continue;
             hits.Add(new(tag.ColliderRID, PhysicsServer2D.Instance.ResolveSceneObject(tag.ColliderRID), tag.ShapeIndex));
         }

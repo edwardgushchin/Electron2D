@@ -70,6 +70,7 @@ Last updated: 2026-09-24
 | `Camera2D : Node2D` | `Camera : Entity` | Viewport camera selection and spatial tracking, including zoom, limits, drag margins and smoothing. |
 | `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Borrowed collision-shape placement as a direct physics-body child; first executable profile under ADR 0054. |
 | `CollisionPolygon2D : Node2D` | `CollisionPolygon : Entity` | Owned solid or hollow polygon placement as a direct physics-body or Area child under ADR 0066. |
+| `RayCast2D : Node2D` | `RayCast : Entity` | Spatial ray node with cached fixed-physics query state over the shared World2D under ADR 0063. |
 | `CollisionObject2D : Node2D` | `abstract CollisionObject : Entity` | Collision filtering and shape ownership above physics-body specializations. |
 | `PhysicsBody2D : CollisionObject2D` | `abstract PhysicsBody : CollisionObject` | Shared fixed-step body and shape lifecycle. |
 | `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic Box2D-backed motion and contact response. |
@@ -103,6 +104,7 @@ ElectronObject
         │   ├── Camera
         │   ├── CollisionShape
         │   ├── CollisionPolygon
+        │   ├── RayCast
         │   ├── CollisionObject
         │   │   └── PhysicsBody
         │   │       ├── RigidBody

@@ -2704,6 +2704,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RayCast",
+    "kind": "type",
+    "declaringType": "Electron2D.RayCast",
+    "name": "RayCast",
+    "signature": "public sealed class Electron2D.RayCast",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Rect2",
     "kind": "type",
     "declaringType": "Electron2D.Rect2",
@@ -6151,6 +6166,19 @@
     "declaringType": "Electron2D.RandomNumberGenerator",
     "name": ".ctor",
     "signature": "public RandomNumberGenerator()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RayCast..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RayCast",
+    "name": ".ctor",
+    "signature": "public RayCast()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -44006,6 +44034,300 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RayCast.AddException(Electron2D.CollisionObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "AddException",
+    "signature": "public System.Void AddException(Electron2D.CollisionObject node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.CollisionObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.AddExceptionRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "AddExceptionRID",
+    "signature": "public System.Void AddExceptionRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.ClearExceptions()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "ClearExceptions",
+    "signature": "public System.Void ClearExceptions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.ForceRaycastUpdate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "ForceRaycastUpdate",
+    "signature": "public System.Void ForceRaycastUpdate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetCollider()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetCollider",
+    "signature": "public Electron2D.ElectronObject GetCollider()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetColliderRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetColliderRID",
+    "signature": "public Electron2D.RID GetColliderRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetColliderShape()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetColliderShape",
+    "signature": "public System.Int32 GetColliderShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetCollisionMaskValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetCollisionMaskValue",
+    "signature": "public System.Boolean GetCollisionMaskValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetCollisionNormal()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetCollisionNormal",
+    "signature": "public Electron2D.Vector2 GetCollisionNormal()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetCollisionPoint()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetCollisionPoint",
+    "signature": "public Electron2D.Vector2 GetCollisionPoint()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.IsColliding()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "IsColliding",
+    "signature": "public System.Boolean IsColliding()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.RemoveException(Electron2D.CollisionObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "RemoveException",
+    "signature": "public System.Void RemoveException(Electron2D.CollisionObject node)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.CollisionObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.RemoveExceptionRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "RemoveExceptionRID",
+    "signature": "public System.Void RemoveExceptionRID(Electron2D.RID rid)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RayCast.SetCollisionMaskValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RayCast",
+    "name": "SetCollisionMaskValue",
+    "signature": "public System.Void SetCollisionMaskValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Rect2.Abs()",
     "kind": "method",
     "declaringType": "Electron2D.Rect2",
@@ -67813,6 +68135,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.CollideWithAreas()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "CollideWithAreas",
+    "signature": "public System.Boolean CollideWithAreas { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.CollideWithBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "CollideWithBodies",
+    "signature": "public System.Boolean CollideWithBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.CollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "CollisionMask",
+    "signature": "public System.UInt32 CollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.ExcludeParent()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "ExcludeParent",
+    "signature": "public System.Boolean ExcludeParent { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.HitFromInside()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "HitFromInside",
+    "signature": "public System.Boolean HitFromInside { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RayCast.TargetPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.RayCast",
+    "name": "TargetPosition",
+    "signature": "public Electron2D.Vector2 TargetPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

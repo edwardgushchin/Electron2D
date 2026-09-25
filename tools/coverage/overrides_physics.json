@@ -1,6 +1,31 @@
 {
   "mappings": [
     {
+      "godot": "RayCast2D::method:get_collider()",
+      "electron2d": "method:Electron2D.RayCast.GetCollider()",
+      "reason": "Typed ElectronObject result preserves the reference object role; server-only colliders have no scene object."
+    },
+    {
+      "godot": "RayCast2D::method:get_collider_rid()",
+      "electron2d": "method:Electron2D.RayCast.GetColliderRID()",
+      "reason": "Uppercase RID naming preserves the numeric scene/server collider identity."
+    },
+    {
+      "godot": "RayCast2D::method:get_collider_shape()",
+      "electron2d": "method:Electron2D.RayCast.GetColliderShape()",
+      "reason": "Typed cached direct shape-owner index; zero before a hit or after a miss."
+    },
+    {
+      "godot": "RayCast2D::method:get_collision_normal()",
+      "electron2d": "method:Electron2D.RayCast.GetCollisionNormal()",
+      "reason": "Typed cached world-space normal, retained after a miss or disable."
+    },
+    {
+      "godot": "RayCast2D::method:get_collision_point()",
+      "electron2d": "method:Electron2D.RayCast.GetCollisionPoint()",
+      "reason": "Typed cached world-space contact point, retained after a miss or disable."
+    },
+    {
       "godot": "CanvasItem::method:get_world_2d()",
       "electron2d": "method:Electron2D.CanvasItem.GetWorld2D()",
       "reason": "Typed scene-tree world access; independent viewport world changes remain a separate scene/renderer dependency."
@@ -67,6 +92,36 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.RayCast..ctor()",
+      "reason": "Managed scene construction projects the enabled local ray and default query options.",
+      "adr": "ADRs 0003, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RayCast.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene construction restores the exact spatial ray node.",
+      "adr": "ADRs 0005, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RayCast.GetPropertyDescriptors()",
+      "reason": "Typed scene descriptors store the ray target, mask and filtering options.",
+      "adr": "ADRs 0005, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RayCast.OnEnterTree()",
+      "reason": "Scene entry enables the internal physics lane and direct-parent RID exclusion.",
+      "adr": "ADRs 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RayCast.OnExitTree()",
+      "reason": "Scene exit disables automatic ray sampling while retaining the last snapshot.",
+      "adr": "ADRs 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.RayCast.OnNotification(System.Int32)",
+      "reason": "Typed internal fixed-physics notification projects the reference automatic ray query timing.",
+      "adr": "ADRs 0008, 0063"
+    },
     {
       "electron2d": "T:Electron2D.PhysicsPointResult2D",
       "reason": "Typed C# value projects the dictionary entries of direct-space point hits without Variant or dynamic lookup.",
@@ -519,6 +574,42 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["class:RayCast2D"],
+      "state": "Partial",
+      "reason": "Direct scene ray snapshots and own query options execute; retained physics-debug gizmo drawing and virtual tile collision-object results remain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
+    },
+    {
+      "godot": ["RayCast2D::method:get_collider()"],
+      "state": "Partial",
+      "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
+    },
+    {
+      "godot": [
+        "RayCast2D::method:add_exception(CollisionObject2D:)",
+        "RayCast2D::method:add_exception_rid(RID:)",
+        "RayCast2D::method:clear_exceptions()",
+        "RayCast2D::method:force_raycast_update()",
+        "RayCast2D::method:get_collider_rid()",
+        "RayCast2D::method:get_collider_shape()",
+        "RayCast2D::method:get_collision_mask_value(int:)",
+        "RayCast2D::method:get_collision_normal()",
+        "RayCast2D::method:get_collision_point()",
+        "RayCast2D::method:is_colliding()",
+        "RayCast2D::method:remove_exception(CollisionObject2D:)",
+        "RayCast2D::method:remove_exception_rid(RID:)",
+        "RayCast2D::method:set_collision_mask_value(int:,bool:)",
+        "RayCast2D::property:collide_with_areas",
+        "RayCast2D::property:collide_with_bodies",
+        "RayCast2D::property:collision_mask",
+        "RayCast2D::property:enabled",
+        "RayCast2D::property:exclude_parent",
+        "RayCast2D::property:hit_from_inside",
+        "RayCast2D::property:target_position"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0063 scene ray executes cached fixed-step and forced queries, typed RID exclusions, parent filtering, masks, Area/body flags, inside hits, target transform, stale/miss state and PackedScene; RayCastTests checks timing, failures and warm allocation."
+    },
     {
       "godot": [
         "class:RID",

@@ -22,6 +22,8 @@ Owns one active node hierarchy and coordinates its lifecycle, input, frames, gro
 
 The tree registers its existing physics world with [PhysicsServer2D](PhysicsServer2D.md) when the first body/Area enters or a CanvasItem asks for [World2D](World2D.md). Its fixed physics lane steps that same space; `World2D.Space` and its direct query view have stable identities until tree teardown. A query prepares pending shape/pose edits even before the first fixed step.
 
+An enabled [RayCast](RayCast.md) samples its cached result through Node's internal physics callback before the backend step. Scene pause/process eligibility and physics priority govern this callback; a forced update can query immediately from the owner thread, including while automatic sampling is disabled. A ray result is held between samples.
+
 Before entry, a root still set to `NodeAutoTranslateMode.Inherit` samples `ProjectSettings.RootNodeAutoTranslate` and becomes `Always` or `Disabled`. Each automatically translating node receives `NotificationTranslationChanged` during entry; the setting is not re-read for an active tree.
 
 `PhysicsInterpolation` samples its typed project setting at construction. Physics frames snapshot eligible canvas and camera transforms before and after callbacks; rendering uses `Engine.PhysicsInterpolationFraction` without altering logical transforms or input coordinates. The flag can be changed on the owner thread, resetting display history.
