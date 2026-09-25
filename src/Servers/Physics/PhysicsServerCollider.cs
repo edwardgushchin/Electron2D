@@ -1,0 +1,208 @@
+using Box2D.NET;
+using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2MathFunction;
+using static Box2D.NET.B2Shapes;
+using static Box2D.NET.B2Types;
+
+namespace Electron2D;
+
+internal sealed class PhysicsServerShape(RID rid, Shape geometry)
+{
+    internal RID RID { get; } = rid;
+    internal Shape Geometry { get; set; } = geometry;
+}
+
+internal sealed class PhysicsServerCollider(RID rid, bool isArea)
+{
+    private readonly List<ShapeSlot> _slots = [];
+    private readonly List<B2ShapeId> _backendShapes = [];
+    private B2BodyId _bodyID;
+    private PhysicsSpace? _space;
+    private Transform _transform = Transform.Identity;
+    private uint _layer = 1;
+    private uint _mask = 1;
+    private Vector2 _linearVelocity;
+    private PhysicsServer2D.BodyMode _mode = PhysicsServer2D.BodyMode.Rigid;
+
+    private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled);
+
+    internal RID RID { get; } = rid;
+    internal bool IsArea { get; } = isArea;
+    internal RID SpaceRID { get; private set; }
+    internal IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
+    internal PhysicsServer2D.BodyMode Mode => _mode;
+    internal int ShapeCount => _slots.Count;
+
+    internal void AttachBackend(PhysicsSpace space, RID spaceRID)
+    {
+        if (_space is not null) throw new InvalidOperationException("A server collider already belongs to a space.");
+        var definition = b2DefaultBodyDef();
+        definition.type = BackendType;
+        definition.position = Shape.ToBackend(_transform.Origin);
+        definition.rotation = b2MakeRot(_transform.Rotation);
+        _bodyID = b2CreateBody(space.WorldID, definition);
+        _space = space;
+        SpaceRID = spaceRID;
+        try
+        {
+            if (_mode == PhysicsServer2D.BodyMode.RigidLinear)
+                b2Body_SetMotionLocks(_bodyID, new(false, false, true));
+            if (!IsArea && _mode is PhysicsServer2D.BodyMode.Rigid or PhysicsServer2D.BodyMode.RigidLinear)
+                b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(_linearVelocity));
+            RebuildShapes();
+        }
+        catch { DetachBackend(); throw; }
+    }
+
+    internal void DetachBackend()
+    {
+        if (_space is null) return;
+        CaptureMotion();
+        b2DestroyBody(_bodyID);
+        _backendShapes.Clear();
+        _space = null;
+        SpaceRID = default;
+    }
+
+    internal void AddShape(PhysicsServerShape shape, Transform localTransform, bool disabled)
+    {
+        ValidateTransform(localTransform);
+        _slots.Add(new(shape, localTransform, disabled));
+        if (_space is null) return;
+        try { RebuildShapes(); }
+        catch
+        {
+            _slots.RemoveAt(_slots.Count - 1);
+            RebuildShapes();
+            throw;
+        }
+    }
+
+    internal bool RemoveShape(PhysicsServerShape shape)
+    {
+        var removed = _slots.RemoveAll(slot => ReferenceEquals(slot.Shape, shape)) != 0;
+        if (removed && _space is not null) RebuildShapes();
+        return removed;
+    }
+
+    internal bool UsesShape(PhysicsServerShape shape)
+    {
+        foreach (var slot in _slots)
+            if (ReferenceEquals(slot.Shape, shape)) return true;
+        return false;
+    }
+
+    internal void SetShapeDisabled(int index, bool disabled)
+    {
+        if ((uint)index >= (uint)_slots.Count) throw new ArgumentOutOfRangeException(nameof(index));
+        var previous = _slots[index];
+        if (previous.Disabled == disabled) return;
+        _slots[index] = previous with { Disabled = disabled };
+        try { RebuildShapes(); }
+        catch { _slots[index] = previous; RebuildShapes(); throw; }
+    }
+
+    internal void RemoveShapeAt(int index)
+    {
+        if ((uint)index >= (uint)_slots.Count) throw new ArgumentOutOfRangeException(nameof(index));
+        var previous = _slots[index];
+        _slots.RemoveAt(index);
+        try { RebuildShapes(); }
+        catch { _slots.Insert(index, previous); RebuildShapes(); throw; }
+    }
+
+    internal void SetMode(PhysicsServer2D.BodyMode mode)
+    {
+        if (IsArea) throw new InvalidOperationException("An Area has no body mode.");
+        if (_mode == mode) return;
+        CaptureMotion();
+        _mode = mode;
+        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic)
+            _linearVelocity = Vector2.Zero;
+        if (_space is null) return;
+        b2Body_SetType(_bodyID, BackendType);
+        b2Body_SetMotionLocks(_bodyID, new(false, false, mode == PhysicsServer2D.BodyMode.RigidLinear));
+        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic)
+            b2Body_SetLinearVelocity(_bodyID, default);
+        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic or PhysicsServer2D.BodyMode.RigidLinear)
+            b2Body_SetAngularVelocity(_bodyID, 0);
+        RebuildShapes();
+    }
+
+    internal void SetTransform(Transform transform)
+    {
+        ValidateTransform(transform);
+        _transform = transform;
+        if (_space is not null)
+            b2Body_SetTransform(_bodyID, Shape.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
+    }
+
+    internal Transform GetTransform()
+    {
+        if (_space is null || IsArea || _mode == PhysicsServer2D.BodyMode.Static)
+            return _transform;
+        var position = b2Body_GetPosition(_bodyID);
+        var rotation = b2Rot_GetAngle(b2Body_GetRotation(_bodyID));
+        return new(rotation, Vector2.One, 0,
+            new(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter));
+    }
+
+    internal void SetLinearVelocity(Vector2 velocity)
+    {
+        if (!velocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(velocity));
+        _linearVelocity = velocity;
+        if (_space is not null && !IsArea) b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(velocity));
+    }
+
+    internal void SetFilter(uint layer, uint mask)
+    {
+        _layer = layer;
+        _mask = mask;
+        if (_space is not null) RebuildShapes();
+    }
+
+    internal uint CollisionLayer => _layer;
+    internal uint CollisionMask => _mask;
+
+    private void CaptureMotion()
+    {
+        if (_space is null || IsArea || _mode == PhysicsServer2D.BodyMode.Static)
+            return;
+        _transform = GetTransform();
+        var velocity = b2Body_GetLinearVelocity(_bodyID);
+        _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter,
+            velocity.Y * PhysicsSpace.UnitsPerMeter);
+    }
+
+    internal void RebuildShapes()
+    {
+        if (_space is null) return;
+        foreach (var slot in _slots)
+            if (!slot.Disabled) ValidateTransform(slot.LocalTransform);
+        foreach (var id in _backendShapes) b2DestroyShape(id, updateBodyMass: false);
+        _backendShapes.Clear();
+        var definition = b2DefaultShapeDef();
+        definition.filter.categoryBits = _layer;
+        definition.filter.maskBits = _mask;
+        definition.isSensor = IsArea;
+        definition.density = !IsArea && _mode is PhysicsServer2D.BodyMode.Rigid or PhysicsServer2D.BodyMode.RigidLinear ? 1 : 0;
+        for (var index = 0; index < _slots.Count; index++)
+        {
+            var slot = _slots[index];
+            if (slot.Disabled) continue;
+            definition.userData = new B2UserData(new PhysicsFixtureTag(RID, index, null));
+            slot.Shape.Geometry.AppendToBody(_bodyID, slot.LocalTransform.Origin,
+                slot.LocalTransform.Rotation, definition, _backendShapes);
+        }
+    }
+
+    private B2BodyType BackendType => IsArea || _mode == PhysicsServer2D.BodyMode.Static
+        ? B2BodyType.b2_staticBody : _mode == PhysicsServer2D.BodyMode.Kinematic
+            ? B2BodyType.b2_kinematicBody : B2BodyType.b2_dynamicBody;
+
+    private static void ValidateTransform(Transform transform)
+    {
+        if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
+            throw new ArgumentException("Physics transforms require finite translation, unit scale and zero skew.", nameof(transform));
+    }
+}

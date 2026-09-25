@@ -51,7 +51,7 @@ The Control branch also exposes [`FocusBehaviorRecursive`](../classes/FocusBehav
 - `SceneState`: live read-only typed metadata view for current packed data.
 - `PackedSceneEditState`: instantiation policy whose runtime `Disabled` value is implemented and whose editor values fail explicitly.
 
-The [Physics domain](physics.md) now supplies RigidBody, StaticBody, CollisionShape and CollisionPolygon descendants on the existing Entity branch. SceneTree's fixed lane owns their internal world step after node physics callbacks and before timers, tweens and interpolation end capture. The Physics domain owns shapes, body behavior and the still-incomplete wider server/query API; Scene remains the scheduling and lifetime owner.
+The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape and CollisionPolygon descendants on the existing Entity branch. SceneTree's fixed lane owns their registered physics-space step after node physics callbacks and before timers, tweens and interpolation end capture. Attached CanvasItems access the same space through [World2D](../classes/World2D.md); Physics owns RID/server/query behavior while Scene remains the scheduling and lifetime owner.
 
 ## Dependency direction
 

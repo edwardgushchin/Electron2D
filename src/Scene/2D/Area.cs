@@ -300,9 +300,11 @@ public sealed partial class Area : CollisionObject
         definition.filter.maskBits = CollisionMask;
         definition.density = 0;
         definition.isSensor = true;
-        foreach (var node in _shapes)
+        for (var index = 0; index < _shapes.Count; index++)
         {
+            var node = _shapes[index];
             if (!node.IsActive) continue;
+            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, null));
             node.AppendToBody(_bodyID, definition, _backendShapes);
         }
         _appliedShapeRevisions.Clear();

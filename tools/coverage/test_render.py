@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -100,6 +100,27 @@ def main():
             for state in ("Implemented", "Partial", "Blocked")} == {
                 "Implemented": 8, "Partial": 1, "Blocked": 1}
     assert " | Blocked | " in next(row for row in polygon_node_rows if "one_way_collision_margin" in row)
+    for name, count in (("RID", 11), ("PhysicsRayQueryParameters2D", 9)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                if row.startswith("| [`") and "github.com/godotengine" in row]
+        assert len(rows) == count and all(" | Implemented | " in row for row in rows)
+    world_rows = pages[CLASS_PAGES / "World2D.md"]
+    assert "| Implemented |" in next(row for row in world_rows.splitlines()
+                                       if row.startswith("| [`property RID space"))
+    direct_rows = pages[CLASS_PAGES / "PhysicsDirectSpaceState2D.md"]
+    assert "| Implemented |" in next(row for row in direct_rows.splitlines()
+                                       if row.startswith("| [`method intersect_ray("))
+    assert "| Partial |" in next(row for row in direct_rows.splitlines()
+                                   if row.startswith("| [`method intersect_point("))
+    server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
+                   if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(server_rows) == 215
+    assert {state: sum(f" | {state} | " in row for row in server_rows)
+            for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
+                "Implemented": 31, "Partial": 8, "Unimplemented": 171, "Blocked": 5}
+    assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_set_shape_disabled", "area_set_shape_disabled", "body_remove_shape", "area_remove_shape"))
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows
