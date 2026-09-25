@@ -67,7 +67,8 @@ public partial class Window : Viewport
     /// <summary>Gets the observed client size or requests a positive client size.</summary>
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.
-    /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.</remarks>
+    /// SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
+    /// On Android the fullscreen surface determines the initial observed size, regardless of the requested size.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Either component is nonpositive.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
@@ -91,6 +92,7 @@ public partial class Window : Viewport
     /// <summary>Gets or sets nonnegative minimum client dimensions; zero means no limit on that axis.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or exceeds a nonzero maximum.</exception>
+    /// <exception cref="NotSupportedException">A nonzero Android window limit is configured before Engine.Run.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MinSize
@@ -102,6 +104,7 @@ public partial class Window : Viewport
     /// <summary>Gets or sets nonnegative maximum client dimensions; zero means no limit on that axis.</summary>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is negative or a nonzero maximum is below the minimum.</exception>
+    /// <exception cref="NotSupportedException">A nonzero Android window limit is configured before Engine.Run.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public Vector2i MaxSize
@@ -240,9 +243,17 @@ public partial class Window : Viewport
     internal void OpenNative()
     {
         _display = DisplayServer.OpenForRendering(_title, _size, hidden: !Visible);
-        _display.WindowSetMinSize(_minSize);
-        _display.WindowSetMaxSize(_maxSize);
-        _display.WindowSetSize(_size);
+        if (OperatingSystem.IsAndroid())
+        {
+            if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
+                throw new NotSupportedException("Android does not support window size limits.");
+        }
+        else
+        {
+            _display.WindowSetMinSize(_minSize);
+            _display.WindowSetMaxSize(_maxSize);
+            _display.WindowSetSize(_size);
+        }
         foreach (var flag in new[] { Flags.ResizeDisabled, Flags.Borderless, Flags.AlwaysOnTop, Flags.NoFocus })
             if (GetFlag(flag))
                 _display.WindowSetFlag((DisplayServer.WindowFlag)flag, true);

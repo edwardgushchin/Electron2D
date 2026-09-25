@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-09-23
+Last updated: 2026-09-25
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -14,7 +14,7 @@ Last updated: 2026-09-23
 
 A configurable native root window that owns scene children.
 
-Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. The root canvas renders after scene processing; embedded windows are not implemented.
+Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. On Android the actual fullscreen surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded windows are not implemented.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
 
@@ -120,6 +120,8 @@ Zero by default.
 
 **ArgumentOutOfRangeException:** A component is negative or a nonzero maximum is below the minimum.
 
+**NotSupportedException:** A nonzero Android limit is configured before Engine.Run.
+
 **InvalidOperationException:** The caller is not the owner or the native request fails.
 
 **ObjectDisposedException:** The window is disposed.
@@ -132,6 +134,8 @@ Gets or sets nonnegative minimum client dimensions; zero means no limit on that 
 Zero by default.
 
 **ArgumentOutOfRangeException:** A component is negative or exceeds a nonzero maximum.
+
+**NotSupportedException:** A nonzero Android limit is configured before Engine.Run.
 
 **InvalidOperationException:** The caller is not the owner or the native request fails.
 
@@ -159,7 +163,7 @@ Gets the observed client size or requests a positive client size.
 
 100 by 100 before configuration or native activation.
 
-Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size.
+Native changes may be asynchronous or constrained by the compositor and size limits. SizeChanged follows committed size changes; desktop position and child canvas transforms do not affect size. On Android the fullscreen surface determines the initial observed size, regardless of the requested size.
 
 **ArgumentOutOfRangeException:** Either component is nonpositive.
 

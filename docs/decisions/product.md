@@ -233,7 +233,7 @@ The Release build and executable test project verify that all moved sources stil
 <a id="adr-0021"></a>
 ## ADR 0021: Runtime and editor target platforms
 
-Last updated: 2026-09-22
+Last updated: 2026-09-25
 
 ### Status
 
@@ -266,7 +266,7 @@ The editor targets the three desktop operating systems and both Linux display pr
 
 ### Current implementation boundary
 
-The project targets `net10.0`, with `net10.0-android`, `net10.0-ios`, and `net10.0-tvos` selected for Android, iOS, and tvOS RIDs. The generic desktop project references the pinned Windows, macOS and Linux native package families so a referencing application can select the correct assets by RID even when its project reference is restored without that RID. Android, iOS and tvOS keep their target-specific package selection; Android TV uses Android packages. `browser-wasm` is accepted without an SDL package until the Web host and dependency model are implemented. A self-contained Linux x64 example publishes with its packaged SDL and .NET 10 runtime; the previous Wayland scene/input observation was made before this migration and needs renewal. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no Web browser host/build/package/test pipeline, mobile or TV host application, iOS or tvOS application bundle, editor executable, signing pipeline, or complete target CI matrix. The current Wayland-only gate does not establish distributable applications on other targets.
+The project targets `net10.0`, with `net10.0-android`, `net10.0-ios`, and `net10.0-tvos` selected for Android, iOS, and tvOS RIDs. The generic desktop project references the pinned Windows, macOS and Linux native package families so a referencing application can select the correct assets by RID even when its project reference is restored without that RID. Android, iOS and tvOS keep their target-specific package selection; Android TV uses Android packages. `browser-wasm` is accepted without an SDL package until the Web host and dependency model are implemented. A self-contained Linux x64 example publishes with its packaged SDL and .NET 10 runtime; the previous Wayland scene/input observation was made before this migration and needs renewal. Some file-system code contains macOS and Windows backends, but they have not been exercised on native hosts. There is no production Web browser host/build/package/test pipeline, mobile or TV host application, iOS or tvOS application bundle, editor executable, signing pipeline, or complete target CI matrix. A diagnostic Android SDLActivity under `tests/Electron2D.AndroidProbe` now packages and runs the public Engine.Run canvas path on an Android arm64 phone and an Android TV armeabi-v7a device; this verifies that display/render slice only, not production host lifecycle, input, audio, storage, or release packaging. The current Wayland-only gate does not establish distributable applications on other targets.
 
 The first Web runtime vertical slice must choose and verify a browser-compatible host and dependency model, then integrate the required rendering, input, storage, lifecycle, and packaging capabilities. No placeholder API or unverified browser package is authorized by this target decision.
 

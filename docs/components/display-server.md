@@ -1,6 +1,6 @@
 # Display server component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Scope
 
@@ -12,7 +12,7 @@ This component owns the native SDL video connection, one main window, display an
 
 ## Runtime flow
 
-1. The SDL main thread calls `Open`, which initializes video and creates one high-density resizable window; creation failure unwinds initialization. A visible Wayland window presents a blank surface so the compositor maps it, then refreshes it on pixel-size and scale changes until rendering takes ownership.
+1. The SDL main thread calls `Open`, which initializes video and creates one high-density resizable window; on Android, SDLActivity establishes the SDL video thread during initialization and the fullscreen surface supplies the actual size; creation failure unwinds initialization. A visible Wayland window presents a blank surface so the compositor maps it, then refreshes it on pixel-size and scale changes until rendering takes ownership.
 2. The host calls `ProcessEvents` before `Engine.AdvanceFrame`. Native queue order is preserved. Keyboard, pointer, wheel, and touch events are converted to typed resources and submitted to `Input` synchronously. `Input` may synthesize touch from mouse or mouse from touch under its documented emulation policies.
 3. Window, quit, system-theme change, main-window display-content-scale change, focus, pointer enter/exit, committed text, and composition events reach typed callbacks. `WindowRectChanged` delivers the complete observed client rectangle after each native move or resize, with state committed before the callback. Theme, content-scale, and rectangle notifications retain native queue order. `IsDarkMode` reads current SDL theme state; `IsDarkModeSupported` uses a cached Settings portal capability on Linux Wayland and X11 and current SDL theme state elsewhere. Unchanged rectangles and foreign-window events are ignored. A completed file drop delivers one ordered path list. Focus loss clears touch indexes, invokes the window callback and application notification, then releases pressed input even when a handler fails. Native file-dialog results are copied on SDL's callback thread and delivered on the owner thread during a later event pump.
    On Wayland, IME composition offsets use Unicode codepoints and unknown negative native offsets become zero. The requested client-pixel caret is converted to SDL logical window coordinates using current pixel density before positioning the 1×10 candidate area while text input is active. Native readback passed at densities one and 1.25; actual input-method popup placement remains unverified.

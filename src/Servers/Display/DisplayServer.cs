@@ -88,10 +88,10 @@ public sealed partial class DisplayServer : ElectronObject
 
     /// <summary>Opens the native video subsystem and creates the main window.</summary>
     /// <param name="title">Initial UTF-8 window title.</param>
-    /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland.</param>
+    /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland; Android uses its fullscreen surface size.</param>
     /// <param name="hidden">Whether the window starts hidden.</param>
     /// <returns>The process's active display server.</returns>
-    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. The main window starts with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere, so smaller requested dimensions may be constrained by the native window manager. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
+    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. Desktop windows start with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere; Android uses the fullscreen surface and has no minimum-size request. Android SDLActivity establishes the SDL video thread during video initialization. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
@@ -125,11 +125,14 @@ public sealed partial class DisplayServer : ElectronObject
             var gamepadHintSet = false;
             try
             {
-                if (!SDL.IsMainThread())
+                // SDLActivity runs managed Main on a worker; video initialization records it as SDL's video thread.
+                if (!OperatingSystem.IsAndroid() && !SDL.IsMainThread())
                     throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
                 if (!SDL.InitSubSystem(SDL.InitFlags.Video))
                     throw SDLFailure("initialize the video subsystem");
                 videoInitialized = true;
+                if (!SDL.IsMainThread())
+                    throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
                 if (!SDL.SetHintWithPriority(SDL.Hints.JoystickAllowBackgroundEvents, "1", SDL.HintPriority.Override))
                     throw SDLFailure("enable background gamepad events");
                 gamepadHintSet = true;
@@ -170,7 +173,7 @@ public sealed partial class DisplayServer : ElectronObject
                     var minimumSize = SDL.GetCurrentVideoDriver() == "wayland"
                         ? WaylandLogicalWindowLimit(new Vector2i(64, 64), window, minimum: true)
                         : new Vector2i(64, 64);
-                    if (!SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
+                    if (!OperatingSystem.IsAndroid() && !SDL.SetWindowMinimumSize(window, minimumSize.X, minimumSize.Y))
                         throw SDLFailure("set the main window's minimum size");
                     if (presentBlank && !hidden && SDL.GetCurrentVideoDriver() == "wayland")
                         PresentBlankWindowSurface(window);
