@@ -24,7 +24,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 
 ## Public surface
 
-The Control branch also exposes [`ControlFocusBehaviorRecursive`](../classes/ControlFocusBehaviorRecursive.md) and [`ControlMouseBehaviorRecursive`](../classes/ControlMouseBehaviorRecursive.md) for direct-Control subtree input policy; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
+The Control branch also exposes [`FocusBehaviorRecursive`](../classes/FocusBehaviorRecursive.md) and [`MouseBehaviorRecursive`](../classes/MouseBehaviorRecursive.md) for direct-Control subtree input policy; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
 
 - `Node`: neutral ordered hierarchy, lifecycle, paths/groups including owner-scoped `%Name`, subtree replacement, inherited physics-interpolation policy/reset, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged. Z ordering, borrowed material/modulation inheritance and draw-transform state now have managed and Wayland pixel audits; its local transform query is fulfilled by owner-guarded Entity/Control overrides. Other canvas rows retain their own status.

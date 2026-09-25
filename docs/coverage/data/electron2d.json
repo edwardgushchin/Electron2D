@@ -451,24 +451,6 @@
     "value": null
   },
   {
-    "id": "T:Electron2D.CollisionPolygonBuildMode",
-    "kind": "type",
-    "declaringType": "Electron2D.CollisionPolygonBuildMode",
-    "name": "CollisionPolygonBuildMode",
-    "signature": "public enum Electron2D.CollisionPolygonBuildMode",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
     "id": "T:Electron2D.CollisionShape",
     "kind": "type",
     "declaringType": "Electron2D.CollisionShape",
@@ -576,42 +558,6 @@
     "declaringType": "Electron2D.Control.CursorShape",
     "name": "CursorShape",
     "signature": "public enum Electron2D.Control.CursorShape",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.ControlFocusBehaviorRecursive",
-    "kind": "type",
-    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
-    "name": "ControlFocusBehaviorRecursive",
-    "signature": "public enum Electron2D.ControlFocusBehaviorRecursive",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.ControlMouseBehaviorRecursive",
-    "kind": "type",
-    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
-    "name": "ControlMouseBehaviorRecursive",
-    "signature": "public enum Electron2D.ControlMouseBehaviorRecursive",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -1108,6 +1054,24 @@
     "declaringType": "Electron2D.FillEnum",
     "name": "FillEnum",
     "signature": "public enum Electron2D.FillEnum",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FocusBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.FocusBehaviorRecursive",
+    "name": "FocusBehaviorRecursive",
+    "signature": "public enum Electron2D.FocusBehaviorRecursive",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -2161,6 +2125,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MouseBehaviorRecursive",
+    "kind": "type",
+    "declaringType": "Electron2D.MouseBehaviorRecursive",
+    "name": "MouseBehaviorRecursive",
+    "signature": "public enum Electron2D.MouseBehaviorRecursive",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MouseButton",
     "kind": "type",
     "declaringType": "Electron2D.MouseButton",
@@ -2476,6 +2458,24 @@
     "baseType": "Electron2D.Entity",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PolygonBuildMode",
+    "kind": "type",
+    "declaringType": "Electron2D.PolygonBuildMode",
+    "name": "PolygonBuildMode",
+    "signature": "public enum Electron2D.PolygonBuildMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -7454,32 +7454,6 @@
     "value": "1"
   },
   {
-    "id": "enumValue:Electron2D.CollisionPolygonBuildMode.Segments()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.CollisionPolygonBuildMode",
-    "name": "Segments",
-    "signature": "public const Electron2D.CollisionPolygonBuildMode Segments = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.CollisionPolygonBuildMode",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.CollisionPolygonBuildMode.Solids()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.CollisionPolygonBuildMode",
-    "name": "Solids",
-    "signature": "public const Electron2D.CollisionPolygonBuildMode Solids = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.CollisionPolygonBuildMode",
-    "value": "0"
-  },
-  {
     "id": "enumValue:Electron2D.Control.CursorShape.Arrow()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Control.CursorShape",
@@ -7699,84 +7673,6 @@
     "parameters": [],
     "returnType": "Electron2D.Control.CursorShape",
     "value": "4"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Disabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
-    "name": "Disabled",
-    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Disabled = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Enabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
-    "name": "Enabled",
-    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Enabled = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlFocusBehaviorRecursive.Inherited()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlFocusBehaviorRecursive",
-    "name": "Inherited",
-    "signature": "public const Electron2D.ControlFocusBehaviorRecursive Inherited = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Disabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
-    "name": "Disabled",
-    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Disabled = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Enabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
-    "name": "Enabled",
-    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Enabled = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.ControlMouseBehaviorRecursive.Inherited()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.ControlMouseBehaviorRecursive",
-    "name": "Inherited",
-    "signature": "public const Electron2D.ControlMouseBehaviorRecursive Inherited = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
-    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Curve.TangentMode.Count()",
@@ -9363,6 +9259,45 @@
     "parameters": [],
     "returnType": "Electron2D.FillEnum",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FocusBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FocusBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.FocusBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FocusBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FocusBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.FocusBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FocusBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FocusBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.FocusBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusBehaviorRecursive",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.FocusMode.All()",
@@ -14721,6 +14656,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.MouseBehaviorRecursive.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MouseBehaviorRecursive",
+    "name": "Disabled",
+    "signature": "public const Electron2D.MouseBehaviorRecursive Disabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseBehaviorRecursive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.MouseBehaviorRecursive.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MouseBehaviorRecursive",
+    "name": "Enabled",
+    "signature": "public const Electron2D.MouseBehaviorRecursive Enabled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseBehaviorRecursive",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.MouseBehaviorRecursive.Inherited()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MouseBehaviorRecursive",
+    "name": "Inherited",
+    "signature": "public const Electron2D.MouseBehaviorRecursive Inherited = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseBehaviorRecursive",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.MouseButton.Left()",
     "kind": "enumValue",
     "declaringType": "Electron2D.MouseButton",
@@ -15174,6 +15148,32 @@
     "parameters": [],
     "returnType": "Electron2D.PhysicsInterpolationMode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PolygonBuildMode.Segments()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PolygonBuildMode",
+    "name": "Segments",
+    "signature": "public const Electron2D.PolygonBuildMode Segments = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PolygonBuildMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PolygonBuildMode.Solids()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PolygonBuildMode",
+    "name": "Solids",
+    "signature": "public const Electron2D.PolygonBuildMode Solids = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PolygonBuildMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.ProcessMode.Always()",
@@ -58817,12 +58817,12 @@
     "kind": "property",
     "declaringType": "Electron2D.CollisionPolygon",
     "name": "BuildMode",
-    "signature": "public Electron2D.CollisionPolygonBuildMode BuildMode { get; set; }",
+    "signature": "public Electron2D.PolygonBuildMode BuildMode { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.CollisionPolygonBuildMode",
+    "returnType": "Electron2D.PolygonBuildMode",
     "value": null
   },
   {
@@ -61105,12 +61105,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Control",
     "name": "FocusBehaviorRecursive",
-    "signature": "public Electron2D.ControlFocusBehaviorRecursive FocusBehaviorRecursive { get; set; }",
+    "signature": "public Electron2D.FocusBehaviorRecursive FocusBehaviorRecursive { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.ControlFocusBehaviorRecursive",
+    "returnType": "Electron2D.FocusBehaviorRecursive",
     "value": null
   },
   {
@@ -61261,12 +61261,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Control",
     "name": "MouseBehaviorRecursive",
-    "signature": "public Electron2D.ControlMouseBehaviorRecursive MouseBehaviorRecursive { get; set; }",
+    "signature": "public Electron2D.MouseBehaviorRecursive MouseBehaviorRecursive { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.ControlMouseBehaviorRecursive",
+    "returnType": "Electron2D.MouseBehaviorRecursive",
     "value": null
   },
   {

@@ -4,7 +4,7 @@ Last updated: 2026-09-25
 
 ## Scope and owned types
 
-[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`CollisionPolygonBuildMode`](../classes/CollisionPolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
+[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
 
 ## Runtime flow
 

@@ -23,7 +23,7 @@ public enum FocusMode
 }
 
 /// <summary>Controls whether focus eligibility is inherited, disabled, or restored in a control subtree.</summary>
-public enum ControlFocusBehaviorRecursive
+public enum FocusBehaviorRecursive
 {
     /// <summary>Follow the direct parent control, or allow focus when there is none.</summary>
     Inherited = 0,
@@ -34,7 +34,7 @@ public enum ControlFocusBehaviorRecursive
 }
 
 /// <summary>Controls whether pointer input is inherited, disabled, or restored in a control subtree.</summary>
-public enum ControlMouseBehaviorRecursive
+public enum MouseBehaviorRecursive
 {
     /// <summary>Follow the direct parent control, or allow pointer input when there is none.</summary>
     Inherited = 0,
@@ -100,8 +100,8 @@ public partial class Control
 
     private MouseFilter _mouseFilter;
     private FocusMode _focusMode;
-    private ControlMouseBehaviorRecursive _mouseBehaviorRecursive;
-    private ControlFocusBehaviorRecursive _focusBehaviorRecursive;
+    private MouseBehaviorRecursive _mouseBehaviorRecursive;
+    private FocusBehaviorRecursive _focusBehaviorRecursive;
     private bool _mouseForcePassScrollEvents = true;
     private CursorShape _mouseDefaultCursorShape;
 
@@ -140,8 +140,8 @@ public partial class Control
     }
 
     /// <summary>Gets or sets the inherited pointer input policy for this control and its descendants.</summary>
-    /// <value><see cref="ControlMouseBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
-    public ControlMouseBehaviorRecursive MouseBehaviorRecursive
+    /// <value><see cref="MouseBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public MouseBehaviorRecursive MouseBehaviorRecursive
     {
         get { ThrowIfDisposed(); return _mouseBehaviorRecursive; }
         set
@@ -194,8 +194,8 @@ public partial class Control
     }
 
     /// <summary>Gets or sets the inherited keyboard focus policy for this control and its descendants.</summary>
-    /// <value><see cref="ControlFocusBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
-    public ControlFocusBehaviorRecursive FocusBehaviorRecursive
+    /// <value><see cref="FocusBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public FocusBehaviorRecursive FocusBehaviorRecursive
     {
         get { ThrowIfDisposed(); return _focusBehaviorRecursive; }
         set
@@ -224,15 +224,15 @@ public partial class Control
 
     private bool IsMouseBehaviorEnabled() => _mouseBehaviorRecursive switch
     {
-        ControlMouseBehaviorRecursive.Enabled => true,
-        ControlMouseBehaviorRecursive.Disabled => false,
+        MouseBehaviorRecursive.Enabled => true,
+        MouseBehaviorRecursive.Disabled => false,
         _ => Parent is not Control parent || parent.IsMouseBehaviorEnabled()
     };
 
     private bool IsFocusBehaviorEnabled() => _focusBehaviorRecursive switch
     {
-        ControlFocusBehaviorRecursive.Enabled => true,
-        ControlFocusBehaviorRecursive.Disabled => false,
+        FocusBehaviorRecursive.Enabled => true,
+        FocusBehaviorRecursive.Disabled => false,
         _ => Parent is not Control parent || parent.IsFocusBehaviorEnabled()
     };
 

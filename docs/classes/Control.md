@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -83,11 +83,11 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public float OffsetRight { get; set; }` | Right local offset. |
 | `public float OffsetBottom { get; set; }` | Bottom local offset. |
 | `public MouseFilter MouseFilter { get; set; }` | Stop by default; Pass bubbles; Ignore does not receive or block pointer events. |
-| `public ControlMouseBehaviorRecursive MouseBehaviorRecursive { get; set; }` | Inherited by default; disables or restores pointer input in a direct Control subtree. |
+| `public MouseBehaviorRecursive MouseBehaviorRecursive { get; set; }` | Inherited by default; disables or restores pointer input in a direct Control subtree. |
 | `public CursorShape MouseDefaultCursorShape { get; set; }` | Arrow by default; a hovered control refreshes the native cursor after a change. |
 | `public bool MouseForcePassScrollEvents { get; set; }` | True by default; permits wheel bubbling through Stop. |
 | `public FocusMode FocusMode { get; set; }` | None by default; Click permits pointer or explicit focus; All also permits action navigation. |
-| `public ControlFocusBehaviorRecursive FocusBehaviorRecursive { get; set; }` | Inherited by default; disables or restores focus eligibility in a direct Control subtree. |
+| `public FocusBehaviorRecursive FocusBehaviorRecursive { get; set; }` | Inherited by default; disables or restores focus eligibility in a direct Control subtree. |
 | `public string FocusNext { get; set; }` / `FocusPrevious` | Relative paths for forward and backward focus traversal; empty by default. |
 | `public string FocusNeighborLeft { get; set; }` / `FocusNeighborTop` / `FocusNeighborRight` / `FocusNeighborBottom` | Relative paths for directional navigation; empty by default. |
 

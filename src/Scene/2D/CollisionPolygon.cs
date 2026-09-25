@@ -3,7 +3,7 @@ using Box2D.NET;
 namespace Electron2D;
 
 /// <summary>Selects solid interior or closed hollow edges for a collision polygon.</summary>
-public enum CollisionPolygonBuildMode
+public enum PolygonBuildMode
 {
     /// <summary>Decomposes the contour into solid convex fixtures.</summary>
     Solids = 0,
@@ -18,8 +18,8 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
 {
     private static readonly PropertyDescriptor[] PolygonProperties =
     [
-        new PropertyDescriptor<CollisionPolygon, CollisionPolygonBuildMode>(nameof(BuildMode), node => node.BuildMode,
-            (node, value) => node.BuildMode = value, _ => CollisionPolygonBuildMode.Solids, stored: true),
+        new PropertyDescriptor<CollisionPolygon, PolygonBuildMode>(nameof(BuildMode), node => node.BuildMode,
+            (node, value) => node.BuildMode = value, _ => PolygonBuildMode.Solids, stored: true),
         new PropertyDescriptor<CollisionPolygon, Vector2[]>(nameof(Polygon), node => node.Polygon,
             (node, value) => node.Polygon = value, _ => [], stored: true),
         new PropertyDescriptor<CollisionPolygon, bool>(nameof(Disabled), node => node.Disabled,
@@ -33,7 +33,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     private Vector2[] _polygon = [];
     private Shape[] _generatedShapes = [];
     private CollisionObject? _owner;
-    private CollisionPolygonBuildMode _buildMode;
+    private PolygonBuildMode _buildMode;
     private bool _disabled;
     private bool _oneWayCollision;
     private Vector2 _oneWayCollisionDirection = Vector2.Down;
@@ -59,15 +59,15 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     }
 
     /// <summary>Gets or sets whether the contour creates solid or hollow collision geometry.</summary>
-    /// <value><see cref="CollisionPolygonBuildMode.Solids"/> by default.</value>
+    /// <value><see cref="PolygonBuildMode.Solids"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
-    public CollisionPolygonBuildMode BuildMode
+    public PolygonBuildMode BuildMode
     {
         get { ThrowIfDisposed(); return _buildMode; }
         set
         {
             EnsureMutable();
-            if (value is not (CollisionPolygonBuildMode.Solids or CollisionPolygonBuildMode.Segments))
+            if (value is not (PolygonBuildMode.Solids or PolygonBuildMode.Segments))
                 throw new ArgumentOutOfRangeException(nameof(value));
             if (_buildMode == value) return;
             var generated = BuildShapes(_polygon, value);
@@ -137,9 +137,9 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
         var warnings = base.GetConfigurationWarnings().ToList();
         if (Parent is not CollisionObject) warnings.Add("CollisionPolygon requires a direct CollisionObject parent.");
         if (_polygon.Length == 0) warnings.Add("An empty polygon has no collision geometry.");
-        else if (_buildMode == CollisionPolygonBuildMode.Solids && _polygon.Length < 3)
+        else if (_buildMode == PolygonBuildMode.Solids && _polygon.Length < 3)
             warnings.Add("A solid polygon needs at least three vertices.");
-        else if (_buildMode == CollisionPolygonBuildMode.Segments && _polygon.Length < 2)
+        else if (_buildMode == PolygonBuildMode.Segments && _polygon.Length < 2)
             warnings.Add("A segment polygon needs at least two vertices.");
         else if (_generatedShapes.Length == 0) warnings.Add("The polygon cannot produce valid collision geometry.");
         if (_oneWayCollision && Parent is Area) warnings.Add("One-way collision has no effect on an Area sensor.");
@@ -211,9 +211,9 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
         if (!(max - min).IsFinite()) throw new ArgumentException("Polygon bounds exceed the finite range.", nameof(points));
     }
 
-    private static Shape[] BuildShapes(Vector2[] points, CollisionPolygonBuildMode mode)
+    private static Shape[] BuildShapes(Vector2[] points, PolygonBuildMode mode)
     {
-        if (mode == CollisionPolygonBuildMode.Segments)
+        if (mode == PolygonBuildMode.Segments)
         {
             if (points.Length < 2) return [];
             var segments = new Vector2[checked(points.Length * 2)];

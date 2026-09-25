@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 ## Scope and owned types
 
@@ -16,8 +16,8 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [GrowDirection](../classes/GrowDirection.md) | enum | Fixed-edge policy when a control grows to its minimum size. |
 | [LayoutDirection](../classes/LayoutDirection.md) | enum | Explicit, inherited and locale-derived horizontal layout policies. |
 | [LayoutPresetMode](../classes/LayoutPresetMode.md) | enum | Intrinsic-minimum or retained width/height policy for offset presets. |
-| [ControlFocusBehaviorRecursive](../classes/ControlFocusBehaviorRecursive.md) | enum | Inherited focus eligibility for direct Control subtrees. |
-| [ControlMouseBehaviorRecursive](../classes/ControlMouseBehaviorRecursive.md) | enum | Inherited pointer eligibility for direct Control subtrees. |
+| [FocusBehaviorRecursive](../classes/FocusBehaviorRecursive.md) | enum | Inherited focus eligibility for direct Control subtrees. |
+| [MouseBehaviorRecursive](../classes/MouseBehaviorRecursive.md) | enum | Inherited pointer eligibility for direct Control subtrees. |
 | [ProcessMode](../classes/ProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 

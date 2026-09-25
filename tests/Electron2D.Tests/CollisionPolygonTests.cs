@@ -15,7 +15,7 @@ internal static class CollisionPolygonTests
     private static void VerifyDefaultsAndValidation()
     {
         using var polygon = new CollisionPolygon();
-        Check(polygon.BuildMode == CollisionPolygonBuildMode.Solids && polygon.Polygon.Length == 0 &&
+        Check(polygon.BuildMode == PolygonBuildMode.Solids && polygon.Polygon.Length == 0 &&
               !polygon.Disabled && !polygon.OneWayCollision && polygon.OneWayCollisionDirection == Vector2.Down,
             "A detached polygon defaults to empty solid geometry without one-way contact.");
         Check(polygon.GetConfigurationWarnings().Length >= 2,
@@ -30,14 +30,14 @@ internal static class CollisionPolygonTests
         Reject<ArgumentNullException>(() => polygon.Polygon = null!);
         Reject<ArgumentException>(() => polygon.Polygon = [new(float.NaN, 0)]);
         Reject<ArgumentException>(() => polygon.Polygon = [new(-float.MaxValue, 0), new(float.MaxValue, 0)]);
-        Reject<ArgumentOutOfRangeException>(() => polygon.BuildMode = (CollisionPolygonBuildMode)7);
-        Check(polygon.Polygon.Length == 4 && polygon.BuildMode == CollisionPolygonBuildMode.Solids,
+        Reject<ArgumentOutOfRangeException>(() => polygon.BuildMode = (PolygonBuildMode)7);
+        Check(polygon.Polygon.Length == 4 && polygon.BuildMode == PolygonBuildMode.Solids,
             "Invalid input rejects without replacing a valid contour or mode.");
 
         polygon.Polygon = [new(0, 0), new(40, 40), new(0, 40), new(40, 0)];
         Check(polygon.Polygon.Length == 4 && polygon.GetConfigurationWarnings().Any(w => w.Contains("cannot produce", StringComparison.Ordinal)),
             "A self-crossing solid contour remains editable but has no collision fixtures.");
-        polygon.BuildMode = CollisionPolygonBuildMode.Segments;
+        polygon.BuildMode = PolygonBuildMode.Segments;
         Check(!polygon.GetConfigurationWarnings().Any(w => w.Contains("cannot produce", StringComparison.Ordinal)),
             "The same contour can still supply hollow edges.");
         polygon.OneWayCollisionDirection = new(300, 400);
@@ -139,7 +139,7 @@ internal static class CollisionPolygonTests
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 76 and < 84,
             "An owned solid polygon contributes mass-bearing fixtures to a dynamic body.");
-        polygon.BuildMode = CollisionPolygonBuildMode.Segments;
+        polygon.BuildMode = PolygonBuildMode.Segments;
         body.GravityScale = 0;
         body.GlobalPosition = Vector2.Zero;
         body.LinearVelocity = Vector2.Zero;
@@ -171,7 +171,7 @@ internal static class CollisionPolygonTests
         Check(!area.GetOverlappingBodies().Contains(body),
             "The missing corner of a concave solid polygon has no sensor fixture.");
 
-        polygon.BuildMode = CollisionPolygonBuildMode.Segments;
+        polygon.BuildMode = PolygonBuildMode.Segments;
         body.GlobalPosition = new(10, 60);
         tree.PhysicsFrame(1d / 60);
         Check(!area.GetOverlappingBodies().Contains(body),
@@ -197,7 +197,7 @@ internal static class CollisionPolygonTests
         var polygon = new CollisionPolygon
         {
             Name = "Contour",
-            BuildMode = CollisionPolygonBuildMode.Segments,
+            BuildMode = PolygonBuildMode.Segments,
             Polygon = [new(-100, 0), new(100, 0)],
             OneWayCollision = true
         };
@@ -207,7 +207,7 @@ internal static class CollisionPolygonTests
         using var copy = packed.Instantiate();
         var restored = copy.GetNode<CollisionPolygon>("Wall/Contour");
         polygon.Polygon = [];
-        Check(restored.BuildMode == CollisionPolygonBuildMode.Segments && restored.Polygon.Length == 2 &&
+        Check(restored.BuildMode == PolygonBuildMode.Segments && restored.Polygon.Length == 2 &&
               restored.OneWayCollision && restored.OneWayCollisionDirection == Vector2.Down && !restored.Disabled,
             "PackedScene restores the exact polygon node and copied physics properties.");
 

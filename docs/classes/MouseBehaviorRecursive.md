@@ -1,9 +1,9 @@
-# ControlMouseBehaviorRecursive
+# MouseBehaviorRecursive
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlMouseBehaviorRecursive`
+- **Declaration:** `public enum MouseBehaviorRecursive`
 - **Source:** [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs)
 - **Used by:** [Control.MouseBehaviorRecursive](Control.md)
 

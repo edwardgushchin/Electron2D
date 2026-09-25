@@ -1,6 +1,6 @@
 # MouseFilter
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum MouseFilter`
@@ -11,7 +11,7 @@ Last updated: 2026-09-24
 
 Controls pointer targeting and bubbling in a root viewport. The enum is stored by `Control` and has the numeric identities of the corresponding UI filter modes.
 
-`Control.GetMouseFilterWithOverride()` applies [`MouseBehaviorRecursive`](ControlMouseBehaviorRecursive.md) and returns `Ignore` when a direct Control ancestor disables pointer input, unless the descendant explicitly enables it.
+`Control.GetMouseFilterWithOverride()` applies [`MouseBehaviorRecursive`](MouseBehaviorRecursive.md) and returns `Ignore` when a direct Control ancestor disables pointer input, unless the descendant explicitly enables it.
 
 | Value | Number | Behavior |
 | --- | ---: | --- |

@@ -28,7 +28,7 @@ ground.AddChild(new CollisionPolygon
 | Member | Contract |
 | --- | --- |
 | `public CollisionPolygon()` | Creates an empty solid polygon with no fixtures. |
-| `public CollisionPolygonBuildMode BuildMode { get; set; }` | Chooses solid interior or closed hollow edges; Solids by default. |
+| `public PolygonBuildMode BuildMode { get; set; }` | Chooses solid interior or closed hollow edges; Solids by default. |
 | `public Vector2[] Polygon { get; set; }` | Copied local vertices; empty by default. |
 | `public bool Disabled { get; set; }` | Removes fixtures while retaining the contour; false by default. |
 | `public bool OneWayCollision { get; set; }` | Selects the side of body contact; false by default. |
@@ -44,7 +44,7 @@ ground.AddChild(new CollisionPolygon
 <a id="buildmode"></a>
 ### `BuildMode`
 
-[`CollisionPolygonBuildMode.Solids`](CollisionPolygonBuildMode.md) is the default and uses convex decomposition for the filled region, including valid concave contours. `Segments` joins each vertex to the next and the last to the first; a body wholly inside the outline does not touch it. Fewer than three solid vertices or two segment vertices yield no fixtures and a warning. An undefined enum value throws `ArgumentOutOfRangeException` without changing mode or geometry. A valid mode change rebuilds fixtures before the next step and survives PackedScene.
+[`PolygonBuildMode.Solids`](PolygonBuildMode.md) is the default and uses convex decomposition for the filled region, including valid concave contours. `Segments` joins each vertex to the next and the last to the first; a body wholly inside the outline does not touch it. Fewer than three solid vertices or two segment vertices yield no fixtures and a warning. An undefined enum value throws `ArgumentOutOfRangeException` without changing mode or geometry. A valid mode change rebuilds fixtures before the next step and survives PackedScene.
 
 <a id="polygon"></a>
 ### `Polygon`

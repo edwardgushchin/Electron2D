@@ -1,9 +1,9 @@
-# ControlFocusBehaviorRecursive
+# FocusBehaviorRecursive
 
-Last updated: 2026-09-24
+Last updated: 2026-09-25
 
 - **Namespace:** `Electron2D`
-- **Declaration:** `public enum ControlFocusBehaviorRecursive`
+- **Declaration:** `public enum FocusBehaviorRecursive`
 - **Source:** [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs)
 - **Used by:** [Control.FocusBehaviorRecursive](Control.md)
 
