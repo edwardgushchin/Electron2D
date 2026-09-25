@@ -7,7 +7,7 @@ This bounded log owns the complete architectural records for rendering. Use [the
 Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 
 <a id="adr-0028"></a>
-## ADR 0028: GPU-first 2D rendering, HLSL/GLSL import and a shared SPIR-V shader path, and SDL_Renderer fallback
+## ADR 0028: GPU-first 2D rendering, shared SPIR-V shaders, browser WebGPU, and SDL_Renderer fallback
 
 Last updated: 2026-09-25
 
@@ -25,12 +25,16 @@ SDL exposes two relevant layers. The [SDL GPU API](https://wiki.libsdl.org/SDL3/
 
 SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux x64 example packages native SDL and runs a window, input, and scene-frame host through the public Electron2D API. The rendering integration now contains executable GPU/fallback canvas paths and partial shader materials. Other target packages remain unverified; the current integration boundary is detailed below.
 
+The pinned SDL GPU API has no browser backend. A standalone Chrome probe rendered a WGSL shader through WebGPU, but that probe did not use Electron2D's canvas or materials. Browser shader support therefore needs an engine-owned backend with the same public material contract.
+
 ### Decision
 
-- The primary Electron2D rendering backend will use the SDL3 GPU API through the vendored SDL3-CS binding when the rendering domain is implemented.
+- The primary native Electron2D rendering backend uses the SDL3 GPU API through the vendored SDL3-CS binding.
+- On Web, use a separate engine-owned WebGPU canvas backend through browser interop. It submits the same retained canvas batches and applies the same typed ShaderMaterial parameters and textures. Keep browser WebGPU and JavaScript objects behind the existing backend-neutral public API. A persistent, nonblocking browser host owns WebGPU initialization, frame submission and disposal; it must not rely on SDL_GPU becoming available in the browser.
 - Electron2D will support engine-provided and user-authored graphics shaders for 2D rendering on the GPU backend. Three-dimensional pipelines and shader functionality are outside the product boundary.
 - Directly support exactly two shader source languages: HLSL and GLSL. Compile both to SPIR-V during project import or build. Source compilation is part of the project toolchain, not a required operation when a shipped game loads a material or draws a frame.
 - SPIR-V is the common intermediate representation and accepted precompiled input format. Every module, whether produced by the HLSL/GLSL importers or supplied externally, follows the same path: payload/capability validation, parameter and resource reflection, shader-interface validation, backend translation where needed, and GPU-program creation. No input origin bypasses this contract.
+- The WebGPU backend translates validated SPIR-V to WGSL before browser shader-module and pipeline creation, preserving the reflected entry point, interface, bindings, material values and texture semantics. This applies to built-in shaders and to modules loaded or replaced at runtime through the public Shader API; an import-only conversion cannot be the sole path. Pin and package a Web-compatible translator when implementing this backend, and propagate translation, WGSL compilation, pipeline and device errors. WGSL remains an internal backend representation, not a third directly supported source language.
 - Accept compatible SPIR-V produced by third-party compilers, including tools for Slang and WGSL. This is the extension boundary; Slang and WGSL are not additional directly supported source languages. Their output must meet the same stage, entry-point, SPIR-V version/capability, resource-binding and backend requirements as the built-in import paths.
 - Use SDL_shadercross through the SDL3-CS ShaderCross binding for reflection and translation of SPIR-V to the active SDL GPU backend. HLSL import can use its HLSL-to-SPIR-V compiler; GLSL import uses a separately specified build-time compiler. The intended backend representations are SPIR-V for Vulkan, DXIL for Direct3D 12 and MSL for Metal. Translation or compilation of a backend representation does not add another public source language or guarantee support for every instruction on every target.
 - The common runtime checks cover payload bounds/structure, the supported capabilities and stages, reflected resource layouts, bindings and shader interfaces; native translation/program-creation failures must propagate. This contract does not require adding SPIRV-Tools through a separate runtime C API. Additional instruction-level validation in import/build tools does not make that validator a runtime dependency. Document the checks actually performed; successful reflection alone is not proof of arbitrary SPIR-V validity.
@@ -53,6 +57,7 @@ SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux
 - Games that use custom shaders must declare or check that requirement instead of assuming fallback visual equivalence.
 - Rendering code and vendored SDL3-CS managed bindings belong to `Electron2D.dll`; native SDL packaging remains a separate platform-specific integration boundary.
 - Projects can supply HLSL, GLSL or externally compiled compatible SPIR-V without depending on SDL types. Shipped shader artifacts enter one validated SPIR-V path. The same validation and reflection requirements apply to imported and external modules.
+- Browser WebGPU consumes that same contract through an internal SPIR-V-to-WGSL translation path; separate browser shader source or public WebGPU handles are not required.
 - Every implemented rendering feature must be tested against each backend that claims it. Shader compilation and visual correctness additionally require backend- and platform-specific executable or image-based verification.
 
 ### Rejected alternatives
@@ -67,6 +72,7 @@ SDL3-CS supplies managed bindings to the DisplayServer. The self-contained Linux
 - **Require source compilation when loading or drawing game materials:** rejected because source compilation belongs to import/build, while the runtime consumes the common shader artifact contract.
 - **Treat compiler success as complete language support:** rejected because parameters, textures, resource interfaces, diagnostics and backend behavior must also work.
 - **Add renderer interfaces and shader resources without executable behavior:** rejected because declarations alone do not satisfy the rendering contract.
+- **Wait for SDL_GPU to gain a Web backend:** rejected as the browser implementation plan because the pinned SDL build exposes no such driver while WebGPU is available in the tested browser.
 
 ### Current implementation boundary
 
@@ -78,7 +84,7 @@ The Linux x64 import tool packages glslang 16.4.0 and SPIRV-Tools v2026.3, built
 
 CanvasItem/Viewport sampling policies now cover texel filtering, ordinary/mirrored repeat, uploaded mipmaps and GPU anisotropy. [Canvas rendering](../components/canvas-rendering.md#texture-sampling) records native backend restrictions; unsupported fallback modes fail explicitly under this ADR. Named material samplers currently implement linear/base-level/clamp defaults independently of canvas policies; their configuration remains pending.
 
-The tested Android arm64 phone now runs the GPU canvas and HLSL/SPIR-V material when four optional Vulkan features are disabled; the pipeline enables depth clipping because depth clamping is then unavailable. The tested Android TV exposes OpenGL ES 2 but no Vulkan hardware feature, so SDL_GPU remains unavailable and only the shaderless SDL_Renderer fallback works. The isolated Chrome probe has WebGL2 and WebGPU devices and a direct SDL_Renderer frame, but SDL 3.4.16/Emscripten exposes no SDL_GPU driver. [The platform matrix](../platform-verification.md) records the exact checks and limits. Standalone probes confirmed a GLES2 fragment shader and red readback on that TV and a WGSL/WebGPU shader frame in Chrome. A shader-capable Electron2D path for TV and browser remains unimplemented and must receive its own backend, shader translation, lifecycle and pixel verification before claiming the common shader contract there.
+The tested Android arm64 phone now runs the GPU canvas and HLSL/SPIR-V material when four optional Vulkan features are disabled; the pipeline enables depth clipping because depth clamping is then unavailable. The tested Android TV exposes OpenGL ES 2 but no Vulkan hardware feature, so SDL_GPU remains unavailable and only the shaderless SDL_Renderer fallback works. The isolated Chrome probe has WebGL2 and WebGPU devices and a direct SDL_Renderer frame, but SDL 3.4.16/Emscripten exposes no SDL_GPU driver. [The platform matrix](../platform-verification.md) records the exact checks and limits. Standalone probes confirmed a GLES2 fragment shader and red readback on that TV and a WGSL/WebGPU shader frame in Chrome. The selected browser WebGPU backend and a shader-capable TV path remain unimplemented; both require shader translation, canvas/material integration, lifecycle and pixel verification before claiming the common shader contract there.
 
 ### Related decisions
 
