@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D", "PhysicsDirectBodyState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -118,6 +118,13 @@ def main():
             for state in ("Implemented", "Partial", "Unimplemented")} == {
                 "Implemented": 41, "Partial": 0, "Unimplemented": 0}
     assert "../../classes/CharacterBody.md" in class_rows["CharacterBody2D"]
+    body_state_rows = [row for row in pages[CLASS_PAGES / "PhysicsDirectBodyState2D.md"].splitlines()
+                       if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(body_state_rows) == 43
+    assert {state: sum(f" | {state} | " in row for row in body_state_rows)
+            for state in ("Implemented", "Partial", "Blocked")} == {
+                "Implemented": 40, "Partial": 3, "Blocked": 0}
+    assert "../../classes/PhysicsDirectBodyState.md" in class_rows["PhysicsDirectBodyState2D"]
     shape_rows = [row for row in pages[CLASS_PAGES / "Shape2D.md"].splitlines()
                   if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_rows) == 8
@@ -155,7 +162,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 35, "Partial": 8, "Unimplemented": 167, "Blocked": 5}
+                "Implemented": 42, "Partial": 8, "Unimplemented": 160, "Blocked": 5}
     assert " | Implemented | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -198,6 +205,8 @@ def main():
                 "Implemented": 24, "Partial": 6, "Unimplemented": 0, "Blocked": 6}
     body_rows = pages[CLASS_PAGES / "RigidBody2D.md"]
     assert "../../classes/RigidBody.DampMode.md" in body_rows
+    assert all(" | Implemented | " in next(row for row in body_rows.splitlines() if row.startswith(f"| [`{prefix}"))
+               for prefix in ("method _integrate_forces", "property bool custom_integrator"))
     assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                        if row.startswith("| [`property int linear_damp_mode"))
     for prefix, status in (("method get_colliding_bodies", "Partial"),

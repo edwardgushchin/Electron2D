@@ -141,23 +141,25 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
-        if (_stepping) throw new InvalidOperationException("A physics world cannot step recursively.");
+        if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
         _stepping = true;
         List<Exception>? errors = null;
+        var solverAdvanced = false;
         try
         {
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
             foreach (var collider in _serverColliders) collider.PrepareBackend();
             ApplyAreaFields(delta);
+            PrepareBodyStates(delta);
             foreach (var body in _bodies)
             {
-                if (body is RigidBody rigid) rigid.ApplyConstantForces();
-                else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+                if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
                 else if (body is CharacterBody character) character.PrepareMotion(delta);
             }
             _contactStep++;
             b2World_Step(_worldID, (float)delta, 4);
+            solverAdvanced = true;
             foreach (var body in _bodies)
             {
                 try
@@ -175,9 +177,12 @@ internal sealed partial class PhysicsSpace : IDisposable
                 rigid.CollectContacts(this, _contactEvents);
             }
             ScanAreas();
+            CaptureBodyStates();
         }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally { PruneOneWayPairs(); _stepping = false; }
+        try { if (solverAdvanced) DispatchBodyStates(); else _callbackBodies.Clear(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
         try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
@@ -186,7 +191,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     public void Dispose()
     {
         if (_disposed) return;
-        if (_stepping) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
+        if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         foreach (var body in _bodies)
         {
             if (body is RigidBody departing) departing.CaptureBackendSleep();
@@ -295,59 +300,87 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var body in _bodies)
         {
             if (body is not RigidBody && body is not CharacterBody) continue;
-            var gravity = Vector2.Zero;
-            var linearDamp = 0f;
-            var angularDamp = 0f;
-            var gravityDone = false;
-            var linearDone = false;
-            var angularDone = false;
-            foreach (var area in _fieldAreas)
-            {
-                if ((area.CollisionMask & body.CollisionLayer) == 0 || !ShapesOverlap(area, body)) continue;
-                if (!gravityDone)
-                {
-                    var mode = area.GravitySpaceOverride;
-                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                        gravity += area.ComputeGravity(body.GlobalPosition);
-                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                        gravity = area.ComputeGravity(body.GlobalPosition);
-                    gravityDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
-                }
-                if (!linearDone)
-                {
-                    var mode = area.LinearDampSpaceOverride;
-                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                        linearDamp += area.LinearDamp;
-                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                        linearDamp = area.LinearDamp;
-                    linearDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
-                }
-                if (!angularDone)
-                {
-                    var mode = area.AngularDampSpaceOverride;
-                    if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                        angularDamp += area.AngularDamp;
-                    else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                        angularDamp = area.AngularDamp;
-                    angularDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
-                }
-                if (gravityDone && linearDone && angularDone) break;
-            }
-            if (!gravityDone) gravity += _defaultGravity;
-            if (!linearDone) linearDamp += _defaultLinearDamp;
-            if (!angularDone) angularDamp += _defaultAngularDamp;
+            ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GlobalPosition,
+                out var gravity, out var linearDamp, out var angularDamp);
             if (body is RigidBody rigid)
                 rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-            else
-                ((CharacterBody)body).SetResolvedGravity(gravity);
+            else ((CharacterBody)body).SetResolvedGravity(gravity);
+        }
+        foreach (var body in _serverColliders)
+        {
+            if (body.IsArea || body.Mode == PhysicsServer.BodyMode.Static) continue;
+            ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GetTransform().Origin,
+                out var gravity, out var linearDamp, out var angularDamp);
+            var runtime = PhysicsServer.Instance.BodyRuntime(body.RID);
+            if (runtime.FieldsInitialized && (runtime.Gravity != gravity || runtime.LinearDamp != linearDamp || runtime.AngularDamp != angularDamp))
+                b2Body_SetAwake(body.BackendID, true);
+            runtime.Gravity = gravity; runtime.LinearDamp = linearDamp; runtime.AngularDamp = angularDamp;
+            runtime.FieldsInitialized = true;
+            if (runtime.Omitted || body.Mode == PhysicsServer.BodyMode.Kinematic) continue;
+            var id = body.BackendID;
+            var linear = b2Body_GetLinearVelocity(id) * MathF.Max(0, 1 - (float)delta * linearDamp);
+            var angular = b2Body_GetAngularVelocity(id) * MathF.Max(0, 1 - (float)delta * angularDamp);
+            var force = Shape.ToBackend(gravity - _defaultGravity) * b2Body_GetMass(id);
+            if (!gravity.IsFinite() || !float.IsFinite(linear.X) || !float.IsFinite(linear.Y) ||
+                !float.IsFinite(angular) || !float.IsFinite(force.X) || !float.IsFinite(force.Y))
+                throw new InvalidOperationException("The resolved server body field exceeds the finite range.");
+            b2Body_SetLinearVelocity(id, linear); b2Body_SetAngularVelocity(id, angular);
+            if (force.X != 0 || force.Y != 0) b2Body_ApplyForceToCenter(id, force, false);
         }
     }
 
-    private bool ShapesOverlap(CollisionObject area, CollisionObject other)
+    private void ResolveAreaFields(uint layer, IReadOnlyList<B2ShapeId> shapes, Vector2 position,
+        out Vector2 gravity, out float linearDamp, out float angularDamp)
+    {
+        gravity = Vector2.Zero;
+        linearDamp = 0f;
+        angularDamp = 0f;
+        var gravityDone = false;
+        var linearDone = false;
+        var angularDone = false;
+        foreach (var area in _fieldAreas)
+        {
+            if ((area.CollisionMask & layer) == 0 || !ShapesOverlap(area.BackendShapes, shapes)) continue;
+            if (!gravityDone)
+            {
+                var mode = area.GravitySpaceOverride;
+                if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                    gravity += area.ComputeGravity(position);
+                else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                    gravity = area.ComputeGravity(position);
+                gravityDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+            }
+            if (!linearDone)
+            {
+                var mode = area.LinearDampSpaceOverride;
+                if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                    linearDamp += area.LinearDamp;
+                else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                    linearDamp = area.LinearDamp;
+                linearDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+            }
+            if (!angularDone)
+            {
+                var mode = area.AngularDampSpaceOverride;
+                if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
+                    angularDamp += area.AngularDamp;
+                else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
+                    angularDamp = area.AngularDamp;
+                angularDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
+            }
+            if (gravityDone && linearDone && angularDone) break;
+        }
+        if (!gravityDone) gravity += _defaultGravity;
+        if (!linearDone) linearDamp += _defaultLinearDamp;
+        if (!angularDone) angularDamp += _defaultAngularDamp;
+    }
+
+    private bool ShapesOverlap(CollisionObject area, CollisionObject other) =>
+        ShapesOverlap(area.BackendShapes, other.BackendShapes);
+
+    private bool ShapesOverlap(IReadOnlyList<B2ShapeId> areaShapes, IReadOnlyList<B2ShapeId> otherShapes)
     {
         var world = b2GetWorldFromId(_worldID);
-        var areaShapes = area.BackendShapes;
-        var otherShapes = other.BackendShapes;
         for (var areaIndex = 0; areaIndex < areaShapes.Count; areaIndex++)
         {
             var areaID = areaShapes[areaIndex];

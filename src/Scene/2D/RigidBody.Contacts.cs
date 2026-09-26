@@ -4,7 +4,7 @@ using static Box2D.NET.B2Shapes;
 
 namespace Electron2D;
 
-public sealed partial class RigidBody
+public partial class RigidBody
 {
     private static readonly PropertyDescriptor[] ContactProperties =
     [

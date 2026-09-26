@@ -14,6 +14,7 @@ public abstract class CollisionObject : Entity
     private uint _collisionLayer = 1;
     private uint _collisionMask = 1;
     private readonly RID _rid;
+    internal RID PhysicsRID => _rid;
 
     /// <summary>Creates an object in collision layer one with mask one.</summary>
     protected CollisionObject() => _rid = PhysicsServer.Instance.RegisterSceneObject(this);

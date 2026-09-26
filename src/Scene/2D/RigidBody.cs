@@ -8,7 +8,7 @@ namespace Electron2D;
 /// <summary>A collision body moved by the fixed-step two-dimensional physics simulation.</summary>
 /// <remarks>Attach it to a SceneTree and add one or more direct CollisionShape children. The tree owns the physics
 /// step; caller code can change forces and velocity during a physics callback before that step.</remarks>
-public sealed partial class RigidBody : PhysicsBody
+public partial class RigidBody : PhysicsBody
 {
     /// <summary>Determines whether the body's damping adds to or replaces resolved world and area damping.</summary>
     public enum DampMode
@@ -21,6 +21,8 @@ public sealed partial class RigidBody : PhysicsBody
 
     private static readonly PropertyDescriptor[] BodyProperties =
     [
+        new PropertyDescriptor<RigidBody, bool>(nameof(CustomIntegrator), body => body.CustomIntegrator,
+            (body, value) => body.CustomIntegrator = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(Mass), body => body.Mass, (body, value) => body.Mass = value, _ => 1f, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(GravityScale), body => body.GravityScale, (body, value) => body.GravityScale = value, _ => 1f, stored: true),
         new PropertyDescriptor<RigidBody, Vector2>(nameof(LinearVelocity), body => body.LinearVelocity, (body, value) => body.LinearVelocity = value, _ => Vector2.Zero, stored: true),
@@ -82,7 +84,7 @@ public sealed partial class RigidBody : PhysicsBody
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
-        set { EnsureMutable(); Finite(value); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, value); }
+        set { EnsureMutable(); Finite(value); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
@@ -230,7 +232,7 @@ public sealed partial class RigidBody : PhysicsBody
         definition.angularVelocity = _angularVelocity;
         definition.linearDamping = 0;
         definition.angularDamping = 0;
-        definition.gravityScale = _gravityScale;
+        definition.gravityScale = _customIntegrator ? 0 : _gravityScale;
         definition.enableSleep = _canSleep;
         definition.isAwake = !_sleeping;
         definition.motionLocks.angularZ = _lockRotation;
@@ -264,7 +266,7 @@ public sealed partial class RigidBody : PhysicsBody
 
         var changed = _fieldsInitialized && (scaledGravity != _effectiveGravity ||
             resolvedLinear != _effectiveLinearDamp || resolvedAngular != _effectiveAngularDamp);
-        var active = !_freeze && HasBackend && (changed || b2Body_IsAwake(BackendID));
+        var active = !_freeze && !_customIntegrator && HasBackend && (changed || b2Body_IsAwake(BackendID));
         var dampedVelocity = default(B2Vec2);
         var dampedAngularVelocity = 0f;
         var force = default(B2Vec2);
@@ -281,6 +283,7 @@ public sealed partial class RigidBody : PhysicsBody
         _effectiveLinearDamp = resolvedLinear;
         _effectiveAngularDamp = resolvedAngular;
         _fieldsInitialized = true;
+        if (_customIntegrator && changed && HasBackend && !_freeze) b2Body_SetAwake(BackendID, true);
         if (!active) return;
         if (changed) b2Body_SetAwake(BackendID, true);
         if (linearFactor != 1) b2Body_SetLinearVelocity(BackendID, dampedVelocity);

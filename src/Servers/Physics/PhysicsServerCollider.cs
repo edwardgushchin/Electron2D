@@ -23,6 +23,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     private uint _layer = 1;
     private uint _mask = 1;
     private Vector2 _linearVelocity;
+    private float _angularVelocity;
     private PhysicsServer.BodyMode _mode = PhysicsServer.BodyMode.Rigid;
 
     private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled);
@@ -51,6 +52,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         definition.type = BackendType;
         definition.position = Shape.ToBackend(_transform.Origin);
         definition.rotation = b2MakeRot(_transform.Rotation);
+        definition.angularVelocity = _mode == PhysicsServer.BodyMode.RigidLinear ? 0 : _angularVelocity;
         _bodyID = b2CreateBody(space.WorldID, definition);
         _space = space;
         SpaceRID = spaceRID;
@@ -67,6 +69,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void DetachBackend()
     {
+        PhysicsServer.Instance.InvalidateBodyView(RID);
         if (_space is null) return;
         CaptureMotion();
         b2DestroyBody(_bodyID);
@@ -130,6 +133,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         _mode = mode;
         if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             _linearVelocity = Vector2.Zero;
+        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
+            _angularVelocity = 0;
         if (_space is null) return;
         b2Body_SetType(_bodyID, BackendType);
         b2Body_SetMotionLocks(_bodyID, new(false, false, mode == PhysicsServer.BodyMode.RigidLinear));
@@ -183,6 +188,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         var velocity = b2Body_GetLinearVelocity(_bodyID);
         _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter,
             velocity.Y * PhysicsSpace.UnitsPerMeter);
+        _angularVelocity = b2Body_GetAngularVelocity(_bodyID);
     }
 
     internal void RebuildShapes()

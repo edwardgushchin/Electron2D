@@ -5,7 +5,7 @@ Last updated: 2026-09-26
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
 - **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
-- **Declaration:** `public sealed partial class RigidBody : PhysicsBody`
+- **Declaration:** `public partial class RigidBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
 ## Description
@@ -147,6 +147,12 @@ The event carries this RigidBody and fires when the solver changes its sleep sta
 
 SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks zero-area segment mass, torque and unshaped movement. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
 
-Shape-index contact events, tile-map virtual body reporting, exact capped-contact selection, `PhysicsDirectBodyState`, custom center of mass/inertia, continuous collision modes and custom integration remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
+Shape-index contact events, tile-map virtual body reporting, exact capped-contact selection, custom center of mass/inertia, continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
 
 A [SeparationRayShape](SeparationRayShape.md) sensor contributes zero inertia and is excluded from the segment-only thin-rod fallback. Ordinary dynamic ray impulses and contact reporting remain incomplete; the class coverage records the required solver manifold integration.
+
+## Custom integration
+
+`public bool CustomIntegrator { get; set; }` defaults false and is packed. True omits automatic gravity, damping and accumulated forces while preserving impulses and native contacts. `protected virtual void IntegrateForces(PhysicsDirectBodyState state)` runs after each active native step with synchronized scene pose and solved contacts. RigidBody is extensible so subclasses can override this hook. State queries are permitted in the hook; scene pose and velocity caches synchronize again after it. A callback exception retains committed edits and does not suppress other body callbacks. Callback references are transient and subclass scene factories follow the inherited typed packing contract.
+
+See [the direct state class](PhysicsDirectBodyState.md) for exact units, lifetime, force semantics and manual gravity-before-damping integration. [PhysicsBodyStateTests](../../tests/Electron2D.Tests/PhysicsBodyStateTests.cs) verifies ordinary/custom behavior, packing, failure recovery and warmed zero managed allocation under [ADR 0070](../decisions/physics.md#adr-0070).

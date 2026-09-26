@@ -83,6 +83,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal void DetachBackend()
     {
+        PhysicsServer.Instance.InvalidateBodyView(PhysicsRID);
         if (_space is null) return;
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();

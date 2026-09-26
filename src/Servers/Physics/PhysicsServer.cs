@@ -46,7 +46,7 @@ public sealed partial class PhysicsServer : ElectronObject
                 foreach (var pair in _sceneObjects)
                     if (!pair.Value.TryGetTarget(out var target) || target.IsDisposed)
                         _staleSceneObjects.Add(pair.Key);
-                foreach (var stale in _staleSceneObjects) _sceneObjects.Remove(stale);
+                foreach (var stale in _staleSceneObjects) { _sceneObjects.Remove(stale); _bodyRuntimes.Remove(stale); }
             }
         }
         return rid;
@@ -58,6 +58,7 @@ public sealed partial class PhysicsServer : ElectronObject
         {
             _sceneObjects.Remove(rid);
             _bodyExceptions.Remove(rid);
+            _bodyRuntimes.Remove(rid);
         }
     }
 
@@ -68,6 +69,7 @@ public sealed partial class PhysicsServer : ElectronObject
             if (!_sceneObjects.TryGetValue(rid, out var weak)) return null;
             if (weak.TryGetTarget(out var node) && !node.IsDisposed) return node;
             _sceneObjects.Remove(rid);
+            _bodyRuntimes.Remove(rid);
             return null;
         }
     }
@@ -75,6 +77,7 @@ public sealed partial class PhysicsServer : ElectronObject
     internal RID RegisterSceneSpace(PhysicsSpace space)
     {
         var rid = RID.Allocate();
+        space.RID = rid;
         lock (_registryGate) _sceneSpaces.Add(rid, space);
         return rid;
     }

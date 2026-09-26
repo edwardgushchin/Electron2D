@@ -9,6 +9,7 @@ public sealed partial class PhysicsServer
         ThrowIfDisposed();
         var space = new PhysicsSpace();
         var rid = RID.Allocate();
+        space.RID = rid;
         lock (_registryGate)
         {
             _sceneSpaces.Add(rid, space);
@@ -352,6 +353,7 @@ public sealed partial class PhysicsServer
             lock (_registryGate)
             {
                 _serverColliders.Remove(rid);
+                _bodyRuntimes.Remove(rid);
                 _bodyExceptions.Remove(rid);
             }
         }

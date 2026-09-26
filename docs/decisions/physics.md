@@ -428,3 +428,35 @@ Games can test reusable geometry for placement and procedural tools without ente
 - A relative-motion cast or an earliest-time contact snapshot: neither represents independently swept resource regions.
 - Create a temporary physics world or register colliders for every pair: lifecycle and allocation would be unrelated to this resource-only operation.
 - Return contacts from partitioned convex fixtures: internal partition edges are not the resource boundary.
+
+<a id="adr-0070"></a>
+## ADR 0070: Live body state and post-solver integration callbacks
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: PhysicsDirectBodyState, RigidBody custom integration and typed body callbacks
+- Depends on: [0054](#adr-0054), [0056](#adr-0056), [0057](#adr-0057), [0058](#adr-0058), [0063](#adr-0063), [0014](resources.md#adr-0014)
+
+### Context
+
+The engine exposes forces, selected Area fields and object-level contacts, but games cannot customize an active body's integration through a live typed view. The pinned body force callback executes after solving and precedes state synchronization. Explicit state IntegrateForces adds gravity before damping; ordinary force integration damps before adding gravity/forces. A pre-solver callback or copied inert state would change those contracts.
+
+### Decision
+
+- Map PhysicsDirectBodyState2D to an engine-created PhysicsDirectBodyState with no public constructor. Cache one wrapper per native body attachment, validate owner thread and non-stepping access, and invalidate it permanently on detachment/replacement/free. Off-callback consumer disposal allows wrapper recreation; borrowed callback disposal rejects. Views own no native body or world and retain contact values/RIDs rather than scene object ownership.
+- Expose actual native velocity, pose, center offsets, inverse mass/inertia, sleep and filters. CenterOfMass is a global-axis offset; CenterOfMassLocal is local. Native inertia/torque/impulse units convert to scene units. Force positions are global-axis offsets from body origin. Persistent scene-body forces share RigidBody state; other bodies retain them in the server body runtime record. Extend scene Area field reduction and field-change wakeup to server bodies using the same masks and overlap reducer.
+- Make RigidBody extensible and expose a protected virtual IntegrateForces hook plus stored CustomIntegrator=false. Execute hooks after solving, with scene synchronization before/after. Custom integration omits default gravity, damping and force accumulators but preserves impulses and contacts. Explicit state IntegrateForces applies selected gravity then damping for one tick on every call; it does not consume force accumulators.
+- Expose cached body state, force/sync callback setters, omission control and contact caps through PhysicsServer for scene/server RIDs. Use typed actions and a generic userdata adapter allocated once at registration. User force callback precedes the scene hook and user sync observer. Under the typed host lifecycle, scene-owned synchronization remains mandatory; the user sync observer supplements it. Delegates are transient and are replaced/cleared by setters. Sleeping/static bodies follow their inactive native callback policy.
+- Snapshot callback identities and solved contacts before user code. Permit post-solver body/fixture mutations and space queries; skip removed or replaced entries. Reject recursive stepping and world disposal. Aggregate callback failures after completing remaining callbacks and events without replaying committed changes. Clear cached views at detachment and registry entries at body release/weak cleanup.
+- Report global contact positions, normals, point velocities and both shape indices independently of object ContactMonitor. Keep collider-object virtual tile identity Partial until typed tile-body integration. Keep contact impulse Partial: normal impulse sums four substeps, but only the final-substep tangential value is available. Exact tangential aggregation requires a backend accumulator exposed before constraint impulses are discarded; include it in that backend integration's first slice. No vendored feature change is authorized by the existing allocation/optimization-only patch permission.
+
+### Consequences and verification
+
+Games can control solver bodies through typed callbacks, manually integrate selected fields, query the world at a safe point, and inspect solved contact identities. PhysicsBodyStateTests covers center/inertia/force units, scene/server fields, Area reduction/wakeup, omission/manual order, callback userdata/order, lifetime/thread guards, contacts surviving fixture queries, hierarchy mutation, failures, packing and 64 warmed active callback frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified.
+
+### Rejected alternatives
+
+- Invoke the hook before native solving or return detached state copies: callback ordering and contact availability would differ.
+- Permit arbitrary live access while constraints execute: this violates solver ownership.
+- Add dynamic callback data or expose native body handles: typed actions and native-private attachment identity cover the required role.

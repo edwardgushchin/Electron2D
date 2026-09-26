@@ -3,7 +3,7 @@ using static Box2D.NET.B2Bodies;
 
 namespace Electron2D;
 
-public sealed partial class RigidBody
+public partial class RigidBody
 {
     private static readonly PropertyDescriptor[] ForceProperties =
     [

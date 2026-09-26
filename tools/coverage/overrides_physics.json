@@ -1,6 +1,226 @@
 {
   "mappings": [
     {
+      "godot": "PhysicsDirectBodyState2D::method:add_constant_central_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.AddConstantCentralForce(Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:add_constant_force(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.AddConstantForce(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:add_constant_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.AddConstantTorque(System.Single)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_central_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyCentralForce(Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_central_impulse(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyCentralImpulse(Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_force(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyForce(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_impulse(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyImpulse(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyTorque(System.Single)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:apply_torque_impulse(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ApplyTorqueImpulse(System.Single)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_constant_force()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetConstantForce()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_constant_torque()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetConstantTorque()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactCollider(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_id(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderID(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderPosition(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_shape(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderShape(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_velocity_at_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderVelocityAtPosition(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_count()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactCount()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_impulse(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactImpulse(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_local_normal(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactLocalNormal(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_local_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactLocalPosition(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_local_shape(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactLocalShape(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_local_velocity_at_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactLocalVelocityAtPosition(System.Int32)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_space_state()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetSpaceState()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_velocity_at_local_position(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetVelocityAtLocalPosition(Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:integrate_forces()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.IntegrateForces()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:set_constant_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.SetConstantForce(Electron2D.Vector2)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:set_constant_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.SetConstantTorque(System.Single)",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:angular_velocity",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.AngularVelocity()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:center_of_mass",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.CenterOfMass()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:center_of_mass_local",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.CenterOfMassLocal()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:collision_layer",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.CollisionLayer()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:collision_mask",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.CollisionMask()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:inverse_inertia",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.InverseInertia()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:inverse_mass",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.InverseMass()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:linear_velocity",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.LinearVelocity()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:sleeping",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.Sleeping()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:step",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.Step()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:total_angular_damp",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.TotalAngularDamp()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:total_gravity",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.TotalGravity()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:total_linear_damp",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.TotalLinearDamp()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::property:transform",
+      "electron2d": "property:Electron2D.PhysicsDirectBodyState.Transform()",
+      "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
+    },
+    {
+      "godot": "RigidBody2D::method:_integrate_forces(PhysicsDirectBodyState2D:)",
+      "electron2d": "method:Electron2D.RigidBody.IntegrateForces(Electron2D.PhysicsDirectBodyState)",
+      "reason": "Typed protected virtual post-solver hook projecting the physics integration callback."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderObject(System.Int32)",
+      "reason": "Typed nullable scene collision role; server-only and released objects return null."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_force_integration_callback(RID:,Callable:,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback(Electron2D.RID,System.Action<Electron2D.PhysicsDirectBodyState>)",
+      "reason": "Typed action plus generic userdata adapter replaces callable/Variant boundary without boxing data during invocation."
+    },
+    {
       "godot": "CharacterBody2D::method:get_floor_normal()",
       "electron2d": "method:Electron2D.CharacterBody.GetFloorNormal()",
       "reason": "Typed cached character motion state in scene units."
@@ -277,6 +497,16 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback`1(Electron2D.RID,Action<Electron2D.PhysicsDirectBodyState, T>,T)",
+      "reason": "Strongly typed generic userdata overload of the existing native force callback; replaces the Variant userdata parameter without dynamic dispatch or invocation-time boxing.",
+      "adr": "ADRs 0001, 0003, 0070"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.ValidateDisposal()",
+      "reason": "Borrowed view lifecycle rejects disposal during callback execution, projecting its scoped engine ownership.",
+      "adr": "ADRs 0003, 0070"
+    },
     {
       "electron2d": "constructor:Electron2D.SeparationRayShape..ctor()",
       "reason": "Typed managed construction projects the existing directed separation resource defaults.",
@@ -924,6 +1154,86 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:PhysicsDirectBodyState2D"
+      ],
+      "state": "Partial",
+      "reason": "Live owner-thread state, post-solver callbacks, forces, field integration and contact snapshots execute. Virtual tile collider object identity and whole-step tangential impulse aggregation remain exact gaps (ADR 0070, PhysicsBodyStateTests)."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2D::method:add_constant_central_force(Vector2:)",
+        "PhysicsDirectBodyState2D::method:add_constant_force(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2D::method:add_constant_torque(float:)",
+        "PhysicsDirectBodyState2D::method:apply_central_force(Vector2:)",
+        "PhysicsDirectBodyState2D::method:apply_central_impulse(Vector2:)",
+        "PhysicsDirectBodyState2D::method:apply_force(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2D::method:apply_impulse(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2D::method:apply_torque(float:)",
+        "PhysicsDirectBodyState2D::method:apply_torque_impulse(float:)",
+        "PhysicsDirectBodyState2D::method:get_constant_force()",
+        "PhysicsDirectBodyState2D::method:get_constant_torque()",
+        "PhysicsDirectBodyState2D::method:get_contact_collider(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_collider_id(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_collider_position(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_collider_shape(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_collider_velocity_at_position(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_count()",
+        "PhysicsDirectBodyState2D::method:get_contact_local_normal(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_local_position(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_local_shape(int:)",
+        "PhysicsDirectBodyState2D::method:get_contact_local_velocity_at_position(int:)",
+        "PhysicsDirectBodyState2D::method:get_space_state()",
+        "PhysicsDirectBodyState2D::method:get_velocity_at_local_position(Vector2:)",
+        "PhysicsDirectBodyState2D::method:integrate_forces()",
+        "PhysicsDirectBodyState2D::method:set_constant_force(Vector2:)",
+        "PhysicsDirectBodyState2D::method:set_constant_torque(float:)",
+        "PhysicsDirectBodyState2D::property:angular_velocity",
+        "PhysicsDirectBodyState2D::property:center_of_mass",
+        "PhysicsDirectBodyState2D::property:center_of_mass_local",
+        "PhysicsDirectBodyState2D::property:collision_layer",
+        "PhysicsDirectBodyState2D::property:collision_mask",
+        "PhysicsDirectBodyState2D::property:inverse_inertia",
+        "PhysicsDirectBodyState2D::property:inverse_mass",
+        "PhysicsDirectBodyState2D::property:linear_velocity",
+        "PhysicsDirectBodyState2D::property:sleeping",
+        "PhysicsDirectBodyState2D::property:step",
+        "PhysicsDirectBodyState2D::property:total_angular_damp",
+        "PhysicsDirectBodyState2D::property:total_gravity",
+        "PhysicsDirectBodyState2D::property:total_linear_damp",
+        "PhysicsDirectBodyState2D::property:transform"
+      ],
+      "state": "Implemented",
+      "reason": "Live native body state and solved global-axis contacts execute for scene/server bodies with attachment/owner-thread guards, custom integration, force units and warmed zero allocation (ADR 0070, PhysicsBodyStateTests)."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)"
+      ],
+      "state": "Partial",
+      "reason": "Scene CollisionObject identity and null server-only objects execute; virtual tile collider identity requires the typed tile-body integration first slice (ADRs 0063, 0070)."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2D::method:get_contact_impulse(int:)"
+      ],
+      "state": "Partial",
+      "reason": "Total normal impulse across four substeps and final-substep tangent impulse are reported; exact whole-step tangential aggregate requires a backend contact accumulator exposed before constraint impulses are discarded (ADR 0070)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_get_direct_state(RID:)",
+        "PhysicsServer2D::method:body_get_max_contacts_reported(RID:)",
+        "PhysicsServer2D::method:body_is_omitting_force_integration(RID:)",
+        "PhysicsServer2D::method:body_set_force_integration_callback(RID:,Callable:,Variant:)",
+        "PhysicsServer2D::method:body_set_max_contacts_reported(RID:,int:)",
+        "PhysicsServer2D::method:body_set_omit_force_integration(RID:,bool:)",
+        "PhysicsServer2D::method:body_set_state_sync_callback(RID:,Callable:)"
+      ],
+      "state": "Implemented",
+      "reason": "Cached body attachment views, typed force/sync callbacks including generic userdata, omission policy and contact caps execute for scene/server bodies with mutation/failure/lifetime checks (ADR 0070, PhysicsBodyStateTests)."
+    },
     {
       "godot": [
         "Shape2D::method:collide(Transform2D:,Shape2D:,Transform2D:)",
@@ -1651,8 +1961,8 @@
         "RigidBody2D::method:_integrate_forces(PhysicsDirectBodyState2D:)",
         "RigidBody2D::property:custom_integrator"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: PhysicsDirectBodyState2D typed solver state and callback timing contract."
+      "state": "Implemented",
+      "reason": "Post-solver typed hook and packed custom-integration policy execute; omission skips gravity/damping/forces while impulses and contact response remain active (ADR 0070, PhysicsBodyStateTests)."
     },
     {
       "godot": [

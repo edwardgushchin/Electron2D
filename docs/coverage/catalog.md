@@ -610,7 +610,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicalSkyMaterial](classes/PhysicalSkyMaterial.md) | Material | Excluded | 11 |
 | [PhysicsBody2D](classes/PhysicsBody2D.md) | CollisionObject2D | Partial | 7 |
 | [PhysicsBody3D](classes/PhysicsBody3D.md) | CollisionObject3D | Excluded | 14 |
-| [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | Object | Blocked | 42 |
+| [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | Object | Partial | 42 |
 | [PhysicsDirectBodyState2DExtension](classes/PhysicsDirectBodyState2DExtension.md) | PhysicsDirectBodyState2D | Blocked | 48 |
 | [PhysicsDirectBodyState3D](classes/PhysicsDirectBodyState3D.md) | Object | Excluded | 44 |
 | [PhysicsDirectBodyState3DExtension](classes/PhysicsDirectBodyState3DExtension.md) | PhysicsDirectBodyState3D | Excluded | 50 |
