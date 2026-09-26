@@ -27,6 +27,7 @@ public sealed partial class Area : CollisionObject
     private readonly List<PhysicsShapePairChange> _pairChanges = [];
     private bool _dispatchingOverlap;
     private PhysicsSpace? _space;
+    internal PhysicsSpace? Space => _space;
     private B2BodyId _bodyID;
     private Vector2 _lastPosition;
     private float _lastRotation;
@@ -185,6 +186,7 @@ public sealed partial class Area : CollisionObject
 
     internal void DetachBackend()
     {
+        PhysicsServer.Instance.FindAreaRuntime(PhysicsRID)?.Reset();
         if (_space is null) return;
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();
@@ -234,6 +236,11 @@ public sealed partial class Area : CollisionObject
         }
         _pairChanges.Clear();
     }
+    internal void EnsureMonitorConfigurationChange()
+    {
+        if (_dispatchingOverlap) throw new InvalidOperationException("Area monitor configuration cannot change during an overlap callback.");
+    }
+
     internal void ClearOverlaps() { _overlaps.Clear(); _nextOverlaps.Clear(); _shapePairs.Clear(); _pairChanges.Clear(); }
     internal bool ContainsOverlap(PhysicsShapePairChange change) => change.ObjectEvent
         ? change.Pair.Other is { } other && _overlaps.Contains(other) : _shapePairs.Contains(change.Pair);

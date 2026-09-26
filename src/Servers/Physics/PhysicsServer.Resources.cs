@@ -237,9 +237,9 @@ public sealed partial class PhysicsServer
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
     public void AreaSetTransform(RID area, Transform transform)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetTransform(transform);
+        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
+        PhysicsServerCollider.ValidateTransform(transform);
+        if (owners.Scene is { } scene) scene.GlobalTransform = transform; else owners.Server!.SetTransform(transform);
     }
 
     /// <summary>Returns the body's current solver transform.</summary>
@@ -310,9 +310,8 @@ public sealed partial class PhysicsServer
     /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
     public void AreaSetCollisionLayer(RID area, uint layer)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetFilter(layer, collider.CollisionMask);
+        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
+        if (owners.Scene is { } scene) scene.CollisionLayer = layer; else owners.Server!.SetFilter(layer, owners.Server.CollisionMask);
     }
 
     /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
@@ -321,9 +320,8 @@ public sealed partial class PhysicsServer
     /// <remarks>The next nonzero overlap scan adopts the policy. Attached changes require the space owner thread.</remarks>
     public void AreaSetMonitorable(RID area, bool monitorable)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        collider.Monitorable = monitorable;
+        ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
+        if (owners.Scene is { } scene) scene.Monitorable = monitorable; else owners.Server!.Monitorable = monitorable;
     }
 
     /// <summary>Frees a server-owned space, collider or shape RID.</summary>
@@ -367,6 +365,7 @@ public sealed partial class PhysicsServer
                 {
                     _serverColliders.Remove(rid);
                     _bodyRuntimes.Remove(rid);
+                    _areaRuntimes.Remove(rid);
                     _bodyExceptions.Remove(rid);
                 }
             }

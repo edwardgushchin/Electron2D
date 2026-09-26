@@ -93,6 +93,7 @@
     "CollisionObject2D.DisableMode": "CollisionDisableMode",
     "RigidBody2D.CenterOfMassMode": "RigidCenterOfMassMode",
     "RigidBody2D.FreezeMode": "RigidFreezeMode",
-    "PhysicsServer2D.BodyDampMode": "RigidBody.DampMode"
+    "PhysicsServer2D.BodyDampMode": "RigidBody.DampMode",
+    "PhysicsServer2D.AreaBodyStatus": "PhysicsServer.AreaBodyStatus"
   }
 }

@@ -149,3 +149,7 @@ area.BodyShapeEntered += (rid, body, bodyShapeIndex, localShapeIndex) =>
 ## Disabled processing and physics
 
 Inherited `DisableMode.Remove` detaches the sensor and its fields while retaining RID and owners. Local overlaps clear and peer Areas receive object/shape departure events. MakeStatic and KeepActive both keep ordinary sensing and fields active while Node process callbacks remain disabled. Re-enabling a removed sensor restores membership synchronously; overlap entry is evaluated at the next physics scan. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+## External server monitor observers
+
+PhysicsServer.AreaSetMonitorCallback/AreaSetAreaMonitorCallback accept this scene RID and add independent logical-pair observers with status/RID/InstanceID/other-shape/local-shape payload. Scene-owned arrays and typed events remain mandatory; raw observers can run even while scene Monitoring is disabled. Replacing either callback resets its raw pair history and replays current entries at the next scan without resetting scene snapshots. Filter/pose/monitorable server setters project the same scene state. Own callback configuration changes reject; peer lifecycle changes are drained after committed snapshots. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) and [ADR 0077](../decisions/physics-monitoring.md#adr-0077) cover this typed ownership adaptation and verification limits.

@@ -217,6 +217,7 @@ PhysicsMassProfileTests.Run();
 PhysicsServerForceTests.Run();
 RigidFreezeModeTests.Run();
 PhysicsBodyParameterTests.Run();
+PhysicsAreaMonitorTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

@@ -799,6 +799,36 @@
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
       "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_monitor_callback(RID:,Callable:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetMonitorCallback(Electron2D.RID,System.Action<Electron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32>)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_area_monitor_callback(RID:,Callable:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetAreaMonitorCallback(Electron2D.RID,System.Action<Electron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32>)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_collision_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetCollisionMask(Electron2D.RID,System.UInt32)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_collision_layer(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetCollisionLayer(Electron2D.RID)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_collision_mask(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetCollisionMask(Electron2D.RID)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_transform(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetTransform(Electron2D.RID)",
+      "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
     }
   ],
   "extras": [
@@ -2010,8 +2040,8 @@
     },
     {
       "godot": ["PhysicsServer2D::method:area_set_collision_mask(RID:,int:)"],
-      "state": "Blocked",
-      "reason": "Trigger: server-only Area overlap monitoring and field/event consumers must use the mask; direct ray/point queries filter by Area layer, so a stored mask alone would be inert (ADR 0063)."
+      "state": "Implemented",
+      "reason": "ADR 0077: server receiver callbacks use Added=0/Removed=1, other RID/object ID and logical shape indices; directional masks and monitorable gating execute via existing exact overlap kernel. PhysicsAreaMonitorTests verifies scene/server payloads, bit 32, reset/reentry/free, callback failures/reentrant removal, owner/configuration guards and 64 warmed active pair cycles without managed allocation."
     },
     {
       "godot": [
@@ -2585,6 +2615,20 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0076 with ADR 0001: BodyParameter is the numeric discriminator of the Variant getter/setter dispatcher. Its ten capabilities are preserved by concrete typed getter/setter pairs; numeric selector/container and MAX sentinel are not shipped with no dispatcher. This excludes only the untyped selection representation, not any parameter behavior."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:area_set_monitor_callback(RID:,Callable:)",
+        "PhysicsServer2D::method:area_set_area_monitor_callback(RID:,Callable:)",
+        "PhysicsServer2D::method:area_get_collision_layer(RID:)",
+        "PhysicsServer2D::method:area_get_collision_mask(RID:)",
+        "PhysicsServer2D::method:area_get_transform(RID:)",
+        "PhysicsServer2D::enum:AreaBodyStatus",
+        "PhysicsServer2D::enum_value:AreaBodyStatus.AREA_BODY_ADDED",
+        "PhysicsServer2D::enum_value:AreaBodyStatus.AREA_BODY_REMOVED"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0077: server receiver callbacks use Added=0/Removed=1, other RID/object ID and logical shape indices; directional masks and monitorable gating execute via existing exact overlap kernel. PhysicsAreaMonitorTests verifies scene/server payloads, bit 32, reset/reentry/free, callback failures/reentrant removal, owner/configuration guards and 64 warmed active pair cycles without managed allocation."
     }
   ]
 }

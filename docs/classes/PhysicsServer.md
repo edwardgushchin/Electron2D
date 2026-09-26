@@ -173,3 +173,22 @@ Together with mass/center/inertia this covers all ten native body parameters. [A
 All live scene/server body RIDs accept detached configuration. Wrong kind/freed RID, off-owner/solver-owned access, nonfinite coefficients and unknown damping modes reject. RigidBody field policy is bidirectional with its scene properties; other roles retain configuration in their runtime record. Selected gravity scales before reporting/integration. Default integration applies max(0,1-delta*damp) to velocity before selected gravity and forces; negative damping is valid. Replace zero bypasses Area/world damping. Omission reports selected fields while skipping their automatic effect. Static/kinematic inverse response remains disabled.
 
 Signed material values feed actual fixture coefficients and rough/absorbent combine callbacks. A per-body server material write leaves a shared borrowed PhysicsMaterial unchanged. A scene material assignment/revision/disposal reloads both overrides; polling recovers an earlier throwing resource subscriber at preparation. Reentry preserves raw server parameters. CharacterBody and its direct view expose the same scaled selected gravity without automatic modification of user Velocity. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) verifies real material/field response, ownership/lifetime/failures and 64 warmed field/read/solver iterations with zero managed allocation. Native allocation, other platforms and owner acceptance remain unverified.
+
+## Area receivers and filter/pose reads
+
+**Source:** [PhysicsServer.Areas.cs](../../src/Servers/Physics/PhysicsServer.Areas.cs)
+
+| Signature | Contract |
+| --- | --- |
+| `void AreaSetMonitorCallback(RID area, Action<AreaBodyStatus, RID, ulong, int, int>? callback)` | Body-pair observer; null clears. |
+| `void AreaSetAreaMonitorCallback(RID area, Action<AreaBodyStatus, RID, ulong, int, int>? callback)` | Monitorable-Area pair observer; null clears. |
+| `void AreaSetCollisionMask(RID area, uint mask)` | Directional receiver mask; default one, including bit 32. |
+| `uint AreaGetCollisionLayer(RID area)` | Current category bits. |
+| `uint AreaGetCollisionMask(RID area)` | Current accepted other-category bits. |
+| `Transform AreaGetTransform(RID area)` | Current global scene/server pose. |
+
+All live scene/server Area RIDs are accepted; pose/layer/monitorable setters use that same projection. [AreaBodyStatus](PhysicsServer.AreaBodyStatus.md) reports Added=0/Removed=1. Remaining payload is other RID, stable scene InstanceID or zero for server-only, other global logical shape index and local index. Compound fixtures deduplicate per logical pair. The receiver mask tests other layer without reciprocal masks. Area callbacks include only monitorable peers; explicit server Areas default non-monitorable.
+
+Registration resets both histories even for the same delegate; null clears without synthetic exits, and current overlaps enter again at the next nonzero scan. Scene-owned overlap arrays/events remain independent and mandatory; an external observer is not its replacement and can observe while scene Monitoring is false. Snapshot state commits before dispatch; failures continue later events and do not replay. Own receiver configuration mutation from a raw or scene overlap callback rejects, while reads are allowed. Epoch changes suppress stale queued callbacks. Other collider removal/free emits retained exits immediately; removal from an entry callback suppresses stale later entries and safely delivers departures.
+
+Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Server field parameters and remaining shape/instance/canvas operations retain their own coverage gaps; native allocation, large-world performance, other platforms and owner acceptance remain unverified.

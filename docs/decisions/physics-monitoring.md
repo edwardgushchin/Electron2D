@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-26
 
-This bounded document owns scene Area overlap and RigidBody contact monitoring. [The decision index](index.md) routes other physics decisions. The stable legacy anchors in physics.md route here.
+This bounded document owns scene/server Area overlap and RigidBody contact monitoring. [The decision index](index.md) routes other physics decisions. The stable legacy anchors in physics.md route here.
 
 <a id="adr-0055"></a>
 ## ADR 0055: Directional scene area monitoring
@@ -62,3 +62,28 @@ Games can respond to collision entry/exit and solver sleep, query current bodies
 ### Logical body-shape transitions
 
 Retain only pairs contributing to the configured contact cap and monitor snapshot. Resolve scene body identity from native shape tags and emit BodyShapeEntered/Exited with RID, Node and remote/local global indices. Deduplicate multiple manifold points and compound fixtures. Object entry precedes its first pair entry; object exit precedes its last retained pair exit. Removal is handled from committed values rather than destroyed native shape IDs. ContactMonitor disabling from an object or shape callback rejects. Tile-map virtual body payloads and exact capped-contact priority remain Partial with the existing triggers.
+
+<a id="adr-0077"></a>
+## ADR 0077: Server Area receiver callbacks and directional masks
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: Typed body/Area logical-pair observers for scene/server Area RIDs
+- Depends on: [0055](#adr-0055), [0058](#adr-0058), [0063](physics.md#adr-0063), [0071](physics.md#adr-0071), [0014](resources.md#adr-0014)
+
+### Context
+
+Scene Areas already observe scene/server shapes through the exact overlap kernel, but a server-created Area cannot receive callbacks. CollisionMask was Blocked without an overlap consumer. The pinned receiver payload is status, other RID, object instance ID, other shape index and local shape index. Registering either callback clears both histories; receiver space changes clear them without synthetic self exits.
+
+### Decision
+
+- Expose nested PhysicsServer.AreaBodyStatus Added=0 and Removed=1 plus AreaSetMonitorCallback and AreaSetAreaMonitorCallback with typed Action<status,RID,ulong,int,int>. InstanceID is the stable scene object's ID or zero for server-only colliders; store RID/logical pair identity rather than native handles. Monitor callbacks are optional and retained until replacement, clear or receiver free. Re-registering even the same delegate clears both pair histories; current overlaps replay entry at the next nonzero scan.
+- Integrate server receiver scans after ordinary scene overlap snapshots, using existing exact shape-pair geometry and fixture tags. Directional receiver mask tests the other layer; no reciprocal mask is required. The Area lane accepts only monitorable other Areas, default false for explicit server Areas. Deduplicate compound fixtures by both global logical indices. Add AreaSetCollisionMask and typed layer/mask/global-pose getters; project filter/pose/monitorable operations across all live scene/server Area RIDs.
+- Keep scene-owned snapshots/events mandatory; external server callbacks on a scene Area are independent observers, rather than replacing its private node-owned receiver. They can observe even when scene Monitoring is disabled. This preserves typed host ownership under the same adaptation as body state observers. Source callback histories and node snapshots remain separate.
+- Commit all receiver pair snapshots before dispatch; emit only logical shape changes with no object duplicate to raw callbacks. Continue later queued callbacks after failure and never replay committed transitions. Configuration writes from the receiver's own raw or scene in/out callback reject; reads remain available. Epoch changes suppress stale queued deliveries. Removing another collider immediately queues retained pair exits; in-callback removal drains safely and suppresses stale later entries. Free completes registry cleanup even when departure callbacks throw.
+- Receiver detach/space change/free clears its own history silently, while peer receivers get ordinary departure changes. Callback registrations and masks survive reentry; world disposal clears event storage and attachment history. Enforce live Area kind, owner thread and non-stepping access. Use cached pair/change/event storage and indexed fixture loops; complexity follows the existing pairwise Area kernel. No vendor source changes.
+
+### Consequences and verification
+
+PhysicsAreaMonitorTests checks server/scene payloads and stable IDs, two local logical pairs, bit 32, directional masks, monitorable gating, callback registration/clear/reset, independent scene snapshots, detach/reentry/other free, failure continuation/no replay, recursive configuration rejection, receiver getters and in-callback removal. Sixty-four warmed active entry/exit cycles allocate zero managed bytes on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. Server Area field parameters, instance/canvas attachment and remaining shape operations retain separate coverage gaps.

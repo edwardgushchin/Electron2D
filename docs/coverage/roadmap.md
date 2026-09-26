@@ -5,7 +5,7 @@ Last updated: 2026-09-25
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
 1. Close 1281 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 995 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+2. Complete 987 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -15,7 +15,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | 128 | 7 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | 120 | 7 |
 | [Node](classes/Node.md) | 66 | 68 |
 | [Window](classes/Window.md) | 42 | 34 |
 | [Control](classes/Control.md) | 35 | 60 |

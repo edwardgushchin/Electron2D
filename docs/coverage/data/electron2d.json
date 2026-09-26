@@ -2647,6 +2647,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsServer.AreaBodyStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer.AreaBodyStatus",
+    "name": "AreaBodyStatus",
+    "signature": "public enum Electron2D.PhysicsServer.AreaBodyStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsServer.BodyMode",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsServer.BodyMode",
@@ -15799,6 +15817,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PhysicsInterpolationMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.AreaBodyStatus.Added()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.AreaBodyStatus",
+    "name": "Added",
+    "signature": "public const Electron2D.PhysicsServer.AreaBodyStatus Added = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.AreaBodyStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.AreaBodyStatus.Removed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.AreaBodyStatus",
+    "name": "Removed",
+    "signature": "public const Electron2D.PhysicsServer.AreaBodyStatus Removed = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.AreaBodyStatus",
     "value": "1"
   },
   {
@@ -44244,6 +44288,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaGetCollisionLayer(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetCollisionLayer",
+    "signature": "public System.UInt32 AreaGetCollisionLayer(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetCollisionMask(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetCollisionMask",
+    "signature": "public System.UInt32 AreaGetCollisionMask(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaGetShapeCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44282,6 +44364,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaGetTransform(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetTransform",
+    "signature": "public Electron2D.Transform AreaGetTransform(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaRemoveShape(Electron2D.RID,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44306,6 +44407,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaSetAreaMonitorCallback(Electron2D.RID,System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetAreaMonitorCallback",
+    "signature": "public System.Void AreaSetAreaMonitorCallback(Electron2D.RID area, System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaSetCollisionLayer(Electron2D.RID,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44323,6 +44448,54 @@
       {
         "name": "layer",
         "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetCollisionMask(Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetCollisionMask",
+    "signature": "public System.Void AreaSetCollisionMask(Electron2D.RID area, System.UInt32 mask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mask",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetMonitorCallback(Electron2D.RID,System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetMonitorCallback",
+    "signature": "public System.Void AreaSetMonitorCallback(Electron2D.RID area, System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E",
         "default": null
       }
     ],

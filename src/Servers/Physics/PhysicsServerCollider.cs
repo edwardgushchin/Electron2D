@@ -70,6 +70,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void DetachBackend()
     {
+        if (IsArea) PhysicsServer.Instance.FindAreaRuntime(RID)?.Reset();
         PhysicsServer.Instance.InvalidateBodyView(RID);
         if (_space is null) return;
         CaptureMotion();

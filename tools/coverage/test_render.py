@@ -162,7 +162,9 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 62, "Partial": 8, "Unimplemented": 128, "Blocked": 5, "Excluded": 12}
+                "Implemented": 71, "Partial": 8, "Unimplemented": 120, "Blocked": 4, "Excluded": 12}
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     force_names = ("apply_central_force", "apply_force", "apply_torque", "apply_central_impulse", "apply_impulse",
                    "apply_torque_impulse", "add_constant_central_force", "add_constant_force", "add_constant_torque",
                    "set_constant_force", "get_constant_force", "set_constant_torque", "get_constant_torque")
@@ -177,7 +179,7 @@ def main():
                  if row.startswith("| [`") and ("CenterOfMassMode" in row or "center_of_mass" in row or "property float inertia" in row)]
     assert len(mass_rows) == 6 and all(" | Implemented | " in row for row in mass_rows)
     assert " | Implemented | " in next(row for row in server_rows if "method body_test_motion(" in row)
-    assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
+    assert " | Implemented | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_set_shape_disabled", "area_set_shape_disabled", "body_remove_shape", "area_remove_shape"))
     collision_owner_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()

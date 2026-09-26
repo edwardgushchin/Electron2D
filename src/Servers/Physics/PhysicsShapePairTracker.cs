@@ -1,7 +1,10 @@
 namespace Electron2D;
 
 internal readonly record struct PhysicsShapePair(RID RID, CollisionObject? Other, bool IsArea,
-    int OtherShape, int LocalShape);
+    int OtherShape, int LocalShape)
+{
+    internal ulong InstanceID => Other?.InstanceID ?? 0;
+}
 internal readonly record struct PhysicsShapePairChange(PhysicsShapePair Pair, bool Entered, bool ObjectEvent);
 
 internal sealed class PhysicsShapePairTracker

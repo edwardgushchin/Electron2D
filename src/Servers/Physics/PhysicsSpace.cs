@@ -98,6 +98,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var other in _bodies)
             if (other is RigidBody rigid) rigid.ForgetContact(body, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
+        ForgetAreaMonitors(body.PhysicsRID);
         DispatchEvents();
     }
 
@@ -125,6 +126,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
         if (!_serverColliders.Remove(collider)) return;
         foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
+        ForgetAreaMonitors(collider.RID);
         collider.DetachBackend();
         DispatchEvents();
     }
@@ -137,6 +139,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         area.DetachBackend();
         area.ClearOverlaps();
         foreach (var other in _areas) other.Forget(area, _overlapEvents);
+        ForgetAreaMonitors(area.PhysicsRID);
         DispatchEvents();
     }
 
@@ -181,6 +184,7 @@ internal sealed partial class PhysicsSpace : IDisposable
                 rigid.CollectContacts(this, _contactEvents);
             }
             ScanAreas();
+            ScanAreaMonitors();
             CaptureBodyStates();
         }
         catch (Exception error) { (errors ??= []).Add(error); }
@@ -209,6 +213,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _serverColliders.Clear();
         _fieldAreas.Clear();
         _overlapEvents.Clear();
+        _serverAreaEvents.Clear();
         _contactEvents.Clear();
         _sleepEvents.Clear();
         _oneWayPairs.Clear();
@@ -448,6 +453,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         try { DispatchContactEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         try { DispatchOverlapEvents(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        try { DispatchAreaMonitors(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Physics callbacks failed.", errors);
     }
