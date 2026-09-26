@@ -118,6 +118,12 @@ def main():
             for state in ("Implemented", "Partial", "Unimplemented")} == {
                 "Implemented": 41, "Partial": 0, "Unimplemented": 0}
     assert "../../classes/CharacterBody.md" in class_rows["CharacterBody2D"]
+    shape_rows = [row for row in pages[CLASS_PAGES / "Shape2D.md"].splitlines()
+                  if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(shape_rows) == 8
+    assert {state: sum(f" | {state} | " in row for row in shape_rows)
+            for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
+                "Implemented": 5, "Partial": 1, "Blocked": 2, "Unimplemented": 0}
     separation_rows = [row for row in pages[CLASS_PAGES / "SeparationRayShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(separation_rows) == 3

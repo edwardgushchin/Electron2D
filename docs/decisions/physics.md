@@ -397,3 +397,34 @@ Character ray floors, ray-specific body tests and direct/Area sensing execute in
 
 - Solid segment fixtures: their two-sided manifold, query visibility and rod inertia change the contract.
 - Correct positions after the native solver as a substitute for constraints: coupled impulses, friction, sleep and reports would remain missing.
+
+<a id="adr-0069"></a>
+## ADR 0069: Standalone resource collision regions and boundary contacts
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: Shape.Collide, CollideWithMotion and the two contact-array variants
+- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0064](#adr-0064), [0068](#adr-0068), [0014](resources.md#adr-0014)
+
+### Context
+
+Direct-space queries execute against registered scene/server fixtures. Resource-pair collision methods must also work without a scene or space. The pinned Shape2D implementation delegates these methods to an internal shape-collision entry point and caps contact arrays at sixteen pairs. Its SAT solver projects each shape's motion independently: the operation tests the two swept regions, not a synchronized relative-velocity cast. Concave terrain motion is ignored; a separation-ray pair uses only the ray's positive axial motion. Those are distinct contracts from direct-space motion queries. The internal server entry point is absent from the pinned public PhysicsServer2D table, so it does not require a new public server member.
+
+### Decision
+
+- Expose all four typed Shape methods using explicit translated/rotated, unit-scale, zero-skew poses and global-axis displacements. Validate finite inputs, live resources and transformed geometry. Queries read caller-owned resources without creating RIDs or temporary worlds and do not mutate them or their scene borrowers. Concurrent resource mutation/disposal is outside the query contract.
+- Use original scene-unit dimensions for primitive support geometry, avoiding round-trip rounding at exact touching. Build each convex swept hull from its original and displaced vertices and retain the linked circle/capsule radius. Test edge and rounded-corner separating axes. Reuse the span hull builder behind Geometry.ConvexHull and double orientation intermediates. A full ConvexPolygonShape contour stays one collision region regardless of backend fixture partitioning; concave resources remain hollow segment collections with the accepted short-segment point fallback.
+- Return global boundary pairs in caller/other order, capped at sixteen. The difference from the first point to the second gives separation normal and depth. Retain deeper pairs when capacity is reached; exact edge touching may return true without a nonzero separating contact. Arrays are caller-owned; empty results share an empty array. Reuse private per-thread proxy and hull buffers after warmup; no user resource is retained by those buffers.
+- Preserve the pinned special pairs: two concave resources or two rays do not collide; concave motion is ignored in either operand. Ray pairs reject containment and use only the ray's own axial motion, ignoring counterpart motion. Reuse the directed native kernel for native-sized target hulls and clip the full convex boundary above that hull limit. Choose the nearest surface crossing across concave pieces.
+- Leave Shape.Draw and CustomSolverBias Blocked by renderer RID drawing and verified per-shape contact-softness integration. Standalone collision does not supply those prerequisites or complete ordinary dynamic ray response.
+
+### Consequences and verification
+
+Games can test reusable geometry for placement and procedural tools without entering a SceneTree. ShapeCollisionTests checks contact order/depth, containment, touching, independent simultaneous motions, all ordinary family pairings, full convex boundaries, hollow/special pairs, sixteen-deepest-pair retention, invalid/disposed inputs, geometry committed before a throwing Changed callback and off-thread use. Sixty-four warmed active, full-contour and empty-contact queries each allocate zero managed bytes on Linux/.NET 10; successful contact arrays allocate caller-owned output. Native allocation, large-world performance, other platforms and owner visual acceptance remain unverified.
+
+### Rejected alternatives
+
+- A relative-motion cast or an earliest-time contact snapshot: neither represents independently swept resource regions.
+- Create a temporary physics world or register colliders for every pair: lifecycle and allocation would be unrelated to this resource-only operation.
+- Return contacts from partitioned convex fixtures: internal partition edges are not the resource boundary.

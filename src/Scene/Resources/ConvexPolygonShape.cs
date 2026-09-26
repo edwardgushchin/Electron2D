@@ -16,6 +16,8 @@ public sealed class ConvexPolygonShape : Shape
     private Vector2[] _points = [];
     private B2Hull[] _hulls = [];
 
+    internal ReadOnlySpan<Vector2> CollisionPoints => _points;
+
     /// <summary>Creates an empty polygon with no collision fixture.</summary>
     public ConvexPolygonShape() { }
 

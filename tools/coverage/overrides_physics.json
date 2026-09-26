@@ -926,6 +926,16 @@
   "statusGroups": [
     {
       "godot": [
+        "Shape2D::method:collide(Transform2D:,Shape2D:,Transform2D:)",
+        "Shape2D::method:collide_and_get_contacts(Transform2D:,Shape2D:,Transform2D:)",
+        "Shape2D::method:collide_with_motion(Transform2D:,Vector2:,Shape2D:,Transform2D:,Vector2:)",
+        "Shape2D::method:collide_with_motion_and_get_contacts(Transform2D:,Vector2:,Shape2D:,Transform2D:,Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "Standalone posed resources and independent swept regions execute without a world/RID; full convex boundary points, hollow/special pairs, sixteen-deepest-pair retention, finite/lifetime checks and warmed zero allocation are checked by ShapeCollisionTests (ADR 0069)."
+    },
+    {
+      "godot": [
         "class:SeparationRayShape2D"
       ],
       "state": "Partial",
@@ -1436,7 +1446,7 @@
         "class:Shape2D"
       ],
       "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families; Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
     },
     {
       "godot": [

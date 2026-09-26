@@ -48865,6 +48865,142 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.Collide(Electron2D.Transform,Electron2D.Shape,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "Collide",
+    "signature": "public System.Boolean Collide(Electron2D.Transform localTransform, Electron2D.Shape withShape, Electron2D.Transform shapeTransform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "withShape",
+        "type": "Electron2D.Shape",
+        "default": null
+      },
+      {
+        "name": "shapeTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.CollideAndGetContacts(Electron2D.Transform,Electron2D.Shape,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "CollideAndGetContacts",
+    "signature": "public Electron2D.Vector2[] CollideAndGetContacts(Electron2D.Transform localTransform, Electron2D.Shape withShape, Electron2D.Transform shapeTransform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "withShape",
+        "type": "Electron2D.Shape",
+        "default": null
+      },
+      {
+        "name": "shapeTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.CollideWithMotion(Electron2D.Transform,Electron2D.Vector2,Electron2D.Shape,Electron2D.Transform,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "CollideWithMotion",
+    "signature": "public System.Boolean CollideWithMotion(Electron2D.Transform localTransform, Electron2D.Vector2 localMotion, Electron2D.Shape withShape, Electron2D.Transform shapeTransform, Electron2D.Vector2 shapeMotion)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "localMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "withShape",
+        "type": "Electron2D.Shape",
+        "default": null
+      },
+      {
+        "name": "shapeTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "shapeMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.CollideWithMotionAndGetContacts(Electron2D.Transform,Electron2D.Vector2,Electron2D.Shape,Electron2D.Transform,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "CollideWithMotionAndGetContacts",
+    "signature": "public Electron2D.Vector2[] CollideWithMotionAndGetContacts(Electron2D.Transform localTransform, Electron2D.Vector2 localMotion, Electron2D.Shape withShape, Electron2D.Transform shapeTransform, Electron2D.Vector2 shapeMotion)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "localMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "withShape",
+        "type": "Electron2D.Shape",
+        "default": null
+      },
+      {
+        "name": "shapeTransform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "shapeMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shape.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Shape",

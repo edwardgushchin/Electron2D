@@ -265,21 +265,27 @@ public static class Geometry
     {
         if (points.IsEmpty) return [];
         var sorted = points.ToArray();
-        Array.Sort(sorted, static (left, right) => left.X == right.X ? left.Y.CompareTo(right.Y) : left.X.CompareTo(right.X));
         var hull = new Vector2[checked(sorted.Length * 2)];
+        var count = FillConvexHull(sorted, hull);
+        Array.Resize(ref hull, count);
+        return hull;
+    }
+
+    internal static int FillConvexHull(Span<Vector2> sorted, Span<Vector2> hull)
+    {
+        sorted.Sort(static (left, right) => left.X == right.X ? left.Y.CompareTo(right.Y) : left.X.CompareTo(right.X));
         var count = 0;
         for (var i = 0; i < sorted.Length; i++)
         {
-            while (count >= 2 && (hull[count - 1] - hull[count - 2]).Cross(sorted[i] - hull[count - 2]) <= 0f) count--;
+            while (count >= 2 && TriangleCross(hull[count - 2], hull[count - 1], sorted[i]) <= 0d) count--;
             hull[count++] = sorted[i];
         }
         for (int i = sorted.Length - 2, start = count + 1; i >= 0; i--)
         {
-            while (count >= start && (hull[count - 1] - hull[count - 2]).Cross(sorted[i] - hull[count - 2]) <= 0f) count--;
+            while (count >= start && TriangleCross(hull[count - 2], hull[count - 1], sorted[i]) <= 0d) count--;
             hull[count++] = sorted[i];
         }
-        Array.Resize(ref hull, count);
-        return hull;
+        return count;
     }
 
     /// <summary>Partitions a simple polygon into convex polygons.</summary>

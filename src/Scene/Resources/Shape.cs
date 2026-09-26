@@ -8,7 +8,7 @@ namespace Electron2D;
 
 /// <summary>Defines reusable two-dimensional collision geometry.</summary>
 /// <remarks>A <see cref="CollisionShape"/> borrows a Shape resource; callers retain its ownership.</remarks>
-public abstract class Shape : Resource
+public abstract partial class Shape : Resource
 {
     private ulong _revision;
     private readonly object _queryRIDGate = new();

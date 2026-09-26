@@ -1,6 +1,6 @@
 # RectangleShape
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -36,6 +36,8 @@ Returns `(-Size.X/2, -Size.Y/2, Size.X, Size.Y)` in local scene units, independe
 
 ## Verification and limits
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies default/invalid geometry, falling box versus floor, collision filtering and borrowed resource lifetime. Inherited standalone shape queries remain separate [coverage rows](../coverage/classes/Shape2D.md).
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies default/invalid geometry, falling box versus floor, collision filtering and borrowed resource lifetime. Inherited drawing and custom solver-bias members retain separate coverage prerequisites.
 
 Direct [shape queries](PhysicsDirectSpaceState.md) use the current filled rectangle and support swept overlap, contact pairs and rest normals; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks these paths.
+
+Inherited [Shape collision methods](Shape.md#collide) now test posed resources and independently swept regions without a SceneTree. ShapeCollisionTests verifies this family under [ADR 0069](../decisions/physics.md#adr-0069), including caller/other boundary-point ordering, lifetime and the sixteen-pair cap.

@@ -1,6 +1,6 @@
 # Geometry
 
-Last updated: 2026-09-23
+Last updated: 2026-09-26
 
 **Inherits:** —
 
@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2i`](Vector2i.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; polygon triangulation uses double area and orientation intermediates. Polygon clipping and offsets use Clipper2 at five decimal digits of internal precision and reject nonfinite or out-of-range coordinates. Other inputs are not generally checked for finiteness. Each returned array is owned by the caller.
+Stateless, backend-independent two-dimensional geometry queries on engine-owned [`Vector2`](Vector2.md) and [`Vector2i`](Vector2i.md). This C# static service projects the reference geometry singleton's pure operations without an object to create or dispose. Calls are safe from multiple threads when callers do not mutate their own input values concurrently. Vector values are single precision; convex hulls and polygon triangulation use double orientation intermediates. Polygon clipping and offsets use Clipper2 at five decimal digits of internal precision and reject nonfinite or out-of-range coordinates. Other inputs are not generally checked for finiteness. Each returned array is owned by the caller.
 
 The class covers grid-line rasterization, nearest points, line/segment intersections, polygon predicates, convex hulls and decomposition, simple-polygon and Delaunay triangulation, atlas layout, segment/circle intersections, polygon boolean operations and offsets. The public name is `Geometry`; [`Geometry2D` coverage](../coverage/classes/Geometry2D.md) identifies the reference source only.
 
@@ -149,3 +149,5 @@ Only Core math, the .NET base library and internally compiled [Clipper2 1.5.4](.
 - [ADR 0004: 2D public API boundary](../decisions/product.md#adr-0004)
 - [ADR 0032: engine-owned math vocabulary](../decisions/core-math.md#adr-0032)
 - [ADR 0035: public family completeness](../decisions/core-math.md#adr-0035)
+
+The convex hull implementation also supplies an internal span-writing path for standalone Shape collision regions. Public ConvexHull retains its caller-owned closed contour and does not mutate the input. The full executable checks cover the shared builder under ShapeCollisionTests.

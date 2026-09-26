@@ -69,3 +69,5 @@ Standalone Shape methods, other shape resources, kinematic bodies, area audio in
 - [0012: Managed dependency vendoring](../decisions/product.md#adr-0012)
 - [0008: Spatial scene inheritance](../decisions/scene.md#adr-0008)
 - [0014: Resource lifetime and hot paths](../decisions/resources.md#adr-0014)
+
+[Shape collision methods](../classes/Shape.md#collide) now expose resource-only overlap, independent swept regions and up to sixteen boundary pairs, without a world or RID. They share shape-family geometry and the directed ray kernel while retaining distinct motion semantics under [ADR 0069](../decisions/physics.md#adr-0069). Full convex contours do not expose internal fixture boundaries. ShapeCollisionTests covers all ordinary family pairs, special exclusions, contact cap/lifetime and warmed zero managed allocation on Linux/.NET 10.

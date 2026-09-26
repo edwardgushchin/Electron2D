@@ -7,6 +7,7 @@ namespace Electron2D;
 
 internal static class PhysicsSeparationRay
 {
+    internal const float MinimumFacingProjection = 1e-6f;
     internal static B2Manifold PairContact(in B2ShapeProxy query, bool? queryRay,
         in B2ShapeProxy other, in B2Transform otherTransform, SeparationRayData? otherRay,
         in B2Vec2 motion, float margin)
@@ -119,7 +120,7 @@ internal static class PhysicsSeparationRay
         }
         if (!hit.hit) return default;
         var normal = b2RotateVector(otherTransform.q, hit.normal);
-        if (b2Dot(normal, from - endpoint) < 1e-6f) return default;
+        if (b2Dot(normal, from - endpoint) < MinimumFacingProjection) return default;
         var point = b2TransformPoint(otherTransform, hit.point);
         var depth = b2Length(endpoint - point);
         var contactPoint = slideOnSlope ? endpoint + depth * normal : point;

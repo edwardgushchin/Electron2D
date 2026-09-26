@@ -191,6 +191,7 @@ PhysicsBodyTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();
+ShapeCollisionTests.Run();
 OneWayCollisionTests.Run();
 CollisionPolygonTests.Run();
 PhysicsQueryTests.Run();

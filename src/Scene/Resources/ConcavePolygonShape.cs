@@ -10,6 +10,7 @@ namespace Electron2D;
 /// <see cref="CollisionShape"/> borrows this caller-owned resource.</remarks>
 public sealed class ConcavePolygonShape : Shape
 {
+    internal ReadOnlySpan<Vector2> CollisionSegments => _segments;
     private Vector2[] _segments = [];
 
     /// <summary>Creates an empty segment collection with no collision fixtures.</summary>

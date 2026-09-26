@@ -1,6 +1,6 @@
 # CircleShape
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -36,6 +36,8 @@ Returns local bounds in scene units as a copied Rect2. It remains usable without
 
 ## Verification and limits
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) covers defaults, bounds, invalid rollback, independent duplication, a live radius change and contact response on a static floor. Inherited standalone shape queries retain their [separate coverage](../coverage/classes/Shape2D.md); other shapes and platforms remain separate.
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) covers defaults, bounds, invalid rollback, independent duplication, a live radius change and contact response on a static floor. Inherited drawing and custom solver-bias members retain separate coverage prerequisites.
 
 Direct [shape queries](PhysicsDirectSpaceState.md) use the current circle radius for overlap, sweep and contact tests; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies this geometry family.
+
+Inherited [Shape collision methods](Shape.md#collide) now test posed resources and independently swept regions without a SceneTree. ShapeCollisionTests verifies this family under [ADR 0069](../decisions/physics.md#adr-0069), including caller/other boundary-point ordering, lifetime and the sixteen-pair cap.
