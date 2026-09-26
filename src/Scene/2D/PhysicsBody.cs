@@ -78,6 +78,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         PhysicsServer.Instance.InvalidateBodyView(PhysicsRID);
         if (_space is null) return;
+        if (this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody) rigid.OnBackendAdvanced();
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();
         _appliedShapeRevisions.Clear();
@@ -292,6 +293,7 @@ public abstract class PhysicsBody : CollisionObject
         _backendShapes.Clear();
 
         var definition = b2DefaultShapeDef();
+        definition.updateBodyMass = false;
         definition.filter.categoryBits = CollisionLayer;
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;

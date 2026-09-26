@@ -162,7 +162,12 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 44, "Partial": 10, "Unimplemented": 156, "Blocked": 5}
+                "Implemented": 57, "Partial": 10, "Unimplemented": 143, "Blocked": 5}
+    force_names = ("apply_central_force", "apply_force", "apply_torque", "apply_central_impulse", "apply_impulse",
+                   "apply_torque_impulse", "add_constant_central_force", "add_constant_force", "add_constant_torque",
+                   "set_constant_force", "get_constant_force", "set_constant_torque", "get_constant_torque")
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method body_{name}(" in row)
+               for name in force_names)
     assert " | Implemented | " in next(row for row in server_rows if "method body_reset_mass_properties(" in row)
     assert all(" | Partial | " in next(row for row in server_rows if f"method body_{action}_param(" in row)
                for action in ("set", "get"))

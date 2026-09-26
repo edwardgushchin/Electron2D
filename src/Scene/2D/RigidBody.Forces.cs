@@ -13,6 +13,8 @@ public partial class RigidBody
             (body, value) => body.ConstantTorque = value, _ => 0f, stored: true)
     ];
 
+    internal void SetConstantTotals(Vector2 force, float torque) { _constantForce = force; _constantTorque = torque; }
+
     private const float TorqueUnitScale = PhysicsSpace.MetersPerUnit * PhysicsSpace.MetersPerUnit;
     private Vector2 _constantForce;
     private float _constantTorque;
@@ -53,11 +55,7 @@ public partial class RigidBody
     public void AddConstantCentralForce(Vector2 force)
     {
         EnsureMutable();
-        if (!force.IsFinite()) throw new ArgumentOutOfRangeException(nameof(force));
-        var total = _constantForce + force;
-        if (!total.IsFinite()) throw new ArgumentOutOfRangeException(nameof(force));
-        _constantForce = total;
-        WakeForPersistentForce();
+        PhysicsServer.Instance.BodyAddConstantCentralForce(GetRID(), force);
     }
 
     /// <summary>Adds a persistent force at a world-axis offset from the body origin.</summary>
@@ -68,15 +66,7 @@ public partial class RigidBody
     public void AddConstantForce(Vector2 force, Vector2 position = default)
     {
         EnsureMutable();
-        ValidateForceAndPosition(force, position);
-        if (HasBackend) PrepareBackend();
-        var totalForce = _constantForce + force;
-        var totalTorque = _constantTorque + (position - CenterOffset()).Cross(force);
-        if (!totalForce.IsFinite() || !float.IsFinite(totalTorque))
-            throw new ArgumentOutOfRangeException(nameof(force), "The accumulated force or torque is nonfinite.");
-        _constantForce = totalForce;
-        _constantTorque = totalTorque;
-        WakeForPersistentForce();
+        PhysicsServer.Instance.BodyAddConstantForce(GetRID(), force, position);
     }
 
     /// <summary>Adds a persistent finite torque without changing constant force.</summary>
@@ -85,11 +75,7 @@ public partial class RigidBody
     public void AddConstantTorque(float torque)
     {
         EnsureMutable();
-        Finite(torque);
-        var total = _constantTorque + torque;
-        if (!float.IsFinite(total)) throw new ArgumentOutOfRangeException(nameof(torque));
-        _constantTorque = total;
-        WakeForPersistentForce();
+        PhysicsServer.Instance.BodyAddConstantTorque(GetRID(), torque);
     }
 
     /// <summary>Applies a force for the current physics step at a world-axis offset from the body origin.</summary>
@@ -101,12 +87,8 @@ public partial class RigidBody
     {
         EnsureMutable();
         ValidateForceAndPosition(force, position);
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying forces.");
-        PrepareBackend();
-        var point = WorldPoint(position);
-        if (!float.IsFinite((position - CenterOffset()).Cross(force)))
-            throw new ArgumentOutOfRangeException(nameof(force), "The positioned force would produce nonfinite torque.");
-        b2Body_ApplyForce(BackendID, Shape.ToBackend(force), point, wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyForce(GetRID(), force, position);
     }
 
     /// <summary>Applies a one-time impulse at a world-axis offset from the body origin.</summary>
@@ -118,12 +100,8 @@ public partial class RigidBody
     {
         EnsureMutable();
         ValidateForceAndPosition(impulse, position);
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying impulses.");
-        PrepareBackend();
-        var point = WorldPoint(position);
-        if (!float.IsFinite((position - CenterOffset()).Cross(impulse)))
-            throw new ArgumentOutOfRangeException(nameof(impulse), "The positioned impulse would produce nonfinite torque.");
-        b2Body_ApplyLinearImpulse(BackendID, Shape.ToBackend(impulse), point, wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyImpulse(GetRID(), impulse, position);
     }
 
     /// <summary>Applies a finite torque for the current physics step.</summary>
@@ -134,9 +112,8 @@ public partial class RigidBody
     {
         EnsureMutable();
         Finite(torque);
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying torque.");
-        PrepareBackend();
-        b2Body_ApplyTorque(BackendID, torque * TorqueUnitScale, wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyTorque(GetRID(), torque);
     }
 
     /// <summary>Applies a finite one-time angular impulse.</summary>
@@ -147,9 +124,8 @@ public partial class RigidBody
     {
         EnsureMutable();
         Finite(torque);
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying torque impulses.");
-        PrepareBackend();
-        b2Body_ApplyAngularImpulse(BackendID, torque * TorqueUnitScale, wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyTorqueImpulse(GetRID(), torque);
     }
 
     /// <summary>Replaces the velocity component along the supplied axis, retaining perpendicular velocity.</summary>
@@ -175,29 +151,6 @@ public partial class RigidBody
             b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(_constantForce), wake: false);
         if (_constantTorque != 0)
             b2Body_ApplyTorque(BackendID, _constantTorque * TorqueUnitScale, wake: false);
-    }
-
-    private B2Vec2 WorldPoint(Vector2 position)
-    {
-        if (!HasBackend)
-        {
-            var scenePoint = GlobalPosition + position;
-            if (!scenePoint.IsFinite()) throw new ArgumentOutOfRangeException(nameof(position));
-            return Shape.ToBackend(scenePoint);
-        }
-        var point = b2Body_GetPosition(BackendID) + Shape.ToBackend(position);
-        if (!float.IsFinite(point.X) || !float.IsFinite(point.Y))
-            throw new ArgumentOutOfRangeException(nameof(position));
-        return point;
-    }
-
-    private Vector2 CenterOffset()
-    {
-        if (!HasBackend) return Vector2.Zero;
-        var center = b2Body_GetWorldCenterOfMass(BackendID);
-        var origin = b2Body_GetPosition(BackendID);
-        return new((center.X - origin.X) * PhysicsSpace.UnitsPerMeter,
-            (center.Y - origin.Y) * PhysicsSpace.UnitsPerMeter);
     }
 
     private void WakeForPersistentForce()

@@ -71,28 +71,9 @@ Overlapping areas can create zero-gravity zones, directional and point attractio
 - Change the shared world gravity or use its built-in damping for each area: those backend controls cannot represent simultaneous per-body fields or the pinned damping equation.
 
 <a id="adr-0057"></a>
-## ADR 0057: Positioned and persistent rigid-body forces
+## ADR 0057
 
-Last updated: 2026-09-24
-
-- Status: Accepted
-- Scope: RigidBody force, impulse, torque and axis-velocity vertical slice
-- Depends on: [0054](#adr-0054), [0056](#adr-0056), [0008](scene.md#adr-0008)
-
-### Context
-
-The first body profile exposed central one-step force and impulse, but game code lacked positioned actions, torque, persistent forces and axis velocity. The pinned reference treats a position argument as an unrotated world-axis offset from the body origin, stores a positioned constant force as a force vector plus a moment computed at addition, and replaces only the velocity component parallel to the chosen axis. The internal backend exposes all required operations but uses meters rather than scene units.
-
-### Decision
-
-- Expose RigidBody `ApplyForce`, `ApplyImpulse`, `ApplyTorque`, `ApplyTorqueImpulse`, `AddConstantCentralForce`, `AddConstantForce`, `AddConstantTorque`, `ConstantForce`, `ConstantTorque` and `SetAxisVelocity`. An optional zero impulse on `ApplyCentralImpulse` matches the pinned default. Persistent totals are typed scene state, remain across fixed steps and scene packing, and stop when cleared. A frozen body stores them without applying them until unfrozen.
-- Use 0.01 meters per scene unit for force and linear impulse, 0.0001 squared meters for torque and angular impulse, and convert positioned arguments from the body's current backend origin in world axes. `AddConstantForce` adds its moment about the current center of mass once at the call; a later rotation does not recompute that stored moment. Validate finite inputs, accumulated totals and generated positions/moments before applying an action.
-- Synchronize pending body pose and child fixtures before public force/impulse/torque actions. This makes a newly attached or edited shape's mass and center of mass available immediately rather than waiting for the next fixed step. Apply persistent force/torque after area field reduction and before solver stepping. Wake bodies on explicit actions as in the pinned API; persistent force application itself does not repeatedly wake a resting body.
-- Synchronize a simulated body's position and rotation back to its scene node in one unit-scale global transform assignment. Reconstructing rotation from the previous decomposed scale accumulated float error and eventually rejected an otherwise valid rotating body. Warmed active force/torque frames allocate zero managed bytes in the checked Linux/.NET 8 profile; native allocation, other platforms and game acceptance remain unverified.
-
-### Consequences
-
-Games can push at an offset, add a one-time impact, spin a body, maintain propulsion and set a jump-axis velocity without public backend types. Shifted-center, unit-conversion, freeze/reentry, invalid-input rollback, packing and repeated-rotation paths have executable checks. Contact monitoring, custom integration, continuous collision, physics server/RID force methods remain separate coverage work; [ADR 0073](physics-mass.md#adr-0073) now implements custom center and inertia through a shared mass profile.
+The active force decision is maintained in [physics-forces.md](physics-forces.md#adr-0057).
 
 <a id="adr-0058"></a>
 ## ADR 0058

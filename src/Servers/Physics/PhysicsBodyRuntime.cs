@@ -5,12 +5,13 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed class PhysicsBodyRuntime(RID rid)
+internal sealed partial class PhysicsBodyRuntime(RID rid)
 {
     internal RID RID { get; } = rid;
     internal float Mass = 1;
     internal float Inertia;
     internal Vector2? CustomCenter;
+    internal readonly List<B2ShapeProxy> MassProxies = [];
     internal B2MassData MassData = new(1, default, 0);
     internal Vector2 ConstantForce;
     internal float ConstantTorque;
@@ -45,7 +46,7 @@ internal sealed class PhysicsBodyRuntime(RID rid)
         var mass = owners.Scene is RigidBody rigid ? rigid.Mass : Mass;
         var inertia = owners.Scene is RigidBody rigidInertia ? rigidInertia.Inertia : Inertia;
         var center = owners.Scene is RigidBody rigidCenter ? rigidCenter.CustomMassCenter : CustomCenter;
-        MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center);
+        MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center, MassProxies);
     }
 
     internal void SetMassProfile(float mass, float inertia, Vector2? center)
@@ -62,7 +63,7 @@ internal sealed class PhysicsBodyRuntime(RID rid)
         if (Space is not null)
         {
             if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
-            MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center);
+            MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center, MassProxies);
         }
         Mass = mass; Inertia = inertia; CustomCenter = center;
     }
@@ -71,13 +72,19 @@ internal sealed class PhysicsBodyRuntime(RID rid)
     {
         var id = BodyID;
         ActiveBeforeStep = b2Body_GetType(id) != B2BodyType.b2_staticBody && b2Body_IsAwake(id);
+        if (b2Body_GetType(id) == B2BodyType.b2_staticBody ||
+            b2Body_GetType(id) == B2BodyType.b2_dynamicBody && !b2Body_IsAwake(id)) return;
         if (Omitted)
         {
             b2Body_SetGravityScale(id, 0);
             var sim = Simulation(id);
             sim.force = default; sim.torque = 0;
+            PendingForce = default; PendingTorque = 0;
             return;
         }
+        if (PendingForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(PendingForce), false);
+        if (PendingTorque != 0 && !RotationLocked) b2Body_ApplyTorque(id, PendingTorque * PhysicsMass.InertiaScale, false);
+        PendingForce = default; PendingTorque = 0;
         if (Owners.Scene is RigidBody rigid) { rigid.ApplyConstantForces(); return; }
         b2Body_SetGravityScale(id, 1);
         if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(ConstantForce), false);

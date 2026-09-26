@@ -2,6 +2,7 @@ using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2Constants;
 using static Box2D.NET.B2Geometries;
+using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Worlds;
 
@@ -22,8 +23,23 @@ internal static class PhysicsMass
             throw new ArgumentOutOfRangeException(nameof(center));
     }
 
-    internal static B2MassData Apply(B2BodyId body, IReadOnlyList<B2ShapeId> shapes,
-        float mass, float inertia, Vector2? customCenter)
+    internal static void AppendGeometry(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
+    {
+        if (shape.IsDisposed || shape is SeparationRayShape) return;
+        if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
+            throw new ArgumentException("Mass geometry requires finite unit-scale poses.", nameof(pose));
+        var start = proxies.Count;
+        shape.AppendQueryProxies(proxies);
+        var transform = new B2Transform(Shape.ToBackend(pose.Origin), b2MakeRot(pose.Rotation));
+        for (var index = start; index < proxies.Count; index++)
+        {
+            var proxy = proxies[index];
+            for (var point = 0; point < proxy.count; point++) proxy.points[point] = b2TransformPoint(transform, proxy.points[point]);
+            proxies[index] = proxy;
+        }
+    }
+
+    internal static B2MassData Calculate(IReadOnlyList<B2ShapeProxy> proxies, float mass, float inertia, Vector2? customCenter)
     {
         Validate(mass, inertia, customCenter);
         var weight = 0d;
@@ -32,9 +48,9 @@ internal static class PhysicsMass
         var segments = false;
         for (var pass = 0; pass < 2; pass++)
         {
-            for (var index = 0; index < shapes.Count; index++)
+            for (var index = 0; index < proxies.Count; index++)
             {
-                var sample = Measure(shapes[index], segments);
+                var sample = Measure(proxies[index], segments);
                 weight += sample.mass;
                 centerX += (double)sample.mass * sample.center.X;
                 centerY += (double)sample.mass * sample.center.Y;
@@ -51,9 +67,9 @@ internal static class PhysicsMass
         var moment = (double)inertia * InertiaScale;
         if (inertia == 0 && weight > 0)
         {
-            for (var index = 0; index < shapes.Count; index++)
+            for (var index = 0; index < proxies.Count; index++)
             {
-                var sample = Measure(shapes[index], segments);
+                var sample = Measure(proxies[index], segments);
                 if (sample.mass == 0) continue;
                 var dx = sample.center.X - centerX;
                 var dy = sample.center.Y - centerY;
@@ -66,7 +82,17 @@ internal static class PhysicsMass
             !float.IsFinite(result.rotationalInertia) || (inertia == 0 && !float.IsFinite(result.rotationalInertia / InertiaScale)) || result.rotationalInertia < 0 ||
             (moment > 0 && (!float.IsFinite(1f / result.rotationalInertia))))
             throw new ArgumentOutOfRangeException(nameof(mass), "Mass geometry exceeds the finite solver range.");
+        return result;
+    }
+
+    internal static B2MassData Apply(B2BodyId body, IReadOnlyList<B2ShapeId> shapes,
+        float mass, float inertia, Vector2? customCenter, List<B2ShapeProxy> proxies)
+    {
+        proxies.Clear();
         var world = b2GetWorldFromId(b2Body_GetWorld(body));
+        for (var index = 0; index < shapes.Count; index++)
+            if (!b2Shape_IsSensor(shapes[index])) proxies.Add(b2MakeShapeDistanceProxy(b2GetShape(world, shapes[index])));
+        var result = Calculate(proxies, mass, inertia, customCenter);
         var minExtent = B2_HUGE;
         var maxExtent = 0f;
         for (var index = 0; index < shapes.Count; index++)
@@ -88,28 +114,27 @@ internal static class PhysicsMass
         return result;
     }
 
-    private static B2MassData Measure(B2ShapeId shape, bool segments)
+    private static B2MassData Measure(B2ShapeProxy proxy, bool segments)
     {
-        if (b2Shape_IsSensor(shape)) return default;
-        var type = b2Shape_GetType(shape);
         if (segments)
         {
-            if (type != B2ShapeType.b2_segmentShape) return default;
-            var segment = b2Shape_GetSegment(shape);
-            var dx = (double)segment.point2.X - segment.point1.X;
-            var dy = (double)segment.point2.Y - segment.point1.Y;
+            if (proxy.count != 2 || proxy.radius != 0) return default;
+            var a = proxy.points[0]; var b = proxy.points[1];
+            var dx = (double)b.X - a.X; var dy = (double)b.Y - a.Y;
             var squaredLength = dx * dx + dy * dy;
             return new((float)Math.Sqrt(squaredLength),
-                new((float)(((double)segment.point1.X + segment.point2.X) / 2),
-                    (float)(((double)segment.point1.Y + segment.point2.Y) / 2)), (float)(squaredLength / 12));
+                new((float)(((double)a.X + b.X) / 2), (float)(((double)a.Y + b.Y) / 2)), (float)(squaredLength / 12));
         }
-        var data = type switch
+        var data = default(B2MassData);
+        if (proxy.count == 1) data = b2ComputeCircleMass(new B2Circle { center = proxy.points[0], radius = proxy.radius }, 1);
+        else if (proxy.count == 2 && proxy.radius > 0)
+            data = b2ComputeCapsuleMass(new B2Capsule { center1 = proxy.points[0], center2 = proxy.points[1], radius = proxy.radius }, 1);
+        else if (proxy.count > 2)
         {
-            B2ShapeType.b2_circleShape => b2ComputeCircleMass(b2Shape_GetCircle(shape), 1),
-            B2ShapeType.b2_capsuleShape => b2ComputeCapsuleMass(b2Shape_GetCapsule(shape), 1),
-            B2ShapeType.b2_polygonShape => b2ComputePolygonMass(b2Shape_GetPolygon(shape), 1),
-            _ => default
-        };
+            var hull = new B2Hull { count = proxy.count, points = proxy.points };
+            var polygon = b2MakePolygon(in hull, proxy.radius);
+            data = b2ComputePolygonMass(polygon, 1);
+        }
         if (data.mass > 0) data.rotationalInertia /= data.mass;
         return data;
     }

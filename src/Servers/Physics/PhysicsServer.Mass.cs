@@ -55,7 +55,7 @@ public sealed partial class PhysicsServer
 
     /// <summary>Gets configured or most recently resolved rotational inertia in scene units.</summary>
     /// <param name="body">A live scene or server body RID.</param>
-    /// <returns>An explicit override or geometry-derived kilograms times squared scene units; zero before an automatic profile is first attached.</returns>
+    /// <returns>An explicit override or geometry-derived kilograms times squared scene units; zero before an automatic profile is first resolved by attachment or a geometry-dependent force call.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public float BodyGetInertia(RID body)
@@ -80,7 +80,7 @@ public sealed partial class PhysicsServer
 
     /// <summary>Gets the configured or most recently resolved local center of mass.</summary>
     /// <param name="body">A live scene or server body RID.</param>
-    /// <returns>Local scene-unit center, or zero before automatic geometry is first attached.</returns>
+    /// <returns>Local scene-unit center, or zero before automatic geometry is first resolved.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public Vector2 BodyGetCenterOfMass(RID body)

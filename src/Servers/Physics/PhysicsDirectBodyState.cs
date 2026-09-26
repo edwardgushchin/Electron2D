@@ -237,28 +237,26 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <param name="position">Finite global-axis offset from the body origin, zero by default.</param>
     public void AddConstantForce(Vector2 force, Vector2 position = default)
     {
-        Access(); Finite(force); Finite(position);
-        var totalForce = GetConstantForce() + force;
-        var totalTorque = GetConstantTorque() + (position - CenterOfMass).Cross(force);
-        Finite(totalForce); Finite(totalTorque);
-        SetConstantForce(totalForce); SetConstantTorque(totalTorque);
+        Access();
+        PhysicsServer.Instance.BodyAddConstantForce(_runtime.RID, force, position);
     }
     /// <summary>Applies a force accumulator for the next solver step without adding torque.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second, zero by default.</param>
     public void ApplyCentralForce(Vector2 force = default)
     {
-        var id = Access(); Finite(force); b2Body_ApplyForceToCenter(id, Shape.ToBackend(force), true);
+        Access();
+        PhysicsServer.Instance.BodyApplyCentralForce(_runtime.RID, force);
     }
     /// <summary>Applies an instantaneous central impulse.</summary>
     /// <param name="impulse">Finite global impulse in scene units times kilograms per second.</param>
-    public void ApplyCentralImpulse(Vector2 impulse) => ApplyImpulse(impulse, CenterOfMass);
+    public void ApplyCentralImpulse(Vector2 impulse) { Access(); PhysicsServer.Instance.BodyApplyCentralImpulse(_runtime.RID, impulse); }
     /// <summary>Applies a positioned force accumulator for the next solver step.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <param name="position">Finite global-axis offset from the body origin, zero by default.</param>
     public void ApplyForce(Vector2 force, Vector2 position = default)
     {
-        var id = Access(); Finite(force); Finite(position); Finite((position - CenterOfMass).Cross(force));
-        b2Body_ApplyForce(id, Shape.ToBackend(force), WorldPoint(id, position), true);
+        Access();
+        PhysicsServer.Instance.BodyApplyForce(_runtime.RID, force, position);
     }
     /// <summary>Applies an instantaneous positioned impulse.</summary>
     /// <param name="impulse">Finite global impulse in scene units times kilograms per second.</param>
@@ -266,20 +264,18 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">An input or resulting velocity is nonfinite.</exception>
     public void ApplyImpulse(Vector2 impulse, Vector2 position = default)
     {
-        var id = Access(); Finite(impulse); Finite(position);
-        var moment = (position - CenterOfMass).Cross(impulse); Finite(moment);
-        Finite(LinearVelocity + impulse * InverseMass); Finite(AngularVelocity + moment * InverseInertia);
-        b2Body_ApplyLinearImpulse(id, Shape.ToBackend(impulse), WorldPoint(id, position), true);
+        Access();
+        PhysicsServer.Instance.BodyApplyImpulse(_runtime.RID, impulse, position);
     }
     /// <summary>Applies torque accumulated for the next solver step.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
-    public void ApplyTorque(float torque) { var id = Access(); Finite(torque); b2Body_ApplyTorque(id, torque * 0.0001f, true); }
+    public void ApplyTorque(float torque) { Access(); PhysicsServer.Instance.BodyApplyTorque(_runtime.RID, torque); }
     /// <summary>Applies an instantaneous torque impulse.</summary>
     /// <param name="impulse">Finite angular impulse in kilograms times squared scene units per second.</param>
     public void ApplyTorqueImpulse(float impulse)
     {
-        var id = Access(); Finite(impulse); Finite(AngularVelocity + impulse * InverseInertia);
-        b2Body_ApplyAngularImpulse(id, impulse * 0.0001f, true);
+        Access();
+        PhysicsServer.Instance.BodyApplyTorqueImpulse(_runtime.RID, impulse);
     }
     /// <summary>Applies one tick of resolved gravity followed by linear and angular damping to velocity.</summary>
     /// <remarks>Each call applies another tick. Accumulated and constant forces are not included.

@@ -201,9 +201,8 @@ public partial class RigidBody : PhysicsBody
     {
         EnsureMutable();
         if (!force.IsFinite()) throw new ArgumentOutOfRangeException(nameof(force));
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying forces.");
-        PrepareBackend();
-        b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(force), wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyCentralForce(GetRID(), force);
     }
 
     /// <summary>Applies a finite instantaneous impulse at the center of mass.</summary>
@@ -214,9 +213,8 @@ public partial class RigidBody : PhysicsBody
     {
         EnsureMutable();
         if (!impulse.IsFinite()) throw new ArgumentOutOfRangeException(nameof(impulse));
-        if (!HasBackend) throw new InvalidOperationException("Attach the body to a scene tree before applying impulses.");
-        PrepareBackend();
-        b2Body_ApplyLinearImpulseToCenter(BackendID, Shape.ToBackend(impulse), wake: true);
+        if (!HasBackend) throw new InvalidOperationException("Attach the body before applying forces or impulses.");
+        PhysicsServer.Instance.BodyApplyCentralImpulse(GetRID(), impulse);
     }
 
     internal override void OnMadeStatic()

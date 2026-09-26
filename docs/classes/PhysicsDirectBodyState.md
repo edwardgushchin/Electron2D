@@ -147,3 +147,7 @@ A CollisionObject using `DisableMode.Remove` invalidates this attachment view wh
 ## Configured versus physical mass
 
 RigidBody and typed PhysicsServer mass parameters share configured kilograms, selected local center and automatic/explicit scene-unit polar moment. This view exposes actual inverse solver values: static/kinematic participation has zero inverse mass/inertia while preserving the resolved center; rotation lock has zero inverse inertia. Use PhysicsServer.BodyGetMass/BodyGetInertia for retained configuration/resolved geometry across detached or temporarily static states. [ADR 0073](../decisions/physics-mass.md#adr-0073) and [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) cover custom-center force response and restoration.
+
+## Shared action state
+
+ApplyForce/ApplyCentralForce/ApplyTorque queue one-step input in the shared body runtime; impulses remain immediate. Borrowed-view access validates the attachment before forwarding, while post-solver callbacks can queue the next step. Omission, static/dormant retention and numeric/rotation-lock validation match [PhysicsServer force methods](PhysicsServer.md). [ADR 0074](../decisions/physics-forces.md#adr-0074) and [PhysicsServerForceTests](../../tests/Electron2D.Tests/PhysicsServerForceTests.cs) define current behavior and allocation limits.

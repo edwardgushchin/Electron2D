@@ -664,6 +664,71 @@
       "godot": "PhysicsServer2D::method:body_reset_mass_properties(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyResetMassProperties(Electron2D.RID)",
       "reason": "Restores automatic center and inertia without changing configured mass; scene RigidBody descriptors share the committed profile under ADR 0073."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_central_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_force(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorque(Electron2D.RID,System.Single)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_central_impulse(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralImpulse(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_impulse(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyImpulse(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_apply_torque_impulse(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorqueImpulse(Electron2D.RID,System.Single)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_add_constant_central_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantCentralForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_add_constant_force(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_add_constant_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantTorque(Electron2D.RID,System.Single)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_constant_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_constant_force(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantForce(Electron2D.RID)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_constant_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantTorque(Electron2D.RID,System.Single)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_constant_torque(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantTorque(Electron2D.RID)",
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
     }
   ],
   "extras": [
@@ -2386,6 +2451,25 @@
       ],
       "state": "Partial",
       "reason": "Typed mass, inertia and center getters/setters execute for all live scene/server body RIDs under ADR 0073. Trigger: remaining parameter branches (bounce/friction, gravity scale and linear/angular damping values/modes) need typed parameter methods connected to shared material and field reduction; no Variant dispatcher or inert enum is exposed."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_apply_central_force(RID:,Vector2:)",
+        "PhysicsServer2D::method:body_apply_force(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2D::method:body_apply_torque(RID:,float:)",
+        "PhysicsServer2D::method:body_apply_central_impulse(RID:,Vector2:)",
+        "PhysicsServer2D::method:body_apply_impulse(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2D::method:body_apply_torque_impulse(RID:,float:)",
+        "PhysicsServer2D::method:body_add_constant_central_force(RID:,Vector2:)",
+        "PhysicsServer2D::method:body_add_constant_force(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2D::method:body_add_constant_torque(RID:,float:)",
+        "PhysicsServer2D::method:body_set_constant_force(RID:,Vector2:)",
+        "PhysicsServer2D::method:body_get_constant_force(RID:)",
+        "PhysicsServer2D::method:body_set_constant_torque(RID:,float:)",
+        "PhysicsServer2D::method:body_get_constant_torque(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0074: all 13 transient/constant force and instantaneous impulse operations share the body runtime, preserve detached impulses and pending inputs through attachment/removal, use current normalized profile and world-axis moment, and retain static/dormant/omission semantics. PhysicsServerForceTests verifies rotated centers, analytic force/torque/impulse values, all geometry projections, mode/sleep/custom integration, callback/thread/numeric failure, reentry and zero warmed managed allocation. Axis velocity remains in the separate body-state slice."
     }
   ]
 }

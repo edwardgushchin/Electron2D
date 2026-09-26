@@ -164,6 +164,21 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             new(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter));
     }
 
+    internal void AppendMassGeometry(List<B2ShapeProxy> proxies)
+    {
+        foreach (var slot in _slots)
+            if (!slot.Disabled) PhysicsMass.AppendGeometry(slot.Shape.Geometry, slot.LocalTransform, proxies);
+    }
+
+    internal Vector2 GetLinearVelocity() => _space is null || _mode == PhysicsServer.BodyMode.Static ? _linearVelocity :
+        new(b2Body_GetLinearVelocity(_bodyID).X * PhysicsSpace.UnitsPerMeter, b2Body_GetLinearVelocity(_bodyID).Y * PhysicsSpace.UnitsPerMeter);
+    internal float GetAngularVelocity() => _space is null || _mode == PhysicsServer.BodyMode.Static ? _angularVelocity : b2Body_GetAngularVelocity(_bodyID);
+    internal void SetAngularVelocity(float velocity)
+    {
+        _angularVelocity = velocity;
+        if (_space is not null && !IsArea) b2Body_SetAngularVelocity(_bodyID, velocity);
+    }
+
     internal void SetLinearVelocity(Vector2 velocity)
     {
         if (!velocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(velocity));
@@ -200,6 +215,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         foreach (var id in _backendShapes) b2DestroyShape(id, updateBodyMass: false);
         _backendShapes.Clear();
         var definition = b2DefaultShapeDef();
+        definition.updateBodyMass = false;
         definition.filter.categoryBits = _layer;
         definition.filter.maskBits = _mask;
         definition.isSensor = IsArea;
@@ -221,7 +237,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         ? B2BodyType.b2_staticBody : _mode == PhysicsServer.BodyMode.Kinematic
             ? B2BodyType.b2_kinematicBody : B2BodyType.b2_dynamicBody;
 
-    private static void ValidateTransform(Transform transform)
+    internal static void ValidateTransform(Transform transform)
     {
         if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new ArgumentException("Physics transforms require finite translation, unit scale and zero skew.", nameof(transform));

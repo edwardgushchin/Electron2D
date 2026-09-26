@@ -119,11 +119,37 @@ Force callback runs before the RigidBody integration hook and user sync observer
 | `void BodySetMass(RID body, float mass)` | Set positive finite kilograms; default one. |
 | `float BodyGetMass(RID body)` | Configured kilograms, including static/kinematic/detached state. |
 | `void BodySetInertia(RID body, float inertia)` | Nonnegative kg·scene-units²; zero selects automatic geometry. |
-| `float BodyGetInertia(RID body)` | Explicit override or most recently resolved automatic moment, initially zero before first attachment. |
+| `float BodyGetInertia(RID body)` | Explicit override or most recently resolved automatic moment, initially zero before first resolution by attachment or a geometry-dependent force call. |
 | `void BodySetCenterOfMass(RID body, Vector2 center)` | Set local custom center relative to body origin. |
-| `Vector2 BodyGetCenterOfMass(RID body)` | Configured custom center or most recently resolved automatic center, initially zero before first attachment. |
+| `Vector2 BodyGetCenterOfMass(RID body)` | Configured custom center or most recently resolved automatic center, initially zero before first resolution by attachment or a geometry-dependent force call. |
 | `void BodyResetMassProperties(RID body)` | Select automatic center and inertia while retaining mass. |
 
 These methods accept every live scene/server body RID. A wrong-kind, empty or freed RID throws ArgumentException. Attached reads synchronize pending shape revisions, and all attached access checks owner thread and solver ownership. Invalid numeric profiles reject before configuration/native writes. Detached automatic values retain the last resolved cache until attachment; custom configuration survives removal. Explicit server body geometry now normalizes to stored kilograms rather than raw unit density. Static and kinematic profiles retain their resolved center with zero physical inverse mass/inertia.
 
 A scene RigidBody shares its stored Mass/Inertia/CenterOfMassMode/CenterOfMass with the typed server profile. Setting its center selects Custom atomically; reset clears stored center/inertia and selects Auto. Property-list callback failures report after the complete commit. Shape geometry uses the same solid-area and segment rod policy as scene bodies. Wider bounce/friction, gravity and damping parameter branches retain Partial coverage; no Variant dispatcher or inert parameter enum is exposed. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) and [ADR 0073](../decisions/physics-mass.md#adr-0073) define verification and the ownership adaptation.
+
+## Body forces and impulses
+
+**Source:** [PhysicsServer.Forces.cs](../../src/Servers/Physics/PhysicsServer.Forces.cs)
+
+| Signature | Contract |
+| --- | --- |
+| `void BodyApplyCentralForce(RID body, Vector2 force)` | One eligible fixed-step force without torque. |
+| `void BodyApplyForce(RID body, Vector2 force, Vector2 position = default)` | One-step force and captured moment. |
+| `void BodyApplyTorque(RID body, float torque)` | One-step angular force. |
+| `void BodyApplyCentralImpulse(RID body, Vector2 impulse)` | Instantaneous central impact. |
+| `void BodyApplyImpulse(RID body, Vector2 impulse, Vector2 position = default)` | Instantaneous positioned impact. |
+| `void BodyApplyTorqueImpulse(RID body, float impulse)` | Instantaneous angular impact. |
+| `void BodyAddConstantCentralForce(RID body, Vector2 force)` | Add persistent force without changing torque. |
+| `void BodyAddConstantForce(RID body, Vector2 force, Vector2 position = default)` | Add persistent force and moment. |
+| `void BodyAddConstantTorque(RID body, float torque)` | Add persistent torque without changing force. |
+| `void BodySetConstantForce(RID body, Vector2 force)` | Replace force; zero clears without waking. |
+| `Vector2 BodyGetConstantForce(RID body)` | Stored global force. |
+| `void BodySetConstantTorque(RID body, float torque)` | Replace torque; zero clears without waking. |
+| `float BodyGetConstantTorque(RID body)` | Stored scalar torque. |
+
+All calls accept live scene/server body RIDs, including detached bodies. Force units are kg·scene-units/s², impulse kg·scene-units/s, torque kg·scene-units²/s² and angular impulse kg·scene-units²/s. Position is a global-axis offset from body origin; its captured moment uses the current rotated center. Current normalized mass resolves from resource proxies while detached, without a temporary world/body. Impulses change retained velocity immediately, while static/kinematic inverse values and rotation lock suppress their respective responses.
+
+Transient inputs persist through removal, static and dormant participation and apply once at the next eligible awake fixed step. Kinematic integration consumes them without dynamic response; omission clears eligible transient/native accumulators. A later explicit sleep assignment wins and retains input until wakeup. Persistent settings share scene RigidBody descriptors; constant getters/replacements require no ready geometry. Add operations wake even for zero input; zero replacement cannot wake by reassigning the other channel. Both totals and resulting velocity/moment validate before mutation. Wrong-kind/freed RID rejects; attached reads/writes enforce owner thread and solver ownership. Post-solver callbacks may queue the next step.
+
+[PhysicsServerForceTests](../../tests/Electron2D.Tests/PhysicsServerForceTests.cs) verifies analytic units, every primitive projection, lifetime, mode/sleep/omission, failures and 64 warmed active attached/detached iterations with zero managed allocation. [ADR 0074](../decisions/physics-forces.md#adr-0074) records immediate detached profile resolution and shared lifetime adaptations. Native allocation, other platforms and owner acceptance remain unverified. Axis velocity and wider body-state methods retain their own coverage rows.
