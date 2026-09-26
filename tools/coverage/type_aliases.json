@@ -98,6 +98,7 @@
     "PhysicsServer2D.BodyDampMode": "RigidBody.DampMode",
     "PhysicsServer2D.AreaBodyStatus": "PhysicsServer.AreaBodyStatus",
     "PhysicsServer2D.AreaSpaceOverrideMode": "Area.SpaceOverride",
-    "VisibleOnScreenEnabler2D.EnableMode": "ScreenEnableMode"
+    "VisibleOnScreenEnabler2D.EnableMode": "ScreenEnableMode",
+    "TextureProgressBar.FillMode": "TextureProgressFillMode"
   }
 }

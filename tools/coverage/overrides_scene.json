@@ -2060,6 +2060,36 @@
       "godot": "NinePatchRect::property:mouse_filter",
       "electron2d": "property:Electron2D.Control.MouseFilter()",
       "reason": "Inherited control property executes with the NinePatchRect constructor and descriptor override default Ignore=2 (ADR 0079)."
+    },
+    {
+      "godot": "Range::method:_value_changed(float:)",
+      "electron2d": "method:Electron2D.Range.OnValueChanged(System.Double)",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "Range::method:set_value_no_signal(float:)",
+      "electron2d": "method:Electron2D.Range.SetValueNoSignal(System.Double)",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "Range::method:share(Node:)",
+      "electron2d": "method:Electron2D.Range.Share(Electron2D.Range)",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "Range::method:unshare()",
+      "electron2d": "method:Electron2D.Range.Unshare()",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "TextureProgressBar::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "TextureProgressBar::property:step",
+      "electron2d": "property:Electron2D.Range.Step()",
+      "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
     }
   ],
   "extras": [
@@ -3052,6 +3082,56 @@
       "electron2d": "method:Electron2D.NinePatchRect.Dispose(System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0079 with 0003/0008/0023: Deterministic cleanup releases borrowed texture subscriptions."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Range..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Range.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Range.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Range.GetConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureProgressBar..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.TextureProgressBar.OnDraw()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.TextureProgressBar.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.TextureProgressBar.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.TextureProgressBar.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "method:Electron2D.TextureProgressBar.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
     }
   ],
   "statusGroups": [
@@ -5448,10 +5528,71 @@
     },
     {
       "godot": [
-        "TextureProgressBar::property:nine_patch_stretch"
+        "Range::method:_value_changed(float:)",
+        "Range::method:set_value_no_signal(float:)",
+        "Range::method:share(Node:)",
+        "Range::method:unshare()",
+        "Range::property:allow_greater",
+        "Range::property:allow_lesser",
+        "Range::property:exp_edit",
+        "Range::property:max_value",
+        "Range::property:min_value",
+        "Range::property:page",
+        "Range::property:ratio",
+        "Range::property:rounded",
+        "Range::property:step",
+        "Range::property:value",
+        "Range::signal:changed()",
+        "Range::signal:value_changed(float:)",
+        "TextureProgressBar::enum:FillMode",
+        "TextureProgressBar::enum_value:FillMode.FILL_BILINEAR_LEFT_AND_RIGHT",
+        "TextureProgressBar::enum_value:FillMode.FILL_BILINEAR_TOP_AND_BOTTOM",
+        "TextureProgressBar::enum_value:FillMode.FILL_BOTTOM_TO_TOP",
+        "TextureProgressBar::enum_value:FillMode.FILL_CLOCKWISE",
+        "TextureProgressBar::enum_value:FillMode.FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE",
+        "TextureProgressBar::enum_value:FillMode.FILL_COUNTER_CLOCKWISE",
+        "TextureProgressBar::enum_value:FillMode.FILL_LEFT_TO_RIGHT",
+        "TextureProgressBar::enum_value:FillMode.FILL_RIGHT_TO_LEFT",
+        "TextureProgressBar::enum_value:FillMode.FILL_TOP_TO_BOTTOM",
+        "TextureProgressBar::method:get_stretch_margin(int:Side)",
+        "TextureProgressBar::method:set_stretch_margin(int:Side,int:)",
+        "TextureProgressBar::property:fill_mode",
+        "TextureProgressBar::property:mouse_filter",
+        "TextureProgressBar::property:nine_patch_stretch",
+        "TextureProgressBar::property:radial_center_offset",
+        "TextureProgressBar::property:radial_fill_degrees",
+        "TextureProgressBar::property:radial_initial_angle",
+        "TextureProgressBar::property:step",
+        "TextureProgressBar::property:stretch_margin_bottom",
+        "TextureProgressBar::property:stretch_margin_left",
+        "TextureProgressBar::property:stretch_margin_right",
+        "TextureProgressBar::property:stretch_margin_top",
+        "TextureProgressBar::property:texture_over",
+        "TextureProgressBar::property:texture_progress",
+        "TextureProgressBar::property:texture_progress_offset",
+        "TextureProgressBar::property:texture_under",
+        "TextureProgressBar::property:tint_over",
+        "TextureProgressBar::property:tint_progress",
+        "TextureProgressBar::property:tint_under"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0080: double range snapping/rounding/clamps/ratio, shared weak-owner policy, explicit/silent notifications and current texture progress rendering execute. All nine fill modes, degree/center/offset, tint/layer/resource state and progress-dependent nine-patch mapping are implemented. RangeProgressTests verifies timing/NaN/local rounding/share identity/failure/reentry/packing/zero allocations; native tests verify all fill masks and warmed radial updates on GPU/compatibility. Inherited container flags retain their exact trigger."
+    },
+    {
+      "godot": [
+        "class:Range",
+        "class:TextureProgressBar"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0080: range value behavior and complete texture-progress rendering execute; inherited size_flags_vertical defaults remain Blocked until Control.SizeFlags and a real container layout consumer are integrated. Accessibility/native semantic tree follows its existing separate gate."
+    },
+    {
+      "godot": [
+        "Range::property:size_flags_vertical",
+        "TextureProgressBar::property:size_flags_vertical"
       ],
       "state": "Blocked",
-      "reason": "ADR 0079: nine-patch geometry now executes on both current canvas backends. Trigger: complete Range plus TextureProgressBar texture/progress/radial-fill control slice; integrate this kernel with progress-dependent patches in that first slice."
+      "reason": "ADR 0080: inherited vertical size flag belongs to Control.SizeFlags, currently absent. Trigger: first complete Control size-flags plus Container layout slice with actual sizing/alignment/expand consumer; implement Range shrink-begin default 0 and TextureProgressBar fill default 1 there, including descriptors and native layout tests."
     }
   ]
 }

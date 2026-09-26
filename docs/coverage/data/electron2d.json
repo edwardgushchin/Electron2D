@@ -2925,6 +2925,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Range",
+    "kind": "type",
+    "declaringType": "Electron2D.Range",
+    "name": "Range",
+    "signature": "public abstract class Electron2D.Range",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RayCast",
     "kind": "type",
     "declaringType": "Electron2D.RayCast",
@@ -3465,6 +3480,39 @@
     "declaringType": "Electron2D.TextureFilter",
     "name": "TextureFilter",
     "signature": "public enum Electron2D.TextureFilter",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextureProgressBar",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TextureProgressBar",
+    "signature": "public class Electron2D.TextureProgressBar",
+    "visibility": "public",
+    "baseType": "Electron2D.Range",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextureProgressFillMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "TextureProgressFillMode",
+    "signature": "public enum Electron2D.TextureProgressFillMode",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -6587,6 +6635,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Range..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Range",
+    "name": ".ctor",
+    "signature": "protected Range()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.RayCast..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.RayCast",
@@ -7071,6 +7132,19 @@
     "name": ".ctor",
     "signature": "protected Texture()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextureProgressBar..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": ".ctor",
+    "signature": "public TextureProgressBar()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -16577,6 +16651,123 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.BilinearLeftAndRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "BilinearLeftAndRight",
+    "signature": "public const Electron2D.TextureProgressFillMode BilinearLeftAndRight = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.BilinearTopAndBottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "BilinearTopAndBottom",
+    "signature": "public const Electron2D.TextureProgressFillMode BilinearTopAndBottom = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.BottomToTop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "BottomToTop",
+    "signature": "public const Electron2D.TextureProgressFillMode BottomToTop = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.Clockwise()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "Clockwise",
+    "signature": "public const Electron2D.TextureProgressFillMode Clockwise = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.ClockwiseAndCounterClockwise()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "ClockwiseAndCounterClockwise",
+    "signature": "public const Electron2D.TextureProgressFillMode ClockwiseAndCounterClockwise = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.CounterClockwise()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "CounterClockwise",
+    "signature": "public const Electron2D.TextureProgressFillMode CounterClockwise = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.LeftToRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "LeftToRight",
+    "signature": "public const Electron2D.TextureProgressFillMode LeftToRight = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.RightToLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "RightToLeft",
+    "signature": "public const Electron2D.TextureProgressFillMode RightToLeft = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureProgressFillMode.TopToBottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureProgressFillMode",
+    "name": "TopToBottom",
+    "signature": "public const Electron2D.TextureProgressFillMode TopToBottom = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.TextureRepeat.Disabled()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TextureRepeat",
@@ -18680,6 +18871,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.ProjectSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Range.Changed()",
+    "kind": "event",
+    "declaringType": "Electron2D.Range",
+    "name": "Changed",
+    "signature": "public event System.Action Changed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Range.ValueChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Range",
+    "name": "ValueChanged",
+    "signature": "public event System.Action\u003CSystem.Double\u003E ValueChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Double\u003E",
     "value": null
   },
   {
@@ -48449,6 +48666,121 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Range.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.OnValueChanged(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "OnValueChanged",
+    "signature": "protected virtual System.Void OnValueChanged(System.Double newValue)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "newValue",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.SetValueNoSignal(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "SetValueNoSignal",
+    "signature": "public System.Void SetValueNoSignal(System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.Share(Electron2D.Range)",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "Share",
+    "signature": "public System.Void Share(Electron2D.Range with)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "with",
+        "type": "Electron2D.Range",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Range.Unshare()",
+    "kind": "method",
+    "declaringType": "Electron2D.Range",
+    "name": "Unshare",
+    "signature": "public System.Void Unshare()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RayCast.AddException(Electron2D.CollisionObject)",
     "kind": "method",
     "declaringType": "Electron2D.RayCast",
@@ -53463,6 +53795,120 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.GetStretchMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "GetStretchMargin",
+    "signature": "public System.Int32 GetStretchMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureProgressBar.SetStretchMargin(Electron2D.Side,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "SetStretchMargin",
+    "signature": "public System.Void SetStretchMargin(Electron2D.Side margin, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -74142,6 +74588,136 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Range.AllowGreater()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "AllowGreater",
+    "signature": "public System.Boolean AllowGreater { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.AllowLesser()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "AllowLesser",
+    "signature": "public System.Boolean AllowLesser { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.ExpEdit()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "ExpEdit",
+    "signature": "public System.Boolean ExpEdit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.MaxValue()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "MaxValue",
+    "signature": "public System.Double MaxValue { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.MinValue()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "MinValue",
+    "signature": "public System.Double MinValue { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.Page()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "Page",
+    "signature": "public System.Double Page { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.Ratio()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "Ratio",
+    "signature": "public System.Double Ratio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.Rounded()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "Rounded",
+    "signature": "public System.Boolean Rounded { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.Step()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "Step",
+    "signature": "public System.Double Step { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Range.Value()",
+    "kind": "property",
+    "declaringType": "Electron2D.Range",
+    "name": "Value",
+    "signature": "public System.Double Value { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RayCast.CollideWithAreas()",
     "kind": "property",
     "declaringType": "Electron2D.RayCast",
@@ -75413,6 +75989,214 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.FillMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "FillMode",
+    "signature": "public Electron2D.TextureProgressFillMode FillMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureProgressFillMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.NinePatchStretch()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "NinePatchStretch",
+    "signature": "public System.Boolean NinePatchStretch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.RadialCenterOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "RadialCenterOffset",
+    "signature": "public Electron2D.Vector2 RadialCenterOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.RadialFillDegrees()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "RadialFillDegrees",
+    "signature": "public System.Single RadialFillDegrees { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.RadialInitialAngle()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "RadialInitialAngle",
+    "signature": "public System.Single RadialInitialAngle { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.StretchMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "StretchMarginBottom",
+    "signature": "public System.Int32 StretchMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.StretchMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "StretchMarginLeft",
+    "signature": "public System.Int32 StretchMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.StretchMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "StretchMarginRight",
+    "signature": "public System.Int32 StretchMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.StretchMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "StretchMarginTop",
+    "signature": "public System.Int32 StretchMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TextureOver()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TextureOver",
+    "signature": "public Electron2D.Texture TextureOver { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TextureProgress()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TextureProgress",
+    "signature": "public Electron2D.Texture TextureProgress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TextureProgressOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TextureProgressOffset",
+    "signature": "public Electron2D.Vector2 TextureProgressOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TextureUnder()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TextureUnder",
+    "signature": "public Electron2D.Texture TextureUnder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TintOver()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TintOver",
+    "signature": "public Electron2D.Color TintOver { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TintProgress()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TintProgress",
+    "signature": "public Electron2D.Color TintProgress { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureProgressBar.TintUnder()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureProgressBar",
+    "name": "TintUnder",
+    "signature": "public Electron2D.Color TintUnder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
     "value": null
   },
   {

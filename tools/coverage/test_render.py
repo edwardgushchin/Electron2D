@@ -156,6 +156,12 @@ def main():
     shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
                         if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
+    for name, count in (("Range", 18), ("TextureProgressBar", 32)):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert len(rows) == count
+        assert " | Partial | " in rows[0]
+        assert " | Blocked | " in next(row for row in rows if "size_flags_vertical" in row.split(" | ")[0])
+        assert all(" | Implemented | " in row for row in rows[1:] if "size_flags_vertical" not in row.split(" | ")[0])
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

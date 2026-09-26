@@ -689,7 +689,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Excluded | 6 |
 | [RID](classes/RID.md) | — | Implemented | 10 |
 | [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Implemented | 9 |
-| [Range](classes/Range.md) | Control | Blocked | 17 |
+| [Range](classes/Range.md) | Control | Partial | 17 |
 | [RayCast2D](classes/RayCast2D.md) | Node2D | Partial | 21 |
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |
 | [Rect2](classes/Rect2.md) | — | Implemented | 27 |
@@ -866,7 +866,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextureCubemapRD](classes/TextureCubemapRD.md) | TextureLayeredRD | Excluded | 0 |
 | [TextureLayered](classes/TextureLayered.md) | Texture | Blocked | 18 |
 | [TextureLayeredRD](classes/TextureLayeredRD.md) | TextureLayered | Excluded | 1 |
-| [TextureProgressBar](classes/TextureProgressBar.md) | Range | Blocked | 31 |
+| [TextureProgressBar](classes/TextureProgressBar.md) | Range | Partial | 31 |
 | [TextureRect](classes/TextureRect.md) | Control | Blocked | 21 |
 | [Theme](classes/Theme.md) | Resource | Blocked | 74 |
 | [ThemeDB](classes/ThemeDB.md) | Object | Blocked | 8 |

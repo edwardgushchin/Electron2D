@@ -8,6 +8,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`Range`](classes/Range.md) | [`Range.cs`](../src/Scene/GUI/Range.cs) | Shared numeric value policy and retained texture progress. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`TextureProgressBar`](classes/TextureProgressBar.md) | [`TextureProgressBar.cs`](../src/Scene/GUI/TextureProgressBar.cs) | Shared numeric value policy and retained texture progress. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`TextureProgressFillMode`](classes/TextureProgressFillMode.md) | [`TextureProgressBar.cs`](../src/Scene/GUI/TextureProgressBar.cs) | Shared numeric value policy and retained texture progress. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`NinePatchRect`](classes/NinePatchRect.md) | [`NinePatchRect.cs`](../src/Scene/GUI/NinePatchRect.cs) | Retained nine-patch texture controls. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`NinePatchRect.AxisStretchMode`](classes/NinePatchRect.AxisStretchMode.md) | [`NinePatchRect.cs`](../src/Scene/GUI/NinePatchRect.cs) | Retained nine-patch texture controls. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`CanvasNinePatch`](classes/CanvasNinePatch.md) | [`CanvasNinePatch.cs`](../src/Servers/Rendering/CanvasNinePatch.cs) | Retained nine-patch texture controls. |

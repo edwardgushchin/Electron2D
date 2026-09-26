@@ -210,6 +210,7 @@ PhysicsAreaFieldTests.Run();
 PhysicsServerAreaFieldTests.Run();
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();
+RangeProgressTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();
