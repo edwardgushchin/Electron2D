@@ -22,8 +22,8 @@ public sealed class KinematicCollision2D : ElectronObject
         return MathF.Abs(_data.Normal.AngleTo(up));
     }
 
-    /// <summary>Returns the moving body's direct shape-owner scene node.</summary>
-    /// <returns>A live CollisionShape or CollisionPolygon, or null for a server-only body.</returns>
+    /// <summary>Returns the moving body's logical shape-owner object.</summary>
+    /// <returns>A live child or arbitrary configured owner object, or null when absent, disposed or server-only.</returns>
     public ElectronObject? GetLocalShape()
     {
         ThrowIfDisposed();
@@ -43,8 +43,8 @@ public sealed class KinematicCollision2D : ElectronObject
     /// <returns>An empty RID before collision.</returns>
     public RID GetColliderRID() { ThrowIfDisposed(); return _data.ColliderRID; }
 
-    /// <summary>Returns the collider's direct shape-owner scene node.</summary>
-    /// <returns>A live CollisionShape or CollisionPolygon, or null for a server-only body.</returns>
+    /// <summary>Returns the collider's logical shape-owner object.</summary>
+    /// <returns>A live child or arbitrary configured owner object, or null when absent, disposed or server-only.</returns>
     public ElectronObject? GetColliderShape()
     {
         ThrowIfDisposed();
@@ -52,7 +52,7 @@ public sealed class KinematicCollision2D : ElectronObject
             .GetShapeNode(_data.ColliderShape);
     }
 
-    /// <summary>Returns the collider's direct shape-owner index.</summary>
+    /// <summary>Returns the collider's global logical shape index.</summary>
     /// <returns>Zero before collision.</returns>
     public int GetColliderShapeIndex() { ThrowIfDisposed(); return _data.ColliderShape; }
 

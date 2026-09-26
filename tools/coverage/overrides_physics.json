@@ -1,6 +1,111 @@
 {
   "mappings": [
     {
+      "godot": "CollisionObject2D::method:create_shape_owner(Object:)",
+      "electron2d": "method:Electron2D.CollisionObject.CreateShapeOwner(Electron2D.ElectronObject)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:get_shape_owner_one_way_collision_direction(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionDirection(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:get_shape_owner_one_way_collision_margin(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionMargin(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:get_shape_owners()",
+      "electron2d": "method:Electron2D.CollisionObject.GetShapeOwners()",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:is_shape_owner_disabled(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.IsShapeOwnerDisabled(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:is_shape_owner_one_way_collision_enabled(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.IsShapeOwnerOneWayCollisionEnabled(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:remove_shape_owner(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.RemoveShapeOwner(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_find_owner(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeFindOwner(System.Int32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_add_shape(int:,Shape2D:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerAddShape(System.UInt32,Electron2D.Shape)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_clear_shapes(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerClearShapes(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_get_owner(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetOwner(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_get_shape(int:,int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShape(System.UInt32,System.Int32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_get_shape_count(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeCount(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_get_shape_index(int:,int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeIndex(System.UInt32,System.Int32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_get_transform(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetTransform(System.UInt32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_remove_shape(int:,int:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerRemoveShape(System.UInt32,System.Int32)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_set_disabled(int:,bool:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerSetDisabled(System.UInt32,System.Boolean)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_set_one_way_collision(int:,bool:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollision(System.UInt32,System.Boolean)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_set_one_way_collision_direction(int:,Vector2:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollisionDirection(System.UInt32,Electron2D.Vector2)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_set_one_way_collision_margin(int:,float:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollisionMargin(System.UInt32,System.Single)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
+      "godot": "CollisionObject2D::method:shape_owner_set_transform(int:,Transform2D:)",
+      "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerSetTransform(System.UInt32,Electron2D.Transform)",
+      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+    },
+    {
       "godot": "PhysicsDirectBodyState2D::method:add_constant_central_force(Vector2:)",
       "electron2d": "method:Electron2D.PhysicsDirectBodyState.AddConstantCentralForce(Electron2D.Vector2)",
       "reason": "Typed live body field or solver/contact operation preserving declared units, callback scope and body identity (ADR 0070)."
@@ -853,7 +958,7 @@
       "adr": "ADRs 0008, 0066"
     },
     {
-      "electron2d": "method:Electron2D.CollisionPolygon.OnExitTree()",
+      "electron2d": "method:Electron2D.CollisionPolygon.OnNotification(System.Int32)",
       "reason": "Scene exit removes the direct polygon slot without discarding editable contour state.",
       "adr": "ADRs 0008, 0066"
     },
@@ -1053,7 +1158,7 @@
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
     },
     {
-      "electron2d": "method:Electron2D.CollisionShape.OnExitTree()",
+      "electron2d": "method:Electron2D.CollisionShape.OnNotification(System.Int32)",
       "reason": "Typed C# lifecycle, resource-copy, scene-instance, configuration or concrete geometry projection of the existing physics role.",
       "adr": "ADRs 0003, 0008, 0012, 0013; first physics slice"
     },
@@ -1154,6 +1259,33 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "CollisionObject2D::method:create_shape_owner(Object:)",
+        "CollisionObject2D::method:get_shape_owner_one_way_collision_direction(int:)",
+        "CollisionObject2D::method:get_shape_owner_one_way_collision_margin(int:)",
+        "CollisionObject2D::method:get_shape_owners()",
+        "CollisionObject2D::method:is_shape_owner_disabled(int:)",
+        "CollisionObject2D::method:is_shape_owner_one_way_collision_enabled(int:)",
+        "CollisionObject2D::method:remove_shape_owner(int:)",
+        "CollisionObject2D::method:shape_find_owner(int:)",
+        "CollisionObject2D::method:shape_owner_add_shape(int:,Shape2D:)",
+        "CollisionObject2D::method:shape_owner_clear_shapes(int:)",
+        "CollisionObject2D::method:shape_owner_get_owner(int:)",
+        "CollisionObject2D::method:shape_owner_get_shape(int:,int:)",
+        "CollisionObject2D::method:shape_owner_get_shape_count(int:)",
+        "CollisionObject2D::method:shape_owner_get_shape_index(int:,int:)",
+        "CollisionObject2D::method:shape_owner_get_transform(int:)",
+        "CollisionObject2D::method:shape_owner_remove_shape(int:,int:)",
+        "CollisionObject2D::method:shape_owner_set_disabled(int:,bool:)",
+        "CollisionObject2D::method:shape_owner_set_one_way_collision(int:,bool:)",
+        "CollisionObject2D::method:shape_owner_set_one_way_collision_direction(int:,Vector2:)",
+        "CollisionObject2D::method:shape_owner_set_one_way_collision_margin(int:,float:)",
+        "CollisionObject2D::method:shape_owner_set_transform(int:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "Owner groups, weak identity, append-order logical indices, reindex/removal, disabled/transform/one-way policy and direct child registration execute in both body and Area fixture/query/solver paths (ADR 0071, ShapeOwnerTests)."
+    },
     {
       "godot": [
         "class:PhysicsDirectBodyState2D"

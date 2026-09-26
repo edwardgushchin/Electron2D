@@ -1,6 +1,6 @@
 # KinematicCollision2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** ElectronObject · **Source:** [KinematicCollision2D.cs](../../src/Scene/2D/KinematicCollision2D.cs) · **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
@@ -26,7 +26,7 @@ if (hit is not null) Console.WriteLine(hit.GetNormal());
 | `public ElectronObject? GetLocalShape()` | Moving scene body's direct CollisionShape or CollisionPolygon owner. |
 | `public ElectronObject? GetCollider()` / `GetColliderShape()` | Live scene body/shape owner, or null after disposal or for a server-only body. |
 | `public ulong GetColliderID()` / `public RID GetColliderRID()` | Sampled instance/RID identity; zero ID for server-only. |
-| `public int GetColliderShapeIndex()` | Collider's direct shape-owner index. |
+| `public int GetColliderShapeIndex()` | Collider's global logical shape index. |
 | `public Vector2 GetColliderVelocity()` | Collider point velocity in scene units per second. |
 | `public float GetDepth()` | Penetration along the normal in scene units. |
 | `public Vector2 GetNormal()` / `GetPosition()` | Global outward normal and collider contact point. |
@@ -39,3 +39,5 @@ if (hit is not null) Console.WriteLine(hit.GetNormal());
 ## Verification and limits
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks scene/server identities, direct shape-owner lookup, contact angle/normal/point, safe travel and remainder, test-only movement and recovery. Virtual tile collision owners remain [Partial](../coverage/classes/KinematicCollision2D.md); native allocation, other platforms and owner acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).

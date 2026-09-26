@@ -167,6 +167,11 @@ def main():
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_set_shape_disabled", "area_set_shape_disabled", "body_remove_shape", "area_remove_shape"))
+    collision_owner_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
+                            if row.startswith("| [`") and "github.com/godotengine" in row and
+                            ("shape_owner" in row or "shape_find_owner" in row)]
+    assert len(collision_owner_rows) == 21
+    assert all(" | Implemented | " in row for row in collision_owner_rows)
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows

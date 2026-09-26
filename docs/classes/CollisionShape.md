@@ -1,6 +1,6 @@
 # CollisionShape
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -36,7 +36,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public override string[] GetConfigurationWarnings()` | Reports missing direct collision-object parent and/or live geometry. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores Shape, Disabled and one-way properties with spatial state. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Restores this exact node type in PackedScene. |
-| `protected override void OnEnterTree()` / `OnExitTree()` | Registers or unregisters the direct body or area slot. |
+| `protected override void OnNotification(int what)` / `OnEnterTree()` | Binds the owner group at parenting/unparenting and synchronizes configuration on tree entry. |
 | `protected override void Dispose(bool disposing)` | Disconnects borrowed resource events and removes the slot. |
 
 ## Property descriptions
@@ -71,3 +71,5 @@ The default one scene unit bounds how deeply an initially overlapping body may r
 The child registers during tree entry and unregisters before its exit finishes; scene disposal disconnects resource listeners. A disposed borrowed Shape becomes ineligible at the next step. A scale or skew change on an active shape fails before replacing the parent's existing fixtures; correction permits a later step. Owner-thread scene mutation follows Node and Entity. Debug color still needs renderer integration and remains on [CollisionShape2D coverage](../coverage/classes/CollisionShape2D.md).
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks parent/shape diagnostics, live shape edits, disablement, PackedScene restoration and borrowed lifetime. [OneWayCollisionTests](../../tests/Electron2D.Tests/OneWayCollisionTests.cs) checks both contact sides, direction and rotation, live changes, packing, area sensing and warmed allocation. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks one-way motion approaches, margin depth and invalid rollback. Other shape-family tests cover their borrowed fixtures. [ADR 0065](../decisions/physics.md#adr-0065) records the one-way body-contact decision.
+
+The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).

@@ -9,7 +9,6 @@ namespace Electron2D;
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
 public abstract class PhysicsBody : CollisionObject
 {
-    private readonly List<ICollisionGeometry> _shapes = [];
     private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private PhysicsSpace? _space;
@@ -28,19 +27,7 @@ public abstract class PhysicsBody : CollisionObject
     internal bool HasBackend => _space is not null;
     internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
-    internal Entity? GetShapeNode(int index) => (uint)index < (uint)_shapes.Count ? _shapes[index].Node : null;
-
-    internal override void AttachShape(ICollisionGeometry shape)
-    {
-        if (_shapes.Contains(shape)) return;
-        _shapes.Add(shape);
-        MarkShapesDirty();
-    }
-
-    internal override void DetachShape(ICollisionGeometry shape)
-    {
-        if (_shapes.Remove(shape)) MarkShapesDirty();
-    }
+    internal ElectronObject? GetShapeNode(int index) => GetShapeOwnerObject(index);
 
     internal override void MarkShapesDirty() => _shapesDirty = true;
 
@@ -103,8 +90,8 @@ public abstract class PhysicsBody : CollisionObject
         }
         if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision) MarkShapesDirty();
         if (!_shapesDirty)
-            for (var index = 0; index < _shapes.Count; index++)
-                if (_shapes[index].GeometryRevision != _appliedShapeRevisions[index]) { MarkShapesDirty(); break; }
+            for (var index = 0; index < ShapeSlots.Count; index++)
+                if (ShapeSlots[index].Revision != _appliedShapeRevisions[index]) { MarkShapesDirty(); break; }
         if (_shapesDirty) RebuildShapes();
         var position = GlobalPosition;
         var rotation = GlobalRotation;
@@ -255,7 +242,6 @@ public abstract class PhysicsBody : CollisionObject
         if (disposing)
         {
             _space?.Remove(this);
-            _shapes.Clear();
             if (_materialOverride is { } material)
             {
                 material.Changed -= OnMaterialChanged;
@@ -268,10 +254,10 @@ public abstract class PhysicsBody : CollisionObject
 
     private void RebuildShapes()
     {
-        foreach (var node in _shapes)
+        foreach (var node in ShapeSlots)
         {
-            if (!node.IsActive) continue;
-            if (!node.Node.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Node.Skew))
+            if (!node.Active) continue;
+            if (!node.Owner.Transform.IsFinite() || !node.Owner.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Owner.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
 
@@ -283,20 +269,20 @@ public abstract class PhysicsBody : CollisionObject
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
         PhysicsSpace.SetMaterial(ref definition, _materialOverride);
-        for (var index = 0; index < _shapes.Count; index++)
+        for (var index = 0; index < ShapeSlots.Count; index++)
         {
-            var node = _shapes[index];
-            if (!node.IsActive) continue;
-            var contact = node.OneWayContact;
+            var node = ShapeSlots[index];
+            if (!node.Active) continue;
+            var contact = node.OneWay;
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
             definition.enablePreSolveEvents = contact is not null ||
                 PhysicsServer.Instance.HasBodyCollisionExceptions(GetRID());
-            node.AppendToBody(_bodyID, definition, _backendShapes);
+            node.Shape.AppendToBody(_bodyID, node.Owner.Transform.Origin, node.Owner.Transform.Rotation, definition, _backendShapes);
         }
 
         OnShapesRebuilt();
         _appliedShapeRevisions.Clear();
-        foreach (var node in _shapes) _appliedShapeRevisions.Add(node.GeometryRevision);
+        foreach (var node in ShapeSlots) _appliedShapeRevisions.Add(node.Revision);
         _appliedMaterialRevision = _materialOverride?.Revision ?? 0;
         _shapesDirty = false;
     }

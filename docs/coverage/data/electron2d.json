@@ -23491,6 +23491,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CollisionObject.CreateShapeOwner(Electron2D.ElectronObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "CreateShapeOwner",
+    "signature": "public System.UInt32 CreateShapeOwner(Electron2D.ElectronObject owner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "owner",
+        "type": "Electron2D.ElectronObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CollisionObject.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CollisionObject",
@@ -23574,6 +23593,114 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionDirection(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetShapeOwnerOneWayCollisionDirection",
+    "signature": "public Electron2D.Vector2 GetShapeOwnerOneWayCollisionDirection(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionMargin(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetShapeOwnerOneWayCollisionMargin",
+    "signature": "public System.Single GetShapeOwnerOneWayCollisionMargin(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.GetShapeOwners()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "GetShapeOwners",
+    "signature": "public System.UInt32[] GetShapeOwners()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.IsShapeOwnerDisabled(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "IsShapeOwnerDisabled",
+    "signature": "public System.Boolean IsShapeOwnerDisabled(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.IsShapeOwnerOneWayCollisionEnabled(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "IsShapeOwnerOneWayCollisionEnabled",
+    "signature": "public System.Boolean IsShapeOwnerOneWayCollisionEnabled(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.RemoveShapeOwner(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "RemoveShapeOwner",
+    "signature": "public System.Void RemoveShapeOwner(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CollisionObject.SetCollisionLayerValue(System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.CollisionObject",
@@ -23615,6 +23742,317 @@
       {
         "name": "value",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeFindOwner(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeFindOwner",
+    "signature": "public System.UInt32 ShapeFindOwner(System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerAddShape(System.UInt32,Electron2D.Shape)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerAddShape",
+    "signature": "public System.Void ShapeOwnerAddShape(System.UInt32 ownerID, Electron2D.Shape shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.Shape",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerClearShapes(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerClearShapes",
+    "signature": "public System.Void ShapeOwnerClearShapes(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerGetOwner(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerGetOwner",
+    "signature": "public Electron2D.ElectronObject ShapeOwnerGetOwner(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerGetShape(System.UInt32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerGetShape",
+    "signature": "public Electron2D.Shape ShapeOwnerGetShape(System.UInt32 ownerID, System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Shape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeCount(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerGetShapeCount",
+    "signature": "public System.Int32 ShapeOwnerGetShapeCount(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeIndex(System.UInt32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerGetShapeIndex",
+    "signature": "public System.Int32 ShapeOwnerGetShapeIndex(System.UInt32 ownerID, System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerGetTransform(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerGetTransform",
+    "signature": "public Electron2D.Transform ShapeOwnerGetTransform(System.UInt32 ownerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerRemoveShape(System.UInt32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerRemoveShape",
+    "signature": "public System.Void ShapeOwnerRemoveShape(System.UInt32 ownerID, System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerSetDisabled(System.UInt32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerSetDisabled",
+    "signature": "public System.Void ShapeOwnerSetDisabled(System.UInt32 ownerID, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollision(System.UInt32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerSetOneWayCollision",
+    "signature": "public System.Void ShapeOwnerSetOneWayCollision(System.UInt32 ownerID, System.Boolean enable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollisionDirection(System.UInt32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerSetOneWayCollisionDirection",
+    "signature": "public System.Void ShapeOwnerSetOneWayCollisionDirection(System.UInt32 ownerID, Electron2D.Vector2 direction)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerSetOneWayCollisionMargin(System.UInt32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerSetOneWayCollisionMargin",
+    "signature": "public System.Void ShapeOwnerSetOneWayCollisionMargin(System.UInt32 ownerID, System.Single margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.ShapeOwnerSetTransform(System.UInt32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "ShapeOwnerSetTransform",
+    "signature": "public System.Void ShapeOwnerSetTransform(System.UInt32 ownerID, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "ownerID",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],
@@ -23693,15 +24131,21 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CollisionPolygon.OnExitTree()",
+    "id": "method:Electron2D.CollisionPolygon.OnNotification(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.CollisionPolygon",
-    "name": "OnExitTree",
-    "signature": "protected override System.Void OnExitTree()",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -23777,15 +24221,21 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.CollisionShape.OnExitTree()",
+    "id": "method:Electron2D.CollisionShape.OnNotification(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.CollisionShape",
-    "name": "OnExitTree",
-    "signature": "protected override System.Void OnExitTree()",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },

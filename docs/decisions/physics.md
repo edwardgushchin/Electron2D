@@ -331,7 +331,7 @@ Games need an editable concave or convex polygon child directly under a physics 
 
 ### Decision
 
-- Map the reference node to `CollisionPolygon : Entity` as a sibling of CollisionShape. A small internal `ICollisionGeometry` contract lets both direct children register with the same body/Area fixture lists; no public backend type or shape-owner stub is added. Name the typed enum `PolygonBuildMode` with Solids=0 and Segments=1, preserving the public `BuildMode` property name.
+- Map the reference node to `CollisionPolygon : Entity` as a sibling of CollisionShape. The internal `ICollisionGeometry` child contract now feeds the shared CollisionObject owner registry under [0071](#adr-0071), with one owner group and one logical slot per generated resource. Solid parts may therefore have distinct global shape indices while all resolve to the same polygon child; compound native fixtures within one resource retain one index. Name the typed enum `PolygonBuildMode` with Solids=0 and Segments=1, preserving the public `BuildMode` property name.
 - Copy the caller's finite local `Polygon` array and validate finite overall bounds before mutation. Empty/insufficient or undecomposable contours remain editable and contribute no fixture in the affected mode, with configuration warnings. Solid mode uses `Geometry.DecomposePolygonInConvex` and owned ConvexPolygonShape resources for every part; Segments mode closes the contour into consecutive endpoint pairs in one owned ConcavePolygonShape. Both modes reuse the existing resource-to-Box2D fixture path, child translation/rotation and pre-rebuild scale/skew validation.
 - Rebuild live fixtures for contour, mode, disabled and transform edits. A body child uses the existing one-way flag/direction pre-solve behavior and the one-way margin in typed body-motion recovery; Area remains a two-sided sensor and warns when one-way is enabled. The node owns/disposes generated resources and stores the typed contour/mode/options in PackedScene. A warning subscriber failure after a valid setter does not prevent the next fixture rebuild.
 
@@ -460,3 +460,33 @@ Games can control solver bodies through typed callbacks, manually integrate sele
 - Invoke the hook before native solving or return detached state copies: callback ordering and contact availability would differ.
 - Permit arbitrary live access while constraints execute: this violates solver ownership.
 - Add dynamic callback data or expose native body handles: typed actions and native-private attachment identity cover the required role.
+
+<a id="adr-0071"></a>
+## ADR 0071: Shape-owner groups and global logical collision slots
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: CollisionObject owner API, child binding and shared body/Area geometry
+- Depends on: [0054](#adr-0054), [0063](#adr-0063), [0065](#adr-0065), [0066](#adr-0066), [0014](resources.md#adr-0014)
+
+### Context
+
+Body/Area geometry previously consisted only of direct child providers. The applicable owner API permits arbitrary weak owner identity, several shapes per group and mutable geometry without children. Owner IDs and native/global shape indices are different spaces: group shapes can interleave in global append order, and removals shift later indices.
+
+### Decision
+
+- Expose all 21 typed owner operations. Use uint owner IDs, sorted owner enumeration and zero/max-current-plus-one allocation; deleting the highest ID permits reuse. Store arbitrary ElectronObject/null identity weakly. Groups borrow live Shape resources, retain logical disposed/disabled slots and never dispose caller resources. Missing IDs/indices and malformed inputs throw typed exceptions before mutation.
+- Store one append-order global slot per resource, with an independent group-local list. Adding to an earlier owner still appends globally; removal renumbers later slots across all groups. ShapeFindOwner reverses the current global mapping. Compound native fixtures share the resource slot's index. Motion owner lookup resolves the weak group object rather than assuming a scene child.
+- Route both Body and Area fixture preparation through the same slots, resource revisions, local group pose and disabled policy. Public poses require finite unit scale/zero skew; child transforms preserve the existing pre-rebuild gate. Body groups apply normalized local one-way direction rotated by group pose plus finite nonnegative recovery margin. Manual defaults are false/zero-margin/down; child defaults remain their configured options. Area one-way setters have no effect. Zero direction is preserved.
+- Bind CollisionShape/CollisionPolygon groups at parenting, keep them across tree exit, synchronize child configuration on entry, and remove them at unparenting/disposal. Active local-transform notifications update only transform; detached notifications stay inactive. Independent public owner overrides do not rewrite child properties; a later corresponding child edit updates that field. Child resource/contour replacement clears and rebuilds that group while retaining its ID.
+- Keep manual groups transient; PackedScene reconstructs child groups from existing stored node/resource configuration. GetShapeOwners allocates caller-owned output; warmed unchanged slot/fixture/solver work reuses capacity. Configuration and structural changes may allocate. Indices in retained contact results describe their sampled step and can become stale after structural reindexing.
+
+### Consequences and verification
+
+Games can create procedural multi-shape groups without hidden scene nodes, disable or transform them, and recover owner identity from real query/motion results. ShapeOwnerTests checks defaults/ID reuse, interleaved indices, removals, weak/disposed identity, copied arrays, numeric errors, manual query/motion/rigid response, one-way/Area behavior, child lifecycle/packing, callback-failure revisions, resource disposal and 64 warmed owner solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Input picking, disable modes, priority and shape-index events retain their own coverage gaps.
+
+### Rejected alternatives
+
+- Treat owner ID as shape index or enumerate fixtures by group order: interleaved additions and structural removals would return incorrect indices.
+- Create hidden CollisionShape children for manual groups: arbitrary owner identity and group lifetime do not require scene nodes.

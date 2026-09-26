@@ -3,7 +3,7 @@ using Box2D.NET;
 namespace Electron2D;
 
 /// <summary>A spatial scene object that owns collision filtering for physics shapes.</summary>
-public abstract class CollisionObject : Entity
+public abstract partial class CollisionObject : Entity
 {
     private static readonly PropertyDescriptor[] CollisionProperties =
     [
@@ -78,15 +78,16 @@ public abstract class CollisionObject : Entity
     internal virtual void OnCollisionFilterChanged() { }
 
     internal abstract IReadOnlyList<B2ShapeId> BackendShapes { get; }
-    internal abstract void AttachShape(ICollisionGeometry shape);
-    internal abstract void DetachShape(ICollisionGeometry shape);
     internal abstract void MarkShapesDirty();
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         try { base.Dispose(disposing); }
-        finally { if (disposing) PhysicsServer.Instance.UnregisterSceneObject(_rid); }
+        finally
+        {
+            if (disposing) { _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Instance.UnregisterSceneObject(_rid); }
+        }
     }
 
     private static uint LayerBit(int number)
@@ -99,8 +100,9 @@ public abstract class CollisionObject : Entity
 internal interface ICollisionGeometry
 {
     Entity Node { get; }
-    bool IsActive { get; }
-    ulong GeometryRevision { get; }
-    OneWayContactData? OneWayContact { get; }
-    void AppendToBody(B2BodyId bodyID, in B2ShapeDef definition, List<B2ShapeId> fixtures);
+    ReadOnlySpan<Shape> OwnerShapes { get; }
+    bool Disabled { get; }
+    bool OneWayCollision { get; }
+    float OneWayCollisionMargin { get; }
+    Vector2 OneWayCollisionDirection { get; }
 }

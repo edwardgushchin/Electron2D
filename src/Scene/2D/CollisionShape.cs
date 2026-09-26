@@ -19,29 +19,21 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     ];
 
     private Shape? _shape;
+    private Shape[] _ownerShapes = [];
     private CollisionObject? _owner;
     private bool _disabled;
     private bool _oneWayCollision;
     private float _oneWayCollisionMargin = 1f;
     private Vector2 _oneWayCollisionDirection = Vector2.Down;
 
-    internal ulong GeometryRevision => _shape is { IsDisposed: false } shape ? shape.GeometryRevision : ulong.MaxValue;
-    internal OneWayContactData? OneWayContact => _oneWayCollision
-        ? new OneWayContactData(_oneWayCollisionDirection.Rotated(Rotation), _oneWayCollisionMargin) : null;
-
     Entity ICollisionGeometry.Node => this;
-    bool ICollisionGeometry.IsActive => !_disabled && _shape is { IsDisposed: false };
-    ulong ICollisionGeometry.GeometryRevision => GeometryRevision;
-    OneWayContactData? ICollisionGeometry.OneWayContact => OneWayContact;
-
-    void ICollisionGeometry.AppendToBody(B2BodyId bodyID, in B2ShapeDef definition, List<B2ShapeId> fixtures) =>
-        _shape!.AppendToBody(bodyID, Position, Rotation, definition, fixtures);
+    ReadOnlySpan<Shape> ICollisionGeometry.OwnerShapes => _ownerShapes;
 
     /// <summary>Creates a detached node with no shape and an enabled collision slot.</summary>
     public CollisionShape()
     {
         NotifyLocalTransformChanges = true;
-        LocalTransformChanged += _ => _owner?.MarkShapesDirty();
+        LocalTransformChanged += _ => _owner?.ChildTransformChanged(this);
     }
 
     /// <summary>Gets or sets the borrowed shape resource, or null to remove collision geometry.</summary>
@@ -57,8 +49,9 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             if (ReferenceEquals(value, _shape)) return;
             DetachShapeEvents(_shape);
             _shape = value;
+            _ownerShapes = value is null ? [] : [value];
             AttachShapeEvents(value);
-            _owner?.MarkShapesDirty();
+            _owner?.ReplaceChildShapes(this);
             UpdateConfigurationWarnings();
         }
     }
@@ -73,7 +66,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             EnsureMutable();
             if (_disabled == value) return;
             _disabled = value;
-            _owner?.MarkShapesDirty();
+            _owner?.ChildDisabledChanged(this);
         }
     }
 
@@ -84,7 +77,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     public bool OneWayCollision
     {
         get { ThrowIfDisposed(); return _oneWayCollision; }
-        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; _owner?.MarkShapesDirty(); UpdateConfigurationWarnings(); }
+        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
     }
 
     /// <summary>Gets or sets the maximum accepted one-way recovery depth in scene units.</summary>
@@ -99,7 +92,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             if (!float.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(value));
             if (_oneWayCollisionMargin == value) return;
             _oneWayCollisionMargin = value;
-            _owner?.MarkShapesDirty();
+            _owner?.ChildMarginChanged(this);
         }
     }
 
@@ -115,7 +108,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             var direction = NormalizeOneWayDirection(value);
             if (_oneWayCollisionDirection == direction) return;
             _oneWayCollisionDirection = direction;
-            _owner?.MarkShapesDirty();
+            _owner?.ChildDirectionChanged(this);
         }
     }
 
@@ -140,19 +133,25 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     private static Node CreateCollisionShape() => new CollisionShape();
 
     /// <inheritdoc />
-    protected override void OnEnterTree()
+    protected override void OnNotification(int what)
     {
-        base.OnEnterTree();
-        if (Parent is not CollisionObject owner) return;
-        owner.AttachShape(this);
-        _owner = owner;
+        base.OnNotification(what);
+        if (what == NotificationParented && Parent is CollisionObject owner)
+        {
+            _owner = owner; owner.AttachShape(this);
+        }
+        else if (what == NotificationUnparented && _owner is { } previous)
+        {
+            _owner = null; previous.DetachShape(this);
+        }
     }
 
     /// <inheritdoc />
-    protected override void OnExitTree()
+    protected override void OnEnterTree()
     {
-        if (_owner is { } owner) { _owner = null; owner.DetachShape(this); }
-        base.OnExitTree();
+        base.OnEnterTree();
+        if (_owner is null && Parent is CollisionObject owner) { _owner = owner; owner.AttachShape(this); }
+        _owner?.SynchronizeChildOwner(this);
     }
 
     /// <inheritdoc />
@@ -163,6 +162,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             if (_owner is { } owner) { _owner = null; owner.DetachShape(this); }
             DetachShapeEvents(_shape);
             _shape = null;
+            _ownerShapes = [];
         }
         base.Dispose(disposing);
     }

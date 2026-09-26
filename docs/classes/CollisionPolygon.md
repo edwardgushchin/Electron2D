@@ -1,6 +1,6 @@
 # CollisionPolygon
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -37,7 +37,7 @@ ground.AddChild(new CollisionPolygon
 | `public override string[] GetConfigurationWarnings()` | Reports an absent direct owner, empty/invalid geometry or ineffective Area one-way setting. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores mode, contour, disabled and one-way state. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Restores this node type in PackedScene. |
-| `protected override void OnEnterTree()` / `OnExitTree()` | Registers or removes this direct body/Area geometry slot. |
+| `protected override void OnNotification(int what)` / `OnEnterTree()` | Creates/removes the owner group at parenting/unparenting and synchronizes configuration on tree entry. |
 | `protected override void Dispose(bool disposing)` | Removes the slot and disposes internally generated resources. |
 
 ## Property descriptions
@@ -74,6 +74,8 @@ The default one scene unit bounds accepted recovery depth against this polygon's
 
 ## Lifecycle, errors and limits
 
-The node registers only under a direct CollisionObject parent during scene entry and removes that slot on exit or disposal. Generated ConvexPolygonShape or ConcavePolygonShape resources are private and owned by this node; callers own only the scene node and vertex arrays they pass. Polygon resources are regenerated before replacement, so invalid numeric writes retain the former state. The owning body or Area rejects active scale/skew before destroying its existing fixtures, and a corrected transform allows a later step. Scene mutation follows Node's owner-thread rule. All own [coverage rows](../coverage/classes/CollisionPolygon2D.md) now have executable behavior; inherited body and Shape gaps remain separate.
+The node creates its group under a direct CollisionObject parent at parenting, synchronizes transform/policy on tree entry, and removes the group at unparenting or disposal. Tree exit alone retains it. Generated ConvexPolygonShape or ConcavePolygonShape resources are private and owned by this node; callers own only the scene node and vertex arrays they pass. Polygon resources are regenerated before replacement, so invalid numeric writes retain the former state. The owning body or Area rejects active scale/skew before destroying its existing fixtures, and a corrected transform allows a later step. Scene mutation follows Node's owner-thread rule. All own [coverage rows](../coverage/classes/CollisionPolygon2D.md) now have executable behavior; inherited body and Shape gaps remain separate.
 
 [CollisionPolygonTests](../../tests/Electron2D.Tests/CollisionPolygonTests.cs) checks defaults, copies, malformed contour, errors, solid concavity, hollow edges, direct mixed owners, one-way traversal, live rebuild after callback failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) verifies its one-way margin in recovery. Native allocator counts, other platforms and owner visual acceptance remain unverified. See [ADR 0066](../decisions/physics.md#adr-0066).
+
+The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
