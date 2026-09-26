@@ -71,7 +71,7 @@ public sealed partial class PhysicsDirectSpaceState
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (!TryContact(query, other, otherTransform, motion, out var manifold)) continue;
+                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, motion, out var manifold)) continue;
                 for (var index = 0; index < manifold.pointCount; index++)
                 {
                     var contact = manifold.points[index];
@@ -119,7 +119,7 @@ public sealed partial class PhysicsDirectSpaceState
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (!TryContact(query, other, otherTransform, motion, out var manifold)) continue;
+                if (!TryQueryContact(query, other, otherTransform, candidate.Tag, motion, out var manifold)) continue;
                 for (var index = 0; index < manifold.pointCount; index++)
                 {
                     var contact = manifold.points[index];
@@ -167,6 +167,16 @@ public sealed partial class PhysicsDirectSpaceState
                 contactQuery.points[point] += fraction * motion;
         }
         manifold = GetManifold(contactQuery, other, otherTransform);
+        return manifold.pointCount != 0;
+    }
+
+    private bool TryQueryContact(in B2ShapeProxy query, in B2ShapeProxy other,
+        in B2Transform otherTransform, PhysicsFixtureTag tag, in B2Vec2 motion, out B2Manifold manifold)
+    {
+        if (_queryRaySlide is null && tag.SeparationRay is null)
+            return TryContact(query, other, otherTransform, motion, out manifold);
+        manifold = PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+            tag.SeparationRay, motion, _queryMargin);
         return manifold.pointCount != 0;
     }
 

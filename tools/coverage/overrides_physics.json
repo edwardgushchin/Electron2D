@@ -278,6 +278,26 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.SeparationRayShape..ctor()",
+      "reason": "Typed managed construction projects the existing directed separation resource defaults.",
+      "adr": "ADRs 0003, 0013, 0068"
+    },
+    {
+      "electron2d": "method:Electron2D.SeparationRayShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed Resource copying preserves independent directed geometry and slope policy.",
+      "adr": "ADRs 0003, 0013, 0068"
+    },
+    {
+      "electron2d": "method:Electron2D.SeparationRayShape.CreateDuplicateInstance()",
+      "reason": "Resource duplication creates an independent directed ray.",
+      "adr": "ADRs 0003, 0013, 0068"
+    },
+    {
+      "electron2d": "method:Electron2D.SeparationRayShape.GetRect()",
+      "reason": "Concrete padded local drawing envelope override of inherited Shape.GetRect.",
+      "adr": "ADRs 0003, 0013, 0068"
+    },
+    {
       "electron2d": "constructor:Electron2D.CharacterBody..ctor()",
       "reason": "Managed scene construction supplies grounded character defaults.",
       "adr": "ADRs 0003, 0008, 0063"
@@ -905,14 +925,35 @@
   ],
   "statusGroups": [
     {
-      "godot": ["class:CharacterBody2D"],
+      "godot": [
+        "class:SeparationRayShape2D"
+      ],
       "state": "Partial",
-      "reason": "Grounded/floating sliding, snap, platform carry, typed contacts and state execute; separation-ray floor behavior awaits an executable SeparationRayShape2D resource (ADRs 0054 and 0063)."
+      "reason": "Directed resource, queries, Area sensing and body/character motion execute. Required trigger: alternative directed solver manifolds before constraint creation, including ordinary dynamic impulses, friction/restitution, sleep and contact reports; these enter that integration first slice (ADR 0068, SeparationRayShapeTests)."
     },
     {
-      "godot": ["CharacterBody2D::method:apply_floor_snap()", "CharacterBody2D::method:move_and_slide()"],
-      "state": "Partial",
-      "reason": "Movement and floor snap execute for current solid/hollow shape families; separation-ray floor participation requires the absent shape resource and its special motion branch (ADR 0063, CharacterBodyTests)."
+      "godot": [
+        "SeparationRayShape2D::property:length",
+        "SeparationRayShape2D::property:slide_on_slope",
+        "PhysicsServer2D::method:separation_ray_shape_create()"
+      ],
+      "state": "Implemented",
+      "reason": "Typed length=20/slope=false state, finite nonnegative geometry, padded bounds, independent copying and server creation execute; directed query/body-motion behavior is checked by SeparationRayShapeTests (ADR 0068)."
+    },
+    {
+      "godot": [
+        "class:CharacterBody2D"
+      ],
+      "state": "Implemented",
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+    },
+    {
+      "godot": [
+        "CharacterBody2D::method:apply_floor_snap()",
+        "CharacterBody2D::method:move_and_slide()"
+      ],
+      "state": "Implemented",
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
     },
     {
       "godot": [
@@ -997,14 +1038,18 @@
       "reason": "Typed body motion snapshot exposes contact geometry, RID/instance/shape identity, point velocity and safe travel (ADR 0063, PhysicsMotionTests)."
     },
     {
-      "godot": ["class:PhysicsTestMotionParameters2D"],
-      "state": "Partial",
-      "reason": "Pose, motion, margin, recovery and exclusions execute; separation-ray participation requires the absent separation-ray shape resource (ADR 0063)."
+      "godot": [
+        "class:PhysicsTestMotionParameters2D"
+      ],
+      "state": "Implemented",
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
     },
     {
-      "godot": ["PhysicsTestMotionParameters2D::property:collide_separation_ray"],
-      "state": "Blocked",
-      "reason": "Trigger: an executable SeparationRayShape2D resource and its special floor-snapping motion behavior (ADR 0063)."
+      "godot": [
+        "PhysicsTestMotionParameters2D::property:collide_separation_ray"
+      ],
+      "state": "Implemented",
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
     },
     {
       "godot": [
@@ -1578,9 +1623,11 @@
       "reason": "Scene body movement and test-only probes execute with safe-margin recovery, earliest body contact, one-way surfaces and typed KinematicCollision snapshots (ADR 0063, PhysicsMotionTests)."
     },
     {
-      "godot": ["PhysicsServer2D::method:body_test_motion(RID:,PhysicsTestMotionParameters2D:,PhysicsTestMotionResult2D:)"],
-      "state": "Partial",
-      "reason": "Scene/server body sweeps, recovery, filters, exclusions and typed results execute; the collide-separation-ray option requires an executable separation-ray shape resource (ADR 0063, PhysicsMotionTests)."
+      "godot": [
+        "PhysicsServer2D::method:body_test_motion(RID:,PhysicsTestMotionParameters2D:,PhysicsTestMotionResult2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
     },
     {
       "godot": [

@@ -4,7 +4,7 @@ Last updated: 2026-09-26
 
 ## Scope and owned types
 
-[`Area`](../classes/Area.md) is the sensor branch of [`CollisionObject`](../classes/CollisionObject.md). Direct [`CollisionShape`](../classes/CollisionShape.md) children borrow circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry and become nonresponding backend fixtures. A SceneTree's internal physics space owns the backend body and the fixed-step overlap scan.
+[`Area`](../classes/Area.md) is the sensor branch of [`CollisionObject`](../classes/CollisionObject.md). Direct [`CollisionShape`](../classes/CollisionShape.md) children borrow circle, capsule, segment, convex polygon, concave segment collection, separation ray or rectangle geometry and become nonresponding backend fixtures. A SceneTree's internal physics space owns the backend body and the fixed-step overlap scan.
 
 ## Runtime flow
 
@@ -23,3 +23,5 @@ An Area uses nonresponding sensor fixtures; a child CollisionShape's one-way bod
 The current profile accepts unit global scale and zero skew while active. Shape/resource, filtering, monitoring and field edits take effect on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Tile-map virtual collision bodies, audio-bus routing and typed shape/RID events remain separate coverage work.
 
 [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks monitoring and event timing. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, sampled defaults, damping and warmed RigidBody frames; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world/Area gravity selection on a kinematic character. Native allocator counts, other platforms and owner visual acceptance remain unverified. [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the execution boundary.
+
+Separation-ray overlap uses exact endpoints and the directed query kernel rather than a GJK segment overlap. Containment and ray-ray pairs are rejected. This also governs field-area selection. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) checks directed Area entry and containment exit under [ADR 0068](../decisions/physics.md#adr-0068).

@@ -54,6 +54,9 @@ public sealed partial class PhysicsServer
     /// <summary>Creates a caller-owned segment shape with its default geometry.</summary>
     /// <returns>A live segment-shape RID.</returns>
     public RID SegmentShapeCreate() => CreateShape(new SegmentShape());
+    /// <summary>Creates a caller-owned twenty-unit directed separation ray.</summary>
+    /// <returns>A live separation-ray shape RID.</returns>
+    public RID SeparationRayShapeCreate() => CreateShape(new SeparationRayShape());
     /// <summary>Creates a caller-owned empty convex polygon shape.</summary>
     /// <returns>A live convex-polygon-shape RID.</returns>
     public RID ConvexPolygonShapeCreate() => CreateShape(new ConvexPolygonShape());

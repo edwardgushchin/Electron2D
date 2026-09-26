@@ -200,10 +200,12 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         }
     }
 
-    private static bool Eligible(B2ShapeId shape, uint mask, RID[] excluded, out PhysicsFixtureTag tag)
+    private static bool Eligible(B2ShapeId shape, uint mask, RID[] excluded, out PhysicsFixtureTag tag,
+        bool includeSeparationRays = false)
     {
         tag = b2Shape_GetUserData(shape).GetRef<PhysicsFixtureTag>()!;
-        if (tag is null || (b2Shape_GetFilter(shape).categoryBits & mask) == 0) return false;
+        if (tag is null || !includeSeparationRays && tag.SeparationRay is not null ||
+            (b2Shape_GetFilter(shape).categoryBits & mask) == 0) return false;
         foreach (var rid in excluded) if (rid == tag.ColliderRID) return false;
         return true;
     }

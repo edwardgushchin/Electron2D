@@ -30,6 +30,7 @@
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",
     "SegmentShape2D": "SegmentShape",
+    "SeparationRayShape2D": "SeparationRayShape",
     "ConvexPolygonShape2D": "ConvexPolygonShape",
     "ConcavePolygonShape2D": "ConcavePolygonShape",
     "RectangleShape2D": "RectangleShape",

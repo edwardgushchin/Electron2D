@@ -15,7 +15,7 @@ public abstract class Shape : Resource
     private RID _queryRID;
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
-    /// <returns>The tight local-axis bounds; a shape need not be centered on its origin.</returns>
+    /// <returns>The local-axis bounds, including drawing padding for a separation ray; a shape need not be centered on its origin.</returns>
     public abstract Rect2 GetRect();
 
     internal abstract void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,

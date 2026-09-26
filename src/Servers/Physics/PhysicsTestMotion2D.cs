@@ -12,6 +12,7 @@ public sealed class PhysicsTestMotionParameters2D : ElectronObject
     private Vector2 _motion;
     private float _margin = 0.08f;
     private bool _recoveryAsCollision;
+    private bool _collideSeparationRay;
     private RID[] _excludeBodies = [];
     private ulong[] _excludeObjects = [];
 
@@ -68,6 +69,14 @@ public sealed class PhysicsTestMotionParameters2D : ElectronObject
     {
         get { ThrowIfDisposed(); return _recoveryAsCollision; }
         set { ThrowIfDisposed(); _recoveryAsCollision = value; }
+    }
+
+    /// <summary>Gets or sets whether non-sliding separation rays can stop the requested motion.</summary>
+    /// <value>False by default; ray recovery always remains enabled.</value>
+    public bool CollideSeparationRay
+    {
+        get { ThrowIfDisposed(); return _collideSeparationRay; }
+        set { ThrowIfDisposed(); _collideSeparationRay = value; }
     }
 
     /// <summary>Gets or sets copied body RID exclusions.</summary>

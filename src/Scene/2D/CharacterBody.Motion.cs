@@ -221,13 +221,13 @@ public partial class CharacterBody
     }
 
     private MotionResultData Move(Vector2 motion, bool recoveryAsCollision, bool testOnly = false,
-        RID excluded = default)
+        RID excluded = default, bool collideSeparationRay = false)
     {
         if (!FiniteMotion(motion)) throw new ArgumentOutOfRangeException(nameof(motion));
         _platformExclusion[0] = excluded;
         var from = GlobalTransform;
         var result = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, _safeMargin,
-            recoveryAsCollision, _platformExclusion, []);
+            recoveryAsCollision, _platformExclusion, [], collideSeparationRay);
         if (!testOnly && result.Travel != Vector2.Zero)
             SetGlobalOrigin(from.Origin + result.Travel);
         return result;
@@ -237,7 +237,8 @@ public partial class CharacterBody
     {
         if (_onFloor) return;
         var length = MathF.Max(_floorSnapLength, _safeMargin);
-        var result = Move(-_upDirection * length, recoveryAsCollision: true, testOnly: true);
+        var result = Move(-_upDirection * length, recoveryAsCollision: true, testOnly: true,
+            collideSeparationRay: true);
         if (!result.Collided) return;
         var floor = Angle(result.Normal, _upDirection) <= _floorMaxAngle + FloorAngleTolerance;
         if (!floor && !(wallAsFloor && Angle(result.Normal, -_upDirection) >
@@ -254,7 +255,8 @@ public partial class CharacterBody
     {
         if (_onFloor || !wasOnFloor || facingUp) return false;
         var length = MathF.Max(_floorSnapLength, _safeMargin);
-        var result = Move(-_upDirection * length, recoveryAsCollision: true, testOnly: true);
+        var result = Move(-_upDirection * length, recoveryAsCollision: true, testOnly: true,
+            collideSeparationRay: true);
         return result.Collided && Angle(result.Normal, _upDirection) <= _floorMaxAngle + FloorAngleTolerance;
     }
 

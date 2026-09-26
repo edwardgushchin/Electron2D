@@ -166,7 +166,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CenterContainer](classes/CenterContainer.md) | Container | Blocked | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
-| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Partial | 40 |
+| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Implemented | 40 |
 | [CharacterBody3D](classes/CharacterBody3D.md) | PhysicsBody3D | Excluded | 41 |
 | [CheckBox](classes/CheckBox.md) | Button | Blocked | 13 |
 | [CheckButton](classes/CheckButton.md) | Button | Blocked | 13 |
@@ -632,7 +632,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsServer3DRenderingServerHandler](classes/PhysicsServer3DRenderingServerHandler.md) | Object | Excluded | 6 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | RefCounted | Implemented | 9 |
 | [PhysicsShapeQueryParameters3D](classes/PhysicsShapeQueryParameters3D.md) | RefCounted | Excluded | 9 |
-| [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Partial | 7 |
+| [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Implemented | 7 |
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Partial | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
@@ -762,7 +762,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScrollContainer](classes/ScrollContainer.md) | Container | Blocked | 39 |
 | [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Implemented | 2 |
 | [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
-| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Unimplemented | 2 |
+| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Partial | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Blocked | 2 |
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |

@@ -1,0 +1,64 @@
+# SeparationRayShape
+
+Last updated: 2026-09-26
+
+**Inherits:** [Shape](Shape.md), [Resource](Resource.md)
+
+- **Source:** [SeparationRayShape.cs](../../src/Scene/Resources/SeparationRayShape.cs)
+- **Declaration:** `public sealed class SeparationRayShape : Shape`
+- **Component:** [Collision shapes](../components/physics-shapes.md)
+
+## Description
+
+A caller-owned directed separation resource from local (0, 0) to (0, Length). A direct CollisionShape child rotates and offsets this ray in its body or Area. Body motion, direct shape queries and Area overlap scans use its directed surface contact; ray and point queries cannot intersect it. Edits reach scene and borrowed server fixtures before their next query or step, even if a user Changed subscriber throws. Attached queries require the physics-space owner thread.
+
+The backend fixture is a zero-density sensor. **Ordinary RigidBody separation impulses are incomplete**: use the resource for character/body motion tests and directed sensing, and supply a solid shape for regular dynamic response. The [class remains Partial](../coverage/classes/SeparationRayShape2D.md) for the solver prerequisite in [ADR 0068](../decisions/physics.md#adr-0068).
+
+## Example
+
+Partial snippet; keep the resource alive while borrowed and call movement from the character's fixed callback:
+
+```csharp
+using var feet = new SeparationRayShape { Length = 24, SlideOnSlope = true };
+var character = new CharacterBody();
+character.AddChild(new CollisionShape { Shape = feet });
+// Supply character.Velocity before calling character.MoveAndSlide().
+```
+
+## API summary
+
+| Member | Contract |
+| --- | --- |
+| `public SeparationRayShape()` | Twenty-unit downward ray; slope sliding false. |
+| `public float Length { get; set; }` | Finite nonnegative local scene-unit length within the backend squared-distance range. |
+| `public bool SlideOnSlope { get; set; }` | Selects the hit surface normal instead of the opposite ray direction. |
+| `public override Rect2 GetRect()` | Returns the padded local drawing envelope. |
+| `protected override Resource CreateDuplicateInstance()` | Creates an independent ray for Resource duplication. |
+| `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies length and slope policy. |
+
+## Property descriptions
+
+<a id="length"></a>
+### `Length`
+
+Defaults to 20. Negative, nonfinite lengths and lengths whose backend squared distance overflows throw ArgumentOutOfRangeException before mutation. Zero contributes no contact. Unequal writes increment the geometry revision and emit Changed; equal writes are silent. A ray shorter than backend linear slop retains exact endpoints in special queries and overlap scans, although its bookkeeping fixture becomes a point.
+
+<a id="slideonslope"></a>
+### `SlideOnSlope`
+
+Defaults to false: separation points opposite the rotated ray axis. True uses the surface normal. The corresponding collider point is the endpoint displaced by the axial penetration distance along that normal; it can differ from the literal intersection point. Unequal writes emit Changed and rebuild metadata; equal writes are silent.
+
+## Method descriptions and lifecycle
+
+<a id="getrect"></a>
+### `GetRect()`
+
+Returns `new Rect2(0, 0, 0, Length).Grow(MathF.Sqrt(0.5f) * 4f)`, including drawing padding rather than a tight zero-width segment. It needs no SceneTree. Disposal rejects access with ObjectDisposedException. Resource copy hooks preserve independent length/policy state; PackedScene retains the borrowed resource. Disposing it releases its resource-owned server RID and removes pending fixtures through the inherited lifetime contract.
+
+## Motion, queries and limits
+
+Contact requires a front-facing surface crossing. A ray starting inside filled geometry has no entry hit; ray-ray pairs never contact. Margin extends the endpoint along the axis. Ray motion extends it by the positive axial displacement; transverse movement does not create a swept solid segment. For an ordinary shape moving against a stationary ray, the union of initial/final native primitives and swept edges supplies directed contact, including rounded margins.
+
+Recovery always includes rays. The motion phase includes sliding rays automatically and other rays only when PhysicsTestMotionParameters2D.CollideSeparationRay is true. CharacterBody floor snap explicitly sets that flag. A touching ray may move away. RID, shape indices, point velocity, masks and exclusions retain the shared contract. Rays contribute zero inertia; ordinary dynamic solver impulses and contact reports remain incomplete.
+
+[SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) checks defaults, equal/invalid/disposed writes, bounds, copying, packing, every existing shape family, containment, rotation/offset, short/zero rays, both slope policies, forward/reverse sweeps, query exclusion, server creation, recovery, character sliding/snap, callback failure, Area sensing, zero inertia and the dynamic gap. Sixty-four warmed body recovery queries, reverse casts/rest queries and active directed Area frames each allocate zero managed bytes on Linux/.NET 10. Native allocation, other platforms, large-world throughput and owner visual acceptance remain unverified.

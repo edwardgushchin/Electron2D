@@ -355,9 +355,12 @@ internal sealed partial class PhysicsSpace : IDisposable
             for (var otherIndex = 0; otherIndex < otherShapes.Count; otherIndex++)
             {
                 var otherID = otherShapes[otherIndex];
+                var rayA = b2Shape_GetUserData(areaID).GetRef<PhysicsFixtureTag>()?.SeparationRay;
+                var rayB = b2Shape_GetUserData(otherID).GetRef<PhysicsFixtureTag>()?.SeparationRay;
                 var aabbB = b2Shape_GetAABB(otherID);
-                if (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
-                    aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y)
+                if (rayA is null && rayB is null &&
+                    (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
+                    aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y))
                     continue;
                 var shapeA = b2GetShape(world, areaID);
                 var shapeB = b2GetShape(world, otherID);
@@ -369,6 +372,14 @@ internal sealed partial class PhysicsSpace : IDisposable
                     transformB = b2Body_GetTransform(b2Shape_GetBody(otherID)),
                     useRadii = true
                 };
+                if (rayA is not null || rayB is not null)
+                {
+                    var query = rayA is { } ray ? PhysicsSeparationRay.WorldProxy(ray, input.transformA, default) :
+                        WorldProxy(input.proxyA, input.transformA, default);
+                    if (PhysicsSeparationRay.PairContact(query, rayA?.SlideOnSlope, input.proxyB,
+                        input.transformB, rayB, default, 0).pointCount != 0) return true;
+                    continue;
+                }
                 var cache = new B2SimplexCache();
                 if (b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP)
                     return true;

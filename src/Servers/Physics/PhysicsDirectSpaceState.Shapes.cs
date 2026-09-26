@@ -39,6 +39,8 @@ public sealed partial class PhysicsDirectSpaceState
 {
     private readonly List<B2ShapeProxy> _queryProxies = [];
     private readonly List<ShapeCandidate> _shapeCandidates = [];
+    private bool? _queryRaySlide;
+    private float _queryMargin;
 
     private readonly record struct ShapeCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
 
@@ -63,8 +65,13 @@ public sealed partial class PhysicsDirectSpaceState
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (!Overlaps(query, other, otherTransform) &&
-                    !SweepsInto(query, other, otherTransform, motion, 1f)) continue;
+                if (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null)
+                {
+                    if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+                        candidate.Tag.SeparationRay, motion, _queryMargin).pointCount == 0) continue;
+                }
+                else if (!Overlaps(query, other, otherTransform) &&
+                         !SweepsInto(query, other, otherTransform, motion, 1f)) continue;
                 hits.Add(new(candidate.Tag.ColliderRID,
                     PhysicsServer.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
                     candidate.Tag.ShapeIndex));
@@ -107,6 +114,26 @@ public sealed partial class PhysicsDirectSpaceState
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
+                if (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null)
+                {
+                    if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+                            candidate.Tag.SeparationRay, default, _queryMargin).pointCount != 0) continue;
+                    if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+                            candidate.Tag.SeparationRay, motion * bestSafe, _queryMargin).pointCount == 0) continue;
+                    var lowRay = 0f;
+                    var highRay = bestSafe;
+                    for (var step = 0; step < 8; step++)
+                    {
+                        var middle = (lowRay + highRay) * 0.5f;
+                        if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
+                                candidate.Tag.SeparationRay, motion * middle, _queryMargin).pointCount != 0)
+                            highRay = middle;
+                        else lowRay = middle;
+                    }
+                    bestSafe = lowRay;
+                    bestUnsafe = highRay;
+                    continue;
+                }
                 if (Overlaps(query, other, otherTransform)) continue;
                 if (!SweepsInto(query, other, otherTransform, motion, bestSafe)) continue;
                 var low = 0f;
@@ -134,15 +161,17 @@ public sealed partial class PhysicsDirectSpaceState
         var space = PhysicsServer.Instance.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
         var shape = parameters.Shape ?? PhysicsServer.Instance.GetShapeGeometry(parameters.ShapeRID);
+        _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();
         shape.AppendQueryProxies(_queryProxies);
         var transform = parameters.Transform;
         var backendTransform = new B2Transform(Shape.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
         var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
+        _queryMargin = margin;
         for (var index = 0; index < _queryProxies.Count; index++)
         {
             var proxy = _queryProxies[index];
-            proxy.radius += margin;
+            if (_queryRaySlide is null) proxy.radius += margin;
             if (!float.IsFinite(proxy.radius)) throw new ArgumentOutOfRangeException(nameof(parameters));
             for (var pointIndex = 0; pointIndex < proxy.count; pointIndex++)
             {
@@ -176,7 +205,7 @@ public sealed partial class PhysicsDirectSpaceState
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = shapes[index];
-            if (Eligible(shape, mask, excluded, out var tag))
+            if (Eligible(shape, mask, excluded, out var tag, includeSeparationRays: true))
                 _shapeCandidates.Add(new(shape, tag));
         }
     }

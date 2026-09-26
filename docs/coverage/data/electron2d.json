@@ -3118,6 +3118,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SeparationRayShape",
+    "kind": "type",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "SeparationRayShape",
+    "signature": "public sealed class Electron2D.SeparationRayShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Shader",
     "kind": "type",
     "declaringType": "Electron2D.Shader",
@@ -6757,6 +6772,19 @@
     "declaringType": "Electron2D.SegmentShape",
     "name": ".ctor",
     "signature": "public SegmentShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SeparationRayShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": ".ctor",
+    "signature": "public SeparationRayShape()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -43636,6 +43664,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SeparationRayShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SeparationRayShapeCreate",
+    "signature": "public Electron2D.RID SeparationRayShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.ShapeGetData(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -48335,6 +48376,71 @@
     "id": "method:Electron2D.SegmentShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.SegmentShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SeparationRayShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SeparationRayShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SeparationRayShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.SeparationRayShape",
     "name": "GetRect",
     "signature": "public override Electron2D.Rect2 GetRect()",
     "visibility": "public",
@@ -69347,6 +69453,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PhysicsTestMotionParameters2D.CollideSeparationRay()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
+    "name": "CollideSeparationRay",
+    "signature": "public System.Boolean CollideSeparationRay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.PhysicsTestMotionParameters2D.ExcludeBodies()",
     "kind": "property",
     "declaringType": "Electron2D.PhysicsTestMotionParameters2D",
@@ -71125,6 +71244,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SeparationRayShape.Length()",
+    "kind": "property",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "Length",
+    "signature": "public System.Single Length { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SeparationRayShape.SlideOnSlope()",
+    "kind": "property",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "SlideOnSlope",
+    "signature": "public System.Boolean SlideOnSlope { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

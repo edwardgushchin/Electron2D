@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -116,8 +116,14 @@ def main():
     assert len(character_rows) == 41
     assert {state: sum(f" | {state} | " in row for row in character_rows)
             for state in ("Implemented", "Partial", "Unimplemented")} == {
-                "Implemented": 38, "Partial": 3, "Unimplemented": 0}
+                "Implemented": 41, "Partial": 0, "Unimplemented": 0}
     assert "../../classes/CharacterBody.md" in class_rows["CharacterBody2D"]
+    separation_rows = [row for row in pages[CLASS_PAGES / "SeparationRayShape2D.md"].splitlines()
+                       if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(separation_rows) == 3
+    assert sum(" | Implemented | " in row for row in separation_rows) == 2
+    assert " | Partial | " in class_rows["SeparationRayShape2D"]
+    assert "alternative directed solver manifolds" in class_rows["SeparationRayShape2D"]
     for name, count in (("RID", 11), ("PhysicsRayQueryParameters2D", 9)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -143,8 +149,8 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 33, "Partial": 9, "Unimplemented": 168, "Blocked": 5}
-    assert " | Partial | " in next(row for row in server_rows if "method body_test_motion(" in row)
+                "Implemented": 35, "Partial": 8, "Unimplemented": 167, "Blocked": 5}
+    assert " | Implemented | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_set_shape_disabled", "area_set_shape_disabled", "body_remove_shape", "area_remove_shape"))
@@ -165,7 +171,7 @@ def main():
                for name in ("move_and_collide", "test_move"))
     for name, count, implemented, partial, blocked in (
         ("KinematicCollision2D", 14, 11, 3, 0),
-        ("PhysicsTestMotionParameters2D", 8, 6, 1, 1),
+        ("PhysicsTestMotionParameters2D", 8, 8, 0, 0),
         ("PhysicsTestMotionResult2D", 14, 12, 2, 0)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -214,6 +220,7 @@ def main():
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
                          ("CapsuleShape2D", "CapsuleShape"),
                          ("SegmentShape2D", "SegmentShape"),
+                         ("SeparationRayShape2D", "SeparationRayShape"),
                          ("ConvexPolygonShape2D", "ConvexPolygonShape"),
                          ("ConcavePolygonShape2D", "ConcavePolygonShape"),
                          ("RectangleShape2D", "RectangleShape"), ("CollisionShape2D", "CollisionShape"),

@@ -42,7 +42,7 @@ internal sealed partial class PhysicsSpace
 
     internal MotionResultData TestBodyMotion(RID ownerRID, IReadOnlyList<B2ShapeId> ownShapes,
         Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
-        RID[] excludedBodies, ulong[] excludedObjects)
+        RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
     {
         PrepareForQuery();
         _motionCandidates.Clear();
@@ -71,14 +71,23 @@ internal sealed partial class PhysicsSpace
                 var ownID = ownShapes[ownIndex];
                 var ownTag = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
                 if (ownTag is null) continue;
-                var query = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
-                query.radius += queryMargin;
+                var ray = ownTag.SeparationRay;
+                var query = ray is { } data ? PhysicsSeparationRay.WorldProxy(data, fromTransform, recovery) :
+                    WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
+                if (ray is null) query.radius += queryMargin;
                 foreach (var candidate in _motionCandidates)
                 {
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                    if (!PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
-                    var manifold = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
+                    B2Manifold manifold;
+                    if (ray is not null || candidate.Tag.SeparationRay is not null)
+                        manifold = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
+                            otherTransform, candidate.Tag.SeparationRay, default, queryMargin);
+                    else
+                    {
+                        if (!PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
+                        manifold = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
+                    }
                     if (manifold.pointCount == 0) continue;
                     for (var index = 0; index < manifold.pointCount; index++)
                     {
@@ -88,7 +97,8 @@ internal sealed partial class PhysicsSpace
                         if (depth <= bestDepth || !AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
                         bestDepth = depth;
                         bestNormal = normal;
-                        bestContact = new(candidate, ownTag.ShapeIndex, point.point, normal, depth);
+                        var colliderPoint = point.point + manifold.normal * (point.separation * 0.5f);
+                        bestContact = new(candidate, ownTag.ShapeIndex, colliderPoint, normal, depth);
                     }
                 }
             }
@@ -109,12 +119,53 @@ internal sealed partial class PhysicsSpace
                 var ownID = ownShapes[ownIndex];
                 var ownTag = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
                 if (ownTag is null) continue;
-                var query = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
+                var ray = ownTag.SeparationRay;
+                if (ray is { SlideOnSlope: false } && !collideSeparationRay) continue;
+                var query = ray is { } data ? PhysicsSeparationRay.WorldProxy(data, fromTransform, recovery) :
+                    WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
                 foreach (var candidate in _motionCandidates)
                 {
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                     if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
+                    if (ray is not null || candidate.Tag.SeparationRay is not null)
+                    {
+                        var full = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
+                            otherTransform, candidate.Tag.SeparationRay, requested * safe, 0);
+                        if (full.pointCount == 0) continue;
+                        var initial = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
+                            otherTransform, candidate.Tag.SeparationRay, default, 0);
+                        if (initial.pointCount != 0 && -initial.points[0].separation <= 0.1f * B2_LINEAR_SLOP &&
+                            b2Dot(requested, -initial.normal) >= -1e-6f) continue;
+                        var lowRay = 0f;
+                        var highRay = initial.pointCount == 0 ? safe : 0f;
+                        if (initial.pointCount == 0)
+                            for (var step = 0; step < 8; step++)
+                            {
+                                var middle = (lowRay + highRay) * 0.5f;
+                                var partial = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
+                                    otherTransform, candidate.Tag.SeparationRay, requested * middle, 0);
+                                if (partial.pointCount != 0) highRay = middle;
+                                else lowRay = middle;
+                            }
+                        if (lowRay >= safe && hasMotionHit) continue;
+                        var rayImpact = query;
+                        for (var pointIndex = 0; pointIndex < rayImpact.count; pointIndex++)
+                            rayImpact.points[pointIndex] += requested * highRay;
+                        var rayContact = PhysicsSeparationRay.PairContact(rayImpact, ray?.SlideOnSlope, other,
+                            otherTransform, candidate.Tag.SeparationRay, default, queryMargin);
+                        if (rayContact.pointCount == 0) rayContact = full;
+                        var point = rayContact.points[0];
+                        var normal = -rayContact.normal;
+                        var depth = MathF.Max(0, -point.separation);
+                        if (!AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
+                        safe = lowRay;
+                        unsafeFraction = highRay;
+                        motionHit = new(candidate, ownTag.ShapeIndex,
+                            point.point + rayContact.normal * (point.separation * 0.5f), normal, depth);
+                        hasMotionHit = true;
+                        continue;
+                    }
                     if (PhysicsDirectSpaceState.Overlaps(query, other, otherTransform))
                     {
                         var stuck = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
@@ -125,7 +176,8 @@ internal sealed partial class PhysicsSpace
                             AcceptOneWay(candidate, normal, depth, queryMargin))
                         {
                             safe = unsafeFraction = 0;
-                            motionHit = new(candidate, ownTag.ShapeIndex, stuck.points[0].point,
+                            motionHit = new(candidate, ownTag.ShapeIndex,
+                                stuck.points[0].point + stuck.normal * (stuck.points[0].separation * 0.5f),
                                 normal, MathF.Max(0, depth));
                             hasMotionHit = true;
                         }
@@ -151,7 +203,8 @@ internal sealed partial class PhysicsSpace
                     if (manifold.pointCount != 0)
                     {
                         var point = manifold.points[0];
-                        motionHit = new(candidate, ownTag.ShapeIndex, point.point,
+                        motionHit = new(candidate, ownTag.ShapeIndex,
+                            point.point + manifold.normal * (point.separation * 0.5f),
                             -manifold.normal, MathF.Max(0, -point.separation));
                     }
                     else motionHit = new(candidate, ownTag.ShapeIndex, cast.point, cast.normal, 0);

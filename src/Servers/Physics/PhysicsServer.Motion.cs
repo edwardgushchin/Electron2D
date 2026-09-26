@@ -16,13 +16,15 @@ public sealed partial class PhysicsServer
         ArgumentNullException.ThrowIfNull(parameters);
         if (result?.IsDisposed == true) throw new ObjectDisposedException(nameof(result));
         var data = TestMotionData(body, parameters.From, parameters.Motion, parameters.Margin,
-            parameters.RecoveryAsCollision, parameters.ExcludedBodies, parameters.ExcludedObjects);
+            parameters.RecoveryAsCollision, parameters.ExcludedBodies, parameters.ExcludedObjects,
+            parameters.CollideSeparationRay);
         result?.Set(data);
         return data.Collided;
     }
 
     internal MotionResultData TestMotionData(RID body, Transform from, Vector2 motion,
-        float margin, bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects)
+        float margin, bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects,
+        bool collideSeparationRay = false)
     {
         ThrowIfDisposed();
         PhysicsSpace? space;
@@ -40,6 +42,6 @@ public sealed partial class PhysicsServer
         }
         if (space is null) throw new InvalidOperationException("A body motion test requires a registered physics space.");
         return space.TestBodyMotion(body, shapes, from, motion, margin, recoveryAsCollision,
-            excludedBodies, excludedObjects);
+            excludedBodies, excludedObjects, collideSeparationRay);
     }
 }

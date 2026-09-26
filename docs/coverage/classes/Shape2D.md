@@ -1,6 +1,6 @@
 # Shape2D API coverage
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 Godot source: [doc/classes/Shape2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Shape2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 

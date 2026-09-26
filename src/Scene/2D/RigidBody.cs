@@ -309,7 +309,7 @@ public sealed partial class RigidBody : PhysicsBody
             var centerY = 0d;
             foreach (var id in BackendShapes)
             {
-                if (b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
+                if (b2Shape_IsSensor(id) || b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
                 var segment = b2Shape_GetSegment(id);
                 var dx = (double)segment.point2.X - segment.point1.X;
                 var dy = (double)segment.point2.Y - segment.point1.Y;
@@ -325,7 +325,7 @@ public sealed partial class RigidBody : PhysicsBody
                 var segmentInertia = 0d;
                 foreach (var id in BackendShapes)
                 {
-                    if (b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
+                    if (b2Shape_IsSensor(id) || b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
                     var segment = b2Shape_GetSegment(id);
                     var dx = (double)segment.point2.X - segment.point1.X;
                     var dy = (double)segment.point2.Y - segment.point1.Y;

@@ -1,6 +1,6 @@
 # PhysicsTestMotionParameters2D API coverage
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 Godot source: [doc/classes/PhysicsTestMotionParameters2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,8 +10,8 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class PhysicsTestMotionParameters2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public sealed class Electron2D.PhysicsTestMotionParameters2D`](../../classes/PhysicsTestMotionParameters2D.md) | Partial | Pose, motion, margin, recovery and exclusions execute; separation-ray participation requires the absent separation-ray shape resource (ADR 0063). |
-| [`property bool collide_separation_ray = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | — | Blocked | Trigger: an executable SeparationRayShape2D resource and its special floor-snapping motion behavior (ADR 0063). |
+| [`class PhysicsTestMotionParameters2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public sealed class Electron2D.PhysicsTestMotionParameters2D`](../../classes/PhysicsTestMotionParameters2D.md) | Implemented | Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests). |
+| [`property bool collide_separation_ray = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public System.Boolean CollideSeparationRay { get; set; }`](../../classes/PhysicsTestMotionParameters2D.md) | Implemented | Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests). |
 | [`property RID[] exclude_bodies = []`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public Electron2D.RID[] ExcludeBodies { get; set; }`](../../classes/PhysicsTestMotionParameters2D.md) | Implemented | Typed motion defaults, finite pose/displacement, copied RID/instance exclusions and margin recovery execute (ADR 0063, PhysicsMotionTests). |
 | [`property int[] exclude_objects = []`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public System.UInt64[] ExcludeObjects { get; set; }`](../../classes/PhysicsTestMotionParameters2D.md) | Implemented | Typed motion defaults, finite pose/displacement, copied RID/instance exclusions and margin recovery execute (ADR 0063, PhysicsMotionTests). |
 | [`property Transform2D from = Transform2D(1, 0, 0, 1, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsTestMotionParameters2D.xml) | [`public Electron2D.Transform From { get; set; }`](../../classes/PhysicsTestMotionParameters2D.md) | Implemented | Typed motion defaults, finite pose/displacement, copied RID/instance exclusions and margin recovery execute (ADR 0063, PhysicsMotionTests). |

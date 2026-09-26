@@ -1,10 +1,10 @@
 # Collision shapes component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 ## Scope and owned types
 
-[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
+[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`SeparationRayShape`](../classes/SeparationRayShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
 
 ## Runtime flow
 
@@ -32,3 +32,5 @@ Shapes use Core Vector2/Rect2/Resource contracts, the Entity scene hierarchy and
 - [0064: Hollow paired-segment resource](../decisions/physics.md#adr-0064)
 - [0065: One-way scene-body contacts](../decisions/physics.md#adr-0065)
 - [0066: Direct scene collision polygons](../decisions/physics.md#adr-0066)
+
+SeparationRayShape defaults to length 20 and SlideOnSlope false, reports padded drawing bounds, duplicates independently and contributes a zero-density sensor fixture with exact directed metadata. Query/body-motion and Area sensing use the special kernel under [ADR 0068](../decisions/physics.md#adr-0068); ray/point queries exclude it. Rays contribute no inertia. Ordinary dynamic ray response remains an exact required solver integration gap. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) verifies current behavior and that remaining boundary.

@@ -358,13 +358,42 @@ The shared PhysicsBody motion test, typed KinematicCollision result, RID excepti
 - Reuse the current server body-motion test for each slide without constructing a public result per fixed frame. In grounded mode classify normals against normalized UpDirection and FloorMaxAngle, apply stop/constant-speed/block-on-wall/ceiling controls, and snap a previously grounded body down only when not facing upward. Floating mode treats contacts as walls and applies WallMinSlideAngle. MaxSlides bounds the loop; copied KinematicCollision objects expose individual and last contacts. Desired Velocity remains caller-owned; the body reports Area/world gravity but game code chooses whether to add it. Validate finite motion and public options before mutation.
 - Sample the last floor or wall body's point velocity and collision layer before movement. Floor/wall layer masks gate carry; movement caused by a platform excludes that platform RID, then a departure policy adds all, only upward, or none of its velocity to Velocity. Keep these operations on the space owner thread and use the existing body/Area field and RID lifetimes.
 - After character scene movement, direct queries prepare its backend fixture at the new pose immediately. Retain the previous solved pose separately; before the next fixed step reset a temporarily prepared query pose and send the final scene pose through the backend kinematic target operation. This preserves contact velocity and same-frame query identity. The current registered-body scan for platform point velocity is linear; replace it only after measured large-world cost. Fix the shared body-motion kernel to report initial contact when movement points inward along a touching slope rather than skipping that pair. Warmed unchanged movement reuses candidate, platform-exclusion and slide-result storage.
-- Keep CharacterBody class, MoveAndSlide and ApplyFloorSnap Partial for separation-ray-specific floor behavior until SeparationRayShape2D and its slide-on-slope motion option execute. The other own members can be Implemented with executable evidence for current shapes; inherited virtual tile collision-object gaps remain on their declaring result types.
+- Include separation rays through the shared contact kernel under [0068](#adr-0068): recovery always considers them, sliding rays participate in motion, and floor snap explicitly includes non-sliding rays. CharacterBody's own class, movement and snap contracts have executable evidence; inherited virtual tile collision-object gaps remain on their declaring result types.
 
 ### Consequences
 
-Caller-driven grounded and floating characters can move along current shapes, snap to floors, follow moving floors and walls, inspect typed contacts, and read selected gravity without public backend types. CharacterBodyTests covers default/invalid/packed state, floor/wall/ceiling and floating movement, slope/ceiling/wall controls, slide caps, platform masks/leave policies, Area gravity, immediate queries, fixed-lane sync and warmed allocation. PhysicsMotionTests guards the touching-slope regression. Native allocation, other platforms, separation-ray behavior, large-world throughput and owner visual acceptance remain unverified.
+Caller-driven grounded and floating characters can move along current shapes, snap to floors, follow moving floors and walls, inspect typed contacts, and read selected gravity without public backend types. CharacterBodyTests covers default/invalid/packed state, floor/wall/ceiling and floating movement, slope/ceiling/wall controls, slide caps, platform masks/leave policies, Area gravity, immediate queries, fixed-lane sync and warmed allocation. PhysicsMotionTests guards the touching-slope regression; SeparationRayShapeTests checks ray sliding and snap. Native allocation, other platforms, large-world throughput and owner visual acceptance remain unverified.
 
 ### Rejected alternatives
 
 - Use StaticBody teleportation for scene movement: it loses kinematic contact velocity and leaves the backend at an old pose during a same-frame query.
 - Add a second character-only collision world: it would split RID identity, shape owners, masks and Area fields from the shared SceneTree space.
+
+<a id="adr-0068"></a>
+## ADR 0068: Directed separation rays in queries and body motion
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: SeparationRayShape resource, directed sensing and shared body-motion contact
+- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0063](#adr-0063), [0067](#adr-0067)
+
+### Context
+
+Character floor behavior requires a directed ray resource. The current Box2D.NET pre-solve callback receives a point/normal and returns a contact veto; it cannot supply an alternative manifold. A regular solver segment would produce wrong slope, containment, query visibility and inertia behavior.
+
+### Decision
+
+- Expose Length=20 and SlideOnSlope=false. Accept finite nonnegative length within the backend squared-distance range; zero contributes no contact. Preserve padded drawing bounds, independent copies and exact indexed geometry metadata.
+- Use a zero-density sensor fixture for registration. Route direct shape queries, Area overlap scans and body motion through one directed native ray-cast kernel. Ray/point queries exclude these fixtures. Reject containment, back-facing hits and ray-ray pairs. Extend margin and positive axial motion along the ray; sliding follows the surface normal, otherwise separation opposes the axis. The swept ordinary convex region is the union of initial/final primitives and swept edges, avoiding the eight-vertex hull ceiling.
+- Include rays in recovery regardless of the flag. Include sliding rays in motion automatically; non-sliding rays require CollideSeparationRay, which snap enables. Preserve reciprocal filters, exceptions, exclusions, shape indices and point velocity. Reconstruct the collider contact point from the manifold, including ordinary contacts. A touching ray moving outward does not block motion. Sensor rays do not receive thin-rod inertia.
+- Keep the ray class Partial for ordinary dynamic impulses and contact reports. Trigger: solver integration that accepts the directed alternative manifold before constraint creation and includes friction/restitution, mass, sleep and reporting. Those checks belong in that integration's first ray slice. This is a required gap, not an exclusion or permanent sensor-only product decision. Vendored feature changes remain outside the authorized allocation/optimization patch scope.
+
+### Consequences and verification
+
+Character ray floors, ray-specific body tests and direct/Area sensing execute in the registered world. SeparationRayShapeTests checks every existing shape family, forward/reverse casts, short/zero rays, policy, copying/server state, recovery, snap and 64 warmed body queries with zero managed allocation. A dynamic ray-only probe passes through a floor and retains zero inertia, recording the remaining response boundary. Native allocation, other platforms and owner visual acceptance remain unverified.
+
+### Rejected alternatives
+
+- Solid segment fixtures: their two-sided manifold, query visibility and rod inertia change the contract.
+- Correct positions after the native solver as a substitute for constraints: coupled impulses, friction, sleep and reports would remain missing.
