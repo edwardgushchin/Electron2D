@@ -154,6 +154,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             {
                 if (body is RigidBody rigid) rigid.ApplyConstantForces();
                 else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+                else if (body is CharacterBody character) character.PrepareMotion(delta);
             }
             _contactStep++;
             b2World_Step(_worldID, (float)delta, 4);
@@ -163,6 +164,7 @@ internal sealed partial class PhysicsSpace : IDisposable
                 {
                     body.CompleteBackend();
                     if (body is AnimatableBody animatable) animatable.SyncPose();
+                    else if (body is CharacterBody character) character.CaptureSolverPose();
                 }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
@@ -292,7 +294,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
         foreach (var body in _bodies)
         {
-            if (body is not RigidBody rigid) continue;
+            if (body is not RigidBody && body is not CharacterBody) continue;
             var gravity = Vector2.Zero;
             var linearDamp = 0f;
             var angularDamp = 0f;
@@ -334,7 +336,10 @@ internal sealed partial class PhysicsSpace : IDisposable
             if (!gravityDone) gravity += _defaultGravity;
             if (!linearDone) linearDamp += _defaultLinearDamp;
             if (!angularDone) angularDamp += _defaultAngularDamp;
-            rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
+            if (body is RigidBody rigid)
+                rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
+            else
+                ((CharacterBody)body).SetResolvedGravity(gravity);
         }
     }
 

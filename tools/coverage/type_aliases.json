@@ -25,6 +25,7 @@
     "AStarGrid2D": "AStarGrid",
     "Area2D": "Area",
     "AnimatableBody2D": "AnimatableBody",
+    "CharacterBody2D": "CharacterBody",
     "Shape2D": "Shape",
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",
@@ -45,6 +46,8 @@
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
+    "CharacterBody2D.MotionMode": "CharacterMotionMode",
+    "CharacterBody2D.PlatformOnLeave": "CharacterPlatformOnLeave",
     "Area2D.SpaceOverride": "Area.SpaceOverride",
     "RigidBody2D.DampMode": "RigidBody.DampMode",
     "CollisionPolygon2D.BuildMode": "PolygonBuildMode",

@@ -1,6 +1,46 @@
 {
   "mappings": [
     {
+      "godot": "CharacterBody2D::method:get_floor_normal()",
+      "electron2d": "method:Electron2D.CharacterBody.GetFloorNormal()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_last_motion()",
+      "electron2d": "method:Electron2D.CharacterBody.GetLastMotion()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_last_slide_collision()",
+      "electron2d": "method:Electron2D.CharacterBody.GetLastSlideCollision()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_platform_velocity()",
+      "electron2d": "method:Electron2D.CharacterBody.GetPlatformVelocity()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_position_delta()",
+      "electron2d": "method:Electron2D.CharacterBody.GetPositionDelta()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_real_velocity()",
+      "electron2d": "method:Electron2D.CharacterBody.GetRealVelocity()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_slide_collision_count()",
+      "electron2d": "method:Electron2D.CharacterBody.GetSlideCollisionCount()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
+      "godot": "CharacterBody2D::method:get_wall_normal()",
+      "electron2d": "method:Electron2D.CharacterBody.GetWallNormal()",
+      "reason": "Typed cached character motion state in scene units."
+    },
+    {
       "godot": "PhysicsBody2D::method:get_collision_exceptions()",
       "electron2d": "method:Electron2D.PhysicsBody.GetCollisionExceptions()",
       "reason": "Typed scene body array preserves insertion order and null slots for server-only RID exceptions."
@@ -237,6 +277,26 @@
     }
   ],
   "extras": [
+    {
+      "electron2d": "constructor:Electron2D.CharacterBody..ctor()",
+      "reason": "Managed scene construction supplies grounded character defaults.",
+      "adr": "ADRs 0003, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.CharacterBody.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene construction restores the spatial character type.",
+      "adr": "ADRs 0005, 0008, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.CharacterBody.GetPropertyDescriptors()",
+      "reason": "Typed scene descriptors store character options without transient contact state.",
+      "adr": "ADRs 0005, 0063"
+    },
+    {
+      "electron2d": "method:Electron2D.CharacterBody.OnEnterTree()",
+      "reason": "Scene entry resets transient floor, wall, platform and slide snapshots.",
+      "adr": "ADRs 0008, 0063"
+    },
     {
       "electron2d": "constructor:Electron2D.KinematicCollision2D..ctor()",
       "reason": "Caller-owned typed output construction for TestMove, with an empty initial snapshot.",
@@ -844,6 +904,60 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": ["class:CharacterBody2D"],
+      "state": "Partial",
+      "reason": "Grounded/floating sliding, snap, platform carry, typed contacts and state execute; separation-ray floor behavior awaits an executable SeparationRayShape2D resource (ADRs 0054 and 0063)."
+    },
+    {
+      "godot": ["CharacterBody2D::method:apply_floor_snap()", "CharacterBody2D::method:move_and_slide()"],
+      "state": "Partial",
+      "reason": "Movement and floor snap execute for current solid/hollow shape families; separation-ray floor participation requires the absent shape resource and its special motion branch (ADR 0063, CharacterBodyTests)."
+    },
+    {
+      "godot": [
+        "CharacterBody2D::enum:MotionMode",
+        "CharacterBody2D::enum:PlatformOnLeave",
+        "CharacterBody2D::enum_value:MotionMode.MOTION_MODE_FLOATING",
+        "CharacterBody2D::enum_value:MotionMode.MOTION_MODE_GROUNDED",
+        "CharacterBody2D::enum_value:PlatformOnLeave.PLATFORM_ON_LEAVE_ADD_UPWARD_VELOCITY",
+        "CharacterBody2D::enum_value:PlatformOnLeave.PLATFORM_ON_LEAVE_ADD_VELOCITY",
+        "CharacterBody2D::enum_value:PlatformOnLeave.PLATFORM_ON_LEAVE_DO_NOTHING",
+        "CharacterBody2D::method:get_floor_angle(Vector2:)",
+        "CharacterBody2D::method:get_floor_normal()",
+        "CharacterBody2D::method:get_last_motion()",
+        "CharacterBody2D::method:get_last_slide_collision()",
+        "CharacterBody2D::method:get_platform_velocity()",
+        "CharacterBody2D::method:get_position_delta()",
+        "CharacterBody2D::method:get_real_velocity()",
+        "CharacterBody2D::method:get_slide_collision(int:)",
+        "CharacterBody2D::method:get_slide_collision_count()",
+        "CharacterBody2D::method:get_wall_normal()",
+        "CharacterBody2D::method:is_on_ceiling()",
+        "CharacterBody2D::method:is_on_ceiling_only()",
+        "CharacterBody2D::method:is_on_floor()",
+        "CharacterBody2D::method:is_on_floor_only()",
+        "CharacterBody2D::method:is_on_wall()",
+        "CharacterBody2D::method:is_on_wall_only()",
+        "CharacterBody2D::property:floor_block_on_wall",
+        "CharacterBody2D::property:floor_constant_speed",
+        "CharacterBody2D::property:floor_max_angle",
+        "CharacterBody2D::property:floor_snap_length",
+        "CharacterBody2D::property:floor_stop_on_slope",
+        "CharacterBody2D::property:max_slides",
+        "CharacterBody2D::property:motion_mode",
+        "CharacterBody2D::property:platform_floor_layers",
+        "CharacterBody2D::property:platform_on_leave",
+        "CharacterBody2D::property:platform_wall_layers",
+        "CharacterBody2D::property:safe_margin",
+        "CharacterBody2D::property:slide_on_ceiling",
+        "CharacterBody2D::property:up_direction",
+        "CharacterBody2D::property:velocity",
+        "CharacterBody2D::property:wall_min_slide_angle"
+      ],
+      "state": "Implemented",
+      "reason": "Typed grounded/floating defaults, contact classification, slope/ceiling/wall controls, platform masks/leave policies, snapshots, finite validation and PackedScene execute (ADR 0063, CharacterBodyTests)."
+    },
     {
       "godot": [
         "PhysicsBody2D::method:add_collision_exception_with(Node:)",
@@ -1620,8 +1734,8 @@
       "godot": [
         "PhysicsBody2D::method:get_gravity()"
       ],
-      "state": "Partial",
-      "reason": "RigidBody last-step area/world gravity and StaticBody zero execute; CharacterBody is absent, so its inherited area-gravity query remains a dependency."
+      "state": "Implemented",
+      "reason": "RigidBody and CharacterBody report resolved world/Area gravity after a fixed step; StaticBody and detached bodies return zero (ADRs 0056 and 0063, PhysicsAreaFieldTests and CharacterBodyTests)."
     },
     {
       "godot": [
@@ -1656,8 +1770,8 @@
         "Area2D::property:gravity_space_override",
         "Area2D::property:priority"
       ],
-      "state": "Partial",
-      "reason": "Gravity and priority execute for current RigidBody with point falloff and live edits; CharacterBody is absent and must inherit the same area field through GetGravity."
+      "state": "Implemented",
+      "reason": "Gravity and priority execute for RigidBody dynamics and CharacterBody GetGravity with point falloff, live edits and world fallback (ADRs 0056 and 0067, PhysicsAreaFieldTests and CharacterBodyTests)."
     }
   ]
 }

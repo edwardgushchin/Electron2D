@@ -139,7 +139,7 @@ public abstract class PhysicsBody : CollisionObject
     internal virtual Vector2 EffectiveGravity => Vector2.Zero;
 
     /// <summary>Gets the gravity applied by the last fixed physics step in scene units per second squared.</summary>
-    /// <returns>Zero for detached bodies and StaticBody; RigidBody reports its resolved area/world field after gravity scaling.</returns>
+    /// <returns>Zero for detached bodies and StaticBody; RigidBody and CharacterBody report resolved Area/world gravity.</returns>
     /// <exception cref="InvalidOperationException">An attached body is read off its scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The body has been disposed.</exception>
     public Vector2 GetGravity()

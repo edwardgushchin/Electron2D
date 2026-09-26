@@ -10,6 +10,33 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
+    internal bool TryGetBodyPointMotion(RID rid, Vector2 point, out Vector2 velocity, out uint layer)
+    {
+        // ponytail: Scan registered bodies for platform velocity; index by RID if large-world profiling needs it.
+        EnsureQueryAccess();
+        for (var index = 0; index < _bodies.Count; index++)
+        {
+            var body = _bodies[index];
+            if (body.GetRID() != rid) continue;
+            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, Shape.ToBackend(point));
+            velocity = ToScene(backendVelocity);
+            layer = body.CollisionLayer;
+            return true;
+        }
+        for (var index = 0; index < _serverColliders.Count; index++)
+        {
+            var body = _serverColliders[index];
+            if (body.IsArea || body.RID != rid) continue;
+            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, Shape.ToBackend(point));
+            velocity = ToScene(backendVelocity);
+            layer = body.CollisionLayer;
+            return true;
+        }
+        velocity = default;
+        layer = 0;
+        return false;
+    }
+
     private readonly List<MotionCandidate> _motionCandidates = [];
     private readonly record struct MotionCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
 
@@ -91,12 +118,15 @@ internal sealed partial class PhysicsSpace
                     if (PhysicsDirectSpaceState.Overlaps(query, other, otherTransform))
                     {
                         var stuck = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
-                        if (stuck.pointCount != 0 && stuck.points[0].separation < -0.1f * B2_LINEAR_SLOP &&
-                            AcceptOneWay(candidate, -stuck.normal, -stuck.points[0].separation, queryMargin))
+                        var depth = stuck.pointCount == 0 ? 0 : -stuck.points[0].separation;
+                        var normal = -stuck.normal;
+                        if (stuck.pointCount != 0 &&
+                            (depth > 0.1f * B2_LINEAR_SLOP || b2Dot(requested, normal) < -1e-6f) &&
+                            AcceptOneWay(candidate, normal, depth, queryMargin))
                         {
                             safe = unsafeFraction = 0;
                             motionHit = new(candidate, ownTag.ShapeIndex, stuck.points[0].point,
-                                -stuck.normal, -stuck.points[0].separation);
+                                normal, MathF.Max(0, depth));
                             hasMotionHit = true;
                         }
                         continue;

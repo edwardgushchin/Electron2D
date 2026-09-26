@@ -9,6 +9,7 @@ internal static class PhysicsMotionTests
         VerifyRecoveryAndOneWay();
         VerifyMarginPacking();
         VerifyShapeOwnerIndices();
+        VerifyTangentialSlopeContact();
         Console.WriteLine("Physics body motion sweep and typed server/scene result checks passed.");
     }
 
@@ -222,6 +223,23 @@ internal static class PhysicsMotionTests
               ReferenceEquals(hit.GetLocalShape(), nearProbe) &&
               ReferenceEquals(hit.GetColliderShape(), nearFloor),
             "Motion results retain direct shape-owner indices across unrelated fixture slots.");
+    }
+
+    private static void VerifyTangentialSlopeContact()
+    {
+        using var circle = new CircleShape();
+        using var slope = new SegmentShape { A = new(-100, 20), B = new(100, -20) };
+        var root = new Node();
+        var mover = new StaticBody { Name = "Mover", Position = new(-80, 106) };
+        mover.AddChild(new CollisionShape { Shape = circle });
+        var floor = new StaticBody { Name = "Slope", Position = new(0, 100) };
+        floor.AddChild(new CollisionShape { Shape = slope });
+        root.AddChild(mover); root.AddChild(floor);
+        using var tree = new SceneTree(root);
+        using var hit = mover.MoveAndCollide(new(100, 0), testOnly: true);
+        Check(hit is not null && hit.GetNormal().X < -0.1f &&
+              hit.GetNormal().Y < -0.9f && hit.GetTravel().X < 5,
+            "A body touching an ascending segment reports an inward tangential sweep instead of tunneling through it.");
     }
 
     private static void Check(bool condition, string message)
