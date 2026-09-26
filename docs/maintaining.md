@@ -1,12 +1,12 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-09-25
+Last updated: 2026-09-27
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
 ## Release license audit
 
-The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored code. Keep each vendor's original license text and the [third-party notices](../licence/THIRD_PARTY_NOTICES.md) in `licence/`. The pinned comparison-data [license](../licence/ReferenceData-LICENSE.txt) stays in the source repository but is excluded from game publishes. Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The current check compares the 63 ELF files, pinned NuGet/runtime versions and 28 published notice files for `linux-x64`; a change requires updating the inventory and notices together. It does not establish the exact source provenance of packaged Vkd3d or audit other platforms. Resolve the outstanding LGPL source/replacement obligations in `licence/THIRD_PARTY_NOTICES.md` before release.
+The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored code. Keep each vendor's original license text and the [third-party notices](../licence/THIRD_PARTY_NOTICES.md) in `licence/`. The pinned comparison-data [license](../licence/ReferenceData-LICENSE.txt) stays in the source repository but is excluded from game publishes. The separate [CanvasStyleGeometry license](../licence/CanvasStyleGeometry-LICENSE.txt) accompanies the adapted runtime style geometry and is included in publishes. Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The current check compares the 63 ELF files, pinned NuGet/runtime versions and 29 published notice files for `linux-x64`; a change requires updating the inventory and notices together. It does not establish the exact source provenance of packaged Vkd3d or audit other platforms. Resolve the outstanding LGPL source/replacement obligations in `licence/THIRD_PARTY_NOTICES.md` before release.
 
 For a desktop self-contained HostExample publish, run `python3 -B tools/check_native_publish.py RID /path/to/publish` after publishing without platform-selection overrides. The check requires an executable host, the matching .NET runtime pack, and exactly the three SDL packages and native libraries for that RID. It does not verify execution on the target OS or replace its license audit.
 

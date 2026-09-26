@@ -57,7 +57,7 @@ def check(publish: Path) -> None:
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 28, f"Expected 28 license and notice files, found {len(expected)}"
+    assert len(expected) == 29, f"Expected 29 license and notice files, found {len(expected)}"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
     for name in expected:
         assert (delivered / name).read_bytes() == (source / name).read_bytes(), name

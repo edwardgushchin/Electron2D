@@ -1566,6 +1566,206 @@
       "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
       "electron2d": "method:Electron2D.StyleBoxTexture.OnGetDrawRect(Electron2D.Rect2)",
       "reason": "ADR 0082: concrete texture style expands requested bounds through the inherited typed hook."
+    },
+    {
+      "godot": "@GlobalScope::enum:Corner",
+      "electron2d": "T:Electron2D.Corner",
+      "reason": "ADR 0082: stable typed 2D corner index consumed by StyleBoxFlat radius queries and setters."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:Corner.CORNER_TOP_LEFT",
+      "electron2d": "enumValue:Electron2D.Corner.TopLeft()",
+      "reason": "ADR 0082: preserves clockwise corner numeric identity, validated by StyleBoxFlat indexed access."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:Corner.CORNER_TOP_RIGHT",
+      "electron2d": "enumValue:Electron2D.Corner.TopRight()",
+      "reason": "ADR 0082: preserves clockwise corner numeric identity, validated by StyleBoxFlat indexed access."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:Corner.CORNER_BOTTOM_RIGHT",
+      "electron2d": "enumValue:Electron2D.Corner.BottomRight()",
+      "reason": "ADR 0082: preserves clockwise corner numeric identity, validated by StyleBoxFlat indexed access."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:Corner.CORNER_BOTTOM_LEFT",
+      "electron2d": "enumValue:Electron2D.Corner.BottomLeft()",
+      "reason": "ADR 0082: preserves clockwise corner numeric identity, validated by StyleBoxFlat indexed access."
+    },
+    {
+      "godot": "StyleBoxFlat::method:get_border_width(int:Side)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.GetBorderWidth(Electron2D.Side)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:get_border_width_min()",
+      "electron2d": "method:Electron2D.StyleBoxFlat.GetBorderWidthMin()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:get_corner_radius(int:Corner)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.GetCornerRadius(Electron2D.Corner)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:get_expand_margin(int:Side)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.GetExpandMargin(Electron2D.Side)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_border_width(int:Side,int:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetBorderWidth(Electron2D.Side,System.Int32)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_border_width_all(int:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetBorderWidthAll(System.Int32)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_corner_radius(int:Corner,int:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetCornerRadius(Electron2D.Corner,System.Int32)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_corner_radius_all(int:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetCornerRadiusAll(System.Int32)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_expand_margin(int:Side,float:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetExpandMargin(Electron2D.Side,System.Single)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::method:set_expand_margin_all(float:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.SetExpandMarginAll(System.Single)",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:anti_aliasing",
+      "electron2d": "property:Electron2D.StyleBoxFlat.AntiAliasing()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:anti_aliasing_size",
+      "electron2d": "property:Electron2D.StyleBoxFlat.AntiAliasingSize()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:bg_color",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BGColor()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_blend",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderBlend()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_color",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderColor()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_width_bottom",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderWidthBottom()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_width_left",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderWidthLeft()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_width_right",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderWidthRight()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:border_width_top",
+      "electron2d": "property:Electron2D.StyleBoxFlat.BorderWidthTop()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:corner_detail",
+      "electron2d": "property:Electron2D.StyleBoxFlat.CornerDetail()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:corner_radius_bottom_left",
+      "electron2d": "property:Electron2D.StyleBoxFlat.CornerRadiusBottomLeft()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:corner_radius_bottom_right",
+      "electron2d": "property:Electron2D.StyleBoxFlat.CornerRadiusBottomRight()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:corner_radius_top_left",
+      "electron2d": "property:Electron2D.StyleBoxFlat.CornerRadiusTopLeft()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:corner_radius_top_right",
+      "electron2d": "property:Electron2D.StyleBoxFlat.CornerRadiusTopRight()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:draw_center",
+      "electron2d": "property:Electron2D.StyleBoxFlat.DrawCenter()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:expand_margin_bottom",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ExpandMarginBottom()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:expand_margin_left",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ExpandMarginLeft()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:expand_margin_right",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ExpandMarginRight()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:expand_margin_top",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ExpandMarginTop()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:shadow_color",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ShadowColor()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:shadow_offset",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ShadowOffset()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:shadow_size",
+      "electron2d": "property:Electron2D.StyleBoxFlat.ShadowSize()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBoxFlat::property:skew",
+      "electron2d": "property:Electron2D.StyleBoxFlat.Skew()",
+      "reason": "ADR 0082: typed flat-style property/query preserves raw signed state, source defaults, Changed timing, content/draw separation and executable retained geometry; BG remains uppercase under ADR 0045."
+    },
+    {
+      "godot": "StyleBox::method:_draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: flat resource implements the existing typed draw/bounds hook with rounded colored triangle geometry and expansion/shadow bounds."
+    },
+    {
+      "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxFlat.OnGetDrawRect(Electron2D.Rect2)",
+      "reason": "ADR 0082: flat resource implements the existing typed draw/bounds hook with rounded colored triangle geometry and expansion/shadow bounds."
     }
   ],
   "statusGroups": [
@@ -2458,7 +2658,7 @@
         "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0082: typed StyleBox margins/minimum/mask/draw hooks and current-item context execute through retained CanvasItem drawing. Texture style preserves axis policies, atlas-before-expand geometry, borrowed texture and exact resource copies; Empty and Line implement their real margin/draw semantics. Global Theme lookup and StyleBoxFlat/control skins remain separate capabilities. StyleBoxTests verifies defaults/notifications/hooks/scope/failure/copy/lifetime/concurrency and 64 warmed recording/replay cycles without managed allocation. StyleBoxRenderingTests verifies nine axis combinations, fractional/atlas/line/empty pixels and 64 warmed mutation/recording/render frames without managed allocation on Linux Wayland GPU/compatibility; native allocator and other-platform acceptance are not claimed."
+      "reason": "ADR 0082: typed StyleBox margins/minimum/mask/draw hooks and current-item context execute through retained CanvasItem drawing. Texture style preserves axis policies, atlas-before-expand geometry, borrowed texture and exact resource copies; Empty and Line implement their real margin/draw semantics. Global Theme lookup and complete control skins remain separate capabilities. StyleBoxTests verifies defaults/notifications/hooks/scope/failure/copy/lifetime/concurrency and 64 warmed recording/replay cycles without managed allocation. StyleBoxRenderingTests verifies nine axis combinations, fractional/atlas/line/empty pixels and 64 warmed mutation/recording/render frames without managed allocation on Linux Wayland GPU/compatibility; native allocator and other-platform acceptance are not claimed."
     },
     {
       "godot": [
@@ -2497,8 +2697,8 @@
         "StyleBoxFlat::property:shadow_size",
         "StyleBoxFlat::property:skew"
       ],
-      "state": "Unimplemented",
-      "reason": "ADR 0082: current retained geometry can support this separate connected slice; implement rounded corners, borders, anti-aliasing, skew, shadows, expansion, minimum policy and all matching resource members together with tessellation and native pixel verification. No absent backend prerequisite remains."
+      "state": "Implemented",
+      "reason": "ADR 0082: flat style owns rounded fill/border/shadow tessellation, border blending, skew, expansion, minima, typed corners, exact resource copying and retained triangle drawing. AA feather uses the current recording factor one; the first viewport/font oversampling slice must divide by its active factor and invalidate recordings on changes. No nonunit override is claimed. StyleBoxFlatTests verifies state, notifications, clamps, copies, guards, concurrency, 15 independent C++ mesh profiles and zero warmed recording/replay allocation; native GPU/compatibility tests verify three visual states and 64 warmed full mutation/render frames with zero managed bytes on Linux Wayland."
     },
     {
       "godot": [
@@ -2509,7 +2709,18 @@
         "PanelContainer::theme_item:panel"
       ],
       "state": "Blocked",
-      "reason": "ADR 0082: trigger is complete StyleBoxFlat plus Theme/default-skin lookup and invalidation. The first panel slice must consume the real default panel style, including drawing and PanelContainer margin layout; do not substitute a fake empty default."
+      "reason": "ADR 0082: StyleBoxFlat drawing is available. Trigger: complete Theme/default-skin lookup and invalidation followed by the first panel consumer slice, with real default panel drawing and PanelContainer content-margin layout. Do not substitute a fake empty default."
+    },
+    {
+      "godot": [
+        "@GlobalScope::enum:Corner",
+        "@GlobalScope::enum_value:Corner.CORNER_TOP_LEFT",
+        "@GlobalScope::enum_value:Corner.CORNER_TOP_RIGHT",
+        "@GlobalScope::enum_value:Corner.CORNER_BOTTOM_RIGHT",
+        "@GlobalScope::enum_value:Corner.CORNER_BOTTOM_LEFT"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0082: global Corner projects stable typed TopLeft=0, TopRight=1, BottomRight=2, BottomLeft=3; StyleBoxFlat validates undefined values before access. StyleBoxFlatTests verifies all numeric values, valid side-specific radius changes and undefined-corner rejection."
     }
   ],
   "extras": [
@@ -3049,6 +3260,26 @@
       "electron2d": "method:Electron2D.StyleBoxTexture.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.StyleBoxFlat..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0013: typed construction, stored property descriptors, exact duplicate factory and Resource graph-copy hook project the existing flat-style resource lifecycle; signed raw values and clamped defaults remain distinct from adapted draw geometry."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxFlat.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0013: typed construction, stored property descriptors, exact duplicate factory and Resource graph-copy hook project the existing flat-style resource lifecycle; signed raw values and clamped defaults remain distinct from adapted draw geometry."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxFlat.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0013: typed construction, stored property descriptors, exact duplicate factory and Resource graph-copy hook project the existing flat-style resource lifecycle; signed raw values and clamped defaults remain distinct from adapted draw geometry."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxFlat.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0013: typed construction, stored property descriptors, exact duplicate factory and Resource graph-copy hook project the existing flat-style resource lifecycle; signed raw values and clamped defaults remain distinct from adapted draw geometry."
     }
   ]
 }

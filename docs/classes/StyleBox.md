@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-27
 
-**Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** [StyleBoxTexture](StyleBoxTexture.md), [StyleBoxEmpty](StyleBoxEmpty.md), [StyleBoxLine](StyleBoxLine.md)
+**Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** [StyleBoxFlat](StyleBoxFlat.md), [StyleBoxTexture](StyleBoxTexture.md), [StyleBoxEmpty](StyleBoxEmpty.md), [StyleBoxLine](StyleBoxLine.md)
 
 **Declaration:** `public abstract class StyleBox : Resource` · **Source:** [StyleBox.cs](../../src/Scene/Resources/StyleBox.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -53,7 +53,7 @@ The caller owns the style's lifetime. A subclass that supports duplication must 
 ## Property descriptions
 
 <a id="contentmarginleft"></a><a id="contentmargintop"></a><a id="contentmarginright"></a><a id="contentmarginbottom"></a>
-**Content margins:** positive values reserve inward content space. Any negative override selects the concrete fallback: zero for Empty, texture borders for Texture, half thickness on the perpendicular sides for Line. Read GetMargin when consuming resolved content space; the properties and GetContentMargin intentionally expose raw values. Every valid write commits before Changed, including equal values. Subscribers run outside the style lock; an exception from a subscriber does not undo state.
+**Content margins:** positive values reserve inward content space. Any negative override selects the concrete fallback: zero for Empty, border widths for Flat, texture borders for Texture, half thickness on the perpendicular sides for Line. Read GetMargin when consuming resolved content space; the properties and GetContentMargin intentionally expose raw values. Every valid write commits before Changed, including equal values. Subscribers run outside the style lock; an exception from a subscriber does not undo state.
 
 ## Method descriptions
 
@@ -82,4 +82,4 @@ The caller owns the style's lifetime. A subclass that supports duplication must 
 
 Built-in resource state uses a private style lock; custom hooks and Changed callbacks execute outside it. Drawing still requires the canvas owner thread, and caller hooks own their own thread-safety. Retained commands capture draw values, so changing a style requires the consumer to queue redraw; content layout likewise needs an explicit minimum refresh. Style and texture ownership remain separate from canvas lifetime.
 
-[Managed tests](../../tests/Electron2D.Tests/StyleBoxTests.cs) verify margins/defaults, hook dispatch, Changed timing, integer strip geometry, recording context and failure cleanup, exact copies, scene-local resource policy, lifetime and lock boundaries. Sixty-four warmed line mutation/recording/replay cycles allocate zero managed bytes. [Native tests](../../tests/Electron2D.Tests/StyleBoxRenderingTests.cs) verify all nine axis combinations, fractional borders/expansion, center suppression, source regions, modulation, atlas ordering, line and empty drawing on Linux Wayland GPU/compatibility; each backend also passes 64 warmed style mutation/recording/render frames with zero managed bytes measured from ProcessFrameStarted through FramePostDraw. Native allocator counts, broad GUI performance, other platforms and owner acceptance remain unverified. See [coverage](../coverage/classes/StyleBox.md), [Resource](Resource.md) and [ADR 0082](../decisions/rendering.md#adr-0082). Global Theme/default-skin lookup, StyleBoxFlat and complete skinned controls remain separate.
+[Managed tests](../../tests/Electron2D.Tests/StyleBoxTests.cs) verify margins/defaults, hook dispatch, Changed timing, integer strip geometry, recording context and failure cleanup, exact copies, scene-local resource policy, lifetime and lock boundaries. Sixty-four warmed line mutation/recording/replay cycles allocate zero managed bytes. [Native tests](../../tests/Electron2D.Tests/StyleBoxRenderingTests.cs) verify all nine axis combinations, fractional borders/expansion, center suppression, source regions, modulation, atlas ordering, line and empty drawing on Linux Wayland GPU/compatibility; each backend also passes 64 warmed style mutation/recording/render frames with zero managed bytes measured from ProcessFrameStarted through FramePostDraw. Native allocator counts, broad GUI performance, other platforms and owner acceptance remain unverified. See [coverage](../coverage/classes/StyleBox.md), [Resource](Resource.md) and [ADR 0082](../decisions/rendering.md#adr-0082). Global Theme/default-skin lookup and complete skinned controls remain separate.

@@ -721,6 +721,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Corner",
+    "kind": "type",
+    "declaringType": "Electron2D.Corner",
+    "name": "Corner",
+    "signature": "public enum Electron2D.Corner",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Curve",
     "kind": "type",
     "declaringType": "Electron2D.Curve",
@@ -3561,6 +3579,21 @@
     "declaringType": "Electron2D.StyleBoxEmpty",
     "name": "StyleBoxEmpty",
     "signature": "public class Electron2D.StyleBoxEmpty",
+    "visibility": "public",
+    "baseType": "Electron2D.StyleBox",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StyleBoxFlat",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "StyleBoxFlat",
+    "signature": "public class Electron2D.StyleBoxFlat",
     "visibility": "public",
     "baseType": "Electron2D.StyleBox",
     "interfaces": [
@@ -7438,6 +7471,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.StyleBoxFlat..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": ".ctor",
+    "signature": "public StyleBoxFlat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.StyleBoxLine..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.StyleBoxLine",
@@ -9005,6 +9051,58 @@
     "parameters": [],
     "returnType": "Electron2D.Control.SizeFlags",
     "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Corner.BottomLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Corner",
+    "name": "BottomLeft",
+    "signature": "public const Electron2D.Corner BottomLeft = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Corner",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Corner.BottomRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Corner",
+    "name": "BottomRight",
+    "signature": "public const Electron2D.Corner BottomRight = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Corner",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Corner.TopLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Corner",
+    "name": "TopLeft",
+    "signature": "public const Electron2D.Corner TopLeft = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Corner",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Corner.TopRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Corner",
+    "name": "TopRight",
+    "signature": "public const Electron2D.Corner TopRight = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Corner",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.Curve.TangentMode.Count()",
@@ -54781,6 +54879,313 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.StyleBoxFlat.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.GetBorderWidth(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "GetBorderWidth",
+    "signature": "public System.Int32 GetBorderWidth(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.GetBorderWidthMin()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "GetBorderWidthMin",
+    "signature": "public System.Int32 GetBorderWidthMin()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.GetCornerRadius(Electron2D.Corner)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "GetCornerRadius",
+    "signature": "public System.Int32 GetCornerRadius(Electron2D.Corner corner)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "corner",
+        "type": "Electron2D.Corner",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.GetExpandMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "GetExpandMargin",
+    "signature": "public System.Single GetExpandMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.OnGetDrawRect(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "OnGetDrawRect",
+    "signature": "protected override Electron2D.Rect2 OnGetDrawRect(Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetBorderWidth(Electron2D.Side,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetBorderWidth",
+    "signature": "public System.Void SetBorderWidth(Electron2D.Side margin, System.Int32 width)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetBorderWidthAll(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetBorderWidthAll",
+    "signature": "public System.Void SetBorderWidthAll(System.Int32 width)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetCornerRadius(Electron2D.Corner,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetCornerRadius",
+    "signature": "public System.Void SetCornerRadius(Electron2D.Corner corner, System.Int32 radius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "corner",
+        "type": "Electron2D.Corner",
+        "default": null
+      },
+      {
+        "name": "radius",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetCornerRadiusAll(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetCornerRadiusAll",
+    "signature": "public System.Void SetCornerRadiusAll(System.Int32 radius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "radius",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetExpandMargin(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetExpandMargin",
+    "signature": "public System.Void SetExpandMargin(Electron2D.Side margin, System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxFlat.SetExpandMarginAll(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "SetExpandMarginAll",
+    "signature": "public System.Void SetExpandMarginAll(System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.StyleBoxLine.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.StyleBoxLine",
@@ -77686,6 +78091,305 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.AntiAliasing()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "AntiAliasing",
+    "signature": "public System.Boolean AntiAliasing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.AntiAliasingSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "AntiAliasingSize",
+    "signature": "public System.Single AntiAliasingSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BGColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BGColor",
+    "signature": "public Electron2D.Color BGColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderBlend()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderBlend",
+    "signature": "public System.Boolean BorderBlend { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderColor",
+    "signature": "public Electron2D.Color BorderColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderWidthBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderWidthBottom",
+    "signature": "public System.Int32 BorderWidthBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderWidthLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderWidthLeft",
+    "signature": "public System.Int32 BorderWidthLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderWidthRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderWidthRight",
+    "signature": "public System.Int32 BorderWidthRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.BorderWidthTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "BorderWidthTop",
+    "signature": "public System.Int32 BorderWidthTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.CornerDetail()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CornerDetail",
+    "signature": "public System.Int32 CornerDetail { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.CornerRadiusBottomLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CornerRadiusBottomLeft",
+    "signature": "public System.Int32 CornerRadiusBottomLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.CornerRadiusBottomRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CornerRadiusBottomRight",
+    "signature": "public System.Int32 CornerRadiusBottomRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.CornerRadiusTopLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CornerRadiusTopLeft",
+    "signature": "public System.Int32 CornerRadiusTopLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.CornerRadiusTopRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "CornerRadiusTopRight",
+    "signature": "public System.Int32 CornerRadiusTopRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.DrawCenter()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "DrawCenter",
+    "signature": "public System.Boolean DrawCenter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ExpandMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ExpandMarginBottom",
+    "signature": "public System.Single ExpandMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ExpandMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ExpandMarginLeft",
+    "signature": "public System.Single ExpandMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ExpandMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ExpandMarginRight",
+    "signature": "public System.Single ExpandMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ExpandMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ExpandMarginTop",
+    "signature": "public System.Single ExpandMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ShadowColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ShadowColor",
+    "signature": "public Electron2D.Color ShadowColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ShadowOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ShadowOffset",
+    "signature": "public Electron2D.Vector2 ShadowOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.ShadowSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "ShadowSize",
+    "signature": "public System.Int32 ShadowSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxFlat.Skew()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxFlat",
+    "name": "Skew",
+    "signature": "public Electron2D.Vector2 Skew { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

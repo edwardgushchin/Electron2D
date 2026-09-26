@@ -775,7 +775,7 @@ public class Resource : ElectronObject
         handlers?.Invoke(this);
     }
 
-    private static void ThrowCombined(Exception? first, Exception? second)
+    internal static void ThrowCombined(Exception? first, Exception? second)
     {
         if (first is not null && second is not null)
             throw new AggregateException(first, second);

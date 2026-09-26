@@ -160,11 +160,14 @@ def main():
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count
         assert all(" | Implemented | " in row for row in rows)
-    for name, count in (("StyleBox", 18), ("StyleBoxTexture", 25), ("StyleBoxLine", 6), ("StyleBoxEmpty", 1)):
+    for name, count in (("StyleBox", 18), ("StyleBoxTexture", 25), ("StyleBoxLine", 6), ("StyleBoxEmpty", 1), ("StyleBoxFlat", 34)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows)
     assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "CanvasItem.md"].splitlines()
                                        if row.startswith("| [`method draw_style_box("))
+    corner_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
+                   if row.startswith("| [`") and ("enum Corner" in row or "[Corner]" in row)]
+    assert len(corner_rows) == 5 and all(" | Implemented | " in row for row in corner_rows)
     flag_rows = [row for row in pages[CLASS_PAGES / "Control.md"].splitlines() if row.startswith("| [`") and ("enum SizeFlags" in row or "[SizeFlags]" in row or "size_flags_" in row)]
     assert len(flag_rows) == 11 and all(" | Implemented | " in row for row in flag_rows)
     container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]

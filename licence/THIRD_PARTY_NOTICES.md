@@ -12,6 +12,9 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | FastNoiseLite managed algorithm | MIT | [LICENSE](FastNoiseLite-LICENSE.txt) |
 | Adapted PCG32 algorithm | Apache-2.0 | [PCG32-LICENSE](PCG32-LICENSE.txt) |
 | Adapted PolyPartition algorithm | MIT | [PolyPartition-LICENSE](PolyPartition-LICENSE.txt) |
+| Flat canvas style geometry | MIT | [CanvasStyleGeometry-LICENSE](CanvasStyleGeometry-LICENSE.txt) |
+
+Flat canvas style geometry adapts the [pinned style_box_flat.cpp algorithm](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/style_box_flat.cpp), including its corner, border, shadow and anti-aliasing tessellation. The separate CanvasStyleGeometry notice accompanies the runtime adaptation; the comparison-data notice retains its repository-only scope.
 
 The license texts above are published together in `licence/`. The comparison data under `docs/coverage` and its separate repository license are not included in a runtime publish.
 

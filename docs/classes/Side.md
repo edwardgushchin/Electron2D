@@ -1,6 +1,6 @@
 # Side
 
-Last updated: 2026-09-21
+Last updated: 2026-09-27
 
 **Inherits:** —
 
@@ -59,11 +59,11 @@ The bottom side.
 
 ## Invariants and error behavior
 
-The four numeric values are stable public API. The enum is not marked as flags. C# permits casting other integers to the type; [`Rect2.GrowSide`](Rect2.md) and [`Rect2i.GrowSide`](Rect2i.md) treat such an undefined value as a no-op. No standalone enum operation throws.
+The four numeric values are stable public API. The enum is not marked as flags. C# permits casting other integers to the type; [`Rect2.GrowSide`](Rect2.md) and [`Rect2i.GrowSide`](Rect2i.md) treat such an undefined value as a no-op. StyleBox margin access and StyleBoxFlat border/expansion access instead reject undefined sides with ArgumentOutOfRangeException. No standalone enum operation throws.
 
 ## Threading, dependencies, and integration
 
-Enum values are immutable, allocation-free, and safe to copy or read on any thread. `Side` has no dependency beyond the runtime enum representation and is currently consumed by `Rect2` and `Rect2i`.
+Enum values are immutable, allocation-free, and safe to copy or read on any thread. `Side` has no dependency beyond the runtime enum representation and is consumed by `Rect2`, `Rect2i` and the [StyleBox](StyleBox.md) resource family.
 
 ## Verification and limitations
 

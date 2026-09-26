@@ -10,5 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <EmbeddedResource Include="Shaders/*.spv" LogicalName="TestShaders.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />
   </ItemGroup>
 </Project>

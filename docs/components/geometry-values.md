@@ -1,10 +1,10 @@
 # Geometry values component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## Scope
 
-This Core component owns the engine's backend-independent value mathematics and pure 2D geometry queries: two-, three-, and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
+This Core component owns the engine's backend-independent value mathematics and pure 2D geometry queries: two-, three-, and four-component floating-point/integer vectors, floating-point and integer 2D axis-aligned rectangles, the 2D affine transform, and rectangle side/corner identities. It contains no renderer, physics, input, asset, scene ownership, native handles, or global state.
 
 ## Owned types
 
@@ -20,6 +20,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 | [`Rect2`](../classes/Rect2.md) | Mutable sequential rectangle and typed geometry operations | [`Rect2.cs`](../../src/Core/Math/Rect2.cs) |
 | [`Rect2i`](../classes/Rect2i.md) | Mutable sequential integer rectangle and typed geometry operations | [`Rect2i.cs`](../../src/Core/Math/Rect2i.cs) |
 | [`Transform`](../classes/Transform.md) | Mutable sequential affine value, composition, inversion, and bounds transformation | [`Transform.cs`](../../src/Core/Math/Transform.cs) |
+| [`Corner`](../classes/Corner.md) | Clockwise 2D corner identity for rounded style geometry | [`Corner.cs`](../../src/Core/Math/Corner.cs) |
 | [`Side`](../classes/Side.md) | Stable identity for the four rectangle edges | [`Side.cs`](../../src/Core/Math/Side.cs) |
 
 ## Runtime flow
@@ -52,6 +53,7 @@ This Core component owns the engine's backend-independent value mathematics and 
 - Numeric hot paths allocate no managed memory after warmup; formatting, transform array operators, and persistence allocate by contract.
 - Floating-point and integer rectangle containment is half-open on right/bottom, and rectangle sizes never normalize implicitly. Integer rectangle arithmetic wraps except for the documented `Abs()` minimum-value failure.
 - Transform multiplication applies the right operand first; general inversion rejects an exactly singular basis, while reverse point/rectangle operations have an orthonormal-basis precondition.
+- `Corner` values remain top-left `0`, top-right `1`, bottom-right `2`, bottom-left `3`; StyleBoxFlat validates undefined values before indexed access.
 - `Side` values remain left `0`, top `1`, right `2`, bottom `3`.
 - `Geometry` does not mutate caller values. Raster lines include both endpoints; nearest-pair and raster results are fresh arrays; missing intersections are nullable values.
 

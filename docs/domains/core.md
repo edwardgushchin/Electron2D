@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-09-25
+Last updated: 2026-09-27
 
 ## Responsibility
 
@@ -32,7 +32,7 @@ The domain currently contains fifteen active components:
 | [Color values](../components/color-values.md) | Floating-point RGBA math, HSV/OKHSL conversion, packing/parsing, and the standard named catalog | Implemented and verified |
 | [Geometry values](../components/geometry-values.md) | Engine-owned vectors, rectangles, affine transforms, side identities, and pure 2D geometry queries | Values and Geometry class implemented |
 
-Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef<T>`](../classes/WeakRef.Generic.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`JSON`](../classes/JSON.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`XMLParser`](../classes/XMLParser.md), [`FileAccessModeFlags`](../classes/FileAccessModeFlags.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), [`Transform`](../classes/Transform.md), and [`Side`](../classes/Side.md).
+Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef<T>`](../classes/WeakRef.Generic.md), [`EventConnection`](../classes/EventConnection.md), [`PropertyDescriptor`](../classes/PropertyDescriptor.md), [`PropertyDescriptor<TOwner, TValue>`](../classes/PropertyDescriptor.Generic.md), [`ConfigKey<T>`](../classes/ConfigKey.Generic.md), [`ConfigFile`](../classes/ConfigFile.md), [`JSON`](../classes/JSON.md), [`FileAccess`](../classes/FileAccess.md), [`DirAccess`](../classes/DirAccess.md), [`XMLParser`](../classes/XMLParser.md), [`FileAccessModeFlags`](../classes/FileAccessModeFlags.md), [`FileCompressionMode`](../classes/FileCompressionMode.md), [`UnixPermissionFlags`](../classes/UnixPermissionFlags.md), [`ProjectSetting<T>`](../classes/ProjectSetting.Generic.md), [`ProjectSettings`](../classes/ProjectSettings.md), [`MainLoop`](../classes/MainLoop.md), [`Engine`](../classes/Engine.md), [`EngineVersionInfo`](../classes/EngineVersionInfo.md), [`Mathf`](../classes/Mathf.md), [`RandomNumberGenerator`](../classes/RandomNumberGenerator.md), [`RegEx`](../classes/RegEx.md), [`RegExMatch`](../classes/RegExMatch.md), [`Color`](../classes/Color.md), [`Colors`](../classes/Colors.md), [`Geometry`](../classes/Geometry.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), [`Transform`](../classes/Transform.md), [`Side`](../classes/Side.md), and [`Corner`](../classes/Corner.md).
 
 ## Public surface
 
@@ -65,6 +65,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - `Rect2` and `Rect2i`: sequential floating-point/integer axis-aligned rectangles with complete backend-independent geometry, typed conversions, strict persistence, and packed-scene storage; `Rect2` additionally provides transform bounds operators. All 27 Rect2 members and all 23 Rect2i members, plus both type rows, have pinned semantic audits, including IEEE growth, ordered edge rejection, integer wrap and conversion failures.
 - `Transform`: sequential affine 2D value with basis/origin decomposition, composition, inversion, interpolation, local/global operations, and typed point/vector/rectangle transforms.
 - `Side`: stable identity of the four rectangle edges.
+- `Corner`: stable clockwise identity of the four rectangle corners, consumed by StyleBoxFlat radius access.
 
 ## Dependency direction
 

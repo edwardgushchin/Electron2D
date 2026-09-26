@@ -831,7 +831,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StringName](classes/StringName.md) | — | Excluded | 124 |
 | [StyleBox](classes/StyleBox.md) | Resource | Implemented | 17 |
 | [StyleBoxEmpty](classes/StyleBoxEmpty.md) | StyleBox | Implemented | 0 |
-| [StyleBoxFlat](classes/StyleBoxFlat.md) | StyleBox | Unimplemented | 33 |
+| [StyleBoxFlat](classes/StyleBoxFlat.md) | StyleBox | Implemented | 33 |
 | [StyleBoxLine](classes/StyleBoxLine.md) | StyleBox | Implemented | 5 |
 | [StyleBoxTexture](classes/StyleBoxTexture.md) | StyleBox | Implemented | 24 |
 | [SubViewport](classes/SubViewport.md) | Viewport | Blocked | 16 |

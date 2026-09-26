@@ -655,7 +655,7 @@ Records the full additional transform for subsequent commands. It executes only 
 <a id="drawstylebox"></a>
 ### `public void DrawStyleBox(StyleBox styleBox, Rect2 rect)`
 
-Records a borrowed [StyleBox](StyleBox.md) using its typed Draw/OnDraw path during this item's recording scope. The style supplies empty, line, textured nine-patch or custom geometry in local pixels; the existing canvas transform, modulation, clipping and texture pipeline apply.
+Records a borrowed [StyleBox](StyleBox.md) using its typed Draw/OnDraw path during this item's recording scope. The style supplies empty, line, textured nine-patch, rounded flat or custom geometry in local pixels; the existing canvas transform, modulation, clipping and texture pipeline apply.
 
 **Parameters:** `styleBox` is a live caller-owned style; `rect` is a finite local rectangle. Null style throws ArgumentNullException, disposed style/target throws ObjectDisposedException, and a wrong owner or inactive recording scope throws InvalidOperationException. Nonfinite geometry throws ArgumentException. The style is not retained as a live draw dependency: the commands capture its current values, while referenced textures remain borrowed.
 
