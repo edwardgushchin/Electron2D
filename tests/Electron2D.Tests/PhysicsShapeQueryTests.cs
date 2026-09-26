@@ -15,7 +15,7 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyParametersAndBorrowedShapeRID()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         using var query = new PhysicsShapeQueryParameters2D();
         Check(query.Shape is null && !query.ShapeRID.IsValid() && query.Transform == Transform.Identity &&
               query.Motion == Vector2.Zero && query.Margin == 0 && query.CollisionMask == uint.MaxValue &&
@@ -40,7 +40,7 @@ internal static class PhysicsShapeQueryTests
         Reject<InvalidOperationException>(() => server.ShapeSetData(borrowedRID, circle));
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, borrowedRID);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
         server.BodySetSpace(body, space);
@@ -76,14 +76,14 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyOverlapAndMotion()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
         var floorRID = server.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
         using var probe = new RectangleShape { Size = new(20, 20) };
         server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, floorRID);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
         server.BodySetSpace(body, space);
@@ -117,7 +117,7 @@ internal static class PhysicsShapeQueryTests
         cast = direct.CastMotion(query);
         Check(cast == (1f, 1f), "CastMotion ignores a shape already colliding at its origin.");
         var secondBody = server.BodyCreate();
-        server.BodySetMode(secondBody, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(secondBody, floorRID);
         server.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 140)));
         server.BodySetSpace(secondBody, space);
@@ -179,14 +179,14 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyContactsAndRestInfo()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
         var floorRID = server.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
         using var circle = new CircleShape();
         server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, floorRID);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 100)));
         server.BodySetSpace(body, space);
@@ -222,7 +222,7 @@ internal static class PhysicsShapeQueryTests
             "A polygon manifold can report two point pairs and a one-pair cap truncates it.");
         query.Shape = circle;
 
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Kinematic);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
         server.BodySetLinearVelocity(body, new(0, 40));
         rest = direct.GetRestInfo(query);
         Check(rest is { } moving && moving.LinearVelocity.Y is > 39 and < 41,
@@ -234,7 +234,7 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyContactPairFamilies()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var direct = server.SpaceGetDirectState(space);
         using var circle = new CircleShape();
@@ -255,7 +255,7 @@ internal static class PhysicsShapeQueryTests
                 _ => server.RectangleShapeCreate()
             };
             server.ShapeSetData(shapeRID, candidateShape);
-            server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+            server.BodySetMode(body, PhysicsServer.BodyMode.Static);
             server.BodyAddShape(body, shapeRID);
             server.BodySetSpace(body, space);
             foreach (var probeShape in families)
@@ -277,13 +277,13 @@ internal static class PhysicsShapeQueryTests
 
     private static void VerifyCompoundAndHollowQueries()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
         var circleRID = server.CircleShapeCreate();
         using var circle = new CircleShape { Radius = 5 };
         server.ShapeSetData(circleRID, circle);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, circleRID);
         server.BodySetSpace(body, space);
         var direct = server.SpaceGetDirectState(space);

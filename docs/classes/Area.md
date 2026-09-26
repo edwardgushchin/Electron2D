@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -26,7 +26,7 @@ trigger.BodyEntered += body => Console.WriteLine(body.Name);
 
 ## API summary
 
-The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies this sensor across fixture rebuilds. Direct [PhysicsDirectSpaceState2D](PhysicsDirectSpaceState2D.md) queries can include Area fixtures when their parameters enable `CollideWithAreas`; object-level area monitoring continues on its fixed-step snapshot path.
+The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies this sensor across fixture rebuilds. Direct [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) queries can include Area fixtures when their parameters enable `CollideWithAreas`; object-level area monitoring continues on its fixed-step snapshot path.
 
 | Member | Default | Contract |
 | --- | --- | --- |

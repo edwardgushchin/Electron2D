@@ -14,7 +14,7 @@ internal static class PhysicsMotionTests
 
     private static void VerifyServerMotion()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var mover = server.BodyCreate();
         var obstacle = server.BodyCreate();
@@ -22,8 +22,8 @@ internal static class PhysicsMotionTests
         var floorRID = server.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 20) };
         server.ShapeSetData(floorRID, floor);
-        server.BodySetMode(mover, PhysicsServer2D.BodyMode.Static);
-        server.BodySetMode(obstacle, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(mover, PhysicsServer.BodyMode.Static);
+        server.BodySetMode(obstacle, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(mover, circleRID);
         server.BodyAddShape(obstacle, floorRID);
         server.BodySetTransform(obstacle, new(0, Vector2.One, 0, new(0, 100)));
@@ -116,7 +116,7 @@ internal static class PhysicsMotionTests
             Motion = new(0, 120)
         };
         using var serverResult = new PhysicsTestMotionResult2D();
-        Check(PhysicsServer2D.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
+        Check(PhysicsServer.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
               ReferenceEquals(serverResult.GetCollider(), floor) &&
               serverResult.GetColliderID() == floor.InstanceID &&
               serverResult.GetColliderRID() == floor.GetRID(),
@@ -126,7 +126,7 @@ internal static class PhysicsMotionTests
         objectCopy[0] = 0;
         Check(serverQuery.ExcludeObjects[0] == floor.InstanceID,
             "Instance-ID exclusions are copied on read and assignment.");
-        Check(!PhysicsServer2D.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
+        Check(!PhysicsServer.Instance.BodyTestMotion(mover.GetRID(), serverQuery, serverResult) &&
               !serverResult.GetColliderRID().IsValid(),
             "Server motion excludes a scene collider by its managed instance ID.");
         for (var frame = 0; frame < 64; frame++) mover.TestMove(Transform.Identity, new(0, 120), tested);

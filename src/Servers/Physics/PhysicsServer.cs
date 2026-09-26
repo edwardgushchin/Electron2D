@@ -1,15 +1,15 @@
 namespace Electron2D;
 
 /// <summary>Owns typed two-dimensional physics resource identities and spaces.</summary>
-public sealed partial class PhysicsServer2D : ElectronObject
+public sealed partial class PhysicsServer : ElectronObject
 {
-    private static readonly PhysicsServer2D SharedInstance = new();
+    private static readonly PhysicsServer SharedInstance = new();
     private readonly object _registryGate = new();
     private readonly Dictionary<RID, WeakReference<CollisionObject>> _sceneObjects = [];
     private readonly List<RID> _staleSceneObjects = [];
     private int _sceneRegistrationsSinceSweep;
     private readonly Dictionary<RID, PhysicsSpace> _sceneSpaces = [];
-    private readonly Dictionary<RID, PhysicsDirectSpaceState2D> _directStates = [];
+    private readonly Dictionary<RID, PhysicsDirectSpaceState> _directStates = [];
     private readonly HashSet<RID> _ownedSpaces = [];
     private readonly Dictionary<RID, PhysicsServerShape> _serverShapes = [];
     private readonly Dictionary<RID, PhysicsServerCollider> _serverColliders = [];
@@ -27,11 +27,11 @@ public sealed partial class PhysicsServer2D : ElectronObject
         RigidLinear = 3
     }
 
-    private PhysicsServer2D() { }
+    private PhysicsServer() { }
 
     /// <summary>Gets the process-wide server for physics resources and scene spaces.</summary>
     /// <value>The shared server; consumer disposal is rejected.</value>
-    public static PhysicsServer2D Instance => SharedInstance;
+    public static PhysicsServer Instance => SharedInstance;
 
     internal RID RegisterSceneObject(CollisionObject node)
     {
@@ -99,7 +99,7 @@ public sealed partial class PhysicsServer2D : ElectronObject
     /// <param name="space">A live space RID.</param>
     /// <returns>The cached query view, or a fresh view if a caller disposed the previous one.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live physics space.</exception>
-    public PhysicsDirectSpaceState2D SpaceGetDirectState(RID space)
+    public PhysicsDirectSpaceState SpaceGetDirectState(RID space)
     {
         ThrowIfDisposed();
         lock (_registryGate)
@@ -107,7 +107,7 @@ public sealed partial class PhysicsServer2D : ElectronObject
             if (!_sceneSpaces.ContainsKey(space))
                 throw new ArgumentException("The RID does not identify a live physics space.", nameof(space));
             if (!_directStates.TryGetValue(space, out var state) || state.IsDisposed)
-                _directStates[space] = state = new PhysicsDirectSpaceState2D(space);
+                _directStates[space] = state = new PhysicsDirectSpaceState(space);
             return state;
         }
     }

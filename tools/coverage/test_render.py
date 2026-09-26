@@ -119,6 +119,7 @@ def main():
     assert "| Implemented |" in next(row for row in world_rows.splitlines()
                                        if row.startswith("| [`property RID space"))
     direct_rows = pages[CLASS_PAGES / "PhysicsDirectSpaceState2D.md"]
+    assert "../../classes/PhysicsDirectSpaceState.md" in class_rows["PhysicsDirectSpaceState2D"]
     assert "| Implemented |" in next(row for row in direct_rows.splitlines()
                                        if row.startswith("| [`method intersect_ray("))
     assert "| Partial |" in next(row for row in direct_rows.splitlines()
@@ -131,6 +132,7 @@ def main():
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {

@@ -1,12 +1,12 @@
 # PhysicsShapeResult2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
-**Declaration:** `public readonly struct PhysicsShapeResult2D` · **Source:** [PhysicsDirectSpaceState2D.Shapes.cs](../../src/Servers/Physics/PhysicsDirectSpaceState2D.Shapes.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+**Declaration:** `public readonly struct PhysicsShapeResult2D` · **Source:** [PhysicsDirectSpaceState.Shapes.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Shapes.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
 ## Description
 
-Copied typed result of [IntersectShape](PhysicsDirectSpaceState2D.md). It identifies one collider shape owner; multiple backend pieces of that owner yield one result. It does not own or keep the collider or RID live.
+Copied typed result of [IntersectShape](PhysicsDirectSpaceState.md). It identifies one collider shape owner; multiple backend pieces of that owner yield one result. It does not own or keep the collider or RID live.
 
 ## Example
 

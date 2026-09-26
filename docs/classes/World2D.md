@@ -1,6 +1,6 @@
 # World2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -30,7 +30,7 @@ if (world is not null)
 | Member | Contract |
 | --- | --- |
 | `public RID Space { get; }` | Stable RID of this tree's live physics space. |
-| `public PhysicsDirectSpaceState2D DirectSpaceState { get; }` | Cached live query view; a disposed view is recreated. |
+| `public PhysicsDirectSpaceState DirectSpaceState { get; }` | Cached live query view; a disposed view is recreated. |
 | `protected override Resource CreateDuplicateInstance()` | Resource duplicate borrows the same space RID. |
 
 ## Lifecycle and limits

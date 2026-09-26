@@ -50,8 +50,8 @@ internal sealed partial class PhysicsSpace
                 {
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
-                    if (!PhysicsDirectSpaceState2D.Overlaps(query, other, otherTransform)) continue;
-                    var manifold = PhysicsDirectSpaceState2D.GetManifold(query, other, otherTransform);
+                    if (!PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
+                    var manifold = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
                     if (manifold.pointCount == 0) continue;
                     for (var index = 0; index < manifold.pointCount; index++)
                     {
@@ -88,9 +88,9 @@ internal sealed partial class PhysicsSpace
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                     if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
-                    if (PhysicsDirectSpaceState2D.Overlaps(query, other, otherTransform))
+                    if (PhysicsDirectSpaceState.Overlaps(query, other, otherTransform))
                     {
-                        var stuck = PhysicsDirectSpaceState2D.GetManifold(query, other, otherTransform);
+                        var stuck = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
                         if (stuck.pointCount != 0 && stuck.points[0].separation < -0.1f * B2_LINEAR_SLOP &&
                             AcceptOneWay(candidate, -stuck.normal, -stuck.points[0].separation, queryMargin))
                         {
@@ -101,14 +101,14 @@ internal sealed partial class PhysicsSpace
                         }
                         continue;
                     }
-                    var cast = PhysicsDirectSpaceState2D.Cast(query, other, otherTransform, requested, safe);
+                    var cast = PhysicsDirectSpaceState.Cast(query, other, otherTransform, requested, safe);
                     if (!cast.hit) continue;
                     var low = 0f;
                     var high = safe;
                     for (var step = 0; step < 8; step++)
                     {
                         var middle = (low + high) * 0.5f;
-                        if (PhysicsDirectSpaceState2D.Cast(query, other, otherTransform, requested, middle).hit)
+                        if (PhysicsDirectSpaceState.Cast(query, other, otherTransform, requested, middle).hit)
                             high = middle;
                         else low = middle;
                     }
@@ -117,7 +117,7 @@ internal sealed partial class PhysicsSpace
                     unsafeFraction = high;
                     var impact = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform,
                         recovery + requested * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(requested)));
-                    var manifold = PhysicsDirectSpaceState2D.GetManifold(impact, other, otherTransform);
+                    var manifold = PhysicsDirectSpaceState.GetManifold(impact, other, otherTransform);
                     if (manifold.pointCount != 0)
                     {
                         var point = manifold.points[0];
@@ -139,7 +139,7 @@ internal sealed partial class PhysicsSpace
                 travel, remainder, safe, unsafeFraction, false);
 
         var rid = contact.Candidate.Tag.ColliderRID;
-        var scene = PhysicsServer2D.Instance.ResolveSceneObject(rid);
+        var scene = PhysicsServer.Instance.ResolveSceneObject(rid);
         var candidateBody = b2Shape_GetBody(contact.Candidate.ShapeID);
         var velocity = b2Body_GetWorldPointVelocity(candidateBody, contact.Point);
         return new(ownerRID, rid, scene?.InstanceID ?? 0, contact.LocalShape,
@@ -156,9 +156,9 @@ internal sealed partial class PhysicsSpace
             var shape = shapes[shapeIndex];
             var tag = b2Shape_GetUserData(shape).GetRef<PhysicsFixtureTag>();
             if (tag is null || tag.ColliderRID == ownerRID || Array.IndexOf(excludedBodies, tag.ColliderRID) >= 0 ||
-                PhysicsServer2D.Instance.BodiesExcepted(ownerRID, tag.ColliderRID))
+                PhysicsServer.Instance.BodiesExcepted(ownerRID, tag.ColliderRID))
                 continue;
-            var scene = PhysicsServer2D.Instance.ResolveSceneObject(tag.ColliderRID);
+            var scene = PhysicsServer.Instance.ResolveSceneObject(tag.ColliderRID);
             if (scene is not null && Array.IndexOf(excludedObjects, scene.InstanceID) >= 0) continue;
             var filter = b2Shape_GetFilter(shape);
             var eligible = false;

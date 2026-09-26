@@ -156,7 +156,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(body);
-        PhysicsServer2D.Instance.BodyAddCollisionException(GetRID(), body.GetRID());
+        PhysicsServer.Instance.BodyAddCollisionException(GetRID(), body.GetRID());
     }
 
     /// <summary>Removes another body from this body's collision-exception list.</summary>
@@ -166,7 +166,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(body);
-        PhysicsServer2D.Instance.BodyRemoveCollisionException(GetRID(), body.GetRID());
+        PhysicsServer.Instance.BodyRemoveCollisionException(GetRID(), body.GetRID());
     }
 
     /// <summary>Returns current scene body exceptions in insertion order.</summary>
@@ -176,10 +176,10 @@ public abstract class PhysicsBody : CollisionObject
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        var entries = PhysicsServer2D.Instance.GetBodyCollisionExceptions(GetRID());
+        var entries = PhysicsServer.Instance.GetBodyCollisionExceptions(GetRID());
         var result = new PhysicsBody?[entries.Length];
         for (var index = 0; index < entries.Length; index++)
-            result[index] = PhysicsServer2D.Instance.ResolveSceneObject(entries[index]) as PhysicsBody;
+            result[index] = PhysicsServer.Instance.ResolveSceneObject(entries[index]) as PhysicsBody;
         return result;
     }
 
@@ -196,7 +196,7 @@ public abstract class PhysicsBody : CollisionObject
         ValidateMotion(motion, safeMargin);
         if (!HasBackend) throw new InvalidOperationException("A body must be attached before moving through physics.");
         var from = GlobalTransform;
-        var data = PhysicsServer2D.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+        var data = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
             recoveryAsCollision, [], []);
         if (!testOnly && data.Travel != Vector2.Zero)
             GlobalTransform = new Transform(from.Rotation, Vector2.One, 0, from.Origin + data.Travel);
@@ -219,7 +219,7 @@ public abstract class PhysicsBody : CollisionObject
         if (!from.IsFinite() || !from.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(from.Skew))
             throw new ArgumentException("Body motion requires finite translation, unit scale and zero skew.", nameof(from));
         if (collision?.IsDisposed == true) throw new ObjectDisposedException(nameof(collision));
-        var data = PhysicsServer2D.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
+        var data = PhysicsServer.Instance.TestMotionData(GetRID(), from, motion, safeMargin,
             recoveryAsCollision, [], []);
         collision?.Set(data);
         return data.Collided;
@@ -289,7 +289,7 @@ public abstract class PhysicsBody : CollisionObject
             var contact = node.OneWayContact;
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
             definition.enablePreSolveEvents = contact is not null ||
-                PhysicsServer2D.Instance.HasBodyCollisionExceptions(GetRID());
+                PhysicsServer.Instance.HasBodyCollisionExceptions(GetRID());
             node.AppendToBody(_bodyID, definition, _backendShapes);
         }
 

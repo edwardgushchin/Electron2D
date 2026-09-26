@@ -99,7 +99,7 @@ public sealed class PhysicsTestMotionResult2D : ElectronObject
 
     /// <summary>Returns a live scene collider, or null for a server-only or freed body.</summary>
     /// <returns>A scene object or null.</returns>
-    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer2D.Instance.ResolveSceneObject(_data.ColliderRID); }
+    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer.Instance.ResolveSceneObject(_data.ColliderRID); }
 
     /// <summary>Returns the sampled collider instance ID, or zero for server-only.</summary>
     /// <returns>The scene instance ID or zero.</returns>

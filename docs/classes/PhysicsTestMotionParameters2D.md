@@ -1,12 +1,12 @@
 # PhysicsTestMotionParameters2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion2D.cs](../../src/Servers/Physics/PhysicsTestMotion2D.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
 ## Description
 
-Caller-owned mutable input to [PhysicsServer2D.BodyTestMotion](PhysicsServer2D.md). The supplied `From` pose and `Motion` are global scene coordinates. The body itself stays at its current pose. Exclusion arrays copy on both reads and writes.
+Caller-owned mutable input to [PhysicsServer.BodyTestMotion](PhysicsServer.md). The supplied `From` pose and `Motion` are global scene coordinates. The body itself stays at its current pose. Exclusion arrays copy on both reads and writes.
 
 ## Example
 
@@ -18,7 +18,7 @@ using var parameters = new PhysicsTestMotionParameters2D
     From = Transform.Identity,
     Motion = new Vector2(0, 100)
 };
-bool blocked = PhysicsServer2D.Instance.BodyTestMotion(bodyRID, parameters);
+bool blocked = PhysicsServer.Instance.BodyTestMotion(bodyRID, parameters);
 ```
 
 ## API summary

@@ -295,9 +295,9 @@ def reason_for_type(item, lookup):
         ({"PhysicsServer2D", "PhysicsServer2DExtension", "PhysicsServer2DManager"},
          "typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice"),
         ({"PhysicsDirectBodyState2D", "PhysicsDirectBodyState2DExtension"},
-         "typed live body-state callback and solver ownership over the PhysicsServer2D space"),
+         "typed live body-state callback and solver ownership over the PhysicsServer space"),
         ({"PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "KinematicCollision2D"},
-         "typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space"),
+         "typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space"),
         ({"RayCast2D", "ShapeCast2D"},
          "scene query nodes consuming the typed direct-space ray/shape query slice"),
         ({"PhysicalBone2D"},
@@ -586,7 +586,7 @@ def render():
         updated = "2026-09-24" if name in {"@GlobalScope", "AStar2D", "AStarGrid2D", "FileAccess", "InputEvent", "InputEventAction", "InputEventFromWindow", "InputEventGesture", "InputEventJoypadButton", "InputEventJoypadMotion", "InputEventKey", "InputEventMagnifyGesture", "InputEventMouse", "InputEventMouseButton", "InputEventMouseMotion", "InputEventPanGesture", "InputEventScreenDrag", "InputEventScreenTouch", "InputEventWithModifiers", "InputMap", "Node", "Object", "PackedScene", "ProjectSettings", "OptimizedTranslation", "CompressedTexture2D", "Font", "FontFile", "FontVariation", "ImageFormatLoader", "ImageFormatLoaderExtension", "PortableCompressedTexture2D", "ResourceFormatLoader", "ResourceLoader", "ResourceSaver", "SystemFont", "VideoStream", "VideoStreamPlayback", "VideoStreamTheora", "SceneTree", "SceneTreeTimer", "Translation", "Vector2", "Vector3", "Vector4", "WeakRef"} or name in PHYSICS_AUDITED_TYPES or (name.startswith("Packed") and name.endswith("Array")) else "2026-09-23"
         if name in {"RigidBody2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "AnimatableBody2D", "StaticBody2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsDirectSpaceState2D", "CanvasItem", "RayCast2D", "ShapeCast2D"}:
             updated = "2026-09-25"
-        if name in {"PhysicsBody2D", "PhysicsServer2D"}:
+        if name in {"PhysicsBody2D", "PhysicsServer2D", "PhysicsDirectSpaceState2D"}:
             updated = "2026-09-26"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

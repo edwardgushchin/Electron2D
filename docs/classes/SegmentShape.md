@@ -1,6 +1,6 @@
 # SegmentShape
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -55,4 +55,4 @@ A static segment constrains circles approaching from either side and a rotated c
 
 [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks defaults, invalid/equal endpoints, exact bounds, independent copying, PackedScene borrowing, live edits after callback failure, two-sided/rotated/dynamic contacts, area sensors, zero-length fallback, mass/inertia and 64 warmed unchanged body/area frames without managed allocations on Linux/.NET 8. The short-segment adaptation is defined in [ADR 0061](../decisions/physics.md#adr-0061); native allocator, other platforms, owner visual acceptance and inherited standalone shape queries remain separately unverified or incomplete.
 
-Direct [shape queries](PhysicsDirectSpaceState2D.md) use the two-sided segment or its zero-length point fallback; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies both.
+Direct [shape queries](PhysicsDirectSpaceState.md) use the two-sided segment or its zero-length point fallback; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies both.

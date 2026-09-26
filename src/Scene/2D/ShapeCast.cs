@@ -229,7 +229,7 @@ public sealed class ShapeCast : Entity
     public ElectronObject? GetCollider(int index)
     {
         var result = Result(index);
-        return PhysicsServer2D.Instance.ResolveSceneObject(result.ColliderRID);
+        return PhysicsServer.Instance.ResolveSceneObject(result.ColliderRID);
     }
 
     /// <summary>Returns a cached collider RID.</summary>
@@ -268,7 +268,7 @@ public sealed class ShapeCast : Entity
             {
                 var hit = results[index];
                 results[index] = new PhysicsRestInfo2D(hit.ColliderRID,
-                    PhysicsServer2D.Instance.ResolveSceneObject(hit.ColliderRID), hit.ShapeIndex,
+                    PhysicsServer.Instance.ResolveSceneObject(hit.ColliderRID), hit.ShapeIndex,
                     hit.Point, hit.Normal, hit.LinearVelocity);
             }
             return results;

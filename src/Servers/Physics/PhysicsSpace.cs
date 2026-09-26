@@ -214,7 +214,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var firstTag = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>();
         var secondTag = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>();
         if (firstTag is not null && secondTag is not null &&
-            PhysicsServer2D.Instance.BodiesExcepted(firstTag.ColliderRID, secondTag.ColliderRID)) return false;
+            PhysicsServer.Instance.BodiesExcepted(firstTag.ColliderRID, secondTag.ColliderRID)) return false;
         var firstData = firstTag?.OneWay;
         var secondData = secondTag?.OneWay;
         if (firstData is null && secondData is null) return true;

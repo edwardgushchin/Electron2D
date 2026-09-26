@@ -36,12 +36,15 @@
     "CollisionPolygon2D": "CollisionPolygon",
     "RayCast2D": "RayCast",
     "ShapeCast2D": "ShapeCast",
+    "PhysicsServer2D": "PhysicsServer",
+    "PhysicsDirectSpaceState2D": "PhysicsDirectSpaceState",
     "CollisionObject2D": "CollisionObject",
     "PhysicsBody2D": "PhysicsBody",
     "RigidBody2D": "RigidBody",
     "StaticBody2D": "StaticBody"
   },
   "enums": {
+    "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
     "Area2D.SpaceOverride": "Area.SpaceOverride",
     "RigidBody2D.DampMode": "RigidBody.DampMode",
     "CollisionPolygon2D.BuildMode": "PolygonBuildMode",

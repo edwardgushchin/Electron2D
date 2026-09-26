@@ -27,13 +27,13 @@ public sealed class KinematicCollision2D : ElectronObject
     public ElectronObject? GetLocalShape()
     {
         ThrowIfDisposed();
-        return (PhysicsServer2D.Instance.ResolveSceneObject(_data.OwnerRID) as PhysicsBody)?
+        return (PhysicsServer.Instance.ResolveSceneObject(_data.OwnerRID) as PhysicsBody)?
             .GetShapeNode(_data.LocalShape);
     }
 
     /// <summary>Returns the live scene collider, if any.</summary>
     /// <returns>A scene object or null for a freed or server-only body.</returns>
-    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer2D.Instance.ResolveSceneObject(_data.ColliderRID); }
+    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer.Instance.ResolveSceneObject(_data.ColliderRID); }
 
     /// <summary>Returns the sampled collider instance ID.</summary>
     /// <returns>Zero for a server-only body.</returns>
@@ -48,7 +48,7 @@ public sealed class KinematicCollision2D : ElectronObject
     public ElectronObject? GetColliderShape()
     {
         ThrowIfDisposed();
-        return (PhysicsServer2D.Instance.ResolveSceneObject(_data.ColliderRID) as PhysicsBody)?
+        return (PhysicsServer.Instance.ResolveSceneObject(_data.ColliderRID) as PhysicsBody)?
             .GetShapeNode(_data.ColliderShape);
     }
 

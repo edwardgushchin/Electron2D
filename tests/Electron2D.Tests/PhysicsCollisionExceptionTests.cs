@@ -62,10 +62,10 @@ internal static class PhysicsCollisionExceptionTests
 
         Reject<ArgumentNullException>(() => mover.AddCollisionExceptionWith(null!));
         Reject<ArgumentNullException>(() => mover.RemoveCollisionExceptionWith(null!));
-        PhysicsServer2D.Instance.BodyAddCollisionException(mover.GetRID(), default);
+        PhysicsServer.Instance.BodyAddCollisionException(mover.GetRID(), default);
         Check(mover.GetCollisionExceptions() is [null],
             "An opaque server exception can retain an empty RID without a matching scene body.");
-        PhysicsServer2D.Instance.BodyRemoveCollisionException(mover.GetRID(), default);
+        PhysicsServer.Instance.BodyRemoveCollisionException(mover.GetRID(), default);
         Check(mover.GetCollisionExceptions().Length == 0,
             "Invalid exception writes leave the prior list unchanged.");
         Reject<InvalidOperationException>(() => Task.Run(() => mover.AddCollisionExceptionWith(floor)).GetAwaiter().GetResult());
@@ -80,9 +80,9 @@ internal static class PhysicsCollisionExceptionTests
         Check(!mover.TestMove(Transform.Identity, new(0, 100)),
             "A body exception survives scene exit and recreates filtered fixtures on reentry.");
         Reject<InvalidOperationException>(() => Task.Run(mover.GetCollisionExceptions).GetAwaiter().GetResult());
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var serverBody = server.BodyCreate();
-        server.BodySetMode(serverBody, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
         server.BodySetSpace(serverBody, mover.GetWorld2D()!.Space);
         server.BodyAddCollisionException(mover.GetRID(), serverBody);
         Check(mover.GetCollisionExceptions() is [var sceneEntry, null] &&
@@ -96,7 +96,7 @@ internal static class PhysicsCollisionExceptionTests
 
     private static void VerifyServerBodyExceptions()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var mover = server.BodyCreate();
         var floor = server.BodyCreate();
@@ -107,8 +107,8 @@ internal static class PhysicsCollisionExceptionTests
         server.ShapeSetData(rectangle, floorGeometry);
         server.BodyAddShape(mover, circle);
         server.BodyAddShape(floor, rectangle);
-        server.BodySetMode(mover, PhysicsServer2D.BodyMode.Rigid);
-        server.BodySetMode(floor, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(mover, PhysicsServer.BodyMode.Rigid);
+        server.BodySetMode(floor, PhysicsServer.BodyMode.Static);
         server.BodySetTransform(floor, new(0, Vector2.One, 0, new(0, 80)));
         server.BodySetSpace(mover, space);
         server.BodySetSpace(floor, space);

@@ -115,7 +115,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
-| Trigger: typed live body-state callback and solver ownership over the PhysicsServer2D space. | 2 |
+| Trigger: typed live body-state callback and solver ownership over the PhysicsServer space. | 2 |
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 2 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
@@ -130,7 +130,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
-| Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer2D space. | 1 |
+| Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

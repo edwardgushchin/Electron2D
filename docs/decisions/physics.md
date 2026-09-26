@@ -1,6 +1,6 @@
 # Electron2D physics decisions
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
@@ -33,7 +33,7 @@ Games can attach a `RigidBody` and `StaticBody` with `CollisionShape` children, 
 ### Rejected alternatives
 
 - Ship Box2D.NET as a managed package or expose its types publicly: ADRs 0004 and 0012 require one Electron2D-owned managed surface.
-- Add public PhysicsServer2D or RID placeholders around the first scene bodies: their resource-identity and direct-space contracts need a complete separate vertical slice.
+- Add public PhysicsServer or RID placeholders around the first scene bodies: their resource-identity and direct-space contracts need a complete separate vertical slice.
 - Write a custom rigid-body solver: ADR 0012 selected the managed Box2D.NET backend.
 
 <a id="adr-0055"></a>
@@ -242,12 +242,13 @@ Last updated: 2026-09-26
 
 ### Context
 
-Before this slice, the scene ran an internal Box2D world but had no public RID, PhysicsServer2D, World2D or direct-space state. The applicable reference query parameters exclude RIDs and may select a shape by RID; results identify a collider by both object and RID, plus a shape index. Server-created physics resources need an identity even without scene nodes. A scene-object-only query surface would leave those contracts and later renderer/navigation RID consumers unresolved.
+Before this slice, the scene ran an internal Box2D world but had no public RID, PhysicsServer, World2D or direct-space state. The applicable reference query parameters exclude RIDs and may select a shape by RID; results identify a collider by both object and RID, plus a shape index. Server-created physics resources need an identity even without scene nodes. A scene-object-only query surface would leave those contracts and later renderer/navigation RID consumers unresolved.
 
 ### Decision
 
 - Introduce one public opaque, backend-neutral RID value type shared by server domains. Its default/zero value is empty; identity is session-local and never exposes a Box2D ID. The owning server validates resource kind and liveness separately from the value type's nonzero validity test. Released IDs must not resolve to a later resource after internal slot reuse. Fixture rebuilds do not change the owning collision object's RID.
-- PhysicsServer2D owns the physics resource registry and real spaces, bodies, areas and shapes. Register the existing SceneTree physics world as a server space; scene membership and teardown retain the lifetime of scene-owned resources. Explicitly created server resources have an executable creation/use/free lifecycle. The scene and server access the same solver state; no parallel scene-only physics world is introduced.
+- Name the public two-dimensional server `PhysicsServer` and its live direct-space view `PhysicsDirectSpaceState`. The shorter names do not add a 3D physics domain; their existing typed methods, nested `BodyMode`, ownership and RID behavior remain unchanged. Update consumers, XML, class pages and coverage mappings together; do not retain duplicate public compatibility types.
+- PhysicsServer owns the physics resource registry and real spaces, bodies, areas and shapes. Register the existing SceneTree physics world as a server space; scene membership and teardown retain the lifetime of scene-owned resources. Explicitly created server resources have an executable creation/use/free lifecycle. The scene and server access the same solver state; no parallel scene-only physics world is introduced.
 - Expose that scene space through the applicable World2D.Space and World2D.DirectSpaceState roles and CanvasItem world access. These physics members may execute before World2D canvas and navigation-map members, which retain their own exact coverage gaps. A direct-space state is a view of its owning live space, not a second world.
 - Keep ordinary gameplay object-oriented: scene nodes and typed ray/shape query objects expose collider references where available. Direct query parameters also retain RID exclusions and shape RID selection; typed C# result values retain collider RID and stable shape-owner index even when no scene CollisionObject exists. Specify each operation's no-hit, ordering, copy and maximum-result behavior in its implementing slice. Do not add Variant, dynamic dictionaries, public Box2D types or backend IDs.
 - Build the public server and query layer in connected executable slices: shared RID/space/body/shape lifetime, world access, ray/point queries, direct shape sweeps and scene query nodes, then shape-index events and remaining applicable server methods. RayCast and ShapeCast consume the same direct-space view; other absent declarations retain their own implementation gates. An accepted architecture does not mark any absent declaration Implemented. Attached queries respect scene owner-thread and backend world-lock boundaries.
@@ -259,13 +260,13 @@ Before this slice, the scene ran an internal Box2D world but had no public RID, 
 
 ### Consequences
 
-Game code can query its current world through typed scene access, scene query nodes or direct body motion without manually managing RIDs, while advanced code can create and test resources through PhysicsServer2D, including server-only colliders in the SceneTree space. RID numeric values are not reused, and a freed RID no longer resolves at its owning server. PhysicsQueryTests checks shared identity and lifecycle; PhysicsShapeQueryTests checks direct sweeps; PhysicsMotionTests checks body movement; PhysicsCollisionExceptionTests checks unilateral scene/server entries, live contact edits, motion filtering, stale targets and warmed allocation; RayCastTests and ShapeCastTests check scene snapshots. Native allocation accounting, other platforms, independent viewport worlds, virtual tile collision owners, physics debug drawing and owner acceptance remain unverified.
+Game code can query its current world through typed scene access, scene query nodes or direct body motion without manually managing RIDs, while advanced code can create and test resources through PhysicsServer, including server-only colliders in the SceneTree space. RID numeric values are not reused, and a freed RID no longer resolves at its owning server. PhysicsQueryTests checks shared identity and lifecycle; PhysicsShapeQueryTests checks direct sweeps; PhysicsMotionTests checks body movement; PhysicsCollisionExceptionTests checks unilateral scene/server entries, live contact edits, motion filtering, stale targets and warmed allocation; RayCastTests and ShapeCastTests check scene snapshots. Native allocation accounting, other platforms, independent viewport worlds, virtual tile collision owners, physics debug drawing and owner acceptance remain unverified.
 
 ### Rejected alternatives
 
 - Replace RID parameters and results with only CollisionObject/Shape references: server-created resources have no required scene object, and this would remove applicable API under ADR 0004.
 - Add a physics-only PhysicsRID: it duplicates the reference's cross-server identity role needed by rendering and navigation.
-- Publish inert RID/PhysicsServer2D placeholders or wait for every server method before the first query: either choice delays an executable, auditable physics-query slice without changing its required ownership contract.
+- Publish inert RID/PhysicsServer placeholders or wait for every server method before the first query: either choice delays an executable, auditable physics-query slice without changing its required ownership contract.
 
 <a id="adr-0064"></a>
 ## ADR 0064: Hollow paired-segment collision resource

@@ -14,16 +14,16 @@ public sealed class World2D : Resource
     /// <exception cref="ObjectDisposedException">This world wrapper was disposed.</exception>
     public RID Space
     {
-        get { ThrowIfDisposed(); PhysicsServer2D.Instance.GetSceneSpace(_space); return _space; }
+        get { ThrowIfDisposed(); PhysicsServer.Instance.GetSceneSpace(_space); return _space; }
     }
 
     /// <summary>Gets the live direct-query view of this physics space.</summary>
     /// <value>The view shares the scene's solver state and obeys its owner thread.</value>
     /// <exception cref="ArgumentException">The owning physics space was freed.</exception>
     /// <exception cref="ObjectDisposedException">This world wrapper was disposed.</exception>
-    public PhysicsDirectSpaceState2D DirectSpaceState
+    public PhysicsDirectSpaceState DirectSpaceState
     {
-        get { ThrowIfDisposed(); return PhysicsServer2D.Instance.SpaceGetDirectState(_space); }
+        get { ThrowIfDisposed(); return PhysicsServer.Instance.SpaceGetDirectState(_space); }
     }
 
     /// <inheritdoc />

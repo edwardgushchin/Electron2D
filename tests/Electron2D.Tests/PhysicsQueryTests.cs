@@ -64,10 +64,10 @@ internal static class PhysicsQueryTests
         Check(ReferenceEquals(world, area.GetWorld2D()) && world.Space.IsValid(),
             "Canvas items in one tree share a physics world and space RID.");
         var direct = world.DirectSpaceState;
-        Check(ReferenceEquals(direct, PhysicsServer2D.Instance.SpaceGetDirectState(world.Space)),
+        Check(ReferenceEquals(direct, PhysicsServer.Instance.SpaceGetDirectState(world.Space)),
             "World and server access return the same live direct-space view.");
-        Reject<InvalidOperationException>(() => PhysicsServer2D.Instance.FreeRID(bodyRID));
-        Reject<InvalidOperationException>(() => PhysicsServer2D.Instance.FreeRID(world.Space));
+        Reject<InvalidOperationException>(() => PhysicsServer.Instance.FreeRID(bodyRID));
+        Reject<InvalidOperationException>(() => PhysicsServer.Instance.FreeRID(world.Space));
 
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 200));
         var hit = direct.IntersectRay(ray);
@@ -111,10 +111,10 @@ internal static class PhysicsQueryTests
         Check(direct.IntersectPoint(point).Any(candidate => candidate.ColliderRID == bodyRID),
             "A point query detects a scene body even when its collision mask is zero.");
 
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var serverBody = server.BodyCreate();
         var serverShape = server.CircleShapeCreate();
-        server.BodySetMode(serverBody, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(serverBody, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(serverBody, serverShape);
         server.BodySetTransform(serverBody, new(0, Vector2.One, 0, new(50, 50)));
         server.BodySetSpace(serverBody, world.Space);
@@ -125,7 +125,7 @@ internal static class PhysicsQueryTests
         server.FreeRID(serverBody);
         server.FreeRID(serverShape);
         Reject<InvalidOperationException>(() => Task.Run(() => direct.IntersectRay(ray)).GetAwaiter().GetResult());
-        Reject<InvalidOperationException>(() => PhysicsServer2D.Instance.Dispose());
+        Reject<InvalidOperationException>(() => PhysicsServer.Instance.Dispose());
         direct.Dispose();
         var reopened = world.DirectSpaceState;
         Check(!ReferenceEquals(direct, reopened) && reopened.IntersectRay(ray)?.ColliderRID == bodyRID,
@@ -144,17 +144,17 @@ internal static class PhysicsQueryTests
 
     private static void VerifyServerResourcesAndPointQueries()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
         var shape = server.CircleShapeCreate();
         using var circle = new CircleShape();
         server.ShapeSetData(shape, circle);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, shape);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 50)));
         server.BodySetSpace(body, space);
-        Check(server.BodyGetSpace(body) == space && server.BodyGetMode(body) == PhysicsServer2D.BodyMode.Static,
+        Check(server.BodyGetSpace(body) == space && server.BodyGetMode(body) == PhysicsServer.BodyMode.Static,
             "A server-created body is attached to its explicit space with its requested mode.");
         using var ray = PhysicsRayQueryParameters2D.Create(new(0, 0), new(0, 100));
         var direct = server.SpaceGetDirectState(space);
@@ -211,7 +211,7 @@ internal static class PhysicsQueryTests
         point.CollisionMask = uint.MaxValue;
 
         var secondBody = server.BodyCreate();
-        server.BodySetMode(secondBody, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(secondBody, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(secondBody, shape);
         server.BodySetTransform(secondBody, new(0, Vector2.One, 0, new(0, 50)));
         server.BodySetSpace(secondBody, space);
@@ -250,10 +250,10 @@ internal static class PhysicsQueryTests
         Reject<InvalidOperationException>(() => Task.Run(() => server.BodyGetSpace(body)).GetAwaiter().GetResult());
         Reject<ArgumentException>(() => server.ShapeSetData(shape, rectangle));
         Reject<ArgumentException>(() => server.BodySetSpace(shape, space));
-        Reject<ArgumentOutOfRangeException>(() => server.BodySetMode(body, (PhysicsServer2D.BodyMode)99));
+        Reject<ArgumentOutOfRangeException>(() => server.BodySetMode(body, (PhysicsServer.BodyMode)99));
         Reject<ArgumentOutOfRangeException>(() => server.SpaceStep(space, -1));
 
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Rigid);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
         server.SpaceStep(space, 1d / 60);
         var movedPosition = server.BodyGetTransform(body).Origin.Y;
         Check(movedPosition > 50,
@@ -265,10 +265,10 @@ internal static class PhysicsQueryTests
             "A dynamic body carries its solved pose and geometry into another explicit space.");
         server.BodySetSpace(body, space);
         server.FreeRID(transientSpace);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
             "Switching to static mode preserves the solved pose.");
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Kinematic);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Kinematic);
         server.SpaceStep(space, 1d / 60);
         Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f,
             "Entering kinematic mode clears earlier dynamic velocity.");
@@ -277,10 +277,10 @@ internal static class PhysicsQueryTests
         var kinematicPosition = server.BodyGetTransform(body).Origin.Y;
         Check(kinematicPosition > movedPosition + 0.5f,
             "A server kinematic body advances by its velocity and reports the solved pose.");
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.RigidLinear);
-        Check(server.BodyGetMode(body) == PhysicsServer2D.BodyMode.RigidLinear,
+        server.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
+        Check(server.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
             "RigidLinear remains an executable distinct mode with rotation locking.");
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         var otherSpace = server.SpaceCreate();
         server.BodySetSpace(body, otherSpace);
         Check(server.BodyGetSpace(body) == otherSpace &&
@@ -310,10 +310,10 @@ internal static class PhysicsQueryTests
 
     private static void VerifyServerShapeFamilies()
     {
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var space = server.SpaceCreate();
         var body = server.BodyCreate();
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         var capsuleRID = server.CapsuleShapeCreate();
         var segmentRID = server.SegmentShapeCreate();
         var convexRID = server.ConvexPolygonShapeCreate();

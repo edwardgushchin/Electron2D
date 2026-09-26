@@ -20,7 +20,7 @@ public sealed partial class SceneTree
         var space = new PhysicsSpace();
         try
         {
-            _physicsSpaceRID = PhysicsServer2D.Instance.RegisterSceneSpace(space);
+            _physicsSpaceRID = PhysicsServer.Instance.RegisterSceneSpace(space);
             _physicsSpace = space;
             return space;
         }

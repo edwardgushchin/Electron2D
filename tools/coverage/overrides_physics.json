@@ -187,17 +187,17 @@
     },
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
-      "electron2d": "method:Electron2D.PhysicsServer2D.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
       "reason": "Typed transform branch of body_set_state; other BodyState branches remain incomplete."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
-      "electron2d": "method:Electron2D.PhysicsServer2D.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
       "reason": "Typed linear-velocity branch of body_set_state; other BodyState branches remain incomplete."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
-      "electron2d": "method:Electron2D.PhysicsServer2D.BodyGetTransform(Electron2D.RID)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetTransform(Electron2D.RID)",
       "reason": "Typed transform branch of body_get_state; other BodyState branches remain incomplete."
     },
     {
@@ -418,12 +418,12 @@
       "adr": "ADRs 0003, 0063"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer2D.SpaceStep(Electron2D.RID,System.Double)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceStep(Electron2D.RID,System.Double)",
       "reason": "Explicit space stepping projects the host lifecycle needed to execute server-only spaces outside a SceneTree.",
       "adr": "ADRs 0003, 0054, 0063"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer2D.ValidateDisposal()",
+      "electron2d": "method:Electron2D.PhysicsServer.ValidateDisposal()",
       "reason": "Managed singleton lifetime prevents a consumer from disposing the shared physics registry.",
       "adr": "ADRs 0003, 0063"
     },
@@ -508,8 +508,8 @@
       "adr": "ADRs 0001, 0063"
     },
     {
-      "electron2d": "property:Electron2D.PhysicsServer2D.Instance()",
-      "reason": "C# singleton accessor for the shared PhysicsServer2D resource registry.",
+      "electron2d": "property:Electron2D.PhysicsServer.Instance()",
+      "reason": "C# singleton accessor for the shared PhysicsServer resource registry.",
       "adr": "ADRs 0004, 0063"
     },
     {
@@ -1035,7 +1035,7 @@
     {
       "godot": ["World2D::property:space", "World2D::property:direct_space_state"],
       "state": "Implemented",
-      "reason": "The live SceneTree world exposes one stable physics-space RID and the same typed direct query view returned by PhysicsServer2D (ADR 0063, PhysicsQueryTests)."
+      "reason": "The live SceneTree world exposes one stable physics-space RID and the same typed direct query view returned by PhysicsServer (ADR 0063, PhysicsQueryTests)."
     },
     {
       "godot": ["World2D::property:canvas", "World2D::property:navigation_map"],
@@ -1579,7 +1579,7 @@
         "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)"
       ],
       "state": "Blocked",
-      "reason": "Trigger: typed PhysicsServer2D RID identity and stable collision-shape owner indices across fixture rebuilding; then emit per-shape events."
+      "reason": "Trigger: typed PhysicsServer RID identity and stable collision-shape owner indices across fixture rebuilding; then emit per-shape events."
     },
     {
       "godot": [

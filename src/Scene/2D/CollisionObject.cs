@@ -16,7 +16,7 @@ public abstract class CollisionObject : Entity
     private readonly RID _rid;
 
     /// <summary>Creates an object in collision layer one with mask one.</summary>
-    protected CollisionObject() => _rid = PhysicsServer2D.Instance.RegisterSceneObject(this);
+    protected CollisionObject() => _rid = PhysicsServer.Instance.RegisterSceneObject(this);
 
     /// <summary>Gets the stable server identity of this collision object.</summary>
     /// <returns>A nonempty RID unchanged by fixture rebuilds or scene attachment.</returns>
@@ -85,7 +85,7 @@ public abstract class CollisionObject : Entity
     protected override void Dispose(bool disposing)
     {
         try { base.Dispose(disposing); }
-        finally { if (disposing) PhysicsServer2D.Instance.UnregisterSceneObject(_rid); }
+        finally { if (disposing) PhysicsServer.Instance.UnregisterSceneObject(_rid); }
     }
 
     private static uint LayerBit(int number)

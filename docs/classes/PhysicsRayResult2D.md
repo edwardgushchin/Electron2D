@@ -1,10 +1,10 @@
 # PhysicsRayResult2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
-**Source:** [PhysicsDirectSpaceState2D.cs](../../src/Servers/Physics/PhysicsDirectSpaceState2D.cs) · **Declaration:** `public readonly struct PhysicsRayResult2D`
+**Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs) · **Declaration:** `public readonly struct PhysicsRayResult2D`
 
-A typed value for the nearest direct-space ray hit, replacing a dynamic result dictionary. It is returned by [IntersectRay](PhysicsDirectSpaceState2D.md) or absent as null when no eligible shape is hit.
+A typed value for the nearest direct-space ray hit, replacing a dynamic result dictionary. It is returned by [IntersectRay](PhysicsDirectSpaceState.md) or absent as null when no eligible shape is hit.
 
 | Member | Meaning |
 | --- | --- |

@@ -35,7 +35,7 @@ public readonly struct PhysicsShapeResult2D
     public int ShapeIndex { get; }
 }
 
-public sealed partial class PhysicsDirectSpaceState2D
+public sealed partial class PhysicsDirectSpaceState
 {
     private readonly List<B2ShapeProxy> _queryProxies = [];
     private readonly List<ShapeCandidate> _shapeCandidates = [];
@@ -66,7 +66,7 @@ public sealed partial class PhysicsDirectSpaceState2D
                 if (!Overlaps(query, other, otherTransform) &&
                     !SweepsInto(query, other, otherTransform, motion, 1f)) continue;
                 hits.Add(new(candidate.Tag.ColliderRID,
-                    PhysicsServer2D.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
+                    PhysicsServer.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
                     candidate.Tag.ShapeIndex));
                 break;
             }
@@ -131,9 +131,9 @@ public sealed partial class PhysicsDirectSpaceState2D
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);
-        var space = PhysicsServer2D.Instance.GetSceneSpace(_spaceRID);
+        var space = PhysicsServer.Instance.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
-        var shape = parameters.Shape ?? PhysicsServer2D.Instance.GetShapeGeometry(parameters.ShapeRID);
+        var shape = parameters.Shape ?? PhysicsServer.Instance.GetShapeGeometry(parameters.ShapeRID);
         _queryProxies.Clear();
         shape.AppendQueryProxies(_queryProxies);
         var transform = parameters.Transform;

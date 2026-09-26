@@ -22,7 +22,7 @@ Explicit force and impulse calls synchronize any pending body pose and child fix
 
 ## Current contract and limits
 
-Every scene CollisionObject now has a stable opaque [RID](../classes/RID.md) until disposal. The SceneTree registers its one solver world with [PhysicsServer2D](../classes/PhysicsServer2D.md), and server-created bodies may attach to that same space; [direct ray/point queries](physics-queries.md) return both RID and scene object when available. Fixture rebuilds retain the collider RID and shape-owner index. Query layers do not depend on the collider's own mask. Wider body-state, shape-index event and joint methods remain separate server slices.
+Every scene CollisionObject now has a stable opaque [RID](../classes/RID.md) until disposal. The SceneTree registers its one solver world with [PhysicsServer](../classes/PhysicsServer.md), and server-created bodies may attach to that same space; [direct ray/point queries](physics-queries.md) return both RID and scene object when available. Fixture rebuilds retain the collider RID and shape-owner index. Query layers do not depend on the collider's own mask. Wider body-state, shape-index event and joint methods remain separate server slices.
 
 An enabled one-way CollisionShape labels its body fixtures for the world pre-solve callback. The child's local direction follows both child and body rotation. The initial side decision remains stable while the fixture pair touches; contact snapshots exclude pairs rejected from the pass-through side. StaticBody, AnimatableBody and RigidBody use the same owner path. Its one-way margin, and the sibling CollisionPolygon margin, now execute in typed kinematic recovery; neither changes the ordinary fixed-step contact side decision.
 

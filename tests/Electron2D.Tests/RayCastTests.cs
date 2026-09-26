@@ -222,10 +222,10 @@ internal static class RayCastTests
         var ray = new RayCast { TargetPosition = new(0, 100) };
         root.AddChild(ray);
         using var tree = new SceneTree(root);
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var body = server.BodyCreate();
         var shape = server.CircleShapeCreate();
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, shape);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(0, 30)));
         server.BodySetSpace(body, ray.GetWorld2D()!.Space);

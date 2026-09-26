@@ -257,11 +257,11 @@ internal static class ShapeCastTests
         Check(cast.GetColliderRID(0) == target.GetRID() && cast.GetCollisionNormal(0).X > 0.9f,
             "The target follows the node rotation into global space.");
 
-        var server = PhysicsServer2D.Instance;
+        var server = PhysicsServer.Instance;
         var body = server.BodyCreate();
         var shapeRID = server.CircleShapeCreate();
         server.BodyAddShape(body, shapeRID);
-        server.BodySetMode(body, PhysicsServer2D.BodyMode.Static);
+        server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodySetTransform(body, new(0, Vector2.One, 0, new(-40, 0)));
         server.BodySetSpace(body, cast.GetWorld2D()!.Space);
         target.Position = new(0, 200);

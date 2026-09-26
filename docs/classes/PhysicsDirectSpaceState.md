@@ -1,12 +1,12 @@
-# PhysicsDirectSpaceState2D
+# PhysicsDirectSpaceState
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
-**Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState2D.cs](../../src/Servers/Physics/PhysicsDirectSpaceState2D.cs)
+**Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
 ## Description
 
-A live view of one existing Box2D space, shared by [World2D](World2D.md) and [PhysicsServer2D.SpaceGetDirectState](PhysicsServer2D.md). It prepares pending scene fixture and transform edits before querying, including queries before the first physics frame. It does not advance simulation or own a second world. Attached queries require the space's owner thread and reject execution while its solver is stepping. A freed space makes a retained view unusable.
+A live view of one existing Box2D space, shared by [World2D](World2D.md) and [PhysicsServer.SpaceGetDirectState](PhysicsServer.md). It prepares pending scene fixture and transform edits before querying, including queries before the first physics frame. It does not advance simulation or own a second world. Attached queries require the space's owner thread and reject execution while its solver is stepping. A freed space makes a retained view unusable.
 
 ## Example
 
@@ -35,4 +35,4 @@ Both methods honor all 32 layer bits, RID exclusions and independent body/Area f
 
 Shape operations share [PhysicsShapeQueryParameters2D](PhysicsShapeQueryParameters2D.md). `IntersectShape` includes geometry crossed by `Motion`, sorts by collider RID and direct shape-owner index, deduplicates compound pieces and then applies `maxResults`. `CastMotion` ignores a collider already intersecting the query at its origin and returns eight-refinement safe/unsafe fractions around the earliest new collision. `CollideShape` returns query point then collider point for each contact, applies the pair cap after RID/index ordering, and returns an empty array on a miss. `GetRestInfo` returns null on a miss and reports the deepest contact with collider point, normal directed toward the query and velocity at that point. Query shapes and server fixtures are live; geometry edits are prepared before querying. Invalid or stale shape RIDs reject the query. Negative result caps throw `ArgumentOutOfRangeException`; a zero cap returns an empty array. All shape operations reject off-owner or in-step access.
 
-The implementation scans registered scene and server fixture lists directly so a collider with mask zero remains queryable by layer. This is linear in fixture count; a measured large-world cost can justify a dedicated broad-phase path. Canvas-instance filtering and remaining direct-space methods retain [coverage gaps](../coverage/classes/PhysicsDirectSpaceState2D.md). [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) verifies ray/point behavior; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies resource/RID shape selection, swept overlap, fractions, contact pairs, manifold families, compound and hollow geometry, scene/server results, filters, errors and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and large-world performance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+The implementation scans registered scene and server fixture lists directly so a collider with mask zero remains queryable by layer. This is linear in fixture count; a measured large-world cost can justify a dedicated broad-phase path. Canvas-instance filtering and remaining direct-space methods retain [coverage gaps](../coverage/classes/PhysicsDirectSpaceState.md). [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) verifies ray/point behavior; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) verifies resource/RID shape selection, swept overlap, fractions, contact pairs, manifold families, compound and hollow geometry, scene/server results, filters, errors and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and large-world performance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).

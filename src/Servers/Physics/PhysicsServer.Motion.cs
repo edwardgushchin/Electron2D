@@ -2,7 +2,7 @@ using Box2D.NET;
 
 namespace Electron2D;
 
-public sealed partial class PhysicsServer2D
+public sealed partial class PhysicsServer
 {
     /// <summary>Tests a live body's shapes through their owning space without moving that body.</summary>
     /// <param name="body">A scene or server-created body RID.</param>

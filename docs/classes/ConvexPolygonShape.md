@@ -1,6 +1,6 @@
 # ConvexPolygonShape
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -57,4 +57,4 @@ The public polygon remains one borrowed resource. The backend accepts at most ei
 
 [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) checks winding, copied arrays, cloud hulls, invalid and crossing contours, twelve-vertex body/area integration including a probe in a later piece, rotated fixtures, live edits despite a throwing `Changed` listener, removal of all fixtures, PackedScene borrowing and 64 warmed unchanged multi-fixture frames without managed allocations on Linux/.NET 8. [ADR 0062](../decisions/physics.md#adr-0062) records the compound-fixture boundary. Native allocator, other platforms, owner visual acceptance, concave decomposition and inherited standalone shape queries remain unverified or incomplete.
 
-Direct [shape queries](PhysicsDirectSpaceState2D.md) test all convex pieces while returning one shape-owner hit per collider; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers a twelve-vertex query.
+Direct [shape queries](PhysicsDirectSpaceState.md) test all convex pieces while returning one shape-owner hit per collider; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers a twelve-vertex query.

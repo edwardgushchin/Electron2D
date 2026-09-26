@@ -45,7 +45,7 @@ public readonly struct PhysicsRestInfo2D
     public Vector2 LinearVelocity { get; }
 }
 
-public sealed partial class PhysicsDirectSpaceState2D
+public sealed partial class PhysicsDirectSpaceState
 {
     private readonly record struct ContactPair(RID RID, int ShapeIndex, int Piece, Vector2 QueryPoint,
         Vector2 ColliderPoint);
@@ -133,7 +133,7 @@ public sealed partial class PhysicsDirectSpaceState2D
                         b2Body_GetWorldPointVelocity(bodyID, colliderPoint);
                     bestDepth = depth;
                     best = new PhysicsRestInfo2D(candidate.Tag.ColliderRID,
-                        PhysicsServer2D.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
+                        PhysicsServer.Instance.ResolveSceneObject(candidate.Tag.ColliderRID),
                         candidate.Tag.ShapeIndex, ToScene(colliderPoint),
                         new(-manifold.normal.X, -manifold.normal.Y),
                         new(velocity.X * PhysicsSpace.UnitsPerMeter,

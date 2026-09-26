@@ -16,7 +16,7 @@ The shared scene-body role. It registers a backend body when entering a SceneTre
 
 A direct [CollisionPolygon](CollisionPolygon.md) child supplies owned solid or hollow fixtures through the same body lifetime, filtering and material path as a direct CollisionShape child. Its contour and mode can change while attached; the next fixed step rebuilds its fixtures.
 
-The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable when the backend body and its fixtures are recreated. [PhysicsDirectSpaceState2D](PhysicsDirectSpaceState2D.md) returns this RID and a direct child shape-owner index in typed ray and point results.
+The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) remains stable when the backend body and its fixtures are recreated. [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) returns this RID and a direct child shape-owner index in typed ray and point results.
 
 | Member | Contract |
 | --- | --- |

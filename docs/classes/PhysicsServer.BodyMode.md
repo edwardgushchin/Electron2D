@@ -1,8 +1,8 @@
-# PhysicsServer2D.BodyMode
+# PhysicsServer.BodyMode
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
-**Owner:** [PhysicsServer2D](PhysicsServer2D.md) · **Source:** [PhysicsServer2D.cs](../../src/Servers/Physics/PhysicsServer2D.cs)
+**Owner:** [PhysicsServer](PhysicsServer.md) · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs)
 
 Selects a server-created body's backend motion policy.
 

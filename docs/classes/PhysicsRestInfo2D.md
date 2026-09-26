@@ -1,12 +1,12 @@
 # PhysicsRestInfo2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
-**Declaration:** `public readonly struct PhysicsRestInfo2D` · **Source:** [PhysicsDirectSpaceState2D.Contacts.cs](../../src/Servers/Physics/PhysicsDirectSpaceState2D.Contacts.cs) · **Component:** [Physics queries](../components/physics-queries.md)
+**Declaration:** `public readonly struct PhysicsRestInfo2D` · **Source:** [PhysicsDirectSpaceState.Contacts.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.Contacts.cs) · **Component:** [Physics queries](../components/physics-queries.md)
 
 ## Description
 
-Copied typed contact selected by [GetRestInfo](PhysicsDirectSpaceState2D.md). The direct view chooses the deepest eligible manifold contact, breaking equal-depth ties by collider RID and shape-owner index. The result does not own or keep its collider live.
+Copied typed contact selected by [GetRestInfo](PhysicsDirectSpaceState.md). The direct view chooses the deepest eligible manifold contact, breaking equal-depth ties by collider RID and shape-owner index. The result does not own or keep its collider live.
 
 ## Example
 

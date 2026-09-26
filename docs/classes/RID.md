@@ -1,6 +1,6 @@
 # RID
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Source:** [RID.cs](../../src/Core/Object/RID.cs) · **Declaration:** `public readonly struct RID : IEquatable<RID>, IComparable<RID>`
 
@@ -33,4 +33,4 @@ if (collider.IsValid()) Console.WriteLine(collider.GetID());
 
 ## Lifetime and verification
 
-Only engine servers allocate nonzero values. `PhysicsServer2D.FreeRID` invalidates its registry entry, while copies retain their numeric value and `IsValid()` still returns true; using that stale value with the server throws. Scene-owned RIDs remain stable across fixture rebuild and scene reentry until their collision object is disposed. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) covers empty/copy/order, scene and server identities, shape rebuild and non-reuse after free. See [ADR 0063](../decisions/physics.md#adr-0063).
+Only engine servers allocate nonzero values. `PhysicsServer.FreeRID` invalidates its registry entry, while copies retain their numeric value and `IsValid()` still returns true; using that stale value with the server throws. Scene-owned RIDs remain stable across fixture rebuild and scene reentry until their collision object is disposed. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) covers empty/copy/order, scene and server identities, shape rebuild and non-reuse after free. See [ADR 0063](../decisions/physics.md#adr-0063).

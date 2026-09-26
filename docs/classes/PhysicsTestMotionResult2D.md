@@ -1,12 +1,12 @@
 # PhysicsTestMotionResult2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion2D.cs](../../src/Servers/Physics/PhysicsTestMotion2D.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
 ## Description
 
-Caller-owned output updated by [PhysicsServer2D.BodyTestMotion](PhysicsServer2D.md). The result copies collider identity, shape-owner indices, contact geometry, fractions and travel. A completed no-hit test clears the preceding collider and records full requested travel. The object does not own the bodies or their fixtures.
+Caller-owned output updated by [PhysicsServer.BodyTestMotion](PhysicsServer.md). The result copies collider identity, shape-owner indices, contact geometry, fractions and travel. A completed no-hit test clears the preceding collider and records full requested travel. The object does not own the bodies or their fixtures.
 
 ## Example
 
@@ -14,7 +14,7 @@ Partial snippet with a registered `bodyRID` and live `parameters`:
 
 ```csharp
 using var result = new PhysicsTestMotionResult2D();
-if (PhysicsServer2D.Instance.BodyTestMotion(bodyRID, parameters, result))
+if (PhysicsServer.Instance.BodyTestMotion(bodyRID, parameters, result))
     Console.WriteLine(result.GetCollisionNormal());
 ```
 

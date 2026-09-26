@@ -23,7 +23,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     private uint _layer = 1;
     private uint _mask = 1;
     private Vector2 _linearVelocity;
-    private PhysicsServer2D.BodyMode _mode = PhysicsServer2D.BodyMode.Rigid;
+    private PhysicsServer.BodyMode _mode = PhysicsServer.BodyMode.Rigid;
 
     private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled);
 
@@ -32,7 +32,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     internal RID SpaceRID { get; private set; }
     internal PhysicsSpace? Space => _space;
     internal IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
-    internal PhysicsServer2D.BodyMode Mode => _mode;
+    internal PhysicsServer.BodyMode Mode => _mode;
     internal int ShapeCount => _slots.Count;
     private volatile bool _shapesDirty;
 
@@ -55,9 +55,9 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         SpaceRID = spaceRID;
         try
         {
-            if (_mode == PhysicsServer2D.BodyMode.RigidLinear)
+            if (_mode == PhysicsServer.BodyMode.RigidLinear)
                 b2Body_SetMotionLocks(_bodyID, new(false, false, true));
-            if (!IsArea && _mode is PhysicsServer2D.BodyMode.Rigid or PhysicsServer2D.BodyMode.RigidLinear)
+            if (!IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear)
                 b2Body_SetLinearVelocity(_bodyID, Shape.ToBackend(_linearVelocity));
             RebuildShapes();
         }
@@ -121,20 +121,20 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         catch { _slots.Insert(index, previous); RebuildShapes(); throw; }
     }
 
-    internal void SetMode(PhysicsServer2D.BodyMode mode)
+    internal void SetMode(PhysicsServer.BodyMode mode)
     {
         if (IsArea) throw new InvalidOperationException("An Area has no body mode.");
         if (_mode == mode) return;
         CaptureMotion();
         _mode = mode;
-        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic)
+        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             _linearVelocity = Vector2.Zero;
         if (_space is null) return;
         b2Body_SetType(_bodyID, BackendType);
-        b2Body_SetMotionLocks(_bodyID, new(false, false, mode == PhysicsServer2D.BodyMode.RigidLinear));
-        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic)
+        b2Body_SetMotionLocks(_bodyID, new(false, false, mode == PhysicsServer.BodyMode.RigidLinear));
+        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             b2Body_SetLinearVelocity(_bodyID, default);
-        if (mode is PhysicsServer2D.BodyMode.Static or PhysicsServer2D.BodyMode.Kinematic or PhysicsServer2D.BodyMode.RigidLinear)
+        if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
             b2Body_SetAngularVelocity(_bodyID, 0);
         RebuildShapes();
     }
@@ -149,7 +149,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     internal Transform GetTransform()
     {
-        if (_space is null || IsArea || _mode == PhysicsServer2D.BodyMode.Static)
+        if (_space is null || IsArea || _mode == PhysicsServer.BodyMode.Static)
             return _transform;
         var position = b2Body_GetPosition(_bodyID);
         var rotation = b2Rot_GetAngle(b2Body_GetRotation(_bodyID));
@@ -176,7 +176,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     private void CaptureMotion()
     {
-        if (_space is null || IsArea || _mode == PhysicsServer2D.BodyMode.Static)
+        if (_space is null || IsArea || _mode == PhysicsServer.BodyMode.Static)
             return;
         _transform = GetTransform();
         var velocity = b2Body_GetLinearVelocity(_bodyID);
@@ -195,8 +195,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         definition.filter.categoryBits = _layer;
         definition.filter.maskBits = _mask;
         definition.isSensor = IsArea;
-        definition.enablePreSolveEvents = !IsArea && PhysicsServer2D.Instance.HasBodyCollisionExceptions(RID);
-        definition.density = !IsArea && _mode is PhysicsServer2D.BodyMode.Rigid or PhysicsServer2D.BodyMode.RigidLinear ? 1 : 0;
+        definition.enablePreSolveEvents = !IsArea && PhysicsServer.Instance.HasBodyCollisionExceptions(RID);
+        definition.density = !IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ? 1 : 0;
         for (var index = 0; index < _slots.Count; index++)
         {
             var slot = _slots[index];
@@ -208,8 +208,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         _shapesDirty = false;
     }
 
-    private B2BodyType BackendType => IsArea || _mode == PhysicsServer2D.BodyMode.Static
-        ? B2BodyType.b2_staticBody : _mode == PhysicsServer2D.BodyMode.Kinematic
+    private B2BodyType BackendType => IsArea || _mode == PhysicsServer.BodyMode.Static
+        ? B2BodyType.b2_staticBody : _mode == PhysicsServer.BodyMode.Kinematic
             ? B2BodyType.b2_kinematicBody : B2BodyType.b2_dynamicBody;
 
     private static void ValidateTransform(Transform transform)

@@ -30,7 +30,7 @@ public abstract class Shape : Resource
         {
             ThrowIfDisposed();
             return _queryRID.IsValid() ? _queryRID :
-                _queryRID = PhysicsServer2D.Instance.RegisterBorrowedShape(this);
+                _queryRID = PhysicsServer.Instance.RegisterBorrowedShape(this);
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class Shape : Resource
         _revision++;
         RID rid;
         lock (_queryRIDGate) rid = _queryRID;
-        if (rid.IsValid()) PhysicsServer2D.Instance.MarkBorrowedShapeDirty(rid);
+        if (rid.IsValid()) PhysicsServer.Instance.MarkBorrowedShapeDirty(rid);
         EmitChanged();
     }
 
@@ -50,7 +50,7 @@ public abstract class Shape : Resource
         {
             RID rid;
             lock (_queryRIDGate) { rid = _queryRID; _queryRID = default; }
-            if (rid.IsValid()) PhysicsServer2D.Instance.UnregisterBorrowedShape(rid);
+            if (rid.IsValid()) PhysicsServer.Instance.UnregisterBorrowedShape(rid);
         }
         base.Dispose(disposing);
     }

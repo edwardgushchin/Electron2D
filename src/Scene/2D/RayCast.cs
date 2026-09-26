@@ -187,7 +187,7 @@ public sealed class RayCast : Entity
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        return PhysicsServer2D.Instance.ResolveSceneObject(_colliderRID);
+        return PhysicsServer.Instance.ResolveSceneObject(_colliderRID);
     }
 
     /// <summary>Returns the RID retained from the most recent hit.</summary>

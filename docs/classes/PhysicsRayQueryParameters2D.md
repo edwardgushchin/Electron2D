@@ -1,10 +1,10 @@
 # PhysicsRayQueryParameters2D
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** ElectronObject · **Source:** [PhysicsQueryParameters2D.cs](../../src/Servers/Physics/PhysicsQueryParameters2D.cs)
 
-Configures one [PhysicsDirectSpaceState2D.IntersectRay](PhysicsDirectSpaceState2D.md) call. It is caller-owned and mutable; reads and writes of `Exclude` copy the RID array. Finite scene-unit endpoints are global coordinates.
+Configures one [PhysicsDirectSpaceState.IntersectRay](PhysicsDirectSpaceState.md) call. It is caller-owned and mutable; reads and writes of `Exclude` copy the RID array. Finite scene-unit endpoints are global coordinates.
 
 ## Example
 

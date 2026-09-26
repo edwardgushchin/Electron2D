@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed partial class PhysicsServer2D
+public sealed partial class PhysicsServer
 {
     /// <summary>Creates a physics space independent of any scene tree.</summary>
     /// <returns>A caller-owned space RID that can be queried, stepped and freed.</returns>

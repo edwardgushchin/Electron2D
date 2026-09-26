@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public sealed partial class PhysicsServer2D
+public sealed partial class PhysicsServer
 {
     private readonly Dictionary<RID, List<RID>> _bodyExceptions = [];
 
