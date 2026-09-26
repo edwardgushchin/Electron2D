@@ -2281,6 +2281,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NinePatchRect",
+    "kind": "type",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "NinePatchRect",
+    "signature": "public class Electron2D.NinePatchRect",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NinePatchRect.AxisStretchMode",
+    "kind": "type",
+    "declaringType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "name": "AxisStretchMode",
+    "signature": "public enum Electron2D.NinePatchRect.AxisStretchMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Node",
     "kind": "type",
     "declaringType": "Electron2D.Node",
@@ -6100,6 +6133,19 @@
     "name": ".ctor",
     "signature": "protected MainLoop()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NinePatchRect..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": ".ctor",
+    "signature": "public NinePatchRect()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -15686,6 +15732,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.NinePatchRect.AxisStretchMode.Stretch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "name": "Stretch",
+    "signature": "public const Electron2D.NinePatchRect.AxisStretchMode Stretch = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NinePatchRect.AxisStretchMode.Tile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "name": "Tile",
+    "signature": "public const Electron2D.NinePatchRect.AxisStretchMode Tile = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NinePatchRect.AxisStretchMode.TileFit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "name": "TileFit",
+    "signature": "public const Electron2D.NinePatchRect.AxisStretchMode TileFit = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.NodeAutoTranslateMode.Always()",
     "kind": "enumValue",
     "declaringType": "Electron2D.NodeAutoTranslateMode",
@@ -18426,6 +18511,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.MainLoop, System.String, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.NinePatchRect.TextureChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "TextureChanged",
+    "signature": "public event System.Action TextureChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -41587,6 +41685,120 @@
       }
     ],
     "returnType": "Electron2D.MethodTweener\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.GetPatchMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "GetPatchMargin",
+    "signature": "public System.Int32 GetPatchMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NinePatchRect.SetPatchMargin(Electron2D.Side,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "SetPatchMargin",
+    "signature": "public System.Void SetPatchMargin(Electron2D.Side margin, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -71223,6 +71435,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.AxisStretchHorizontal()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "AxisStretchHorizontal",
+    "signature": "public Electron2D.NinePatchRect.AxisStretchMode AxisStretchHorizontal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.AxisStretchVertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "AxisStretchVertical",
+    "signature": "public Electron2D.NinePatchRect.AxisStretchMode AxisStretchVertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NinePatchRect.AxisStretchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.DrawCenter()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "DrawCenter",
+    "signature": "public System.Boolean DrawCenter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.PatchMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "PatchMarginBottom",
+    "signature": "public System.Int32 PatchMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.PatchMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "PatchMarginLeft",
+    "signature": "public System.Int32 PatchMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.PatchMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "PatchMarginRight",
+    "signature": "public System.Int32 PatchMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.PatchMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "PatchMarginTop",
+    "signature": "public System.Int32 PatchMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.RegionRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "RegionRect",
+    "signature": "public Electron2D.Rect2 RegionRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NinePatchRect.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.NinePatchRect",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
     "value": null
   },
   {

@@ -189,6 +189,14 @@ public abstract partial class CanvasItem
             Transform.Identity, texture, src, transpose, clipUV, tile));
     }
 
+    internal void RecordNinePatch(Texture texture, Rect2 destination, Rect2 source, CanvasNinePatch patch)
+    {
+        ValidateTextureDraw(texture, destination, Colors.White);
+        if (!source.IsFinite()) throw new ArgumentException("Nine-patch source geometry must be finite.", nameof(source));
+        (_canvasCommands ??= []).Add(new(false, destination.Position, destination.Size, Colors.White, 0, false,
+            Transform.Identity, texture, source, NinePatch: patch));
+    }
+
     /// <summary>Sets an additional transform for subsequent commands in this canvas recording.</summary>
     /// <param name="position">Translation in local units.</param>
     /// <param name="rotation">Rotation in radians, zero by default.</param>

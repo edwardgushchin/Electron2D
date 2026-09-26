@@ -1,6 +1,6 @@
 # AtlasTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-09-26
 
 - Declaration: `public sealed class AtlasTexture : Texture`
 - Source: [AtlasTexture.cs](../../src/Scene/Resources/AtlasTexture.cs)
@@ -143,3 +143,5 @@ The pinned SDL software triangle input truncates source UVs to integer texels as
 ## Polygon consumers
 
 CanvasItem.DrawPolygon and DrawColoredPolygon capture the immediate Region as normalized UV mapping and borrow the ultimate source. They ignore Margin and FilterClip; a zero region size collapses UVs, and nested regions are not composed. Missing UVs sample the full source at zero. DrawPrimitive samples the full source without remapping. An empty atlas uses white sampling for these raw geometry commands. Metadata changes require redraw; existing recorded commands retain their source even if this view is replaced or disposed. [CanvasItem](CanvasItem.md#drawpolygon) documents validation, reentrant size callbacks and lifetime.
+
+[NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.

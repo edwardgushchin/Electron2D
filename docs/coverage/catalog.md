@@ -489,7 +489,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [NavigationServer2DManager](classes/NavigationServer2DManager.md) | Object | Blocked | 2 |
 | [NavigationServer3D](classes/NavigationServer3D.md) | Object | Excluded | 168 |
 | [NavigationServer3DManager](classes/NavigationServer3DManager.md) | Object | Excluded | 2 |
-| [NinePatchRect](classes/NinePatchRect.md) | Control | Blocked | 17 |
+| [NinePatchRect](classes/NinePatchRect.md) | Control | Implemented | 17 |
 | [Node](classes/Node.md) | Object | Partial | 213 |
 | [Node2D](classes/Node2D.md) | CanvasItem | Implemented | 23 |
 | [Node3D](classes/Node3D.md) | Node | Excluded | 64 |

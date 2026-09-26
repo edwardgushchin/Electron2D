@@ -195,25 +195,36 @@ public sealed class AtlasTexture : Texture
         }
     }
 
+    internal Texture? ResolveDrawRegion(ref Rect2 destination, ref Rect2 requestedSource)
+    {
+        lock (GraphGate)
+        {
+            ThrowIfDisposed();
+            if (_atlas is not { } atlas) return null;
+            var source = requestedSource;
+            if (source.Size == Vector2.Zero) source.Size = _roundedRegion.Size;
+            if (source.Size == Vector2.Zero) source.Size = atlas.GetSize();
+            if (source.Size.X == 0 || source.Size.Y == 0) return null;
+            var scale = destination.Size / source.Size;
+            source.Position += _roundedRegion.Position - _margin.Position;
+            var clipped = EffectiveRegion(atlas, _roundedRegion).Intersection(source);
+            if (!clipped.HasArea()) return null;
+            var offset = clipped.Position - source.Position;
+            if (scale.X < 0) offset.X += clipped.Size.X - source.Size.X;
+            if (scale.Y < 0) offset.Y += clipped.Size.Y - source.Size.Y;
+            destination = new(destination.Position + offset * scale, clipped.Size * scale);
+            requestedSource = clipped;
+            ValidateRectangle(destination); ValidateRectangle(requestedSource);
+            return atlas;
+        }
+    }
+
     private void DrawRegion(CanvasItem canvasItem, Rect2 rect, Rect2? requestedSource, Color? modulate, bool transpose)
     {
-        var atlas = _atlas!; var region = _roundedRegion; var margin = _margin; var clip = _filterClip;
-        var source = requestedSource ?? new Rect2(Vector2.Zero, LogicalSize(atlas, region, margin));
-        if (source.Size == Vector2.Zero) source.Size = region.Size;
-        if (source.Size == Vector2.Zero) source.Size = atlas.GetSize();
-        if (source.Size.X == 0 || source.Size.Y == 0) return;
-        var scale = rect.Size / source.Size;
-        source.Position += region.Position - margin.Position;
-        ValidateRectangle(source);
-        if (!scale.IsFinite()) throw new ArgumentException("Texture scaling overflowed.", nameof(rect));
-        var clipped = EffectiveRegion(atlas, region).Intersection(source);
-        if (clipped.Size == Vector2.Zero) return;
-        var offset = clipped.Position - source.Position;
-        if (scale.X < 0) offset.X += clipped.Size.X - source.Size.X;
-        if (scale.Y < 0) offset.Y += clipped.Size.Y - source.Size.Y;
-        var destination = new Rect2(rect.Position + offset * scale, clipped.Size * scale);
-        ValidateRectangle(destination); ValidateRectangle(clipped);
-        atlas.DrawRectRegion(canvasItem, destination, clipped, modulate, transpose, clip);
+        var source = requestedSource ?? new Rect2(Vector2.Zero, LogicalSize(_atlas, _roundedRegion, _margin));
+        var clip = _filterClip;
+        var atlas = ResolveDrawRegion(ref rect, ref source);
+        atlas?.DrawRectRegion(canvasItem, rect, source, modulate, transpose, clip);
     }
 
     private static Rect2 EffectiveRegion(Texture? atlas, Rect2 region) => new(region.Position, new Vector2(

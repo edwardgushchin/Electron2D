@@ -2055,6 +2055,11 @@
       "godot": "RemoteTransform2D::property:use_global_coordinates",
       "state": "Implemented",
       "reason": "Default true; switches between queued global and synchronous attached local transform notifications, transferring immediately on mode change. RemoteTransformTests covers distinct source/target parents."
+    },
+    {
+      "godot": "NinePatchRect::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "Inherited control property executes with the NinePatchRect constructor and descriptor override default Ignore=2 (ADR 0079)."
     }
   ],
   "extras": [
@@ -3017,6 +3022,36 @@
       "electron2d": "method:Electron2D.VisibleOnScreenNotifier.Dispose(System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0078/0003: typed deterministic teardown releases subscriptions after ordinary Entity lifecycle cleanup."
+    },
+    {
+      "electron2d": "constructor:Electron2D.NinePatchRect..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Managed default construction projects the source control defaults."
+    },
+    {
+      "electron2d": "method:Electron2D.NinePatchRect.OnDraw()",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Typed canvas recording implements the existing nine-patch draw notification."
+    },
+    {
+      "electron2d": "method:Electron2D.NinePatchRect.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Typed intrinsic minimum hook projects source margin-sum sizing."
+    },
+    {
+      "electron2d": "method:Electron2D.NinePatchRect.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Typed descriptors retain the full configured control state and exact inherited pointer-filter default."
+    },
+    {
+      "electron2d": "method:Electron2D.NinePatchRect.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Exact-type constructor preserves NinePatchRect during scene reconstruction."
+    },
+    {
+      "electron2d": "method:Electron2D.NinePatchRect.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0079 with 0003/0008/0023: Deterministic cleanup releases borrowed texture subscriptions."
     }
   ],
   "statusGroups": [
@@ -5386,6 +5421,37 @@
       ],
       "state": "Blocked",
       "reason": "ADR 0078/0027: ShowRect draws a translucent magenta rectangle only when editor hint is active in the pinned source. Trigger: first self-hosted editor canvas gizmo drawing slice; add and test the flag and fill in that slice. No inert runtime bool is shipped."
+    },
+    {
+      "godot": [
+        "class:NinePatchRect",
+        "NinePatchRect::enum:AxisStretchMode",
+        "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_STRETCH",
+        "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE",
+        "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE_FIT",
+        "NinePatchRect::method:get_patch_margin(int:Side)",
+        "NinePatchRect::method:set_patch_margin(int:Side,int:)",
+        "NinePatchRect::property:axis_stretch_horizontal",
+        "NinePatchRect::property:axis_stretch_vertical",
+        "NinePatchRect::property:draw_center",
+        "NinePatchRect::property:mouse_filter",
+        "NinePatchRect::property:patch_margin_bottom",
+        "NinePatchRect::property:patch_margin_left",
+        "NinePatchRect::property:patch_margin_right",
+        "NinePatchRect::property:patch_margin_top",
+        "NinePatchRect::property:region_rect",
+        "NinePatchRect::property:texture",
+        "NinePatchRect::signal:texture_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0079: NinePatchRect projects the complete control contract and five default/property kinds, signed side margins/minimum-size sums, MouseFilter.Ignore and borrowed texture lifecycle. Retained CPU mapping executes Stretch/Tile/TileFit and center suppression across region/atlas sources on GPU and compatibility; negative region flips and constant-source centers execute. NinePatchTests checks independent axis oracle/packing/errors and native pixel tests verify all nine combinations, texture views, 64 warmed resized frames without managed allocation. Dense tessellation has an explicit finite geometry ceiling; native/platform/owner acceptance limits remain documented."
+    },
+    {
+      "godot": [
+        "TextureProgressBar::property:nine_patch_stretch"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0079: nine-patch geometry now executes on both current canvas backends. Trigger: complete Range plus TextureProgressBar texture/progress/radial-fill control slice; integrate this kernel with progress-dependent patches in that first slice."
     }
   ]
 }

@@ -7,7 +7,7 @@ internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vect
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect2 Source = default,
-    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null);
+    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null, CanvasNinePatch? NinePatch = null, bool ConstantSource = false);
 
 internal readonly record struct CanvasAnimationSlice(double Length, double Begin, double End, double Offset)
 {
@@ -22,6 +22,7 @@ internal static class CanvasGeometry
 {
     internal static void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false)
     {
+        if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return; }
         if (command.Stroke is { } stroke) { stroke.Append(output, transform, modulation, snapVertices); return; }
         if (command.Polygon is { } polygon) { polygon.Append(output, transform, modulation, snapVertices); return; }
         var color = command.Color * modulation;
@@ -38,7 +39,7 @@ internal static class CanvasGeometry
         var pixels = command.Texture!.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
         var size = command.B.Abs();
         var source = new Rect2(command.Source.Position, command.Source.Size.Abs());
-        if (size.X == 0 || size.Y == 0 || !source.HasArea()) return;
+        if (size.X == 0 || size.Y == 0 || !source.HasArea() && !command.ConstantSource) return;
         if (command.Transpose) size = new Vector2(size.Y, size.X);
         var flipX = (command.B.X < 0) != (command.Source.Size.X < 0);
         var flipY = (command.B.Y < 0) != (command.Source.Size.Y < 0);

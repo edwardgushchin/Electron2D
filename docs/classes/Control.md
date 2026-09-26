@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -280,3 +280,5 @@ The top hit Control in a root viewport receives a temporary local pointer event.
 Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU and dummy/software in an earlier slice; they do not verify this navigation change.
 
 **Decisions:** [scene hierarchy](../decisions/scene.md#adr-0008), [typed 2D API](../decisions/product.md#adr-0004), [rendering](../decisions/rendering.md#adr-0028).
+
+[NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.

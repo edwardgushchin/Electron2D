@@ -156,6 +156,8 @@ def main():
     shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
                         if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
+    patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
+    assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]
     assert len(screen_rows) == 6
     assert all(" | Implemented | " in row for row in screen_rows if not any(name in row for name in ("class VisibleOnScreenNotifier2D", "property bool show_rect")))

@@ -13,7 +13,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Scene | [scene.md](scene.md) | 0006, 0008, 0011, 0023, 0031, 0036, 0037 |
 | Resources | [resources.md](resources.md) | 0013, 0014, 0039 |
 | Localization | [localization.md](localization.md) | 0007 |
-| Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078 |
+| Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078, 0079 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053 |
 | Physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
 | Physics fields | [physics-fields.md](physics-fields.md) | 0056 |

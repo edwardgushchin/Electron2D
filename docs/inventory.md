@@ -8,6 +8,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`NinePatchRect`](classes/NinePatchRect.md) | [`NinePatchRect.cs`](../src/Scene/GUI/NinePatchRect.cs) | Retained nine-patch texture controls. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`NinePatchRect.AxisStretchMode`](classes/NinePatchRect.AxisStretchMode.md) | [`NinePatchRect.cs`](../src/Scene/GUI/NinePatchRect.cs) | Retained nine-patch texture controls. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`CanvasNinePatch`](classes/CanvasNinePatch.md) | [`CanvasNinePatch.cs`](../src/Servers/Rendering/CanvasNinePatch.cs) | Retained nine-patch texture controls. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`VisibleOnScreenNotifier`](classes/VisibleOnScreenNotifier.md) | [`VisibleOnScreenNotifier.cs`](../src/Scene/2D/VisibleOnScreenNotifier.cs) | Retained screen visibility and processing policy. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`VisibleOnScreenEnabler`](classes/VisibleOnScreenEnabler.md) | [`VisibleOnScreenEnabler.cs`](../src/Scene/2D/VisibleOnScreenEnabler.cs) | Retained screen visibility and processing policy. |
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`ScreenEnableMode`](classes/ScreenEnableMode.md) | [`VisibleOnScreenEnabler.cs`](../src/Scene/2D/VisibleOnScreenEnabler.cs) | Retained screen visibility and processing policy. |

@@ -149,3 +149,29 @@ Last updated: 2026-09-26
 ScreenVisibilityTests covers defaults, enums, target cache identity/path changes/errors, every process policy, weak disposal, silent departure/reentry, event failure with policy application, ownership, packing and 64 warmed nested ProcessMode transitions with zero managed bytes. ScreenVisibilityRenderingTests covers twelve native region/mask/layer/default-canvas/alpha/border/degenerate stages, black readback confirming no runtime gizmo, actual RigidBody participation, committed peer state, stale event suppression, failure continuation/native release and 64 warmed active enabler transitions with zero managed bytes per compatibility/GPU Linux Wayland path. Native allocator counts, other platforms, broad-scene cost and owner visual acceptance are unverified; no vendor source changes.
 
 Primary pinned sources: [node behavior](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/visible_on_screen_notifier_2d.cpp), [render culling](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp).
+
+<a id="adr-0079"></a>
+## ADR 0079: Retained nine-patch controls
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: NinePatchRect control, borrowed texture regions and all axis modes on both current canvas backends
+- Depends on: [0028](#adr-0028), [0008](scene.md#adr-0008), [0013](resources.md#adr-0013), [0014](resources.md#adr-0014)
+
+### Decision
+
+- Implement NinePatchRect : Control with Texture=null, RegionRect=zero, DrawCenter=true, four signed integer margins=zero and horizontal/vertical Stretch=0. Reuse nested AxisStretchMode Stretch=0, Tile=1, TileFit=2 and Side Left/Top/Right/Bottom. Constructor and typed inherited descriptor default MouseFilter to Ignore=2. Intrinsic minimum is the floating-point sum of opposing margins, including signed values; Control combines it with custom minimum and zero.
+- Record one typed nine-patch canvas command, then expand independent axis pieces using the pinned pixel mapping. Corners retain native source size; center axes stretch once, tile at source-center pixel period, or round the repeat count with floor(destination/source+0.5) and scale whole tiles to fit. Both-center pieces are omitted only when DrawCenter=false. A collapsed source center in Stretch uses constant UV. Oversized borders keep begin-side priority; signed margin policy remains stored rather than editor-hint clamping.
+- Use the existing texture/material/transform/sampling/blend/clip pipeline on both GPU and compatibility. Live dimensions and atlas geometry resolve at every submission, so a missed earlier Changed subscriber cannot strand old geometry. Source regions with negative extent use the accepted texture-region flip convention. All-zero size selects the whole base texture. Atlas region/margin clipping maps destination and source before splitting; nested views resolve through each layer to common root storage. Reuse the same atlas region resolver for ordinary DrawRectRegion.
+- CPU tessellation is proportional to repeat count; reject more than 1,048,574 axis tiles or 1,048,576 piece pairs before submission. This is the current finite geometry budget, not a blanket performance claim. A common nine-patch fragment path on a shader-capable fallback is the upgrade when dense panels make this ceiling or cost relevant. Successful warmed frames within prepared capacity allocate no managed bytes; first capacity growth and errors are outside the measured interval.
+- Compensate interpolation rounding at normalized source starts with a 0.00001-texel inward offset; native per-pixel oracle checks exact fractional TileFit seams on both backends. This numerical adjustment does not replace the source axis mapping. Texture filter/repeat still use inherited current canvas policy; native allocator counts remain unmeasured.
+- Borrow textures without disposing them. Assignment unsubscribes old events, subscribes the new binding, commits redraw/minimum invalidation and emits TextureChanged; equal references are silent. Content changes redraw without replacement signal. Disposed borrowed resources clear the binding. Notification errors leave committed state and are aggregated; disposal releases subscriptions. Store all configuration in typed scene descriptors and preserve exact class reconstruction.
+
+### Verification and dependency triggers
+
+NinePatchTests checks defaults, signed margins/minimum sums, defined enum/side and finite-region guards, borrowed replacement/update/disposal/errors, packing and an independent pixel-axis oracle for all nine mode combinations. Native NinePatchRenderingTests checks every pixel of the nine combinations, DrawCenter=false, signed-region flips, atlas margins/clipping and constant center, plus 64 warmup/64 active resized frames with zero managed bytes on Linux Wayland GPU and compatibility. Native readback images were inspected. Other platforms, native allocation, dense-panel cost and owner visual acceptance are unverified; vendor source is unchanged.
+
+RenderingServer.CanvasItemAddNinePatch remains Blocked until public retained canvas/item RID ownership and attachment exist; this control uses the real current internal command consumer. TextureProgressBar.NinePatchStretch now depends on its complete Range/progress/radial-fill control slice, with this geometry reusable then. Theme/StyleBox and first editor skin authoring remain separate complete slices.
+
+Primary pinned sources: [control contract](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/gui/nine_patch_rect.cpp), [axis shader oracle](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_rd/shaders/canvas.glsl), [atlas mapping](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/atlas_texture.cpp).
