@@ -28,6 +28,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled);
 
     internal RID RID { get; } = rid;
+    internal B2BodyId BackendID => _bodyID;
     internal bool IsArea { get; } = isArea;
     internal RID SpaceRID { get; private set; }
     internal PhysicsSpace? Space => _space;

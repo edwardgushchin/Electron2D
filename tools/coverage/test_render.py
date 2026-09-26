@@ -61,7 +61,7 @@ def main():
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))
-        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
+        for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
                      "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
@@ -111,6 +111,13 @@ def main():
             for state in ("Implemented", "Partial", "Blocked")} == {
                 "Implemented": 26, "Partial": 2, "Blocked": 0}
     assert "../../classes/ShapeCast.md" in class_rows["ShapeCast2D"]
+    character_rows = [row for row in pages[CLASS_PAGES / "CharacterBody2D.md"].splitlines()
+                      if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(character_rows) == 41
+    assert {state: sum(f" | {state} | " in row for row in character_rows)
+            for state in ("Implemented", "Partial", "Unimplemented")} == {
+                "Implemented": 38, "Partial": 3, "Unimplemented": 0}
+    assert "../../classes/CharacterBody.md" in class_rows["CharacterBody2D"]
     for name, count in (("RID", 11), ("PhysicsRayQueryParameters2D", 9)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -145,6 +152,8 @@ def main():
                if "one_way_collision" in row and "margin" not in row)
     assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
     physics_body_rows = pages[CLASS_PAGES / "PhysicsBody2D.md"].splitlines()
+    assert " | Implemented | " in next(row for row in physics_body_rows
+                                        if row.startswith("| [`method get_gravity("))
     assert all(" | Implemented | " in next(row for row in physics_body_rows
                                           if row.startswith(f"| [`method {name}("))
                for name in ("add_collision_exception_with", "get_collision_exceptions",
@@ -172,7 +181,7 @@ def main():
     assert len(area_rows) == 36
     assert {state: sum(f" | {state} | " in row for row in area_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 17, "Partial": 13, "Unimplemented": 0, "Blocked": 6}
+                "Implemented": 24, "Partial": 6, "Unimplemented": 0, "Blocked": 6}
     body_rows = pages[CLASS_PAGES / "RigidBody2D.md"]
     assert "../../classes/RigidBody.DampMode.md" in body_rows
     assert "| Implemented |" in next(row for row in body_rows.splitlines()

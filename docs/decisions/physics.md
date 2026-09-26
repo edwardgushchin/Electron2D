@@ -63,7 +63,7 @@ Games can use typed `AreaEntered`, `AreaExited`, `BodyEntered` and `BodyExited` 
 <a id="adr-0056"></a>
 ## ADR 0056: Area field priority and body damping
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: Executable area gravity/damping, typed world defaults and body field response
@@ -77,7 +77,7 @@ Area monitoring supplies shape geometry and directional filtering but initially 
 
 - Add typed `ProjectSettings` keys for the 2D default gravity strength/vector and linear/angular damping, with pinned defaults 980, (0, 1), 0.1 and 1. A SceneTree physics world samples active overrides when its first body or area attaches; the existing world retains that snapshot.
 - Give `Area` the five numeric `SpaceOverride` modes and finite signed gravity/damping fields, including transformed point gravity, constant-strength or inverse-square falloff, shared direction/point storage and integer priority. Field participation is independent of `Monitoring` and `Monitorable`; an area's mask still tests the body's layer. Resolve each channel in descending priority before the backend world step, using current shape overlap rather than the preceding event snapshot.
-- Preserve the backend's sampled world gravity, then apply each current dynamic body's difference from it as a mass-scaled force. Apply the pinned `max(0, 1 - delta * totalDamp)` linear/angular velocity factors before solver stepping and keep backend damping at zero. `RigidBody.DampMode` selects Combine or Replace separately for each channel. `PhysicsBody.GetGravity()` reports the last resolved vector after body gravity scaling on RigidBody; detached and StaticBody queries return zero. CharacterBody must inherit this field query when its kinematic slice is implemented.
+- Preserve the backend's sampled world gravity, then apply each current dynamic body's difference from it as a mass-scaled force. Apply the pinned `max(0, 1 - delta * totalDamp)` linear/angular velocity factors before solver stepping and keep backend damping at zero. `RigidBody.DampMode` selects Combine or Replace separately for each channel. `PhysicsBody.GetGravity()` reports the last resolved vector after body gravity scaling on RigidBody; CharacterBody reports the same selected world/Area gravity without automatically applying it to caller-owned Velocity. Detached and StaticBody queries return zero.
 - Validate all public numeric and enum inputs before mutation and reject a nonfinite resolved field or motion before changing body velocity. A changed resolved field wakes a sleeping body. Reuse area-order scratch storage and existing shape-distance scans; the checked warmed moving and sleeping-body field paths allocate zero managed bytes on Linux/.NET 8. No vendored source is changed.
 
 ### Consequences
@@ -140,7 +140,7 @@ Games can respond to collision entry/exit and solver sleep, query current bodies
 <a id="adr-0059"></a>
 ## ADR 0059: Capsule collision resource and fixture geometry
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: Concrete capsule Shape resource for existing body and area fixtures
@@ -158,12 +158,12 @@ The first scene-body profile supports circle and rectangle fixtures. A vertical 
 
 ### Consequences
 
-Rigid and static bodies gain capsule contact response, and areas gain capsule sensors and field geometry. The public type adds no backend handle and uses the existing borrowed-resource lifetime. Managed tests cover linked dimensions, degenerate values, rotation, live edits, packing and warmed allocation. Direct-space sweeps, character movement, native allocator accounting, other platforms and owner acceptance remain separate work.
+Rigid and static bodies gain capsule contact response, and areas gain capsule sensors and field geometry. The public type adds no backend handle and uses the existing borrowed-resource lifetime. Managed tests cover linked dimensions, degenerate values, rotation, live edits, packing and warmed allocation. Separation-ray floor behavior, native allocator accounting, other platforms and owner acceptance remain separate work.
 
 <a id="adr-0060"></a>
 ## ADR 0060: Fixed-step kinematic platform motion
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: AnimatableBody scene role and synchronized kinematic movement
@@ -171,7 +171,7 @@ Last updated: 2026-09-25
 
 ### Context
 
-Static bodies constrain a rigid body but teleport when their scene transform changes, so a moving platform has no contact velocity. The pinned AnimatableBody2D inherits StaticBody2D, uses a kinematic backend body, estimates linear/angular velocity from manual movement, and defaults to delaying the scene transform until the next physics frame. Box2D.NET offers kinematic bodies and a target-transform operation that derives both velocities for a fixed step. Direct-space sweeps and CharacterBody movement still require separate result and recovery contracts.
+Static bodies constrain a rigid body but teleport when their scene transform changes, so a moving platform has no contact velocity. The pinned AnimatableBody2D inherits StaticBody2D, uses a kinematic backend body, estimates linear/angular velocity from manual movement, and defaults to delaying the scene transform until the next physics frame. Box2D.NET offers kinematic bodies and a target-transform operation that derives both velocities for a fixed step. The direct sweep and CharacterBody movement contracts are now defined under ADRs 0063 and 0067.
 
 ### Decision
 
@@ -181,12 +181,12 @@ Static bodies constrain a rigid body but teleport when their scene transform cha
 
 ### Consequences
 
-Games can animate moving platforms and doors that push or carry dynamic bodies, using typed scene transforms. CharacterBody platform following and kinematic sweeps remain future slices. Native allocation, other platforms and owner visual acceptance remain unverified.
+Games can animate moving platforms and doors that push or carry dynamic bodies, using typed scene transforms. CharacterBody now follows moving platforms and consumes kinematic sweeps under ADR 0067. Native allocation, other platforms and owner visual acceptance remain unverified.
 
 <a id="adr-0061"></a>
 ## ADR 0061: Two-sided segment fixtures and zero-area body mass
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: SegmentShape resource and executable static, dynamic and area fixtures
@@ -206,7 +206,7 @@ Joint2D/PinJoint2D was compared as another gameplay slice. Its public RID needs 
 
 ### Consequences
 
-Games can construct two-sided terrain edges and line sensors and attach segments to moving bodies. Live edits, rotation, short/point limits, resource copying, scene packing and dynamic mass/inertia have executable checks. Compound chain geometry, joint tuning/RID, direct-space sweeps, native allocator accounting, other platforms and owner acceptance remain separate work.
+Games can construct two-sided terrain edges and line sensors and attach segments to moving bodies. Live edits, rotation, short/point limits, resource copying, scene packing and dynamic mass/inertia have executable checks. Compound chain geometry, joint tuning/RID, separation-ray participation, native allocator accounting, other platforms and owner acceptance remain separate work.
 
 <a id="adr-0062"></a>
 ## ADR 0062: Compound convex collision fixtures
@@ -337,3 +337,33 @@ Games need an editable concave or convex polygon child directly under a physics 
 ### Consequences
 
 One node now supplies solid concave terrain, hollow closed boundaries or sensors without a hidden scene child. CollisionPolygonTests checks array ownership, errors, malformed editable contours, solid/segment mode, concave missing space, body contact, one-way traversal, live edits, warning failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. Native allocator counts, other platforms and owner visual acceptance remain unverified.
+
+<a id="adr-0067"></a>
+## ADR 0067: Character sliding and platform following
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: Caller-driven CharacterBody grounded/floating motion and typed slide snapshots
+- Depends on: [0008](scene.md#adr-0008), [0054](#adr-0054), [0056](#adr-0056), [0060](#adr-0060), [0063](#adr-0063), [0065](#adr-0065)
+
+### Context
+
+The shared PhysicsBody motion test, typed KinematicCollision result, RID exceptions and kinematic backend exist. Games still lack the spatial character role that turns desired velocity into floor/wall/ceiling classification, repeated slide motion, floor snap and moving-platform following. The selected backend permits kinematic target motion but direct queries must see a character's new scene pose before the following solver step. A query that ignores an initially touching inclined segment can tunnel through that slope.
+
+### Decision
+
+- Map the spatial character to `CharacterBody : PhysicsBody`, keeping the Entity and CollisionObject branches intact. Keep `MotionMode` and `PlatformOnLeave` as properties; name their typed C# enum types `CharacterMotionMode` and `CharacterPlatformOnLeave` because C# cannot give a nested enum and property the same identifier. Preserve numeric enum values, applicable defaults and PackedScene state. Do not store transient contacts, flags or platform RID in PackedScene.
+- Reuse the current server body-motion test for each slide without constructing a public result per fixed frame. In grounded mode classify normals against normalized UpDirection and FloorMaxAngle, apply stop/constant-speed/block-on-wall/ceiling controls, and snap a previously grounded body down only when not facing upward. Floating mode treats contacts as walls and applies WallMinSlideAngle. MaxSlides bounds the loop; copied KinematicCollision objects expose individual and last contacts. Desired Velocity remains caller-owned; the body reports Area/world gravity but game code chooses whether to add it. Validate finite motion and public options before mutation.
+- Sample the last floor or wall body's point velocity and collision layer before movement. Floor/wall layer masks gate carry; movement caused by a platform excludes that platform RID, then a departure policy adds all, only upward, or none of its velocity to Velocity. Keep these operations on the space owner thread and use the existing body/Area field and RID lifetimes.
+- After character scene movement, direct queries prepare its backend fixture at the new pose immediately. Retain the previous solved pose separately; before the next fixed step reset a temporarily prepared query pose and send the final scene pose through the backend kinematic target operation. This preserves contact velocity and same-frame query identity. The current registered-body scan for platform point velocity is linear; replace it only after measured large-world cost. Fix the shared body-motion kernel to report initial contact when movement points inward along a touching slope rather than skipping that pair. Warmed unchanged movement reuses candidate, platform-exclusion and slide-result storage.
+- Keep CharacterBody class, MoveAndSlide and ApplyFloorSnap Partial for separation-ray-specific floor behavior until SeparationRayShape2D and its slide-on-slope motion option execute. The other own members can be Implemented with executable evidence for current shapes; inherited virtual tile collision-object gaps remain on their declaring result types.
+
+### Consequences
+
+Caller-driven grounded and floating characters can move along current shapes, snap to floors, follow moving floors and walls, inspect typed contacts, and read selected gravity without public backend types. CharacterBodyTests covers default/invalid/packed state, floor/wall/ceiling and floating movement, slope/ceiling/wall controls, slide caps, platform masks/leave policies, Area gravity, immediate queries, fixed-lane sync and warmed allocation. PhysicsMotionTests guards the touching-slope regression. Native allocation, other platforms, separation-ray behavior, large-world throughput and owner visual acceptance remain unverified.
+
+### Rejected alternatives
+
+- Use StaticBody teleportation for scene movement: it loses kinematic contact velocity and leaves the backend at an old pose during a same-frame query.
+- Add a second character-only collision world: it would split RID identity, shape owners, masks and Area fields from the shared SceneTree space.

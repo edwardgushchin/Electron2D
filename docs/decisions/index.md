@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -15,7 +15,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Localization | [localization.md](localization.md) | 0007 |
 | Rendering | [rendering.md](rendering.md) | 0028, 0046 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053 |
-| Physics | [physics.md](physics.md) | 0054, 0055, 0056, 0057, 0058, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066 |
+| Physics | [physics.md](physics.md) | 0054, 0055, 0056, 0057, 0058, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067 |
 | Audio | [audio.md](audio.md) | 0047 |
 | Input | [input.md](input.md) | 0038 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |

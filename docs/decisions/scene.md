@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -76,6 +76,7 @@ Last updated: 2026-09-24
 | `PhysicsBody2D : CollisionObject2D` | `abstract PhysicsBody : CollisionObject` | Shared fixed-step body and shape lifecycle. |
 | `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic Box2D-backed motion and contact response. |
 | `StaticBody2D : PhysicsBody2D` | `StaticBody : PhysicsBody` | Stationary Box2D-backed collision geometry. |
+| `CharacterBody2D : PhysicsBody2D` | `CharacterBody : PhysicsBody` | Caller-driven grounded/floating slide motion over the shared world under ADR 0067. |
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
 | `BaseButton : Control` | `BaseButton : Control` | Shared button behavior; future UI implementation. |
 | `Button : BaseButton` | `Button : BaseButton` | Concrete button behavior; future UI implementation. |
@@ -110,6 +111,7 @@ ElectronObject
         │   ├── CollisionObject
         │   │   └── PhysicsBody
         │   │       ├── RigidBody
+        │   │       ├── CharacterBody
         │   │       └── StaticBody
         │   └── other spatial nodes, preserving their reference intermediate bases
         └── Control

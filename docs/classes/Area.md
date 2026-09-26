@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-25
 
 ## Description
 
-A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, its gravity and damping fields affect overlapping dynamic bodies before the solver step regardless of monitoring flags.
+A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, gravity and damping fields affect overlapping RigidBody dynamics, while gravity also feeds CharacterBody's inherited `GetGravity()` query before the solver step.
 
 ## Example
 
@@ -107,4 +107,4 @@ Object-level events are raised once per other node even when multiple shape pair
 
 The area owns its backend sensor fixtures, while its child shapes borrow caller-owned Shape resources. A moving body passes through without collision response. Active area and shape transforms require unit scale and zero skew; an invalid transform fails the step before replacing geometry, and a corrected step can continue. Filter, disabled-state and shape changes take effect on the next step. Exiting or disposing removes backend state; re-entry creates new fixtures. [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional filtering including body mask zero, area monitorability, multi-shape deduplication, moving-body passage, live geometry, packing, tree removal, callback failure and mutation. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field defaults, priority and combination modes, point falloff, signed damping, scene packing and finite failure recovery. The tests check 64 warmed steady, moving-field and sleeping-field frames with zero managed allocations on Linux/.NET 8. Native allocation, other platforms and large-scene performance remain unverified.
 
-The body-result and body-event methods currently cover `PhysicsBody` nodes; tile-map virtual collision bodies are not yet integrated. Gravity and priority effects execute for current `RigidBody` nodes, while future `CharacterBody` gravity queries still need this field reduction. Audio-bus routing and shape-index events remain incomplete on [Area2D coverage](../coverage/classes/Area2D.md). [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the monitoring and field contracts.
+The body-result and body-event methods currently cover `PhysicsBody` nodes; tile-map virtual collision bodies are not yet integrated. Gravity and priority effects execute for RigidBody and CharacterBody; only RigidBody applies this field as force automatically. [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) verifies its inherited gravity query. Audio-bus routing and shape-index events remain incomplete on [Area2D coverage](../coverage/classes/Area2D.md). [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the monitoring and field contracts.

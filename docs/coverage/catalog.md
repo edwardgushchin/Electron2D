@@ -166,7 +166,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CenterContainer](classes/CenterContainer.md) | Container | Blocked | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
-| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Unimplemented | 40 |
+| [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Partial | 40 |
 | [CharacterBody3D](classes/CharacterBody3D.md) | PhysicsBody3D | Excluded | 41 |
 | [CheckBox](classes/CheckBox.md) | Button | Blocked | 13 |
 | [CheckButton](classes/CheckButton.md) | Button | Blocked | 13 |

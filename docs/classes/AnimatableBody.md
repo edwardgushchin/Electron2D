@@ -1,6 +1,6 @@
 # AnimatableBody
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [StaticBody](StaticBody.md), [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -49,4 +49,4 @@ The StaticBody material override, PhysicsBody gravity query, CollisionObject fil
 
 ## Verification and limits
 
-[AnimatableBodyTests](../../tests/Electron2D.Tests/AnimatableBodyTests.cs) checks a rigid rider on a moving platform, deferred and immediate modes, rotation, zero delta, invalid rollback, callback failure, owner-thread access, reentry, PackedScene and 64 warmed stationary and moving contact frames without managed allocations on Linux/.NET 8. [ADR 0060](../decisions/physics.md#adr-0060) defines the kinematic target policy. CharacterBody platform following, native allocation, other platforms and owner visual acceptance remain unverified.
+[AnimatableBodyTests](../../tests/Electron2D.Tests/AnimatableBodyTests.cs) checks a rigid rider on a moving platform, deferred and immediate modes, rotation, zero delta, invalid rollback, callback failure, owner-thread access, reentry, PackedScene and 64 warmed stationary and moving contact frames without managed allocations on Linux/.NET 8. [ADR 0060](../decisions/physics.md#adr-0060) defines the kinematic target policy. CharacterBody now follows accepted floor and wall platform layers under ADR 0067; native allocation, other platforms and owner visual acceptance remain unverified.

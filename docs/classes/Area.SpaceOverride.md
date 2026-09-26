@@ -14,4 +14,4 @@ Controls each gravity or damping field independently while overlapping areas are
 | `Replace` | 3 | Replaces earlier contributions and stops lower-priority areas and the world default. |
 | `ReplaceCombine` | 4 | Replaces earlier contributions, then continues to lower-priority areas and the world default. |
 
-The three override properties default to `Disabled`. Invalid enum values throw before changing state. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks numeric identities and each reduction mode on current RigidBody simulation. CharacterBody field consumption remains a separate type dependency.
+The three override properties default to `Disabled`. Invalid enum values throw before changing state. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks numeric identities and each reduction mode on current RigidBody simulation. CharacterBody now reads the selected gravity field through inherited GetGravity; its desired Velocity remains caller-owned.
