@@ -151,3 +151,7 @@ RigidBody and typed PhysicsServer mass parameters share configured kilograms, se
 ## Shared action state
 
 ApplyForce/ApplyCentralForce/ApplyTorque queue one-step input in the shared body runtime; impulses remain immediate. Borrowed-view access validates the attachment before forwarding, while post-solver callbacks can queue the next step. Omission, static/dormant retention and numeric/rotation-lock validation match [PhysicsServer force methods](PhysicsServer.md). [ADR 0074](../decisions/physics-forces.md#adr-0074) and [PhysicsServerForceTests](../../tests/Electron2D.Tests/PhysicsServerForceTests.cs) define current behavior and allocation limits.
+
+## Internal kinematic integration intervals
+
+Fast kinematic travel may divide one fixed frame into several native world calls under [ADR 0075](../decisions/physics.md#adr-0075). Step and callback timing retain the outer frame; current contact impulse snapshots expose the last native solve. Whole-step impulse aggregation remains a separately tracked Partial contract. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) verifies full outer force duration and one integration callback.

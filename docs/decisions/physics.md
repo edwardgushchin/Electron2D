@@ -458,3 +458,28 @@ Effective inherited Node.ProcessMode.Disabled already issues synchronous disable
 ### Consequences and verification
 
 Games can deactivate collision branches, keep disabled scenery solid, or leave autonomous simulation active. CollisionDisableModeTests covers real query/solver/sensor behavior, disabled entry and inheritance breaks, policy switches, reparent/reentry, view invalidation, RID/owner retention, mass/locks/freeze/velocity restoration, user failures, phase/thread validation and packing. Sixty-four warmed mixed active rigid/static kinematic/sensor frames allocate zero managed bytes on the scene owner thread in Linux/.NET 10. Policy transitions themselves use the existing allocating Node notification/fixture lifecycle; native allocation, other platforms and owner visual acceptance remain unverified. No vendor change is required.
+
+<a id="adr-0075"></a>
+## ADR 0075: Static and kinematic frozen body roles
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: RigidBody freeze policy and current kinematic body-path integration
+- Depends on: [0054](#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0072](#adr-0072), [0073](physics-mass.md#adr-0073), [0074](physics-forces.md#adr-0074)
+
+### Context
+
+Freeze currently selects only a static body. The pinned FreezeMode offers Static=0/default and Kinematic=1: frozen bodies ignore gravity/forces, but a manually animated kinematic body has contact velocity along its path. Native target transforms support this role, while a single native world call can skip a dynamic body crossed by a long kinematic move. Rebuilding targets from the approximate native angle decoder also produces idle angular drift in synchronized scene presentation.
+
+### Decision
+
+- Project the enum as global RigidFreezeMode with the same values and a stored FreezeMode property. The mode has no effect while Freeze is false. A changed frozen mode selects the corresponding native role; mode/freeze mutations validate owner thread and solver ownership before writes and synchronize pending pose before switching. Pack mode before Freeze. Undefined enums reject before mutation.
+- Frozen Static retains manual teleport behavior. Frozen Kinematic derives linear/angular velocity from the latest manual global target over a nonzero fixed frame; it ignores gravity/forces and retains zero inverse mass/inertia. Scene pose queries present the target immediately, zero delta does not consume it, and the next solver pass restores exact native history before deriving motion. Snapshot history on mode change/entry, preserve configured mass/inertia and body role across disable/remove/reentry, and let inherited MakeStatic temporarily override the role. Dynamic rotation lock is retained but does not prevent manually animated frozen rotation.
+- Keep observed scene pose separate from exact native transform history. An unchanged frozen target clears velocity without reconstructing a decoded native angle. Apply the same idle guard to synchronized AnimatableBody. Native angular target estimation remains approximate under the existing ADR 0060 backend policy; tests allow 0.1 rad/s deviation for a 0.1 rad target over 1/60 s and 0.01 rad presentation tolerance.
+- Subdivide native world calls when actual kinematic linear/angular travel exceeds a conservative fraction of current mover/dynamic collider extents, with native slop as the minimum interval. Use actual native kinematic roles across scene/server bodies, skip extra calls without dynamic targets, and reject counts outside the finite integer integration range. Retain one outer callback/event/snapshot cycle and the original outer Step value. Capture dynamic force/torque accumulators once and replay them across internal intervals so their full outer duration is preserved. Cache the snapshot list. Cost grows with travel and small geometry; a native kinematic time-of-impact path is the profiling-triggered upgrade. Current contact impulse views still expose the last native solve; whole-step aggregation retains its separate Partial coverage.
+- StaticBody constant surface velocities remain Blocked by an exact normal/tangential stationary constraint-velocity channel: native static bodies use zero dummy solver state and scalar tangentSpeed alone cannot supply it. Wider server state and CCD modes remain separate API work. No vendor source changes are required for this slice.
+
+### Consequences and verification
+
+RigidFreezeModeTests covers values/defaults, unfrozen invariance, immediate queries/zero delta, rotation and idle behavior, real moderate/fast path contacts, preserved force duration/single callback, mass/lock restoration, MakeStatic override/reentry, packed state, numeric/thread/phase/disposal errors, synchronized sibling idle regression and 64 warmed active subdivided solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms, broad-scene performance and owner visual acceptance remain unverified.

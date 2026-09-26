@@ -49,3 +49,7 @@ The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) changes friction and
 ## Disabled processing and physics
 
 Inherited `DisableMode.Remove` omits an effectively disabled static body from solver and queries. MakeStatic and KeepActive keep its normal static response; enabling never changes its configured role. RID, owner groups and borrowed resources survive removal and reentry. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+## Stationary surface velocity prerequisite
+
+Constant linear/angular surface velocity remains unimplemented. Its [Blocked coverage rows](../coverage/classes/StaticBody2D.md) require a normal and tangential point-velocity channel in contact constraints while keeping body pose stationary. Native static contacts read a zero dummy solver state; a scalar tangent-speed material offset alone is insufficient. [ADR 0075](../decisions/physics.md#adr-0075) records this exact integration trigger.

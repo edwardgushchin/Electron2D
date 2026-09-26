@@ -186,6 +186,12 @@ def main():
     disable_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
                     if row.startswith("| [`") and ("DisableMode" in row or "disable_mode" in row)]
     assert len(disable_rows) == 5 and all(" | Implemented | " in row for row in disable_rows)
+    freeze_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines()
+                   if row.startswith("| [`") and ("FreezeMode" in row or "freeze_mode" in row)]
+    assert len(freeze_rows) == 4 and all(" | Implemented | " in row for row in freeze_rows)
+    static_rows = pages[CLASS_PAGES / "StaticBody2D.md"].splitlines()
+    assert all(" | Blocked | " in next(row for row in static_rows if f"property {typ} {name}" in row)
+               for typ, name in (("Vector2", "constant_linear_velocity"), ("float", "constant_angular_velocity")))
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows

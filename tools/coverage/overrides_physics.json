@@ -2470,6 +2470,24 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0074: all 13 transient/constant force and instantaneous impulse operations share the body runtime, preserve detached impulses and pending inputs through attachment/removal, use current normalized profile and world-axis moment, and retain static/dormant/omission semantics. PhysicsServerForceTests verifies rotated centers, analytic force/torque/impulse values, all geometry projections, mode/sleep/custom integration, callback/thread/numeric failure, reentry and zero warmed managed allocation. Axis velocity remains in the separate body-state slice."
+    },
+    {
+      "godot": [
+        "RigidBody2D::enum:FreezeMode",
+        "RigidBody2D::enum_value:FreezeMode.FREEZE_MODE_STATIC",
+        "RigidBody2D::enum_value:FreezeMode.FREEZE_MODE_KINEMATIC",
+        "RigidBody2D::property:freeze_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0075: typed Static=0/default and Kinematic=1 choose the frozen native role. RigidFreezeModeTests verifies unaffected unfrozen dynamics, current mass/locks restoration, manual query/zero-step targets, angular velocity tolerance and idle stability, ordinary/fast dynamic path contacts, full outer-step force and single callback duration, disable override/reentry, packed state, input/thread/phase rejection and zero warmed managed allocation."
+    },
+    {
+      "godot": [
+        "StaticBody2D::property:constant_linear_velocity",
+        "StaticBody2D::property:constant_angular_velocity"
+      ],
+      "state": "Blocked",
+      "reason": "Exact trigger: a stationary-surface velocity channel must supply both normal and tangential point velocity to contact constraints while leaving body pose stationary. Box2D static contacts select a zero dummy solver state (B2ContactSolvers), and material tangentSpeed supplies only a scalar tangent offset; the current bool pre-solve callback cannot supply a full surface velocity. Requires an engine-owned constraint/solver bridge or verified backend support; stored metadata or moving/restoring a kinematic pose would not close this behavior."
     }
   ]
 }

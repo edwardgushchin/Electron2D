@@ -59,6 +59,11 @@ public sealed class AnimatableBody : StaticBody
         var target = _syncToPhysics && _hasTarget ? _targetTransform : GlobalTransform;
         if (!target.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(target.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
+        if (_syncToPhysics && !_hasTarget && target == _lastValidTransform && !PhysicsMadeStatic)
+        {
+            b2Body_SetLinearVelocity(BackendID, default); b2Body_SetAngularVelocity(BackendID, 0);
+            return;
+        }
         var transform = new B2Transform(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
         if (PhysicsMadeStatic) b2Body_SetTransform(BackendID, transform.p, transform.q);
         else b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
@@ -77,6 +82,7 @@ public sealed class AnimatableBody : StaticBody
         _applyingPhysicsPose = true;
         try { GlobalTransform = solved; }
         finally { _applyingPhysicsPose = false; }
+        _lastValidTransform = GlobalTransform;
     }
 
     /// <inheritdoc />

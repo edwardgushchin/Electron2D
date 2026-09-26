@@ -215,6 +215,7 @@ ShapePairEventTests.Run();
 CollisionDisableModeTests.Run();
 PhysicsMassProfileTests.Run();
 PhysicsServerForceTests.Run();
+RigidFreezeModeTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

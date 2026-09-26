@@ -54,3 +54,7 @@ The StaticBody material override, PhysicsBody gravity query, CollisionObject fil
 ## Disabled processing and physics
 
 Inherited `DisableMode.MakeStatic` temporarily replaces the kinematic native type with static. Manual targets retain the existing fixed-step synchronized presentation, but teleport without derived contact velocity. Enable/KeepActive restores the kinematic role; exit/reentry applies the effective inherited policy. Remove omits fixtures while retaining stored scene state and shape owners. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+## Idle and fast kinematic paths
+
+Synchronized solved poses stop their derived velocity on unchanged frames without rebuilding a target from the native angle decoder. Current scene/server kinematic roles can subdivide world integration when travel would otherwise cross a dynamic body between collision updates; outer callback/event timing remains one fixed frame. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks synchronized sibling idle rotation and [ADR 0075](../decisions/physics.md#adr-0075) defines the shared integration policy and performance/precision limits.

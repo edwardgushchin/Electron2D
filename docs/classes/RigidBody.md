@@ -4,7 +4,7 @@ Last updated: 2026-09-26
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
-- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Mass.cs](../../src/Scene/2D/RigidBody.Mass.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
+- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Mass.cs](../../src/Scene/2D/RigidBody.Mass.cs), [RigidBody.Freeze.cs](../../src/Scene/2D/RigidBody.Freeze.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
 - **Declaration:** `public partial class RigidBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
@@ -41,6 +41,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `public bool CanSleep { get; set; }` | true | Allows idle sleep. |
 | `public bool Sleeping { get; set; }` | false | Reads or changes current awake state. |
 | `public bool Freeze { get; set; }` | false | Uses a static backend mode while true; unfreezing resumes dynamic motion. |
+| `public RigidFreezeMode FreezeMode { get; set; }` | Static | Selects stationary or manually driven kinematic participation while frozen. |
 | `public bool LockRotation { get; set; }` | false | Locks angular movement in the solver. |
 | `public PhysicsMaterial? PhysicsMaterialOverride { get; set; }` | null | Borrows a surface material for every child fixture. |
 | `public Vector2 ConstantForce { get; set; }` | (0, 0) | Persistent center force in scene units times kilograms/s². |
@@ -195,3 +196,17 @@ Undefined mode, nonfinite or negative inertia, native reciprocal underflow/overf
 ## Shared force lifetime
 
 Force/impulse operations share the typed [PhysicsServer](PhysicsServer.md) runtime. Scene immediate Apply methods still require attachment; server calls can act on a detached RID. Pending one-step inputs survive disable/remove/static/dormant transitions and apply once on eligible integration; omission discards them there. Dynamic native velocities are captured before removal, preserving an impulse issued since the last solver callback. Persistent positioned calls resolve the current detached profile and rotated center. Creation/rebuild of fixtures applies the complete mass profile once and preserves configured velocity. Invalid inputs/totals/velocities and solver-owned pose mutation reject before partial writes. [PhysicsServerForceTests](../../tests/Electron2D.Tests/PhysicsServerForceTests.cs) verifies these boundaries; [ADR 0074](../decisions/physics-forces.md#adr-0074) owns the shared policy.
+
+<a id="freezemode"></a>
+## `FreezeMode`
+
+[RigidFreezeMode](RigidFreezeMode.md) stores Static=0/default or Kinematic=1. It has no effect while Freeze is false. Static manual transforms teleport; Kinematic manual global targets derive native contact velocity over a nonzero fixed frame, allowing the frozen body to push dynamic bodies along its path. Gravity, force response and physical inverse mass/inertia remain disabled. A forced pose query exposes the target immediately; zero delta retains it. Solver history uses the exact native transform, and unchanged targets clear velocity rather than drifting from an approximate angle decoder.
+
+Changing mode/freeze synchronizes pending pose before switching and checks owner/solver access before changing flags. Reentry snapshots the current scene pose; inherited MakeStatic temporarily overrides Kinematic without changing configuration. Unfreezing restores mass, explicit inertia and dynamic rotation lock; that lock does not prevent manually animated frozen rotation. Mode is packed before Freeze. Undefined mode, disposed/off-owner access and role mutation from solver-owned pose callbacks reject.
+
+```csharp
+using var body = new RigidBody { Freeze = true, FreezeMode = RigidFreezeMode.Kinematic };
+body.Position += new Vector2(2, 0);
+```
+
+Current kinematic paths can use several native integration intervals within one fixed frame to avoid skipping crossed dynamic geometry. Dynamic force/torque acts for the full outer duration and integration callbacks still run once. Native angular estimation is approximate: the checked 0.1 rad / 1/60 s target is within 0.1 rad/s of the ideal six; presentation uses a 0.01 rad tolerance. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) covers ordinary/fast contacts, idle, query/zero delta, policy and mass restoration, failure boundaries, storage and 64 warmed active subdivided frames with zero managed allocation. [ADR 0075](../decisions/physics.md#adr-0075) owns this contract. Native allocation, broad-scene performance, other platforms and owner acceptance remain unverified.

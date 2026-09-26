@@ -159,9 +159,10 @@ internal sealed partial class PhysicsSpace : IDisposable
             {
                 if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
                 else if (body is CharacterBody character) character.PrepareMotion(delta);
+                else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
             }
             _contactStep++;
-            b2World_Step(_worldID, (float)delta, 4);
+            StepKinematicPaths(delta);
             solverAdvanced = true;
             foreach (var body in _bodies)
             {

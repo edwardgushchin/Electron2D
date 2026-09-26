@@ -36,6 +36,7 @@ public partial class RigidBody : PhysicsBody
             (body, value) => body.LinearDampMode = value, _ => DampMode.Combine, stored: true),
         new PropertyDescriptor<RigidBody, DampMode>(nameof(AngularDampMode), body => body.AngularDampMode,
             (body, value) => body.AngularDampMode = value, _ => DampMode.Combine, stored: true),
+        new PropertyDescriptor<RigidBody, RigidFreezeMode>(nameof(FreezeMode), body => body.FreezeMode, (body, value) => body.FreezeMode = value, _ => RigidFreezeMode.Static, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(Freeze), body => body.Freeze, (body, value) => body.Freeze = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(LockRotation), body => body.LockRotation, (body, value) => body.LockRotation = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, PhysicsMaterial?>(nameof(PhysicsMaterialOverride), body => body.PhysicsMaterialOverride,
@@ -152,7 +153,7 @@ public partial class RigidBody : PhysicsBody
         set { EnsureMutable(); ValidateDampMode(value); _angularDampMode = value; }
     }
 
-    /// <summary>Gets or sets whether simulation treats this body as static.</summary>
+    /// <summary>Gets or sets whether gravity and forces are disabled under the selected freeze role.</summary>
     /// <remarks>The configured freeze flag is independent of the inherited disable policy.
     /// Attached changes during solver ownership reject before changing this flag.</remarks>
     /// <value>False by default.</value>
@@ -164,6 +165,7 @@ public partial class RigidBody : PhysicsBody
             EnsureMutable();
             if (_freeze == value) return;
             EnsurePhysicsParticipationChange();
+            if (HasBackend) PrepareBackend();
             _freeze = value;
             UpdatePhysicsParticipation();
         }
@@ -174,7 +176,7 @@ public partial class RigidBody : PhysicsBody
     public bool LockRotation
     {
         get { ThrowIfDisposed(); return _lockRotation; }
-        set { EnsureMutable(); _lockRotation = value; if (HasBackend) b2Body_SetMotionLocks(BackendID, new(false, false, value)); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; if (HasBackend) b2Body_SetMotionLocks(BackendID, new(false, false, !_freeze && value)); }
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
@@ -226,30 +228,36 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnBodyTypeChanged()
     {
+        b2Body_SetMotionLocks(BackendID, new(false, false, !_freeze && _lockRotation));
         ApplyMass(_mass);
+        ResetFrozenSolverPose();
         if (_freeze || PhysicsMadeStatic) return;
         b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
         b2Body_SetAngularVelocity(BackendID, _angularVelocity);
     }
 
-    internal override bool MovesWithSimulation => !_freeze;
+    internal override bool MovesWithSimulation => !_freeze || FrozenKinematic;
     internal override Vector2 EffectiveGravity => _effectiveGravity;
 
-    internal override B2BodyType RequestedBodyType => _freeze ? B2BodyType.b2_staticBody : B2BodyType.b2_dynamicBody;
+    internal override B2BodyType RequestedBodyType => !_freeze ? B2BodyType.b2_dynamicBody :
+        _freezeMode == RigidFreezeMode.Kinematic ? B2BodyType.b2_kinematicBody : B2BodyType.b2_staticBody;
 
     internal override B2BodyDef CreateBodyDefinition()
     {
         _fieldsInitialized = false;
+        _frozenSolverPose = GlobalTransform;
+        _frozenQueryPoseApplied = false;
+        _frozenNativePose = new B2Transform(Shape.ToBackend(_frozenSolverPose.Origin), B2MathFunction.b2MakeRot(_frozenSolverPose.Rotation));
         var definition = b2DefaultBodyDef();
         definition.type = RequestedBodyType;
-        definition.linearVelocity = Shape.ToBackend(_linearVelocity);
-        definition.angularVelocity = _angularVelocity;
+        definition.linearVelocity = FrozenKinematic ? default : Shape.ToBackend(_linearVelocity);
+        definition.angularVelocity = FrozenKinematic ? 0 : _angularVelocity;
         definition.linearDamping = 0;
         definition.angularDamping = 0;
         definition.gravityScale = _customIntegrator ? 0 : _gravityScale;
         definition.enableSleep = _canSleep;
         definition.isAwake = !_sleeping;
-        definition.motionLocks.angularZ = _lockRotation;
+        definition.motionLocks.angularZ = !_freeze && _lockRotation;
         return definition;
     }
 
@@ -257,6 +265,7 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnBackendAdvanced()
     {
+        if (FrozenKinematic) ResetFrozenSolverPose();
         var velocity = b2Body_GetLinearVelocity(BackendID);
         _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter, velocity.Y * PhysicsSpace.UnitsPerMeter);
         _angularVelocity = b2Body_GetAngularVelocity(BackendID);

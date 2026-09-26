@@ -3109,6 +3109,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RigidFreezeMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RigidFreezeMode",
+    "name": "RigidFreezeMode",
+    "signature": "public enum Electron2D.RigidFreezeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneState",
     "kind": "type",
     "declaringType": "Electron2D.SceneState",
@@ -16081,6 +16099,32 @@
     "parameters": [],
     "returnType": "Electron2D.RigidCenterOfMassMode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidFreezeMode.Kinematic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidFreezeMode",
+    "name": "Kinematic",
+    "signature": "public const Electron2D.RigidFreezeMode Kinematic = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidFreezeMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidFreezeMode.Static()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidFreezeMode",
+    "name": "Static",
+    "signature": "public const Electron2D.RigidFreezeMode Static = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidFreezeMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Shader.Mode.CanvasItem()",
@@ -73237,6 +73281,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.FreezeMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "FreezeMode",
+    "signature": "public Electron2D.RigidFreezeMode FreezeMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidFreezeMode",
     "value": null
   },
   {
