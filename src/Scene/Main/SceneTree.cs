@@ -48,7 +48,8 @@ public sealed partial class SceneTree : MainLoop
     private readonly List<Tween> _tweens = [];
     private readonly LinkedList<CanvasItem> _transformChanges = new();
     private LinkedListNode<CanvasItem>? _nextTransformNotification;
-    private ConcurrentQueue<Action> _deferred = new();
+    private Queue<Action> _deferred = new();
+    private Queue<Action>? _deferredSpare = new();
     private ConcurrentQueue<DeletionRequest> _deletions = new();
     private List<Node>? _activationReadied;
     private bool _acceptingWork = true;
@@ -186,9 +187,9 @@ public sealed partial class SceneTree : MainLoop
     public Node Root { get; }
 
     /// <summary>Gets an advisory snapshot indicating whether deferred actions or deletions are queued.</summary>
-    /// <value><see langword="true"/> when either concurrent queue is currently nonempty.</value>
+    /// <value><see langword="true"/> when the synchronized action queue or concurrent deletion queue is currently nonempty.</value>
     /// <remarks>This property is not a synchronization barrier and may change immediately after it is read.</remarks>
-    internal bool HasDeferredWork => !_deferred.IsEmpty || !_deletions.IsEmpty;
+    internal bool HasDeferredWork { get { lock (_workGate) return _deferred.Count != 0 || !_deletions.IsEmpty; } }
 
     /// <summary>Gets the number of completed process-frame attempts.</summary>
     /// <value>The number of valid calls to <see cref="ProcessFrame"/>, including calls that reported callback failures.</value>
@@ -378,7 +379,8 @@ public sealed partial class SceneTree : MainLoop
     /// <remarks>
     /// An action queued during a captured flush batch waits for a later flush. Queue acceptance is atomic with the
     /// start of tree finalization: a successful call is either captured by a future flush or intentionally discarded by
-    /// later finalization; a call that loses that race throws and does not enqueue.
+    /// later finalization; a call that loses that race throws and does not enqueue. Two synchronized action queues
+    /// exchange enqueue/captured roles and reuse their prepared capacity; later capacity growth may allocate.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="action"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The tree has been finalized, or disposal has started or finished.</exception>
@@ -1492,14 +1494,15 @@ public sealed partial class SceneTree : MainLoop
 
     private void FlushDeferredCore(ref List<Exception>? errors, bool flushTransforms = false)
     {
-        ConcurrentQueue<Action>? actions = null;
+        Queue<Action>? actions = null;
 
         lock (_workGate)
         {
-            if (!_deferred.IsEmpty)
+            if (_deferred.Count != 0)
             {
                 actions = _deferred;
-                _deferred = new ConcurrentQueue<Action>();
+                _deferred = _deferredSpare ?? throw new InvalidOperationException("Deferred action batches cannot be captured recursively.");
+                _deferredSpare = null;
             }
         }
 
@@ -1515,6 +1518,7 @@ public sealed partial class SceneTree : MainLoop
             }
         }
 
+        if (actions is not null) lock (_workGate) _deferredSpare = actions;
         if (flushTransforms) FlushTransformNotifications(ref errors);
 
         ConcurrentQueue<DeletionRequest>? deletions = null;
@@ -1757,7 +1761,7 @@ public sealed partial class SceneTree : MainLoop
 
     private void ClearPendingWorkUnderLock()
     {
-        _deferred = new ConcurrentQueue<Action>();
+        _deferred.Clear(); _deferredSpare?.Clear();
         _deletions = new ConcurrentQueue<DeletionRequest>();
         _uniqueGroupOperations.Clear();
         _transformChanges.Clear(); _nextTransformNotification = null;

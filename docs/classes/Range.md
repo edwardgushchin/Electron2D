@@ -1,6 +1,6 @@
 # Range
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [TextureProgressBar](TextureProgressBar.md)
 
@@ -28,7 +28,7 @@ second.Unshare();
 
 | Signature | Contract/default |
 | --- | --- |
-| `protected Range()` | Initializes default numeric policy. |
+| `protected Range()` | Initializes default numeric policy and vertical ShrinkBegin. |
 | `public double MinValue { get; set; }` | Finite, 0. Raises max if needed. |
 | `public double MaxValue { get; set; }` | Finite, 100; clamps to min. |
 | `public double Value { get; set; }` | 0; snaps, rounds and clamps. NaN retained. |
@@ -71,4 +71,4 @@ second.Unshare();
 
 ## Lifecycle, errors and verification
 
-Groups store weak owners and release links on disposal; snapshots retain owners only during delivery. PackedScene stores config independently, with snapping policies restored before Value, and omits sharing links. Finite config guard errors occur before mutation; disposed/capture/off-owner errors remain authoritative. [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verifies timing/values/errors/reentry/packing and zero bytes for 64 warmed shared updates. Inherited SizeFlagsVertical is not yet exposed: it enters the first Control.SizeFlags/Container layout slice with actual shrink/fill/expand behavior. [Coverage](../coverage/classes/Range.md) remains Partial for this dependency. Native/platform/accessibility/owner limits are recorded in [ADR 0080](../decisions/rendering.md#adr-0080).
+Groups store weak owners and release links on disposal; snapshots retain owners only during delivery. PackedScene stores config independently, with snapping policies restored before Value, and omits sharing links. Finite config guard errors occur before mutation; disposed/capture/off-owner errors remain authoritative. [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verifies timing/values/errors/reentry/packing and zero bytes for 64 warmed shared updates. Inherited SizeFlagsVertical defaults to ShrinkBegin, with a matching stored descriptor and actual Container consumption under [ADR 0081](../decisions/rendering.md#adr-0081). [Coverage](../coverage/classes/Range.md) marks this dependency Implemented. Native/platform/accessibility/owner limits are recorded in [ADR 0080](../decisions/rendering.md#adr-0080).

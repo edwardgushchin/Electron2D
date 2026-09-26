@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 ## Responsibility
 
@@ -63,4 +63,8 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 
 [NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.
 
-[Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flag remains Blocked for the first Control.SizeFlags/Container layout consumer; no inert flag is exposed. [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+[Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flags now execute through [Container](../classes/Container.md) and [BoxContainer](../classes/BoxContainer.md), with Range ShrinkBegin and progress Fill defaults under [ADR 0081](../decisions/rendering.md#adr-0081). [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+
+## Box container layout
+
+[Container](../classes/Container.md) owns direct-control listeners and deferred pre/sort phases; [BoxContainer](../classes/BoxContainer.md), [HBoxContainer](../classes/HBoxContainer.md) and [VBoxContainer](../classes/VBoxContainer.md) arrange weighted primary allocations and cross-axis fill/shrink before retained drawing. Min/max refit, RTL, local signed separation and actual spacers consume [Control.SizeFlags](../classes/Control.SizeFlags.md). Typed storage preserves exact defaults/factories. Two synchronized SceneTree action queues recycle prepared captured-batch capacity; per-box scratch slots are reused. Managed and native tests verify small warmed layouts with zero managed allocation; larger GUI/native allocator/platform/owner guarantees remain unverified. Container semantic accessibility and global Theme resources retain precise separate dependencies in [ADR 0081](../decisions/rendering.md#adr-0081).

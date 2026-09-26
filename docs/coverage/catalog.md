@@ -125,7 +125,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [BoneConstraint3D](classes/BoneConstraint3D.md) | SkeletonModifier3D | Excluded | 20 |
 | [BoneMap](classes/BoneMap.md) | Resource | Excluded | 6 |
 | [BoneTwistDisperser3D](classes/BoneTwistDisperser3D.md) | SkeletonModifier3D | Excluded | 36 |
-| [BoxContainer](classes/BoxContainer.md) | Container | Blocked | 8 |
+| [BoxContainer](classes/BoxContainer.md) | Container | Implemented | 8 |
 | [BoxMesh](classes/BoxMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [BoxOccluder3D](classes/BoxOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [BoxShape3D](classes/BoxShape3D.md) | Shape3D | Excluded | 1 |
@@ -198,7 +198,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
 | [ConfigFile](classes/ConfigFile.md) | RefCounted | Implemented | 17 |
 | [ConfirmationDialog](classes/ConfirmationDialog.md) | AcceptDialog | Blocked | 5 |
-| [Container](classes/Container.md) | Control | Blocked | 11 |
+| [Container](classes/Container.md) | Control | Partial | 11 |
 | [Control](classes/Control.md) | CanvasItem | Partial | 267 |
 | [ConvertTransformModifier3D](classes/ConvertTransformModifier3D.md) | BoneConstraint3D | Excluded | 25 |
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Implemented | 2 |
@@ -358,7 +358,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
 | [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Unimplemented | 2 |
-| [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Blocked | 0 |
+| [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Blocked | 2 |
@@ -689,7 +689,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Excluded | 6 |
 | [RID](classes/RID.md) | — | Implemented | 10 |
 | [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Implemented | 9 |
-| [Range](classes/Range.md) | Control | Partial | 17 |
+| [Range](classes/Range.md) | Control | Implemented | 17 |
 | [RayCast2D](classes/RayCast2D.md) | Node2D | Partial | 21 |
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |
 | [Rect2](classes/Rect2.md) | — | Implemented | 27 |
@@ -866,7 +866,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextureCubemapRD](classes/TextureCubemapRD.md) | TextureLayeredRD | Excluded | 0 |
 | [TextureLayered](classes/TextureLayered.md) | Texture | Blocked | 18 |
 | [TextureLayeredRD](classes/TextureLayeredRD.md) | TextureLayered | Excluded | 1 |
-| [TextureProgressBar](classes/TextureProgressBar.md) | Range | Partial | 31 |
+| [TextureProgressBar](classes/TextureProgressBar.md) | Range | Implemented | 31 |
 | [TextureRect](classes/TextureRect.md) | Control | Blocked | 21 |
 | [Theme](classes/Theme.md) | Resource | Blocked | 74 |
 | [ThemeDB](classes/ThemeDB.md) | Object | Blocked | 8 |
@@ -901,7 +901,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [UPNPDevice](classes/UPNPDevice.md) | RefCounted | Blocked | 21 |
 | [UndoRedo](classes/UndoRedo.md) | Object | Blocked | 27 |
 | [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Excluded | 1 |
-| [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Blocked | 0 |
+| [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Blocked | 4 |
 | [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |

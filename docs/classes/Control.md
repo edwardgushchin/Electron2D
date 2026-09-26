@@ -1,14 +1,14 @@
 # Control
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
-**Inherited By:** No production type yet. The accepted GUI branch will place BaseButton and Button here.
+**Inherited By:** [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md). BaseButton/Button remain separate future consumers.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public class Control : CanvasItem`
+- **Declaration:** `public partial class Control : CanvasItem`
 
 ## Description
 
@@ -20,7 +20,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 `SetOffsetsPreset` positions all four edges in one reflow without changing anchors. [`LayoutPresetMode`](LayoutPresetMode.md) selects intrinsic minimum or current width/height; wide presets stretch their selected axis regardless of that choice. Signed margins move edge placements, while center placements ignore margin. `SetAnchorsAndOffsetsPreset` applies the anchor step before the offset step; an invalid offset mode leaves the completed anchor step in place. RTL uses the pinned negative horizontal span and then mirrors the resolved rectangle. A root Control also uses the visible viewport rectangle's origin. `SetAnchorAndOffset` sets one anchor before its explicit offset, with opposite-anchor pushing disabled by default.
 
-`CustomMinimumSize` combines componentwise with an intrinsic minimum supplied by `OnGetMinimumSize` and zero. `CustomMaximumSize` combines enabled bounds from the intrinsic hook, the caller and a direct parent that propagates its maximum; a negative component means unbounded. Reflow applies the minimum first and then the maximum, so the maximum wins on a conflicting axis. [`GrowDirection`](GrowDirection.md) independently chooses the fixed horizontal and vertical edges for growth or shrinkage. Attached visible controls coalesce size changes through `SceneTree.Defer`; `Resized` occurs before the corresponding size-change event. Both bounds are queryable immediately. Container relayout, desired-size cache and wrapping windows remain open.
+`CustomMinimumSize` combines componentwise with an intrinsic minimum supplied by `OnGetMinimumSize` and zero. `CustomMaximumSize` combines enabled bounds from the intrinsic hook, the caller and a direct parent that propagates its maximum; a negative component means unbounded. Reflow applies the minimum first and then the maximum, so the maximum wins on a conflicting axis. [`GrowDirection`](GrowDirection.md) independently chooses the fixed horizontal and vertical edges for growth or shrinkage. Attached visible controls coalesce size changes through `SceneTree.Defer`; `Resized` occurs before the corresponding size-change event. Both bounds are queryable immediately. [Container](Container.md) and [BoxContainer](BoxContainer.md) now consume sizing flags and propagated allocation bounds. Desired-size resource consumers and wrapping windows remain separate dependencies.
 
 [`LayoutDirection`](LayoutDirection.md) adds explicit LTR/RTL mirroring after horizontal minimum/maximum resolution. Inherited controls follow the nearest Control in the same translation domain; `ApplicationLocale` and `SystemLocale` use the corresponding managed culture only when a matching catalog or configured fallback permits RTL. Direction changes notify the subtree before callers observe the resolved rectangles. `Position` and `Size` writes remain physical in RTL. Root and forced project direction settings, Window inheritance, exact locale aliases and automatic scene refresh after a process-wide culture change remain Partial.
 
@@ -30,7 +30,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, container sizing, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -283,4 +283,17 @@ Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU 
 
 [NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.
 
-[Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flag remains Blocked for the first Control.SizeFlags/Container layout consumer; no inert flag is exposed. [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+[Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flags now execute through [Container](../classes/Container.md) and [BoxContainer](../classes/BoxContainer.md), with Range ShrinkBegin and progress Fill defaults under [ADR 0081](../decisions/rendering.md#adr-0081). [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+
+## Container size flags
+
+| Signature | Contract/default |
+| --- | --- |
+| `public SizeFlags SizeFlagsHorizontal { get; set; }` | Fill; independent allocation/alignment bits. |
+| `public SizeFlags SizeFlagsVertical { get; set; }` | Fill; Range ShrinkBegin override, progress Fill. |
+| `public float SizeFlagsStretchRatio { get; set; }` | Finite one; zero/negative retained. |
+| `public event Action? SizeFlagsChanged` | Actual flags/ratio change after state commit. |
+| `public enum SizeFlags` | [Flagged six-value set](Control.SizeFlags.md). |
+
+<a id="sizeflagshorizontal"></a><a id="sizeflagsvertical"></a><a id="sizeflagsstretchratio"></a><a id="sizeflagschanged"></a><a id="sizeflags"></a>
+The direct Container consumes each axis for fill/shrink and the box primary axis for weighted expansion. Unknown bits are preserved, equal assignments silent, and callbacks observe committed state. Nonfinite ratio throws ArgumentOutOfRangeException. Attached reads/mutations use owner affinity, capture rejects mutation, disposed use rejects. Typed descriptors serialize all three properties. Container fit resets anchors, rectangle and visual transform. [Box tests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verify flags/defaults/packing and actual layout; [ADR 0081](../decisions/rendering.md#adr-0081) records the semantic service/theme/platform limits.

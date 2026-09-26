@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -828,3 +828,7 @@ Canvas transform notifications use dedicated owner-thread queues. Physics delive
 ## Canvas render time
 
 RenderCanvas forwards the captured scaled process step inside the existing scene execution barrier. Tree pause does not suppress the renderer clock; TimeScale zero supplies a zero step. Canvas callbacks retain the same mutation, failure and lifetime guards. See [canvas timing](../components/canvas-rendering.md#animation-intervals-and-rectangles).
+
+## Reused captured action batches
+
+SceneTree.Defer and deferred group operations enqueue under the existing lifetime/work lock. Two action queues swap roles when a nonempty batch is captured; the owner drains the captured queue outside the lock and recycles its capacity. Work enqueued by a callback or another thread after capture waits for another flush. Later capacity growth and user callbacks can allocate. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verifies next-batch/cross-thread semantics and zero bytes over 64 prepared batch cycles, alongside the existing concurrent disposal and lifetime tests. Queued deletions retain their separate ownership mechanism.

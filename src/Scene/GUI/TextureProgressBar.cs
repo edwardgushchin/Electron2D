@@ -54,10 +54,11 @@ public partial class TextureProgressBar : Range
         new PropertyDescriptor<TextureProgressBar, int>(nameof(StretchMarginRight), node => node.StretchMarginRight, (node, value) => node.StretchMarginRight = value, _ => 0, stored: true),
         new PropertyDescriptor<TextureProgressBar, int>(nameof(StretchMarginBottom), node => node.StretchMarginBottom, (node, value) => node.StretchMarginBottom = value, _ => 0, stored: true),
         new PropertyDescriptor<TextureProgressBar, double>(nameof(Step), node => node.Step, (node, value) => node.Step = value, _ => 1, stored: true),
-        new PropertyDescriptor<TextureProgressBar, MouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => MouseFilter.Pass, stored: true)
+        new PropertyDescriptor<TextureProgressBar, MouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => MouseFilter.Pass, stored: true),
+        new PropertyDescriptor<TextureProgressBar, SizeFlags>(nameof(SizeFlagsVertical), node => node.SizeFlagsVertical, (node, value) => node.SizeFlagsVertical = value, _ => SizeFlags.Fill, stored: true),
     ];
-    /// <summary>Creates an empty progress control with integer step and pass-through pointer input.</summary>
-    public TextureProgressBar() { Step = 1; MouseFilter = MouseFilter.Pass; }
+    /// <summary>Creates an empty progress control with integer step, vertical Fill and pass-through pointer input.</summary>
+    public TextureProgressBar() { Step = 1; MouseFilter = MouseFilter.Pass; SizeFlagsVertical = SizeFlags.Fill; }
     private void Check() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     /// <summary>Gets or sets the borrowed TextureUnder drawing resource.</summary>
     /// <value>Null initially.</value>
@@ -226,7 +227,7 @@ public partial class TextureProgressBar : Range
         return horizontal ? new(new(offset, 0), new(extent, size.Y)) : new(new(0, offset), new(size.X, extent));
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(property => property.Name != nameof(Step) && property.Name != nameof(MouseFilter) && property.Name != nameof(Value))
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(property => property.Name != nameof(Step) && property.Name != nameof(MouseFilter) && property.Name != nameof(Value) && property.Name != nameof(SizeFlagsVertical))
         .Concat(ProgressProperties).Concat([new PropertyDescriptor<TextureProgressBar, double>(nameof(Value), node => node.Value, (node, value) => node.Value = value, _ => 0, stored: true)]);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(TextureProgressBar) ? CreateProgress : base.CreateSceneInstanceFactory();

@@ -156,12 +156,17 @@ def main():
     shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
                         if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
-    for name, count in (("Range", 18), ("TextureProgressBar", 32)):
+    for name, count in (("Range", 18), ("TextureProgressBar", 32), ("BoxContainer", 9), ("HBoxContainer", 1), ("VBoxContainer", 1)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count
-        assert " | Partial | " in rows[0]
-        assert " | Blocked | " in next(row for row in rows if "size_flags_vertical" in row.split(" | ")[0])
-        assert all(" | Implemented | " in row for row in rows[1:] if "size_flags_vertical" not in row.split(" | ")[0])
+        assert all(" | Implemented | " in row for row in rows)
+    flag_rows = [row for row in pages[CLASS_PAGES / "Control.md"].splitlines() if row.startswith("| [`") and ("enum SizeFlags" in row or "[SizeFlags]" in row or "size_flags_" in row)]
+    assert len(flag_rows) == 11 and all(" | Implemented | " in row for row in flag_rows)
+    container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]
+    assert len(container_rows) == 12
+    assert " | Partial | " in next(row for row in container_rows if "class Container" in row)
+    assert " | Blocked | " in next(row for row in container_rows if "accessibility_region" in row)
+    assert all(" | Implemented | " in row for row in container_rows if "class Container" not in row and "accessibility_region" not in row)
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

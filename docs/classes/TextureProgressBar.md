@@ -1,6 +1,6 @@
 # TextureProgressBar
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [Range](Range.md), Control, CanvasItem, Node, ElectronObject
 
@@ -29,7 +29,7 @@ var bar = new TextureProgressBar
 
 | Signature | Contract/default |
 | --- | --- |
-| `public TextureProgressBar()` | Step 1, MouseFilter.Pass, no textures. |
+| `public TextureProgressBar()` | Step 1, MouseFilter.Pass, vertical Fill, no textures. |
 | `public Texture? TextureUnder { get; set; }` | Borrowed null background. |
 | `public Texture? TextureProgress { get; set; }` | Borrowed null fill. |
 | `public Texture? TextureOver { get; set; }` | Borrowed null foreground. |
@@ -68,4 +68,4 @@ var bar = new TextureProgressBar
 <a id="getstretchmargin"></a><a id="setstretchmargin"></a>
 Side accessors require Left/Top/Right/Bottom. Public access uses owner/lifetime/capture guards. [Range](Range.md) supplies shared double value/ratio/signals and policy timing. Descriptors restore config before Value, preserving fractional values despite the default Step=1; exact type is retained. Sharing and resource ownership are not serialized as native runtime state.
 
-[Managed tests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verify resources/modes/angles/minimum/config/errors/packing and shared state. [Native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) compare every pixel of nine half/empty/full masks and six linear nine-patch masks, inspect readback grids and measure 64 warmed active radial frames with zero managed allocation on GPU/compatibility Linux Wayland. Native allocators, broad GUI cost, other platforms and owner acceptance are unverified. Inherited vertical size flags remain Blocked until the real Control/Container layout slice; class [coverage](../coverage/classes/TextureProgressBar.md) remains Partial. See [ADR 0080](../decisions/rendering.md#adr-0080).
+[Managed tests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verify resources/modes/angles/minimum/config/errors/packing and shared state. [Native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) compare every pixel of nine half/empty/full masks and six linear nine-patch masks, inspect readback grids and measure 64 warmed active radial frames with zero managed allocation on GPU/compatibility Linux Wayland. Native allocators, broad GUI cost, other platforms and owner acceptance are unverified. Inherited vertical flags default to Fill with exact stored defaults and real Container layout under [ADR 0081](../decisions/rendering.md#adr-0081); class [coverage](../coverage/classes/TextureProgressBar.md) is Implemented in its bounded scope. See [ADR 0080](../decisions/rendering.md#adr-0080).

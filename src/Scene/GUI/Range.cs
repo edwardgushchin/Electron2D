@@ -52,10 +52,11 @@ public abstract class Range : Control
         new PropertyDescriptor<Range, bool>(nameof(ExpEdit), node => node.ExpEdit, (node, value) => node.ExpEdit = value, _ => false, stored: true),
         new PropertyDescriptor<Range, bool>(nameof(Rounded), node => node.Rounded, (node, value) => node.Rounded = value, _ => false, stored: true),
         new PropertyDescriptor<Range, double>(nameof(Value), node => node.Value, (node, value) => node.Value = value, _ => 0, stored: true),
+        new PropertyDescriptor<Range, SizeFlags>(nameof(SizeFlagsVertical), node => node.SizeFlagsVertical, (node, value) => node.SizeFlagsVertical = value, _ => SizeFlags.ShrinkBegin, stored: true),
     ];
 
-    /// <summary>Initializes a detached range with min zero, max 100 and step 0.01.</summary>
-    protected Range() { _owner = new(this); _shared.Owners.Add(_owner); }
+    /// <summary>Initializes a detached range with min zero, max 100, step 0.01 and vertical ShrinkBegin.</summary>
+    protected Range() { _owner = new(this); _shared.Owners.Add(_owner); SizeFlagsVertical = SizeFlags.ShrinkBegin; }
     /// <summary>Occurs after min/max/page/step configuration changes, following any value clamp notification.</summary>
     public event Action? Changed;
     /// <summary>Occurs after a changed shared value, following the typed value hook.</summary>
@@ -277,7 +278,7 @@ public abstract class Range : Control
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings() => ExpEdit && MinValue < 0 ? [.. base.GetConfigurationWarnings(), "Exponential editing requires a nonnegative minimum."] : base.GetConfigurationWarnings();
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(RangeProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(property => property.Name != nameof(SizeFlagsVertical)).Concat(RangeProperties);
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {

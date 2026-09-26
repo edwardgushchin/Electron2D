@@ -4,7 +4,7 @@ namespace Electron2D;
 
 /// <summary>A canvas item with a rectangular layout and a pivot-based transform.</summary>
 /// <remarks>Anchors and offsets resolve against the direct canvas parent's rectangle or the viewport.
-/// The root viewport routes pointer and focused keyboard input to controls. Theme, container layout and complete GUI routing remain separate capabilities.</remarks>
+/// The root viewport routes pointer and focused keyboard input to controls. Container flags drive concrete box layout; theme and complete GUI routing remain separate capabilities.</remarks>
 public partial class Control : CanvasItem
 {
     private readonly float[] _anchors = new float[4];
@@ -238,7 +238,7 @@ public partial class Control : CanvasItem
             CombineMaximum(intrinsic.Y, _customMaximumSize.Y));
         if (!TopLevel && Parent is Control { PropagateMaximumSize: true } parent)
         {
-            var inherited = parent.GetCombinedMaximumSize();
+            var inherited = ContainerMaximum ?? parent.GetCombinedMaximumSize();
             maximum = new(CombineMaximum(maximum.X, inherited.X), CombineMaximum(maximum.Y, inherited.Y));
         }
         return maximum;
@@ -441,7 +441,7 @@ public partial class Control : CanvasItem
     /// <summary>Resets size to its effective minimum, capped by any maximum.</summary>
     public void ResetSize() => SetSize(Vector2.Zero);
 
-    private void SetLayoutRect(Vector2 position, Vector2 size, bool keepOffsets)
+    private void SetLayoutRect(Vector2 position, Vector2 size, bool keepOffsets, bool resetAnchors = false)
     {
         EnsureMutable(); EnsureFinite(position, nameof(position)); EnsureFinite(size, nameof(size));
         if (size.X < 0 || size.Y < 0) throw new ArgumentOutOfRangeException(nameof(size));
@@ -460,12 +460,13 @@ public partial class Control : CanvasItem
         }
         else
         {
-            values[0] = logicalX - _anchors[0] * area.X;
-            values[1] = position.Y - _anchors[1] * area.Y;
-            values[2] = logicalX + size.X - _anchors[2] * area.X;
-            values[3] = position.Y + size.Y - _anchors[3] * area.Y;
+            values[0] = logicalX - (resetAnchors ? 0 : _anchors[0]) * area.X;
+            values[1] = position.Y - (resetAnchors ? 0 : _anchors[1]) * area.Y;
+            values[2] = logicalX + size.X - (resetAnchors ? 0 : _anchors[2]) * area.X;
+            values[3] = position.Y + size.Y - (resetAnchors ? 0 : _anchors[3]) * area.Y;
         }
         foreach (var value in values) EnsureFinite(value, nameof(position));
+        if (resetAnchors) Array.Clear(_anchors);
         for (var index = 0; index < 4; index++)
             if (keepOffsets) _anchors[index] = values[index]; else _offsets[index] = values[index];
         Reflow();
@@ -734,7 +735,7 @@ public partial class Control : CanvasItem
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties);
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Control) ? CreateControl : base.CreateSceneInstanceFactory();
@@ -742,7 +743,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
+        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
         base.Dispose(disposing);
     }
 

@@ -2090,6 +2090,41 @@
       "godot": "TextureProgressBar::property:step",
       "electron2d": "property:Electron2D.Range.Step()",
       "reason": "ADR 0080: typed double range hook/policy or inherited progress default projection; Range-only share input rejects wrong kinds at compile time."
+    },
+    {
+      "godot": "Container::method:_get_allowed_size_flags_horizontal()",
+      "electron2d": "method:Electron2D.Container.GetAllowedSizeFlagsHorizontal()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "Container::method:_get_allowed_size_flags_vertical()",
+      "electron2d": "method:Electron2D.Container.GetAllowedSizeFlagsVertical()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "Container::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "Container::property:propagate_maximum_size",
+      "electron2d": "property:Electron2D.Control.PropagateMaximumSize()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "Range::property:size_flags_vertical",
+      "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "TextureProgressBar::property:size_flags_vertical",
+      "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "BoxContainer::theme_item:separation",
+      "electron2d": "property:Electron2D.BoxContainer.Separation()",
+      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
     }
   ],
   "extras": [
@@ -3132,6 +3167,91 @@
       "electron2d": "method:Electron2D.TextureProgressBar.Dispose(System.Boolean)",
       "state": "Implemented",
       "reason": "ADR 0080 with 0003/0008/0023: typed construction, concrete draw/minimum, descriptors, factory, diagnostics or deterministic subscription/group cleanup projects the existing range/progress concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Container..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Container.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Container.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Container.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Container.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.BoxContainer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.BoxContainer..ctor(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.GetAllowedSizeFlagsHorizontal()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.GetAllowedSizeFlagsVertical()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.BoxContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.HBoxContainer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.HBoxContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VBoxContainer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
     }
   ],
   "statusGroups": [
@@ -5583,16 +5703,68 @@
         "class:Range",
         "class:TextureProgressBar"
       ],
-      "state": "Partial",
-      "reason": "ADR 0080: range value behavior and complete texture-progress rendering execute; inherited size_flags_vertical defaults remain Blocked until Control.SizeFlags and a real container layout consumer are integrated. Accessibility/native semantic tree follows its existing separate gate."
+      "state": "Implemented",
+      "reason": "ADR 0081: real Control.SizeFlags and Container/Box layout now execute. Range shrink-begin and TextureProgressBar fill inherited defaults and descriptors are implemented with native sizing consumer checks; prior value/progress behavior remains verified under ADR 0080."
     },
     {
       "godot": [
         "Range::property:size_flags_vertical",
         "TextureProgressBar::property:size_flags_vertical"
       ],
+      "state": "Implemented",
+      "reason": "ADR 0081: real Control.SizeFlags and Container/Box layout now execute. Range shrink-begin and TextureProgressBar fill inherited defaults and descriptors are implemented with native sizing consumer checks; prior value/progress behavior remains verified under ADR 0080."
+    },
+    {
+      "godot": [
+        "class:BoxContainer",
+        "BoxContainer::enum:AlignmentMode",
+        "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+        "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+        "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+        "BoxContainer::method:add_spacer(bool:)",
+        "BoxContainer::property:alignment",
+        "BoxContainer::property:vertical",
+        "BoxContainer::theme_item:separation",
+        "Container::constant:NOTIFICATION_PRE_SORT_CHILDREN",
+        "Container::constant:NOTIFICATION_SORT_CHILDREN",
+        "Container::method:_get_allowed_size_flags_horizontal()",
+        "Container::method:_get_allowed_size_flags_vertical()",
+        "Container::method:fit_child_in_rect(Control:,Rect2:)",
+        "Container::method:queue_sort()",
+        "Container::property:mouse_filter",
+        "Container::property:propagate_maximum_size",
+        "Container::signal:pre_sort_children()",
+        "Container::signal:sort_children()",
+        "Control::enum:SizeFlags",
+        "Control::enum_value:SizeFlags.SIZE_EXPAND",
+        "Control::enum_value:SizeFlags.SIZE_EXPAND_FILL",
+        "Control::enum_value:SizeFlags.SIZE_FILL",
+        "Control::enum_value:SizeFlags.SIZE_SHRINK_BEGIN",
+        "Control::enum_value:SizeFlags.SIZE_SHRINK_CENTER",
+        "Control::enum_value:SizeFlags.SIZE_SHRINK_END",
+        "Control::property:size_flags_horizontal",
+        "Control::property:size_flags_stretch_ratio",
+        "Control::property:size_flags_vertical",
+        "Control::signal:size_flags_changed()",
+        "class:HBoxContainer",
+        "class:VBoxContainer"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0081: Control size bits/stretch ratios and deferred Container fit/phase callbacks execute through Box/HBox/VBox primary allocation, min/max weighted refit, alignment/RTL, child eligibility and actual spacers. BoxContainerTests verifies state/lifecycle/packing/callbacks, captured batch reuse and zero warmed allocations; native GPU/compatibility tests verify rendered geometry. Accessibility semantic service remains separately blocked."
+    },
+    {
+      "godot": [
+        "class:Container"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0081: complete current layout base and real box consumers execute; AccessibilityRegion remains Blocked until native accessibility semantic tree/region service integrates. No inert region bool is exposed."
+    },
+    {
+      "godot": [
+        "Container::property:accessibility_region"
+      ],
       "state": "Blocked",
-      "reason": "ADR 0080: inherited vertical size flag belongs to Control.SizeFlags, currently absent. Trigger: first complete Control size-flags plus Container layout slice with actual sizing/alignment/expand consumer; implement Range shrink-begin default 0 and TextureProgressBar fill default 1 there, including descriptors and native layout tests."
+      "reason": "ADR 0081 with ADR 0041: trigger first native semantic accessibility tree/landmark region integration; add and verify Container.AccessibilityRegion in that service slice, including a named screen-reader region."
     }
   ]
 }
