@@ -629,6 +629,41 @@
       "godot": "RigidBody2D::method:get_contact_count()",
       "electron2d": "method:Electron2D.RigidBody.GetContactCount()",
       "reason": "Typed last-step contact-point count is independent of object-level monitoring."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetMass(Electron2D.RID)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetInertia(Electron2D.RID)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCenterOfMass(Electron2D.RID)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetMass(Electron2D.RID,System.Single)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetInertia(Electron2D.RID,System.Single)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetCenterOfMass(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_reset_mass_properties(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyResetMassProperties(Electron2D.RID)",
+      "reason": "Restores automatic center and inertia without changing configured mass; scene RigidBody descriptors share the committed profile under ADR 0073."
     }
   ],
   "extras": [
@@ -2330,6 +2365,27 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0072: typed Remove/MakeStatic/KeepActive integrate effective inherited ProcessMode.Disabled with scene-world membership and configured native body mode. CollisionDisableModeTests verifies values/defaults, disabled entry/reparent/reentry, RID/owner/view lifetime, real queries and contacts, sensor continuity, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed allocation-free mixed solver frames. Pause alone does not disable physics."
+    },
+    {
+      "godot": [
+        "RigidBody2D::enum:CenterOfMassMode",
+        "RigidBody2D::enum_value:CenterOfMassMode.CENTER_OF_MASS_MODE_AUTO",
+        "RigidBody2D::enum_value:CenterOfMassMode.CENTER_OF_MASS_MODE_CUSTOM",
+        "RigidBody2D::property:center_of_mass",
+        "RigidBody2D::property:center_of_mass_mode",
+        "RigidBody2D::property:inertia",
+        "PhysicsServer2D::method:body_reset_mass_properties(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0073: one-kilogram normalized geometry mass, local custom/auto center and scene-unit explicit/automatic polar moment execute for scene/server profiles. PhysicsMassProfileTests verifies live geometry, parallel-axis values, inertia without shapes, center impulse, mode/reset/property-list failure, native extent refresh, freeze/disable restoration, detached entry, numeric/thread/phase rollback, storage and zero warmed managed allocations."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+        "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "Typed mass, inertia and center getters/setters execute for all live scene/server body RIDs under ADR 0073. Trigger: remaining parameter branches (bounce/friction, gravity scale and linear/angular damping values/modes) need typed parameter methods connected to shared material and field reduction; no Variant dispatcher or inert enum is exposed."
     }
   ]
 }

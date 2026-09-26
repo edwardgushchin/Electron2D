@@ -4,7 +4,7 @@ Last updated: 2026-09-26
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
-- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
+- **Source:** [RigidBody.cs](../../src/Scene/2D/RigidBody.cs), [RigidBody.Mass.cs](../../src/Scene/2D/RigidBody.Mass.cs), [RigidBody.Forces.cs](../../src/Scene/2D/RigidBody.Forces.cs), [RigidBody.Contacts.cs](../../src/Scene/2D/RigidBody.Contacts.cs)
 - **Declaration:** `public partial class RigidBody : PhysicsBody`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
@@ -27,7 +27,10 @@ body.AddChild(new CollisionShape { Shape = geometry });
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public float Mass { get; set; }` | 1 | Positive finite kilograms within the solver range; scales shape-derived or zero-area inertia. |
+| `public float Mass { get; set; }` | 1 | Positive finite kilograms within the solver range; normalizes automatic shape inertia and retains an explicit override. |
+| `public RigidCenterOfMassMode CenterOfMassMode { get; set; }` | Auto | Automatic geometry or configured local center. |
+| `public Vector2 CenterOfMass { get; set; }` | Zero | Stored local offset; changed assignment requires Custom. |
+| `public float Inertia { get; set; }` | 0 | Stored kg·scene-units²; zero selects automatic geometry. |
 | `public float GravityScale { get; set; }` | 1 | Finite multiplier, including zero and negative values. |
 | `public Vector2 LinearVelocity { get; set; }` | (0, 0) | Finite scene units per second. |
 | `public float AngularVelocity { get; set; }` | 0 | Finite radians per second. |
@@ -73,7 +76,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 <a id="mass"></a>
 ### `Mass`
 
-Zero, negative and nonfinite values throw `ArgumentOutOfRangeException` before mutation. With fixtures present, assignment scales their shape-derived mass and rotational inertia to the requested kilograms; a ratio or inertia that would overflow is rejected before replacing the current mass. A detached value is applied when the body later enters a tree; live fixture edits reapply it. A body with only zero-area segments distributes its requested mass by segment length and uses thin-rod inertia around their length-weighted center. An unshaped body has the requested mass and zero inertia, so it can move without colliding. A mass or inertia whose reciprocal exceeds the finite solver range rejects before backend mutation.
+Positive kilograms normalize the active native geometry rather than preserving its raw density mass. Solid primitives use actual area-weighted centroid and polar moment; segment-only bodies keep length-weighted thin-rod inertia, and unshaped/point-only automatic bodies have zero inertia. Invalid mass, reciprocal inertia, converted scene-unit inertia or center-relative extents reject before profile/native mutation. Detached configuration applies on entry; pending/live fixture revisions recalculate the profile. Explicit Inertia remains independent of mass scaling. Scene pose and velocity do not change merely because the profile changes. Static participation keeps zero inverse values and restores the configured profile when dynamic behavior returns.
 
 <a id="velocity"></a>
 ### `LinearVelocity` and `AngularVelocity`
@@ -147,7 +150,7 @@ The event carries this RigidBody and fires when the solver changes its sleep sta
 
 SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks zero-area segment mass, torque and unshaped movement. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
 
-Tile-map virtual body reporting, exact capped-contact selection, custom center of mass/inertia, continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
+Tile-map virtual body reporting, exact capped-contact selection, continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
 
 A [SeparationRayShape](SeparationRayShape.md) sensor contributes zero inertia and is excluded from the segment-only thin-rod fallback. Ordinary dynamic ray impulses and contact reporting remain incomplete; the class coverage records the required solver manifold integration.
 
@@ -173,3 +176,18 @@ Current scene PhysicsBody identities execute; server-only contacts have no Node 
 ## Disabled processing and physics
 
 Inherited `DisableMode.MakeStatic` makes an effectively disabled body static without setting `Freeze`. Entering static mode clears prior linear/angular velocities for an unfrozen body. Velocity assignments while static remain stored; restoration reapplies them, mass and rotation lock. Freeze changes cannot override a temporary static policy, and enabling does not unfreeze a user-frozen body. Persistent forces and CustomIntegrator remain configured. Remove invalidates attachment-bound direct views; KeepActive continues solving while Node callbacks remain disabled. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+<a id="centerofmassmode"></a>
+## `CenterOfMassMode`, `CenterOfMass` and `Inertia`
+
+[RigidCenterOfMassMode](RigidCenterOfMassMode.md) selects Auto/default or Custom. CenterOfMass is a stored local scene-unit offset from body origin, not a global offset. Automatic geometry does not replace this stored vector; use PhysicsServer.BodyGetCenterOfMass or a live direct-body view for the resolved value. A changed center assignment requires Custom, while assigning the current vector is a no-op. Returning to Auto clears the stored center, preserves explicit Inertia, and reports PropertyListChanged after committing the profile. Callback failure leaves that entire profile committed.
+
+Inertia is a nonnegative stored float in kilograms times squared scene units. Zero/default selects automatic polar moment about the selected center; a custom center uses the parallel-axis theorem. A positive override is retained across mass/shape/mode changes and works without collision shapes. The stored zero remains zero after calculation; PhysicsServer.BodyGetInertia reports the resolved moment. Rotation lock masks angular inverse response without discarding the override.
+
+```csharp
+using var body = new RigidBody { Mass = 2, CenterOfMassMode = RigidCenterOfMassMode.Custom };
+body.CenterOfMass = new Vector2(5, 0);
+body.Inertia = 200;
+```
+
+Undefined mode, nonfinite or negative inertia, native reciprocal underflow/overflow and invalid center reject. Attached setters enforce owner thread and reject during solver-owned pose synchronization before replacing stored or native data. PackedScene stores mode before center. PhysicsServer typed mass methods share the same scene profile; BodyResetMassProperties selects Auto, clears stored center/inertia and retains Mass. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) checks behavior and 64 warmed profile-change/solver frames with zero managed allocation; [ADR 0073](../decisions/physics-mass.md#adr-0073) records automatic geometry and ownership adaptations. Native allocation and other platforms remain unverified.

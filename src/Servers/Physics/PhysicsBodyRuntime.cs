@@ -8,6 +8,10 @@ namespace Electron2D;
 internal sealed class PhysicsBodyRuntime(RID rid)
 {
     internal RID RID { get; } = rid;
+    internal float Mass = 1;
+    internal float Inertia;
+    internal Vector2? CustomCenter;
+    internal B2MassData MassData = new(1, default, 0);
     internal Vector2 ConstantForce;
     internal float ConstantTorque;
     internal bool OmitForces;
@@ -34,6 +38,34 @@ internal sealed class PhysicsBodyRuntime(RID rid)
     }
 
     internal void EnsureMutable() => Space?.EnsureQueryAccess();
+
+    internal void ApplyMassProfile()
+    {
+        var owners = Owners;
+        var mass = owners.Scene is RigidBody rigid ? rigid.Mass : Mass;
+        var inertia = owners.Scene is RigidBody rigidInertia ? rigidInertia.Inertia : Inertia;
+        var center = owners.Scene is RigidBody rigidCenter ? rigidCenter.CustomMassCenter : CustomCenter;
+        MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center);
+    }
+
+    internal void SetMassProfile(float mass, float inertia, Vector2? center)
+    {
+        EnsureMutable();
+        PhysicsMass.Validate(mass, inertia, center);
+        var owners = Owners;
+        if (owners.Scene is RigidBody rigid)
+        {
+            rigid.SetMassProfile(mass, inertia, center.HasValue ? RigidCenterOfMassMode.Custom : RigidCenterOfMassMode.Auto,
+                center ?? Vector2.Zero);
+            return;
+        }
+        if (Space is not null)
+        {
+            if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
+            MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center);
+        }
+        Mass = mass; Inertia = inertia; CustomCenter = center;
+    }
 
     internal void ApplyBeforeStep()
     {

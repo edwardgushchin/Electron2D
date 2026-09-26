@@ -24,6 +24,9 @@ public partial class RigidBody : PhysicsBody
         new PropertyDescriptor<RigidBody, bool>(nameof(CustomIntegrator), body => body.CustomIntegrator,
             (body, value) => body.CustomIntegrator = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(Mass), body => body.Mass, (body, value) => body.Mass = value, _ => 1f, stored: true),
+        new PropertyDescriptor<RigidBody, float>(nameof(Inertia), body => body.Inertia, (body, value) => body.Inertia = value, _ => 0f, stored: true),
+        new PropertyDescriptor<RigidBody, RigidCenterOfMassMode>(nameof(CenterOfMassMode), body => body.CenterOfMassMode, (body, value) => body.CenterOfMassMode = value, _ => RigidCenterOfMassMode.Auto, stored: true),
+        new PropertyDescriptor<RigidBody, Vector2>(nameof(CenterOfMass), body => body.CenterOfMass, (body, value) => body.CenterOfMass = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(GravityScale), body => body.GravityScale, (body, value) => body.GravityScale = value, _ => 1f, stored: true),
         new PropertyDescriptor<RigidBody, Vector2>(nameof(LinearVelocity), body => body.LinearVelocity, (body, value) => body.LinearVelocity = value, _ => Vector2.Zero, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(AngularVelocity), body => body.AngularVelocity, (body, value) => body.AngularVelocity = value, _ => 0f, stored: true),
@@ -70,12 +73,12 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets positive finite body mass in kilograms.</summary>
-    /// <value>One by default.</value>
+    /// <value>One by default. Automatic inertia scales with mass; an explicit Inertia override is retained.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mass is not positive and finite, is below the solver range, or its shape inertia would overflow or underflow the solver range.</exception>
     public float Mass
     {
         get { ThrowIfDisposed(); return _mass; }
-        set { EnsureMutable(); Positive(value); ApplyMass(value); _mass = value; }
+        set => SetMassProfile(value, _inertia, _centerOfMassMode, _centerOfMass);
     }
 
     /// <summary>Gets or sets the finite multiplier of the world's downward gravity.</summary>
@@ -225,10 +228,10 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnBodyTypeChanged()
     {
+        ApplyMass(_mass);
         if (_freeze || PhysicsMadeStatic) return;
         b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
         b2Body_SetAngularVelocity(BackendID, _angularVelocity);
-        ApplyMass(_mass);
     }
 
     internal override bool MovesWithSimulation => !_freeze;
@@ -314,72 +317,9 @@ public partial class RigidBody : PhysicsBody
 
     private static Node CreateRigidBody() => new RigidBody();
 
-    private void ApplyMass(float desiredMass)
-    {
-        if (!HasBackend || _freeze || PhysicsMadeStatic) return;
-        var data = b2Body_GetMassData(BackendID);
-        if (data.mass <= 0)
-        {
-            var totalLength = 0d;
-            var centerX = 0d;
-            var centerY = 0d;
-            foreach (var id in BackendShapes)
-            {
-                if (b2Shape_IsSensor(id) || b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
-                var segment = b2Shape_GetSegment(id);
-                var dx = (double)segment.point2.X - segment.point1.X;
-                var dy = (double)segment.point2.Y - segment.point1.Y;
-                var length = Math.Sqrt(dx * dx + dy * dy);
-                totalLength += length;
-                centerX += length * ((double)segment.point1.X + segment.point2.X) * 0.5;
-                centerY += length * ((double)segment.point1.Y + segment.point2.Y) * 0.5;
-            }
-            if (totalLength > 0)
-            {
-                centerX /= totalLength;
-                centerY /= totalLength;
-                var segmentInertia = 0d;
-                foreach (var id in BackendShapes)
-                {
-                    if (b2Shape_IsSensor(id) || b2Shape_GetType(id) != B2ShapeType.b2_segmentShape) continue;
-                    var segment = b2Shape_GetSegment(id);
-                    var dx = (double)segment.point2.X - segment.point1.X;
-                    var dy = (double)segment.point2.Y - segment.point1.Y;
-                    var length = Math.Sqrt(dx * dx + dy * dy);
-                    var mx = ((double)segment.point1.X + segment.point2.X) * 0.5 - centerX;
-                    var my = ((double)segment.point1.Y + segment.point2.Y) * 0.5 - centerY;
-                    segmentInertia += desiredMass * length / totalLength * (length * length / 12 + mx * mx + my * my);
-                }
-                if (!double.IsFinite(segmentInertia) || segmentInertia > float.MaxValue ||
-                    (segmentInertia > 0 && !float.IsFinite(1f / (float)segmentInertia)) ||
-                    Math.Abs(centerX) > float.MaxValue || Math.Abs(centerY) > float.MaxValue)
-                    throw new ArgumentOutOfRangeException(nameof(desiredMass), "Segment mass exceeds the solver range.");
-                data.center = new((float)centerX, (float)centerY);
-                data.rotationalInertia = (float)segmentInertia;
-            }
-            data.mass = desiredMass;
-            b2Body_SetMassData(BackendID, data);
-            return;
-        }
-        var ratio = desiredMass / data.mass;
-        var inertia = data.rotationalInertia * ratio;
-        if (!float.IsFinite(ratio) || !float.IsFinite(inertia) ||
-            (inertia > 0 && !float.IsFinite(1f / inertia)))
-            throw new ArgumentOutOfRangeException(nameof(desiredMass), "Mass exceeds the current shape's representable inertia range.");
-        data.mass = desiredMass;
-        data.rotationalInertia = inertia;
-        b2Body_SetMassData(BackendID, data);
-    }
-
     private static void Finite(float value)
     {
         if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
-    }
-
-    private static void Positive(float value)
-    {
-        if (!float.IsFinite(value) || value <= 0 || !float.IsFinite(1f / value))
-            throw new ArgumentOutOfRangeException(nameof(value));
     }
 
     private static void ValidateDampMode(DampMode value)

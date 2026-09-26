@@ -26,7 +26,7 @@ internal static class PhysicsBodyTests
                 "Contact resolution stops the falling body.");
             body.Mass = 1e-30f;
             Reject<ArgumentOutOfRangeException>(() => body.Mass = float.MaxValue);
-            Check(body.Mass == 1e-30f, "A mass-ratio overflow leaves the previous body state intact.");
+            Check(body.Mass == 1e-30f, "An unrepresentable geometry-derived inertia leaves the previous body state intact.");
             body.Mass = 1;
             var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
             for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);

@@ -92,7 +92,7 @@ The first body profile exposed central one-step force and impulse, but game code
 
 ### Consequences
 
-Games can push at an offset, add a one-time impact, spin a body, maintain propulsion and set a jump-axis velocity without public backend types. Shifted-center, unit-conversion, freeze/reentry, invalid-input rollback, packing and repeated-rotation paths have executable checks. Contact monitoring, custom integration, continuous collision, custom mass distribution and physics server/RID methods remain separate coverage work.
+Games can push at an offset, add a one-time impact, spin a body, maintain propulsion and set a jump-axis velocity without public backend types. Shifted-center, unit-conversion, freeze/reentry, invalid-input rollback, packing and repeated-rotation paths have executable checks. Contact monitoring, custom integration, continuous collision, physics server/RID force methods remain separate coverage work; [ADR 0073](physics-mass.md#adr-0073) now implements custom center and inertia through a shared mass profile.
 
 <a id="adr-0058"></a>
 ## ADR 0058

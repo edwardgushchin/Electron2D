@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-26
 
-**Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs)
+**Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
 ## Description
 
@@ -111,3 +111,19 @@ Setters replace the previous user delegate; null clears it. Typed generic userda
 Force callback runs before the RigidBody integration hook and user sync observer. Scene-owned synchronization remains mandatory under the typed host architecture; a user sync observer supplements it. Scene pose/cache synchronization brackets hooks. Callback failures are collected; body removal safely invalidates captured entries. Recursive stepping and world disposal reject during callback dispatch. [PhysicsBodyStateTests](../../tests/Electron2D.Tests/PhysicsBodyStateTests.cs) checks these contracts under [ADR 0070](../decisions/physics.md#adr-0070).
 
 `public void AreaSetMonitorable(RID area, bool monitorable)` controls whether scene monitoring Areas detect a server-created Area. Server Areas default false; the next nonzero overlap scan adopts the flag. Attached changes require the space owner thread outside native stepping. Shape events carry its RID with a null scene Area. Scene-object overlap arrays stay scene-only. Server free preserves exit values and finishes registry cleanup despite callback failure. ShapePairEventTests verifies body and Area nullable payloads under ADR 0055.
+
+## Typed body mass parameters
+
+| Signature | Contract |
+| --- | --- |
+| `void BodySetMass(RID body, float mass)` | Set positive finite kilograms; default one. |
+| `float BodyGetMass(RID body)` | Configured kilograms, including static/kinematic/detached state. |
+| `void BodySetInertia(RID body, float inertia)` | Nonnegative kg·scene-units²; zero selects automatic geometry. |
+| `float BodyGetInertia(RID body)` | Explicit override or most recently resolved automatic moment, initially zero before first attachment. |
+| `void BodySetCenterOfMass(RID body, Vector2 center)` | Set local custom center relative to body origin. |
+| `Vector2 BodyGetCenterOfMass(RID body)` | Configured custom center or most recently resolved automatic center, initially zero before first attachment. |
+| `void BodyResetMassProperties(RID body)` | Select automatic center and inertia while retaining mass. |
+
+These methods accept every live scene/server body RID. A wrong-kind, empty or freed RID throws ArgumentException. Attached reads synchronize pending shape revisions, and all attached access checks owner thread and solver ownership. Invalid numeric profiles reject before configuration/native writes. Detached automatic values retain the last resolved cache until attachment; custom configuration survives removal. Explicit server body geometry now normalizes to stored kilograms rather than raw unit density. Static and kinematic profiles retain their resolved center with zero physical inverse mass/inertia.
+
+A scene RigidBody shares its stored Mass/Inertia/CenterOfMassMode/CenterOfMass with the typed server profile. Setting its center selects Custom atomically; reset clears stored center/inertia and selects Auto. Property-list callback failures report after the complete commit. Shape geometry uses the same solid-area and segment rod policy as scene bodies. Wider bounce/friction, gravity and damping parameter branches retain Partial coverage; no Variant dispatcher or inert parameter enum is exposed. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) and [ADR 0073](../decisions/physics-mass.md#adr-0073) define verification and the ownership adaptation.

@@ -3091,6 +3091,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RigidCenterOfMassMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RigidCenterOfMassMode",
+    "name": "RigidCenterOfMassMode",
+    "signature": "public enum Electron2D.RigidCenterOfMassMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SceneState",
     "kind": "type",
     "declaringType": "Electron2D.SceneState",
@@ -16036,6 +16054,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RigidBody.DampMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidCenterOfMassMode.Auto()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidCenterOfMassMode",
+    "name": "Auto",
+    "signature": "public const Electron2D.RigidCenterOfMassMode Auto = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidCenterOfMassMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RigidCenterOfMassMode.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RigidCenterOfMassMode",
+    "name": "Custom",
+    "signature": "public const Electron2D.RigidCenterOfMassMode Custom = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidCenterOfMassMode",
     "value": "1"
   },
   {
@@ -44414,6 +44458,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetCenterOfMass(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetCenterOfMass",
+    "signature": "public Electron2D.Vector2 BodyGetCenterOfMass(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetDirectState(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44430,6 +44493,44 @@
       }
     ],
     "returnType": "Electron2D.PhysicsDirectBodyState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetInertia(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetInertia",
+    "signature": "public System.Single BodyGetInertia(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetMass(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetMass",
+    "signature": "public System.Single BodyGetMass(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -44595,6 +44696,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyResetMassProperties(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyResetMassProperties",
+    "signature": "public System.Void BodyResetMassProperties(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetCenterOfMass(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetCenterOfMass",
+    "signature": "public System.Void BodySetCenterOfMass(Electron2D.RID body, Electron2D.Vector2 center)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "center",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodySetCollisionLayer(Electron2D.RID,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44696,6 +44840,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodySetInertia(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetInertia",
+    "signature": "public System.Void BodySetInertia(Electron2D.RID body, System.Single inertia)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "inertia",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44713,6 +44881,30 @@
       {
         "name": "velocity",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetMass(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetMass",
+    "signature": "public System.Void BodySetMass(Electron2D.RID body, System.Single mass)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mass",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -72640,6 +72832,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RigidBody.CenterOfMass()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "CenterOfMass",
+    "signature": "public Electron2D.Vector2 CenterOfMass { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.CenterOfMassMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "CenterOfMassMode",
+    "signature": "public Electron2D.RigidCenterOfMassMode CenterOfMassMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RigidCenterOfMassMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RigidBody.ConstantForce()",
     "kind": "property",
     "declaringType": "Electron2D.RigidBody",
@@ -72710,6 +72928,19 @@
     "declaringType": "Electron2D.RigidBody",
     "name": "GravityScale",
     "signature": "public System.Single GravityScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.Inertia()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "Inertia",
+    "signature": "public System.Single Inertia { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

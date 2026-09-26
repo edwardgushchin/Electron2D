@@ -90,6 +90,7 @@
     "AStarGrid2D.CellShape": "AStarGrid.CellShape",
     "AStarGrid2D.DiagonalMode": "AStarGrid.DiagonalMode",
     "AStarGrid2D.Heuristic": "AStarGrid.Heuristic",
-    "CollisionObject2D.DisableMode": "CollisionDisableMode"
+    "CollisionObject2D.DisableMode": "CollisionDisableMode",
+    "RigidBody2D.CenterOfMassMode": "RigidCenterOfMassMode"
   }
 }

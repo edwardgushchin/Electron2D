@@ -150,7 +150,7 @@ public abstract class PhysicsBody : CollisionObject
     internal abstract B2BodyDef CreateBodyDefinition();
     internal abstract bool MovesWithSimulation { get; }
     internal virtual void OnBackendAdvanced() { }
-    internal virtual void OnShapesRebuilt() { }
+    internal virtual void OnShapesRebuilt() => PhysicsServer.Instance.BodyRuntime(PhysicsRID).ApplyMassProfile();
     internal virtual Vector2 EffectiveGravity => Vector2.Zero;
 
     /// <summary>Gets the gravity applied by the last fixed physics step in scene units per second squared.</summary>

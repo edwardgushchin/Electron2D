@@ -162,7 +162,13 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 43, "Partial": 8, "Unimplemented": 159, "Blocked": 5}
+                "Implemented": 44, "Partial": 10, "Unimplemented": 156, "Blocked": 5}
+    assert " | Implemented | " in next(row for row in server_rows if "method body_reset_mass_properties(" in row)
+    assert all(" | Partial | " in next(row for row in server_rows if f"method body_{action}_param(" in row)
+               for action in ("set", "get"))
+    mass_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines()
+                 if row.startswith("| [`") and ("CenterOfMassMode" in row or "center_of_mass" in row or "property float inertia" in row)]
+    assert len(mass_rows) == 6 and all(" | Implemented | " in row for row in mass_rows)
     assert " | Implemented | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

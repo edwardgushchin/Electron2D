@@ -143,3 +143,7 @@ The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now su
 ## Disabled processing and physics
 
 A CollisionObject using `DisableMode.Remove` invalidates this attachment view when its effective inherited ProcessMode becomes Disabled. Reattachment provides a new view with the same collider RID. MakeStatic retains the view and exposes zero inverse mass/inertia until the requested body type is restored. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+## Configured versus physical mass
+
+RigidBody and typed PhysicsServer mass parameters share configured kilograms, selected local center and automatic/explicit scene-unit polar moment. This view exposes actual inverse solver values: static/kinematic participation has zero inverse mass/inertia while preserving the resolved center; rotation lock has zero inverse inertia. Use PhysicsServer.BodyGetMass/BodyGetInertia for retained configuration/resolved geometry across detached or temporarily static states. [ADR 0073](../decisions/physics-mass.md#adr-0073) and [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) cover custom-center force response and restoration.

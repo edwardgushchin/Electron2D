@@ -213,6 +213,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             slot.Shape.Geometry.AppendToBody(_bodyID, slot.LocalTransform.Origin,
                 slot.LocalTransform.Rotation, definition, _backendShapes);
         }
+        if (!IsArea) PhysicsServer.Instance.BodyRuntime(RID).ApplyMassProfile();
         _shapesDirty = false;
     }
 
