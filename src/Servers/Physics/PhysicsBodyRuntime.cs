@@ -86,7 +86,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid)
         if (PendingTorque != 0 && !RotationLocked) b2Body_ApplyTorque(id, PendingTorque * PhysicsMass.InertiaScale, false);
         PendingForce = default; PendingTorque = 0;
         if (Owners.Scene is RigidBody rigid) { rigid.ApplyConstantForces(); return; }
-        b2Body_SetGravityScale(id, 1);
+        b2Body_SetGravityScale(id, BodyGravityScale);
         if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(ConstantForce), false);
         if (ConstantTorque != 0) b2Body_ApplyTorque(id, ConstantTorque * 0.0001f, false);
     }

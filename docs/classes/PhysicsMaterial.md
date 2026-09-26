@@ -1,6 +1,6 @@
 # PhysicsMaterial
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 **Inherits:** [Resource](Resource.md), ElectronObject
 
@@ -51,3 +51,7 @@ Every successful property assignment raises `Changed`, including an assignment o
 The caller retains and disposes the resource. Bodies unsubscribe when replaced, disposed, or after the material is disposed. `PhysicsMaterialOverride = null` restores the default surface. A failed earlier `Disposed` subscriber cannot retain a disposed override: its getter reports null and the next step clears the stale reference. Live material changes recreate fixtures before the next step; continuous contacts may be reestablished by that rebuild. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) checks defaults, invalid values, notification failure, duplication, packing, bounce/absorbent mixing, rough friction, live edits, borrowed disposal and 64 warmed resting and active-contact frames each with zero managed allocations on Linux/.NET 8. Native allocator counts, other platforms and visual acceptance remain unverified.
 
 [ADR 0054](../decisions/physics.md#adr-0054) defines the internal physics backend. [PhysicsMaterial coverage](../coverage/classes/PhysicsMaterial.md) records the reference mapping.
+
+## Body-local server coefficients
+
+PhysicsServer signed friction/bounce setters can override one body's fixtures without mutating this borrowed resource or other borrowers. Assignment, revision or disposal reloads both body coefficients; polling at body preparation recovers a change whose earlier subscriber threw before the body handler. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) verifies isolation, signed contact behavior and reload under [ADR 0076](../decisions/physics-mass.md#adr-0076).

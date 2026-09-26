@@ -161,15 +161,17 @@ def main():
     assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
-            for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 57, "Partial": 10, "Unimplemented": 143, "Blocked": 5}
+            for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
+                "Implemented": 62, "Partial": 8, "Unimplemented": 128, "Blocked": 5, "Excluded": 12}
     force_names = ("apply_central_force", "apply_force", "apply_torque", "apply_central_impulse", "apply_impulse",
                    "apply_torque_impulse", "add_constant_central_force", "add_constant_force", "add_constant_torque",
                    "set_constant_force", "get_constant_force", "set_constant_torque", "get_constant_torque")
     assert all(" | Implemented | " in next(row for row in server_rows if f"method body_{name}(" in row)
                for name in force_names)
+    parameter_rows = [row for row in server_rows if "BodyParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
+    assert len(parameter_rows) == 12 and all(" | Excluded | " in row for row in parameter_rows)
     assert " | Implemented | " in next(row for row in server_rows if "method body_reset_mass_properties(" in row)
-    assert all(" | Partial | " in next(row for row in server_rows if f"method body_{action}_param(" in row)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method body_{action}_param(" in row)
                for action in ("set", "get"))
     mass_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines()
                  if row.startswith("| [`") and ("CenterOfMassMode" in row or "center_of_mass" in row or "property float inertia" in row)]

@@ -90,3 +90,7 @@ Tree entry resets transient collision and platform state while keeping configure
 ## Disabled processing and physics
 
 Inherited `DisableMode.MakeStatic` temporarily replaces the native kinematic role with static. Typed manual movement remains available; fixed-step static pose synchronization teleports without derived contact velocity. Enable/KeepActive restores kinematic participation. Remove detaches the body and its query fixtures until processing is enabled or the policy changes. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).
+
+## Typed server field policy
+
+PhysicsServer BodySetGravityScale changes the selected Area/world field reported by GetGravity and PhysicsDirectBodyState.TotalGravity together. The method does not integrate that field into user Velocity. Body damping values/modes retain their shared runtime policy while kinematic inverse dynamics stays disabled. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) checks the non-rigid projection under [ADR 0076](../decisions/physics-mass.md#adr-0076).

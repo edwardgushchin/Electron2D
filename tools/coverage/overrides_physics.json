@@ -729,6 +729,76 @@
       "godot": "PhysicsServer2D::method:body_get_constant_torque(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantTorque(Electron2D.RID)",
       "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetFriction(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetBounce(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetGravityScale(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDamp(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDamp(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDampMode(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDampMode(Electron2D.RID)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetFriction(Electron2D.RID,System.Single)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetBounce(Electron2D.RID,System.Single)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetGravityScale(Electron2D.RID,System.Single)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearDamp(Electron2D.RID,System.Single)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDamp(Electron2D.RID,System.Single)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
     }
   ],
   "extras": [
@@ -2449,8 +2519,8 @@
         "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
         "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)"
       ],
-      "state": "Partial",
-      "reason": "Typed mass, inertia and center getters/setters execute for all live scene/server body RIDs under ADR 0073. Trigger: remaining parameter branches (bounce/friction, gravity scale and linear/angular damping values/modes) need typed parameter methods connected to shared material and field reduction; no Variant dispatcher or inert enum is exposed."
+      "state": "Implemented",
+      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations."
     },
     {
       "godot": [
@@ -2488,6 +2558,33 @@
       ],
       "state": "Blocked",
       "reason": "Exact trigger: a stationary-surface velocity channel must supply both normal and tangential point velocity to contact constraints while leaving body pose stationary. Box2D static contacts select a zero dummy solver state (B2ContactSolvers), and material tangentSpeed supplies only a scalar tangent offset; the current bool pre-solve callback cannot supply a full surface velocity. Requires an engine-owned constraint/solver bridge or verified backend support; stored metadata or moving/restoring a kinematic pose would not close this behavior."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:BodyDampMode",
+        "PhysicsServer2D::enum_value:BodyDampMode.BODY_DAMP_MODE_COMBINE",
+        "PhysicsServer2D::enum_value:BodyDampMode.BODY_DAMP_MODE_REPLACE"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:BodyParameter",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_BOUNCE",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_FRICTION",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_MASS",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_INERTIA",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_CENTER_OF_MASS",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_GRAVITY_SCALE",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_LINEAR_DAMP_MODE",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_ANGULAR_DAMP_MODE",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_LINEAR_DAMP",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_ANGULAR_DAMP",
+        "PhysicsServer2D::enum_value:BodyParameter.BODY_PARAM_MAX"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0076 with ADR 0001: BodyParameter is the numeric discriminator of the Variant getter/setter dispatcher. Its ten capabilities are preserved by concrete typed getter/setter pairs; numeric selector/container and MAX sentinel are not shipped with no dispatcher. This excludes only the untyped selection representation, not any parameter behavior."
     }
   ]
 }

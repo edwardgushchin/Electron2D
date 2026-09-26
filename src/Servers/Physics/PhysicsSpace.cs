@@ -328,28 +328,19 @@ internal sealed partial class PhysicsSpace : IDisposable
                 out var gravity, out var linearDamp, out var angularDamp);
             if (body is RigidBody rigid)
                 rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-            else ((CharacterBody)body).SetResolvedGravity(gravity);
+            else
+            {
+                var runtime = PhysicsServer.Instance.BodyRuntime(body.PhysicsRID);
+                runtime.ApplyResolvedFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
+                ((CharacterBody)body).SetResolvedGravity(runtime.Gravity);
+            }
         }
         foreach (var body in _serverColliders)
         {
             if (body.IsArea || body.Mode == PhysicsServer.BodyMode.Static) continue;
             ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GetTransform().Origin,
                 out var gravity, out var linearDamp, out var angularDamp);
-            var runtime = PhysicsServer.Instance.BodyRuntime(body.RID);
-            if (runtime.FieldsInitialized && (runtime.Gravity != gravity || runtime.LinearDamp != linearDamp || runtime.AngularDamp != angularDamp))
-                b2Body_SetAwake(body.BackendID, true);
-            runtime.Gravity = gravity; runtime.LinearDamp = linearDamp; runtime.AngularDamp = angularDamp;
-            runtime.FieldsInitialized = true;
-            if (runtime.Omitted || body.Mode == PhysicsServer.BodyMode.Kinematic) continue;
-            var id = body.BackendID;
-            var linear = b2Body_GetLinearVelocity(id) * MathF.Max(0, 1 - (float)delta * linearDamp);
-            var angular = b2Body_GetAngularVelocity(id) * MathF.Max(0, 1 - (float)delta * angularDamp);
-            var force = Shape.ToBackend(gravity - _defaultGravity) * b2Body_GetMass(id);
-            if (!gravity.IsFinite() || !float.IsFinite(linear.X) || !float.IsFinite(linear.Y) ||
-                !float.IsFinite(angular) || !float.IsFinite(force.X) || !float.IsFinite(force.Y))
-                throw new InvalidOperationException("The resolved server body field exceeds the finite range.");
-            b2Body_SetLinearVelocity(id, linear); b2Body_SetAngularVelocity(id, angular);
-            if (force.X != 0 || force.Y != 0) b2Body_ApplyForceToCenter(id, force, false);
+            PhysicsServer.Instance.BodyRuntime(body.RID).ApplyResolvedFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
         }
     }
 
@@ -518,8 +509,11 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal static void SetMaterial(ref B2ShapeDef definition, PhysicsMaterial? material)
     {
-        var friction = material?.ComputedFriction ?? 1f;
-        var bounce = material?.ComputedBounce ?? 0f;
+        SetMaterial(ref definition, material?.ComputedFriction ?? 1f, material?.ComputedBounce ?? 0f);
+    }
+
+    internal static void SetMaterial(ref B2ShapeDef definition, float friction, float bounce)
+    {
         definition.material.friction = MathF.Abs(friction);
         definition.material.restitution = MathF.Abs(bounce);
         definition.material.userMaterialId = (friction < 0 ? RoughMaterial : 0) |

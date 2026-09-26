@@ -82,13 +82,14 @@ public partial class RigidBody : PhysicsBody
         set => SetMassProfile(value, _inertia, _centerOfMassMode, _centerOfMass);
     }
 
-    /// <summary>Gets or sets the finite multiplier of the world's downward gravity.</summary>
+    /// <summary>Gets or sets the finite multiplier of selected Area/world gravity.</summary>
+    /// <remarks>Leaving an approximately zero previous multiplier follows the body wakeup rule.</remarks>
     /// <value>One by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
-        set { EnsureMutable(); Finite(value); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
+        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Instance.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
@@ -284,6 +285,7 @@ public partial class RigidBody : PhysicsBody
         var angularFactor = MathF.Max(0, 1 - (float)delta * resolvedAngular);
         var extraAcceleration = scaledGravity - defaultGravity * _gravityScale;
         if (!scaledGravity.IsFinite() || !extraAcceleration.IsFinite() ||
+            !float.IsFinite(resolvedLinear) || !float.IsFinite(resolvedAngular) ||
             !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
             throw new InvalidOperationException("The resolved physics field exceeds the finite simulation range.");
 

@@ -92,6 +92,7 @@
     "AStarGrid2D.Heuristic": "AStarGrid.Heuristic",
     "CollisionObject2D.DisableMode": "CollisionDisableMode",
     "RigidBody2D.CenterOfMassMode": "RigidCenterOfMassMode",
-    "RigidBody2D.FreezeMode": "RigidFreezeMode"
+    "RigidBody2D.FreezeMode": "RigidFreezeMode",
+    "PhysicsServer2D.BodyDampMode": "RigidBody.DampMode"
   }
 }

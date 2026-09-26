@@ -44,6 +44,7 @@ public abstract class PhysicsBody : CollisionObject
             old.Disposed -= OnMaterialDisposed;
         }
         _materialOverride = material;
+        PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
         if (material is not null)
         {
             material.Changed += OnMaterialChanged;
@@ -93,9 +94,14 @@ public abstract class PhysicsBody : CollisionObject
         if (_materialOverride is { IsDisposed: true })
         {
             _materialOverride = null;
+            PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
             MarkShapesDirty();
         }
-        if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision) MarkShapesDirty();
+        if ((_materialOverride?.Revision ?? 0) != _appliedMaterialRevision)
+        {
+            PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+            MarkShapesDirty();
+        }
         if (!_shapesDirty)
             for (var index = 0; index < ShapeSlots.Count; index++)
                 if (ShapeSlots[index].Revision != _appliedShapeRevisions[index]) { MarkShapesDirty(); break; }
@@ -297,7 +303,8 @@ public abstract class PhysicsBody : CollisionObject
         definition.filter.categoryBits = CollisionLayer;
         definition.filter.maskBits = CollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
-        PhysicsSpace.SetMaterial(ref definition, _materialOverride);
+        var runtime = PhysicsServer.Instance.BodyRuntime(PhysicsRID);
+        PhysicsSpace.SetMaterial(ref definition, runtime.GetFriction(), runtime.GetBounce());
         for (var index = 0; index < ShapeSlots.Count; index++)
         {
             var node = ShapeSlots[index];
@@ -323,11 +330,13 @@ public abstract class PhysicsBody : CollisionObject
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
     }
 
-    private void OnMaterialChanged(Resource _) => MarkShapesDirty();
+    private void OnMaterialChanged(Resource _) { if (IsDisposed) return; PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides(); MarkShapesDirty(); }
 
     private void OnMaterialDisposed(ElectronObject _)
     {
+        if (IsDisposed) return;
         _materialOverride = null;
+        PhysicsServer.Instance.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
         MarkShapesDirty();
     }
 }

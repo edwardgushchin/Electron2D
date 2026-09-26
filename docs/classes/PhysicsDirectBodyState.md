@@ -155,3 +155,7 @@ ApplyForce/ApplyCentralForce/ApplyTorque queue one-step input in the shared body
 ## Internal kinematic integration intervals
 
 Fast kinematic travel may divide one fixed frame into several native world calls under [ADR 0075](../decisions/physics.md#adr-0075). Step and callback timing retain the outer frame; current contact impulse snapshots expose the last native solve. Whole-step impulse aggregation remains a separately tracked Partial contract. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) verifies full outer force duration and one integration callback.
+
+## Selected field parameters
+
+Typed PhysicsServer gravity/damping parameters feed the same reported TotalGravity/TotalLinearDamp/TotalAngularDamp and automatic integration policy for server/non-rigid bodies. CharacterBody.GetGravity reports the same scaled selected field. Custom integration still omits automatic effects while retaining selected-field reporting. [ADR 0076](../decisions/physics-mass.md#adr-0076) and [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) cover the shared policy.

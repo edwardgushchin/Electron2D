@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    private PhysicsBodyRuntime MassRuntime(RID body)
+    private PhysicsBodyRuntime ParameterRuntime(RID body)
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
@@ -30,7 +30,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public void BodySetMass(RID body, float mass)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         runtime.SetMassProfile(mass, ConfiguredInertia(runtime), ConfiguredCenter(runtime));
     }
 
@@ -39,7 +39,7 @@ public sealed partial class PhysicsServer
     /// <returns>Configured positive mass, including while static, kinematic or detached.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
-    public float BodyGetMass(RID body) => ConfiguredMass(MassRuntime(body));
+    public float BodyGetMass(RID body) => ConfiguredMass(ParameterRuntime(body));
 
     /// <summary>Sets rotational inertia in kilograms times squared scene units.</summary>
     /// <param name="body">A live scene or server body RID.</param>
@@ -49,7 +49,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public void BodySetInertia(RID body, float inertia)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         runtime.SetMassProfile(ConfiguredMass(runtime), inertia, ConfiguredCenter(runtime));
     }
 
@@ -60,7 +60,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public float BodyGetInertia(RID body)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         var value = ConfiguredInertia(runtime);
         return value > 0 ? value : runtime.MassData.rotationalInertia / PhysicsMass.InertiaScale;
     }
@@ -74,7 +74,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public void BodySetCenterOfMass(RID body, Vector2 center)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         runtime.SetMassProfile(ConfiguredMass(runtime), ConfiguredInertia(runtime), center);
     }
 
@@ -85,7 +85,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public Vector2 BodyGetCenterOfMass(RID body)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         return ConfiguredCenter(runtime) ?? new Vector2(runtime.MassData.center.X * PhysicsSpace.UnitsPerMeter,
             runtime.MassData.center.Y * PhysicsSpace.UnitsPerMeter);
     }
@@ -97,7 +97,7 @@ public sealed partial class PhysicsServer
     /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
     public void BodyResetMassProperties(RID body)
     {
-        var runtime = MassRuntime(body);
+        var runtime = ParameterRuntime(body);
         runtime.SetMassProfile(ConfiguredMass(runtime), 0, null);
     }
 }
