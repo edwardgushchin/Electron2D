@@ -42,33 +42,9 @@ Games can attach a `RigidBody` and `StaticBody` with `CollisionShape` children, 
 This active decision is maintained in [physics-monitoring.md](physics-monitoring.md#adr-0055).
 
 <a id="adr-0056"></a>
-## ADR 0056: Area field priority and body damping
+## ADR 0056
 
-Last updated: 2026-09-26
-
-- Status: Accepted
-- Scope: Executable area gravity/damping, typed world defaults and body field response
-- Depends on: [0055](#adr-0055), [0019](core-data-io.md#adr-0019), [0014](resources.md#adr-0014)
-
-### Context
-
-Area monitoring supplies shape geometry and directional filtering but initially did not affect simulated bodies. The pinned 2D reference resolves gravity, linear damping and angular damping independently in descending area-priority order, then adds any unstopped world default and finally combines or replaces body damping. It applies damping to velocity before force integration. The managed backend offers one world gravity and a different built-in damping equation, so simply exposing field properties would not execute the accepted behavior.
-
-### Decision
-
-- Add typed `ProjectSettings` keys for the 2D default gravity strength/vector and linear/angular damping, with pinned defaults 980, (0, 1), 0.1 and 1. A SceneTree physics world samples active overrides when its first body or area attaches; the existing world retains that snapshot.
-- Give `Area` the five numeric `SpaceOverride` modes and finite signed gravity/damping fields, including transformed point gravity, constant-strength or inverse-square falloff, shared direction/point storage and integer priority. Field participation is independent of `Monitoring` and `Monitorable`; an area's mask still tests the body's layer. Resolve each channel in descending priority before the backend world step, using current shape overlap rather than the preceding event snapshot.
-- Preserve the backend's sampled world gravity, then apply each current dynamic body's difference from it as a mass-scaled force. Apply the pinned `max(0, 1 - delta * totalDamp)` linear/angular velocity factors before solver stepping and keep backend damping at zero. `RigidBody.DampMode` selects Combine or Replace separately for each channel. `PhysicsBody.GetGravity()` reports the last resolved vector after body gravity scaling on RigidBody; CharacterBody reports the same selected world/Area gravity without automatically applying it to caller-owned Velocity. Detached and StaticBody queries return zero.
-- Validate all public numeric and enum inputs before mutation and reject a nonfinite resolved field or motion before changing body velocity. A changed resolved field wakes a sleeping body. Reuse area-order scratch storage and existing shape-distance scans; the checked warmed moving and sleeping-body field paths allocate zero managed bytes on Linux/.NET 8. No vendored source is changed.
-
-### Consequences
-
-Overlapping areas can create zero-gravity zones, directional and point attraction, and independent linear/angular damping with priority and stopping modes. Packed scenes retain field and body-mode state. Current world defaults are sampled at creation; native allocator counts, other platforms, large-scene cost and owner visual acceptance remain unverified. Solver/contact behavior remains subject to the backend rather than a claim of complete physics-server parity.
-
-### Rejected alternatives
-
-- Add only field properties without simulation effects: these would be inert compatibility stubs.
-- Change the shared world gravity or use its built-in damping for each area: those backend controls cannot represent simultaneous per-body fields or the pinned damping equation.
+This active decision is maintained in [physics-fields.md](physics-fields.md#adr-0056).
 
 <a id="adr-0057"></a>
 ## ADR 0057

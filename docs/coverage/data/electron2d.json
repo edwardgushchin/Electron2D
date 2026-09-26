@@ -44288,6 +44288,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaGetAngularDamp(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetAngularDamp",
+    "signature": "public System.Single AreaGetAngularDamp(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetAngularDampSpaceOverride(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetAngularDampSpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride AreaGetAngularDampSpaceOverride(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaGetCollisionLayer(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44323,6 +44361,158 @@
       }
     ],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetGravity(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetGravity",
+    "signature": "public System.Single AreaGetGravity(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetGravityPoint(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetGravityPoint",
+    "signature": "public System.Boolean AreaGetGravityPoint(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetGravityPointUnitDistance(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetGravityPointUnitDistance",
+    "signature": "public System.Single AreaGetGravityPointUnitDistance(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetGravitySpaceOverride(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetGravitySpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride AreaGetGravitySpaceOverride(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetGravityVector(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetGravityVector",
+    "signature": "public Electron2D.Vector2 AreaGetGravityVector(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetLinearDamp(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetLinearDamp",
+    "signature": "public System.Single AreaGetLinearDamp(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetLinearDampSpaceOverride(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetLinearDampSpaceOverride",
+    "signature": "public Electron2D.Area.SpaceOverride AreaGetLinearDampSpaceOverride(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetPriority(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetPriority",
+    "signature": "public System.Int32 AreaGetPriority(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -44407,6 +44597,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaSetAngularDamp(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetAngularDamp",
+    "signature": "public System.Void AreaSetAngularDamp(Electron2D.RID area, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetAngularDampSpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetAngularDampSpaceOverride",
+    "signature": "public System.Void AreaSetAngularDampSpaceOverride(Electron2D.RID area, Electron2D.Area.SpaceOverride value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Area.SpaceOverride",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaSetAreaMonitorCallback(Electron2D.RID,System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44479,6 +44717,174 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaSetGravity(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetGravity",
+    "signature": "public System.Void AreaSetGravity(Electron2D.RID area, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetGravityPoint(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetGravityPoint",
+    "signature": "public System.Void AreaSetGravityPoint(Electron2D.RID area, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetGravityPointUnitDistance(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetGravityPointUnitDistance",
+    "signature": "public System.Void AreaSetGravityPointUnitDistance(Electron2D.RID area, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetGravitySpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetGravitySpaceOverride",
+    "signature": "public System.Void AreaSetGravitySpaceOverride(Electron2D.RID area, Electron2D.Area.SpaceOverride value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Area.SpaceOverride",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetGravityVector(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetGravityVector",
+    "signature": "public System.Void AreaSetGravityVector(Electron2D.RID area, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetLinearDamp(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetLinearDamp",
+    "signature": "public System.Void AreaSetLinearDamp(Electron2D.RID area, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetLinearDampSpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetLinearDampSpaceOverride",
+    "signature": "public System.Void AreaSetLinearDampSpaceOverride(Electron2D.RID area, Electron2D.Area.SpaceOverride value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Area.SpaceOverride",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaSetMonitorCallback(Electron2D.RID,System.Action\u003CElectron2D.PhysicsServer.AreaBodyStatus, Electron2D.RID, System.UInt64, System.Int32, System.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -44520,6 +44926,30 @@
       {
         "name": "monitorable",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetPriority(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetPriority",
+    "signature": "public System.Void AreaSetPriority(Electron2D.RID area, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
         "default": null
       }
     ],

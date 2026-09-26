@@ -43,164 +43,130 @@ public sealed partial class Area
             (area, value) => area.Priority = value, _ => 0, stored: true)
     ];
 
-    private SpaceOverride _gravitySpaceOverride;
-    private SpaceOverride _linearDampSpaceOverride;
-    private SpaceOverride _angularDampSpaceOverride;
-    private float _gravity = 980f;
-    private Vector2 _gravityVector = new(0, 1);
-    private bool _gravityPoint;
-    private float _gravityPointUnitDistance;
-    private float _linearDamp = 0.1f;
-    private float _angularDamp = 1f;
-    private int _priority;
-
-    internal bool HasFieldOverrides => _gravitySpaceOverride != SpaceOverride.Disabled ||
-        _linearDampSpaceOverride != SpaceOverride.Disabled || _angularDampSpaceOverride != SpaceOverride.Disabled;
+    internal readonly PhysicsAreaFields Fields = new(980f, new(0, 1));
 
     /// <summary>Gets or sets how this area's gravity combines with other areas and the world.</summary>
     /// <value><see cref="SpaceOverride.Disabled"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mode value is not defined.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public SpaceOverride GravitySpaceOverride
     {
-        get { ThrowIfDisposed(); return _gravitySpaceOverride; }
-        set { EnsureMutable(); ValidateMode(value); _gravitySpaceOverride = value; }
+        get { ThrowIfDisposed(); return Fields.GravitySpaceOverride; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateMode(value); Fields.GravitySpaceOverride = value; }
     }
 
     /// <summary>Gets or sets the finite gravity strength in scene units per second squared.</summary>
     /// <value>980 by default; signed values are allowed.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public float Gravity
     {
-        get { ThrowIfDisposed(); return _gravity; }
-        set { EnsureMutable(); ValidateFinite(value); _gravity = value; }
+        get { ThrowIfDisposed(); return Fields.Gravity; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.Gravity = value; }
     }
 
     /// <summary>Gets or sets the local gravity direction without normalizing it.</summary>
     /// <value>(0, 1) by default. Shares its stored vector with <see cref="GravityPointCenter"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public Vector2 GravityDirection
     {
-        get { ThrowIfDisposed(); return _gravityVector; }
-        set { EnsureMutable(); ValidateFinite(value); _gravityVector = value; }
+        get { ThrowIfDisposed(); return Fields.GravityVector; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.GravityVector = value; }
     }
 
     /// <summary>Gets or sets whether gravity points toward the transformed local center.</summary>
     /// <value>False by default.</value>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public bool GravityPoint
     {
-        get { ThrowIfDisposed(); return _gravityPoint; }
-        set { EnsureMutable(); _gravityPoint = value; }
+        get { ThrowIfDisposed(); return Fields.GravityPoint; }
+        set { EnsureFieldChange(); Fields.GravityPoint = value; }
     }
 
     /// <summary>Gets or sets the local attraction point used when <see cref="GravityPoint"/> is true.</summary>
     /// <value>(0, 1) by default. Shares its stored vector with <see cref="GravityDirection"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public Vector2 GravityPointCenter
     {
-        get { ThrowIfDisposed(); return _gravityVector; }
-        set { EnsureMutable(); ValidateFinite(value); _gravityVector = value; }
+        get { ThrowIfDisposed(); return Fields.GravityVector; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.GravityVector = value; }
     }
 
     /// <summary>Gets or sets the distance at which point gravity has the configured strength.</summary>
     /// <value>Zero by default for distance-independent point gravity; positive values use inverse-square falloff.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public float GravityPointUnitDistance
     {
-        get { ThrowIfDisposed(); return _gravityPointUnitDistance; }
-        set { EnsureMutable(); ValidateFinite(value); _gravityPointUnitDistance = value; }
+        get { ThrowIfDisposed(); return Fields.GravityPointUnitDistance; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.GravityPointUnitDistance = value; }
     }
 
     /// <summary>Gets or sets how this area's linear damping combines with other areas and the world.</summary>
     /// <value><see cref="SpaceOverride.Disabled"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mode value is not defined.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public SpaceOverride LinearDampSpaceOverride
     {
-        get { ThrowIfDisposed(); return _linearDampSpaceOverride; }
-        set { EnsureMutable(); ValidateMode(value); _linearDampSpaceOverride = value; }
+        get { ThrowIfDisposed(); return Fields.LinearDampSpaceOverride; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateMode(value); Fields.LinearDampSpaceOverride = value; }
     }
 
     /// <summary>Gets or sets the finite linear damping rate per second.</summary>
     /// <value>0.1 by default; signed values are allowed.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public float LinearDamp
     {
-        get { ThrowIfDisposed(); return _linearDamp; }
-        set { EnsureMutable(); ValidateFinite(value); _linearDamp = value; }
+        get { ThrowIfDisposed(); return Fields.LinearDamp; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.LinearDamp = value; }
     }
 
     /// <summary>Gets or sets how this area's angular damping combines with other areas and the world.</summary>
     /// <value><see cref="SpaceOverride.Disabled"/> by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The mode value is not defined.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public SpaceOverride AngularDampSpaceOverride
     {
-        get { ThrowIfDisposed(); return _angularDampSpaceOverride; }
-        set { EnsureMutable(); ValidateMode(value); _angularDampSpaceOverride = value; }
+        get { ThrowIfDisposed(); return Fields.AngularDampSpaceOverride; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateMode(value); Fields.AngularDampSpaceOverride = value; }
     }
 
     /// <summary>Gets or sets the finite angular damping rate per second.</summary>
     /// <value>One by default; signed values are allowed.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public float AngularDamp
     {
-        get { ThrowIfDisposed(); return _angularDamp; }
-        set { EnsureMutable(); ValidateFinite(value); _angularDamp = value; }
+        get { ThrowIfDisposed(); return Fields.AngularDamp; }
+        set { EnsureFieldChange(); PhysicsAreaFields.ValidateFinite(value); Fields.AngularDamp = value; }
     }
 
     /// <summary>Gets or sets this area's processing priority; greater values are processed first.</summary>
     /// <value>Zero by default.</value>
-    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is changed off its scene owner thread or while the solver owns its space.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public int Priority
     {
-        get { ThrowIfDisposed(); return _priority; }
-        set { EnsureMutable(); _priority = value; }
+        get { ThrowIfDisposed(); return Fields.Priority; }
+        set { EnsureFieldChange(); Fields.Priority = value; }
     }
 
-    internal Vector2 ComputeGravity(Vector2 bodyPosition)
+    internal void EnsureFieldChange()
     {
-        if (!_gravityPoint) return _gravityVector * _gravity;
-        var toward = ToGlobal(_gravityVector) - bodyPosition;
-        var lengthSquared = toward.LengthSquared();
-        if (lengthSquared == 0) return Vector2.Zero;
-        var strength = _gravityPointUnitDistance > 0
-            ? _gravity * _gravityPointUnitDistance * _gravityPointUnitDistance / lengthSquared
-            : _gravity;
-        return toward.Normalized() * strength;
-    }
-
-    private static void ValidateFinite(float value)
-    {
-        if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
-    }
-
-    private static void ValidateFinite(Vector2 value)
-    {
-        if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
-    }
-
-    private static void ValidateMode(SpaceOverride value)
-    {
-        if (value is < SpaceOverride.Disabled or > SpaceOverride.ReplaceCombine)
-            throw new ArgumentOutOfRangeException(nameof(value));
+        EnsureMutable();
+        EnsurePhysicsParticipationChange();
     }
 }

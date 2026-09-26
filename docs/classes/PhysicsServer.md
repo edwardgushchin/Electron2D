@@ -192,3 +192,78 @@ All live scene/server Area RIDs are accepted; pose/layer/monitorable setters use
 Registration resets both histories even for the same delegate; null clears without synthetic exits, and current overlaps enter again at the next nonzero scan. Scene-owned overlap arrays/events remain independent and mandatory; an external observer is not its replacement and can observe while scene Monitoring is false. Snapshot state commits before dispatch; failures continue later events and do not replay. Own receiver configuration mutation from a raw or scene overlap callback rejects, while reads are allowed. Epoch changes suppress stale queued callbacks. Other collider removal/free emits retained exits immediately; removal from an entry callback suppresses stale later entries and safely delivers departures.
 
 Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Server field parameters and remaining shape/instance/canvas operations retain their own coverage gaps; native allocation, large-world performance, other platforms and owner acceptance remain unverified.
+
+## Typed Area fields and space defaults
+
+Twenty concrete methods share one field profile with scene Area properties. Each accepts a live scene/server Area RID; a live space RID instead addresses its unbounded default Area. Every attached access requires the owner thread outside solver ownership. Detached server configuration is retained through assignment/reentry. Receiver monitoring/monitorability do not gate fields, and changing fields does not reset raw observer history. Field writes are allowed inside post-step callbacks for the next nonzero reduction. Invalid RID/kind throws ArgumentException; finite/defined input failures throw ArgumentOutOfRangeException before assignment. Nonfinite computed fields or motion produce the existing aggregate physics-frame/SpaceStep failure before that body's velocity/cache changes; correct the configuration before continuing.
+
+| Full getter signature | Full setter signature | Value/default |
+| --- | --- | --- |
+| `public Area.SpaceOverride AreaGetGravitySpaceOverride(RID area)` | `public void AreaSetGravitySpaceOverride(RID area, Area.SpaceOverride value)` | Disabled; one of five independent reduction modes. |
+| `public float AreaGetGravity(RID area)` | `public void AreaSetGravity(RID area, float value)` | Signed scene units/s²: 9.80665 for server-only, 980 for scene. |
+| `public Vector2 AreaGetGravityVector(RID area)` | `public void AreaSetGravityVector(RID area, Vector2 value)` | Unnormalized direction/local point: (0, -1) server, (0, 1) scene. |
+| `public bool AreaGetGravityPoint(RID area)` | `public void AreaSetGravityPoint(RID area, bool value)` | False; point center shares scene GravityDirection/GravityPointCenter storage. |
+| `public float AreaGetGravityPointUnitDistance(RID area)` | `public void AreaSetGravityPointUnitDistance(RID area, float value)` | Zero; positive selects inverse-square falloff, nonpositive constant strength. |
+| `public Area.SpaceOverride AreaGetLinearDampSpaceOverride(RID area)` | `public void AreaSetLinearDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
+| `public float AreaGetLinearDamp(RID area)` | `public void AreaSetLinearDamp(RID area, float value)` | Signed inverse seconds, 0.1. |
+| `public Area.SpaceOverride AreaGetAngularDampSpaceOverride(RID area)` | `public void AreaSetAngularDampSpaceOverride(RID area, Area.SpaceOverride value)` | Disabled. |
+| `public float AreaGetAngularDamp(RID area)` | `public void AreaSetAngularDamp(RID area, float value)` | Signed inverse seconds, 1. |
+| `public int AreaGetPriority(RID area)` | `public void AreaSetPriority(RID area, int value)` | Zero; greater values run first. |
+
+### Field method descriptions
+
+<a id="areagetgravityspaceoverride"></a>
+<a id="areasetgravityspaceoverride"></a>
+**AreaGetGravitySpaceOverride / AreaSetGravitySpaceOverride:** Disabled; one of five independent reduction modes. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetgravity"></a>
+<a id="areasetgravity"></a>
+**AreaGetGravity / AreaSetGravity:** Signed scene units/s²: 9.80665 for server-only, 980 for scene. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetgravityvector"></a>
+<a id="areasetgravityvector"></a>
+**AreaGetGravityVector / AreaSetGravityVector:** Unnormalized direction/local point: (0, -1) server, (0, 1) scene. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetgravitypoint"></a>
+<a id="areasetgravitypoint"></a>
+**AreaGetGravityPoint / AreaSetGravityPoint:** False; point center shares scene GravityDirection/GravityPointCenter storage. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetgravitypointunitdistance"></a>
+<a id="areasetgravitypointunitdistance"></a>
+**AreaGetGravityPointUnitDistance / AreaSetGravityPointUnitDistance:** Zero; positive selects inverse-square falloff, nonpositive constant strength. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetlineardampspaceoverride"></a>
+<a id="areasetlineardampspaceoverride"></a>
+**AreaGetLinearDampSpaceOverride / AreaSetLinearDampSpaceOverride:** Disabled. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetlineardamp"></a>
+<a id="areasetlineardamp"></a>
+**AreaGetLinearDamp / AreaSetLinearDamp:** Signed inverse seconds, 0.1. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetangulardampspaceoverride"></a>
+<a id="areasetangulardampspaceoverride"></a>
+**AreaGetAngularDampSpaceOverride / AreaSetAngularDampSpaceOverride:** Disabled. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetangulardamp"></a>
+<a id="areasetangulardamp"></a>
+**AreaGetAngularDamp / AreaSetAngularDamp:** Signed inverse seconds, 1. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+<a id="areagetpriority"></a>
+<a id="areasetpriority"></a>
+**AreaGetPriority / AreaSetPriority:** Zero; greater values run first. Getter returns the stored value; setter updates that same profile for the next reduction.
+
+Gravity, linear damping and angular damping stop independently under [Area.SpaceOverride](Area.SpaceOverride.md). Current exact shape overlap and receiver mask against body layer select each Area once; reciprocal body masks and duplicate fixture pairs do not multiply contributions. Scene/server Areas are sorted together in stable descending priority; equal priorities retain current membership order (scene entries then server entries). Disabled geometry, removal and free stop contribution; reentry preserves configuration. Directional gravity ignores receiver rotation; point gravity transforms its local vector through the global pose, normalizes the direction toward it, applies constant/inverse-square strength, and is zero at the exact center.
+
+A space's default profile starts from sampled ProjectSettings strength/vector/damping, priority -1 and disabled modes. Its priority and modes remain stored but do not gate the final default fallback. The fallback contributes only channels not stopped by an Area; it has no bounded geometry and point gravity uses an identity transform. Changes apply to the existing space on its next nonzero step, wake affected sleeping dynamics, and do not edit ProjectSettings or other worlds. Body damping Combine/Replace and gravity scaling follow the existing parameter contract; CharacterBody reads selected gravity without automatic acceleration. Zero delta retains the last body totals.
+
+Partial usage snippet (live `areaRID` in a stepped world):
+
+```csharp
+var physics = PhysicsServer.Instance;
+physics.AreaSetGravitySpaceOverride(areaRID, Area.SpaceOverride.Replace);
+physics.AreaSetGravity(areaRID, 0);
+physics.AreaSetLinearDampSpaceOverride(areaRID, Area.SpaceOverride.Combine);
+physics.AreaSetLinearDamp(areaRID, 2);
+```
+
+[PhysicsServerAreaFieldTests](../../tests/Electron2D.Tests/PhysicsServerAreaFieldTests.cs) checks defaults, all ten branches, scene projection, mixed mode/priority/filter/lifecycle, actual server response, mutable space defaults/point fallback, failure recovery, callbacks/guards and zero managed bytes over 64 warmed active field frames on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance are unverified. [ADR 0056](../decisions/physics-fields.md#adr-0056) owns the shared profile and typed selector adaptation.

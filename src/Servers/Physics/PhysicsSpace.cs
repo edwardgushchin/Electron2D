@@ -19,7 +19,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<PhysicsBody> _bodies = [];
     private readonly List<Area> _areas = [];
     private readonly List<PhysicsServerCollider> _serverColliders = [];
-    private readonly List<Area> _fieldAreas = [];
+    private readonly List<(PhysicsAreaFields Fields, uint Mask, IReadOnlyList<B2ShapeId> Shapes, Transform Transform)> _fieldAreas = [];
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly List<ContactEvent> _contactEvents = [];
     private readonly List<RigidBody> _sleepEvents = [];
@@ -28,8 +28,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly B2WorldId _worldID;
     private readonly Vector2 _defaultGravity;
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
-    private readonly float _defaultLinearDamp;
-    private readonly float _defaultAngularDamp;
+    internal PhysicsAreaFields DefaultAreaFields { get; }
     private bool _stepping;
     private bool _dispatching;
     private bool _dispatchingContacts;
@@ -43,10 +42,14 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal PhysicsSpace()
     {
         var settings = ProjectSettings.Instance;
-        _defaultGravity = settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector) *
-            settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity);
-        _defaultLinearDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp);
-        _defaultAngularDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp);
+        DefaultAreaFields = new(settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravity),
+            settings.GetWithOverride(ProjectSettings.Physics2DDefaultGravityVector))
+        {
+            LinearDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultLinearDamp),
+            AngularDamp = settings.GetWithOverride(ProjectSettings.Physics2DDefaultAngularDamp),
+            Priority = -1
+        };
+        _defaultGravity = DefaultAreaFields.ComputeGravity(Transform.Identity, Vector2.Zero);
         if (!_defaultGravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var definition = b2DefaultWorldDef();
         definition.gravity = Shape.ToBackend(_defaultGravity);
@@ -314,17 +317,10 @@ internal sealed partial class PhysicsSpace : IDisposable
         // ponytail: Stable insertion order is quadratic in field areas; use indexed sorting if large-world profiling needs it.
         _fieldAreas.Clear();
         foreach (var area in _areas)
-        {
-            if (!area.HasFieldOverrides) continue;
-            var index = _fieldAreas.Count;
-            _fieldAreas.Add(area);
-            while (index > 0 && _fieldAreas[index - 1].Priority < area.Priority)
-            {
-                _fieldAreas[index] = _fieldAreas[index - 1];
-                index--;
-            }
-            _fieldAreas[index] = area;
-        }
+            AddFieldArea(area.Fields, area.CollisionMask, area.BackendShapes, area.GlobalTransform);
+        foreach (var collider in _serverColliders)
+            if (collider.AreaFields is { } fields)
+                AddFieldArea(fields, collider.CollisionMask, collider.BackendShapes, collider.GetTransform());
 
         foreach (var body in _bodies)
         {
@@ -349,6 +345,20 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
     }
 
+    private void AddFieldArea(PhysicsAreaFields fields, uint mask, IReadOnlyList<B2ShapeId> shapes, Transform transform)
+    {
+        if (!fields.HasOverrides) return;
+        var index = _fieldAreas.Count;
+        var area = (fields, mask, shapes, transform);
+        _fieldAreas.Add(area);
+        while (index > 0 && _fieldAreas[index - 1].Fields.Priority < fields.Priority)
+        {
+            _fieldAreas[index] = _fieldAreas[index - 1];
+            index--;
+        }
+        _fieldAreas[index] = area;
+    }
+
     private void ResolveAreaFields(uint layer, IReadOnlyList<B2ShapeId> shapes, Vector2 position,
         out Vector2 gravity, out float linearDamp, out float angularDamp)
     {
@@ -360,39 +370,39 @@ internal sealed partial class PhysicsSpace : IDisposable
         var angularDone = false;
         foreach (var area in _fieldAreas)
         {
-            if ((area.CollisionMask & layer) == 0 || !ShapesOverlap(area.BackendShapes, shapes)) continue;
+            if ((area.Mask & layer) == 0 || !ShapesOverlap(area.Shapes, shapes)) continue;
             if (!gravityDone)
             {
-                var mode = area.GravitySpaceOverride;
+                var mode = area.Fields.GravitySpaceOverride;
                 if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                    gravity += area.ComputeGravity(position);
+                    gravity += area.Fields.ComputeGravity(area.Transform, position);
                 else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                    gravity = area.ComputeGravity(position);
+                    gravity = area.Fields.ComputeGravity(area.Transform, position);
                 gravityDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
             }
             if (!linearDone)
             {
-                var mode = area.LinearDampSpaceOverride;
+                var mode = area.Fields.LinearDampSpaceOverride;
                 if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                    linearDamp += area.LinearDamp;
+                    linearDamp += area.Fields.LinearDamp;
                 else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                    linearDamp = area.LinearDamp;
+                    linearDamp = area.Fields.LinearDamp;
                 linearDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
             }
             if (!angularDone)
             {
-                var mode = area.AngularDampSpaceOverride;
+                var mode = area.Fields.AngularDampSpaceOverride;
                 if (mode is Area.SpaceOverride.Combine or Area.SpaceOverride.CombineReplace)
-                    angularDamp += area.AngularDamp;
+                    angularDamp += area.Fields.AngularDamp;
                 else if (mode is Area.SpaceOverride.Replace or Area.SpaceOverride.ReplaceCombine)
-                    angularDamp = area.AngularDamp;
+                    angularDamp = area.Fields.AngularDamp;
                 angularDone = mode is Area.SpaceOverride.CombineReplace or Area.SpaceOverride.Replace;
             }
             if (gravityDone && linearDone && angularDone) break;
         }
-        if (!gravityDone) gravity += _defaultGravity;
-        if (!linearDone) linearDamp += _defaultLinearDamp;
-        if (!angularDone) angularDamp += _defaultAngularDamp;
+        if (!gravityDone) gravity += DefaultAreaFields.ComputeGravity(Transform.Identity, position);
+        if (!linearDone) linearDamp += DefaultAreaFields.LinearDamp;
+        if (!angularDone) angularDamp += DefaultAreaFields.AngularDamp;
     }
 
     private bool ShapesOverlap(CollisionObject area, CollisionObject other) =>

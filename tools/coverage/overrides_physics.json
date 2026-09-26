@@ -829,6 +829,106 @@
       "godot": "PhysicsServer2D::method:area_get_transform(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetTransform(Electron2D.RID)",
       "reason": "Typed live scene/server Area receiver capability executes directional logical-pair monitoring, filter reads or global pose under ADR 0077."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravitySpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetGravitySpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravity(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetGravity(Electron2D.RID,System.Single)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityVector(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetGravityVector(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityPoint(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetGravityPoint(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityPointUnitDistance(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetGravityPointUnitDistance(Electron2D.RID,System.Single)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetLinearDampSpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetLinearDampSpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetLinearDamp(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetLinearDamp(Electron2D.RID,System.Single)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetAngularDampSpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetAngularDampSpaceOverride(Electron2D.RID,Electron2D.Area.SpaceOverride)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetAngularDamp(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetAngularDamp(Electron2D.RID,System.Single)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetPriority(Electron2D.RID)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetPriority(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
     }
   ],
   "extras": [
@@ -1729,12 +1829,17 @@
       "reason": "Unilateral RID exception lists suppress body pairs from solver contacts and motion tests in either direction; live toggles rebuild fixture contacts, scene enumeration keeps insertion order and server-only null slots (ADR 0063, PhysicsCollisionExceptionTests)."
     },
     {
-      "godot": ["class:KinematicCollision2D"],
+      "godot": [
+        "class:KinematicCollision2D"
+      ],
       "state": "Partial",
       "reason": "Typed travel, remainder, contact and scene shape owners execute; virtual tile collision-object and shape owners await typed tile-body integration (ADR 0063)."
     },
     {
-      "godot": ["KinematicCollision2D::method:get_collider()", "KinematicCollision2D::method:get_collider_shape()"],
+      "godot": [
+        "KinematicCollision2D::method:get_collider()",
+        "KinematicCollision2D::method:get_collider_shape()"
+      ],
       "state": "Partial",
       "reason": "Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063)."
     },
@@ -1782,12 +1887,16 @@
       "reason": "Typed motion defaults, finite pose/displacement, copied RID/instance exclusions and margin recovery execute (ADR 0063, PhysicsMotionTests)."
     },
     {
-      "godot": ["class:PhysicsTestMotionResult2D"],
+      "godot": [
+        "class:PhysicsTestMotionResult2D"
+      ],
       "state": "Partial",
       "reason": "Typed motion result fields execute; collider object projection remains Partial for virtual tile collision bodies (ADR 0063)."
     },
     {
-      "godot": ["PhysicsTestMotionResult2D::method:get_collider()"],
+      "godot": [
+        "PhysicsTestMotionResult2D::method:get_collider()"
+      ],
       "state": "Partial",
       "reason": "Scene bodies resolve and server-only bodies return null; virtual tile collision bodies require typed tile-owner integration (ADR 0063)."
     },
@@ -1810,12 +1919,16 @@
       "reason": "Server body motion returns typed RID, shape indices, contact point/normal/depth/velocity and safe/unsafe travel (ADR 0063, PhysicsMotionTests)."
     },
     {
-      "godot": ["class:ShapeCast2D"],
+      "godot": [
+        "class:ShapeCast2D"
+      ],
       "state": "Partial",
       "reason": "Cached scene shape sweeps and typed contacts execute; physics-debug gizmo drawing and virtual tile collision-owner results retain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
     },
     {
-      "godot": ["ShapeCast2D::method:get_collider(int:)"],
+      "godot": [
+        "ShapeCast2D::method:get_collider(int:)"
+      ],
       "state": "Partial",
       "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
     },
@@ -1852,12 +1965,16 @@
       "reason": "Spatial shape casts execute fixed-frame and forced first-impact queries, typed multi-collider contacts, RID exclusions, filtering, zero motion, rotation, caps, PackedScene and warmed allocation checks (ADR 0063, ShapeCastTests)."
     },
     {
-      "godot": ["class:RayCast2D"],
+      "godot": [
+        "class:RayCast2D"
+      ],
       "state": "Partial",
       "reason": "Direct scene ray snapshots and own query options execute; retained physics-debug gizmo drawing and virtual tile collision-object results remain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
     },
     {
-      "godot": ["RayCast2D::method:get_collider()"],
+      "godot": [
+        "RayCast2D::method:get_collider()"
+      ],
       "state": "Partial",
       "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
     },
@@ -1905,17 +2022,25 @@
       "reason": "Opaque session-local RID preserves zero/default, copy, ordering and numeric identity; freed values remain nonzero but cannot resolve to reused server resources (ADR 0063, PhysicsQueryTests)."
     },
     {
-      "godot": ["class:World2D"],
+      "godot": [
+        "class:World2D"
+      ],
       "state": "Partial",
       "reason": "SceneTree-shared Space and DirectSpaceState execute; Canvas and NavigationMap still require renderer/navigation resource ownership (ADR 0063)."
     },
     {
-      "godot": ["World2D::property:space", "World2D::property:direct_space_state"],
+      "godot": [
+        "World2D::property:space",
+        "World2D::property:direct_space_state"
+      ],
       "state": "Implemented",
       "reason": "The live SceneTree world exposes one stable physics-space RID and the same typed direct query view returned by PhysicsServer (ADR 0063, PhysicsQueryTests)."
     },
     {
-      "godot": ["World2D::property:canvas", "World2D::property:navigation_map"],
+      "godot": [
+        "World2D::property:canvas",
+        "World2D::property:navigation_map"
+      ],
       "state": "Blocked",
       "reason": "Trigger: renderer canvas RID and navigation-map RID lifetimes must be attached to the same World2D; physics space identity alone does not implement those server domains (ADRs 0028, 0052 and 0063)."
     },
@@ -1935,7 +2060,9 @@
       "reason": "Typed finite global endpoints, copied RID exclusions, all-layer mask, Area/body flags, inside hits and Create defaults execute in PhysicsQueryTests (ADR 0063)."
     },
     {
-      "godot": ["class:PhysicsPointQueryParameters2D"],
+      "godot": [
+        "class:PhysicsPointQueryParameters2D"
+      ],
       "state": "Partial",
       "reason": "Point, copied exclusions, mask and Area/body flags execute; CanvasInstanceID requires independent canvas/world identity (ADRs 0028 and 0063)."
     },
@@ -1951,22 +2078,30 @@
       "reason": "Typed finite global point, copied RID exclusions, all-layer mask and Area/body flags execute for scene and server colliders (ADR 0063, PhysicsQueryTests)."
     },
     {
-      "godot": ["PhysicsPointQueryParameters2D::property:canvas_instance_id"],
+      "godot": [
+        "PhysicsPointQueryParameters2D::property:canvas_instance_id"
+      ],
       "state": "Blocked",
       "reason": "Trigger: independent viewport canvas instance identity and query filtering across multiple World2D resources (ADRs 0028 and 0063)."
     },
     {
-      "godot": ["class:PhysicsDirectSpaceState2D"],
+      "godot": [
+        "class:PhysicsDirectSpaceState2D"
+      ],
       "state": "Partial",
       "reason": "Typed ray, point, shape-overlap, sweep, contact and rest views execute; point canvas-instance filtering and remaining direct-space methods retain separate prerequisites (ADR 0063)."
     },
     {
-      "godot": ["PhysicsDirectSpaceState2D::method:intersect_ray(PhysicsRayQueryParameters2D:)"],
+      "godot": [
+        "PhysicsDirectSpaceState2D::method:intersect_ray(PhysicsRayQueryParameters2D:)"
+      ],
       "state": "Implemented",
       "reason": "Nearest typed ray hit preserves collider RID/object/instance ID, stable shape-owner index, position, normal, exclusions, masks, Area flags and inside behavior (ADR 0063, PhysicsQueryTests)."
     },
     {
-      "godot": ["PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"],
+      "godot": [
+        "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"
+      ],
       "state": "Partial",
       "reason": "Typed point hits, RID ordering, deduplicated shape-owner indices and max-results execute; CanvasInstanceID filtering awaits independent viewport canvas identity (ADRs 0028 and 0063)."
     },
@@ -1997,7 +2132,9 @@
       "reason": "Mutable typed defaults, live Shape/RID selection, copied exclusions, finite pose/motion/margin validation and body/Area/layer filters execute (ADR 0063, PhysicsShapeQueryTests)."
     },
     {
-      "godot": ["class:PhysicsServer2D"],
+      "godot": [
+        "class:PhysicsServer2D"
+      ],
       "state": "Partial",
       "reason": "Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063)."
     },
@@ -2039,7 +2176,9 @@
       "reason": "Real shared Box2D spaces and six existing shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests)."
     },
     {
-      "godot": ["PhysicsServer2D::method:area_set_collision_mask(RID:,int:)"],
+      "godot": [
+        "PhysicsServer2D::method:area_set_collision_mask(RID:,int:)"
+      ],
       "state": "Implemented",
       "reason": "ADR 0077: server receiver callbacks use Added=0/Removed=1, other RID/object ID and logical shape indices; directional masks and monitorable gating execute via existing exact overlap kernel. PhysicsAreaMonitorTests verifies scene/server payloads, bit 32, reset/reentry/free, callback failures/reentrant removal, owner/configuration guards and 64 warmed active pair cycles without managed allocation."
     },
@@ -2062,7 +2201,9 @@
       "reason": "Typed transform and linear-velocity server branches execute; remaining BodyState values need corresponding typed solver-state methods and callback integration (ADR 0063)."
     },
     {
-      "godot": ["PhysicsServer2D::method:free_rid(RID:)"],
+      "godot": [
+        "PhysicsServer2D::method:free_rid(RID:)"
+      ],
       "state": "Partial",
       "reason": "Scene-owned identities and explicit physics spaces/bodies/Areas/shapes have tested lifetime; joint, world-boundary, custom and other server resource kinds remain unimplemented (ADR 0063)."
     },
@@ -2629,6 +2770,37 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0077: server receiver callbacks use Added=0/Removed=1, other RID/object ID and logical shape indices; directional masks and monitorable gating execute via existing exact overlap kernel. PhysicsAreaMonitorTests verifies scene/server payloads, bit 32, reset/reentry/free, callback failures/reentrant removal, owner/configuration guards and 64 warmed active pair cycles without managed allocation."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0056: all ten typed Area parameter pairs execute for scene/server RIDs and space default fields. Existing Area.SpaceOverride supplies the five numeric modes. PhysicsServerAreaFieldTests verifies distinct defaults, scene bidirectionality, mixed priority, bit 32 and lifecycle, actual server gravity/signed damping, transformed point falloff, unbounded default fields, overflow recovery, callback/owner/solver guards and zero warmed allocations.",
+      "godot": [
+        "PhysicsServer2D::method:area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+        "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+        "PhysicsServer2D::enum:AreaSpaceOverrideMode",
+        "PhysicsServer2D::enum_value:AreaSpaceOverrideMode.AREA_SPACE_OVERRIDE_COMBINE",
+        "PhysicsServer2D::enum_value:AreaSpaceOverrideMode.AREA_SPACE_OVERRIDE_COMBINE_REPLACE",
+        "PhysicsServer2D::enum_value:AreaSpaceOverrideMode.AREA_SPACE_OVERRIDE_DISABLED",
+        "PhysicsServer2D::enum_value:AreaSpaceOverrideMode.AREA_SPACE_OVERRIDE_REPLACE",
+        "PhysicsServer2D::enum_value:AreaSpaceOverrideMode.AREA_SPACE_OVERRIDE_REPLACE_COMBINE"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0056 and ADR 0001: AreaParameter is only the numeric selector/container of the Variant dispatcher. All ten field capabilities are preserved through concrete typed getter/setter pairs; the untyped numeric selection representation is not shipped. This does not exclude any gravity/damping/priority behavior.",
+      "godot": [
+        "PhysicsServer2D::enum:AreaParameter",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_ANGULAR_DAMP",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_ANGULAR_DAMP_OVERRIDE_MODE",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_GRAVITY",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_GRAVITY_IS_POINT",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_GRAVITY_OVERRIDE_MODE",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_GRAVITY_POINT_UNIT_DISTANCE",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_GRAVITY_VECTOR",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_LINEAR_DAMP",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE",
+        "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_PRIORITY"
+      ]
     }
   ]
 }

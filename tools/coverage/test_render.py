@@ -162,9 +162,15 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 71, "Partial": 8, "Unimplemented": 120, "Blocked": 4, "Excluded": 12}
+                "Implemented": 79, "Partial": 8, "Unimplemented": 101, "Blocked": 4, "Excluded": 23}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
+    area_parameter_rows = [row for row in server_rows if "AreaParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
+    assert len(area_parameter_rows) == 11 and all(" | Excluded | " in row for row in area_parameter_rows)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method area_{action}_param(" in row)
+               for action in ("set", "get"))
+    area_mode_rows = [row for row in server_rows if "AreaSpaceOverrideMode" in row.split(" | ")[0]]
+    assert len(area_mode_rows) == 6 and all(" | Implemented | " in row for row in area_mode_rows)
     force_names = ("apply_central_force", "apply_force", "apply_torque", "apply_central_impulse", "apply_impulse",
                    "apply_torque_impulse", "add_constant_central_force", "add_constant_force", "add_constant_torque",
                    "set_constant_force", "get_constant_force", "set_constant_torque", "get_constant_torque")
