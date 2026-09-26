@@ -37,28 +37,9 @@ Games can attach a `RigidBody` and `StaticBody` with `CollisionShape` children, 
 - Write a custom rigid-body solver: ADR 0012 selected the managed Box2D.NET backend.
 
 <a id="adr-0055"></a>
-## ADR 0055: Directional scene area monitoring
+## ADR 0055
 
-Last updated: 2026-09-24
-
-- Status: Accepted
-- Scope: Area overlap snapshots and object-level events
-- Depends on: [0054](#adr-0054), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
-
-### Context
-
-The first physics slice owns body fixtures, but interactive game triggers need nonresponding area shapes and reliable body/area overlap reports. The reference's area mask tests the other object's layer without requiring the other's mask to include the area layer. The pinned backend's sensor-event and overlap-query filters require reciprocal mask agreement, which would omit valid area detections, including a body with mask zero.
-
-### Decision
-
-- Map the reference `Area2D` to `Area : CollisionObject : Entity`. A direct `CollisionShape` child belongs to either an `Area` or a `PhysicsBody` and borrows its Shape resource. The area owns a stationary backend body with sensor fixtures. It has no collision response.
-- After each nonzero SceneTree fixed step and body synchronization, scan area-to-body and area-to-area shape pairs using the backend's broad bounding boxes and exact shape-distance proxy. An area's mask checks the other's layer; an area's `Monitoring` controls its own scan, and another area's `Monitorable` controls whether it can be a reported area. The other object's mask does not suppress detection. An area's own `Monitorable` does not stop its own monitoring.
-- Keep one object-level overlap snapshot per area. Update snapshots once per step, deduplicate multiple touching shape pairs, then deliver entered/exited callbacks after backend stepping so handlers can mutate the scene. Removing an object clears other areas' snapshots and delivers exits without another step. Zero elapsed time retains the previous snapshot. Callback failures are collected without replaying committed transitions.
-- Use pairwise scans for this first area profile, with no managed allocations in warmed unchanged scans on the checked Linux/.NET 8 path. Upgrade to a spatial candidate index when large-scene measurement warrants it. The backend source is unchanged. Shape-index events require typed RID/shape-owner identity; gravity/damping priority reduction is implemented by ADR 0056, while audio-bus routing has a separate integration trigger in coverage.
-
-### Consequences
-
-Games can use typed `AreaEntered`, `AreaExited`, `BodyEntered` and `BodyExited` events and query the last fixed-step overlap snapshot for bodies and areas. A body with collision mask zero is still detectable through its layer. Scene packing preserves the area role and monitoring flags. Other platforms, native allocation, broad-world performance and owner game acceptance remain unverified.
+This active decision is maintained in [physics-monitoring.md](physics-monitoring.md#adr-0055).
 
 <a id="adr-0056"></a>
 ## ADR 0056: Area field priority and body damping
@@ -114,28 +95,9 @@ The first body profile exposed central one-step force and impulse, but game code
 Games can push at an offset, add a one-time impact, spin a body, maintain propulsion and set a jump-axis velocity without public backend types. Shifted-center, unit-conversion, freeze/reentry, invalid-input rollback, packing and repeated-rotation paths have executable checks. Contact monitoring, custom integration, continuous collision, custom mass distribution and physics server/RID methods remain separate coverage work.
 
 <a id="adr-0058"></a>
-## ADR 0058: Rigid-body contact and sleep snapshots
+## ADR 0058
 
-Last updated: 2026-09-25
-
-- Status: Accepted
-- Scope: Object-level RigidBody contact reports, point counts and solver sleep events
-- Depends on: [0054](#adr-0054), [0055](#adr-0055), [0014](resources.md#adr-0014)
-
-### Context
-
-Rigid bodies respond to contact but had no typed way to observe the other bodies, cap reported contact points, or react when the solver changes sleep state. The pinned backend supplies transient begin/end events whose shape IDs can be invalid after fixture destruction. It also exposes the currently touching pairs and their manifolds after each unlocked step. The accepted reference differentiates a cached contact-point count from opt-in object-level monitoring, and does not emit its sleep signal for a direct `Sleeping` property assignment.
-
-### Decision
-
-- Add `RigidBody.ContactMonitor`, nonnegative `MaxContactsReported`, `GetContactCount()`, typed `GetCollidingBodies()`, object-level `BodyEntered`/`BodyExited` and `SleepingStateChanged`. Zero reported contacts is the default. Count points up to the configured cap after each step, while the object snapshot and entry/exit events also require monitoring. Disabling monitoring clears its object snapshot without synthesizing exits; disabling from inside its contact callback is rejected before mutation.
-- Read current backend touching pairs and manifold point counts through a reusable per-body buffer after solver/body synchronization. Resolve other bodies through current backend body IDs, deduplicate shape pairs by scene body, then commit snapshots before callbacks. Emit sleep transitions before contact transitions; explicit `Sleeping` assignments update stored state without a solver event. Scene-body removal clears peers' snapshots and delivers exits without another step. Callback exceptions are aggregated while later queued contact and area events continue.
-- Use current touching-pair data rather than transient backend end-event shape IDs, which may already be destroyed after shape, filter or body edits. Reuse buffers and sets so warmed resting, active-contact and no-contact fixed frames allocate zero managed bytes on the checked Linux/.NET 8 path. The backend source is unchanged.
-- Shape-index contact signals remain dependent on public typed RID/shape-owner identity. Body-level results/signals remain Partial until tile-map virtual collision bodies are integrated; the exact reference priority for selecting manifold points when a cap is lower than simultaneous contacts and its upper cap still require a dedicated audit.
-
-### Consequences
-
-Games can respond to collision entry/exit and solver sleep, query current bodies and bounded contact points, and safely remove a collider from a callback. Attached owner-thread access, scene packing, filter and shape edits, callback failures and warmed allocations have executable checks. Native allocator counts, other platforms, large-world performance and owner acceptance remain unverified.
+This active decision is maintained in [physics-monitoring.md](physics-monitoring.md#adr-0058).
 
 <a id="adr-0059"></a>
 ## ADR 0059: Capsule collision resource and fixture geometry

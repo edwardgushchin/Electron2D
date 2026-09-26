@@ -1,6 +1,36 @@
 {
   "mappings": [
     {
+      "godot": "Area2D::signal:area_shape_entered(RID:,Area2D:,int:,int:)",
+      "electron2d": "event:Electron2D.Area.AreaShapeEntered()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
+      "godot": "Area2D::signal:area_shape_exited(RID:,Area2D:,int:,int:)",
+      "electron2d": "event:Electron2D.Area.AreaShapeExited()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
+      "godot": "Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)",
+      "electron2d": "event:Electron2D.Area.BodyShapeEntered()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
+      "godot": "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)",
+      "electron2d": "event:Electron2D.Area.BodyShapeExited()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
+      "godot": "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
+      "electron2d": "event:Electron2D.RigidBody.BodyShapeEntered()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
+      "godot": "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)",
+      "electron2d": "event:Electron2D.RigidBody.BodyShapeExited()",
+      "reason": "Typed shape-pair signal projects RID, declaring scene role and remote/local global logical indices; nullable server-only Area payload is preserved."
+    },
+    {
       "godot": "CollisionObject2D::method:create_shape_owner(Object:)",
       "electron2d": "method:Electron2D.CollisionObject.CreateShapeOwner(Electron2D.ElectronObject)",
       "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
@@ -1261,6 +1291,37 @@
   "statusGroups": [
     {
       "godot": [
+        "Area2D::signal:area_shape_entered(RID:,Area2D:,int:,int:)",
+        "Area2D::signal:area_shape_exited(RID:,Area2D:,int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Area/Area logical pairs, nullable server payloads, monitorable policy, transitions/removal/guard/failure behavior execute (ADR 0055, ShapePairEventTests)."
+    },
+    {
+      "godot": [
+        "Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)",
+        "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests)."
+    },
+    {
+      "godot": [
+        "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
+        "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload and exact capped-contact priority require the existing tile/contact integration triggers (ADR 0058, ShapePairEventTests)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:area_set_monitorable(RID:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "Typed server Area monitorability controls scene shape-pair sensing; default false and nullable payload execute (ADR 0055, ShapePairEventTests)."
+    },
+    {
+      "godot": [
         "CollisionObject2D::method:create_shape_owner(Object:)",
         "CollisionObject2D::method:get_shape_owner_one_way_collision_direction(int:)",
         "CollisionObject2D::method:get_shape_owner_one_way_collision_margin(int:)",
@@ -2123,14 +2184,6 @@
     },
     {
       "godot": [
-        "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
-        "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: public typed physics RID identity and stable collision shape-owner indices across fixture rebuilds, plus tile-map virtual collision body integration for full signal payloads (ADR 0058)."
-    },
-    {
-      "godot": [
         "RigidBody2D::method:add_constant_central_force(Vector2:)",
         "RigidBody2D::method:add_constant_force(Vector2:,Vector2:)",
         "RigidBody2D::method:add_constant_torque(float:)",
@@ -2183,16 +2236,6 @@
       ],
       "state": "Implemented",
       "reason": "AreaTests verifies step snapshots, directional masks, monitorability, events, multi-shape deduplication, callback failure, removal and warmed no-allocation scans."
-    },
-    {
-      "godot": [
-        "Area2D::signal:area_shape_entered(RID:,Area2D:,int:,int:)",
-        "Area2D::signal:area_shape_exited(RID:,Area2D:,int:,int:)",
-        "Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)",
-        "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: typed PhysicsServer RID identity and stable collision-shape owner indices across fixture rebuilding; then emit per-shape events."
     },
     {
       "godot": [

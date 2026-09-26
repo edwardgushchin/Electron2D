@@ -17607,6 +17607,32 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Area.AreaShapeEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "AreaShapeEntered",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Area, System.Int32, System.Int32\u003E AreaShapeEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Area, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.AreaShapeExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "AreaShapeExited",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Area, System.Int32, System.Int32\u003E AreaShapeExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Area, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Area.BodyEntered()",
     "kind": "event",
     "declaringType": "Electron2D.Area",
@@ -17630,6 +17656,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Entity\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.BodyShapeEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "BodyShapeEntered",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Entity, System.Int32, System.Int32\u003E BodyShapeEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Entity, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Area.BodyShapeExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.Area",
+    "name": "BodyShapeExited",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Entity, System.Int32, System.Int32\u003E BodyShapeExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Entity, System.Int32, System.Int32\u003E",
     "value": null
   },
   {
@@ -18306,6 +18358,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RigidBody.BodyShapeEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "BodyShapeEntered",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Node, System.Int32, System.Int32\u003E BodyShapeEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Node, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RigidBody.BodyShapeExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "BodyShapeExited",
+    "signature": "public event System.Action\u003CElectron2D.RID, Electron2D.Node, System.Int32, System.Int32\u003E BodyShapeExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Node, System.Int32, System.Int32\u003E",
     "value": null
   },
   {
@@ -44081,6 +44159,30 @@
       {
         "name": "layer",
         "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetMonitorable(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetMonitorable",
+    "signature": "public System.Void AreaSetMonitorable(Electron2D.RID area, System.Boolean monitorable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "monitorable",
+        "type": "System.Boolean",
         "default": null
       }
     ],

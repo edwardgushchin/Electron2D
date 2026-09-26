@@ -315,6 +315,17 @@ public sealed partial class PhysicsServer
         collider.SetFilter(layer, collider.CollisionMask);
     }
 
+    /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
+    /// <param name="area">A live server Area RID.</param>
+    /// <param name="monitorable">The sensing policy; server Areas default false.</param>
+    /// <remarks>The next nonzero overlap scan adopts the policy. Attached changes require the space owner thread.</remarks>
+    public void AreaSetMonitorable(RID area, bool monitorable)
+    {
+        var collider = GetCollider(area, isArea: true);
+        EnsureColliderSpaceAccessible(collider);
+        collider.Monitorable = monitorable;
+    }
+
     /// <summary>Frees a server-owned space, collider or shape RID.</summary>
     /// <param name="rid">A live caller-owned server resource identity.</param>
     /// <remarks>SceneTree-owned spaces and CollisionObject RIDs are released by their scene owners.</remarks>
@@ -349,12 +360,15 @@ public sealed partial class PhysicsServer
         else if (collider is not null)
         {
             EnsureColliderSpaceAccessible(collider);
-            if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider);
-            lock (_registryGate)
+            try { if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider); }
+            finally
             {
-                _serverColliders.Remove(rid);
-                _bodyRuntimes.Remove(rid);
-                _bodyExceptions.Remove(rid);
+                lock (_registryGate)
+                {
+                    _serverColliders.Remove(rid);
+                    _bodyRuntimes.Remove(rid);
+                    _bodyExceptions.Remove(rid);
+                }
             }
         }
         else if (shape is not null)

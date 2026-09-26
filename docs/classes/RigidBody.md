@@ -147,7 +147,7 @@ The event carries this RigidBody and fires when the solver changes its sleep sta
 
 SceneTree owns the backend world and handle; the body owns no public handle and borrows child collision resources. Node disposal tears down its backend body without disposing borrowed Shape resources. Unit global scale and zero skew are required while active. A failed geometry validation leaves the world reusable after correction. The body can exit and re-enter a tree. Circle/rectangle contacts, masks, central impulse, frozen motion, PackedScene state and warmed zero-allocation frame lanes are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs). [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks signed area/body damping, combination modes and gravity. [RigidBodyForceTests](../../tests/Electron2D.Tests/RigidBodyForceTests.cs) checks offset/center-of-mass actions, unit conversion, persistent force, invalid rollback, packed state and repeated rotation. [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks zero-area segment mass, torque and unshaped movement. [RigidBodyContactTests](../../tests/Electron2D.Tests/RigidBodyContactTests.cs) checks point caps, object entries/exits, multi-shape deduplication, solver sleep, callback mutation/failure, packed state and 64 warmed resting, active and empty contact frames with zero managed allocations on Linux/.NET 8.
 
-Shape-index contact events, tile-map virtual body reporting, exact capped-contact selection, custom center of mass/inertia, continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
+Tile-map virtual body reporting, exact capped-contact selection, custom center of mass/inertia, continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
 
 A [SeparationRayShape](SeparationRayShape.md) sensor contributes zero inertia and is excluded from the segment-only thin-rod fallback. Ordinary dynamic ray impulses and contact reporting remain incomplete; the class coverage records the required solver manifold integration.
 
@@ -156,3 +156,16 @@ A [SeparationRayShape](SeparationRayShape.md) sensor contributes zero inertia an
 `public bool CustomIntegrator { get; set; }` defaults false and is packed. True omits automatic gravity, damping and accumulated forces while preserving impulses and native contacts. `protected virtual void IntegrateForces(PhysicsDirectBodyState state)` runs after each active native step with synchronized scene pose and solved contacts. RigidBody is extensible so subclasses can override this hook. State queries are permitted in the hook; scene pose and velocity caches synchronize again after it. A callback exception retains committed edits and does not suppress other body callbacks. Callback references are transient and subclass scene factories follow the inherited typed packing contract.
 
 See [the direct state class](PhysicsDirectBodyState.md) for exact units, lifetime, force semantics and manual gravity-before-damping integration. [PhysicsBodyStateTests](../../tests/Electron2D.Tests/PhysicsBodyStateTests.cs) verifies ordinary/custom behavior, packing, failure recovery and warmed zero managed allocation under [ADR 0070](../decisions/physics.md#adr-0070).
+
+## Body shape-pair events
+
+| Signature | Contract |
+| --- | --- |
+| `public event Action<RID, Node, int, int>? BodyShapeEntered` | Retained collider RID, scene Node, collider global slot index, local global slot index. |
+| `public event Action<RID, Node, int, int>? BodyShapeExited` | Retained departed pair and sampled global indices. |
+
+<a id="bodyshapeentered"></a>
+<a id="bodyshapeexited"></a>
+These events require ContactMonitor and a positive MaxContactsReported. The capped touching contact set is reduced to logical slot pairs, so duplicate manifold points and compound fixtures do not repeat entries. Object entry precedes its first pair entry; object exit precedes its last retained pair exit. A remaining shape pair keeps the object's monitor snapshot alive. Removal uses committed RID/indices rather than already-destroyed native shape IDs and delivers exits without another solver step. Disabling ContactMonitor inside either object or shape callback rejects.
+
+Current scene PhysicsBody identities execute; server-only contacts have no Node payload and are excluded from scene body events. Virtual tile payloads and exact capped-contact priority remain Partial under [ADR 0058](../decisions/physics-monitoring.md#adr-0058). Handler failure retains the committed snapshot and does not suppress later queued pair transitions. ShapePairEventTests checks real native two-shape contacts, disabled-slot departure and collider removal.

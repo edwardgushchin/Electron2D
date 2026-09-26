@@ -211,6 +211,7 @@ RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();
 ShapeOwnerTests.Run();
+ShapePairEventTests.Run();
 AStarTests.Run();
 AStarGridTests.Run();
 RemoteTransformTests.Run();

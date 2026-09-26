@@ -112,3 +112,36 @@ The body-result and body-event methods currently cover `PhysicsBody` nodes; tile
 A SeparationRayShape child senses a directed front-facing surface crossing, including its exact short-ray extent. A ray starting inside filled geometry and two rays do not overlap. Scene Area overlap and field selection use this same kernel under [ADR 0068](../decisions/physics.md#adr-0068), verified by SeparationRayShapeTests.
 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+## Logical shape-pair events
+
+| Signature | Payload |
+| --- | --- |
+| `public event Action<RID, Area?, int, int>? AreaShapeEntered` | Collider RID, nullable scene Area, collider global logical shape index, local index. |
+| `public event Action<RID, Area?, int, int>? AreaShapeExited` | Retained departed Area pair identity and sampled indices. |
+| `public event Action<RID, Entity?, int, int>? BodyShapeEntered` | Collider RID, nullable spatial body, body global logical shape index, local index. |
+| `public event Action<RID, Entity?, int, int>? BodyShapeExited` | Retained departed body pair identity and sampled indices. |
+
+<a id="areashapeentered"></a>
+<a id="areashapeexited"></a>
+<a id="bodyshapeentered"></a>
+<a id="bodyshapeexited"></a>
+### Pair identity, order and lifecycle
+
+Monitoring scans deduplicate all native fixtures contributing the same collider RID/remote/local logical slot pair. Multiple manifold points or compound convex fixtures do not produce duplicate logical entries. Each nonzero step commits both pair and deduplicated scene-object snapshots before callbacks. Unchanged pairs do not replay. First entry of an object precedes its first shape entry. Ordinary last-pair departure emits object exit before that pair exit; scene-tree departure emits object exit then all retained shape exits without another step. Exits preserve the sampled indices, which may be stale after structural slot reindexing.
+
+Server-only body/Area colliders produce shape payloads with their RID and null scene object. They do not appear in GetOverlappingBodies/Areas object arrays. Server-created Areas default non-monitorable; PhysicsServer.AreaSetMonitorable enables detection. Scene object values preserve the typed declaring role, including Entity for bodies and Area for Areas. Virtual tile body payloads remain Partial until typed tile-body integration; the Area/Area branch is executable for current scene/server Area identities.
+
+A failed callback does not replay committed transitions and later queued object/shape transitions still run. Changes to Monitoring or Monitorable during an in/out callback throw InvalidOperationException before mutation; equal assignments are harmless. Apply changed policies after the callback returns. Body/Area removal clears retained pairs and queues exits; server collider free completes registry cleanup even if a departure handler throws. Steady and pre-warmed entry/exit callbacks allocate zero managed bytes in ShapePairEventTests on Linux/.NET 10.
+
+Partial handler snippet:
+
+```csharp
+area.BodyShapeEntered += (rid, body, bodyShapeIndex, localShapeIndex) =>
+{
+    uint ownerID = area.ShapeFindOwner(localShapeIndex);
+    // body is null for a server-only collider; rid still identifies it.
+};
+```
+
+[ShapePairEventTests](../../tests/Electron2D.Tests/ShapePairEventTests.cs) checks multi-slot/body/Area pairs, compound deduplication, object/pair ordering, masks and monitorability, server nullable identities, removals, callback locks/failures and warmed steady/active transition allocation. See [ADR 0055](../decisions/physics-monitoring.md#adr-0055).

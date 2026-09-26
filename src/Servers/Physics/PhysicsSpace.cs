@@ -36,8 +36,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool _disposed;
     private long _contactStep;
 
-    internal readonly record struct OverlapEvent(Area Area, CollisionObject Other, bool Entered);
-    internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsBody Other, bool Entered);
+    internal readonly record struct OverlapEvent(Area Area, PhysicsShapePairChange Change);
+    internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
     private readonly record struct OneWayPair(bool Allowed, long SeenStep);
 
     internal PhysicsSpace()
@@ -123,7 +123,10 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
-        if (_serverColliders.Remove(collider)) collider.DetachBackend();
+        if (!_serverColliders.Remove(collider)) return;
+        foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
+        collider.DetachBackend();
+        DispatchEvents();
     }
 
     internal void Remove(Area area)
@@ -269,14 +272,34 @@ internal sealed partial class PhysicsSpace : IDisposable
             if (area.Monitoring)
             {
                 foreach (var body in _bodies)
-                    if ((area.CollisionMask & body.CollisionLayer) != 0 && ShapesOverlap(area, body))
-                        area.Observe(body);
+                    if ((area.CollisionMask & body.CollisionLayer) != 0)
+                        ScanOverlapPairs(area, body.GetRID(), body, false, body.BackendShapes);
                 foreach (var other in _areas)
                     if (!ReferenceEquals(area, other) && other.Monitorable &&
-                        (area.CollisionMask & other.CollisionLayer) != 0 && ShapesOverlap(area, other))
-                        area.Observe(other);
+                        (area.CollisionMask & other.CollisionLayer) != 0)
+                        ScanOverlapPairs(area, other.GetRID(), other, true, other.BackendShapes);
+                foreach (var other in _serverColliders)
+                    if ((!other.IsArea || other.Monitorable) && (area.CollisionMask & other.CollisionLayer) != 0)
+                        ScanOverlapPairs(area, other.RID, null, other.IsArea, other.BackendShapes);
             }
             area.CommitOverlapScan(_overlapEvents);
+        }
+    }
+
+    private void ScanOverlapPairs(Area area, RID rid, CollisionObject? other, bool isArea, IReadOnlyList<B2ShapeId> otherShapes)
+    {
+        for (var localIndex = 0; localIndex < area.BackendShapes.Count; localIndex++)
+        {
+            var local = area.BackendShapes[localIndex];
+            var localTag = b2Shape_GetUserData(local).GetRef<PhysicsFixtureTag>();
+            if (localTag is null) continue;
+            for (var remoteIndex = 0; remoteIndex < otherShapes.Count; remoteIndex++)
+            {
+                var remote = otherShapes[remoteIndex];
+                var remoteTag = b2Shape_GetUserData(remote).GetRef<PhysicsFixtureTag>();
+                if (remoteTag is not null && ShapePairOverlaps(local, remote))
+                    area.Observe(new(rid, other, isArea, remoteTag.ShapeIndex, localTag.ShapeIndex));
+            }
         }
     }
 
@@ -380,45 +403,43 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     private bool ShapesOverlap(IReadOnlyList<B2ShapeId> areaShapes, IReadOnlyList<B2ShapeId> otherShapes)
     {
-        var world = b2GetWorldFromId(_worldID);
-        for (var areaIndex = 0; areaIndex < areaShapes.Count; areaIndex++)
-        {
-            var areaID = areaShapes[areaIndex];
-            var aabbA = b2Shape_GetAABB(areaID);
-            for (var otherIndex = 0; otherIndex < otherShapes.Count; otherIndex++)
-            {
-                var otherID = otherShapes[otherIndex];
-                var rayA = b2Shape_GetUserData(areaID).GetRef<PhysicsFixtureTag>()?.SeparationRay;
-                var rayB = b2Shape_GetUserData(otherID).GetRef<PhysicsFixtureTag>()?.SeparationRay;
-                var aabbB = b2Shape_GetAABB(otherID);
-                if (rayA is null && rayB is null &&
-                    (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
-                    aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y))
-                    continue;
-                var shapeA = b2GetShape(world, areaID);
-                var shapeB = b2GetShape(world, otherID);
-                var input = new B2DistanceInput
-                {
-                    proxyA = b2MakeShapeDistanceProxy(shapeA),
-                    proxyB = b2MakeShapeDistanceProxy(shapeB),
-                    transformA = b2Body_GetTransform(b2Shape_GetBody(areaID)),
-                    transformB = b2Body_GetTransform(b2Shape_GetBody(otherID)),
-                    useRadii = true
-                };
-                if (rayA is not null || rayB is not null)
-                {
-                    var query = rayA is { } ray ? PhysicsSeparationRay.WorldProxy(ray, input.transformA, default) :
-                        WorldProxy(input.proxyA, input.transformA, default);
-                    if (PhysicsSeparationRay.PairContact(query, rayA?.SlideOnSlope, input.proxyB,
-                        input.transformB, rayB, default, 0).pointCount != 0) return true;
-                    continue;
-                }
-                var cache = new B2SimplexCache();
-                if (b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP)
-                    return true;
-            }
-        }
+        for (var first = 0; first < areaShapes.Count; first++)
+            for (var second = 0; second < otherShapes.Count; second++)
+                if (ShapePairOverlaps(areaShapes[first], otherShapes[second])) return true;
         return false;
+    }
+
+    private bool ShapePairOverlaps(B2ShapeId first, B2ShapeId second)
+    {
+        var world = b2GetWorldFromId(_worldID);
+        var aabbA = b2Shape_GetAABB(first);
+        var rayA = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>()?.SeparationRay;
+        var rayB = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>()?.SeparationRay;
+        var aabbB = b2Shape_GetAABB(second);
+        if (rayA is null && rayB is null &&
+            (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
+            aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y))
+            return false;
+        var shapeA = b2GetShape(world, first);
+        var shapeB = b2GetShape(world, second);
+        var input = new B2DistanceInput
+        {
+            proxyA = b2MakeShapeDistanceProxy(shapeA),
+            proxyB = b2MakeShapeDistanceProxy(shapeB),
+            transformA = b2Body_GetTransform(b2Shape_GetBody(first)),
+            transformB = b2Body_GetTransform(b2Shape_GetBody(second)),
+            useRadii = true
+        };
+        if (rayA is not null || rayB is not null)
+        {
+            var query = rayA is { } ray ? PhysicsSeparationRay.WorldProxy(ray, input.transformA, default) :
+                WorldProxy(input.proxyA, input.transformA, default);
+            if (PhysicsSeparationRay.PairContact(query, rayA?.SlideOnSlope, input.proxyB,
+                input.transformB, rayB, default, 0).pointCount != 0) return true;
+            return false;
+        }
+        var cache = new B2SimplexCache();
+        return b2ShapeDistance(ref input, ref cache, null, 0).distance <= 0.1f * B2_LINEAR_SLOP;
     }
 
     internal PhysicsBody? FindBody(B2BodyId id)
@@ -457,8 +478,8 @@ internal sealed partial class PhysicsSpace : IDisposable
             {
                 var change = _contactEvents[index];
                 if (!change.Receiver.IsInsideTree || !change.Receiver.ContactMonitor ||
-                    (change.Entered && !change.Receiver.ContainsContact(change.Other))) continue;
-                try { change.Receiver.RaiseContact(change.Other, change.Entered); }
+                    (change.Change.Entered && !change.Receiver.ContainsContact(change.Change))) continue;
+                try { change.Receiver.RaiseContact(change.Change); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
         }
@@ -481,8 +502,8 @@ internal sealed partial class PhysicsSpace : IDisposable
             for (var index = 0; index < _overlapEvents.Count; index++)
             {
                 var change = _overlapEvents[index];
-                if (!change.Area.IsInsideTree || (change.Entered && !change.Area.ContainsOverlap(change.Other))) continue;
-                try { change.Area.RaiseOverlap(change.Other, change.Entered); }
+                if (!change.Area.IsInsideTree || (change.Change.Entered && !change.Area.ContainsOverlap(change.Change))) continue;
+                try { change.Area.RaiseOverlap(change.Change); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
         }

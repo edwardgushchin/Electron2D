@@ -162,7 +162,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 42, "Partial": 8, "Unimplemented": 160, "Blocked": 5}
+                "Implemented": 43, "Partial": 8, "Unimplemented": 159, "Blocked": 5}
     assert " | Implemented | " in next(row for row in server_rows if "method body_test_motion(" in row)
     assert " | Blocked | " in next(row for row in server_rows if "method area_set_collision_mask(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -207,7 +207,7 @@ def main():
     assert len(area_rows) == 36
     assert {state: sum(f" | {state} | " in row for row in area_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 24, "Partial": 6, "Unimplemented": 0, "Blocked": 6}
+                "Implemented": 26, "Partial": 8, "Unimplemented": 0, "Blocked": 2}
     body_rows = pages[CLASS_PAGES / "RigidBody2D.md"]
     assert "../../classes/RigidBody.DampMode.md" in body_rows
     assert all(" | Implemented | " in next(row for row in body_rows.splitlines() if row.startswith(f"| [`{prefix}"))
@@ -220,8 +220,8 @@ def main():
                            ("property int max_contacts_reported", "Partial"),
                            ("signal body_entered", "Partial"),
                            ("signal body_exited", "Partial"),
-                           ("signal body_shape_entered", "Blocked"),
-                           ("signal body_shape_exited", "Blocked"),
+                           ("signal body_shape_entered", "Partial"),
+                           ("signal body_shape_exited", "Partial"),
                            ("signal sleeping_state_changed", "Implemented")):
         assert f" | {status} | " in next(row for row in body_rows.splitlines()
                                        if row.startswith(f"| [`{prefix}"))

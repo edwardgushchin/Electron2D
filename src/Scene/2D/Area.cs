@@ -23,6 +23,9 @@ public sealed partial class Area : CollisionObject
     private readonly List<ulong> _appliedShapeRevisions = [];
     private HashSet<CollisionObject> _overlaps = new(ReferenceEqualityComparer.Instance);
     private HashSet<CollisionObject> _nextOverlaps = new(ReferenceEqualityComparer.Instance);
+    private readonly PhysicsShapePairTracker _shapePairs = new();
+    private readonly List<PhysicsShapePairChange> _pairChanges = [];
+    private bool _dispatchingOverlap;
     private PhysicsSpace? _space;
     private B2BodyId _bodyID;
     private Vector2 _lastPosition;
@@ -41,7 +44,7 @@ public sealed partial class Area : CollisionObject
     public bool Monitoring
     {
         get { ThrowIfDisposed(); return _monitoring; }
-        set { EnsureMutable(); _monitoring = value; }
+        set { EnsureMutable(); if (_monitoring == value) return; if (_dispatchingOverlap) throw new InvalidOperationException("Change monitoring after overlap callbacks return."); _monitoring = value; }
     }
 
     /// <summary>Gets or sets whether other monitoring areas can detect this area.</summary>
@@ -51,7 +54,7 @@ public sealed partial class Area : CollisionObject
     public bool Monitorable
     {
         get { ThrowIfDisposed(); return _monitorable; }
-        set { EnsureMutable(); _monitorable = value; }
+        set { EnsureMutable(); if (_monitorable == value) return; if (_dispatchingOverlap) throw new InvalidOperationException("Change monitorable policy after overlap callbacks return."); _monitorable = value; }
     }
 
     /// <summary>Occurs after a fixed step when another area begins overlapping this area.</summary>
@@ -65,6 +68,20 @@ public sealed partial class Area : CollisionObject
 
     /// <summary>Occurs after a fixed step when a physics body stops overlapping this area.</summary>
     public event Action<Entity>? BodyExited;
+
+    /// <summary>Occurs when a logical Area shape pair starts overlapping.</summary>
+    /// <remarks>Arguments are collider RID, nullable scene Area, collider global shape index and local global shape index.
+    /// Server-only colliders have a null scene object. Monitoring must be enabled.</remarks>
+    public event Action<RID, Area?, int, int>? AreaShapeEntered;
+    /// <summary>Occurs when a retained logical Area shape pair stops overlapping.</summary>
+    /// <remarks>Arguments preserve the departed RID and both sampled global shape indices.</remarks>
+    public event Action<RID, Area?, int, int>? AreaShapeExited;
+    /// <summary>Occurs when a logical body/Area shape pair starts overlapping.</summary>
+    /// <remarks>Arguments are body RID, nullable spatial body, body global shape index and local global shape index.</remarks>
+    public event Action<RID, Entity?, int, int>? BodyShapeEntered;
+    /// <summary>Occurs when a retained logical body/Area shape pair stops overlapping.</summary>
+    /// <remarks>Server-only bodies have a null scene object; departure preserves sampled indices.</remarks>
+    public event Action<RID, Entity?, int, int>? BodyShapeExited;
 
     /// <summary>Returns the current area-overlap snapshot.</summary>
     /// <returns>A caller-owned array updated from the last nonzero fixed step.</returns>
@@ -194,45 +211,55 @@ public sealed partial class Area : CollisionObject
         }
     }
 
-    internal void BeginOverlapScan() => _nextOverlaps.Clear();
-
-    internal void Observe(CollisionObject other) => _nextOverlaps.Add(other);
-
+    internal void BeginOverlapScan() { _nextOverlaps.Clear(); _shapePairs.Begin(); }
+    internal void Observe(PhysicsShapePair pair)
+    {
+        _shapePairs.Observe(pair);
+        if (pair.Other is { } other) _nextOverlaps.Add(other);
+    }
     internal void CommitOverlapScan(List<PhysicsSpace.OverlapEvent> events)
     {
-        foreach (var other in _overlaps)
-            if (!_nextOverlaps.Contains(other)) events.Add(new(this, other, false));
-        foreach (var other in _nextOverlaps)
-            if (!_overlaps.Contains(other)) events.Add(new(this, other, true));
-        (_overlaps, _nextOverlaps) = (_nextOverlaps, _overlaps);
+        _pairChanges.Clear(); _shapePairs.Commit(_pairChanges);
+        foreach (var change in _pairChanges) events.Add(new(this, change));
+        _pairChanges.Clear(); (_overlaps, _nextOverlaps) = (_nextOverlaps, _overlaps);
     }
-
-    internal void Forget(CollisionObject other, List<PhysicsSpace.OverlapEvent> events)
+    internal void Forget(CollisionObject other, List<PhysicsSpace.OverlapEvent> events) => ForgetRID(other.PhysicsRID, events);
+    internal void ForgetRID(RID rid, List<PhysicsSpace.OverlapEvent> events)
     {
-        _nextOverlaps.Remove(other);
-        if (_overlaps.Remove(other)) events.Add(new(this, other, false));
-    }
-
-    internal void ClearOverlaps()
-    {
-        _overlaps.Clear();
-        _nextOverlaps.Clear();
-    }
-
-    internal bool ContainsOverlap(CollisionObject other) => _overlaps.Contains(other);
-
-    internal void RaiseOverlap(CollisionObject other, bool entered)
-    {
-        if (other is Area area)
+        _pairChanges.Clear(); _shapePairs.Forget(rid, _pairChanges);
+        foreach (var change in _pairChanges)
         {
-            if (entered) AreaEntered?.Invoke(area);
-            else AreaExited?.Invoke(area);
+            if (change.Pair.Other is { } other) { _overlaps.Remove(other); _nextOverlaps.Remove(other); }
+            events.Add(new(this, change));
         }
-        else if (other is PhysicsBody body)
+        _pairChanges.Clear();
+    }
+    internal void ClearOverlaps() { _overlaps.Clear(); _nextOverlaps.Clear(); _shapePairs.Clear(); _pairChanges.Clear(); }
+    internal bool ContainsOverlap(PhysicsShapePairChange change) => change.ObjectEvent
+        ? change.Pair.Other is { } other && _overlaps.Contains(other) : _shapePairs.Contains(change.Pair);
+    internal void RaiseOverlap(PhysicsShapePairChange change)
+    {
+        _dispatchingOverlap = true;
+        try
         {
-            if (entered) BodyEntered?.Invoke(body);
-            else BodyExited?.Invoke(body);
+            var pair = change.Pair;
+            if (change.ObjectEvent)
+            {
+                if (pair.Other is Area area) { if (change.Entered) AreaEntered?.Invoke(area); else AreaExited?.Invoke(area); }
+                else if (pair.Other is Entity body) { if (change.Entered) BodyEntered?.Invoke(body); else BodyExited?.Invoke(body); }
+            }
+            else if (pair.IsArea)
+            {
+                if (change.Entered) AreaShapeEntered?.Invoke(pair.RID, pair.Other as Area, pair.OtherShape, pair.LocalShape);
+                else AreaShapeExited?.Invoke(pair.RID, pair.Other as Area, pair.OtherShape, pair.LocalShape);
+            }
+            else
+            {
+                if (change.Entered) BodyShapeEntered?.Invoke(pair.RID, pair.Other, pair.OtherShape, pair.LocalShape);
+                else BodyShapeExited?.Invoke(pair.RID, pair.Other, pair.OtherShape, pair.LocalShape);
+            }
         }
+        finally { _dispatchingOverlap = false; }
     }
 
     /// <inheritdoc />
