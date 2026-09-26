@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## Responsibility
 
@@ -14,7 +14,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 
 | Component | Types | State |
 | --- | --- | --- |
-| [Canvas rendering](../components/canvas-rendering.md) | [`SpriteFrames`](../classes/SpriteFrames.md), [`SpriteFrames.LoopMode`](../classes/SpriteFrames.LoopMode.md), [`AnimatedTexture`](../classes/AnimatedTexture.md) | Named animation data for AnimatedSprite and independent timed texture playback, with graph copying and borrowed sources |
+| [Canvas rendering](../components/canvas-rendering.md) | [`SpriteFrames`](../classes/SpriteFrames.md), [`SpriteFrames.LoopMode`](../classes/SpriteFrames.LoopMode.md), [`AnimatedTexture`](../classes/AnimatedTexture.md), [StyleBox](../classes/StyleBox.md), [StyleBoxTexture](../classes/StyleBoxTexture.md), [StyleBoxLine](../classes/StyleBoxLine.md), [StyleBoxEmpty](../classes/StyleBoxEmpty.md) | Retained decoration and named animation data for AnimatedSprite and independent timed texture playback, with graph copying and borrowed sources |
 | [Gradients](../components/gradients.md) | Gradient and its mode/space enums, GradientRampTexture, GradientTexture and its fill/repeat enums | Managed interpolation and lazy RGBA8/RGBAF texture generation, typed copies/local ownership and native canvas/material sampling |
 | [Curves](../components/curves.md) | [`Curve`](../classes/Curve.md), [`Curve.TangentMode`](../classes/Curve.TangentMode.md), [`Curve2D`](../classes/Curve2D.md), [`CurveTexture`](../classes/CurveTexture.md), [`CurveXYZTexture`](../classes/CurveXYZTexture.md), [`CurveTexture.TextureModeEnum`](../classes/CurveTexture.TextureModeEnum.md) | Managed scalar/spatial sampling, tangents, baking, tessellation and nearest queries with typed copying and scene-local ownership |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
@@ -93,3 +93,9 @@ Resource, Image, and packed-scene checks live in `tests/Electron2D.Tests/Program
 [FastNoiseLiteTests](../../tests/Electron2D.Tests/FastNoiseLiteTests.cs) checks pinned algorithm vectors, copying and generated-texture invalidation. [NoiseTextureTests](../../tests/Electron2D.Tests/NoiseTextureTests.cs) verifies source invalidation, luminance mapping, normal conversion, mipmaps, seamless selection, graph copies, failures and cleanup through a concrete test sampler. [NoiseTextureRenderingTests](../../tests/Electron2D.Tests/NoiseTextureRenderingTests.cs) verifies retained Sprite pixels after source changes on Linux Wayland GPU and compatibility backends.
 
 Shader reflection separates the reserved float32 TIME input from material values and stored descriptors. Reload and duplication preserve user parameters while the renderer fills current time per draw. The shared HLSL/GLSL/SPIR-V validation and native checks are recorded in [shader render time](../components/shader-materials.md#render-time).
+
+## Style resources and canvas decoration
+
+[StyleBox](../classes/StyleBox.md) supplies typed content margins, minimum size, mask and draw-bound queries plus protected custom drawing hooks. [StyleBoxTexture](../classes/StyleBoxTexture.md) borrows a texture and records nine-patch decoration with atlas resolution before expansion; [StyleBoxLine](../classes/StyleBoxLine.md) records a signed, integer-aligned rectangle; [StyleBoxEmpty](../classes/StyleBoxEmpty.md) supplies margins without decoration. CanvasItem.DrawStyleBox executes these resources during the target's normal recording scope. The current-item query spans all three recording stages and restores context after failures. Stored state uses the existing exact resource graph duplication; consumers request redraw/layout when their styles change, and texture Changed is not forwarded by the style.
+
+[Managed tests](../../tests/Electron2D.Tests/StyleBoxTests.cs) verify margins/defaults, hook dispatch, Changed timing, integer strip geometry, recording context and failure cleanup, exact copies, scene-local resource policy, lifetime and lock boundaries. Sixty-four warmed line mutation/recording/replay cycles allocate zero managed bytes. [Native tests](../../tests/Electron2D.Tests/StyleBoxRenderingTests.cs) verify all nine axis combinations, fractional borders/expansion, center suppression, source regions, modulation, atlas ordering, line and empty drawing on Linux Wayland GPU/compatibility; each backend also passes 64 warmed style mutation/recording/render frames with zero managed bytes measured from ProcessFrameStarted through FramePostDraw. Native allocator counts, broad GUI performance, other platforms and owner acceptance remain unverified. StyleBoxFlat remains a connected tessellation/resource slice on the available renderer. Panel/PanelContainer require its real default style plus Theme/default-skin lookup; text requires the approved SDL_ttf/HarfBuzz integration. See [ADR 0082](../decisions/rendering.md#adr-0082).

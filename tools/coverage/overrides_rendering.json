@@ -1326,6 +1326,246 @@
       "godot": "Texture2D::method:_has_alpha()",
       "electron2d": "property:Electron2D.NoiseTexture.HasAlpha()",
       "reason": "Concrete override of the pinned false alpha declaration; generated pixel alpha remains available through GetImage and IsPixelOpaque."
+    },
+    {
+      "godot": "StyleBox::method:_draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.Draw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.GetDrawRect(Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.OnGetDrawRect(Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:_get_minimum_size()",
+      "electron2d": "method:Electron2D.StyleBox.OnGetMinimumSize()",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:_test_mask(Vector2:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.OnTestMask(Electron2D.Vector2,Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawStyleBox(Electron2D.StyleBox,Electron2D.Rect2)",
+      "reason": "ADR 0082: protected typed hook and public query/draw entry project the existing style-box capability; CanvasItem replaces the canvas RID under the established Texture.Draw adaptation."
+    },
+    {
+      "godot": "StyleBox::method:get_content_margin(int:Side)",
+      "electron2d": "method:Electron2D.StyleBox.GetContentMargin(Electron2D.Side)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:get_current_item_drawn()",
+      "electron2d": "method:Electron2D.StyleBox.GetCurrentItemDrawn()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:get_margin(int:Side)",
+      "electron2d": "method:Electron2D.StyleBox.GetMargin(Electron2D.Side)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:get_minimum_size()",
+      "electron2d": "method:Electron2D.StyleBox.GetMinimumSize()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:get_offset()",
+      "electron2d": "method:Electron2D.StyleBox.GetOffset()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:set_content_margin(int:Side,float:)",
+      "electron2d": "method:Electron2D.StyleBox.SetContentMargin(Electron2D.Side,System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:set_content_margin_all(float:)",
+      "electron2d": "method:Electron2D.StyleBox.SetContentMarginAll(System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:test_mask(Vector2:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBox.TestMask(Electron2D.Vector2,Electron2D.Rect2)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::property:content_margin_bottom",
+      "electron2d": "property:Electron2D.StyleBox.ContentMarginBottom()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::property:content_margin_left",
+      "electron2d": "property:Electron2D.StyleBox.ContentMarginLeft()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::property:content_margin_right",
+      "electron2d": "property:Electron2D.StyleBox.ContentMarginRight()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::property:content_margin_top",
+      "electron2d": "property:Electron2D.StyleBox.ContentMarginTop()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:get_expand_margin(int:Side)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.GetExpandMargin(Electron2D.Side)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:get_texture_margin(int:Side)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.GetTextureMargin(Electron2D.Side)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:set_expand_margin(int:Side,float:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.SetExpandMargin(Electron2D.Side,System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:set_expand_margin_all(float:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.SetExpandMarginAll(System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:set_texture_margin(int:Side,float:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.SetTextureMargin(Electron2D.Side,System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::method:set_texture_margin_all(float:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.SetTextureMarginAll(System.Single)",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:axis_stretch_horizontal",
+      "electron2d": "property:Electron2D.StyleBoxTexture.AxisStretchHorizontal()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:axis_stretch_vertical",
+      "electron2d": "property:Electron2D.StyleBoxTexture.AxisStretchVertical()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:draw_center",
+      "electron2d": "property:Electron2D.StyleBoxTexture.DrawCenter()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:expand_margin_bottom",
+      "electron2d": "property:Electron2D.StyleBoxTexture.ExpandMarginBottom()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:expand_margin_left",
+      "electron2d": "property:Electron2D.StyleBoxTexture.ExpandMarginLeft()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:expand_margin_right",
+      "electron2d": "property:Electron2D.StyleBoxTexture.ExpandMarginRight()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:expand_margin_top",
+      "electron2d": "property:Electron2D.StyleBoxTexture.ExpandMarginTop()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:modulate_color",
+      "electron2d": "property:Electron2D.StyleBoxTexture.ModulateColor()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:region_rect",
+      "electron2d": "property:Electron2D.StyleBoxTexture.RegionRect()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:texture",
+      "electron2d": "property:Electron2D.StyleBoxTexture.Texture()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:texture_margin_bottom",
+      "electron2d": "property:Electron2D.StyleBoxTexture.TextureMarginBottom()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:texture_margin_left",
+      "electron2d": "property:Electron2D.StyleBoxTexture.TextureMarginLeft()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:texture_margin_right",
+      "electron2d": "property:Electron2D.StyleBoxTexture.TextureMarginRight()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxTexture::property:texture_margin_top",
+      "electron2d": "property:Electron2D.StyleBoxTexture.TextureMarginTop()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxLine::property:color",
+      "electron2d": "property:Electron2D.StyleBoxLine.Color()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxLine::property:grow_begin",
+      "electron2d": "property:Electron2D.StyleBoxLine.GrowBegin()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxLine::property:grow_end",
+      "electron2d": "property:Electron2D.StyleBoxLine.GrowEnd()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxLine::property:thickness",
+      "electron2d": "property:Electron2D.StyleBoxLine.Thickness()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBoxLine::property:vertical",
+      "electron2d": "property:Electron2D.StyleBoxLine.Vertical()",
+      "reason": "ADR 0082: typed public style query/property preserves the pinned margin, geometry, mask, state and draw contract; negative margins and source-specific Changed timing remain explicit."
+    },
+    {
+      "godot": "StyleBox::method:_draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: concrete resource implements the inherited required style draw hook through the existing retained canvas commands."
+    },
+    {
+      "godot": "StyleBox::method:_draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxLine.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: concrete resource implements the inherited required style draw hook through the existing retained canvas commands."
+    },
+    {
+      "godot": "StyleBox::method:_draw(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxEmpty.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+      "reason": "ADR 0082: concrete resource implements the inherited required style draw hook through the existing retained canvas commands."
+    },
+    {
+      "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
+      "electron2d": "method:Electron2D.StyleBoxTexture.OnGetDrawRect(Electron2D.Rect2)",
+      "reason": "ADR 0082: concrete texture style expands requested bounds through the inherited typed hook."
     }
   ],
   "statusGroups": [
@@ -2037,13 +2277,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First StyleBox resource/rendering slice must implement this canvas consumer together with actual stylebox geometry, margins and native output.",
-      "godot": [
-        "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First typed Mesh/MultiMesh resource, upload and lifetime integration must implement these retained canvas consumers together; raw polygon commands do not establish mesh identities or instancing.",
       "godot": [
         "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
@@ -2169,6 +2402,114 @@
       ],
       "state": "Blocked",
       "reason": "ADR 0079: real nine-patch geometry executes through NinePatchRect; this public server entry requires retained canvas/item RID creation, ownership and attachment. Trigger: first complete public canvas/item RID command slice; reuse the implemented geometry there."
+    },
+    {
+      "godot": [
+        "class:StyleBox",
+        "StyleBox::method:_draw(RID:,Rect2:)",
+        "StyleBox::method:_get_draw_rect(Rect2:)",
+        "StyleBox::method:_get_minimum_size()",
+        "StyleBox::method:_test_mask(Vector2:,Rect2:)",
+        "StyleBox::method:draw(RID:,Rect2:)",
+        "StyleBox::method:get_content_margin(int:Side)",
+        "StyleBox::method:get_current_item_drawn()",
+        "StyleBox::method:get_margin(int:Side)",
+        "StyleBox::method:get_minimum_size()",
+        "StyleBox::method:get_offset()",
+        "StyleBox::method:set_content_margin(int:Side,float:)",
+        "StyleBox::method:set_content_margin_all(float:)",
+        "StyleBox::method:test_mask(Vector2:,Rect2:)",
+        "StyleBox::property:content_margin_bottom",
+        "StyleBox::property:content_margin_left",
+        "StyleBox::property:content_margin_right",
+        "StyleBox::property:content_margin_top",
+        "class:StyleBoxTexture",
+        "StyleBoxTexture::enum:AxisStretchMode",
+        "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_STRETCH",
+        "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE",
+        "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE_FIT",
+        "StyleBoxTexture::method:get_expand_margin(int:Side)",
+        "StyleBoxTexture::method:get_texture_margin(int:Side)",
+        "StyleBoxTexture::method:set_expand_margin(int:Side,float:)",
+        "StyleBoxTexture::method:set_expand_margin_all(float:)",
+        "StyleBoxTexture::method:set_texture_margin(int:Side,float:)",
+        "StyleBoxTexture::method:set_texture_margin_all(float:)",
+        "StyleBoxTexture::property:axis_stretch_horizontal",
+        "StyleBoxTexture::property:axis_stretch_vertical",
+        "StyleBoxTexture::property:draw_center",
+        "StyleBoxTexture::property:expand_margin_bottom",
+        "StyleBoxTexture::property:expand_margin_left",
+        "StyleBoxTexture::property:expand_margin_right",
+        "StyleBoxTexture::property:expand_margin_top",
+        "StyleBoxTexture::property:modulate_color",
+        "StyleBoxTexture::property:region_rect",
+        "StyleBoxTexture::property:texture",
+        "StyleBoxTexture::property:texture_margin_bottom",
+        "StyleBoxTexture::property:texture_margin_left",
+        "StyleBoxTexture::property:texture_margin_right",
+        "StyleBoxTexture::property:texture_margin_top",
+        "class:StyleBoxEmpty",
+        "class:StyleBoxLine",
+        "StyleBoxLine::property:color",
+        "StyleBoxLine::property:grow_begin",
+        "StyleBoxLine::property:grow_end",
+        "StyleBoxLine::property:thickness",
+        "StyleBoxLine::property:vertical",
+        "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0082: typed StyleBox margins/minimum/mask/draw hooks and current-item context execute through retained CanvasItem drawing. Texture style preserves axis policies, atlas-before-expand geometry, borrowed texture and exact resource copies; Empty and Line implement their real margin/draw semantics. Global Theme lookup and StyleBoxFlat/control skins remain separate capabilities. StyleBoxTests verifies defaults/notifications/hooks/scope/failure/copy/lifetime/concurrency and 64 warmed recording/replay cycles without managed allocation. StyleBoxRenderingTests verifies nine axis combinations, fractional/atlas/line/empty pixels and 64 warmed mutation/recording/render frames without managed allocation on Linux Wayland GPU/compatibility; native allocator and other-platform acceptance are not claimed."
+    },
+    {
+      "godot": [
+        "class:StyleBoxFlat",
+        "StyleBoxFlat::method:get_border_width(int:Side)",
+        "StyleBoxFlat::method:get_border_width_min()",
+        "StyleBoxFlat::method:get_corner_radius(int:Corner)",
+        "StyleBoxFlat::method:get_expand_margin(int:Side)",
+        "StyleBoxFlat::method:set_border_width(int:Side,int:)",
+        "StyleBoxFlat::method:set_border_width_all(int:)",
+        "StyleBoxFlat::method:set_corner_radius(int:Corner,int:)",
+        "StyleBoxFlat::method:set_corner_radius_all(int:)",
+        "StyleBoxFlat::method:set_expand_margin(int:Side,float:)",
+        "StyleBoxFlat::method:set_expand_margin_all(float:)",
+        "StyleBoxFlat::property:anti_aliasing",
+        "StyleBoxFlat::property:anti_aliasing_size",
+        "StyleBoxFlat::property:bg_color",
+        "StyleBoxFlat::property:border_blend",
+        "StyleBoxFlat::property:border_color",
+        "StyleBoxFlat::property:border_width_bottom",
+        "StyleBoxFlat::property:border_width_left",
+        "StyleBoxFlat::property:border_width_right",
+        "StyleBoxFlat::property:border_width_top",
+        "StyleBoxFlat::property:corner_detail",
+        "StyleBoxFlat::property:corner_radius_bottom_left",
+        "StyleBoxFlat::property:corner_radius_bottom_right",
+        "StyleBoxFlat::property:corner_radius_top_left",
+        "StyleBoxFlat::property:corner_radius_top_right",
+        "StyleBoxFlat::property:draw_center",
+        "StyleBoxFlat::property:expand_margin_bottom",
+        "StyleBoxFlat::property:expand_margin_left",
+        "StyleBoxFlat::property:expand_margin_right",
+        "StyleBoxFlat::property:expand_margin_top",
+        "StyleBoxFlat::property:shadow_color",
+        "StyleBoxFlat::property:shadow_offset",
+        "StyleBoxFlat::property:shadow_size",
+        "StyleBoxFlat::property:skew"
+      ],
+      "state": "Unimplemented",
+      "reason": "ADR 0082: current retained geometry can support this separate connected slice; implement rounded corners, borders, anti-aliasing, skew, shadows, expansion, minimum policy and all matching resource members together with tessellation and native pixel verification. No absent backend prerequisite remains."
+    },
+    {
+      "godot": [
+        "class:Panel",
+        "Panel::theme_item:panel",
+        "class:PanelContainer",
+        "PanelContainer::property:mouse_filter",
+        "PanelContainer::theme_item:panel"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0082: trigger is complete StyleBoxFlat plus Theme/default-skin lookup and invalidation. The first panel slice must consume the real default panel style, including drawing and PanelContainer margin layout; do not substitute a fake empty default."
     }
   ],
   "extras": [
@@ -2638,6 +2979,76 @@
       "electron2d": "method:Electron2D.NoiseTexture.Dispose(System.Boolean)",
       "reason": "Detaches change subscriptions and releases owned generated pixels without disposing borrowed sources.",
       "adr": "ADRs 0003/0013"
+    },
+    {
+      "electron2d": "constructor:Electron2D.StyleBox..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.StyleBoxEmpty..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.StyleBoxLine..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.StyleBoxTexture..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBox.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBox.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxEmpty.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxLine.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxLine.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxLine.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxTexture.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxTexture.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
+    },
+    {
+      "electron2d": "method:Electron2D.StyleBoxTexture.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0082 with 0003/0013: typed construction, stored property descriptors, exact resource duplicate factory, graph-copy hook or borrowed-texture reference cleanup projects existing resource/style lifecycle rather than an additional capability."
     }
   ]
 }

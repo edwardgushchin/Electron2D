@@ -12,6 +12,8 @@ public abstract partial class CanvasItem
     private List<CanvasCommand>? _canvasCommands;
     private int _redrawPending = 1;
     private bool _drawing;
+    [ThreadStatic] private static CanvasItem? _currentDrawingItem;
+    internal static CanvasItem? CurrentDrawingItem => _currentDrawingItem;
     private Color _modulate = Colors.White;
     private Color _selfModulate = Colors.White;
     private Material? _material;
@@ -197,6 +199,25 @@ public abstract partial class CanvasItem
             Transform.Identity, texture, source, NinePatch: patch));
     }
 
+    /// <summary>Records a reusable style decoration during this item's canvas recording.</summary>
+    /// <param name="styleBox">The live style whose draw hook supplies the retained commands.</param>
+    /// <param name="rect">The finite local destination rectangle.</param>
+    /// <remarks>Style changes require QueueRedraw from the owning control. Commands capture geometry while
+    /// borrowing any texture resources; the canvas does not own the style or textures.</remarks>
+    /// <exception cref="ArgumentNullException">The style is null.</exception>
+    /// <exception cref="ArgumentException">The rectangle is nonfinite.</exception>
+    /// <exception cref="InvalidOperationException">The item is not recording on its owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The item, style or drawing resource is disposed.</exception>
+    public void DrawStyleBox(StyleBox styleBox, Rect2 rect)
+    {
+        ValidateStyleDraw(rect); ArgumentNullException.ThrowIfNull(styleBox); styleBox.Draw(this, rect);
+    }
+
+    internal void ValidateStyleDraw(Rect2 rect)
+    {
+        EnsureDrawing(); if (!rect.IsFinite()) throw new ArgumentException("Style rectangles must be finite.", nameof(rect));
+    }
+
     /// <summary>Sets an additional transform for subsequent commands in this canvas recording.</summary>
     /// <param name="position">Translation in local units.</param>
     /// <param name="rotation">Rotation in radians, zero by default.</param>
@@ -265,6 +286,7 @@ public abstract partial class CanvasItem
         _canvasCommands?.Clear();
         _polygonCount = 0; _strokeCount = 0;
         _drawing = true;
+        var previousDrawingItem = _currentDrawingItem; _currentDrawingItem = this;
         try
         {
             DispatchNotification(NotificationDraw);
@@ -278,7 +300,7 @@ public abstract partial class CanvasItem
             InvalidateCanvas();
             throw;
         }
-        finally { _drawing = false; }
+        finally { _drawing = false; _currentDrawingItem = previousDrawingItem; }
     }
 
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;

@@ -213,6 +213,7 @@ NinePatchTests.Run();
 RangeProgressTests.Run();
 BoxContainerTests.Run();
 GridContainerTests.Run();
+StyleBoxTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();

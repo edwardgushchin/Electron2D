@@ -3541,6 +3541,84 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.StyleBox",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "StyleBox",
+    "signature": "public abstract class Electron2D.StyleBox",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StyleBoxEmpty",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBoxEmpty",
+    "name": "StyleBoxEmpty",
+    "signature": "public class Electron2D.StyleBoxEmpty",
+    "visibility": "public",
+    "baseType": "Electron2D.StyleBox",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StyleBoxLine",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "StyleBoxLine",
+    "signature": "public class Electron2D.StyleBoxLine",
+    "visibility": "public",
+    "baseType": "Electron2D.StyleBox",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StyleBoxTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "StyleBoxTexture",
+    "signature": "public class Electron2D.StyleBoxTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.StyleBox",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.StyleBoxTexture.AxisStretchMode",
+    "kind": "type",
+    "declaringType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "name": "AxisStretchMode",
+    "signature": "public enum Electron2D.StyleBoxTexture.AxisStretchMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SubtweenTweener",
     "kind": "type",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -7326,6 +7404,58 @@
     "declaringType": "Electron2D.StaticBody",
     "name": ".ctor",
     "signature": "public StaticBody()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StyleBox..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StyleBox",
+    "name": ".ctor",
+    "signature": "protected StyleBox()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StyleBoxEmpty..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StyleBoxEmpty",
+    "name": ".ctor",
+    "signature": "public StyleBoxEmpty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StyleBoxLine..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": ".ctor",
+    "signature": "public StyleBoxLine()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.StyleBoxTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": ".ctor",
+    "signature": "public StyleBoxTexture()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -16885,6 +17015,45 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.StyleBoxTexture.AxisStretchMode.Stretch()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "name": "Stretch",
+    "signature": "public const Electron2D.StyleBoxTexture.AxisStretchMode Stretch = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.StyleBoxTexture.AxisStretchMode.Tile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "name": "Tile",
+    "signature": "public const Electron2D.StyleBoxTexture.AxisStretchMode Tile = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.StyleBoxTexture.AxisStretchMode.TileFit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "name": "TileFit",
+    "signature": "public const Electron2D.StyleBoxTexture.AxisStretchMode TileFit = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.TextureFilter.Linear()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TextureFilter",
@@ -23643,6 +23812,30 @@
       {
         "name": "transform",
         "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawStyleBox(Electron2D.StyleBox,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawStyleBox",
+    "signature": "public System.Void DrawStyleBox(Electron2D.StyleBox styleBox, Electron2D.Rect2 rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "styleBox",
+        "type": "Electron2D.StyleBox",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
         "default": null
       }
     ],
@@ -54232,6 +54425,702 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.StyleBox.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.Draw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "Draw",
+    "signature": "public System.Void Draw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetContentMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetContentMargin",
+    "signature": "public System.Single GetContentMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetCurrentItemDrawn()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetCurrentItemDrawn",
+    "signature": "public Electron2D.CanvasItem GetCurrentItemDrawn()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CanvasItem",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetDrawRect(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetDrawRect",
+    "signature": "public Electron2D.Rect2 GetDrawRect(Electron2D.Rect2 rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetMargin",
+    "signature": "public System.Single GetMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetMinimumSize",
+    "signature": "public Electron2D.Vector2 GetMinimumSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetOffset()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetOffset",
+    "signature": "public Electron2D.Vector2 GetOffset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "OnDraw",
+    "signature": "protected abstract System.Void OnDraw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.OnGetDrawRect(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "OnGetDrawRect",
+    "signature": "protected virtual Electron2D.Rect2 OnGetDrawRect(Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "OnGetMinimumSize",
+    "signature": "protected virtual Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.OnTestMask(Electron2D.Vector2,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "OnTestMask",
+    "signature": "protected virtual System.Boolean OnTestMask(Electron2D.Vector2 point, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.SetContentMargin(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "SetContentMargin",
+    "signature": "public System.Void SetContentMargin(Electron2D.Side margin, System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.SetContentMarginAll(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "SetContentMarginAll",
+    "signature": "public System.Void SetContentMarginAll(System.Single offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "offset",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBox.TestMask(Electron2D.Vector2,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "TestMask",
+    "signature": "public System.Boolean TestMask(Electron2D.Vector2 point, Electron2D.Rect2 rect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxEmpty.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxEmpty",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxEmpty.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxEmpty",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxLine.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxLine.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxLine.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxLine.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.GetExpandMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "GetExpandMargin",
+    "signature": "public System.Single GetExpandMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.GetTextureMargin(Electron2D.Side)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "GetTextureMargin",
+    "signature": "public System.Single GetTextureMargin(Electron2D.Side margin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.OnDraw(Electron2D.CanvasItem,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw(Electron2D.CanvasItem canvasItem, Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "canvasItem",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.OnGetDrawRect(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "OnGetDrawRect",
+    "signature": "protected override Electron2D.Rect2 OnGetDrawRect(Electron2D.Rect2 rect)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.SetExpandMargin(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "SetExpandMargin",
+    "signature": "public System.Void SetExpandMargin(Electron2D.Side margin, System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.SetExpandMarginAll(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "SetExpandMarginAll",
+    "signature": "public System.Void SetExpandMarginAll(System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.SetTextureMargin(Electron2D.Side,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "SetTextureMargin",
+    "signature": "public System.Void SetTextureMargin(Electron2D.Side margin, System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "margin",
+        "type": "Electron2D.Side",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.StyleBoxTexture.SetTextureMarginAll(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "SetTextureMarginAll",
+    "signature": "public System.Void SetTextureMarginAll(System.Single size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SubtweenTweener.SetDelay(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SubtweenTweener",
@@ -76745,6 +77634,305 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PhysicsMaterial",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBox.ContentMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "ContentMarginBottom",
+    "signature": "public System.Single ContentMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBox.ContentMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "ContentMarginLeft",
+    "signature": "public System.Single ContentMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBox.ContentMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "ContentMarginRight",
+    "signature": "public System.Single ContentMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBox.ContentMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBox",
+    "name": "ContentMarginTop",
+    "signature": "public System.Single ContentMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxLine.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxLine.GrowBegin()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "GrowBegin",
+    "signature": "public System.Single GrowBegin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxLine.GrowEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "GrowEnd",
+    "signature": "public System.Single GrowEnd { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxLine.Thickness()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "Thickness",
+    "signature": "public System.Int32 Thickness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxLine.Vertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxLine",
+    "name": "Vertical",
+    "signature": "public System.Boolean Vertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.AxisStretchHorizontal()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "AxisStretchHorizontal",
+    "signature": "public Electron2D.StyleBoxTexture.AxisStretchMode AxisStretchHorizontal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.AxisStretchVertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "AxisStretchVertical",
+    "signature": "public Electron2D.StyleBoxTexture.AxisStretchMode AxisStretchVertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBoxTexture.AxisStretchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.DrawCenter()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "DrawCenter",
+    "signature": "public System.Boolean DrawCenter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.ExpandMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "ExpandMarginBottom",
+    "signature": "public System.Single ExpandMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.ExpandMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "ExpandMarginLeft",
+    "signature": "public System.Single ExpandMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.ExpandMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "ExpandMarginRight",
+    "signature": "public System.Single ExpandMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.ExpandMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "ExpandMarginTop",
+    "signature": "public System.Single ExpandMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.ModulateColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "ModulateColor",
+    "signature": "public Electron2D.Color ModulateColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.RegionRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "RegionRect",
+    "signature": "public Electron2D.Rect2 RegionRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.TextureMarginBottom()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "TextureMarginBottom",
+    "signature": "public System.Single TextureMarginBottom { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.TextureMarginLeft()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "TextureMarginLeft",
+    "signature": "public System.Single TextureMarginLeft { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.TextureMarginRight()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "TextureMarginRight",
+    "signature": "public System.Single TextureMarginRight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.StyleBoxTexture.TextureMarginTop()",
+    "kind": "property",
+    "declaringType": "Electron2D.StyleBoxTexture",
+    "name": "TextureMarginTop",
+    "signature": "public System.Single TextureMarginTop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

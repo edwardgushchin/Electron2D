@@ -829,11 +829,11 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [StreamPeerUDS](classes/StreamPeerUDS.md) | StreamPeerSocket | Blocked | 3 |
 | [String](classes/String.md) | — | Excluded | 132 |
 | [StringName](classes/StringName.md) | — | Excluded | 124 |
-| [StyleBox](classes/StyleBox.md) | Resource | Blocked | 17 |
-| [StyleBoxEmpty](classes/StyleBoxEmpty.md) | StyleBox | Blocked | 0 |
-| [StyleBoxFlat](classes/StyleBoxFlat.md) | StyleBox | Blocked | 33 |
-| [StyleBoxLine](classes/StyleBoxLine.md) | StyleBox | Blocked | 5 |
-| [StyleBoxTexture](classes/StyleBoxTexture.md) | StyleBox | Blocked | 24 |
+| [StyleBox](classes/StyleBox.md) | Resource | Implemented | 17 |
+| [StyleBoxEmpty](classes/StyleBoxEmpty.md) | StyleBox | Implemented | 0 |
+| [StyleBoxFlat](classes/StyleBoxFlat.md) | StyleBox | Unimplemented | 33 |
+| [StyleBoxLine](classes/StyleBoxLine.md) | StyleBox | Implemented | 5 |
+| [StyleBoxTexture](classes/StyleBoxTexture.md) | StyleBox | Implemented | 24 |
 | [SubViewport](classes/SubViewport.md) | Viewport | Blocked | 16 |
 | [SubViewportContainer](classes/SubViewportContainer.md) | Container | Blocked | 5 |
 | [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |

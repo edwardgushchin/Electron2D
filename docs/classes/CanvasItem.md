@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [Node](Node.md)
 
@@ -190,6 +190,7 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawRect(Rect2 rect, Color color, bool filled = true, float width = -1f, bool antialiased = false)`](#m-electron2d-canvasitem-drawrect-electron2d-rect2-electron2d-color-system-boolean-system-single-system-boolean) | Records a filled rectangle or a centered rectangular outline during canvas recording. |
 | [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Records an additional transform for subsequent commands. It executes only when its animation interval is visible; each replay starts with identity. |
 | [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Records the full additional transform for subsequent commands. It executes only when its animation interval is visible; DrawEndAnimation retains the last executed transform. |
+| [`public void DrawStyleBox(StyleBox styleBox, Rect2 rect)`](#drawstylebox) | Records borrowed style decoration during this item's canvas recording. |
 | [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
 | [`public void DrawTextureRect(Texture texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect2-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
 | [`public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
@@ -650,6 +651,15 @@ Records the full additional transform for subsequent commands. It executes only 
 **System.InvalidOperationException:** Called outside this item's recording scope or off its owner thread.
 
 **System.ObjectDisposedException:** The node is disposed.
+
+<a id="drawstylebox"></a>
+### `public void DrawStyleBox(StyleBox styleBox, Rect2 rect)`
+
+Records a borrowed [StyleBox](StyleBox.md) using its typed Draw/OnDraw path during this item's recording scope. The style supplies empty, line, textured nine-patch or custom geometry in local pixels; the existing canvas transform, modulation, clipping and texture pipeline apply.
+
+**Parameters:** `styleBox` is a live caller-owned style; `rect` is a finite local rectangle. Null style throws ArgumentNullException, disposed style/target throws ObjectDisposedException, and a wrong owner or inactive recording scope throws InvalidOperationException. Nonfinite geometry throws ArgumentException. The style is not retained as a live draw dependency: the commands capture its current values, while referenced textures remain borrowed.
+
+The caller requests redraw after style changes, and minimum-size refresh when it uses the style's margins. StyleBox.GetCurrentItemDrawn returns this item throughout NotificationDraw, Draw and OnDraw on the recording thread; the context is restored in finally after success or failure. A failed recording drops partial commands under the existing canvas cleanup contract. Theme lookup, automatic GUI mask routing and default skin selection remain separate. See [ADR 0082](../decisions/rendering.md#adr-0082).
 
 <a id="m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color"></a>
 ### `public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`
