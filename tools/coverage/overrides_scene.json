@@ -2125,6 +2125,21 @@
       "godot": "BoxContainer::theme_item:separation",
       "electron2d": "property:Electron2D.BoxContainer.Separation()",
       "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+    },
+    {
+      "godot": "GridContainer::property:columns",
+      "electron2d": "property:Electron2D.GridContainer.Columns()",
+      "reason": "ADR 0081: typed grid column count or local signed theme-constant projection consumed by executable row-major layout; global Theme lookup remains a separate dependency."
+    },
+    {
+      "godot": "GridContainer::theme_item:h_separation",
+      "electron2d": "property:Electron2D.GridContainer.HSeparation()",
+      "reason": "ADR 0081: typed grid column count or local signed theme-constant projection consumed by executable row-major layout; global Theme lookup remains a separate dependency."
+    },
+    {
+      "godot": "GridContainer::theme_item:v_separation",
+      "electron2d": "property:Electron2D.GridContainer.VSeparation()",
+      "reason": "ADR 0081: typed grid column count or local signed theme-constant projection consumed by executable row-major layout; global Theme lookup remains a separate dependency."
     }
   ],
   "extras": [
@@ -3252,6 +3267,31 @@
       "electron2d": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
       "state": "Implemented",
       "reason": "ADR 0081 with 0003/0008/0023: typed construction, layout/default/hook, descriptor, exact-type scene factory or deterministic subscription cleanup projects the accepted container concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.GridContainer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.GridContainer.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.GridContainer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.GridContainer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
+    },
+    {
+      "electron2d": "method:Electron2D.GridContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0081 with 0003/0008/0023: typed construction, intrinsic grid minimum, inherited sort notification, stored column/separation descriptors and exact-type scene factory project the existing grid-container concept."
     }
   ],
   "statusGroups": [
@@ -5765,6 +5805,16 @@
       ],
       "state": "Blocked",
       "reason": "ADR 0081 with ADR 0041: trigger first native semantic accessibility tree/landmark region integration; add and verify Container.AccessibilityRegion in that service slice, including a named screen-reader region."
+    },
+    {
+      "godot": [
+        "class:GridContainer",
+        "GridContainer::property:columns",
+        "GridContainer::theme_item:h_separation",
+        "GridContainer::theme_item:v_separation"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0081: row-major grid consumes Container phases and fitting, integer-truncated minima, independent uniform row/column expansion, min/max refit, first-slot remainder, sparse empty-column expansion, RTL and typed packing. Corrected capped-row advance uses final allocation rather than minimum to avoid overlap. GridContainerTests verifies managed state/bounds/sparse columns/packing/callbacks and zero warmed allocations; GridContainerRenderingTests verifies seven pixel phases and 64 warmed resize/layout/render frames with zero managed bytes on Linux Wayland GPU/compatibility. Global Theme lookup and inherited semantic accessibility retain their exact separate dependencies."
     }
   ]
 }

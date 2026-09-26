@@ -354,7 +354,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GraphElement](classes/GraphElement.md) | Container | Blocked | 15 |
 | [GraphFrame](classes/GraphFrame.md) | GraphElement | Blocked | 14 |
 | [GraphNode](classes/GraphNode.md) | GraphElement | Blocked | 55 |
-| [GridContainer](classes/GridContainer.md) | Container | Blocked | 3 |
+| [GridContainer](classes/GridContainer.md) | Container | Implemented | 3 |
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
 | [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Unimplemented | 2 |

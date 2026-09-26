@@ -212,6 +212,7 @@ ScreenVisibilityTests.Run();
 NinePatchTests.Run();
 RangeProgressTests.Run();
 BoxContainerTests.Run();
+GridContainerTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();

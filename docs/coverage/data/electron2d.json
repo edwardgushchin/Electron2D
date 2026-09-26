@@ -1386,6 +1386,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.GridContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "GridContainer",
+    "signature": "public class Electron2D.GridContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.GroupCallFlags",
     "kind": "type",
     "declaringType": "Electron2D.GroupCallFlags",
@@ -6009,6 +6024,19 @@
     "declaringType": "Electron2D.GradientTexture",
     "name": ".ctor",
     "signature": "public GradientTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.GridContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.GridContainer",
+    "name": ".ctor",
+    "signature": "public GridContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34228,6 +34256,64 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GridContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GridContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GridContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.GridContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -71051,6 +71137,45 @@
     "declaringType": "Electron2D.GradientTexture",
     "name": "Width",
     "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GridContainer.Columns()",
+    "kind": "property",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "Columns",
+    "signature": "public System.Int32 Columns { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GridContainer.HSeparation()",
+    "kind": "property",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "HSeparation",
+    "signature": "public System.Int32 HSeparation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.GridContainer.VSeparation()",
+    "kind": "property",
+    "declaringType": "Electron2D.GridContainer",
+    "name": "VSeparation",
+    "signature": "public System.Int32 VSeparation { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

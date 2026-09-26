@@ -33,6 +33,7 @@ public partial class Control : CanvasItem
     private GrowDirection _growVertical = GrowDirection.End;
     private bool _minimumSizeUpdatePending;
     private bool _maximumSizeUpdatePending;
+    private Action? _minimumSizeUpdateAction, _maximumSizeUpdateAction;
     private LayoutDirection _layoutDirection;
     private CanvasItem? _layoutParent;
     private Viewport? _layoutViewport;
@@ -259,18 +260,22 @@ public partial class Control : CanvasItem
         EnsureMutable();
         if (!IsInsideTree || !IsVisibleInTree || _minimumSizeUpdatePending) return;
         _minimumSizeUpdatePending = true;
-        Tree!.Defer(ApplyMinimumSizeUpdate);
+        Tree!.Defer(_minimumSizeUpdateAction ??= ApplyMinimumSizeUpdate);
     }
 
-    /// <summary>Requests a coalesced maximum-size update and refreshes direct child control bounds.</summary>
+    /// <summary>Requests a coalesced maximum-size update, invalidates child allocation caches and refreshes child bounds.</summary>
     public void UpdateMaximumSize()
     {
         EnsureMutable();
-        foreach (var child in Children)
-            if (child is Control control && !control.TopLevel) control.UpdateMaximumSize();
+        for (var index = 0; index < ChildCount; index++)
+            if (GetChild(index) is Control { TopLevel: false } control)
+            {
+                control.ContainerMaximum = null;
+                control.UpdateMaximumSize();
+            }
         if (!IsInsideTree || !IsVisibleInTree || _maximumSizeUpdatePending) return;
         _maximumSizeUpdatePending = true;
-        Tree!.Defer(ApplyMaximumSizeUpdate);
+        Tree!.Defer(_maximumSizeUpdateAction ??= ApplyMaximumSizeUpdate);
     }
 
     /// <summary>Supplies the intrinsic minimum size; the base control has none.</summary>
@@ -721,6 +726,11 @@ public partial class Control : CanvasItem
         else base.OnNotification(what);
         if (what == NotificationEnterCanvas)
         {
+            if (Parent is Container { IsDisposed: false } container)
+            {
+                ContainerMaximum = null;
+                container.UpdateMinimumSize(); container.QueueSort();
+            }
             _layoutParent = GetParentItem();
             if (_layoutParent is not null) _layoutParent.ItemRectChanged += OnParentRectChanged;
             else if ((_layoutViewport = GetViewport()) is not null) _layoutViewport.SizeChanged += Reflow;

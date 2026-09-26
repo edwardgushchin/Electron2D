@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-27
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [BoxContainer](BoxContainer.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md)
 
 **Declaration:** `public class Container : Control` · **Source:** [Container.cs](../../src/Scene/GUI/Container.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -39,7 +39,7 @@ tree.ProcessFrame(0);
 ## Method descriptions
 
 <a id="queuesort"></a>
-**QueueSort:** detached requests do nothing. Attached requests reuse one cached action. A pending pass stays pending during notifications/events, so repeated requests and requests made by those callbacks coalesce. SceneTree captures one action batch; work enqueued after capture waits for another flush. Each entry caches a membership-specific action; stale actions from prior tree memberships are ignored. Entry, child add/remove/order, child flags/bounds/visibility, resize, layout direction and becoming visible request layout. Exit clears pending membership. Errors in required phases are collected after later phases are attempted; ordinary multicast subscriber ordering applies within one event.
+**QueueSort:** detached requests do nothing. Attached requests reuse one cached action. Repeated requests before a pending pass coalesce. Requests made during notifications/events mark one follow-up pass, enqueued after the current pass completes; reentrant column, child-flag and bound changes therefore take effect on a later captured batch. SceneTree captures one action batch; work enqueued after capture waits for another flush. Each entry caches a membership-specific action; stale actions from prior tree memberships are ignored. Entry, child add/remove/order, child flags/bounds/visibility, own maximum changes, resize, layout direction and becoming visible request layout. Exit clears pending membership. Errors in required phases are collected after later phases are attempted; ordinary multicast subscriber ordering applies within one event.
 
 <a id="fitchildinrect"></a>
 **FitChildInRect:** requires a live direct child; null throws ArgumentNullException and wrong/disposed child or invalid allocation throws ArgumentException. Fill uses the allocation and inherited bounds/growth; non-fill uses current bound minimum, aligned Begin/Center/End. End has priority, horizontal alignment respects RTL, center offsets floor. Current intrinsic desired size defaults to zero; future desired-size consumers need the associated internal dependency slice. Resets anchors to zero, commits the rectangle in one reflow, then resets rotation and scale. Geometry callbacks can fail after state commits.
@@ -53,10 +53,10 @@ tree.ProcessFrame(0);
 ## Event and constant descriptions
 
 <a id="notificationpresortchildren"></a><a id="presortchildren"></a><a id="notificationsortchildren"></a><a id="sortchildren"></a>
-Order is NotificationPreSortChildren (50), PreSortChildren, NotificationSortChildren (51), SortChildren. Box arrangement executes in notification 51 before SortChildren. Disposed/detached state suppresses later callbacks. Failures aggregate through the scene flush/frame after required work.
+Order is NotificationPreSortChildren (50), PreSortChildren, NotificationSortChildren (51), SortChildren. Box and grid arrangement execute in notification 51 before SortChildren. Disposed/detached state suppresses later callbacks. Failures aggregate through the scene flush/frame after required work.
 
 ## Lifecycle, errors and verification
 
-Owner/lifetime guards apply to reads and mutations; scene capture rejects mutation. Removing controls clears parent allocation caches and listeners. Cached action queues and reusable box slots allocate zero managed bytes after capacity preparation in the measured small hierarchy. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) checks phases, coalescing, failures, membership, flags/default reverts/packing, stale cross-tree sorts and captured batches. [Native checks](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) render actual child rectangles on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, other platforms and owner acceptance remain unverified.
+Owner/lifetime guards apply to reads and mutations; scene capture rejects mutation. Removing controls clears parent allocation caches and listeners. An own MaximumSizeChanged event requests sorting even when the container rectangle does not resize; parent maximum updates clear obsolete child allocation caches before refresh, so later fits can use raised bounds. A direct Control child changing TopLevel clears its parent allocation cache and requests minimum refresh/sort, updating its layout eligibility automatically. Cached action queues and reusable box slots allocate zero managed bytes after capacity preparation in the measured small hierarchy. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) checks phases, coalescing, failures, membership, flags/default reverts/packing, stale cross-tree sorts and captured batches. [Native checks](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) render actual child rectangles on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, other platforms and owner acceptance remain unverified.
 
 AccessibilityRegion remains Blocked: native semantic landmark publication/update/removal needs the accessibility service and viewport/control semantic identity. [Coverage](../coverage/classes/Container.md) leaves the class Partial for that exact dependency. No inert semantic property is exposed. See [ADR 0081](../decisions/rendering.md#adr-0081).

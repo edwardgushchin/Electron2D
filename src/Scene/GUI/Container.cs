@@ -10,6 +10,7 @@ public class Container : Control
     /// <summary>Identifies the child arrangement notification.</summary>
     public const int NotificationSortChildren = 51;
     private bool _pendingSort;
+    private bool _sorting, _sortAgain;
     private SceneTree? _queuedTree;
     private Action? _sortAction;
     private ulong _sortGeneration;
@@ -23,24 +24,28 @@ public class Container : Control
     {
         MouseFilter = MouseFilter.Pass; PropagateMaximumSize = true;
         ChildAdded += ChildEntered; ChildRemoved += ChildLeft; ChildOrderChanged += ChildOrder;
+        MaximumSizeChanged += QueueSort;
     }
     /// <summary>Occurs after the pre-sort notification and before arrangement.</summary>
     public event Action? PreSortChildren;
     /// <summary>Occurs after the sort notification and concrete arrangement.</summary>
     public event Action? SortChildren;
     /// <summary>Queues one deferred child arrangement while attached.</summary>
-    /// <remarks>Repeated requests coalesce. Requests during the current sort do not recurse. Detached requests do nothing.</remarks>
+    /// <remarks>Repeated requests coalesce. Requests during the current sort queue a later deferred pass without
+    /// recursion. Detached requests do nothing.</remarks>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The container is disposed.</exception>
     public void QueueSort()
     {
-        EnsureMutable(); if (!IsInsideTree || _pendingSort) return;
+        EnsureMutable(); if (!IsInsideTree) return;
+        if (_pendingSort) { if (_sorting) _sortAgain = true; return; }
         _pendingSort = true; _queuedTree = Tree; Tree!.Defer(_sortAction!);
     }
     private void Sort(SceneTree expectedTree, ulong generation)
     {
         bool Current() => !IsDisposed && IsInsideTree && generation == _sortGeneration && ReferenceEquals(Tree, expectedTree) && ReferenceEquals(_queuedTree, expectedTree);
         if (!Current()) return;
+        _sorting = true; _sortAgain = false;
         List<Exception>? errors = null;
         try
         {
@@ -49,7 +54,15 @@ public class Container : Control
             try { if (Current()) DispatchNotification(NotificationSortChildren); } catch (Exception error) { CollectException(ref errors, error); }
             try { if (Current()) SortChildren?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         }
-        finally { if (generation == _sortGeneration) { _pendingSort = false; _queuedTree = null; } }
+        finally
+        {
+            if (generation == _sortGeneration)
+            {
+                var again = _sortAgain;
+                _sorting = false; _sortAgain = false; _pendingSort = false; _queuedTree = null;
+                if (again && !IsDisposed && IsInsideTree) QueueSort();
+            }
+        }
         ThrowCollected("Container layout callbacks failed.", errors);
     }
     private void ChildEntered(Node _, Node child)
@@ -113,6 +126,7 @@ public class Container : Control
     internal override void OnTreeMembershipChanged(bool entering)
     {
         _sortGeneration++;
+        _sorting = false; _sortAgain = false;
         if (!entering) { _pendingSort = false; _queuedTree = null; _sortAction = null; }
         else
         {
