@@ -1286,6 +1286,11 @@
       "electron2d": "method:Electron2D.Area.OnExitTree()",
       "reason": "Typed C# construction, scene packing or lifecycle projection of the existing area role.",
       "adr": "ADRs 0003, 0005, 0008, 0055"
+    },
+    {
+      "electron2d": "method:Electron2D.CollisionObject.OnNotification(System.Int32)",
+      "reason": "Overrides the existing Node disabled/enabled notification hook to apply the stored collision policy; manual notifications preserve effective ProcessMode and add no independent capability.",
+      "adr": "ADR 0072"
     }
   ],
   "statusGroups": [
@@ -2314,6 +2319,17 @@
       ],
       "state": "Implemented",
       "reason": "Gravity and priority execute for RigidBody dynamics and CharacterBody GetGravity with point falloff, live edits and world fallback (ADRs 0056 and 0067, PhysicsAreaFieldTests and CharacterBodyTests)."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::enum:DisableMode",
+        "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_REMOVE",
+        "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_MAKE_STATIC",
+        "CollisionObject2D::enum_value:DisableMode.DISABLE_MODE_KEEP_ACTIVE",
+        "CollisionObject2D::property:disable_mode"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0072: typed Remove/MakeStatic/KeepActive integrate effective inherited ProcessMode.Disabled with scene-world membership and configured native body mode. CollisionDisableModeTests verifies values/defaults, disabled entry/reparent/reentry, RID/owner/view lifetime, real queries and contacts, sensor continuity, freeze/mass/locks/velocity restoration, callback failures, phase/thread guards, packing and 64 warmed allocation-free mixed solver frames. Pause alone does not disable physics."
     }
   ]
 }

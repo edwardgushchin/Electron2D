@@ -57,6 +57,12 @@ public abstract class PhysicsBody : CollisionObject
         if (_space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
         ValidatePhysicsTransform();
         var definition = CreateBodyDefinition();
+        if (PhysicsMadeStatic)
+        {
+            definition.type = B2BodyType.b2_staticBody;
+            definition.linearVelocity = default;
+            definition.angularVelocity = 0;
+        }
         _lastPosition = GlobalPosition;
         _lastRotation = GlobalRotation;
         definition.position = Shape.ToBackend(_lastPosition);
@@ -64,7 +70,7 @@ public abstract class PhysicsBody : CollisionObject
         _bodyID = b2CreateBody(space.WorldID, definition);
         _space = space;
         _shapesDirty = true;
-        try { RebuildShapes(); }
+        try { RebuildShapes(); if (PhysicsMadeStatic) OnMadeStatic(); }
         catch { DetachBackend(); throw; }
     }
 
@@ -108,7 +114,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal void CompleteBackend()
     {
-        if (_space is null || !MovesWithSimulation) return;
+        if (_space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
         var position = b2Body_GetPosition(_bodyID);
         var rotation = b2Body_GetRotation(_bodyID);
         var scenePosition = new Vector2(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter);
@@ -118,6 +124,27 @@ public abstract class PhysicsBody : CollisionObject
         if (GlobalPosition != scenePosition || GlobalRotation != sceneRotation)
             GlobalTransform = new Transform(sceneRotation, Vector2.One, 0, scenePosition);
         OnBackendAdvanced();
+    }
+
+    internal abstract B2BodyType RequestedBodyType { get; }
+    internal virtual void OnMadeStatic() { }
+    internal virtual void OnBodyTypeChanged() { }
+
+    internal override void UpdatePhysicsParticipation()
+    {
+        if (!IsInsideTree) return;
+        if (PhysicsRemoved)
+        {
+            if (HasBackend) Tree?.UnregisterPhysicsBody(this);
+            return;
+        }
+        if (!HasBackend) { Tree?.RegisterPhysicsBody(this); return; }
+        var type = PhysicsMadeStatic ? B2BodyType.b2_staticBody : RequestedBodyType;
+        if (b2Body_GetType(BackendID) == type) return;
+        if (PhysicsMadeStatic) OnMadeStatic();
+        b2Body_SetType(BackendID, type);
+        OnBodyTypeChanged();
+        MarkShapesDirty();
     }
 
     internal abstract B2BodyDef CreateBodyDefinition();
@@ -226,7 +253,7 @@ public abstract class PhysicsBody : CollisionObject
     protected override void OnEnterTree()
     {
         base.OnEnterTree();
-        Tree?.RegisterPhysicsBody(this);
+        UpdatePhysicsParticipation();
     }
 
     /// <inheritdoc />

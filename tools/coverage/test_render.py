@@ -172,6 +172,9 @@ def main():
                             ("shape_owner" in row or "shape_find_owner" in row)]
     assert len(collision_owner_rows) == 21
     assert all(" | Implemented | " in row for row in collision_owner_rows)
+    disable_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
+                    if row.startswith("| [`") and ("DisableMode" in row or "disable_mode" in row)]
+    assert len(disable_rows) == 5 and all(" | Implemented | " in row for row in disable_rows)
     shape_node_rows = [row for row in pages[CLASS_PAGES / "CollisionShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert all(" | Implemented | " in row for row in shape_node_rows

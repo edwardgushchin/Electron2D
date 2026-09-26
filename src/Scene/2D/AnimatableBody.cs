@@ -1,7 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
@@ -51,12 +50,7 @@ public sealed class AnimatableBody : StaticBody
         }
     }
 
-    internal override B2BodyDef CreateBodyDefinition()
-    {
-        var definition = base.CreateBodyDefinition();
-        definition.type = B2BodyType.b2_kinematicBody;
-        return definition;
-    }
+    internal override B2BodyType RequestedBodyType => B2BodyType.b2_kinematicBody;
 
     internal override void ApplySceneTransform(Vector2 position, float rotation) { }
 
@@ -66,7 +60,8 @@ public sealed class AnimatableBody : StaticBody
         if (!target.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(target.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
         var transform = new B2Transform(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
-        b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
+        if (PhysicsMadeStatic) b2Body_SetTransform(BackendID, transform.p, transform.q);
+        else b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
     }
 
     internal void SyncPose()

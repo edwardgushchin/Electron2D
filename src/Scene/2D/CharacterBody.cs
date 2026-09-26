@@ -250,10 +250,12 @@ public partial class CharacterBody : PhysicsBody
 
     internal override bool MovesWithSimulation => false;
 
+    internal override B2BodyType RequestedBodyType => B2BodyType.b2_kinematicBody;
+
     internal override B2BodyDef CreateBodyDefinition()
     {
         var definition = b2DefaultBodyDef();
-        definition.type = B2BodyType.b2_kinematicBody;
+        definition.type = RequestedBodyType;
         return definition;
     }
 
@@ -271,7 +273,8 @@ public partial class CharacterBody : PhysicsBody
         if (_queryPoseApplied)
             b2Body_SetTransform(BackendID, Shape.ToBackend(_solverPose.Origin), b2MakeRot(_solverPose.Rotation));
         var transform = new B2Transform(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
-        b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
+        if (PhysicsMadeStatic) b2Body_SetTransform(BackendID, transform.p, transform.q);
+        else b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
     }
 
     internal void CaptureSolverPose()

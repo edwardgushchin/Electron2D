@@ -8,6 +8,8 @@ The current official baseline is [Godot 4.7.2 stable](https://godotengine.org/ar
 
 Open the [class catalog](catalog.md), [dependency roadmap](roadmap.md), [DisplayServer class coverage](classes/DisplayServer.md), and [Electron2D declarations without a verified pairing](electron2d-unmapped.md). The pinned machine inventories are [Godot](data/godot-4.7.2.json) and [Electron2D](data/electron2d.json).
 
+The [CollisionObject2D](classes/CollisionObject2D.md) disable-policy slice closes five enum/value/property rows under [ADR 0072](../decisions/physics.md#adr-0072). CollisionDisableModeTests verifies inherited disabled entry/removal/reparent, real queries and static solver contacts, MakeStatic sensor continuity, requested mode and mass/lock/freeze/velocity restoration, view/RID/owner lifetime, callback failures, phase/thread rollback, PackedScene and 64 warmed mixed solver frames with zero managed allocation on Linux/.NET 10. MakeStatic retains Area fields/sensors; pause alone does not disable physics. Native allocation, other platforms and owner visual acceptance remain unverified.
+
 ## Reference and scope
 
 The upstream baseline must be an exact official stable release and source revision, with a retrieval date and link to its class reference. A moving `/stable/` URL alone is insufficient to reproduce a comparison. On each stable release, review the upstream delta and update the pinned revision, tables, counts, and roadmap together. Each comparison page records its last audited revision and date. The Electron2D baseline is the compiled production assembly from the same repository revision as the register.

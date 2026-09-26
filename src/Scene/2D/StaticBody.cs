@@ -27,10 +27,12 @@ public class StaticBody : PhysicsBody
 
     internal override bool MovesWithSimulation => false;
 
+    internal override B2BodyType RequestedBodyType => B2BodyType.b2_staticBody;
+
     internal override B2BodyDef CreateBodyDefinition()
     {
         var definition = b2DefaultBodyDef();
-        definition.type = B2BodyType.b2_staticBody;
+        definition.type = RequestedBodyType;
         return definition;
     }
 

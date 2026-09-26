@@ -162,6 +162,7 @@ public partial class RigidBody
 
     internal void CaptureBackendSleep()
     {
+        if (b2Body_GetType(BackendID) == B2BodyType.b2_staticBody) return;
         _sleeping = !b2Body_IsAwake(BackendID);
         _sleepChangePending = false;
     }

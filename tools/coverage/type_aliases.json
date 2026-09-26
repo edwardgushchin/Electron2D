@@ -89,6 +89,7 @@
     "FastNoiseLite.DomainWarpFractalType": "DomainWarpFractalType",
     "AStarGrid2D.CellShape": "AStarGrid.CellShape",
     "AStarGrid2D.DiagonalMode": "AStarGrid.DiagonalMode",
-    "AStarGrid2D.Heuristic": "AStarGrid.Heuristic"
+    "AStarGrid2D.Heuristic": "AStarGrid.Heuristic",
+    "CollisionObject2D.DisableMode": "CollisionDisableMode"
   }
 }

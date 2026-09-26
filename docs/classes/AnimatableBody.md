@@ -50,3 +50,7 @@ The StaticBody material override, PhysicsBody gravity query, CollisionObject fil
 ## Verification and limits
 
 [AnimatableBodyTests](../../tests/Electron2D.Tests/AnimatableBodyTests.cs) checks a rigid rider on a moving platform, deferred and immediate modes, rotation, zero delta, invalid rollback, callback failure, owner-thread access, reentry, PackedScene and 64 warmed stationary and moving contact frames without managed allocations on Linux/.NET 8. [ADR 0060](../decisions/physics.md#adr-0060) defines the kinematic target policy. CharacterBody now follows accepted floor and wall platform layers under ADR 0067; native allocation, other platforms and owner visual acceptance remain unverified.
+
+## Disabled processing and physics
+
+Inherited `DisableMode.MakeStatic` temporarily replaces the kinematic native type with static. Manual targets retain the existing fixed-step synchronized presentation, but teleport without derived contact velocity. Enable/KeepActive restores the kinematic role; exit/reentry applies the effective inherited policy. Remove omits fixtures while retaining stored scene state and shape owners. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).

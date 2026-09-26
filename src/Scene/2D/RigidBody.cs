@@ -88,6 +88,7 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
+    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
     public Vector2 LinearVelocity
@@ -98,17 +99,18 @@ public partial class RigidBody : PhysicsBody
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
             _linearVelocity = value;
-            if (HasBackend && !_freeze) b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(value));
+            if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(value));
         }
     }
 
     /// <summary>Gets or sets angular velocity in radians per second.</summary>
+    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float AngularVelocity
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _angularVelocity; }
-        set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze) b2Body_SetAngularVelocity(BackendID, value); }
+        set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAngularVelocity(BackendID, value); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -148,6 +150,8 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets whether simulation treats this body as static.</summary>
+    /// <remarks>The configured freeze flag is independent of the inherited disable policy.
+    /// Attached changes during solver ownership reject before changing this flag.</remarks>
     /// <value>False by default.</value>
     public bool Freeze
     {
@@ -156,17 +160,9 @@ public partial class RigidBody : PhysicsBody
         {
             EnsureMutable();
             if (_freeze == value) return;
+            EnsurePhysicsParticipationChange();
             _freeze = value;
-            if (HasBackend)
-            {
-                b2Body_SetType(BackendID, value ? B2BodyType.b2_staticBody : B2BodyType.b2_dynamicBody);
-                if (!value)
-                {
-                    b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
-                    b2Body_SetAngularVelocity(BackendID, _angularVelocity);
-                }
-                MarkShapesDirty();
-            }
+            UpdatePhysicsParticipation();
         }
     }
 
@@ -220,14 +216,31 @@ public partial class RigidBody : PhysicsBody
         b2Body_ApplyLinearImpulseToCenter(BackendID, Shape.ToBackend(impulse), wake: true);
     }
 
+    internal override void OnMadeStatic()
+    {
+        if (_freeze) return;
+        _linearVelocity = Vector2.Zero;
+        _angularVelocity = 0;
+    }
+
+    internal override void OnBodyTypeChanged()
+    {
+        if (_freeze || PhysicsMadeStatic) return;
+        b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
+        b2Body_SetAngularVelocity(BackendID, _angularVelocity);
+        ApplyMass(_mass);
+    }
+
     internal override bool MovesWithSimulation => !_freeze;
     internal override Vector2 EffectiveGravity => _effectiveGravity;
+
+    internal override B2BodyType RequestedBodyType => _freeze ? B2BodyType.b2_staticBody : B2BodyType.b2_dynamicBody;
 
     internal override B2BodyDef CreateBodyDefinition()
     {
         _fieldsInitialized = false;
         var definition = b2DefaultBodyDef();
-        definition.type = _freeze ? B2BodyType.b2_staticBody : B2BodyType.b2_dynamicBody;
+        definition.type = RequestedBodyType;
         definition.linearVelocity = Shape.ToBackend(_linearVelocity);
         definition.angularVelocity = _angularVelocity;
         definition.linearDamping = 0;
@@ -266,7 +279,7 @@ public partial class RigidBody : PhysicsBody
 
         var changed = _fieldsInitialized && (scaledGravity != _effectiveGravity ||
             resolvedLinear != _effectiveLinearDamp || resolvedAngular != _effectiveAngularDamp);
-        var active = !_freeze && !_customIntegrator && HasBackend && (changed || b2Body_IsAwake(BackendID));
+        var active = !_freeze && !PhysicsMadeStatic && !_customIntegrator && HasBackend && (changed || b2Body_IsAwake(BackendID));
         var dampedVelocity = default(B2Vec2);
         var dampedAngularVelocity = 0f;
         var force = default(B2Vec2);
@@ -283,7 +296,7 @@ public partial class RigidBody : PhysicsBody
         _effectiveLinearDamp = resolvedLinear;
         _effectiveAngularDamp = resolvedAngular;
         _fieldsInitialized = true;
-        if (_customIntegrator && changed && HasBackend && !_freeze) b2Body_SetAwake(BackendID, true);
+        if (_customIntegrator && changed && HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
         if (!active) return;
         if (changed) b2Body_SetAwake(BackendID, true);
         if (linearFactor != 1) b2Body_SetLinearVelocity(BackendID, dampedVelocity);
@@ -303,7 +316,7 @@ public partial class RigidBody : PhysicsBody
 
     private void ApplyMass(float desiredMass)
     {
-        if (!HasBackend || _freeze) return;
+        if (!HasBackend || _freeze || PhysicsMadeStatic) return;
         var data = b2Body_GetMassData(BackendID);
         if (data.mass <= 0)
         {

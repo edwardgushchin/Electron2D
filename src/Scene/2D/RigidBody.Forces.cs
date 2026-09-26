@@ -165,12 +165,12 @@ public partial class RigidBody
         var result = velocity - axis * axis.Dot(velocity) + axisVelocity;
         if (!result.IsFinite()) throw new ArgumentOutOfRangeException(nameof(axisVelocity));
         LinearVelocity = result;
-        if (HasBackend && !_freeze) b2Body_SetAwake(BackendID, true);
+        if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
     }
 
     internal void ApplyConstantForces()
     {
-        if (_freeze || !HasBackend || !b2Body_IsAwake(BackendID)) return;
+        if (_freeze || PhysicsMadeStatic || !HasBackend || !b2Body_IsAwake(BackendID)) return;
         if (_constantForce != Vector2.Zero)
             b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(_constantForce), wake: false);
         if (_constantTorque != 0)
@@ -202,7 +202,7 @@ public partial class RigidBody
 
     private void WakeForPersistentForce()
     {
-        if (HasBackend && !_freeze) b2Body_SetAwake(BackendID, true);
+        if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
         else _sleeping = false;
     }
 

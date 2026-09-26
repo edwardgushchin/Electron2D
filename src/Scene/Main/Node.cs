@@ -533,11 +533,12 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
     /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
-    /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.</remarks>
+    /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
+    /// Callback failures are collected after all remaining descendants are notified.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="Exception">An enabled or disabled notification callback throws after the mode changes.</exception>
+    /// <exception cref="AggregateException">Enabled or disabled notification callbacks throw after all affected nodes are notified.</exception>
     public ProcessMode ProcessMode
     {
         get
@@ -556,14 +557,20 @@ public partial class Node : ElectronObject
                 return;
 
             var disabledStates = EnumerateDepthFirst().ToDictionary(node => node, node => node.ResolveProcessMode() == ProcessMode.Disabled);
+            foreach (var node in disabledStates.Keys)
+                if (node is CollisionObject collider) collider.EnsurePhysicsParticipationChange();
             _processMode = value;
 
+            List<Exception>? errors = null;
             foreach (var (node, wasDisabled) in disabledStates)
             {
+                if (node.IsDisposed) continue;
                 var isDisabled = node.ResolveProcessMode() == ProcessMode.Disabled;
                 if (wasDisabled != isDisabled)
-                    node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled);
+                    try { node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled); }
+                    catch (Exception error) { CollectException(ref errors, error); }
             }
+            ThrowCollected("Process mode notification callbacks failed.", errors);
         }
     }
 
@@ -2514,6 +2521,8 @@ public partial class Node : ElectronObject
 
         return root;
     }
+
+    internal bool ProcessingDisabled => ResolveProcessMode() == ProcessMode.Disabled;
 
     private ProcessMode ResolveProcessMode()
     {

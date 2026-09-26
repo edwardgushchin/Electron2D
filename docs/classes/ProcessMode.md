@@ -1,6 +1,6 @@
 # ProcessMode
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 **Inherits:** —
 
@@ -19,7 +19,7 @@ Controls when a node receives process and physics-process callbacks.
 `ProcessMode` is the typed pause policy stored by each [`Node`](Node.md). It owns no resources and has no lifecycle. [`SceneTree`](SceneTree.md) resolves it before each process, physics-process, or scene-input callback.
 
 The values affect Electron2D's explicitly enabled host-driven process, physics-process, and scene-input callback
-lanes. They do not control rendering, audio, or a physics server.
+lanes. Effective Disabled processing also applies each scene [CollisionObject.DisableMode](CollisionObject.md#disablemode); pausing alone does not. Rendering and audio remain independent.
 
 ## Examples
 

@@ -27,6 +27,8 @@ public sealed partial class SceneTree
         catch { space.Dispose(); throw; }
     }
 
+    internal void EnsurePhysicsParticipationChange() => _physicsSpace?.EnsureQueryAccess();
+
     internal void RegisterPhysicsBody(PhysicsBody body)
     {
         EnsureOwnerThread();

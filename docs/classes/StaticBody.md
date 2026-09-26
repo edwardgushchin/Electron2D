@@ -1,6 +1,6 @@
 # StaticBody
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [AnimatableBody](AnimatableBody.md)
 
@@ -45,3 +45,7 @@ The optional borrowed [PhysicsMaterial](PhysicsMaterial.md) changes friction and
 ## Verification and limits
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) verifies rectangle and circle contacts against a StaticBody floor, filter changes, live shape edits, borrowed resource lifetime and scene disposal. [PhysicsMaterialTests](../../tests/Electron2D.Tests/PhysicsMaterialTests.cs) verifies material mixing and ownership. `ConstantLinearVelocity` and `ConstantAngularVelocity` remain incomplete on [StaticBody2D coverage](../coverage/classes/StaticBody2D.md). See [ADRs 0054 and 0060](../decisions/physics.md#adr-0060) for the unit and kinematic boundaries.
+
+## Disabled processing and physics
+
+Inherited `DisableMode.Remove` omits an effectively disabled static body from solver and queries. MakeStatic and KeepActive keep its normal static response; enabling never changes its configured role. RID, owner groups and borrowed resources survive removal and reentry. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).

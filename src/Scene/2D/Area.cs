@@ -272,11 +272,21 @@ public sealed partial class Area : CollisionObject
 
     private static Node CreateArea() => new Area();
 
+    internal override void UpdatePhysicsParticipation()
+    {
+        if (!IsInsideTree) return;
+        if (PhysicsRemoved)
+        {
+            if (_space is not null) Tree?.UnregisterPhysicsArea(this);
+        }
+        else if (_space is null) Tree?.RegisterPhysicsArea(this);
+    }
+
     /// <inheritdoc />
     protected override void OnEnterTree()
     {
         base.OnEnterTree();
-        Tree?.RegisterPhysicsArea(this);
+        UpdatePhysicsParticipation();
     }
 
     /// <inheritdoc />

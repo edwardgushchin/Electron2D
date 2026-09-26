@@ -4,7 +4,7 @@ Last updated: 2026-09-26
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
-- **Source:** [CollisionObject.cs](../../src/Scene/2D/CollisionObject.cs), [CollisionObject.ShapeOwners.cs](../../src/Scene/2D/CollisionObject.ShapeOwners.cs)
+- **Source:** [CollisionObject.cs](../../src/Scene/2D/CollisionObject.cs), [CollisionDisableMode.cs](../../src/Scene/2D/CollisionDisableMode.cs), [CollisionObject.ShapeOwners.cs](../../src/Scene/2D/CollisionObject.ShapeOwners.cs)
 - **Declaration:** `public abstract class CollisionObject : Entity`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
@@ -19,6 +19,7 @@ Direct [CollisionPolygon](CollisionPolygon.md) children contribute owned solid o
 | Member | Contract |
 | --- | --- |
 | `protected CollisionObject()` | Initializes layer and mask to bit one. |
+| `public CollisionDisableMode DisableMode { get; set; }` | Policy for inherited disabled processing; default Remove. |
 | `public uint CollisionLayer { get; set; }` | Category bits; default 1. |
 | `public uint CollisionMask { get; set; }` | Accepted category bits; default 1. |
 | `public RID GetRID()` | Stable server identity from construction to disposal. |
@@ -26,7 +27,8 @@ Direct [CollisionPolygon](CollisionPolygon.md) children contribute owned solid o
 | `public void SetCollisionLayerValue(int layerNumber, bool value)` | Changes one layer bit. |
 | `public bool GetCollisionMaskValue(int layerNumber)` | Tests one-based mask bit 1–32. |
 | `public void SetCollisionMaskValue(int layerNumber, bool value)` | Changes one mask bit. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits to inherited Entity descriptors. |
+| `protected override void OnNotification(int what)` | Applies effective disabled/enabled physics participation after base notification handling. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits and disable policy to inherited Entity descriptors. |
 
 ## Member descriptions
 
@@ -50,9 +52,16 @@ Any 32-bit mask is valid, including zero. Assignment marks shapes dirty and chan
 
 The two getters and two setters take a one-based bit number from 1 through 32. Values outside that range throw `ArgumentOutOfRangeException` without changing the mask. Setters retain all other bits. A body must be attached to a scene to affect live physics, but detached filter state is stored for later attachment and PackedScene capture.
 
+<a id="disablemode"></a>
+### `DisableMode`
+
+Controls physics while the effective inherited Node.ProcessMode is Disabled. [CollisionDisableMode](CollisionDisableMode.md) defines three stored values. Remove/default detaches from queries, solver and Area fields; the same RID, owner groups and borrowed shapes remain for synchronous reattachment. Held direct-body views become invalid. Peer object/shape exits use the normal departure path. MakeStatic preserves membership and sensor behavior but temporarily makes Body static, without changing its Freeze or requested role. KeepActive continues ordinary physics. Scene pause alone does not apply this policy.
+
+Changing the policy while disabled applies it immediately. Entry, reparent and reentry read the current inherited process mode. Undefined enum values, disposed access, off-owner attached mutation and changes during solver ownership reject; departure callback exceptions are reported after committed membership changes. Stored policy survives PackedScene. Manual notification IDs cannot fake a disabled boundary. [CollisionDisableModeTests](../../tests/Electron2D.Tests/CollisionDisableModeTests.cs) checks this contract and warmed solver frames; [ADR 0072](../decisions/physics.md#adr-0072) records the C# enum projection.
+
 ## Limits and verification
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Public shape-owner management, collision priority and viewport mouse-picking callbacks/events retain distinct [coverage gaps](../coverage/classes/CollisionObject2D.md).
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Collision priority and viewport mouse-picking callbacks/events retain distinct [coverage gaps](../coverage/classes/CollisionObject2D.md).
 
 ## Shape-owner example
 

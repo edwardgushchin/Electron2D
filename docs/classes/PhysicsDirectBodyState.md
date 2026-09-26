@@ -139,3 +139,7 @@ Invalid contact indices throw ArgumentOutOfRangeException. Disposed or ended att
 [PhysicsBodyStateTests](../../tests/Electron2D.Tests/PhysicsBodyStateTests.cs) covers scene/server fields, center offsets, inertia units, force/impulse paths, Area reduction/wakeup, custom integration, callback ordering/userdata, actual solved contacts, fixture-query edits, hierarchy mutation, exceptions, stale/disposed/off-thread views, packing and 64 warmed active callback frames without managed allocations on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. See [ADR 0070](../decisions/physics.md#adr-0070).
 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+## Disabled processing and physics
+
+A CollisionObject using `DisableMode.Remove` invalidates this attachment view when its effective inherited ProcessMode becomes Disabled. Reattachment provides a new view with the same collider RID. MakeStatic retains the view and exposes zero inverse mass/inertia until the requested body type is restored. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).

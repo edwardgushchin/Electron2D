@@ -8,8 +8,13 @@ public abstract partial class CollisionObject : Entity
     private static readonly PropertyDescriptor[] CollisionProperties =
     [
         new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionLayer), node => node.CollisionLayer, (node, value) => node.CollisionLayer = value, _ => 1u, stored: true),
-        new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionMask), node => node.CollisionMask, (node, value) => node.CollisionMask = value, _ => 1u, stored: true)
+        new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionMask), node => node.CollisionMask, (node, value) => node.CollisionMask = value, _ => 1u, stored: true),
+        new PropertyDescriptor<CollisionObject, CollisionDisableMode>(nameof(DisableMode), node => node.DisableMode, (node, value) => node.DisableMode = value, _ => CollisionDisableMode.Remove, stored: true)
     ];
+
+    private CollisionDisableMode _disableMode;
+    internal bool PhysicsRemoved => IsInsideTree && ProcessingDisabled && _disableMode == CollisionDisableMode.Remove;
+    internal bool PhysicsMadeStatic => IsInsideTree && ProcessingDisabled && _disableMode == CollisionDisableMode.MakeStatic;
 
     private uint _collisionLayer = 1;
     private uint _collisionMask = 1;
@@ -25,6 +30,29 @@ public abstract partial class CollisionObject : Entity
     {
         ThrowIfDisposed();
         return _rid;
+    }
+
+    /// <summary>Gets or sets how effective disabled processing affects physics participation.</summary>
+    /// <value><see cref="CollisionDisableMode.Remove"/> by default.</value>
+    /// <remarks>Applies synchronously to attached objects, including inherited disabled processing.
+    /// Pausing the scene alone does not apply this policy. Area remains a sensor in MakeStatic mode.
+    /// Removal retains RID and shape owners, invalidates live body views and reports peer overlap exits.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off the owner thread or the world is stepping.</exception>
+    /// <exception cref="ObjectDisposedException">The object is disposed.</exception>
+    /// <exception cref="Exception">A departure callback throws after the policy and membership change.</exception>
+    public CollisionDisableMode DisableMode
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _disableMode; }
+        set
+        {
+            EnsureMutable();
+            if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_disableMode == value) return;
+            EnsurePhysicsParticipationChange();
+            _disableMode = value;
+            if (IsInsideTree) UpdatePhysicsParticipation();
+        }
     }
 
     /// <summary>Gets or sets the 32-bit collision category mask.</summary>
@@ -74,6 +102,18 @@ public abstract partial class CollisionObject : Entity
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
         base.GetPropertyDescriptors().Concat(CollisionProperties);
+
+    /// <inheritdoc />
+    protected override void OnNotification(int what)
+    {
+        base.OnNotification(what);
+        if (what is NotificationDisabled or NotificationEnabled && IsInsideTree)
+            UpdatePhysicsParticipation();
+    }
+
+    internal void EnsurePhysicsParticipationChange() => Tree?.EnsurePhysicsParticipationChange();
+
+    internal abstract void UpdatePhysicsParticipation();
 
     internal virtual void OnCollisionFilterChanged() { }
 

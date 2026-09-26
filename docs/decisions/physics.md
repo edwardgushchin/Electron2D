@@ -446,9 +446,34 @@ Body/Area geometry previously consisted only of direct child providers. The appl
 
 ### Consequences and verification
 
-Games can create procedural multi-shape groups without hidden scene nodes, disable or transform them, and recover owner identity from real query/motion results. ShapeOwnerTests checks defaults/ID reuse, interleaved indices, removals, weak/disposed identity, copied arrays, numeric errors, manual query/motion/rigid response, one-way/Area behavior, child lifecycle/packing, callback-failure revisions, resource disposal and 64 warmed owner solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Input picking, disable modes, priority and shape-index events retain their own coverage gaps.
+Games can create procedural multi-shape groups without hidden scene nodes, disable or transform them, and recover owner identity from real query/motion results. ShapeOwnerTests checks defaults/ID reuse, interleaved indices, removals, weak/disposed identity, copied arrays, numeric errors, manual query/motion/rigid response, one-way/Area behavior, child lifecycle/packing, callback-failure revisions, resource disposal and 64 warmed owner solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Input picking and priority retain their own coverage gaps; ADR 0072 adds disable modes, and the monitoring decisions own shape-index events.
 
 ### Rejected alternatives
 
 - Treat owner ID as shape index or enumerate fixtures by group order: interleaved additions and structural removals would return incorrect indices.
 - Create hidden CollisionShape children for manual groups: arbitrary owner identity and group lifetime do not require scene nodes.
+
+<a id="adr-0072"></a>
+## ADR 0072: Disabled scene collision participation
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: CollisionObject disable policy across all current Body and Area siblings
+- Depends on: [0054](#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0070](#adr-0070), [0071](#adr-0071), [0055](physics-monitoring.md#adr-0055)
+
+### Context
+
+Effective inherited Node.ProcessMode.Disabled already issues synchronous disabled/enabled notifications, but collision objects remained in the world. The pinned CollisionObject2D policy changes world membership or temporarily replaces a body's requested mode. Its MakeStatic body transition clears pre-existing linear/angular velocity and does not change the configured body role; Area remains a sensor.
+
+### Decision
+
+- Project the nested DisableMode enum as global CollisionDisableMode to coexist with the same-named C# property. Preserve Remove=0/default, MakeStatic=1 and KeepActive=2. Store the policy in PackedScene and reject undefined values before mutation.
+- Remove detaches an effectively disabled object from the scene world, query results, solver and Area fields. Retain RID, exception lists, owner groups, borrowed resources and configured body state. Invalidate attachment-bound direct-body views and clear local snapshots; report peer departure events through the existing removal path. Re-enable or a policy change reattaches synchronously. Entering a disabled inherited branch applies the policy before creating fixtures; reparent and reentry use the new effective mode. Pause alone does not trigger it.
+- MakeStatic keeps Body fixtures and direct views attached with a static native type. Clear a newly static unfrozen rigid body's prior velocities; assignments while static retain their stored values for restoration. Preserve Freeze, mass, rotation lock, custom integrator, forces and the requested dynamic/kinematic/static role. Restore the requested type when enabled or changing to KeepActive. Area stays active for sensors and fields in both MakeStatic and KeepActive.
+- Static manual transforms teleport without derived kinematic contact velocity. AnimatableBody keeps its existing fixed-step synchronized presentation; CharacterBody keeps typed manual motion. KeepActive continues ordinary solver behavior while Node callbacks remain disabled.
+- Preflight attached policy, ProcessMode and Freeze changes against the scene world's solver ownership before changing flags. Post-solver integration callbacks can disable objects under ADR 0070. Aggregate notification failures after visiting all surviving affected descendants, so one departure subscriber cannot strand later bodies in the old participation state. Manual notification IDs do not override the effective ProcessMode.
+
+### Consequences and verification
+
+Games can deactivate collision branches, keep disabled scenery solid, or leave autonomous simulation active. CollisionDisableModeTests covers real query/solver/sensor behavior, disabled entry and inheritance breaks, policy switches, reparent/reentry, view invalidation, RID/owner retention, mass/locks/freeze/velocity restoration, user failures, phase/thread validation and packing. Sixty-four warmed mixed active rigid/static kinematic/sensor frames allocate zero managed bytes on the scene owner thread in Linux/.NET 10. Policy transitions themselves use the existing allocating Node notification/fixture lifecycle; native allocation, other platforms and owner visual acceptance remain unverified. No vendor change is required.

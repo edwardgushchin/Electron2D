@@ -471,6 +471,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CollisionDisableMode",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionDisableMode",
+    "name": "CollisionDisableMode",
+    "signature": "public enum Electron2D.CollisionDisableMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CollisionObject",
     "kind": "type",
     "declaringType": "Electron2D.CollisionObject",
@@ -8011,6 +8029,45 @@
     "parameters": [],
     "returnType": "Electron2D.ClockDirection",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CollisionDisableMode.KeepActive()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CollisionDisableMode",
+    "name": "KeepActive",
+    "signature": "public const Electron2D.CollisionDisableMode KeepActive = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionDisableMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CollisionDisableMode.MakeStatic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CollisionDisableMode",
+    "name": "MakeStatic",
+    "signature": "public const Electron2D.CollisionDisableMode MakeStatic = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionDisableMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CollisionDisableMode.Remove()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CollisionDisableMode",
+    "name": "Remove",
+    "signature": "public const Electron2D.CollisionDisableMode Remove = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionDisableMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Control.CursorShape.Arrow()",
@@ -23757,6 +23814,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -63851,6 +63927,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObject.DisableMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "DisableMode",
+    "signature": "public Electron2D.CollisionDisableMode DisableMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CollisionDisableMode",
     "value": null
   },
   {

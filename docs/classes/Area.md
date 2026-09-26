@@ -145,3 +145,7 @@ area.BodyShapeEntered += (rid, body, bodyShapeIndex, localShapeIndex) =>
 ```
 
 [ShapePairEventTests](../../tests/Electron2D.Tests/ShapePairEventTests.cs) checks multi-slot/body/Area pairs, compound deduplication, object/pair ordering, masks and monitorability, server nullable identities, removals, callback locks/failures and warmed steady/active transition allocation. See [ADR 0055](../decisions/physics-monitoring.md#adr-0055).
+
+## Disabled processing and physics
+
+Inherited `DisableMode.Remove` detaches the sensor and its fields while retaining RID and owners. Local overlaps clear and peer Areas receive object/shape departure events. MakeStatic and KeepActive both keep ordinary sensing and fields active while Node process callbacks remain disabled. Re-enabling a removed sensor restores membership synchronously; overlap entry is evaluated at the next physics scan. See [CollisionObject.DisableMode](CollisionObject.md#disablemode) and [ADR 0072](../decisions/physics.md#adr-0072).

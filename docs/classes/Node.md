@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -374,7 +374,7 @@ Gets or sets the pause policy used by both process callback lanes.
 
 **Value:** `ProcessMode.Inherit` by default.
 
-**Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
+**Remarks:** Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants. Failures are collected after notifying all remaining descendants. Scene collision objects apply their [DisableMode](CollisionObject.md#disablemode); attached process-policy changes preflight solver ownership before changing the stored mode.
 
 **System.ArgumentOutOfRangeException:** The assigned enum value is undefined.
 
@@ -382,7 +382,7 @@ Gets or sets the pause policy used by both process callback lanes.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
-**System.Exception:** An enabled or disabled notification callback throws after the mode changes.
+**System.AggregateException:** Enabled or disabled notification callbacks throw after all affected nodes are notified.
 
 <a id="p-electron2d-node-processpriority"></a>
 ### `public int ProcessPriority { get; set; }`
