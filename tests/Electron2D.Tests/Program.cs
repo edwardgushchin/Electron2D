@@ -208,6 +208,7 @@ PhysicsMaterialTests.Run();
 AreaTests.Run();
 PhysicsAreaFieldTests.Run();
 PhysicsServerAreaFieldTests.Run();
+ScreenVisibilityTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();

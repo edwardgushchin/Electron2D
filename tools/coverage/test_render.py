@@ -156,6 +156,13 @@ def main():
     shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
                         if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
+    screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]
+    assert len(screen_rows) == 6
+    assert all(" | Implemented | " in row for row in screen_rows if not any(name in row for name in ("class VisibleOnScreenNotifier2D", "property bool show_rect")))
+    assert " | Partial | " in next(row for row in screen_rows if "class VisibleOnScreenNotifier2D" in row)
+    assert " | Blocked | " in next(row for row in screen_rows if "property bool show_rect" in row)
+    enabler_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenEnabler2D.md"].splitlines() if row.startswith("| [`")]
+    assert len(enabler_rows) == 7 and all(" | Implemented | " in row for row in enabler_rows)
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]

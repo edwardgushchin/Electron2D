@@ -125,3 +125,27 @@ The existing canvas has GPU and SDL_Renderer paths. The future public font, text
 
 - Introduce SkiaSharp or another complete 2D renderer for text: rejected because Electron2D already owns a canvas renderer and would have to package and reconcile a second graphics stack.
 - Use glyph rasterization without HarfBuzz shaping: rejected because it cannot satisfy the multilingual text contract.
+
+<a id="adr-0078"></a>
+## ADR 0078: Retained screen visibility and processing enablers
+
+Last updated: 2026-09-26
+
+- Status: Accepted
+- Scope: VisibleOnScreenNotifier/VisibleOnScreenEnabler runtime regions in the current retained canvases
+- Depends on: [0028](#adr-0028), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014), [0072](physics.md#adr-0072), [0027](product.md#adr-0027)
+
+### Decision
+
+- Map VisibleOnScreenNotifier2D and its enabler subclass to VisibleOnScreenNotifier : Entity and VisibleOnScreenEnabler : VisibleOnScreenNotifier. Defaults are Rect(-10,-10,20,20), on-screen false, EnableNodePath ".." and enabled mode Inherit. Namespace ScreenEnableMode supplies Inherit=0, Always=1, WhenPaused=2 because C# cannot give a nested enum and property the same name.
+- Evaluate visibility during actual retained frame construction with the same effective transforms, layer membership, viewport masks, interpolation, clipping and repeated copies as submitted geometry. Use conservative transformed bounds including the local origin and any inherited retained draw geometry, inclusive border/line/point intersection and the inherited modulation alpha threshold 0.007; SelfModulate does not gate detection. This follows pinned render culling and does not test occlusion by other items. Negative finite rectangle extents normalize; reject nonfinite rectangles/endpoints and transformed overflow. State remains false until the first submitted frame; skipped/hidden rendering retains the last sample.
+- Commit all current notifier states after backend submission before callbacks, then deliver ScreenEntered/ScreenExited on the owner thread before FramePostDraw. Reuse transition storage and generation stamps; in-callback remove/reentry invalidates stale queued delivery. Continue later notifiers after user failures, report aggregate errors and never replay committed transitions. Tree entry/exit reset state silently through actual membership hooks, not manually delivered notifications.
+- Enabler weakly caches its relative path target on entry or a changed nonempty path. Entry disables it before render. A screen entry writes the selected enabled ProcessMode, exit writes Disabled; apply this after the event even when a handler fails. Every enabled-mode assignment updates the current target; equal paths do not rebind. Empty/changed paths and departure drop the cache without restoring old modes. An invalid attached path commits the path, clears the cache and raises a typed error rather than only logging the source diagnostic. Disposed targets are ignored; ordinary target owner/physics/capture guards remain authoritative.
+- Node.ProcessMode captures disabled-state transitions in cached depth-specific lists instead of a LINQ dictionary. Preserve preorder, pre-mutation physics validation, callback failure continuation and nested callback edits. Warm each used subtree capacity/reentrancy depth outside the measured interval. Node lifecycle transitions may still perform explicit physics resource attachment/removal; the zero-allocation screen check targets neutral processing nodes, while separate native assertions verify RigidBody remove/reentry behavior.
+- ShowRect is editor-only magenta gizmo drawing in the pinned source. Keep that member Blocked until the first self-hosted editor canvas gizmo drawing slice and add/test its flag and fill there. Do not ship an inert bool. Public independent offscreen viewport rendering remains subject to its existing lifecycle gate; this slice integrates the current root-window renderer and CanvasLayer groups on both backends.
+
+### Verification
+
+ScreenVisibilityTests covers defaults, enums, target cache identity/path changes/errors, every process policy, weak disposal, silent departure/reentry, event failure with policy application, ownership, packing and 64 warmed nested ProcessMode transitions with zero managed bytes. ScreenVisibilityRenderingTests covers twelve native region/mask/layer/default-canvas/alpha/border/degenerate stages, black readback confirming no runtime gizmo, actual RigidBody participation, committed peer state, stale event suppression, failure continuation/native release and 64 warmed active enabler transitions with zero managed bytes per compatibility/GPU Linux Wayland path. Native allocator counts, other platforms, broad-scene cost and owner visual acceptance are unverified; no vendor source changes.
+
+Primary pinned sources: [node behavior](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/2d/visible_on_screen_notifier_2d.cpp), [render culling](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp).

@@ -8,6 +8,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`VisibleOnScreenNotifier`](classes/VisibleOnScreenNotifier.md) | [`VisibleOnScreenNotifier.cs`](../src/Scene/2D/VisibleOnScreenNotifier.cs) | Retained screen visibility and processing policy. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`VisibleOnScreenEnabler`](classes/VisibleOnScreenEnabler.md) | [`VisibleOnScreenEnabler.cs`](../src/Scene/2D/VisibleOnScreenEnabler.cs) | Retained screen visibility and processing policy. |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [`ScreenEnableMode`](classes/ScreenEnableMode.md) | [`VisibleOnScreenEnabler.cs`](../src/Scene/2D/VisibleOnScreenEnabler.cs) | Retained screen visibility and processing policy. |
 | [Core](domains/core.md) | [Object lifecycle](components/object-lifecycle.md) | [`ElectronObject`](classes/ElectronObject.md) | [`ElectronObject.cs`](../src/Core/Object/ElectronObject.cs) | Current | Implemented and verified |
 | [Core](domains/core.md) | [Object lifecycle](components/object-lifecycle.md) | [`WeakRef<T>`](classes/WeakRef.Generic.md) | [`WeakRef.cs`](../src/Core/Object/WeakRef.cs) | Current | Implemented and managed-verified |
 | [Core](domains/core.md) | [Typed event connections](components/event-connections.md) | [`EventConnection`](classes/EventConnection.md) | [`EventConnection.cs`](../src/Core/Object/EventConnection.cs) | Current | Implemented and verified |

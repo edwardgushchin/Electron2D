@@ -171,6 +171,8 @@ public partial class Node : ElectronObject
 
     private int _physicsProcessPriority;
 
+    private readonly List<List<(Node Node, bool Disabled)>> _processModeSnapshots = [];
+    private int _processModeDepth;
     private ProcessMode _processMode;
 
     private NodeAutoTranslateMode _autoTranslateMode;
@@ -534,7 +536,8 @@ public partial class Node : ElectronObject
     /// <summary>Gets or sets the pause policy used by both process callback lanes.</summary>
     /// <value><see cref="ProcessMode.Inherit"/> by default.</value>
     /// <remarks>Crossing the effective disabled boundary synchronously notifies this node and affected inheriting descendants.
-    /// Callback failures are collected after all remaining descendants are notified.</remarks>
+    /// Callback failures are collected after all remaining descendants are notified. Preorder snapshots are cached
+    /// separately for nested callback edits; prepare used subtree capacity and reentrancy depth before a measured hot interval.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
     /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
@@ -556,21 +559,28 @@ public partial class Node : ElectronObject
             if (_processMode == value)
                 return;
 
-            var disabledStates = EnumerateDepthFirst().ToDictionary(node => node, node => node.ResolveProcessMode() == ProcessMode.Disabled);
-            foreach (var node in disabledStates.Keys)
-                if (node is CollisionObject collider) collider.EnsurePhysicsParticipationChange();
-            _processMode = value;
-
-            List<Exception>? errors = null;
-            foreach (var (node, wasDisabled) in disabledStates)
+            var depth = _processModeDepth++;
+            if (depth == _processModeSnapshots.Count) _processModeSnapshots.Add([]);
+            var disabledStates = _processModeSnapshots[depth];
+            try
             {
-                if (node.IsDisposed) continue;
-                var isDisabled = node.ResolveProcessMode() == ProcessMode.Disabled;
-                if (wasDisabled != isDisabled)
-                    try { node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled); }
-                    catch (Exception error) { CollectException(ref errors, error); }
+                CaptureDisabledStates(this, disabledStates);
+                foreach (var state in disabledStates)
+                    if (state.Node is CollisionObject collider) collider.EnsurePhysicsParticipationChange();
+                _processMode = value;
+
+                List<Exception>? errors = null;
+                foreach (var (node, wasDisabled) in disabledStates)
+                {
+                    if (node.IsDisposed) continue;
+                    var isDisabled = node.ResolveProcessMode() == ProcessMode.Disabled;
+                    if (wasDisabled != isDisabled)
+                        try { node.DispatchNotification(isDisabled ? NotificationDisabled : NotificationEnabled); }
+                        catch (Exception error) { CollectException(ref errors, error); }
+                }
+                ThrowCollected("Process mode notification callbacks failed.", errors);
             }
-            ThrowCollected("Process mode notification callbacks failed.", errors);
+            finally { disabledStates.Clear(); _processModeDepth--; }
         }
     }
 
@@ -2234,6 +2244,12 @@ public partial class Node : ElectronObject
             throw new ArgumentOutOfRangeException(nameof(index), index, "Child index is outside the valid range.");
 
         return index;
+    }
+
+    private static void CaptureDisabledStates(Node node, List<(Node Node, bool Disabled)> states)
+    {
+        states.Add((node, node.ResolveProcessMode() == ProcessMode.Disabled));
+        for (var index = 0; index < node._children.Count; index++) CaptureDisabledStates(node._children[index], states);
     }
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>

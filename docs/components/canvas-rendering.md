@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 ## Scope and owned types
 
@@ -284,3 +284,5 @@ CanvasTimingTests checks inclusive/exclusive boundaries, offsets, signed/zero pe
 Delivery verification: `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-timing-publish` passed. From that directory, `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests` passed the full rendering suite, including twelve interval/rectangle frames on compatibility, GPU/default, HLSL and GLSL. The same packaged executable with `ELECTRON2D_TEST_CANVAS_TIMING=1 SDL_VIDEODRIVER=dummy` passed software compatibility and warmed renderer-allocation checks. Managed checks, formatting, warning-free Release build and the pinned bidirectional coverage check passed. GTK locale warnings remain an existing nonfatal host condition. Other platforms, exact hardware thin-line coverage and owner visual acceptance remain unverified.
 
 The [platform verification matrix](../platform-verification.md) records separate SDL_Renderer, SDL_GPU and shader results on Wayland, XWayland, Android phone/TV and the isolated browser probe. Android fallback pixels passed on both devices; the phone also passed relaxed Vulkan GPU and shader pixels, while the TV still rejected SDL GPU creation. The relaxed Android device explicitly rejects anisotropic texture filtering instead of claiming it was applied. The Web probe proved a direct SDL_Renderer canvas frame but is not a persistent Engine.Run host.
+
+Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.

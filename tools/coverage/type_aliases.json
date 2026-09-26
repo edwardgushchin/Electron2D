@@ -44,7 +44,9 @@
     "CollisionObject2D": "CollisionObject",
     "PhysicsBody2D": "PhysicsBody",
     "RigidBody2D": "RigidBody",
-    "StaticBody2D": "StaticBody"
+    "StaticBody2D": "StaticBody",
+    "VisibleOnScreenNotifier2D": "VisibleOnScreenNotifier",
+    "VisibleOnScreenEnabler2D": "VisibleOnScreenEnabler"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
@@ -95,6 +97,7 @@
     "RigidBody2D.FreezeMode": "RigidFreezeMode",
     "PhysicsServer2D.BodyDampMode": "RigidBody.DampMode",
     "PhysicsServer2D.AreaBodyStatus": "PhysicsServer.AreaBodyStatus",
-    "PhysicsServer2D.AreaSpaceOverrideMode": "Area.SpaceOverride"
+    "PhysicsServer2D.AreaSpaceOverrideMode": "Area.SpaceOverride",
+    "VisibleOnScreenEnabler2D.EnableMode": "ScreenEnableMode"
   }
 }

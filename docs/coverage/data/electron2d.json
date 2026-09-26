@@ -3190,6 +3190,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ScreenEnableMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ScreenEnableMode",
+    "name": "ScreenEnableMode",
+    "signature": "public enum Electron2D.ScreenEnableMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SegmentShape",
     "kind": "type",
     "declaringType": "Electron2D.SegmentShape",
@@ -3917,6 +3935,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisibleOnScreenEnabler",
+    "kind": "type",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": "VisibleOnScreenEnabler",
+    "signature": "public class Electron2D.VisibleOnScreenEnabler",
+    "visibility": "public",
+    "baseType": "Electron2D.VisibleOnScreenNotifier",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisibleOnScreenNotifier",
+    "kind": "type",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "VisibleOnScreenNotifier",
+    "signature": "public class Electron2D.VisibleOnScreenNotifier",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -7438,6 +7486,32 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisibleOnScreenEnabler..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": ".ctor",
+    "signature": "public VisibleOnScreenEnabler()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisibleOnScreenNotifier..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": ".ctor",
+    "signature": "public VisibleOnScreenNotifier()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -16171,6 +16245,45 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.ScreenEnableMode.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenEnableMode",
+    "name": "Always",
+    "signature": "public const Electron2D.ScreenEnableMode Always = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenEnableMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ScreenEnableMode.Inherit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenEnableMode",
+    "name": "Inherit",
+    "signature": "public const Electron2D.ScreenEnableMode Inherit = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenEnableMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ScreenEnableMode.WhenPaused()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScreenEnableMode",
+    "name": "WhenPaused",
+    "signature": "public const Electron2D.ScreenEnableMode WhenPaused = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenEnableMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.Shader.Mode.CanvasItem()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Shader.Mode",
@@ -18815,6 +18928,32 @@
     "declaringType": "Electron2D.Viewport",
     "name": "SizeChanged",
     "signature": "public event System.Action SizeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VisibleOnScreenNotifier.ScreenEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "ScreenEntered",
+    "signature": "public event System.Action ScreenEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.VisibleOnScreenNotifier.ScreenExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "ScreenExited",
+    "signature": "public event System.Action ScreenExited",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -59509,6 +59648,90 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisibleOnScreenEnabler.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisibleOnScreenEnabler.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisibleOnScreenNotifier.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisibleOnScreenNotifier.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisibleOnScreenNotifier.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisibleOnScreenNotifier.IsOnScreen()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "IsOnScreen",
+    "signature": "public System.Boolean IsOnScreen()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.WeakRef\u003CT\u003E.GetRef()",
     "kind": "method",
     "declaringType": "Electron2D.WeakRef\u003CT\u003E",
@@ -75862,6 +76085,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisibleOnScreenEnabler.EnableMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": "EnableMode",
+    "signature": "public Electron2D.ScreenEnableMode EnableMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScreenEnableMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisibleOnScreenEnabler.EnableNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisibleOnScreenEnabler",
+    "name": "EnableNodePath",
+    "signature": "public System.String EnableNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisibleOnScreenNotifier.Rect()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "Rect",
+    "signature": "public Electron2D.Rect2 Rect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {

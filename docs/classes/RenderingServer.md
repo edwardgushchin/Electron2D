@@ -1,8 +1,8 @@
 # RenderingServer
 
-Last updated: 2026-09-24
+Last updated: 2026-09-26
 
-- Declaration: `public sealed class RenderingServer : ElectronObject`
+- Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
 - Component: [Canvas rendering](../components/canvas-rendering.md)
@@ -120,3 +120,5 @@ Before ordering/traversing a canvas branch, RenderingServer independently tests 
 ## Canvas render time
 
 After FramePreDraw, RenderingServer advances its per-run clock by the captured scaled process step and wraps it by the active [RenderingTimeRolloverSeconds](ProjectSettings.md#renderingtimerolloverseconds). CanvasItem evaluates ordered interval/transform commands against that value each frame. Disabled rendering or an invisible root skips both submission and clock advancement. Tree pause leaves time advancing; TimeScale zero freezes it. The GPU backend sends the same clock to optional reserved TIME uniforms; see [shader render time](../components/shader-materials.md#render-time). See [canvas timing verification](../components/canvas-rendering.md#animation-intervals-and-rectangles).
+
+Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.

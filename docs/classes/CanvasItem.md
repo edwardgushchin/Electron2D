@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-09-25
+Last updated: 2026-09-26
 
 **Inherits:** [Node](Node.md)
 
@@ -999,3 +999,5 @@ GetGlobalTransform computes and caches the direct canvas-parent composition unti
 Local notifications are attached-only, synchronous and enabled by NotifyLocalTransformChanges. Entity transform setters notify even when assigned an equal matrix. Global invalidation is committed first, so a local callback can read the new global transform or force the already queued notification. The typed events now project the numeric notifications, replacing the former unconditional synchronous event path.
 
 [The component audit](../components/scene-hierarchy.md#transform-invalidation-and-delivery) records exact source semantics, safe phases, reentry policy and tests. Hidden, masked or processing-disabled canvas items can still receive queued notifications. No interpolation, physics backend or UI implementation is implied.
+
+Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.

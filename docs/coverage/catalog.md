@@ -923,9 +923,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Viewport](classes/Viewport.md) | Node | Partial | 200 |
 | [ViewportTexture](classes/ViewportTexture.md) | Texture2D | Blocked | 1 |
 | [VirtualJoystick](classes/VirtualJoystick.md) | Control | Blocked | 27 |
-| [VisibleOnScreenEnabler2D](classes/VisibleOnScreenEnabler2D.md) | VisibleOnScreenNotifier2D | Blocked | 6 |
+| [VisibleOnScreenEnabler2D](classes/VisibleOnScreenEnabler2D.md) | VisibleOnScreenNotifier2D | Implemented | 6 |
 | [VisibleOnScreenEnabler3D](classes/VisibleOnScreenEnabler3D.md) | VisibleOnScreenNotifier3D | Excluded | 6 |
-| [VisibleOnScreenNotifier2D](classes/VisibleOnScreenNotifier2D.md) | Node2D | Blocked | 5 |
+| [VisibleOnScreenNotifier2D](classes/VisibleOnScreenNotifier2D.md) | Node2D | Partial | 5 |
 | [VisibleOnScreenNotifier3D](classes/VisibleOnScreenNotifier3D.md) | VisualInstance3D | Excluded | 4 |
 | [VisualInstance3D](classes/VisualInstance3D.md) | Node3D | Excluded | 10 |
 | [VisualShader](classes/VisualShader.md) | Shader | Blocked | 50 |

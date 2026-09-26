@@ -7,8 +7,8 @@ namespace Electron2D;
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
 /// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Lights, general canvas clipping, offscreen public viewports and device recovery
-/// are not integrated. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
-public sealed class RenderingServer : ElectronObject
+/// are not integrated. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
+public sealed partial class RenderingServer : ElectronObject
 {
     /// <summary>Specifies the smallest canvas-layer index, drawn before every greater layer index.</summary>
     public const int CanvasLayerMin = int.MinValue;
@@ -153,6 +153,8 @@ public sealed class RenderingServer : ElectronObject
             _nodes.Clear();
             Capture(tree.Root);
             foreach (var node in _nodes)
+                if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
+            foreach (var node in _nodes)
                 if (node.GetParentItem() is null)
                 {
                     var layer = node.GetCanvasLayerNode();
@@ -181,7 +183,9 @@ public sealed class RenderingServer : ElectronObject
                 {
                     var clip = GetClip(item.Node, pixels);
                     if ((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels))
-                        item.Node.AppendCanvas(_vertices, _batches, item.Transform, CanvasTime, clip);
+                    {
+                        AppendScreenCanvas(item.Node, item.Transform, clip, pixels);
+                    }
                     continue;
                 }
                 var size = repeatSource is Parallax current ? current.RepeatSize : ((ParallaxLayer)repeatSource).RepeatPeriod;
@@ -201,13 +205,14 @@ public sealed class RenderingServer : ElectronObject
                             : new Vector2(x * size.X, y * size.Y);
                         transform.Origin += sourceTransform.BasisXform(displacement);
                         if (!transform.IsFinite()) throw new InvalidOperationException("Parallax repetition overflowed finite coordinates.");
-                        item.Node.AppendCanvas(_vertices, _batches, transform, CanvasTime, repeatedClip);
+                        AppendScreenCanvas(item.Node, transform, repeatedClip, pixels);
                     }
             }
             foreach (var batch in _batches)
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
             _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
+            DispatchScreenVisibility(tree);
             FramePostDraw?.Invoke();
         }
         finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear(); _rendering = false; }
