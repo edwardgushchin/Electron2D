@@ -356,7 +356,9 @@ public sealed class PackedScene : Resource
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
         foreach (var property in stored.Properties)
         {
-            if (!descriptors.TryGetValue(property.Name, out var descriptor) || !descriptor.IsStored ||
+            if (!descriptors.TryGetValue(property.Name, out var descriptor))
+                descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType);
+            if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
             {
                 throw new InvalidOperationException(

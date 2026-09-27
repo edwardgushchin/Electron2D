@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Arranges visible direct child controls along one pixel-aligned axis.</summary>
 /// <remarks>Weighted expansion is constrained by child min/max bounds; residual space follows alignment.
-/// Horizontal layout honors RTL. Local separation controls the gap; global themes remain separate.</remarks>
+/// Horizontal layout honors RTL. Inherited theme constants and local overrides control the gap.</remarks>
 public class BoxContainer : Container
 {
     /// <summary>Specifies alignment of unused space along the box axis.</summary>
@@ -17,14 +17,13 @@ public class BoxContainer : Container
     }
     private bool _vertical, _fixed, _arranging, _arrangeAgain;
     private AlignmentMode _alignment;
-    private int _separation = 4;
     private readonly List<Slot> _slots = [];
     private readonly record struct Slot(Control Child, int Minimum, int Maximum, float Ratio, int Final, bool Expand);
     private static readonly PropertyDescriptor[] BoxProperties =
     [
         new PropertyDescriptor<BoxContainer, bool>(nameof(Vertical), node => node.Vertical, (node, value) => node.Vertical = value, _ => false, stored: true),
         new PropertyDescriptor<BoxContainer, AlignmentMode>(nameof(Alignment), node => node.Alignment, (node, value) => node.Alignment = value, _ => AlignmentMode.Begin, stored: true),
-        new PropertyDescriptor<BoxContainer, int>(nameof(Separation), node => node.Separation, (node, value) => node.Separation = value, _ => 4, stored: true)
+        new PropertyDescriptor<BoxContainer, int>(nameof(Separation), node => node.Separation, (node, value) => node.Separation = value, node => node.InheritedThemeConstant("separation"))
     ];
     /// <summary>Creates a horizontal box aligned to its leading edge with separation four.</summary>
     public BoxContainer() { }
@@ -52,13 +51,13 @@ public class BoxContainer : Container
         set { EnsureMutable(); if (_fixed) throw new InvalidOperationException("This box has a fixed orientation."); _vertical = value; UpdateMinimumSize(); Arrange(); }
     }
     /// <summary>Gets or sets the local signed pixel separation between child allocations.</summary>
-    /// <value>Four initially; projects the existing box theme constant without introducing a theme resource.</value>
+    /// <value>Four in the built-in theme; assignments create a local typed theme override.</value>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned; layout callbacks do not settle or exceed pixel range.</exception>
     /// <exception cref="ObjectDisposedException">The box is disposed.</exception>
     public int Separation
     {
-        get { Check(); return _separation; }
-        set { EnsureMutable(); if (_separation == value) return; _separation = value; UpdateMinimumSize(); QueueSort(); }
+        get => GetThemeConstant("separation");
+        set { EnsureMutable(); if (Separation == value) return; if (value == InheritedThemeConstant("separation")) RemoveThemeConstantOverride("separation"); else AddThemeConstantOverride("separation", value); UpdateMinimumSize(); QueueSort(); }
     }
     /// <summary>Adds a real expanding Control spacer at the beginning or end.</summary>
     /// <param name="begin">Whether to insert before the current children.</param>
@@ -82,8 +81,8 @@ public class BoxContainer : Container
             if (Sortable(GetChild(index), true) && GetChild(index) is Control child)
             {
                 var size = child.GetBoundMinimumSize().Ceil();
-                if (_vertical) { minimum.X = MathF.Max(minimum.X, size.X); minimum.Y += size.Y + (count == 0 ? 0 : _separation); }
-                else { minimum.Y = MathF.Max(minimum.Y, size.Y); minimum.X += size.X + (count == 0 ? 0 : _separation); }
+                if (_vertical) { minimum.X = MathF.Max(minimum.X, size.X); minimum.Y += size.Y + (count == 0 ? 0 : Separation); }
+                else { minimum.Y = MathF.Max(minimum.Y, size.Y); minimum.X += size.X + (count == 0 ? 0 : Separation); }
                 count++;
             }
         return minimum;
@@ -123,7 +122,7 @@ public class BoxContainer : Container
                 if (expand) { stretchAvailable = checked(stretchAvailable + minAxis); ratioTotal += child.SizeFlagsStretchRatio; }
             }
         if (_slots.Count == 0) return;
-        var stretchMaximum = checked(Pixel(_vertical ? size.Y : size.X) - checked((_slots.Count - 1) * _separation));
+        var stretchMaximum = checked(Pixel(_vertical ? size.Y : size.X) - checked((_slots.Count - 1) * Separation));
         stretchAvailable = checked(stretchAvailable + Math.Max(0, stretchMaximum - stretchMinimum));
         if (propagating) stretchAvailable = Math.Min(stretchAvailable, Pixel(_vertical ? maximum.Y : maximum.X));
         if (!float.IsFinite(ratioTotal)) throw new InvalidOperationException("Expansion weights exceed finite layout range.");
@@ -155,7 +154,7 @@ public class BoxContainer : Container
             for (var sequence = 0; sequence < _slots.Count; sequence++)
             {
                 var slot = _slots[!_vertical && rtl ? _slots.Count - 1 - sequence : sequence];
-                if (sequence != 0) offset = checked(offset + _separation);
+                if (sequence != 0) offset = checked(offset + Separation);
                 var end = checked(offset + slot.Final);
                 if (slot.Expand && sequence == _slots.Count - 1) end = Pixel(_vertical ? size.Y : size.X);
                 var allocation = _vertical ? new Rect2(0, offset, size.X, end - offset) : new Rect2(offset, 0, end - offset, size.Y);
@@ -163,7 +162,7 @@ public class BoxContainer : Container
                     slot.Child.ContainerMaximum = _vertical ? new(maximum.X, MathF.Max(maximum.Y - accumulated, 0)) : new(MathF.Max(maximum.X - accumulated, 0), maximum.Y);
                 if (!slot.Child.IsDisposed && ReferenceEquals(slot.Child.Parent, this))
                     try { FitChildInRect(slot.Child, allocation); } catch (Exception failure) { CollectException(ref errors, failure); }
-                accumulated = checked(accumulated + end - offset + _separation); offset = end;
+                accumulated = checked(accumulated + end - offset + Separation); offset = end;
             }
         }
         finally { _slots.Clear(); }

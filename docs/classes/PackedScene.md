@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 **Inherits:** [Resource](Resource.md)
 
@@ -261,3 +261,9 @@ The current contract is runtime-only and in-memory. It has no `.tscn`/binary loa
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
 - [0031: Node trees and reusable scenes as the primary game-object model](../decisions/scene.md#adr-0031)
+
+## Typed theme override reconstruction
+
+During reconstruction, each captured property must match a writable stored descriptor on the fresh target with the exact captured value type. Control/Window theme overrides have one bounded extension under [ADR 0083](../decisions/rendering.md#adr-0083): when a fresh target has no descriptor yet, the engine can reconstruct only the reserved `ThemeColorOverride/`, `ThemeConstantOverride/`, `ThemeFontSizeOverride/`, `ThemeIconOverride/` and `ThemeStyleBoxOverride/` families with exact `Color?`, `int?`, `int?`, `Texture` and `StyleBox` value types. The descriptor is newly bound to the target's typed theme API. Unknown prefixes, other node roles, non-stored entries and mismatched types still fail. Captured source-owner delegates are never reused, and this does not add Variant values or general string member dispatch.
+
+Theme/variation and actual override entries are captured independently of computed Box/Grid separation aliases. This preserves inherited values after instantiation instead of freezing a resolved gap as a new local override. Existing hierarchy/resource rollback, exact factory identity and scene-local graph policy remain unchanged. [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified.

@@ -4,8 +4,8 @@ Last updated: 2026-09-25
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1278 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 957 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+1. Close 1289 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 956 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -19,7 +19,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Node](classes/Node.md) | 66 | 68 |
 | [Window](classes/Window.md) | 42 | 34 |
 | [Object](classes/Object.md) | 34 | 22 |
-| [Control](classes/Control.md) | 24 | 60 |
+| [Control](classes/Control.md) | 23 | 60 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
@@ -47,6 +47,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [DisplayServer](classes/DisplayServer.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
+| [Theme](classes/Theme.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
 | [RegExMatch](classes/RegExMatch.md) | 0 | 6 |
 | [Shader](classes/Shader.md) | 0 | 6 |
@@ -62,6 +63,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | 0 | 2 |
+| [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | 0 | 1 |
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | 0 | 1 |
@@ -75,7 +77,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Exact trigger | Classes |
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 73 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 71 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
@@ -99,7 +101,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
-| ADR 0082: StyleBoxFlat drawing is available. Trigger: complete Theme/default-skin lookup and invalidation followed by the first panel consumer slice, with real default panel drawing and PanelContainer content-margin layout. Do not substitute a fake empty default. | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
 | Trigger: first audio decoding and playback slice. | 2 |

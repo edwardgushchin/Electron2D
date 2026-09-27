@@ -2,7 +2,7 @@
 
 Last updated: 2026-09-27
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md)
 
 **Declaration:** `public class Container : Control` · **Source:** [Container.cs](../../src/Scene/GUI/Container.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -31,7 +31,7 @@ tree.ProcessFrame(0);
 | `public event Action? SortChildren` | Runs after concrete sort notification. |
 | `protected virtual SizeFlags[] GetAllowedSizeFlagsHorizontal()` | Returns advisory horizontal choices. |
 | `protected virtual SizeFlags[] GetAllowedSizeFlagsVertical()` | Returns advisory vertical choices. |
-| `protected override void OnNotification(int what)` | Queues sort for resize/direction/visibility changes. |
+| `protected override void OnNotification(int what)` | Queues sort for resize/direction/visibility/theme changes. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds exact inherited defaults. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Preserves exact Container identity. |
 | `protected override void Dispose(bool disposing)` | Releases child subscriptions and events. |
@@ -48,7 +48,7 @@ tree.ProcessFrame(0);
 **Allowed flags hooks:** caller-owned arrays contain Fill, Expand, ShrinkBegin, ShrinkCenter and ShrinkEnd. These are advisory inspector choices, with no editor implementation or restriction of arbitrary stored bits. Boxes omit Expand on their cross axis.
 
 <a id="onnotification"></a><a id="getpropertydescriptors"></a><a id="createsceneinstancefactory"></a><a id="dispose"></a>
-**Overrides:** preserve base notification behavior, typed stored defaults and exact factory identity; disposal unsubscribes direct controls before base teardown. A custom subclass supplies its own packing factory under the existing Node contract.
+**Overrides:** theme-driven QueueSort runs in finally even if a base ThemeChanged callback fails, covering box/grid/panel consumers. Other overrides preserve base notification behavior, typed stored defaults and exact factory identity; disposal unsubscribes direct controls before base teardown. A custom subclass supplies its own packing factory under the existing Node contract.
 
 ## Event and constant descriptions
 

@@ -4,7 +4,7 @@ Last updated: 2026-09-27
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md). BaseButton/Button remain separate future consumers.
+**Inherited By:** [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md). BaseButton/Button remain separate future consumers.
 
 - **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
 - **Namespace:** `Electron2D`
@@ -30,7 +30,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
 
-The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, themes, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, Font theme data/project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 ## Example
 
@@ -297,3 +297,59 @@ Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU 
 
 <a id="sizeflagshorizontal"></a><a id="sizeflagsvertical"></a><a id="sizeflagsstretchratio"></a><a id="sizeflagschanged"></a><a id="sizeflags"></a>
 The direct Container consumes each axis for fill/shrink and the box primary axis for weighted expansion. Unknown bits are preserved, equal assignments silent, and callbacks observe committed state. Nonfinite ratio throws ArgumentOutOfRangeException. Attached reads/mutations use owner affinity, capture rejects mutation, disposed use rejects. Typed descriptors serialize all three properties. Container fit resets anchors, rectangle and visual transform. [Box tests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verify flags/defaults/packing and actual layout; [ADR 0081](../decisions/rendering.md#adr-0081) records the semantic service/theme/platform limits.
+
+## Typed theme API
+
+Source: [Control.Theme.cs](../../src/Scene/GUI/Control.Theme.cs). The five data categories share [theme owner lookup](../components/themes.md); Font resource methods remain absent until the approved text-resource slice.
+
+| Signature | Contract |
+| --- | --- |
+| `public Theme? Theme { get; set; }` | Borrowed branch resource, null initially. |
+| `public string ThemeTypeVariation { get; set; }` | Empty initially. |
+| `public const int NotificationThemeChanged = 45` | Refresh notification before cache clearing and dependent work. |
+| `public event Action? ThemeChanged` | Raised during refresh before the previous lookup cache is cleared. |
+| `public Color GetThemeColor(string name, string themeType = "")` | Resolved typed value; resources remain borrowed. |
+| `public bool HasThemeColor(string name, string themeType = "")` | Matching override/theme data, excluding universal fallback. |
+| `public bool HasThemeColorOverride(string name)` | Local override slot only. |
+| `public void AddThemeColorOverride(string name, Color color)` | Commits local value; equal writes still refresh. |
+| `public void RemoveThemeColorOverride(string name)` | Refreshes even when no local slot existed. |
+| `public int GetThemeConstant(string name, string themeType = "")` | Resolved typed value; resources remain borrowed. |
+| `public bool HasThemeConstant(string name, string themeType = "")` | Matching override/theme data, excluding universal fallback. |
+| `public bool HasThemeConstantOverride(string name)` | Local override slot only. |
+| `public void AddThemeConstantOverride(string name, int constant)` | Commits local value; equal writes still refresh. |
+| `public void RemoveThemeConstantOverride(string name)` | Refreshes even when no local slot existed. |
+| `public int GetThemeFontSize(string name, string themeType = "")` | Resolved typed value; resources remain borrowed. |
+| `public bool HasThemeFontSize(string name, string themeType = "")` | Matching override/theme data, excluding universal fallback. |
+| `public bool HasThemeFontSizeOverride(string name)` | Local override slot only. |
+| `public void AddThemeFontSizeOverride(string name, int fontSize)` | Commits local value; equal writes still refresh. |
+| `public void RemoveThemeFontSizeOverride(string name)` | Refreshes even when no local slot existed. |
+| `public Texture? GetThemeIcon(string name, string themeType = "")` | Resolved typed value; resources remain borrowed. |
+| `public bool HasThemeIcon(string name, string themeType = "")` | Matching override/theme data, excluding universal fallback. |
+| `public bool HasThemeIconOverride(string name)` | Local override slot only. |
+| `public void AddThemeIconOverride(string name, Texture texture)` | Commits local value; equal writes still refresh. |
+| `public void RemoveThemeIconOverride(string name)` | Refreshes even when no local slot existed. |
+| `public StyleBox? GetThemeStyleBox(string name, string themeType = "")` | Resolved typed value; resources remain borrowed. |
+| `public bool HasThemeStyleBox(string name, string themeType = "")` | Matching override/theme data, excluding universal fallback. |
+| `public bool HasThemeStyleBoxOverride(string name)` | Local override slot only. |
+| `public void AddThemeStyleBoxOverride(string name, StyleBox styleBox)` | Commits local value; equal writes still refresh. |
+| `public void RemoveThemeStyleBoxOverride(string name)` | Refreshes even when no local slot existed. |
+| `public float GetThemeDefaultBaseScale()` | Nearest positive theme default, then built-in default, then universal fallback. |
+| `public int GetThemeDefaultFontSize()` | Same priority for positive font-size defaults. |
+| `public void BeginBulkThemeOverride()` | Enables boolean override batching; repeated Begin is idempotent. |
+| `public void EndBulkThemeOverride()` | Ends a batch and publishes one refresh; no active batch throws. |
+
+<a id="theme"></a><a id="themetypevariation"></a>
+**Assignment and inheritance:** Theme replacement rejects disposed input, suppresses equal references and refreshes this node and live consecutive Control/Window descendants. ThemeTypeVariation suppresses equal values and refreshes this node. A neutral Node between theme owners ends inheritance; root Window themes therefore reach only consecutive theme-capable branches. Stored Theme references are borrowed. An externally disposed assigned Theme remains readable through the property, but owner lookup skips it after invalidation.
+
+<a id="getthemecolor"></a><a id="hasthemecolor"></a><a id="hasthemecoloroverride"></a><a id="addthemecoloroverride"></a><a id="removethemecoloroverride"></a><a id="getthemeconstant"></a><a id="hasthemeconstant"></a><a id="hasthemeconstantoverride"></a><a id="addthemeconstantoverride"></a><a id="removethemeconstantoverride"></a><a id="getthemefontsize"></a><a id="hasthemefontsize"></a><a id="hasthemefontsizeoverride"></a><a id="addthemefontsizeoverride"></a><a id="removethemefontsizeoverride"></a><a id="getthemeicon"></a><a id="hasthemeicon"></a><a id="hasthemeiconoverride"></a><a id="addthemeiconoverride"></a><a id="removethemeiconoverride"></a><a id="getthemestylebox"></a><a id="hasthemestylebox"></a><a id="hasthemestyleboxoverride"></a><a id="addthemestyleboxoverride"></a><a id="removethemestyleboxoverride"></a><a id="getthemedefaultbasescale"></a><a id="getthemedefaultfontsize"></a><a id="beginbulkthemeoverride"></a><a id="endbulkthemeoverride"></a><a id="notificationthemechanged"></a><a id="themechanged"></a>
+**Get/Has resolution:** detached queries bypass resolved-value caches, so ancestor/global resource edits are immediately visible without notifications. Attached queries use the deferred invalidation contract below. Empty themeType means the current type and variation. A local override applies only to this implicit query, the node's own class name or its selected variation. An explicit different type bypasses local overrides. The nearest theme defining the variation supplies its dependency chain; native ancestry follows. Search each nearest-to-outer owner theme across that type order, then the built-in Theme. Get uses the universal category fallback when no match exists. Has excludes that universal fallback, but a positive Theme.DefaultFontSize is itself a valid FontSize match. A cycle in the active variation chain throws InvalidOperationException. Direct resource queries on Theme remain exact-type queries and do not perform this branch search.
+
+**Keys and errors:** node-side names/type strings may be empty and otherwise contain arbitrary text except a null character. Null strings throw ArgumentNullException, null characters throw ArgumentException. Assigned colors must be finite. Icon/style overrides require non-null live resources; unlike a Theme's null placeholder slots, a local resource override cannot be null. Integer overrides retain signed values. Attached queries require the owner thread; mutation also observes capture/lifetime guards. A disposed stored override retains identity until removed/replaced, so its consumer can reject invalid use.
+
+**Overrides and batching:** Add commits the local value; Remove clears any local slot. Both refresh even for equal/missing values. Resource overrides share one content-change/disposal subscription per distinct resource. Owner-thread override changes refresh synchronously when attached, while off-thread resource changes defer to the owner. Begin is a boolean suppression flag rather than a nesting counter; End without an active batch throws InvalidOperationException, and a valid End refreshes once even if the batch made no edits. Detached changes invalidate lookup state without emitting an attached theme notification.
+
+**Timing and callbacks:** Theme resource content changes and global context/fallback replacement are deferred through SceneTree. NotificationThemeChanged invokes ThemeChanged before clearing the previous lookup cache, so an event handler may still see an already cached inherited/resource result; direct local overrides are checked before that cache. Required invalidation, redraw and dependent geometry work are attempted after event failures. Propagation continues to later live descendants and reports aggregated failures. Reentrant branch propagation repeats from a fresh captured set and rejects a nonsettling chain after 64 passes. Tree membership generations suppress stale deferred work. Virtual getters that replace theme state cannot refill an invalidated cache; a subsequent lookup recomputes. Deferred override-resource delivery rechecks the current bulk flag, preserving suppression when a batch begins after a worker callback was queued. Same-owner notification reentry also settles iteratively within the 64-pass bound.
+
+**Stored state and cleanup:** Theme/variation are typed stored properties. Actual local overrides use typed descriptors; a null descriptor value means removal, not a null resource override. Fresh Control/Window instances reconstruct missing override descriptors only through the five reserved prefixes and exact captured value types; other unknown/mismatched schemas remain rejected. Exact scene packing follows existing resource graph/local-to-scene rules. Cleanup removes theme/global/resource subscriptions and cached references; externally owned resources are never disposed by node cleanup. First-use query keys and capacity growth may allocate; warmed behavior is measured separately.
+
+[ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. Font objects/defaults/overrides, project Theme loading and remaining built-in GUI defaults remain separate under [ADR 0083](../decisions/rendering.md#adr-0083).

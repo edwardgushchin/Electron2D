@@ -27,13 +27,13 @@ tree.ProcessFrame(0);
 | `protected BoxContainer(bool vertical)` | Creates a fixed-orientation specialization. |
 | `public AlignmentMode Alignment { get; set; }` | Begin; changes arrange attached children synchronously. |
 | `public bool Vertical { get; set; }` | False; generic boxes allow changes, fixed subclasses reject all assignments. |
-| `public int Separation { get; set; }` | Signed local pixel gap, four; typed theme-constant projection. |
+| `public int Separation { get; set; }` | Signed resolved pixel gap; built-in default four, local override projection. |
 | `public Control AddSpacer(bool begin)` | Adds real primary-axis ExpandFill child. |
 | `protected override Vector2 OnGetMinimumSize()` | Bound minimum aggregation. |
 | `protected override void OnNotification(int what)` | Arranges during NotificationSortChildren. |
 | `protected override SizeFlags[] GetAllowedSizeFlagsHorizontal()` | Omits cross-axis Expand when vertical. |
 | `protected override SizeFlags[] GetAllowedSizeFlagsVertical()` | Omits cross-axis Expand when horizontal. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores generic orientation, alignment and separation. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores generic orientation/alignment; separation edits the inherited typed constant override. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Exact generic box identity. |
 | `public enum AlignmentMode` | [Begin=0, Center=1, End=2](BoxContainer.AlignmentMode.md). |
 
@@ -46,7 +46,7 @@ tree.ProcessFrame(0);
 **Vertical:** chooses axis for minima, stretch, spacer flags and allowed inspector choices. Generic assignments request minimum refresh and immediate layout, including equal assignments. HBox/VBox throw InvalidOperationException even for equal values; their stored descriptors omit Vertical so packing cannot trigger an illegal write.
 
 <a id="separation"></a>
-**Separation:** signed integer pixel gap. Changes update minimum and queue layout; equal assignments are silent. Negative gaps overlap allocations. This local typed property projects the existing theme constant; global Theme resources/inheritance remain a separate coverage dependency.
+**Separation:** signed integer pixel gap. A changed assignment refreshes attached ThemeChanged/cache/redraw/minimum/reflow state synchronously and queues child layout; equal resolved assignments are silent. Negative gaps overlap allocations. The getter resolves GetThemeConstant("separation"); a changed assignment creates a local typed constant override unless it equals the inherited value, in which case it removes the override. Equal resolved assignments remain silent. Removing that inherited override restores branch/default lookup. The editable Separation descriptor is not stored independently, and its revert default queries the inherited value excluding local overrides. Actual override presence/value is stored by the nullable ThemeConstantOverride/separation descriptor, preventing inherited gaps from being frozen by scene packing. Reverting the legacy property to its inherited default removes a differing local override; the nullable override descriptor can also remove an explicitly equal-valued slot. Notification/reflow failures can occur during assignment after state commits. See [ADR 0083](../decisions/rendering.md#adr-0083).
 
 ## Method and enumeration descriptions
 
@@ -63,4 +63,4 @@ tree.ProcessFrame(0);
 
 Inherited Container subscriptions/coalescing and Control owner/capture/maximum/input guards apply. Nonfinite ratios reject; overflowing integer pixel layout or nonfinite total weight throws InvalidOperationException rather than producing invalid geometry. Child callback failures attempt later captured children and aggregate. Scratch storage is reused; refit is quadratic in children and has no measured large-GUI guarantee.
 
-[Managed tests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verify fractional pixels, signed/zero weights and separation, propagated maximums, weighted min/max, RTL, alignment, shrink, visibility, spacers, exact packing, reentrant arrangement, deferred phases and zero bytes for 64 warmed resize/layout cycles. [Native tests](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) verify retained NinePatchRect pixels, redistribution and 64 warmed resize/immediate-layout/render frames on Linux Wayland GPU/compatibility. Native allocator counts, broad GUI performance, other platforms and owner acceptance remain unverified. Inherited Container accessibility and global themes remain separate dependencies. See [coverage](../coverage/classes/BoxContainer.md) and [ADR 0081](../decisions/rendering.md#adr-0081).
+[Managed tests](../../tests/Electron2D.Tests/BoxContainerTests.cs) verify fractional pixels, signed/zero weights and separation, propagated maximums, weighted min/max, RTL, alignment, shrink, visibility, spacers, exact packing, reentrant arrangement, deferred phases and zero bytes for 64 warmed resize/layout cycles. [Native tests](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) verify retained NinePatchRect pixels, redistribution and 64 warmed resize/immediate-layout/render frames on Linux Wayland GPU/compatibility. Native allocator counts, broad GUI performance, other platforms and owner acceptance remain unverified. Inherited Container accessibility, Font data and project Theme loading remain separate dependencies. See [coverage](../coverage/classes/BoxContainer.md) and [ADR 0081](../decisions/rendering.md#adr-0081).

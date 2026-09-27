@@ -592,8 +592,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PacketPeerExtension](classes/PacketPeerExtension.md) | PacketPeer | Blocked | 4 |
 | [PacketPeerStream](classes/PacketPeerStream.md) | PacketPeer | Blocked | 3 |
 | [PacketPeerUDP](classes/PacketPeerUDP.md) | PacketPeer | Blocked | 13 |
-| [Panel](classes/Panel.md) | Control | Blocked | 1 |
-| [PanelContainer](classes/PanelContainer.md) | Container | Blocked | 2 |
+| [Panel](classes/Panel.md) | Control | Implemented | 1 |
+| [PanelContainer](classes/PanelContainer.md) | Container | Implemented | 2 |
 | [PanoramaSkyMaterial](classes/PanoramaSkyMaterial.md) | Material | Excluded | 3 |
 | [Parallax2D](classes/Parallax2D.md) | Node2D | Partial | 11 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | CanvasLayer | Partial | 7 |
@@ -868,8 +868,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextureLayeredRD](classes/TextureLayeredRD.md) | TextureLayered | Excluded | 1 |
 | [TextureProgressBar](classes/TextureProgressBar.md) | Range | Implemented | 31 |
 | [TextureRect](classes/TextureRect.md) | Control | Blocked | 21 |
-| [Theme](classes/Theme.md) | Resource | Blocked | 74 |
-| [ThemeDB](classes/ThemeDB.md) | Object | Blocked | 8 |
+| [Theme](classes/Theme.md) | Resource | Partial | 74 |
+| [ThemeDB](classes/ThemeDB.md) | Object | Partial | 8 |
 | [Thread](classes/Thread.md) | RefCounted | Blocked | 11 |
 | [TileData](classes/TileData.md) | Object | Blocked | 44 |
 | [TileMap](classes/TileMap.md) | Node2D | Blocked | 63 |

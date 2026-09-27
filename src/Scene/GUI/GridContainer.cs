@@ -5,7 +5,7 @@ namespace Electron2D;
 /// Layout uses inherited deferred sorting and fill/shrink fitting. Horizontal order follows layout direction.</remarks>
 public class GridContainer : Container
 {
-    private int _columns = 1, _hSeparation = 4, _vSeparation = 4;
+    private int _columns = 1;
     private bool _arranging;
     private readonly List<Control> _children = [];
     private Track[] _columnTracks = [], _rowTracks = [];
@@ -14,8 +14,8 @@ public class GridContainer : Container
     private static readonly PropertyDescriptor[] GridProperties =
     [
         new PropertyDescriptor<GridContainer, int>(nameof(Columns), node => node.Columns, (node, value) => node.Columns = value, _ => 1, stored: true),
-        new PropertyDescriptor<GridContainer, int>(nameof(HSeparation), node => node.HSeparation, (node, value) => node.HSeparation = value, _ => 4, stored: true),
-        new PropertyDescriptor<GridContainer, int>(nameof(VSeparation), node => node.VSeparation, (node, value) => node.VSeparation = value, _ => 4, stored: true)
+        new PropertyDescriptor<GridContainer, int>(nameof(HSeparation), node => node.HSeparation, (node, value) => node.HSeparation = value, node => node.InheritedThemeConstant("h_separation")),
+        new PropertyDescriptor<GridContainer, int>(nameof(VSeparation), node => node.VSeparation, (node, value) => node.VSeparation = value, node => node.InheritedThemeConstant("v_separation"))
     ];
     /// <summary>Creates a one-column grid with four-pixel horizontal and vertical separation.</summary>
     public GridContainer() { }
@@ -31,22 +31,22 @@ public class GridContainer : Container
         set { EnsureMutable(); if (value < 1) throw new ArgumentOutOfRangeException(nameof(value)); if (_columns == value) return; _columns = value; QueueSort(); UpdateMinimumSize(); }
     }
     /// <summary>Gets or sets the signed horizontal pixel gap between occupied columns.</summary>
-    /// <value>Four initially; a local typed projection of the horizontal theme constant.</value>
+    /// <value>Four initially; assignments create a local horizontal theme-constant override.</value>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
     /// <exception cref="ObjectDisposedException">The grid is disposed.</exception>
     public int HSeparation
     {
-        get { Check(); return _hSeparation; }
-        set { EnsureMutable(); if (_hSeparation == value) return; _hSeparation = value; QueueSort(); UpdateMinimumSize(); }
+        get => GetThemeConstant("h_separation");
+        set { EnsureMutable(); if (HSeparation == value) return; if (value == InheritedThemeConstant("h_separation")) RemoveThemeConstantOverride("h_separation"); else AddThemeConstantOverride("h_separation", value); QueueSort(); UpdateMinimumSize(); }
     }
     /// <summary>Gets or sets the signed vertical pixel gap between rows.</summary>
-    /// <value>Four initially; a local typed projection of the vertical theme constant.</value>
+    /// <value>Four initially; assignments create a local vertical theme-constant override.</value>
     /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
     /// <exception cref="ObjectDisposedException">The grid is disposed.</exception>
     public int VSeparation
     {
-        get { Check(); return _vSeparation; }
-        set { EnsureMutable(); if (_vSeparation == value) return; _vSeparation = value; QueueSort(); UpdateMinimumSize(); }
+        get => GetThemeConstant("v_separation");
+        set { EnsureMutable(); if (VSeparation == value) return; if (value == InheritedThemeConstant("v_separation")) RemoveThemeConstantOverride("v_separation"); else AddThemeConstantOverride("v_separation", value); QueueSort(); UpdateMinimumSize(); }
     }
     /// <inheritdoc />
     protected override Vector2 OnGetMinimumSize()
@@ -64,7 +64,7 @@ public class GridContainer : Container
             }
         if (count == 0) return Vector2.Zero;
         var columns = Math.Min(count, configuredColumns); var rows = (count - 1) / configuredColumns + 1;
-        var width = checked((columns - 1) * _hSeparation); var height = checked((rows - 1) * _vSeparation);
+        var width = checked((columns - 1) * HSeparation); var height = checked((rows - 1) * VSeparation);
         for (var index = 0; index < columns; index++) width = checked(width + _minimumColumns[index]);
         for (var index = 0; index < rows; index++) height = checked(height + _minimumRows[index]);
         return new(width, height);
@@ -79,7 +79,7 @@ public class GridContainer : Container
         {
             for (var index = 0; index < ChildCount; index++) if (Sortable(GetChild(index)) && GetChild(index) is Control child) _children.Add(child);
             if (_children.Count == 0) return;
-            var columns = _columns; var horizontalGap = _hSeparation; var verticalGap = _vSeparation;
+            var columns = _columns; var horizontalGap = HSeparation; var verticalGap = VSeparation;
             var columnCount = Math.Min(_children.Count, columns); var rowCount = (_children.Count - 1) / columns + 1;
             Prepare(ref _columnTracks, columnCount); Prepare(ref _rowTracks, rowCount);
             var size = Size; var maximum = GetCombinedMaximumSize(); var propagate = PropagateMaximumSize;

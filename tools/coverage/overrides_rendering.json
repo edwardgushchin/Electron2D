@@ -1766,6 +1766,746 @@
       "godot": "StyleBox::method:_get_draw_rect(Rect2:)",
       "electron2d": "method:Electron2D.StyleBoxFlat.OnGetDrawRect(Electron2D.Rect2)",
       "reason": "ADR 0082: flat resource implements the existing typed draw/bounds hook with rounded colored triangle geometry and expansion/shadow bounds."
+    },
+    {
+      "godot": "Panel::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: panel style is selected through inherited typed theme lookup with name panel; PanelContainer preserves MouseFilter.Stop as its inherited stored default."
+    },
+    {
+      "godot": "PanelContainer::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: panel style is selected through inherited typed theme lookup with name panel; PanelContainer preserves MouseFilter.Stop as its inherited stored default."
+    },
+    {
+      "godot": "PanelContainer::property:mouse_filter",
+      "electron2d": "property:Electron2D.Control.MouseFilter()",
+      "reason": "ADR 0083: panel style is selected through inherited typed theme lookup with name panel; PanelContainer preserves MouseFilter.Stop as its inherited stored default."
+    },
+    {
+      "godot": "Theme::enum:DataType",
+      "electron2d": "T:Electron2D.Theme.DataType",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_COLOR",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.Color()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_CONSTANT",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.Constant()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_FONT",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.Font()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_FONT_SIZE",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.FontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_ICON",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.Icon()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.Max()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::enum_value:DataType.DATA_TYPE_STYLEBOX",
+      "electron2d": "enumValue:Electron2D.Theme.DataType.StyleBox()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:add_type(StringName:)",
+      "electron2d": "method:Electron2D.Theme.AddType(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear()",
+      "electron2d": "method:Electron2D.Theme.Clear()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearThemeItem(Electron2D.Theme.DataType,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:clear_type_variation(StringName:)",
+      "electron2d": "method:Electron2D.Theme.ClearTypeVariation(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_color_list(String:)",
+      "electron2d": "method:Electron2D.Theme.GetColorList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_color_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetColorTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_constant_list(String:)",
+      "electron2d": "method:Electron2D.Theme.GetConstantList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_constant_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetConstantTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_font_size_list(String:)",
+      "electron2d": "method:Electron2D.Theme.GetFontSizeList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_font_size_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetFontSizeTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_icon_list(String:)",
+      "electron2d": "method:Electron2D.Theme.GetIconList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_icon_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetIconTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_stylebox_list(String:)",
+      "electron2d": "method:Electron2D.Theme.GetStyleBoxList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_stylebox_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetStyleBoxTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_theme_item_list(int:Theme.DataType,String:)",
+      "electron2d": "method:Electron2D.Theme.GetThemeItemList(Electron2D.Theme.DataType,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_theme_item_type_list(int:Theme.DataType)",
+      "electron2d": "method:Electron2D.Theme.GetThemeItemTypeList(Electron2D.Theme.DataType)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_type_list()",
+      "electron2d": "method:Electron2D.Theme.GetTypeList()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_type_variation_base(StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetTypeVariationBase(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_type_variation_list(StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetTypeVariationList(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_default_base_scale()",
+      "electron2d": "method:Electron2D.Theme.HasDefaultBaseScale()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_default_font_size()",
+      "electron2d": "method:Electron2D.Theme.HasDefaultFontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:has_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.HasThemeItem(Electron2D.Theme.DataType,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:is_type_variation(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.IsTypeVariation(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:merge_with(Theme:)",
+      "electron2d": "method:Electron2D.Theme.MergeWith(Electron2D.Theme)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:remove_type(StringName:)",
+      "electron2d": "method:Electron2D.Theme.RemoveType(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_color(StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameColor(System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_constant(StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameConstant(System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_font_size(StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameFontSize(System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_icon(StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameIcon(System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_stylebox(StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameStyleBox(System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_theme_item(int:Theme.DataType,StringName:,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameThemeItem(Electron2D.Theme.DataType,System.String,System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:rename_type(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.RenameType(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_color(StringName:,StringName:,Color:)",
+      "electron2d": "method:Electron2D.Theme.SetColor(System.String,System.String,Electron2D.Color)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_constant(StringName:,StringName:,int:)",
+      "electron2d": "method:Electron2D.Theme.SetConstant(System.String,System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_font_size(StringName:,StringName:,int:)",
+      "electron2d": "method:Electron2D.Theme.SetFontSize(System.String,System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_icon(StringName:,StringName:,Texture2D:)",
+      "electron2d": "method:Electron2D.Theme.SetIcon(System.String,System.String,Electron2D.Texture)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_stylebox(StringName:,StringName:,StyleBox:)",
+      "electron2d": "method:Electron2D.Theme.SetStyleBox(System.String,System.String,Electron2D.StyleBox)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:set_type_variation(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.SetTypeVariation(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::property:default_base_scale",
+      "electron2d": "property:Electron2D.Theme.DefaultBaseScale()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::property:default_font_size",
+      "electron2d": "property:Electron2D.Theme.DefaultFontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::method:get_default_theme()",
+      "electron2d": "method:Electron2D.ThemeDB.GetDefaultTheme()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::property:fallback_base_scale",
+      "electron2d": "property:Electron2D.ThemeDB.FallbackBaseScale()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::property:fallback_font_size",
+      "electron2d": "property:Electron2D.ThemeDB.FallbackFontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::property:fallback_icon",
+      "electron2d": "property:Electron2D.ThemeDB.FallbackIcon()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::property:fallback_stylebox",
+      "electron2d": "property:Electron2D.ThemeDB.FallbackStyleBox()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "ThemeDB::signal:fallback_changed()",
+      "electron2d": "event:Electron2D.ThemeDB.FallbackChanged()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::constant:NOTIFICATION_THEME_CHANGED",
+      "electron2d": "constant:Electron2D.Control.NotificationThemeChanged()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:add_theme_color_override(StringName:,Color:)",
+      "electron2d": "method:Electron2D.Control.AddThemeColorOverride(System.String,Electron2D.Color)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:add_theme_constant_override(StringName:,int:)",
+      "electron2d": "method:Electron2D.Control.AddThemeConstantOverride(System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:add_theme_font_size_override(StringName:,int:)",
+      "electron2d": "method:Electron2D.Control.AddThemeFontSizeOverride(System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:add_theme_icon_override(StringName:,Texture2D:)",
+      "electron2d": "method:Electron2D.Control.AddThemeIconOverride(System.String,Electron2D.Texture)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:add_theme_stylebox_override(StringName:,StyleBox:)",
+      "electron2d": "method:Electron2D.Control.AddThemeStyleBoxOverride(System.String,Electron2D.StyleBox)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:begin_bulk_theme_override()",
+      "electron2d": "method:Electron2D.Control.BeginBulkThemeOverride()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:end_bulk_theme_override()",
+      "electron2d": "method:Electron2D.Control.EndBulkThemeOverride()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_default_base_scale()",
+      "electron2d": "method:Electron2D.Control.GetThemeDefaultBaseScale()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_default_font_size()",
+      "electron2d": "method:Electron2D.Control.GetThemeDefaultFontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:get_theme_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_color_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeColorOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_constant_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeConstantOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_font_size_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeFontSizeOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_icon_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeIconOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:has_theme_stylebox_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.HasThemeStyleBoxOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:remove_theme_color_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.RemoveThemeColorOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:remove_theme_constant_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.RemoveThemeConstantOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:remove_theme_font_size_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.RemoveThemeFontSizeOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:remove_theme_icon_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.RemoveThemeIconOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::method:remove_theme_stylebox_override(StringName:)",
+      "electron2d": "method:Electron2D.Control.RemoveThemeStyleBoxOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::property:theme",
+      "electron2d": "property:Electron2D.Control.Theme()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::property:theme_type_variation",
+      "electron2d": "property:Electron2D.Control.ThemeTypeVariation()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Control::signal:theme_changed()",
+      "electron2d": "event:Electron2D.Control.ThemeChanged()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::constant:NOTIFICATION_THEME_CHANGED",
+      "electron2d": "constant:Electron2D.Window.NotificationThemeChanged()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:add_theme_color_override(StringName:,Color:)",
+      "electron2d": "method:Electron2D.Window.AddThemeColorOverride(System.String,Electron2D.Color)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:add_theme_constant_override(StringName:,int:)",
+      "electron2d": "method:Electron2D.Window.AddThemeConstantOverride(System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:add_theme_font_size_override(StringName:,int:)",
+      "electron2d": "method:Electron2D.Window.AddThemeFontSizeOverride(System.String,System.Int32)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:add_theme_icon_override(StringName:,Texture2D:)",
+      "electron2d": "method:Electron2D.Window.AddThemeIconOverride(System.String,Electron2D.Texture)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:add_theme_stylebox_override(StringName:,StyleBox:)",
+      "electron2d": "method:Electron2D.Window.AddThemeStyleBoxOverride(System.String,Electron2D.StyleBox)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:begin_bulk_theme_override()",
+      "electron2d": "method:Electron2D.Window.BeginBulkThemeOverride()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:end_bulk_theme_override()",
+      "electron2d": "method:Electron2D.Window.EndBulkThemeOverride()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_default_base_scale()",
+      "electron2d": "method:Electron2D.Window.GetThemeDefaultBaseScale()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_default_font_size()",
+      "electron2d": "method:Electron2D.Window.GetThemeDefaultFontSize()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:get_theme_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_color(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeColor(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_color_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeColorOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_constant(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeConstant(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_constant_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeConstantOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_font_size(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeFontSize(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_font_size_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeFontSizeOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_icon(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeIcon(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_icon_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeIconOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_stylebox(StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:has_theme_stylebox_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.HasThemeStyleBoxOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:remove_theme_color_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.RemoveThemeColorOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:remove_theme_constant_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.RemoveThemeConstantOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:remove_theme_font_size_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.RemoveThemeFontSizeOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:remove_theme_icon_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.RemoveThemeIconOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::method:remove_theme_stylebox_override(StringName:)",
+      "electron2d": "method:Electron2D.Window.RemoveThemeStyleBoxOverride(System.String)",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::property:theme",
+      "electron2d": "property:Electron2D.Window.Theme()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::property:theme_type_variation",
+      "electron2d": "property:Electron2D.Window.ThemeTypeVariation()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Window::signal:theme_changed()",
+      "electron2d": "event:Electron2D.Window.ThemeChanged()",
+      "reason": "ADR 0083: typed resource/owner query or mutation preserves category defaults, presence, key/variation order, state changes and lifetime. Strings project StringName; scene theme operations share actual Control/Window consumers."
+    },
+    {
+      "godot": "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetColor(System.String,System.String)",
+      "reason": "ADR 0001/0083: concrete typed color access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetConstant(System.String,System.String)",
+      "reason": "ADR 0001/0083: concrete typed constant access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetFontSize(System.String,System.String)",
+      "reason": "ADR 0001/0083: concrete typed font_size access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetIcon(System.String,System.String)",
+      "reason": "ADR 0001/0083: concrete typed icon access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+      "electron2d": "method:Electron2D.Theme.GetStyleBox(System.String,System.String)",
+      "reason": "ADR 0001/0083: concrete typed stylebox access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Theme.SetColor(System.String,System.String,Electron2D.Color)",
+      "reason": "ADR 0001/0083: concrete typed color access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Theme.SetConstant(System.String,System.String,System.Int32)",
+      "reason": "ADR 0001/0083: concrete typed constant access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Theme.SetFontSize(System.String,System.String,System.Int32)",
+      "reason": "ADR 0001/0083: concrete typed font_size access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Theme.SetIcon(System.String,System.String,Electron2D.Texture)",
+      "reason": "ADR 0001/0083: concrete typed icon access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.Theme.SetStyleBox(System.String,System.String,Electron2D.StyleBox)",
+      "reason": "ADR 0001/0083: concrete typed stylebox access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
     }
   ],
   "statusGroups": [
@@ -2658,7 +3398,7 @@
         "CanvasItem::method:draw_style_box(StyleBox:,Rect2:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0082: typed StyleBox margins/minimum/mask/draw hooks and current-item context execute through retained CanvasItem drawing. Texture style preserves axis policies, atlas-before-expand geometry, borrowed texture and exact resource copies; Empty and Line implement their real margin/draw semantics. Global Theme lookup and complete control skins remain separate capabilities. StyleBoxTests verifies defaults/notifications/hooks/scope/failure/copy/lifetime/concurrency and 64 warmed recording/replay cycles without managed allocation. StyleBoxRenderingTests verifies nine axis combinations, fractional/atlas/line/empty pixels and 64 warmed mutation/recording/render frames without managed allocation on Linux Wayland GPU/compatibility; native allocator and other-platform acceptance are not claimed."
+      "reason": "ADR 0082: typed StyleBox margins/minimum/mask/draw hooks and current-item context execute through retained CanvasItem drawing. Texture style preserves axis policies, atlas-before-expand geometry, borrowed texture and exact resource copies; Empty and Line implement their real margin/draw semantics. Typed Theme lookup and panel consumers execute under ADR 0083; Font/project-theme/remaining-control skin gaps remain separate. StyleBoxTests verifies defaults/notifications/hooks/scope/failure/copy/lifetime/concurrency and 64 warmed recording/replay cycles without managed allocation. StyleBoxRenderingTests verifies nine axis combinations, fractional/atlas/line/empty pixels and 64 warmed mutation/recording/render frames without managed allocation on Linux Wayland GPU/compatibility; native allocator and other-platform acceptance are not claimed."
     },
     {
       "godot": [
@@ -2708,8 +3448,8 @@
         "PanelContainer::property:mouse_filter",
         "PanelContainer::theme_item:panel"
       ],
-      "state": "Blocked",
-      "reason": "ADR 0082: StyleBoxFlat drawing is available. Trigger: complete Theme/default-skin lookup and invalidation followed by the first panel consumer slice, with real default panel drawing and PanelContainer content-margin layout. Do not substitute a fake empty default."
+      "state": "Implemented",
+      "reason": "ADR 0083: inherited typed panel-style lookup consumes real ThemeDB defaults/overrides; Panel paints before user drawing, and PanelContainer adds style/child minima, content fitting and reduced maximum propagation with exact Stop defaults and factories. ThemeResourceTests, ThemeLookupTests and PanelContainerTests verify state/priority/notification failures/reentry/typed packing and warmed allocations; ThemePanelRenderingTests verifies seven visual phases and 64 warmed notification/layout/render frames without managed allocation on Linux Wayland GPU/compatibility."
     },
     {
       "godot": [
@@ -2721,6 +3461,210 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0082: global Corner projects stable typed TopLeft=0, TopRight=1, BottomRight=2, BottomLeft=3; StyleBoxFlat validates undefined values before access. StyleBoxFlatTests verifies all numeric values, valid side-specific radius changes and undefined-corner rejection."
+    },
+    {
+      "godot": [
+        "Theme::enum:DataType",
+        "Theme::enum_value:DataType.DATA_TYPE_COLOR",
+        "Theme::enum_value:DataType.DATA_TYPE_CONSTANT",
+        "Theme::enum_value:DataType.DATA_TYPE_FONT",
+        "Theme::enum_value:DataType.DATA_TYPE_FONT_SIZE",
+        "Theme::enum_value:DataType.DATA_TYPE_ICON",
+        "Theme::enum_value:DataType.DATA_TYPE_MAX",
+        "Theme::enum_value:DataType.DATA_TYPE_STYLEBOX",
+        "Theme::method:add_type(StringName:)",
+        "Theme::method:clear()",
+        "Theme::method:clear_color(StringName:,StringName:)",
+        "Theme::method:clear_constant(StringName:,StringName:)",
+        "Theme::method:clear_font_size(StringName:,StringName:)",
+        "Theme::method:clear_icon(StringName:,StringName:)",
+        "Theme::method:clear_stylebox(StringName:,StringName:)",
+        "Theme::method:clear_type_variation(StringName:)",
+        "Theme::method:get_color(StringName:,StringName:)",
+        "Theme::method:get_color_list(String:)",
+        "Theme::method:get_color_type_list()",
+        "Theme::method:get_constant(StringName:,StringName:)",
+        "Theme::method:get_constant_list(String:)",
+        "Theme::method:get_constant_type_list()",
+        "Theme::method:get_font_size(StringName:,StringName:)",
+        "Theme::method:get_font_size_list(String:)",
+        "Theme::method:get_font_size_type_list()",
+        "Theme::method:get_icon(StringName:,StringName:)",
+        "Theme::method:get_icon_list(String:)",
+        "Theme::method:get_icon_type_list()",
+        "Theme::method:get_stylebox(StringName:,StringName:)",
+        "Theme::method:get_stylebox_list(String:)",
+        "Theme::method:get_stylebox_type_list()",
+        "Theme::method:get_type_list()",
+        "Theme::method:get_type_variation_base(StringName:)",
+        "Theme::method:get_type_variation_list(StringName:)",
+        "Theme::method:has_color(StringName:,StringName:)",
+        "Theme::method:has_constant(StringName:,StringName:)",
+        "Theme::method:has_default_base_scale()",
+        "Theme::method:has_default_font_size()",
+        "Theme::method:has_font_size(StringName:,StringName:)",
+        "Theme::method:has_icon(StringName:,StringName:)",
+        "Theme::method:has_stylebox(StringName:,StringName:)",
+        "Theme::method:is_type_variation(StringName:,StringName:)",
+        "Theme::method:merge_with(Theme:)",
+        "Theme::method:remove_type(StringName:)",
+        "Theme::method:rename_color(StringName:,StringName:,StringName:)",
+        "Theme::method:rename_constant(StringName:,StringName:,StringName:)",
+        "Theme::method:rename_font_size(StringName:,StringName:,StringName:)",
+        "Theme::method:rename_icon(StringName:,StringName:,StringName:)",
+        "Theme::method:rename_stylebox(StringName:,StringName:,StringName:)",
+        "Theme::method:rename_type(StringName:,StringName:)",
+        "Theme::method:set_color(StringName:,StringName:,Color:)",
+        "Theme::method:set_constant(StringName:,StringName:,int:)",
+        "Theme::method:set_font_size(StringName:,StringName:,int:)",
+        "Theme::method:set_icon(StringName:,StringName:,Texture2D:)",
+        "Theme::method:set_stylebox(StringName:,StringName:,StyleBox:)",
+        "Theme::method:set_type_variation(StringName:,StringName:)",
+        "Theme::property:default_base_scale",
+        "Theme::property:default_font_size",
+        "ThemeDB::property:fallback_base_scale",
+        "ThemeDB::property:fallback_font_size",
+        "ThemeDB::property:fallback_stylebox",
+        "ThemeDB::signal:fallback_changed()",
+        "Control::constant:NOTIFICATION_THEME_CHANGED",
+        "Control::method:add_theme_color_override(StringName:,Color:)",
+        "Control::method:add_theme_constant_override(StringName:,int:)",
+        "Control::method:add_theme_font_size_override(StringName:,int:)",
+        "Control::method:add_theme_icon_override(StringName:,Texture2D:)",
+        "Control::method:add_theme_stylebox_override(StringName:,StyleBox:)",
+        "Control::method:begin_bulk_theme_override()",
+        "Control::method:end_bulk_theme_override()",
+        "Control::method:get_theme_color(StringName:,StringName:)",
+        "Control::method:get_theme_constant(StringName:,StringName:)",
+        "Control::method:get_theme_default_base_scale()",
+        "Control::method:get_theme_default_font_size()",
+        "Control::method:get_theme_font_size(StringName:,StringName:)",
+        "Control::method:get_theme_icon(StringName:,StringName:)",
+        "Control::method:get_theme_stylebox(StringName:,StringName:)",
+        "Control::method:has_theme_color(StringName:,StringName:)",
+        "Control::method:has_theme_color_override(StringName:)",
+        "Control::method:has_theme_constant(StringName:,StringName:)",
+        "Control::method:has_theme_constant_override(StringName:)",
+        "Control::method:has_theme_font_size(StringName:,StringName:)",
+        "Control::method:has_theme_font_size_override(StringName:)",
+        "Control::method:has_theme_icon(StringName:,StringName:)",
+        "Control::method:has_theme_icon_override(StringName:)",
+        "Control::method:has_theme_stylebox(StringName:,StringName:)",
+        "Control::method:has_theme_stylebox_override(StringName:)",
+        "Control::method:remove_theme_color_override(StringName:)",
+        "Control::method:remove_theme_constant_override(StringName:)",
+        "Control::method:remove_theme_font_size_override(StringName:)",
+        "Control::method:remove_theme_icon_override(StringName:)",
+        "Control::method:remove_theme_stylebox_override(StringName:)",
+        "Control::property:theme",
+        "Control::property:theme_type_variation",
+        "Control::signal:theme_changed()",
+        "Window::constant:NOTIFICATION_THEME_CHANGED",
+        "Window::method:add_theme_color_override(StringName:,Color:)",
+        "Window::method:add_theme_constant_override(StringName:,int:)",
+        "Window::method:add_theme_font_size_override(StringName:,int:)",
+        "Window::method:add_theme_icon_override(StringName:,Texture2D:)",
+        "Window::method:add_theme_stylebox_override(StringName:,StyleBox:)",
+        "Window::method:begin_bulk_theme_override()",
+        "Window::method:end_bulk_theme_override()",
+        "Window::method:get_theme_color(StringName:,StringName:)",
+        "Window::method:get_theme_constant(StringName:,StringName:)",
+        "Window::method:get_theme_default_base_scale()",
+        "Window::method:get_theme_default_font_size()",
+        "Window::method:get_theme_font_size(StringName:,StringName:)",
+        "Window::method:get_theme_icon(StringName:,StringName:)",
+        "Window::method:get_theme_stylebox(StringName:,StringName:)",
+        "Window::method:has_theme_color(StringName:,StringName:)",
+        "Window::method:has_theme_color_override(StringName:)",
+        "Window::method:has_theme_constant(StringName:,StringName:)",
+        "Window::method:has_theme_constant_override(StringName:)",
+        "Window::method:has_theme_font_size(StringName:,StringName:)",
+        "Window::method:has_theme_font_size_override(StringName:)",
+        "Window::method:has_theme_icon(StringName:,StringName:)",
+        "Window::method:has_theme_icon_override(StringName:)",
+        "Window::method:has_theme_stylebox(StringName:,StringName:)",
+        "Window::method:has_theme_stylebox_override(StringName:)",
+        "Window::method:remove_theme_color_override(StringName:)",
+        "Window::method:remove_theme_constant_override(StringName:)",
+        "Window::method:remove_theme_font_size_override(StringName:)",
+        "Window::method:remove_theme_icon_override(StringName:)",
+        "Window::method:remove_theme_stylebox_override(StringName:)",
+        "Window::property:theme",
+        "Window::property:theme_type_variation",
+        "Window::signal:theme_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0083: five typed theme categories, defaults/variation/type operations and shared Control/Window owner lookup, overrides, batching and theme-change delivery execute with current panel/container consumers. Font resources and project-theme loading remain separately accounted. ThemeResourceTests, ThemeLookupTests and PanelContainerTests verify state/priority/notification failures/reentry/typed packing and warmed allocations; ThemePanelRenderingTests verifies seven visual phases and 64 warmed notification/layout/render frames without managed allocation on Linux Wayland GPU/compatibility."
+    },
+    {
+      "godot": [
+        "Theme::method:clear_font(StringName:,StringName:)",
+        "Theme::method:get_font(StringName:,StringName:)",
+        "Theme::method:get_font_list(String:)",
+        "Theme::method:get_font_type_list()",
+        "Theme::method:has_default_font()",
+        "Theme::method:has_font(StringName:,StringName:)",
+        "Theme::method:rename_font(StringName:,StringName:,StringName:)",
+        "Theme::method:set_font(StringName:,StringName:,Font:)",
+        "Theme::property:default_font",
+        "ThemeDB::property:fallback_font",
+        "Control::method:add_theme_font_override(StringName:,Font:)",
+        "Control::method:get_theme_default_font()",
+        "Control::method:get_theme_font(StringName:,StringName:)",
+        "Control::method:has_theme_font(StringName:,StringName:)",
+        "Control::method:has_theme_font_override(StringName:)",
+        "Control::method:remove_theme_font_override(StringName:)",
+        "Window::method:add_theme_font_override(StringName:,Font:)",
+        "Window::method:get_theme_default_font()",
+        "Window::method:get_theme_font(StringName:,StringName:)",
+        "Window::method:has_theme_font(StringName:,StringName:)",
+        "Window::method:has_theme_font_override(StringName:)",
+        "Window::method:remove_theme_font_override(StringName:)"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0083 with ADR 0046: first approved SDL_ttf/HarfBuzz Font resource/loading/shaping slice must implement actual Font theme storage/defaults, list/mutation methods, ThemeDB font fallback and Control/Window font queries/overrides together; no inert Font resource is exposed."
+    },
+    {
+      "godot": [
+        "Theme::method:clear_theme_item(int:Theme.DataType,StringName:,StringName:)",
+        "Theme::method:get_theme_item(int:Theme.DataType,StringName:,StringName:)",
+        "Theme::method:get_theme_item_list(int:Theme.DataType,String:)",
+        "Theme::method:get_theme_item_type_list(int:Theme.DataType)",
+        "Theme::method:has_theme_item(int:Theme.DataType,StringName:,StringName:)",
+        "Theme::method:rename_theme_item(int:Theme.DataType,StringName:,StringName:,StringName:)",
+        "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0083: Color, Constant, FontSize, Icon and StyleBox behavior is executable. Category Has/list/rename/clear reject Font with NotSupportedException until the first Font resource slice. Variant get/set are projected through the five concrete typed getter/setter families under ADR 0001; add the sixth typed Font projection with that dependency."
+    },
+    {
+      "godot": [
+        "class:Theme",
+        "class:ThemeDB"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0083: current five-category Theme resource and ThemeDB/default/owner pipeline execute. Theme lacks actual Font category/default APIs until SDL_ttf/HarfBuzz Font resources; ThemeDB additionally lacks project Theme-file loading/startup gui/theme/custom policy and full default assets for absent GUI/font consumers."
+    },
+    {
+      "godot": [
+        "ThemeDB::method:get_default_theme()"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0083: returns the live built-in Theme containing actual Panel/PanelContainer styles and Box/HBox/VBox/Grid separation constants. Populate and verify each remaining GUI default style/color/constant/icon family with its first complete consumer slice; default Font assets enter the SDL_ttf/HarfBuzz Font slice. This does not claim the full upstream default-theme catalog."
+    },
+    {
+      "godot": [
+        "ThemeDB::method:get_project_theme()"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0083: trigger Theme resource-file serialization/loading plus typed gui/theme/custom startup configuration, validation and ownership. Add GetProjectTheme only when it returns the actual loaded project Theme, not a null-success stub."
+    },
+    {
+      "godot": [
+        "ThemeDB::property:fallback_icon"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0083: live nullable borrowed fallback icon and lazy decoding of the pinned 16x16 error SVG execute at default scale one. Trigger for completion: default-theme-scale/DPI-aware icon construction and dependent refresh on active scale changes; no nonunit asset scaling is claimed."
     }
   ],
   "extras": [
@@ -3280,6 +4224,101 @@
       "electron2d": "method:Electron2D.StyleBoxFlat.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "state": "Implemented",
       "reason": "ADR 0082 with 0013: typed construction, stored property descriptors, exact duplicate factory and Resource graph-copy hook project the existing flat-style resource lifecycle; signed raw values and clamped defaults remain distinct from adapted draw geometry."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Theme..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Theme.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Theme.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Theme.OnResetState()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Theme.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Theme.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "property:Electron2D.ThemeDB.Instance()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.ThemeDB.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Panel..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Panel.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Panel.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PanelContainer..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.GetAllowedSizeFlagsHorizontal()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.GetAllowedSizeFlagsVertical()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.PanelContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0083 with 0003/0013/0023: typed construction, singleton access, resource graph copy/reset/descriptors/cleanup or concrete panel notification/layout/factory/default hooks project existing theme and panel lifecycle capabilities."
+    },
+    {
+      "electron2d": "method:Electron2D.Window.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0083 with ADR 0008: concrete Window notification override projects inherited node/theme lifecycle, including owner refresh on theme changes and parent transitions; no new public notification capability is introduced."
     }
   ]
 }

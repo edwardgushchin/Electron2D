@@ -4,7 +4,8 @@ namespace Electron2D;
 
 /// <summary>A canvas item with a rectangular layout and a pivot-based transform.</summary>
 /// <remarks>Anchors and offsets resolve against the direct canvas parent's rectangle or the viewport.
-/// The root viewport routes pointer and focused keyboard input to controls. Container flags drive concrete box layout; theme and complete GUI routing remain separate capabilities.</remarks>
+/// The root viewport routes pointer and focused keyboard input to controls. Container flags drive concrete layout;
+/// typed themes supply inherited appearance values and local overrides.</remarks>
 public partial class Control : CanvasItem
 {
     private readonly float[] _anchors = new float[4];
@@ -724,6 +725,9 @@ public partial class Control : CanvasItem
             ThrowCollected("Control visibility callbacks failed.", errors);
         }
         else base.OnNotification(what);
+        if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
+        else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
+        else if (what == NotificationThemeChanged) ProcessThemeNotification();
         if (what == NotificationEnterCanvas)
         {
             if (Parent is Container { IsDisposed: false } container)
@@ -745,7 +749,7 @@ public partial class Control : CanvasItem
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Control>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Control) ? CreateControl : base.CreateSceneInstanceFactory();
@@ -753,7 +757,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
+        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
         base.Dispose(disposing);
     }
 

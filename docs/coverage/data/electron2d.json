@@ -2557,6 +2557,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Panel",
+    "kind": "type",
+    "declaringType": "Electron2D.Panel",
+    "name": "Panel",
+    "signature": "public class Electron2D.Panel",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PanelContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "PanelContainer",
+    "signature": "public class Electron2D.PanelContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Parallax",
     "kind": "type",
     "declaringType": "Electron2D.Parallax",
@@ -3751,6 +3781,54 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Theme",
+    "kind": "type",
+    "declaringType": "Electron2D.Theme",
+    "name": "Theme",
+    "signature": "public class Electron2D.Theme",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Theme.DataType",
+    "kind": "type",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "DataType",
+    "signature": "public enum Electron2D.Theme.DataType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ThemeDB",
+    "kind": "type",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "ThemeDB",
+    "signature": "public sealed class Electron2D.ThemeDB",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Timer",
     "kind": "type",
     "declaringType": "Electron2D.Timer",
@@ -4635,6 +4713,19 @@
     "value": "40"
   },
   {
+    "id": "constant:Electron2D.Control.NotificationThemeChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationThemeChanged",
+    "signature": "public const System.Int32 NotificationThemeChanged = 45",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "45"
+  },
+  {
     "id": "constant:Electron2D.DisplayServer.InvalidScreen()",
     "kind": "constant",
     "declaringType": "Electron2D.DisplayServer",
@@ -5517,6 +5608,19 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "-2147483648"
+  },
+  {
+    "id": "constant:Electron2D.Window.NotificationThemeChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Window",
+    "name": "NotificationThemeChanged",
+    "signature": "public const System.Int32 NotificationThemeChanged = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "32"
   },
   {
     "id": "constructor:Electron2D.AStar..ctor()",
@@ -6585,6 +6689,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Panel..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Panel",
+    "name": ".ctor",
+    "signature": "public Panel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PanelContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": ".ctor",
+    "signature": "public PanelContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Parallax..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Parallax",
@@ -7528,6 +7658,19 @@
     "declaringType": "Electron2D.TextureProgressBar",
     "name": ".ctor",
     "signature": "public TextureProgressBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Theme..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Theme",
+    "name": ".ctor",
+    "signature": "public Theme()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17438,6 +17581,97 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.Theme.DataType.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "Color",
+    "signature": "public const Electron2D.Theme.DataType Color = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.Constant()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "Constant",
+    "signature": "public const Electron2D.Theme.DataType Constant = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.Font()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "Font",
+    "signature": "public const Electron2D.Theme.DataType Font = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.FontSize()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "FontSize",
+    "signature": "public const Electron2D.Theme.DataType FontSize = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.Icon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "Icon",
+    "signature": "public const Electron2D.Theme.DataType Icon = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "Max",
+    "signature": "public const Electron2D.Theme.DataType Max = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.Theme.DataType.StyleBox()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Theme.DataType",
+    "name": "StyleBox",
+    "signature": "public const Electron2D.Theme.DataType StyleBox = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme.DataType",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.TimerProcessCallback.Idle()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TimerProcessCallback",
@@ -19102,6 +19336,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.ThemeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "ThemeChanged",
+    "signature": "public event System.Action ThemeChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Curve.DomainChanged()",
     "kind": "event",
     "declaringType": "Electron2D.Curve",
@@ -19804,6 +20051,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.ThemeDB.FallbackChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "FallbackChanged",
+    "signature": "public event System.Action FallbackChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Timer.Timeout()",
     "kind": "event",
     "declaringType": "Electron2D.Timer",
@@ -20004,6 +20264,19 @@
     "declaringType": "Electron2D.Window",
     "name": "MouseExited",
     "signature": "public event System.Action MouseExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.ThemeChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "ThemeChanged",
+    "signature": "public event System.Action ThemeChanged",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26921,6 +27194,139 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.AddThemeColorOverride(System.String,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AddThemeColorOverride",
+    "signature": "public System.Void AddThemeColorOverride(System.String name, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AddThemeConstantOverride(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AddThemeConstantOverride",
+    "signature": "public System.Void AddThemeConstantOverride(System.String name, System.Int32 constant)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "constant",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AddThemeFontSizeOverride(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AddThemeFontSizeOverride",
+    "signature": "public System.Void AddThemeFontSizeOverride(System.String name, System.Int32 fontSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AddThemeIconOverride(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AddThemeIconOverride",
+    "signature": "public System.Void AddThemeIconOverride(System.String name, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AddThemeStyleBoxOverride(System.String,Electron2D.StyleBox)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AddThemeStyleBoxOverride",
+    "signature": "public System.Void AddThemeStyleBoxOverride(System.String name, Electron2D.StyleBox styleBox)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "styleBox",
+        "type": "Electron2D.StyleBox",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.BeginBulkThemeOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "BeginBulkThemeOverride",
+    "signature": "public System.Void BeginBulkThemeOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -26949,6 +27355,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.EndBulkThemeOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "EndBulkThemeOverride",
+    "signature": "public System.Void EndBulkThemeOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -27269,6 +27688,152 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeColor",
+    "signature": "public Electron2D.Color GetThemeColor(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeConstant",
+    "signature": "public System.Int32 GetThemeConstant(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeDefaultBaseScale()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeDefaultBaseScale",
+    "signature": "public System.Single GetThemeDefaultBaseScale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeDefaultFontSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeDefaultFontSize",
+    "signature": "public System.Int32 GetThemeDefaultFontSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeFontSize",
+    "signature": "public System.Int32 GetThemeFontSize(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeIcon",
+    "signature": "public Electron2D.Texture GetThemeIcon(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetThemeStyleBox",
+    "signature": "public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetTransform()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -27332,6 +27897,221 @@
       {
         "name": "point",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeColor",
+    "signature": "public System.Boolean HasThemeColor(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeColorOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeColorOverride",
+    "signature": "public System.Boolean HasThemeColorOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeConstant",
+    "signature": "public System.Boolean HasThemeConstant(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeConstantOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeConstantOverride",
+    "signature": "public System.Boolean HasThemeConstantOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeFontSize",
+    "signature": "public System.Boolean HasThemeFontSize(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeFontSizeOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeFontSizeOverride",
+    "signature": "public System.Boolean HasThemeFontSizeOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeIcon",
+    "signature": "public System.Boolean HasThemeIcon(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeIconOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeIconOverride",
+    "signature": "public System.Boolean HasThemeIconOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeStyleBox",
+    "signature": "public System.Boolean HasThemeStyleBox(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.HasThemeStyleBoxOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "HasThemeStyleBoxOverride",
+    "signature": "public System.Boolean HasThemeStyleBoxOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -27444,6 +28224,101 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.RemoveThemeColorOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "RemoveThemeColorOverride",
+    "signature": "public System.Void RemoveThemeColorOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.RemoveThemeConstantOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "RemoveThemeConstantOverride",
+    "signature": "public System.Void RemoveThemeConstantOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.RemoveThemeFontSizeOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "RemoveThemeFontSizeOverride",
+    "signature": "public System.Void RemoveThemeFontSizeOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.RemoveThemeIconOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "RemoveThemeIconOverride",
+    "signature": "public System.Void RemoveThemeIconOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.RemoveThemeStyleBoxOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "RemoveThemeStyleBoxOverride",
+    "signature": "public System.Void RemoveThemeStyleBoxOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -44644,6 +45519,122 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Panel.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Panel",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Panel.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Panel",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PanelContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PanelContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Parallax.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Parallax",
@@ -55884,6 +56875,1318 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Theme.AddType(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "AddType",
+    "signature": "public System.Void AddType(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearColor",
+    "signature": "public System.Void ClearColor(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearConstant",
+    "signature": "public System.Void ClearConstant(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearFontSize",
+    "signature": "public System.Void ClearFontSize(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearIcon",
+    "signature": "public System.Void ClearIcon(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearStyleBox",
+    "signature": "public System.Void ClearStyleBox(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearThemeItem(Electron2D.Theme.DataType,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearThemeItem",
+    "signature": "public System.Void ClearThemeItem(Electron2D.Theme.DataType dataType, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dataType",
+        "type": "Electron2D.Theme.DataType",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.ClearTypeVariation(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "ClearTypeVariation",
+    "signature": "public System.Void ClearTypeVariation(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetColor",
+    "signature": "public virtual Electron2D.Color GetColor(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetColorList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetColorList",
+    "signature": "public System.String[] GetColorList(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetColorTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetColorTypeList",
+    "signature": "public System.String[] GetColorTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetConstant",
+    "signature": "public virtual System.Int32 GetConstant(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetConstantList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetConstantList",
+    "signature": "public System.String[] GetConstantList(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetConstantTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetConstantTypeList",
+    "signature": "public System.String[] GetConstantTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetFontSize",
+    "signature": "public virtual System.Int32 GetFontSize(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetFontSizeList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetFontSizeList",
+    "signature": "public System.String[] GetFontSizeList(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetFontSizeTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetFontSizeTypeList",
+    "signature": "public System.String[] GetFontSizeTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetIcon",
+    "signature": "public virtual Electron2D.Texture GetIcon(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetIconList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetIconList",
+    "signature": "public System.String[] GetIconList(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetIconTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetIconTypeList",
+    "signature": "public System.String[] GetIconTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetStyleBox",
+    "signature": "public virtual Electron2D.StyleBox GetStyleBox(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetStyleBoxList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetStyleBoxList",
+    "signature": "public System.String[] GetStyleBoxList(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetStyleBoxTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetStyleBoxTypeList",
+    "signature": "public System.String[] GetStyleBoxTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetThemeItemList(Electron2D.Theme.DataType,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetThemeItemList",
+    "signature": "public System.String[] GetThemeItemList(Electron2D.Theme.DataType dataType, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dataType",
+        "type": "Electron2D.Theme.DataType",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetThemeItemTypeList(Electron2D.Theme.DataType)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetThemeItemTypeList",
+    "signature": "public System.String[] GetThemeItemTypeList(Electron2D.Theme.DataType dataType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dataType",
+        "type": "Electron2D.Theme.DataType",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetTypeList()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetTypeList",
+    "signature": "public System.String[] GetTypeList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetTypeVariationBase(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetTypeVariationBase",
+    "signature": "public System.String GetTypeVariationBase(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.GetTypeVariationList(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "GetTypeVariationList",
+    "signature": "public System.String[] GetTypeVariationList(System.String baseType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "baseType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasColor",
+    "signature": "public System.Boolean HasColor(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasConstant",
+    "signature": "public System.Boolean HasConstant(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasDefaultBaseScale()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasDefaultBaseScale",
+    "signature": "public System.Boolean HasDefaultBaseScale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasDefaultFontSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasDefaultFontSize",
+    "signature": "public System.Boolean HasDefaultFontSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasFontSize",
+    "signature": "public System.Boolean HasFontSize(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasIcon",
+    "signature": "public System.Boolean HasIcon(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasStyleBox",
+    "signature": "public System.Boolean HasStyleBox(System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.HasThemeItem(Electron2D.Theme.DataType,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "HasThemeItem",
+    "signature": "public System.Boolean HasThemeItem(Electron2D.Theme.DataType dataType, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dataType",
+        "type": "Electron2D.Theme.DataType",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.IsTypeVariation(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "IsTypeVariation",
+    "signature": "public System.Boolean IsTypeVariation(System.String themeType, System.String baseType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "baseType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.MergeWith(Electron2D.Theme)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "MergeWith",
+    "signature": "public System.Void MergeWith(Electron2D.Theme other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.Theme",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RemoveType(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RemoveType",
+    "signature": "public System.Void RemoveType(System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameColor(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameColor",
+    "signature": "public System.Void RenameColor(System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameConstant(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameConstant",
+    "signature": "public System.Void RenameConstant(System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameFontSize(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameFontSize",
+    "signature": "public System.Void RenameFontSize(System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameIcon(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameIcon",
+    "signature": "public System.Void RenameIcon(System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameStyleBox(System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameStyleBox",
+    "signature": "public System.Void RenameStyleBox(System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameThemeItem(Electron2D.Theme.DataType,System.String,System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameThemeItem",
+    "signature": "public System.Void RenameThemeItem(Electron2D.Theme.DataType dataType, System.String oldName, System.String name, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "dataType",
+        "type": "Electron2D.Theme.DataType",
+        "default": null
+      },
+      {
+        "name": "oldName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.RenameType(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "RenameType",
+    "signature": "public System.Void RenameType(System.String oldThemeType, System.String themeType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oldThemeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetColor(System.String,System.String,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetColor",
+    "signature": "public System.Void SetColor(System.String name, System.String themeType, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetConstant(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetConstant",
+    "signature": "public System.Void SetConstant(System.String name, System.String themeType, System.Int32 constant)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "constant",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetFontSize(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetFontSize",
+    "signature": "public System.Void SetFontSize(System.String name, System.String themeType, System.Int32 fontSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetIcon(System.String,System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetIcon",
+    "signature": "public System.Void SetIcon(System.String name, System.String themeType, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetStyleBox(System.String,System.String,Electron2D.StyleBox)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetStyleBox",
+    "signature": "public System.Void SetStyleBox(System.String name, System.String themeType, Electron2D.StyleBox styleBox)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "styleBox",
+        "type": "Electron2D.StyleBox",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Theme.SetTypeVariation(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Theme",
+    "name": "SetTypeVariation",
+    "signature": "public System.Void SetTypeVariation(System.String themeType, System.String baseType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "baseType",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ThemeDB.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ThemeDB.GetDefaultTheme()",
+    "kind": "method",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "GetDefaultTheme",
+    "signature": "public Electron2D.Theme GetDefaultTheme()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Timer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Timer",
@@ -62388,6 +64691,139 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.AddThemeColorOverride(System.String,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "AddThemeColorOverride",
+    "signature": "public System.Void AddThemeColorOverride(System.String name, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.AddThemeConstantOverride(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "AddThemeConstantOverride",
+    "signature": "public System.Void AddThemeConstantOverride(System.String name, System.Int32 constant)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "constant",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.AddThemeFontSizeOverride(System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "AddThemeFontSizeOverride",
+    "signature": "public System.Void AddThemeFontSizeOverride(System.String name, System.Int32 fontSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.AddThemeIconOverride(System.String,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "AddThemeIconOverride",
+    "signature": "public System.Void AddThemeIconOverride(System.String name, Electron2D.Texture texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.AddThemeStyleBoxOverride(System.String,Electron2D.StyleBox)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "AddThemeStyleBoxOverride",
+    "signature": "public System.Void AddThemeStyleBoxOverride(System.String name, Electron2D.StyleBox styleBox)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "styleBox",
+        "type": "Electron2D.StyleBox",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.BeginBulkThemeOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "BeginBulkThemeOverride",
+    "signature": "public System.Void BeginBulkThemeOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -62416,6 +64852,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.EndBulkThemeOverride()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "EndBulkThemeOverride",
+    "signature": "public System.Void EndBulkThemeOverride()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -62478,6 +64927,152 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.GetThemeColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeColor",
+    "signature": "public Electron2D.Color GetThemeColor(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeConstant",
+    "signature": "public System.Int32 GetThemeConstant(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeDefaultBaseScale()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeDefaultBaseScale",
+    "signature": "public System.Single GetThemeDefaultBaseScale()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeDefaultFontSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeDefaultFontSize",
+    "signature": "public System.Int32 GetThemeDefaultFontSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeFontSize",
+    "signature": "public System.Int32 GetThemeFontSize(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeIcon",
+    "signature": "public Electron2D.Texture GetThemeIcon(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.GetThemeStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetThemeStyleBox",
+    "signature": "public Electron2D.StyleBox GetThemeStyleBox(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.GetVisibleRect()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -62530,6 +65125,221 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.HasThemeColor(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeColor",
+    "signature": "public System.Boolean HasThemeColor(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeColorOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeColorOverride",
+    "signature": "public System.Boolean HasThemeColorOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeConstant(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeConstant",
+    "signature": "public System.Boolean HasThemeConstant(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeConstantOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeConstantOverride",
+    "signature": "public System.Boolean HasThemeConstantOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeFontSize(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeFontSize",
+    "signature": "public System.Boolean HasThemeFontSize(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeFontSizeOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeFontSizeOverride",
+    "signature": "public System.Boolean HasThemeFontSizeOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeIcon(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeIcon",
+    "signature": "public System.Boolean HasThemeIcon(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeIconOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeIconOverride",
+    "signature": "public System.Boolean HasThemeIconOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeStyleBox(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeStyleBox",
+    "signature": "public System.Boolean HasThemeStyleBox(System.String name, System.String themeType = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "themeType",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.HasThemeStyleBoxOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "HasThemeStyleBoxOverride",
+    "signature": "public System.Boolean HasThemeStyleBoxOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.Hide()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -62565,6 +65375,120 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.RemoveThemeColorOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "RemoveThemeColorOverride",
+    "signature": "public System.Void RemoveThemeColorOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.RemoveThemeConstantOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "RemoveThemeConstantOverride",
+    "signature": "public System.Void RemoveThemeConstantOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.RemoveThemeFontSizeOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "RemoveThemeFontSizeOverride",
+    "signature": "public System.Void RemoveThemeFontSizeOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.RemoveThemeIconOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "RemoveThemeIconOverride",
+    "signature": "public System.Void RemoveThemeIconOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Window.RemoveThemeStyleBoxOverride(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "RemoveThemeStyleBoxOverride",
+    "signature": "public System.Void RemoveThemeStyleBoxOverride(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -71126,6 +74050,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.Theme()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "Theme",
+    "signature": "public Electron2D.Theme Theme { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.ThemeTypeVariation()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "ThemeTypeVariation",
+    "signature": "public System.String ThemeTypeVariation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ConvexPolygonShape.Points()",
     "kind": "property",
     "declaringType": "Electron2D.ConvexPolygonShape",
@@ -78900,6 +81850,97 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Theme.DefaultBaseScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.Theme",
+    "name": "DefaultBaseScale",
+    "signature": "public System.Single DefaultBaseScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Theme.DefaultFontSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.Theme",
+    "name": "DefaultFontSize",
+    "signature": "public System.Int32 DefaultFontSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ThemeDB.FallbackBaseScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "FallbackBaseScale",
+    "signature": "public System.Single FallbackBaseScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ThemeDB.FallbackFontSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "FallbackFontSize",
+    "signature": "public System.Int32 FallbackFontSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ThemeDB.FallbackIcon()",
+    "kind": "property",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "FallbackIcon",
+    "signature": "public Electron2D.Texture FallbackIcon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ThemeDB.FallbackStyleBox()",
+    "kind": "property",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "FallbackStyleBox",
+    "signature": "public Electron2D.StyleBox FallbackStyleBox { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ThemeDB.Instance()",
+    "kind": "property",
+    "declaringType": "Electron2D.ThemeDB",
+    "name": "Instance",
+    "signature": "public static Electron2D.ThemeDB Instance { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ThemeDB",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Timer.Autostart()",
     "kind": "property",
     "declaringType": "Electron2D.Timer",
@@ -80041,6 +83082,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.Theme()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "Theme",
+    "signature": "public Electron2D.Theme Theme { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Theme",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.ThemeTypeVariation()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "ThemeTypeVariation",
+    "signature": "public System.String ThemeTypeVariation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

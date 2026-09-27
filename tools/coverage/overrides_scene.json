@@ -2124,7 +2124,7 @@
     {
       "godot": "BoxContainer::theme_item:separation",
       "electron2d": "property:Electron2D.BoxContainer.Separation()",
-      "reason": "ADR 0081: typed size-flag hook or inherited default/local theme separation projection used by actual layout."
+      "reason": "ADR 0081/0083: typed separation alias resolves inherited theme constants and edits local overrides; built-in default is four. Non-stored legacy descriptors plus nullable typed override storage preserve inheritance through scene packing."
     },
     {
       "godot": "GridContainer::property:columns",
@@ -2134,12 +2134,12 @@
     {
       "godot": "GridContainer::theme_item:h_separation",
       "electron2d": "property:Electron2D.GridContainer.HSeparation()",
-      "reason": "ADR 0081: typed grid column count or local signed theme-constant projection consumed by executable row-major layout; global Theme lookup remains a separate dependency."
+      "reason": "ADR 0081/0083: typed separation alias resolves inherited theme constants and edits local overrides; built-in default is four. Non-stored legacy descriptors plus nullable typed override storage preserve inheritance through scene packing."
     },
     {
       "godot": "GridContainer::theme_item:v_separation",
       "electron2d": "property:Electron2D.GridContainer.VSeparation()",
-      "reason": "ADR 0081: typed grid column count or local signed theme-constant projection consumed by executable row-major layout; global Theme lookup remains a separate dependency."
+      "reason": "ADR 0081/0083: typed separation alias resolves inherited theme constants and edits local overrides; built-in default is four. Non-stored legacy descriptors plus nullable typed override storage preserve inheritance through scene packing."
     }
   ],
   "extras": [
@@ -5163,7 +5163,6 @@
       "state": "Blocked",
       "reason": "First typed GUI, text and theme integration with Window after the renderer (ADRs 0008 and 0028).",
       "godot": [
-        "Window::constant:NOTIFICATION_THEME_CHANGED",
         "Window::enum:LayoutDirection",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
@@ -5172,53 +5171,15 @@
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_SYSTEM_LOCALE",
-        "Window::method:add_theme_color_override(StringName:,Color:)",
-        "Window::method:add_theme_constant_override(StringName:,int:)",
-        "Window::method:add_theme_font_override(StringName:,Font:)",
-        "Window::method:add_theme_font_size_override(StringName:,int:)",
-        "Window::method:add_theme_icon_override(StringName:,Texture2D:)",
-        "Window::method:add_theme_stylebox_override(StringName:,StyleBox:)",
-        "Window::method:begin_bulk_theme_override()",
         "Window::method:child_controls_changed()",
-        "Window::method:end_bulk_theme_override()",
         "Window::method:get_layout_direction()",
-        "Window::method:get_theme_color(StringName:,StringName:)",
-        "Window::method:get_theme_constant(StringName:,StringName:)",
-        "Window::method:get_theme_default_base_scale()",
-        "Window::method:get_theme_default_font()",
-        "Window::method:get_theme_default_font_size()",
-        "Window::method:get_theme_font(StringName:,StringName:)",
-        "Window::method:get_theme_font_size(StringName:,StringName:)",
-        "Window::method:get_theme_icon(StringName:,StringName:)",
-        "Window::method:get_theme_stylebox(StringName:,StringName:)",
-        "Window::method:has_theme_color(StringName:,StringName:)",
-        "Window::method:has_theme_color_override(StringName:)",
-        "Window::method:has_theme_constant(StringName:,StringName:)",
-        "Window::method:has_theme_constant_override(StringName:)",
-        "Window::method:has_theme_font(StringName:,StringName:)",
-        "Window::method:has_theme_font_override(StringName:)",
-        "Window::method:has_theme_font_size(StringName:,StringName:)",
-        "Window::method:has_theme_font_size_override(StringName:)",
-        "Window::method:has_theme_icon(StringName:,StringName:)",
-        "Window::method:has_theme_icon_override(StringName:)",
-        "Window::method:has_theme_stylebox(StringName:,StringName:)",
-        "Window::method:has_theme_stylebox_override(StringName:)",
         "Window::method:is_layout_rtl()",
         "Window::method:is_using_font_oversampling()",
-        "Window::method:remove_theme_color_override(StringName:)",
-        "Window::method:remove_theme_constant_override(StringName:)",
-        "Window::method:remove_theme_font_override(StringName:)",
-        "Window::method:remove_theme_font_size_override(StringName:)",
-        "Window::method:remove_theme_icon_override(StringName:)",
-        "Window::method:remove_theme_stylebox_override(StringName:)",
         "Window::method:set_layout_direction(int:Window.LayoutDirection)",
         "Window::method:set_use_font_oversampling(bool:)",
         "Window::property:accessibility_description",
         "Window::property:accessibility_name",
-        "Window::property:theme",
-        "Window::property:theme_type_variation",
         "Window::property:wrap_controls",
-        "Window::signal:theme_changed()",
         "Window::theme_item:title_font",
         "Window::theme_item:title_font_size"
       ]
@@ -5814,7 +5775,7 @@
         "GridContainer::theme_item:v_separation"
       ],
       "state": "Implemented",
-      "reason": "ADR 0081: row-major grid consumes Container phases and fitting, integer-truncated minima, independent uniform row/column expansion, min/max refit, first-slot remainder, sparse empty-column expansion, RTL and typed packing. Corrected capped-row advance uses final allocation rather than minimum to avoid overlap. GridContainerTests verifies managed state/bounds/sparse columns/packing/callbacks and zero warmed allocations; GridContainerRenderingTests verifies seven pixel phases and 64 warmed resize/layout/render frames with zero managed bytes on Linux Wayland GPU/compatibility. Global Theme lookup and inherited semantic accessibility retain their exact separate dependencies."
+      "reason": "ADR 0081: row-major grid consumes Container phases and fitting, integer-truncated minima, independent uniform row/column expansion, min/max refit, first-slot remainder, sparse empty-column expansion, RTL and typed packing. Corrected capped-row advance uses final allocation rather than minimum to avoid overlap. GridContainerTests verifies managed state/bounds/sparse columns/packing/callbacks and zero warmed allocations; GridContainerRenderingTests verifies seven pixel phases and 64 warmed resize/layout/render frames with zero managed bytes on Linux Wayland GPU/compatibility. Typed Theme lookup executes under ADR 0083; Font/project-theme and inherited semantic accessibility retain their exact separate dependencies."
     }
   ]
 }

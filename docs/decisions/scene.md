@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -193,7 +193,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-09-23
+Last updated: 2026-09-27
 
 ### Status
 
@@ -230,6 +230,8 @@ Derived node types opt in through `CreateSceneInstanceFactory()`. The factory mu
 #### Reconstruction and lifetime
 
 Instantiation creates nodes parent-first, restores typed properties and persistent groups before parenting, assigns `Owner` after hierarchy construction, then handles scene-local resources. The result is detached and does not enter or become ready in a `SceneTree`.
+
+During reconstruction, each captured property must match a writable stored descriptor on the fresh target with the exact captured value type. Control/Window theme overrides have one bounded extension under [ADR 0083](rendering.md#adr-0083): when a fresh target has no descriptor yet, the engine can reconstruct only the reserved `ThemeColorOverride/`, `ThemeConstantOverride/`, `ThemeFontSizeOverride/`, `ThemeIconOverride/` and `ThemeStyleBoxOverride/` families with exact `Color?`, `int?`, `int?`, `Texture` and `StyleBox` value types. The descriptor is newly bound to the target's typed theme API. Unknown prefixes, other node roles, non-stored entries and mismatched types still fail. Captured source-owner delegates are never reused, and this does not add Variant values or general string member dispatch.
 
 The returned root owns the created hierarchy and all resource duplicates created for that instance. External non-local resources remain shared. Resource duplication preserves aliases and cycles; `GetLocalScene()` is assigned before each local setup callback. Setup occurs once per local duplicate before notification `20`. Only the root receives that notification after complete hierarchy/resource restoration.
 

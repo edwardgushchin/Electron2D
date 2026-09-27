@@ -120,8 +120,11 @@ public class Container : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what is NotificationResized or NotificationLayoutDirectionChanged || what == NotificationVisibilityChanged && IsVisibleInTree) QueueSort();
+        try { base.OnNotification(what); }
+        finally
+        {
+            if (!IsDisposed && (what is NotificationResized or NotificationLayoutDirectionChanged or NotificationThemeChanged || what == NotificationVisibilityChanged && IsVisibleInTree)) QueueSort();
+        }
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {

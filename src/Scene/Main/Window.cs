@@ -214,7 +214,7 @@ public partial class Window : Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
@@ -227,6 +227,7 @@ public partial class Window : Viewport
     {
         if (disposing)
         {
+            _themeOwner?.Dispose(); ThemeChanged = null;
             CloseRequested = null;
             VisibilityChanged = null;
             TitleChanged = null;

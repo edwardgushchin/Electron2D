@@ -154,10 +154,9 @@ internal static class GridContainerTests
         overflow.AddChild(first); overflow.AddChild(middle); overflow.AddChild(last);
         using var overflowTree = new SceneTree(overflow); overflowTree.ProcessFrame(0); overflowTree.ProcessFrame(0);
         var firstRect = new Rect2(first.Position, first.Size); var middleRect = new Rect2(middle.Position, middle.Size); var lastRect = new Rect2(last.Position, last.Size);
-        overflow.HSeparation = int.MaxValue;
-        var failure = Capture(() => overflowTree.ProcessFrame(0));
+        var failure = Capture(() => overflow.HSeparation = int.MaxValue);
         Check(failure is AggregateException aggregate && aggregate.Flatten().InnerExceptions.Any(error => error is OverflowException),
-            "Overflowing aggregate separation fails explicitly before cell fitting.");
+            "Overflowing theme separation fails during immediate theme reflow before deferred cell fitting.");
         Check(new Rect2(first.Position, first.Size) == firstRect && new Rect2(middle.Position, middle.Size) == middleRect && new Rect2(last.Position, last.Size) == lastRect,
             "A rejected overflowing layout leaves every previously fitted child rectangle unchanged.");
         overflow.HSeparation = 0; overflowTree.ProcessFrame(0);
