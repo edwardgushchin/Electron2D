@@ -26,8 +26,13 @@
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="src/Scene/Theme/Fonts/*.woff2" LogicalName="Electron2D.Fonts.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
+    <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.201" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.201" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.201" />
     <PackageReference Include="SDL3-CS.Windows" Version="3.4.16.0" />
     <PackageReference Include="SDL3-CS.Windows.Image" Version="3.4.6.9" />
     <PackageReference Include="SDL3-CS.Windows.Shadercross" Version="3.0.0.11" />
@@ -56,4 +61,5 @@
   <Target Name="ValidateElectron2DNativeRID" BeforeTargets="Restore;Build;Publish" Condition="'$(Electron2DNativePlatform)' == ''">
     <Error Text="Electron2D has no native package mapping for RuntimeIdentifier '$(RuntimeIdentifier)'." />
   </Target>
+  <Import Project="tools/text-native.targets" />
 </Project>

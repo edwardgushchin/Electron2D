@@ -1,13 +1,13 @@
 namespace Electron2D;
 
 /// <summary>Loads supported resource files through the engine's typed resource path cache.</summary>
-/// <remarks>The first format is <see cref="ImageTexture"/> from PNG, JPEG, WebP, BMP, TGA or SVG.
+/// <remarks>Supported resources are image textures and dynamic font files.
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
 /// operations serialize cache decisions; this service does not own caller resources or their renderer payloads.</remarks>
 public static class ResourceLoader
 {
     /// <summary>Controls how a load uses or refreshes the path cache.</summary>
-    /// <remarks>Deep modes equal their ordinary counterparts for dependency-free image files.</remarks>
+    /// <remarks>Deep modes equal their ordinary counterparts for dependency-free image and font files.</remarks>
     public enum CacheMode
     {
         /// <summary>Load an independent resource without registering it.</summary>
@@ -16,17 +16,18 @@ public static class ResourceLoader
         Reuse,
         /// <summary>Reload into a live cached resource, or load and register a new one.</summary>
         Replace,
-        /// <summary>Ignore recursively; equivalent to Ignore for dependency-free images.</summary>
+        /// <summary>Ignore recursively; equivalent to Ignore for dependency-free images and fonts.</summary>
         IgnoreDeep,
-        /// <summary>Replace recursively; equivalent to Replace for dependency-free images.</summary>
+        /// <summary>Replace recursively; equivalent to Replace for dependency-free images and fonts.</summary>
         ReplaceDeep
     }
 
     private static readonly object LoadGate = new();
+    private static readonly string[] FontExtensions = ["ttf", "otf", "woff", "woff2", "ttc", "otc"];
     private static readonly string[] ImageExtensions = ["png", "jpg", "jpeg", "webp", "bmp", "tga", "svg"];
 
     /// <summary>Loads a supported typed resource from an operating-system, res:// or user:// path.</summary>
-    /// <typeparam name="TResource"><see cref="ImageTexture"/> or an assignable resource base type.</typeparam>
+    /// <typeparam name="TResource"><see cref="ImageTexture"/>, <see cref="FontFile"/> or an assignable resource base type.</typeparam>
     /// <param name="path">File path; the exact path string is the cache key.</param>
     /// <param name="cacheMode">Whether to reuse, ignore or refresh an existing live instance.</param>
     /// <returns>A caller-owned live resource. Reuse and Replace can return the same cached instance.</returns>
@@ -34,7 +35,7 @@ public static class ResourceLoader
     /// <exception cref="NotSupportedException">The resource type or file extension is unsupported.</exception>
     /// <exception cref="InvalidOperationException">Reuse finds a different resource type at the path.</exception>
     /// <exception cref="IOException">The file cannot be read.</exception>
-    /// <exception cref="InvalidDataException">The encoded image is malformed or exceeds supported limits.</exception>
+    /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
     public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse)
         where TResource : Resource
     {
@@ -46,18 +47,32 @@ public static class ResourceLoader
         lock (LoadGate)
         {
             var cached = Resource.GetRegisteredPath(path);
-            if (cacheMode == CacheMode.Reuse && cached is ImageTexture && cached is TResource reused) return reused;
+            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile && cached is TResource reused) return reused;
             if (cacheMode == CacheMode.Reuse && cached is not null)
                 throw new InvalidOperationException("The cached resource has a different type.");
 
-            using var image = Image.LoadFromFile(path);
-            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is ImageTexture texture)
+            var fontFile = typeof(TResource).IsAssignableFrom(typeof(FontFile)) &&
+                (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) || IsExtension(path, FontExtensions));
+            Resource loaded;
+            if (fontFile)
             {
-                texture.SetImage(image);
-                return (TResource)(Resource)texture;
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is FontFile font)
+                {
+                    font.LoadDynamicFont(path); return (TResource)(Resource)font;
+                }
+                var createdFont = new FontFile();
+                try { createdFont.LoadDynamicFont(path); loaded = createdFont; }
+                catch { createdFont.Dispose(); throw; }
             }
-
-            var loaded = ImageTexture.CreateFromImage(image);
+            else
+            {
+                using var image = Image.LoadFromFile(path);
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is ImageTexture texture)
+                {
+                    texture.SetImage(image); return (TResource)(Resource)texture;
+                }
+                loaded = ImageTexture.CreateFromImage(image);
+            }
             try
             {
                 if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep)
@@ -79,15 +94,15 @@ public static class ResourceLoader
     /// <summary>Reports whether a supported resource file exists or is already cached.</summary>
     /// <typeparam name="TResource">Requested resource type or compatible base type.</typeparam>
     /// <param name="path">Exact cache path or file path.</param>
-    /// <returns>True when a live cached instance has this type, or a recognized image file exists for it.</returns>
+    /// <returns>True when a live cached instance has this type, or a recognized image or font file exists for it.</returns>
     /// <remarks>The cache is checked first, so a cached resource may outlive removal of its source file.</remarks>
     /// <exception cref="ArgumentException">The path is null or empty.</exception>
     public static bool Exists<TResource>(string path) where TResource : Resource
     {
         CheckFilePath(path);
         return Resource.GetRegisteredPath(path) is TResource ||
-            typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) &&
-            IsImageExtension(path) && FileAccess.FileExists(path);
+            (typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && IsExtension(path, ImageExtensions) ||
+             typeof(TResource).IsAssignableFrom(typeof(FontFile)) && IsExtension(path, FontExtensions)) && FileAccess.FileExists(path);
     }
 
     /// <summary>Reports whether any live registered resource occupies an exact cache path.</summary>
@@ -117,12 +132,14 @@ public static class ResourceLoader
     /// <returns>The supported extensions without dots, or an empty array for unsupported types.</returns>
     public static string[] GetRecognizedExtensionsForType<TResource>() where TResource : Resource
     {
-        return typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) ? (string[])ImageExtensions.Clone() : [];
+        var images = typeof(TResource).IsAssignableFrom(typeof(ImageTexture));
+        var fonts = typeof(TResource).IsAssignableFrom(typeof(FontFile));
+        return images && fonts ? [.. ImageExtensions, .. FontExtensions] : images ? (string[])ImageExtensions.Clone() : fonts ? (string[])FontExtensions.Clone() : [];
     }
 
     private static void CheckType<TResource>() where TResource : Resource
     {
-        if (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)))
+        if (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && !typeof(TResource).IsAssignableFrom(typeof(FontFile)))
             throw new NotSupportedException($"Resource files for {typeof(TResource).Name} are not integrated.");
     }
 
@@ -134,9 +151,9 @@ public static class ResourceLoader
         ProjectSettings.Instance.GlobalizePath(path);
     }
 
-    private static bool IsImageExtension(string path)
+    private static bool IsExtension(string path, string[] extensions)
     {
         var extension = System.IO.Path.GetExtension(path).TrimStart('.');
-        return ImageExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+        return extensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
     }
 }

@@ -269,18 +269,21 @@ public sealed partial class RenderingServer : ElectronObject
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
-        item is Control { ClipContents: true } && GetClip(item, pixels, repeatSource, includeSelf: true) is { } clip && !clip.HasArea();
+        (item is Control { ClipContents: true } || item.CanvasClipRect is not null) && GetClip(item, pixels, repeatSource, includeSelf: true) is { } clip && !clip.HasArea();
 
     private Rect2i? GetClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null, bool includeSelf = false)
     {
         Rect2? clipped = null;
         var repeat = repeatSource is not null && !ReferenceEquals(item, repeatSource);
-        for (var ancestor = includeSelf ? item : item.GetParentItem(); ancestor is not null; ancestor = ancestor.GetParentItem())
+        for (var ancestor = item; ancestor is not null; ancestor = ancestor.GetParentItem())
         {
             if (ReferenceEquals(ancestor, repeatSource)) repeat = false;
-            if (ancestor is not Control { ClipContents: true } control) continue;
-            var transform = _canvasTransforms[control];
-            var area = transform * new Rect2(Vector2.Zero, control.Size);
+            var localClip = ancestor.CanvasClipRect;
+            if (localClip is null && (includeSelf || !ReferenceEquals(ancestor, item)) && ancestor is Control { ClipContents: true } control)
+                localClip = new Rect2(Vector2.Zero, control.Size);
+            if (localClip is not { } localArea) continue;
+            var transform = _canvasTransforms[ancestor];
+            var area = transform * localArea;
             if (repeat) area = ExpandRepeatedClip(area, repeatSource!);
             if (!area.Position.IsFinite() || !area.Size.IsFinite())
                 throw new InvalidOperationException("Canvas clipping overflowed finite coordinates.");

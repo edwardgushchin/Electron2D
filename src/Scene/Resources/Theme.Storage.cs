@@ -13,10 +13,12 @@ public partial class Theme
         lock (_gate)
         {
             ThrowIfDisposed(); MergeValues(_colors, source.Colors); MergeValues(_constants, source.Constants); MergeValues(_fontSizes, source.FontSizes);
-            MergeResources(_icons, source.Icons); MergeResources(_styles, source.Styles);
+            MergeResources(_fonts, source.Fonts); MergeResources(_icons, source.Icons); MergeResources(_styles, source.Styles);
             foreach (var variation in source.Variations) SetVariationCore(variation.Key, variation.Value);
             if (source.BaseScale > 0) _defaultBaseScale = source.BaseScale;
             if (source.FontSize > 0) _defaultFontSize = source.FontSize;
+            if (source.DefaultFont is not null && !ReferenceEquals(_defaultFont, source.DefaultFont))
+            { Retain(source.DefaultFont); Release(_defaultFont); _defaultFont = source.DefaultFont; }
         }
         Publish(true);
     }
@@ -29,7 +31,7 @@ public partial class Theme
         Publish(true);
     }
 
-    private sealed record Snapshot(float BaseScale, int FontSize,
+    private sealed record Snapshot(float BaseScale, int FontSize, Font? DefaultFont, Dictionary<string, Dictionary<string, Font?>> Fonts,
         Dictionary<string, Dictionary<string, Color>> Colors, Dictionary<string, Dictionary<string, int>> Constants,
         Dictionary<string, Dictionary<string, int>> FontSizes, Dictionary<string, Dictionary<string, Texture?>> Icons,
         Dictionary<string, Dictionary<string, StyleBox?>> Styles, Dictionary<string, string> Variations,
@@ -41,7 +43,7 @@ public partial class Theme
         {
             ThrowIfDisposed(); var children = new Dictionary<string, List<string>>(StringComparer.Ordinal);
             foreach (var entry in _variationChildren) children.Add(entry.Key, [.. entry.Value]);
-            return new(_defaultBaseScale, _defaultFontSize, CloneMap(_colors), CloneMap(_constants), CloneMap(_fontSizes), CloneMap(_icons), CloneMap(_styles), new(_variations, StringComparer.Ordinal), children);
+            return new(_defaultBaseScale, _defaultFontSize, _defaultFont, CloneMap(_fonts), CloneMap(_colors), CloneMap(_constants), CloneMap(_fontSizes), CloneMap(_icons), CloneMap(_styles), new(_variations, StringComparer.Ordinal), children);
         }
     }
     private static Dictionary<string, Dictionary<string, T>> CloneMap<T>(Dictionary<string, Dictionary<string, T>> source)
@@ -52,6 +54,8 @@ public partial class Theme
     }
     private static void ValidateResources(Snapshot snapshot)
     {
+        ValidateResource(snapshot.DefaultFont);
+        foreach (var type in snapshot.Fonts.Values) foreach (var value in type.Values) ValidateResource(value);
         foreach (var type in snapshot.Icons.Values) foreach (var value in type.Values) ValidateResource(value);
         foreach (var type in snapshot.Styles.Values) foreach (var value in type.Values) ValidateResource(value);
     }
@@ -68,10 +72,11 @@ public partial class Theme
                 items[item.Key] = item.Value;
             }
     }
-    private void ClearCore()
+    private void ClearCore(bool keepDefault = true)
     {
         foreach (var resource in _references.Keys) { resource.Changed -= _resourceChanged; resource.Disposed -= _resourceDisposed; }
-        _references.Clear(); _colors.Clear(); _constants.Clear(); _fontSizes.Clear(); _icons.Clear(); _styles.Clear(); _variations.Clear(); _variationChildren.Clear();
+        _references.Clear(); _colors.Clear(); _constants.Clear(); _fontSizes.Clear(); _fonts.Clear(); _icons.Clear(); _styles.Clear(); _variations.Clear(); _variationChildren.Clear();
+        if (keepDefault) Retain(_defaultFont); else _defaultFont = null;
     }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(Theme) ? new Theme() : base.CreateDuplicateInstance();
@@ -82,15 +87,16 @@ public partial class Theme
         var snapshot = Capture(); ValidateResources(snapshot);
         if (deep)
         {
-            snapshot = snapshot with { Icons = DuplicateResources(snapshot.Icons, duplicateSubresource), Styles = DuplicateResources(snapshot.Styles, duplicateSubresource) };
+            snapshot = snapshot with { DefaultFont = (Font?)duplicateSubresource(snapshot.DefaultFont), Fonts = DuplicateResources(snapshot.Fonts, duplicateSubresource), Icons = DuplicateResources(snapshot.Icons, duplicateSubresource), Styles = DuplicateResources(snapshot.Styles, duplicateSubresource) };
         }
         var copy = (Theme)target;
         lock (copy._gate)
         {
-            copy.ThrowIfDisposed(); copy.ClearCore(); copy._defaultBaseScale = snapshot.BaseScale; copy._defaultFontSize = snapshot.FontSize;
+            copy.ThrowIfDisposed(); copy.ClearCore(false); copy._defaultBaseScale = snapshot.BaseScale; copy._defaultFontSize = snapshot.FontSize; copy._defaultFont = snapshot.DefaultFont; copy.Retain(copy._defaultFont);
             foreach (var type in snapshot.Colors) copy._colors.Add(type.Key, type.Value);
             foreach (var type in snapshot.Constants) copy._constants.Add(type.Key, type.Value);
             foreach (var type in snapshot.FontSizes) copy._fontSizes.Add(type.Key, type.Value);
+            foreach (var type in snapshot.Fonts) { copy._fonts.Add(type.Key, type.Value); foreach (var resource in type.Value.Values) copy.Retain(resource); }
             foreach (var type in snapshot.Icons) { copy._icons.Add(type.Key, type.Value); foreach (var resource in type.Value.Values) copy.Retain(resource); }
             foreach (var type in snapshot.Styles) { copy._styles.Add(type.Key, type.Value); foreach (var resource in type.Value.Values) copy.Retain(resource); }
             foreach (var variation in snapshot.Variations) copy._variations.Add(variation.Key, variation.Value);
@@ -122,6 +128,7 @@ public partial class Theme
             AddDescriptors(_colors, "colors", entries, static (theme, name, type) => theme.GetColor(name, type), static (theme, name, type, value) => theme.SetColor(name, type, value));
             AddDescriptors(_constants, "constants", entries, static (theme, name, type) => theme.GetConstant(name, type), static (theme, name, type, value) => theme.SetConstant(name, type, value));
             AddDescriptors(_fontSizes, "font_sizes", entries, static (theme, name, type) => theme.StoredValue(theme._fontSizes, name, type), static (theme, name, type, value) => theme.SetFontSize(name, type, value));
+            AddDescriptors(_fonts, "fonts", entries, static (theme, name, type) => theme.StoredValue(theme._fonts, name, type), static (theme, name, type, value) => theme.SetFont(name, type, value));
             AddDescriptors(_icons, "icons", entries, static (theme, name, type) => theme.StoredValue(theme._icons, name, type), static (theme, name, type, value) => theme.SetIcon(name, type, value));
             AddDescriptors(_styles, "styles", entries, static (theme, name, type) => theme.StoredValue(theme._styles, name, type), static (theme, name, type, value) => theme.SetStyleBox(name, type, value));
             foreach (var variation in _variations.Keys)
@@ -149,7 +156,7 @@ public partial class Theme
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) lock (_gate) ClearCore();
+        if (disposing) lock (_gate) ClearCore(false);
         base.Dispose(disposing);
     }
 }

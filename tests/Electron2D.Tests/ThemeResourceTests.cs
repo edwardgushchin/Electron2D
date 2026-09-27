@@ -66,7 +66,7 @@ internal static class ThemeResourceTests
         order.Clear(); theme.SetStyleBox("panel", "Type", null); Check(order.SequenceEqual(new[] { "changed" }), "Replacing a nonnull resource with null retains the existing slot without a list notification.");
         theme.RenameStyleBox("panel", "renamed", "Type"); Check(theme.GetStyleBoxList("Type").SequenceEqual(new[] { "renamed" }), "Renaming works for null placeholders.");
         theme.ClearStyleBox("renamed", "Type"); Check(theme.GetStyleBoxList("Type").Length == 0 && theme.GetStyleBoxTypeList().Contains("Type"), "Clearing the last item retains its empty category type.");
-        foreach (var dataType in new[] { Theme.DataType.Color, Theme.DataType.Constant, Theme.DataType.FontSize, Theme.DataType.Icon, Theme.DataType.StyleBox })
+        foreach (var dataType in new[] { Theme.DataType.Color, Theme.DataType.Constant, Theme.DataType.Font, Theme.DataType.FontSize, Theme.DataType.Icon, Theme.DataType.StyleBox })
         {
             Check(theme.GetThemeItemTypeList(dataType) is not null, "Every supported typed category executes its list query.");
             Check(theme.GetThemeItemList(dataType, "missing").Length == 0, "Absent category types return empty item snapshots.");
@@ -98,7 +98,7 @@ internal static class ThemeResourceTests
         using var theme = new Theme(); var changes = 0; var lists = 0; theme.Changed += _ => changes++; theme.PropertyListChanged += _ => lists++;
         theme.AddType("Empty"); theme.AddType("Empty");
         Check(changes == 2 && lists == 2 && theme.GetTypeList().Count(name => name == "Empty") == 1 && theme.GetIconTypeList().Contains("Empty") && theme.GetColorTypeList().Contains("Empty") && theme.GetFontSizeTypeList().Contains("Empty"), "AddType creates every supported category record and notifies even for an existing type.");
-        changes = lists = 0; theme.RemoveType("Empty"); Check(changes == 3 && lists == 3 && theme.GetTypeList().Length == 0, "Removing a complete supported type preserves separate icon, style and final notification phases.");
+        changes = lists = 0; theme.RemoveType("Empty"); Check(changes == 4 && lists == 4 && theme.GetTypeList().Length == 0, "Removing a complete type preserves separate icon, style, font and final notification phases.");
         theme.SetTypeVariation("Dense", "Control"); theme.SetTypeVariation("Deeper", "Dense"); theme.SetTypeVariation("Peer", "Control");
         Check(theme.GetTypeVariationList("Control").SequenceEqual(new[] { "Dense", "Deeper", "Peer" }) && theme.IsTypeVariation("Deeper", "Dense") && !theme.IsTypeVariation("Deeper", "Control"), "Variation lists recurse in child order while direct relationship tests do not follow ancestors.");
         theme.SetTypeVariation("Dense", "Control"); Check(theme.GetTypeVariationList("Control").SequenceEqual(new[] { "Peer", "Dense", "Deeper" }), "Equal variation replacement moves its link to the end of its base's child order.");
@@ -152,9 +152,10 @@ internal static class ThemeResourceTests
         Reject<ArgumentException>(() => theme.ClearConstant("missing", "Type")); theme.SetConstant("item", "Type", 1);
         Reject<ArgumentException>(() => theme.RenameConstant("item", "item", "Type")); Reject<ArgumentException>(() => theme.RenameConstant("missing", "new", "Type"));
         Check(theme.GetColor("invalid-name", "invalid/type") == Colors.Black, "Queries accept arbitrary nonnull missing keys without mutation-name validation.");
-        Reject<NotSupportedException>(() => theme.HasThemeItem(Theme.DataType.Font, "font", "Type")); Reject<NotSupportedException>(() => theme.GetThemeItemList(Theme.DataType.Font, "Type"));
-        Reject<NotSupportedException>(() => theme.GetThemeItemTypeList(Theme.DataType.Font)); Reject<NotSupportedException>(() => theme.ClearThemeItem(Theme.DataType.Font, "font", "Type"));
-        Reject<NotSupportedException>(() => theme.RenameThemeItem(Theme.DataType.Font, "old", "new", "Type")); Reject<ArgumentOutOfRangeException>(() => theme.GetThemeItemTypeList(Theme.DataType.Max));
+        Check(!theme.HasThemeItem(Theme.DataType.Font, "font", "Type") && theme.GetThemeItemList(Theme.DataType.Font, "Type").Length == 0 && theme.GetThemeItemTypeList(Theme.DataType.Font).Length == 0,
+            "An empty font category executes typed queries without creating placeholder records.");
+        Reject<ArgumentException>(() => theme.ClearThemeItem(Theme.DataType.Font, "font", "Type"));
+        Reject<ArgumentException>(() => theme.RenameThemeItem(Theme.DataType.Font, "old", "new", "Type")); Reject<ArgumentOutOfRangeException>(() => theme.GetThemeItemTypeList(Theme.DataType.Max));
         var delivered = 0; theme.Changed += _ => delivered++;
         Action<ElectronObject> failedList = _ => throw new ApplicationException("expected theme list failure"); theme.PropertyListChanged += failedList;
         Reject<ApplicationException>(() => theme.SetColor("new", "Type", Colors.Red)); theme.PropertyListChanged -= failedList;

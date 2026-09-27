@@ -78,17 +78,18 @@ public static class TranslationServer
 
     /// <summary>Gets the best loaded main-domain catalog locale for the selected culture, or the configured fallback.</summary>
     /// <returns>The matching catalog locale, the current culture for an exact match, or the fallback locale.</returns>
+    /// <remarks>Reuses the domain's internal catalog snapshot and compares already normalized locale names without allocating. Catalog locale changes are observed on every lookup.</remarks>
     public static string GetToolLocale()
     {
         var requested = Culture.Name;
         var bestScore = 0;
         string? best = null;
-        foreach (var translation in GetTranslations())
+        foreach (var translation in GetOrAddDomain(string.Empty).GetLookupSnapshot())
         {
             try
             {
                 var candidate = translation.Locale;
-                var score = CompareLocales(requested, candidate);
+                var score = CompareNormalizedLocales(requested, candidate);
                 if (score <= 0 || score < bestScore) continue;
                 if (score == 10) return requested;
                 best = candidate;
@@ -97,6 +98,35 @@ public static class TranslationServer
             catch (ObjectDisposedException) when (translation.IsDisposed) { }
         }
         return best ?? FallbackCulture?.Name ?? string.Empty;
+    }
+
+    private static int CompareNormalizedLocales(string first, string second)
+    {
+        if (first == second) return 10;
+        var a = first.AsSpan(); var b = second.AsSpan(); var aSeparator = a.IndexOf('-'); var bSeparator = b.IndexOf('-');
+        var aLanguage = a[..(aSeparator < 0 ? a.Length : aSeparator)]; var bLanguage = b[..(bSeparator < 0 ? b.Length : bSeparator)];
+        if (!aLanguage.SequenceEqual(bLanguage)) return 0;
+        ParseNormalizedParts(aSeparator < 0 ? [] : a[(aSeparator + 1)..], out var aScript, out var aRegion, out var aVariant);
+        ParseNormalizedParts(bSeparator < 0 ? [] : b[(bSeparator + 1)..], out var bScript, out var bRegion, out var bVariant);
+        if (aScript.SequenceEqual(bScript) && aRegion.SequenceEqual(bRegion) && aVariant.SequenceEqual(bVariant)) return 10;
+        var score = 5;
+        if (!aScript.IsEmpty && !bScript.IsEmpty) score += aScript.SequenceEqual(bScript) ? 1 : -1;
+        if (!aRegion.IsEmpty && !bRegion.IsEmpty) score += aRegion.SequenceEqual(bRegion) ? 1 : -1;
+        if (!aVariant.IsEmpty && !bVariant.IsEmpty) score += aVariant.SequenceEqual(bVariant) ? 1 : -1;
+        return score;
+    }
+
+    private static void ParseNormalizedParts(ReadOnlySpan<char> parts, out ReadOnlySpan<char> script,
+        out ReadOnlySpan<char> region, out ReadOnlySpan<char> variant)
+    {
+        script = region = variant = [];
+        foreach (var range in parts.Split('-'))
+        {
+            var part = parts[range];
+            if (part.Length == 4 && script.IsEmpty) script = part;
+            else if (part.Length is 2 or 3 && region.IsEmpty) region = part;
+            else if (variant.IsEmpty) variant = part;
+        }
     }
 
     private static (string Language, string Script, string Region, string Variant) ParseLocale(string locale)

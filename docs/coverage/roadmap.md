@@ -1,11 +1,11 @@
 # Coverage roadmap
 
-Last updated: 2026-09-25
+Last updated: 2026-09-27
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1289 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 977 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [AspectRatioContainer](classes/AspectRatioContainer.md), [CenterContainer](classes/CenterContainer.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [MarginContainer](classes/MarginContainer.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
+1. Close 1273 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 1057 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [AspectRatioContainer](classes/AspectRatioContainer.md), [CenterContainer](classes/CenterContainer.md), [DampedSpringJoint2D](classes/DampedSpringJoint2D.md), [GrooveJoint2D](classes/GrooveJoint2D.md), [Joint2D](classes/Joint2D.md), [MarginContainer](classes/MarginContainer.md), [PinJoint2D](classes/PinJoint2D.md), [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -16,16 +16,18 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 565 | 7 |
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | 101 | 7 |
+| [FontFile](classes/FontFile.md) | 76 | 0 |
 | [Node](classes/Node.md) | 66 | 68 |
 | [Window](classes/Window.md) | 42 | 34 |
 | [Object](classes/Object.md) | 34 | 22 |
-| [Control](classes/Control.md) | 23 | 60 |
+| [Control](classes/Control.md) | 18 | 60 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [Input](classes/Input.md) | 12 | 31 |
 | [TranslationServer](classes/TranslationServer.md) | 12 | 21 |
 | [SceneState](classes/SceneState.md) | 12 | 16 |
 | [Image](classes/Image.md) | 11 | 71 |
 | [ProjectSettings](classes/ProjectSettings.md) | 9 | 44 |
+| [Font](classes/Font.md) | 9 | 0 |
 | [SceneTree](classes/SceneTree.md) | 8 | 19 |
 | [Viewport](classes/Viewport.md) | 5 | 15 |
 | [RigidBody2D](classes/RigidBody2D.md) | 5 | 7 |
@@ -47,7 +49,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [DisplayServer](classes/DisplayServer.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
-| [Theme](classes/Theme.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
 | [RegExMatch](classes/RegExMatch.md) | 0 | 6 |
 | [Shader](classes/Shader.md) | 0 | 6 |
@@ -77,8 +78,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Exact trigger | Classes |
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 65 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 63 |
 | Audio: trigger is the first audio mixing and playback slice. | 56 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
 | Animation: trigger is the first scene animation slice. | 28 |
@@ -95,7 +96,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
-| Trigger: first SDL_ttf/HarfBuzz text-shaping, font import and renderer slice (ADR 0046). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
@@ -128,8 +128,10 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
+| Trigger: platform font discovery, matching and owned fallback faces over the integrated FontFile backend (ADR 0046). | 1 |
 | Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
 | Trigger: typed live body-state callback and solver ownership over the PhysicsServer space. | 1 |
+| Trigger: variable-font instance coordinates, variation metadata and per-instance shaping/raster cache identity over the integrated FreeType/HarfBuzz backend (ADR 0046). | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

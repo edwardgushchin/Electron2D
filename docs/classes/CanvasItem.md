@@ -1011,3 +1011,84 @@ Local notifications are attached-only, synchronous and enabled by NotifyLocalTra
 [The component audit](../components/scene-hierarchy.md#transform-invalidation-and-delivery) records exact source semantics, safe phases, reentry policy and tests. Hidden, masked or processing-disabled canvas items can still receive queued notifications. No interpolation, physics backend or UI implementation is implied.
 
 Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.
+
+## Font drawing
+
+All text methods use the existing recording scope and delegate to the supplied borrowed [Font](Font.md). Position denotes the baseline in local canvas units. Paragraph shaping, fallback, Unicode scalar clusters, width/alignment, wrapping, outlines and oversampling follow the font contract. Text uses ordinary glyph textures, so inherited transform, modulation, sampling, material and clipping policies apply. The font must remain live while its recorded glyphs are consumed.
+
+| Signature | Contract |
+| --- | --- |
+| `public void DrawChar(Font font, Vector2 position, string character, int fontSize = 16, Color? modulate = null, float oversampling = 0)` | [DrawChar](#drawchar) |
+| `public void DrawCharOutline(Font font, Vector2 position, string character, int fontSize = 16, int size = -1, Color? modulate = null, float oversampling = 0)` | [DrawCharOutline](#drawcharoutline) |
+| `public void DrawString(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, Color? modulate = null, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida \| TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)` | [DrawString](#drawstring) |
+| `public void DrawStringOutline(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int size = 1, Color? modulate = null, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida \| TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)` | [DrawStringOutline](#drawstringoutline) |
+| `public void DrawMultilineString(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int maxLines = -1, Color? modulate = null, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory \| TextLineBreakFlags.WordBound, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida \| TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)` | [DrawMultilineString](#drawmultilinestring) |
+| `public void DrawMultilineStringOutline(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int maxLines = -1, int size = 1, Color? modulate = null, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory \| TextLineBreakFlags.WordBound, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida \| TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)` | [DrawMultilineStringOutline](#drawmultilinestringoutline) |
+
+<a id="drawchar"></a>
+### DrawChar
+
+`public void DrawChar(Font font, Vector2 position, string character, int fontSize = 16, Color? modulate = null, float oversampling = 0)`
+
+Draws one unshaped Unicode character during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `character`: Exactly one Unicode scalar, encoded as one or two UTF-16 code units.; `fontSize`: Positive logical font size.; `modulate`: Finite color multiplier, or null for white.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+<a id="drawcharoutline"></a>
+### DrawCharOutline
+
+`public void DrawCharOutline(Font font, Vector2 position, string character, int fontSize = 16, int size = -1, Color? modulate = null, float oversampling = 0)`
+
+Draws the outline of one unshaped Unicode character during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `character`: Exactly one Unicode scalar, encoded as one or two UTF-16 code units.; `fontSize`: Positive logical font size.; `size`: Outline radius; nonpositive values draw an unexpanded glyph.; `modulate`: Finite color multiplier, or null for white.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+<a id="drawstring"></a>
+### DrawString
+
+`public void DrawString(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, Color? modulate = null, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)`
+
+Draws one shaped line during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `text`: The text to shape and draw.; `alignment`: Advance-axis alignment.; `width`: Available width; a negative value leaves width unconstrained.; `fontSize`: Positive logical font size.; `modulate`: Finite color multiplier, or null for white.; `justificationFlags`: Fill-spacing rules.; `direction`: Paragraph direction.; `orientation`: The glyph advance axis.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+<a id="drawstringoutline"></a>
+### DrawStringOutline
+
+`public void DrawStringOutline(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int size = 1, Color? modulate = null, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)`
+
+Draws the outline of one shaped line during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `text`: The text to shape and draw.; `alignment`: Advance-axis alignment.; `width`: Available width; a negative value leaves width unconstrained.; `fontSize`: Positive logical font size.; `size`: Outline radius; nonpositive values draw an unexpanded glyph.; `modulate`: Finite color multiplier, or null for white.; `justificationFlags`: Fill-spacing rules.; `direction`: Paragraph direction.; `orientation`: The glyph advance axis.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+<a id="drawmultilinestring"></a>
+### DrawMultilineString
+
+`public void DrawMultilineString(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int maxLines = -1, Color? modulate = null, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory | TextLineBreakFlags.WordBound, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)`
+
+Draws a shaped Unicode paragraph during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `text`: The text to shape and draw.; `alignment`: Advance-axis alignment.; `width`: Available width; a negative value leaves width unconstrained.; `fontSize`: Positive logical font size.; `maxLines`: Maximum visible lines; a negative value draws every line.; `modulate`: Finite color multiplier, or null for white.; `breakFlags`: Unicode line-break rules.; `justificationFlags`: Fill-spacing rules.; `direction`: Paragraph direction.; `orientation`: The glyph advance axis.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+<a id="drawmultilinestringoutline"></a>
+### DrawMultilineStringOutline
+
+`public void DrawMultilineStringOutline(Font font, Vector2 position, string text, HorizontalAlignment alignment = HorizontalAlignment.Left, float width = -1, int fontSize = 16, int maxLines = -1, int size = 1, Color? modulate = null, TextLineBreakFlags breakFlags = TextLineBreakFlags.Mandatory | TextLineBreakFlags.WordBound, TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound, TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal, float oversampling = 0)`
+
+Draws the outline of a shaped Unicode paragraph during this item's recording.
+
+`font`: The live borrowed font.; `position`: The finite local baseline position.; `text`: The text to shape and draw.; `alignment`: Advance-axis alignment.; `width`: Available width; a negative value leaves width unconstrained.; `fontSize`: Positive logical font size.; `maxLines`: Maximum visible lines; a negative value draws every line.; `size`: Outline radius; nonpositive values draw an unexpanded glyph.; `modulate`: Finite color multiplier, or null for white.; `breakFlags`: Unicode line-break rules.; `justificationFlags`: Fill-spacing rules.; `direction`: Paragraph direction.; `orientation`: The glyph advance axis.; `oversampling`: Positive raster scale, or a nonpositive value for automatic scale.
+
+Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
+
+[FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) verifies all six entrypoints, independent raster pixels, fallback scripts, clipping, transforms, modulation and 64 warmed active frames without managed allocation on Linux Wayland GPU and compatibility. Other platforms, native allocator counts and owner acceptance remain unverified.

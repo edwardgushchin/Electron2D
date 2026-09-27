@@ -1,0 +1,36 @@
+<Project>
+  <PropertyGroup>
+    <!-- Native output is target-specific: preserve an application RID through ProjectReference. -->
+    <IsRidAgnostic>false</IsRidAgnostic>
+    <Electron2DTextNativeRID Condition="'$(Electron2DTextNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DTextNativeRID>
+    <Electron2DTextNativeRID Condition="'$(Electron2DTextNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DTextNativeRID>
+    <_Electron2DTextNativeSupported>false</_Electron2DTextNativeSupported>
+    <_Electron2DTextNativeSupported Condition="('$(Electron2DNativePlatform)' == '' or '$(Electron2DNativePlatform)' == 'Linux') and ('$(Electron2DTextNativeRID)' == 'linux-x64' or '$(Electron2DTextNativeRID)' == 'linux-arm64')">true</_Electron2DTextNativeSupported>
+    <Electron2DTextNativeEnabled Condition="'$(Electron2DTextNativeEnabled)' == '' and '$(_Electron2DTextNativeSupported)' == 'true'">true</Electron2DTextNativeEnabled>
+    <Electron2DTextNativeEnabled Condition="'$(Electron2DTextNativeEnabled)' == ''">false</Electron2DTextNativeEnabled>
+    <Electron2DTextNativeJobs Condition="'$(Electron2DTextNativeJobs)' == ''">8</Electron2DTextNativeJobs>
+    <_Electron2DTextNativeSource>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../src/Servers/Text/Native'))</_Electron2DTextNativeSource>
+    <_Electron2DTextNativeBuild>$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'text-native', '$(Electron2DTextNativeRID)'))))</_Electron2DTextNativeBuild>
+    <_Electron2DTextNativeLibrary Condition="'$(Electron2DTextNativeLibrary)' == ''">$(_Electron2DTextNativeBuild)/libElectron2DTextBreak.so</_Electron2DTextNativeLibrary>
+    <_Electron2DTextNativeLibrary Condition="'$(Electron2DTextNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DTextNativeLibrary)'))</_Electron2DTextNativeLibrary>
+    <_Electron2DTextNativeArch Condition="'$(Electron2DTextNativeRID)' == 'linux-x64'">x64</_Electron2DTextNativeArch>
+    <_Electron2DTextNativeArch Condition="'$(Electron2DTextNativeRID)' == 'linux-arm64'">arm64</_Electron2DTextNativeArch>
+    <_Electron2DTextNativeToolchainArg Condition="'$(Electron2DTextNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DTextNativeToolchain)&quot;</_Electron2DTextNativeToolchainArg>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/data/TextBreak78.dat" LogicalName="Electron2D.TextBreak.dat" />
+    <_Electron2DTextNativeInput Include="$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.cpp;$(MSBuildThisFileDirectory)../src/Vendor/ICU/**/*.h;$(MSBuildThisFileDirectory)../src/Vendor/ICU/manifest.json;$(MSBuildThisFileDirectory)../src/Servers/Text/Native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DTextNativeLibrary)" Condition="'$(Electron2DTextNativeEnabled)' == 'true'" Link="libElectron2DTextBreak.so" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+  <Target Name="ValidateElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DTextNativeEnabled)' == 'true'">
+    <Error Condition="'$(_Electron2DTextNativeSupported)' != 'true'" Text="The private text backend currently requires the Linux native platform and linux-x64 or linux-arm64 RID. Electron2DNativePlatform='$(Electron2DNativePlatform)' and Electron2DTextNativeRID='$(Electron2DTextNativeRID)' are not a supported text build profile; a prebuilt library or toolchain does not override the platform gate." />
+    <Error Condition="'$(Electron2DTextNativeLibrary)' != '' and !Exists('$(_Electron2DTextNativeLibrary)')" Text="Electron2DTextNativeLibrary must name an existing library built for $(Electron2DTextNativeRID)." />
+    <Error Condition="'$(Electron2DTextNativeLibrary)' == '' and '$(Electron2DTextNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DTextNativeToolchain)' == ''" Text="Cross-RID text builds require Electron2DTextNativeToolchain (CMake toolchain) or Electron2DTextNativeLibrary (prebuilt target library). The host compiler must not silently produce the wrong architecture." />
+    <Error Condition="'$(Electron2DTextNativeLibrary)' == '' and !$([MSBuild]::IsOSPlatform('Linux')) and '$(Electron2DTextNativeToolchain)' == ''" Text="Building the private Linux text library on another OS requires an explicit CMake cross toolchain or prebuilt library." />
+  </Target>
+  <Target Name="BuildElectron2DTextNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DTextNative" Condition="'$(Electron2DTextNativeEnabled)' == 'true' and '$(Electron2DTextNativeLibrary)' == ''" Inputs="@(_Electron2DTextNativeInput);$(Electron2DTextNativeToolchain)" Outputs="$(_Electron2DTextNativeLibrary)">
+    <MakeDir Directories="$(_Electron2DTextNativeBuild)" />
+    <Exec Command="cmake -S &quot;$(_Electron2DTextNativeSource)&quot; -B &quot;$(_Electron2DTextNativeBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DELECTRON2D_ICU_BUILD_TOOL=OFF -DELECTRON2D_TEXT_TARGET_ARCH=$(_Electron2DTextNativeArch) $(_Electron2DTextNativeToolchainArg)" />
+    <Exec Command="cmake --build &quot;$(_Electron2DTextNativeBuild)&quot; --target Electron2DTextBreak --config Release --parallel $(Electron2DTextNativeJobs)" />
+  </Target>
+</Project>

@@ -142,7 +142,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     throw new NotSupportedException("This compatibility driver cannot repeat textures whose dimensions are not powers of two.");
             }
         foreach (var pair in _textures)
-            if (!_usedTextures.Contains(pair.Key)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); }
+            if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); }
         if (_targetSize != size)
         {
             var target = new RenderHandle(SDL.CreateTexture(renderer, (BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);

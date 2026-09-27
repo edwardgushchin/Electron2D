@@ -1,0 +1,362 @@
+{
+  "repository": "https://github.com/AvaloniaUI/Avalonia",
+  "release": "12.1.3",
+  "commit": "8eeda4f6f546165b3f72e63c9f42247abb306905",
+  "unicodeVersion": "17.0.0",
+  "transform": "Namespace substitution; internal top-level types; UTF8 BOM and CRLF normalization only. Algorithms unchanged.",
+  "files": [
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/BiDi.trie.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/BiDi.trie.cs",
+      "upstreamSHA256": "9a1517e3af500eb0ad9e99d1e608a5efc5c0e14b419156e3e46ea8bec4e3a208",
+      "sha256": "b82aa45ddb3cd9d5c025f3417fb085de2849b92b02494561743031f0f5becc9f",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/BiDiAlgorithm.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/BiDiAlgorithm.cs",
+      "upstreamSHA256": "245d9e90d33ff619f0507993ba41ca2670ec278ee40152e4a04c6f311929aa5b",
+      "sha256": "c8e3cf397ea756877761a6e9fb3d116e01bbd971813b7a5b29cae1fd2bfaf28b",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/BiDiClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/BiDiClass.cs",
+      "upstreamSHA256": "69b83111e3ff6e14251cc84fe78b29e9fc63a205fd3be682a195e1c9404d2c86",
+      "sha256": "dd8cfa8fbb3d0a1836592459e0d6cbb3b6d0f07117b5246a06db590d14372b18",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/BiDiData.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/BiDiData.cs",
+      "upstreamSHA256": "53e6f0063113e0945b76e8870e88826cf209b8da2125e57533a0f160435d070e",
+      "sha256": "a19411cd7ec5a39893f924268427c21bc7c91505c6be6fd4b3e7ad717f28f997",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/BiDiPairedBracketType.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/BiDiPairedBracketType.cs",
+      "upstreamSHA256": "3f6421dd82c9e01db65844731021cc14d4762fcf47e15883d77e331a8a96e3cc",
+      "sha256": "3f181d4e0a2fe976bc33eaca535519a385f4f2e1826189b35d65b754b7391a41",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/Codepoint.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/Codepoint.cs",
+      "upstreamSHA256": "da9426acd6b8fd39af61dd92790d49d64e4ebef23561b11a67e1816089739bdd",
+      "sha256": "d3efb5af0fff3bc2d20983b90c213f68a8cb0276b0003d2045277d8c19715ae1",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/CodepointEnumerator.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/CodepointEnumerator.cs",
+      "upstreamSHA256": "77f92bd274857560da0fcc26a9c64fa5d79aeaf4062ed4866d824fb1b82b059f",
+      "sha256": "79a000a50fe82ff0470564513155c878d5917d04c6173ee1376b4f5f0abe4c72",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/EastAsianWidth.trie.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/EastAsianWidth.trie.cs",
+      "upstreamSHA256": "09944f3075e0f5afefcc65585f97960b0aecf91a1cc1191c335c7f7efa095796",
+      "sha256": "23faf6c771e58473608f722f4fe1166a9bf35395027dc82120f69cc0d3efebed",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/EastAsianWidthClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/EastAsianWidthClass.cs",
+      "upstreamSHA256": "fb07f3f688663531b40ad43b2e55aa8ce89ac44a674f0ea58f2f126b9733f2f0",
+      "sha256": "bb92b0a82f3a0c003f6ea08c9c0685e290c63b94171df3f5dcfba966fbe20e0c",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/GeneralCategory.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/GeneralCategory.cs",
+      "upstreamSHA256": "9f3b889f329c2a1d48f516f3a91d6c2001e22fec902d78742137f38c61f03b35",
+      "sha256": "c31f8c1a6d75156a4aa087e244aff82c3ec187b82aacebef415832cad665aeaf",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/Grapheme.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/Grapheme.cs",
+      "upstreamSHA256": "9f9d76dea13d922ab5d9e162cf72826f7759185b9bcbcbeefa77820f19baf9cb",
+      "sha256": "86f2c103e94ba142a4c5b4b7d8c074ad1bc9d4ec8ffe419564091cf7ecb4c497",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/GraphemeBreak.trie.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/GraphemeBreak.trie.cs",
+      "upstreamSHA256": "a1046d5fb657a77e8119fbc5c70f0a2b72dd1e7ba48817358feeea2343df7aa6",
+      "sha256": "ce3818d400430b46130ac5482f0c3220c564484815fd135f0e1c4c377042ba7c",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/GraphemeBreakClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/GraphemeBreakClass.cs",
+      "upstreamSHA256": "a7e551592895455436400318625ebe73c27904012bf880e63db9c9e8f946effc",
+      "sha256": "180c949934b970b1cdc733ccc9348bd578829655a6d91f64d917b09360628745",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/GraphemeEnumerator.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/GraphemeEnumerator.cs",
+      "upstreamSHA256": "700d94a2c6ebdb5d1721b7bc48218ac7407123cf781b32dc86565b1a32ff6cbc",
+      "sha256": "c422f891bb84c3301f24975eaf3a88fba91c4aabbc712dfa35cdc71fe80f8bbe",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/IndicConjunctBreakClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/IndicConjunctBreakClass.cs",
+      "upstreamSHA256": "17dfaff801174a9bc4a1a75d0672d7c2c09ca54f4f51f6561af30f86f9b7ab6e",
+      "sha256": "a6449f1b256004477ba8d122ee498def19634f7cb78c6d4f64996df14a23fbc3",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/LineBreak.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/LineBreak.cs",
+      "upstreamSHA256": "c13ea111694330ee5ab36c348c24ea10a379125a185bbb96894f2e5e07ef5a82",
+      "sha256": "86b013ce0c4ca6f3b0e8e203d6ffe05677bcce51d4f249ef5ac74c194fe6c1fa",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/LineBreakClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/LineBreakClass.cs",
+      "upstreamSHA256": "e2dac104be99ebfd4a0ed424471cdfcfa2907b96ccdb61536f0cb08bb024e610",
+      "sha256": "ae541ce1d4cc77c189900d922b6d83c5e5785298ff7247c81e1c780e81e1f624",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/LineBreakEnumerator.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/LineBreakEnumerator.cs",
+      "upstreamSHA256": "fd109832e88ab3d1c8a3609ee82f9354bc41d4c77ca2497025a26b848ae40a5a",
+      "sha256": "66b46af5c87d1f375202f9197a1d7516da354974f71f6e7094009b29b230d5c7",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/Script.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/Script.cs",
+      "upstreamSHA256": "991d220f5badfbe479a058912f1a97068c0721ab2d2d2c91d59939dd3f442710",
+      "sha256": "1b2bda49a8beff82e5bf9edb9720e67cb680ca88fc1a400e5c5bffee97405532",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/ScriptExtensions.data.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/ScriptExtensions.data.cs",
+      "upstreamSHA256": "aef4ad588fd211a3768ad61606fe92fd532b3e962a9c3bd3bede10831fe292ec",
+      "sha256": "612196f73156c0696c32bfb2b27acc43dc4ae940b096010b89aeffa7937689e5",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeData.Lookups.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeData.Lookups.cs",
+      "upstreamSHA256": "65b631c06c27447a64365f32c6ab1fc5b3ed54d24880d12a080ced2c2ffc4cf3",
+      "sha256": "5c7c5f0de7cf3dc61402d0c72cf039954545cccfb0ea9b4cb04f57e4c60bf52d",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeData.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeData.cs",
+      "upstreamSHA256": "1209034d9aa8bc4383a6c97fd31214b508935c7b78154516cd51850a4e625c87",
+      "sha256": "e3fe723c286c40f30318a8deb278936ccc42a0c1e23f81b245fca0bd90345db7",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeData.trie.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeData.trie.cs",
+      "upstreamSHA256": "9d36ec22b8f374f1c94614a331e2882fdf680957604d5149de317cb7b062dcc8",
+      "sha256": "354f4d91240cf217ed0863d7e835d6e80381d3bfb87fe40722cc30bb24147d7f",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeDataSource.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeDataSource.cs",
+      "upstreamSHA256": "c57e75be29b1c9230e3cf89cea2c2082346a2149bc64a02bee3ca7d91594b785",
+      "sha256": "99e43473e7db1cadfbdd234b66136b78b9e242952f95fd831d8bb6051132c63c",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeTrie.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeTrie.cs",
+      "upstreamSHA256": "d797ae30ad72e4fefdb70a5711cfc9f1ae43de743a62cb5cc4ce55d64bc8d8d7",
+      "sha256": "5d4fed668afc9177483829b42960b78ee9e92b06cd7a97d15f63c5e5bd8c33a4",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/UnicodeTrieBuilder.Constants.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/UnicodeTrieBuilder.Constants.cs",
+      "upstreamSHA256": "12257d773fc4c2bede5532cb39c798465958c085c4a1759f13304165acae1397",
+      "sha256": "f1f3d5bb6443e2c83a221726249b15f405fd6c6045bfa373ae5a1848513ca499",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/WordBreakClass.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/WordBreakClass.cs",
+      "upstreamSHA256": "46d04d6880a491dda0d76fa8deeecc4485a2f507cbcf719c5aa2d2a4ebf9b7f7",
+      "sha256": "e3aa0e57d002d1ab55e9aacedc805c6a744a9df42d79b21f9a7f1fbed953cf3f",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Utilities/ArrayBuilder.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Utilities/ArrayBuilder.cs",
+      "upstreamSHA256": "ca62598a778093ab80e8b234d8f78ecdf748745ee5b10009db3b59fb987d61bd",
+      "sha256": "69ef6b5a9054a084b15a7e09e44bea3f48fa3e75931e2dc64239ef7f67b4e5f5",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Utilities/ArraySlice.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Utilities/ArraySlice.cs",
+      "upstreamSHA256": "eb0945b1f2f8ac8158298e08cc310302d8526d28f83734f689ed8cdc4b83ba53",
+      "sha256": "2d39eaac0a248ccdf19a705355a9ab00050c3ab39ff4bb66363805885708bc4b",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Utilities/BidiDictionary.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Utilities/BidiDictionary.cs",
+      "upstreamSHA256": "b59e6aae578c5694f9ab00630da6c82de718616f37b1f4d07a27cee44d8d3400",
+      "sha256": "7802f83affd6754c70405f8d28cca0ef5779accf12284c63fa1d3e37495ed301",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Utilities/ImmutableReadOnlyListStructEnumerator.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Utilities/ImmutableReadOnlyListStructEnumerator.cs",
+      "upstreamSHA256": "9052e8e8cb1dba3f1be4815e40f2b290e8d07e51d4f79d916d3eed06026fcc34",
+      "sha256": "38771a6eddaf8635749f534b3d14b2a05f8b897165dffc18e3f0f129fd22ddef",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Utilities/MappedArraySlice.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Utilities/MappedArraySlice.cs",
+      "upstreamSHA256": "aee93c31d4c299a59512cdf17769cd738337085ca3f91693f1750ca06b1233cf",
+      "sha256": "8452944d28a83d833b94bbbccbb7a29e9f8155bf5cc9a6b8a2ffb7e2598fbdc8",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/FormattingBufferHelper.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/FormattingBufferHelper.cs",
+      "upstreamSHA256": "5d3e8846039f704fabab71aed23332695f39918490a5ea808abf40e33989e1dc",
+      "sha256": "0b0fe98f3f8233fd879009e8f3cdcd300c0ee9f248fb43e3fe4482404a8e8d52",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/MIT.txt",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/licence.md",
+      "upstreamSHA256": "213814d306090074d234d760239ff0f67eb9b8d20eefb4d5631bb39dbe0b769b",
+      "sha256": "213814d306090074d234d760239ff0f67eb9b8d20eefb4d5631bb39dbe0b769b"
+    },
+    {
+      "destination": "licence/UnicodeText-MIT.txt",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/licence.md",
+      "upstreamSHA256": "213814d306090074d234d760239ff0f67eb9b8d20eefb4d5631bb39dbe0b769b",
+      "sha256": "213814d306090074d234d760239ff0f67eb9b8d20eefb4d5631bb39dbe0b769b"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/Apache-2.0.txt",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "upstreamSHA256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "destination": "licence/UnicodeText-Apache-2.0.txt",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "upstreamSHA256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/DotNet.txt",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/v8.0.0/LICENSE.TXT",
+      "upstreamSHA256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+    },
+    {
+      "destination": "licence/UnicodeText-DotNet.txt",
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/v8.0.0/LICENSE.TXT",
+      "upstreamSHA256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/foliojs-unicode-trie.txt",
+      "url": "https://raw.githubusercontent.com/foliojs/unicode-trie/409ed3bd2201024bca4f593a6ca0d056bf2cba18/LICENSE",
+      "upstreamSHA256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d",
+      "sha256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d"
+    },
+    {
+      "destination": "licence/UnicodeText-foliojs-unicode-trie.txt",
+      "url": "https://raw.githubusercontent.com/foliojs/unicode-trie/409ed3bd2201024bca4f593a6ca0d056bf2cba18/LICENSE",
+      "upstreamSHA256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d",
+      "sha256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/foliojs-linebreak.txt",
+      "url": "https://raw.githubusercontent.com/foliojs/linebreak/dc9603e8e58ce0e6d431cc5087ffb98132cc6a07/LICENSE",
+      "upstreamSHA256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440",
+      "sha256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440"
+    },
+    {
+      "destination": "licence/UnicodeText-foliojs-linebreak.txt",
+      "url": "https://raw.githubusercontent.com/foliojs/linebreak/dc9603e8e58ce0e6d431cc5087ffb98132cc6a07/LICENSE",
+      "upstreamSHA256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440",
+      "sha256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/LICENCES/Unicode.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/LICENSE",
+      "upstreamSHA256": "fe5c62b543e287981db198f2acfa0ca732d12591a1024536dc8fd85dacd77104",
+      "sha256": "fe5c62b543e287981db198f2acfa0ca732d12591a1024536dc8fd85dacd77104"
+    },
+    {
+      "destination": "licence/UnicodeText-Unicode.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/LICENSE",
+      "upstreamSHA256": "fe5c62b543e287981db198f2acfa0ca732d12591a1024536dc8fd85dacd77104",
+      "sha256": "fe5c62b543e287981db198f2acfa0ca732d12591a1024536dc8fd85dacd77104"
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/WordBreakEnumerator.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/WordBreakEnumerator.cs",
+      "upstreamSHA256": "c39e00817d6189b81f7e14fded3d3a720e9bfc3582cb7156ad36c425326684e3",
+      "sha256": "fbb4bff9cb0a0858c10f6dbfbc442e8e75060f43d8820a32883416056004cefa",
+      "adapt": true
+    },
+    {
+      "destination": "src/Vendor/UnicodeText/Media/TextFormatting/Unicode/WordSegment.cs",
+      "url": "https://raw.githubusercontent.com/AvaloniaUI/Avalonia/8eeda4f6f546165b3f72e63c9f42247abb306905/src/Avalonia.Base/Media/TextFormatting/Unicode/WordSegment.cs",
+      "upstreamSHA256": "6262325475359dda75fff034a6e583a97b8e80414125594f4c7c3484e906ba79",
+      "sha256": "55645dffeb21b1debcf023350cf81f1adb9d1fc02cf8988f8a605025cb41ec15",
+      "adapt": true
+    }
+  ],
+  "conformance": [
+    {
+      "name": "GraphemeBreakTest.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/auxiliary/GraphemeBreakTest.txt",
+      "upstreamSHA256": "e2d134d2c52919bace503ebb6a551c1855fe1a1faec18478c78fff254a1793ec",
+      "limit": null
+    },
+    {
+      "name": "LineBreakTest.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/auxiliary/LineBreakTest.txt",
+      "upstreamSHA256": "e69884e0dde6a8724873f885d68c52dc14518abf9ae4ca9e2283b8773db3b752",
+      "limit": null
+    },
+    {
+      "name": "BidiTest.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/BidiTest.txt",
+      "upstreamSHA256": "888bdfc8090652272d1f859cdb00ae659e2dc6c26740be61ef1d03998a687620",
+      "limit": 2048
+    },
+    {
+      "name": "BidiCharacterTest.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/BidiCharacterTest.txt",
+      "upstreamSHA256": "a3e6e905ab5afbe318a96df5401d0372a04cd73ef139ab5e3cf0ae241c255488",
+      "limit": 2048
+    },
+    {
+      "name": "WordBreakTest.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/auxiliary/WordBreakTest.txt",
+      "upstreamSHA256": "1de23a75f37904abc7d206239ee8d34f8fdf0fb4ab32a7174dfbabbde25419b2",
+      "limit": null
+    }
+  ],
+  "fixture": {
+    "destination": "tests/Electron2D.Tests/Fixtures/UnicodeTextConformance.json",
+    "sha256": "41cdd46990319c73fdcf5f2d8e15d84637c5314c4b75ae70670ee66291ec53d4"
+  }
+}

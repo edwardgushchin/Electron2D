@@ -1,3 +1,6 @@
 src/Vendor/SDL3-CS/** -whitespace
 src/Vendor/Box2D.NET/** -whitespace
+src/Vendor/UnicodeText/** -whitespace
+src/Vendor/ICU/** -whitespace
 licence/** -whitespace
+tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace

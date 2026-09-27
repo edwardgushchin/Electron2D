@@ -303,6 +303,8 @@ public abstract partial class CanvasItem
         finally { _drawing = false; _currentDrawingItem = previousDrawingItem; }
     }
 
+    internal virtual Rect2? CanvasClipRect => null;
+
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 

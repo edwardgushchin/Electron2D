@@ -16,6 +16,7 @@ internal sealed class ThemeOwner : IDisposable
         validate: static value => { if (!value.IsFinite()) throw new ArgumentException("Theme colors must be finite.", nameof(value)); });
     internal readonly Store<int> Constants = new(static (t, n, k) => t.HasConstant(n, k), static (t, n, k) => t.GetConstant(n, k), static () => 0);
     internal readonly Store<int> FontSizes = new(static (t, n, k) => t.HasFontSize(n, k), static (t, n, k) => t.GetFontSize(n, k), static () => ThemeDB.Instance.FallbackFontSize);
+    internal readonly Store<Font?> Fonts = new(static (t, n, k) => t.HasFont(n, k), static (t, n, k) => t.GetFont(n, k), static () => ThemeDB.Instance.FallbackFont, true);
     internal readonly Store<Texture?> Icons = new(static (t, n, k) => t.HasIcon(n, k), static (t, n, k) => t.GetIcon(n, k), static () => ThemeDB.Instance.FallbackIcon, true);
     internal readonly Store<StyleBox?> Styles = new(static (t, n, k) => t.HasStyleBox(n, k), static (t, n, k) => t.GetStyleBox(n, k), static () => ThemeDB.Instance.FallbackStyleBox, true);
     private readonly Node _owner;
@@ -88,7 +89,7 @@ internal sealed class ThemeOwner : IDisposable
     internal void Invalidate()
     {
         _cacheGeneration++;
-        Colors.Cache.Clear(); Constants.Cache.Clear(); FontSizes.Cache.Clear(); Icons.Cache.Clear(); Styles.Cache.Clear(); _types.Clear();
+        Colors.Cache.Clear(); Constants.Cache.Clear(); FontSizes.Cache.Clear(); Fonts.Cache.Clear(); Icons.Cache.Clear(); Styles.Cache.Clear(); _types.Clear();
         Interlocked.Exchange(ref _invalidated, 0);
     }
     private void CheckQuery()
@@ -205,6 +206,13 @@ internal sealed class ThemeOwner : IDisposable
             if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultBaseScale()) return theme.DefaultBaseScale;
         var defaults = ThemeDB.Instance.GetDefaultTheme(); return defaults.HasDefaultBaseScale() ? defaults.DefaultBaseScale : ThemeDB.Instance.FallbackBaseScale;
     }
+    internal Font? DefaultFont()
+    {
+        CheckQuery();
+        for (var owner = this; owner is not null; owner = From(owner._owner.Parent))
+            if (owner._theme is { IsDisposed: false } theme && theme.HasDefaultFont()) return theme.DefaultFont;
+        var defaults = ThemeDB.Instance.GetDefaultTheme(); return defaults.HasDefaultFont() ? defaults.DefaultFont : ThemeDB.Instance.FallbackFont;
+    }
     internal int DefaultFontSize()
     {
         CheckQuery();
@@ -265,13 +273,14 @@ internal sealed class ThemeOwner : IDisposable
         _tree = null; _sourceAction = null; _selfAction = null; _overrideAction = null;
         if (_theme is { } theme) { theme.Changed -= _sourceChanged; theme.Disposed -= _sourceDisposed; }
         foreach (var resource in _sources.Keys) { resource.Changed -= _overrideChanged; resource.Disposed -= _overrideDisposed; }
-        _sources.Clear(); _theme = null; Colors.Overrides.Clear(); Constants.Overrides.Clear(); FontSizes.Overrides.Clear(); Icons.Overrides.Clear(); Styles.Overrides.Clear(); Invalidate();
+        _sources.Clear(); _theme = null; Colors.Overrides.Clear(); Constants.Overrides.Clear(); FontSizes.Overrides.Clear(); Fonts.Overrides.Clear(); Icons.Overrides.Clear(); Styles.Overrides.Clear(); Invalidate();
     }
     internal IEnumerable<PropertyDescriptor> Properties<TNode>() where TNode : Node
     {
         foreach (var descriptor in ScalarProperties<TNode, Color>("ThemeColorOverride/", Colors, static owner => owner.Colors)) yield return descriptor;
         foreach (var descriptor in ScalarProperties<TNode, int>("ThemeConstantOverride/", Constants, static owner => owner.Constants)) yield return descriptor;
         foreach (var descriptor in ScalarProperties<TNode, int>("ThemeFontSizeOverride/", FontSizes, static owner => owner.FontSizes)) yield return descriptor;
+        foreach (var descriptor in ResourceProperties<TNode, Font>("ThemeFontOverride/", Fonts, static owner => owner.Fonts)) yield return descriptor;
         foreach (var descriptor in ResourceProperties<TNode, Texture>("ThemeIconOverride/", Icons, static owner => owner.Icons)) yield return descriptor;
         foreach (var descriptor in ResourceProperties<TNode, StyleBox>("ThemeStyleBoxOverride/", Styles, static owner => owner.Styles)) yield return descriptor;
     }
@@ -307,6 +316,8 @@ internal sealed class ThemeOwner : IDisposable
             return ScalarProperty<TNode, int>("ThemeConstantOverride/", name[22..], static owner => owner.Constants);
         if (valueType == typeof(int?) && name.StartsWith("ThemeFontSizeOverride/", StringComparison.Ordinal))
             return ScalarProperty<TNode, int>("ThemeFontSizeOverride/", name[22..], static owner => owner.FontSizes);
+        if (valueType == typeof(Font) && name.StartsWith("ThemeFontOverride/", StringComparison.Ordinal))
+            return ResourceProperty<TNode, Font>("ThemeFontOverride/", name[18..], static owner => owner.Fonts);
         if (valueType == typeof(Texture) && name.StartsWith("ThemeIconOverride/", StringComparison.Ordinal))
             return ResourceProperty<TNode, Texture>("ThemeIconOverride/", name[18..], static owner => owner.Icons);
         if (valueType == typeof(StyleBox) && name.StartsWith("ThemeStyleBoxOverride/", StringComparison.Ordinal))

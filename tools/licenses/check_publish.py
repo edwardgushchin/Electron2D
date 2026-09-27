@@ -13,6 +13,8 @@ PACKAGES = {
     "SDL3-CS.Linux/3.4.16",
     "SDL3-CS.Linux.Image/3.4.6.9",
     "SDL3-CS.Linux.Shadercross/3.0.0.11",
+    "MonoGame.Library.FreeType/2.13.2.5",
+    "HarfBuzzSharp.NativeAssets.Linux/14.2.1.201",
 }
 NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
@@ -20,6 +22,9 @@ NATIVE_GROUPS = {
                "libhostpolicy.so", "libmscordaccore.so", "libmscordbi.so"),
     "SDL": ("libSDL3.so*",),
     "SDL_image": ("libSDL3_image.so*",),
+    "FreeType": ("libfreetype.so",),
+    "HarfBuzz": ("libHarfBuzzSharp.so",),
+    "ICUText": ("libElectron2DTextBreak.so",),
     "libaom": ("libaom.so*",),
     "libavif": ("libavif.so*",),
     "dav1d": ("libdav1d.so*",),
@@ -43,7 +48,7 @@ def check(publish: Path) -> None:
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.iterdir() if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 63, f"Expected 63 audited ELF files, found {len(elf)}"
+    assert len(elf) == 66, f"Expected 66 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()
@@ -57,7 +62,7 @@ def check(publish: Path) -> None:
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 29, f"Expected 29 license and notice files, found {len(expected)}"
+    assert len(expected) == 46, f"Expected 46 license and notice files, found {len(expected)}"
     assert {p.name for p in delivered.iterdir() if p.is_file()} == expected, "Unexpected published license files"
     for name in expected:
         assert (delivered / name).read_bytes() == (source / name).read_bytes(), name

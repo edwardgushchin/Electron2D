@@ -1,0 +1,64 @@
+{
+  "unicodeVersion": "17.0.0",
+  "icuRelease": "78.3",
+  "icuCommit": "21d1eb0f306e1141c10931e914dfc038c06121da",
+  "license": "licence/TextCase-LICENSE.txt",
+  "inputs": [
+    {
+      "name": "ucase.cpp",
+      "url": "https://raw.githubusercontent.com/unicode-org/icu/21d1eb0f306e1141c10931e914dfc038c06121da/icu4c/source/common/ucase.cpp",
+      "sha256": "a94ccf6f96d2f3eb7bd3008529a38d0d032abaab0fd4f5ef038d7460742f3045"
+    },
+    {
+      "name": "ucasemap_imp.h",
+      "url": "https://raw.githubusercontent.com/unicode-org/icu/21d1eb0f306e1141c10931e914dfc038c06121da/icu4c/source/common/ucasemap_imp.h",
+      "sha256": "d1acc77c08324bd726c1a4e49f52f6a969910f0d77dd7d97bfddb72e0e841764"
+    },
+    {
+      "name": "ICU-LICENSE",
+      "url": "https://raw.githubusercontent.com/unicode-org/icu/21d1eb0f306e1141c10931e914dfc038c06121da/LICENSE",
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "name": "UnicodeData.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/UnicodeData.txt",
+      "sha256": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c"
+    },
+    {
+      "name": "SpecialCasing.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/SpecialCasing.txt",
+      "sha256": "efc25faf19de21b92c1194c111c932e03d2a5eaf18194e33f1156e96de4c9588"
+    },
+    {
+      "name": "PropList.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/PropList.txt",
+      "sha256": "130dcddcaadaf071008bdfce1e7743e04fdfbc910886f017d9f9ac931d8c64dd"
+    },
+    {
+      "name": "DerivedCoreProperties.txt",
+      "url": "https://raw.githubusercontent.com/unicode-org/unicodetools/0509b4b256ff75c65300c8aaecb9e6ec816d9520/unicodetools/data/ucd/17.0.0/DerivedCoreProperties.txt",
+      "sha256": "24c7fed1195c482faaefd5c1e7eb821c5ee1fb6de07ecdbaa64b56a99da22c08"
+    },
+    {
+      "name": "ustrcase.cpp",
+      "url": "https://raw.githubusercontent.com/unicode-org/icu/21d1eb0f306e1141c10931e914dfc038c06121da/icu4c/source/common/ustrcase.cpp",
+      "sha256": "e5d6cae3829094a2bfb2e7a8ee294e97a369bc3f7397262eff0f99299cfb4d9c"
+    }
+  ],
+  "outputs": {
+    "src/Servers/Text/TextCase.Data.cs": "112fe9c80df170ebd31e191cb00d0b6acd62a0c3f8a9216e7d57526e41987992",
+    "licence/TextCase-LICENSE.txt": "cbbbe1c00abe815d52b0dc28b0c620fda6a2a61ffac8f00a6699e310eda1fa76"
+  },
+  "counts": {
+    "simpleUppercaseMappings": 1505,
+    "fullUppercaseExpansions": 102,
+    "greekEntries": 400
+  },
+  "conformance": {
+    "oracle": "ICU 78.3, explicit-length UTF-16",
+    "scalarLocaleProfiles": 6672384,
+    "contextProfiles": 332080,
+    "portableGoldenCases": 348,
+    "testSource": "tests/Electron2D.Tests/TextCaseTests.cs"
+  }
+}

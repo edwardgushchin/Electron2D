@@ -1,6 +1,6 @@
 # Resource loading component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## Scope and owned types
 
@@ -29,3 +29,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 - [ADR 0013: Managed typed Resource and first loader profile](../decisions/resources.md#adr-0013)
 - [ADR 0014: Resource lifetime and hot paths](../decisions/resources.md#adr-0014)
 - [ADR 0039: Image codecs](../decisions/resources.md#adr-0039)
+
+## Dynamic font files
+
+[FontFile](../classes/FontFile.md) shares the same serialized path-cache decision and caller ownership used by image textures. `Load<FontFile>` and compatible Font/Resource views create an actual decoded font; Ignore yields an independent instance, Reuse preserves the cached wrapper and Replace validates bytes before updating the same wrapper. The font source owns native faces and glyph textures; the loader never owns or leases them. `ttf`, `otf`, `woff`, `woff2`, `ttc` and `otc` participate in typed extension discovery. Bitmap fonts, system discovery, public format plugins and threaded loading retain their separate dependencies. [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs) verifies WOFF2 data, concurrent reuse, rollback and cache lifetime.

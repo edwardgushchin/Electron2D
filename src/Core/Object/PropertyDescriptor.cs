@@ -97,7 +97,9 @@ public abstract class PropertyDescriptor
 /// <typeparam name="TValue">The property's value type.</typeparam>
 /// <remarks>
 /// Delegate execution is synchronous on the caller's thread. The descriptor is immutable, but access to an owner
-/// follows that owner's threading rules.
+/// follows that owner's threading rules. Packed-scene storage accepts unmanaged values, strings, resources,
+/// and the explicit vector, color, float, string and polygon-index array profiles. Stored arrays are cloned
+/// during capture and restoration, and their revert comparison uses element values.
 /// </remarks>
 public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     where TOwner : ElectronObject
@@ -220,6 +222,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
 
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
+            typeof(TValue) != typeof(string[]) &&
+            typeof(TValue) != typeof(float[]) &&
             typeof(TValue) != typeof(Vector2[]) &&
             typeof(TValue) != typeof(Color[]) &&
             typeof(TValue) != typeof(int[][]) &&
@@ -262,6 +266,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
 
     private static bool ValuesEqual(TValue left, TValue right)
     {
+        if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
+        if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
         if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);
         if (left is Color[] colors && right is Color[] otherColors) return colors.AsSpan().SequenceEqual(otherColors);
         if (left is int[][] contours && right is int[][] otherContours)
@@ -314,6 +320,8 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
 
     internal static TValue Snapshot(TValue value) => value switch
     {
+        string[] strings => (TValue)(object)strings.Clone(),
+        float[] numbers => (TValue)(object)numbers.Clone(),
         Vector2[] points => (TValue)(object)points.Clone(),
         Color[] colors => (TValue)(object)colors.Clone(),
         int[][] contours => (TValue)(object)contours.Select(indices => (int[])indices.Clone()).ToArray(),

@@ -10,6 +10,8 @@ public sealed class TranslationDomain : ElectronObject
 {
     private readonly object _gate = new();
     private readonly List<Translation> _translations = [];
+    private Translation[]? _lookupSnapshot = [];
+    private CultureInfo? _overrideCulture;
     private string _localeOverride = string.Empty;
     private bool _enabled = true;
     private string? _registeredName;
@@ -36,8 +38,8 @@ public sealed class TranslationDomain : ElectronObject
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            var normalized = value.Length == 0 ? string.Empty : CultureInfo.GetCultureInfo(value.Replace('_', '-')).Name;
-            lock (_gate) { ThrowIfDisposed(); _localeOverride = normalized; }
+            var culture = value.Length == 0 ? null : CultureInfo.GetCultureInfo(value.Replace('_', '-'));
+            lock (_gate) { ThrowIfDisposed(); _localeOverride = culture?.Name ?? string.Empty; _overrideCulture = culture; }
         }
     }
 
@@ -120,7 +122,7 @@ public sealed class TranslationDomain : ElectronObject
             if (translation.IsDisposed) throw new ObjectDisposedException(nameof(translation));
             if (_translations.Any(item => ReferenceEquals(item, translation))) return;
             translation.Disposed += OnTranslationDisposed;
-            _translations.Add(translation);
+            _translations.Add(translation); _lookupSnapshot = null;
             if (translation.IsDisposed)
             {
                 RemoveUnderLock(translation);
@@ -144,7 +146,7 @@ public sealed class TranslationDomain : ElectronObject
         {
             ThrowIfDisposed();
             foreach (var translation in _translations) translation.Disposed -= OnTranslationDisposed;
-            _translations.Clear();
+            _translations.Clear(); _lookupSnapshot = [];
         }
     }
 
@@ -172,7 +174,27 @@ public sealed class TranslationDomain : ElectronObject
     /// <summary>Reports whether any catalog matches a locale.</summary>
     /// <param name="locale">The requested locale.</param>
     /// <param name="exact">Whether a normalized exact match is required.</param>
-    public bool HasTranslationForLocale(string locale, bool exact) => FindTranslations(locale, exact).Length != 0;
+    public bool HasTranslationForLocale(string locale, bool exact) => HasNormalizedLocale(NormalizeLocale(locale), exact);
+
+    internal bool HasTranslationForCulture(CultureInfo culture, bool exact) => HasNormalizedLocale(culture.Name, exact);
+
+    private bool HasNormalizedLocale(string locale, bool exact)
+    {
+        var separator = locale.IndexOf('-'); var language = locale.AsSpan(0, separator < 0 ? locale.Length : separator);
+        foreach (var translation in GetLookupSnapshot())
+        {
+            try
+            {
+                var candidate = translation.Locale;
+                if (candidate == locale) return true;
+                if (exact) continue;
+                var candidateSeparator = candidate.IndexOf('-');
+                if (language.SequenceEqual(candidate.AsSpan(0, candidateSeparator < 0 ? candidate.Length : candidateSeparator))) return true;
+            }
+            catch (ObjectDisposedException) when (translation.IsDisposed) { }
+        }
+        return false;
+    }
 
     /// <summary>Gets the highest-scoring matching catalog, or null when none matches.</summary>
     /// <param name="locale">The requested locale.</param>
@@ -273,15 +295,15 @@ public sealed class TranslationDomain : ElectronObject
     {
         get
         {
-            string locale;
-            lock (_gate) { ThrowIfDisposed(); locale = _localeOverride; }
-            return locale.Length == 0 ? TranslationServer.Culture : CultureInfo.GetCultureInfo(locale);
+            CultureInfo? culture;
+            lock (_gate) { ThrowIfDisposed(); culture = _overrideCulture; }
+            return culture ?? TranslationServer.Culture;
         }
     }
 
     internal string FindMessage(string locale, string message, string context, bool exact = false)
     {
-        var translations = GetTranslations();
+        var translations = GetLookupSnapshot();
         string? best = null;
         var bestScore = 0;
         for (var i = translations.Length - 1; i >= 0; i--)
@@ -305,7 +327,7 @@ public sealed class TranslationDomain : ElectronObject
 
     internal string FindPluralMessage(string locale, string singular, string plural, long count, string context, bool exact = false)
     {
-        var translations = GetTranslations();
+        var translations = GetLookupSnapshot();
         string? best = null;
         var bestScore = 0;
         for (var i = translations.Length - 1; i >= 0; i--)
@@ -329,18 +351,29 @@ public sealed class TranslationDomain : ElectronObject
 
     internal string ApplyPseudo(string message) => PseudolocalizationEnabled ? Pseudolocalize(message) : message;
 
+    internal Translation[] GetLookupSnapshot()
+    {
+        lock (_gate) { ThrowIfDisposed(); return _lookupSnapshot ??= [.. _translations]; }
+    }
+
     internal void SetRegisteredName(string? name)
     {
         lock (_gate) { ThrowIfDisposed(); _registeredName = name; }
     }
 
-    internal static IEnumerable<string> CultureChain(CultureInfo culture)
+    internal static CultureSequence CultureChain(CultureInfo culture) => new(culture);
+
+    internal struct CultureSequence(CultureInfo culture)
     {
-        while (true)
+        private CultureInfo? _next = culture;
+        public string Current { get; private set; } = string.Empty;
+        public readonly CultureSequence GetEnumerator() => this;
+        public bool MoveNext()
         {
-            yield return culture.Name;
-            if (culture.Equals(CultureInfo.InvariantCulture)) yield break;
-            culture = culture.Parent;
+            if (_next is null) return false;
+            Current = _next.Name;
+            _next = _next.Equals(CultureInfo.InvariantCulture) ? null : _next.Parent;
+            return true;
         }
     }
 
@@ -353,12 +386,12 @@ public sealed class TranslationDomain : ElectronObject
 
     private void OnTranslationDisposed(ElectronObject resource)
     {
-        lock (_gate) _translations.RemoveAll(item => ReferenceEquals(item, resource));
+        lock (_gate) if (_translations.RemoveAll(item => ReferenceEquals(item, resource)) != 0) _lookupSnapshot = null;
     }
 
     private void RemoveUnderLock(Translation translation)
     {
-        if (_translations.Remove(translation)) translation.Disposed -= OnTranslationDisposed;
+        if (_translations.Remove(translation)) { translation.Disposed -= OnTranslationDisposed; _lookupSnapshot = null; }
     }
 
     private static string NormalizeLocale(string locale)

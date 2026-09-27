@@ -86,6 +86,8 @@ Returns ten for identical or normalized-equal locales, zero for different langua
 
 Returns the highest-scoring live main-domain catalog locale for `Culture`; an exact match returns the current culture name. Later registrations win equal non-exact scores. Without a matching catalog, returns the startup fallback locale or an empty string when fallback is disabled. Editor-specific locale selection is not implemented.
 
+Prepared lookups reuse the domain's internal catalog snapshot and compare normalized locale names without allocating. Changes to a registered catalog's locale remain visible immediately. The public `GetTranslations()` result remains an independent caller-owned array.
+
 <a id="m-electron2d-translationserver-addtranslation-system-globalization-cultureinfo-system-string-system-string-system-string-system-string"></a>
 ### `public static void AddTranslation(CultureInfo culture, string domain, string message, string translation, string context = null)`
 

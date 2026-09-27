@@ -157,7 +157,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
         foreach (var pair in _pipelines)
             if (!_usedPrograms.Contains(pair.Key)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures)
-            if (!_usedTextures.Contains(pair.Key)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
+            if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
         foreach (var pair in _textureBindings)
             if (!_usedMaterials.Contains(pair.Key)) _textureBindings.Remove(pair.Key);
         EnsureTarget(size);

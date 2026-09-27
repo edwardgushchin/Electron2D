@@ -176,15 +176,14 @@ public partial class Control : CanvasItem
 
     private CultureInfo GetApplicationCulture()
     {
-        var overrideLocale = TranslationServer.GetOrAddDomain(TranslationDomain).LocaleOverride;
-        return overrideLocale.Length == 0 ? TranslationServer.Culture : CultureInfo.GetCultureInfo(overrideLocale);
+        return TranslationServer.GetOrAddDomain(TranslationDomain).EffectiveCulture;
     }
 
     private bool IsLocaleRTL(CultureInfo culture)
     {
         if (!culture.TextInfo.IsRightToLeft) return false;
         var domain = TranslationServer.GetOrAddDomain(TranslationDomain);
-        return domain.HasTranslationForLocale(culture.Name, exact: false)
+        return domain.HasTranslationForCulture(culture, exact: false)
             || TranslationServer.FallbackCulture?.TwoLetterISOLanguageName == culture.TwoLetterISOLanguageName;
     }
 

@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-09-23
+Last updated: 2026-09-27
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -186,3 +186,7 @@ Descriptor metadata is immutable. Delegates execute synchronously on the caller'
 ## Verification and limitations
 
 The executable test covers typed get/set, validation rejection, revert-value retrieval, revert availability, restoration, storage metadata, packed capture/restore including reference-free [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and [`TimerProcessCallback`](TimerProcessCallback.md) values plus Timer configuration, resource remapping, and unsupported stored-shape rejection. Property-value change events, undo/redo, attributes, node-reference remapping, arbitrary collection storage, and automatic reflection discovery are not implemented.
+
+## Text array storage
+
+The explicit packed-scene array profile includes `float[]` tab increments and `string[]` structured-text options. Capture, state reads and restoration clone these arrays; structural element equality drives revert checks. Label setters still enforce finite tab increments with a positive repeated cycle and nonnull parser options when restoring stored values. This extends the existing vector/color/polygon-index array profiles without accepting arbitrary managed reference graphs. [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) exercises real scene packing and independent array snapshots.

@@ -1,6 +1,6 @@
 # TranslationDomain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 **Inherits:** [`ElectronObject`](ElectronObject.md)
 **Inherited By:** —
@@ -82,3 +82,7 @@ domain.Dispose();
 ## Decision
 
 [ADR 0007](../decisions/localization.md#adr-0007) defines ownership, lookup order and typed plural policy.
+
+## Prepared lookup storage
+
+Culture fallback traversal uses a value enumerator, preserving the selected-culture, parent and invariant order without allocating an iterator. A normalized locale override retains its read-only `CultureInfo` until the override changes. Internal catalog membership snapshots are rebuilt only after registration, removal, clear or disposal; public `GetTranslations()` still returns an independent array. Lookup results are not cached: live catalog edits remain visible, and virtual resource callbacks still run outside the domain lock. [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) verifies translated text and warm localized uppercase frames in the complete text consumer.

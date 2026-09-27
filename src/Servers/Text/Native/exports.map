@@ -1,0 +1,13 @@
+{
+    global:
+        e2d_text_init;
+        e2d_text_versions;
+        e2d_text_is_nonprinting;
+        e2d_break_open;
+        e2d_break_set;
+        e2d_break_first;
+        e2d_break_next;
+        e2d_break_status;
+        e2d_break_close;
+    local: *;
+};

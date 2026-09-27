@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-09-25
+Last updated: 2026-09-27
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -301,8 +301,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FogVolume](classes/FogVolume.md) | VisualInstance3D | Excluded | 3 |
 | [FoldableContainer](classes/FoldableContainer.md) | Container | Blocked | 36 |
 | [FoldableGroup](classes/FoldableGroup.md) | Resource | Blocked | 5 |
-| [Font](classes/Font.md) | Resource | Blocked | 36 |
-| [FontFile](classes/FontFile.md) | Font | Blocked | 89 |
+| [Font](classes/Font.md) | Resource | Partial | 36 |
+| [FontFile](classes/FontFile.md) | Font | Partial | 89 |
 | [FontVariation](classes/FontVariation.md) | Font | Blocked | 14 |
 | [FramebufferCacheRD](classes/FramebufferCacheRD.md) | Object | Excluded | 1 |
 | [GDExtension](classes/GDExtension.md) | Resource | Blocked | 7 |
@@ -419,9 +419,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | RefCounted | Partial | 13 |
 | [KinematicCollision3D](classes/KinematicCollision3D.md) | RefCounted | Excluded | 14 |
-| [Label](classes/Label.md) | Control | Blocked | 42 |
+| [Label](classes/Label.md) | Control | Implemented | 42 |
 | [Label3D](classes/Label3D.md) | GeometryInstance3D | Excluded | 49 |
-| [LabelSettings](classes/LabelSettings.md) | Resource | Blocked | 33 |
+| [LabelSettings](classes/LabelSettings.md) | Resource | Implemented | 33 |
 | [Light2D](classes/Light2D.md) | Node2D | Blocked | 25 |
 | [Light3D](classes/Light3D.md) | VisualInstance3D | Excluded | 57 |
 | [LightOccluder2D](classes/LightOccluder2D.md) | Node2D | Blocked | 3 |
@@ -868,7 +868,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextureLayeredRD](classes/TextureLayeredRD.md) | TextureLayered | Excluded | 1 |
 | [TextureProgressBar](classes/TextureProgressBar.md) | Range | Implemented | 31 |
 | [TextureRect](classes/TextureRect.md) | Control | Blocked | 21 |
-| [Theme](classes/Theme.md) | Resource | Partial | 74 |
+| [Theme](classes/Theme.md) | Resource | Implemented | 74 |
 | [ThemeDB](classes/ThemeDB.md) | Object | Partial | 8 |
 | [Thread](classes/Thread.md) | RefCounted | Blocked | 11 |
 | [TileData](classes/TileData.md) | Object | Blocked | 44 |

@@ -2,12 +2,12 @@ using System.Runtime.ExceptionServices;
 
 namespace Electron2D;
 
-/// <summary>Stores typed colors, constants, font sizes, icons and canvas styles by item and theme-type keys.</summary>
+/// <summary>Stores typed colors, constants, fonts, font sizes, icons and canvas styles by item and theme-type keys.</summary>
 /// <remarks>Names use ASCII letters, digits and underscores; an empty type is valid, while an item name is not.
 /// Resources are borrowed and shared aliases use one change subscription. Explicitly disposed resources retain
 /// their identity; drawing consumers reject their use. Mutations commit under an instance lock and notify outside it.
 /// Structural changes notify the property list before Changed. Existing-key writes notify even when equal.
-/// Font resources require the separate text-resource implementation.</remarks>
+/// Font defaults participate in the same borrowed-resource lifetime.</remarks>
 public partial class Theme : Resource
 {
     /// <summary>Identifies a category of theme data.</summary>
@@ -17,7 +17,7 @@ public partial class Theme : Resource
         Color = 0,
         /// <summary>A signed integer constant.</summary>
         Constant = 1,
-        /// <summary>A font resource; category operations require the text-resource implementation.</summary>
+        /// <summary>A borrowed font resource.</summary>
         Font = 2,
         /// <summary>A signed font-size entry.</summary>
         FontSize = 3,
@@ -32,6 +32,7 @@ public partial class Theme : Resource
     private readonly object _gate = new();
     private readonly Dictionary<string, Dictionary<string, Color>> _colors = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Dictionary<string, int>> _constants = new(StringComparer.Ordinal), _fontSizes = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<string, Font?>> _fonts = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Dictionary<string, Texture?>> _icons = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Dictionary<string, StyleBox?>> _styles = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _variations = new(StringComparer.Ordinal);
@@ -41,13 +42,15 @@ public partial class Theme : Resource
     private readonly Action<ElectronObject> _resourceDisposed;
     private float _defaultBaseScale;
     private int _defaultFontSize = -1;
+    private Font? _defaultFont;
     private static readonly PropertyDescriptor[] ThemeProperties =
     [
         new PropertyDescriptor<Theme, float>(nameof(DefaultBaseScale), theme => theme.DefaultBaseScale, (theme, value) => theme.DefaultBaseScale = value, _ => 0, stored: true),
+        new PropertyDescriptor<Theme, Font?>(nameof(DefaultFont), theme => theme.DefaultFont, (theme, value) => theme.DefaultFont = value, _ => null, stored: true),
         new PropertyDescriptor<Theme, int>(nameof(DefaultFontSize), theme => theme.DefaultFontSize, (theme, value) => theme.DefaultFontSize = value, _ => -1, stored: true)
     ];
 
-    /// <summary>Creates an empty theme with base scale zero and default font size minus one.</summary>
+    /// <summary>Creates an empty theme with base scale zero, no default font and default font size minus one.</summary>
     public Theme() { _resourceChanged = ReferencedChanged; _resourceDisposed = ReferencedDisposed; }
 
     /// <summary>Gets or sets the finite base-scale override. Only positive values provide a default.</summary>
@@ -61,6 +64,27 @@ public partial class Theme : Resource
             Publish(false);
         }
     }
+    /// <summary>Gets or sets the borrowed default font used when no nonnull font entry exists.</summary>
+    /// <value>Null initially. Equal assignments are silent; changes emit Changed.</value>
+    /// <remarks>The font remains borrowed and forwards its changes and disposal. Clearing theme items retains this default.</remarks>
+    /// <exception cref="ObjectDisposedException">This theme or the assigned font is disposed.</exception>
+    public Font? DefaultFont
+    {
+        get { lock (_gate) { ThrowIfDisposed(); return _defaultFont; } }
+        set
+        {
+            lock (_gate)
+            {
+                ThrowIfDisposed(); ValidateResource(value); if (ReferenceEquals(_defaultFont, value)) return;
+                Retain(value); Release(_defaultFont); _defaultFont = value;
+            }
+            Publish(false);
+        }
+    }
+    /// <summary>Tests whether this theme stores a default font identity.</summary>
+    /// <returns>True when DefaultFont is nonnull.</returns>
+    public bool HasDefaultFont() => DefaultFont is not null;
+
     /// <summary>Gets or sets the default font size. Only positive values supply a fallback.</summary>
     /// <value>Minus one initially. Equal writes are silent; other writes emit Changed.</value>
     public int DefaultFontSize
@@ -146,6 +170,31 @@ public partial class Theme : Resource
     public string[] GetFontSizeList(string themeType) => ItemList(_fontSizes, themeType);
     /// <summary>Lists types with a font-size-category record.</summary><returns>A type-name snapshot.</returns>
     public string[] GetFontSizeTypeList() => TypeList(_fontSizes);
+
+    /// <summary>Stores a borrowed font or an explicit null placeholder.</summary>
+    /// <param name="name">The nonempty item key.</param><param name="themeType">The theme-type key.</param><param name="font">A live font or null.</param>
+    public void SetFont(string name, string themeType, Font? font) => SetResource(_fonts, name, themeType, font);
+    /// <summary>Gets a nonnull font entry, the local default font, or the theme-database fallback.</summary>
+    /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>The borrowed font or fallback, which may be null.</returns>
+    public virtual Font? GetFont(string name, string themeType)
+    {
+        lock (_gate) { CheckQuery(name, themeType); if (TryItem(_fonts, name, themeType, out var value) && value is not null) return value; if (_defaultFont is not null) return _defaultFont; }
+        return ThemeDB.Instance.FallbackFont;
+    }
+    /// <summary>Tests for a nonnull font entry or local default; universal fallback fonts do not count.</summary>
+    /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param><returns>True when a nonnull identity is stored.</returns>
+    public bool HasFont(string name, string themeType) { lock (_gate) { CheckQuery(name, themeType); return _defaultFont is not null || TryItem(_fonts, name, themeType, out var value) && value is not null; } }
+    /// <summary>Renames a font slot without changing borrowed-resource subscriptions.</summary>
+    /// <param name="oldName">The existing key.</param><param name="name">The new key.</param><param name="themeType">The exact theme-type key.</param>
+    public void RenameFont(string oldName, string name, string themeType) => RenameEntry(_fonts, oldName, name, themeType);
+    /// <summary>Removes an existing font slot and releases its change subscription.</summary>
+    /// <param name="name">The item key.</param><param name="themeType">The exact theme-type key.</param>
+    public void ClearFont(string name, string themeType) => ClearResource(_fonts, name, themeType);
+    /// <summary>Lists font keys, including explicit null placeholders.</summary>
+    /// <param name="themeType">The exact theme-type key.</param><returns>An item-name snapshot.</returns>
+    public string[] GetFontList(string themeType) => ItemList(_fonts, themeType);
+    /// <summary>Lists types with a font-category record.</summary><returns>A type-name snapshot.</returns>
+    public string[] GetFontTypeList() => TypeList(_fonts);
 
     /// <summary>Stores a borrowed icon or an explicit null placeholder.</summary>
     /// <param name="name">The nonempty item key.</param><param name="themeType">The theme-type key.</param><param name="texture">A live texture or null.</param>

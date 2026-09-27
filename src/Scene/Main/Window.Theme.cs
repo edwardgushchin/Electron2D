@@ -123,6 +123,38 @@ public partial class Window
     /// <param name="name">The item key.</param>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
     public void RemoveThemeFontSizeOverride(string name) => ThemeOwner.RemoveOverride(ThemeOwner.FontSizes, name);
+    /// <summary>Gets a typed theme font using local override, branch themes, native defaults and universal fallback.</summary>
+    /// <param name="name">The item key.</param>
+    /// <param name="themeType">An explicit type, or empty for this node and its variation.</param>
+    /// <returns>The resolved value; resources are borrowed.</returns>
+    /// <exception cref="ArgumentException">A key is null or contains a null character.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or a variation chain cycles.</exception>
+    /// <exception cref="ObjectDisposedException">The node or queried service is disposed.</exception>
+    public Font? GetThemeFont(string name, string themeType = "") => ThemeOwner.Get(ThemeOwner.Fonts, name, themeType);
+    /// <summary>Tests whether an override or a branch/default theme provides a font, excluding universal fallback.</summary>
+    /// <param name="name">The item key.</param>
+    /// <param name="themeType">An explicit type, or empty for this node and its variation.</param>
+    /// <returns>True when lookup finds a defined value.</returns>
+    public bool HasThemeFont(string name, string themeType = "") => ThemeOwner.Has(ThemeOwner.Fonts, name, themeType);
+    /// <summary>Tests for a local font override, without inherited lookup.</summary>
+    /// <param name="name">The item key.</param>
+    /// <returns>True when an override slot exists.</returns>
+    public bool HasThemeFontOverride(string name) => ThemeOwner.HasOverride(ThemeOwner.Fonts, name);
+    /// <summary>Stores a local font override and refreshes this node's theme state.</summary>
+    /// <param name="name">The item key.</param>
+    /// <param name="font">The typed override value.</param>
+    /// <remarks>Equal assignments still refresh. Overrides apply only to implicit, own-class or own-variation queries.</remarks>
+    /// <exception cref="ArgumentException">A key is invalid; color overrides must be finite and resource overrides must be nonnull.</exception>
+    /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
+    /// <exception cref="ObjectDisposedException">The node or assigned resource is disposed.</exception>
+    public void AddThemeFontOverride(string name, Font font)
+    {
+        ThemeOwner.SetOverride(ThemeOwner.Fonts, name, font);
+    }
+    /// <summary>Removes a local font override and refreshes even when the key was absent.</summary>
+    /// <param name="name">The item key.</param>
+    /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
+    public void RemoveThemeFontOverride(string name) => ThemeOwner.RemoveOverride(ThemeOwner.Fonts, name);
     /// <summary>Gets a typed theme icon using local override, branch themes, native defaults and universal fallback.</summary>
     /// <param name="name">The item key.</param>
     /// <param name="themeType">An explicit type, or empty for this node and its variation.</param>
@@ -190,8 +222,11 @@ public partial class Window
     /// <summary>Gets the first positive branch/default theme scale, or the universal scale fallback.</summary>
     /// <returns>The resolved scale.</returns>
     public float GetThemeDefaultBaseScale() => ThemeOwner.DefaultBaseScale();
+    /// <summary>Gets the first nonnull branch/default theme font, or the universal font fallback.</summary>
+    /// <returns>The borrowed font, which may be null when no fallback exists.</returns>
+    public Font? GetThemeDefaultFont() => ThemeOwner.DefaultFont();
     /// <summary>Gets the first positive branch/default font-size value, or the universal integer fallback.</summary>
-    /// <returns>The resolved size; no Font resource or text renderer is implied.</returns>
+    /// <returns>The resolved font size.</returns>
     public int GetThemeDefaultFontSize() => ThemeOwner.DefaultFontSize();
     /// <summary>Suppresses local override notifications until EndBulkThemeOverride. Repeated begins do not nest.</summary>
     public void BeginBulkThemeOverride() => ThemeOwner.BeginBulk();

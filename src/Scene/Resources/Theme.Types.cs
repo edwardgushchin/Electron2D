@@ -3,17 +3,15 @@ namespace Electron2D;
 public partial class Theme
 {
     /// <summary>Tests a typed category without resolving database fallbacks.</summary>
-    /// <param name="dataType">The category; Font is unavailable until text resources exist.</param><param name="name">The item key.</param><param name="themeType">The exact type key.</param>
+    /// <param name="dataType">The typed category.</param><param name="name">The item key.</param><param name="themeType">The exact type key.</param>
     /// <returns>The category's presence result, including the local default for font sizes.</returns>
-    /// <exception cref="NotSupportedException">The font-resource category was requested.</exception>
     public bool HasThemeItem(DataType dataType, string name, string themeType)
     {
         CheckCategory(dataType);
-        return dataType switch { DataType.Color => HasColor(name, themeType), DataType.Constant => HasConstant(name, themeType), DataType.FontSize => HasFontSize(name, themeType), DataType.Icon => HasIcon(name, themeType), _ => HasStyleBox(name, themeType) };
+        return dataType switch { DataType.Color => HasColor(name, themeType), DataType.Constant => HasConstant(name, themeType), DataType.Font => HasFont(name, themeType), DataType.FontSize => HasFontSize(name, themeType), DataType.Icon => HasIcon(name, themeType), _ => HasStyleBox(name, themeType) };
     }
     /// <summary>Renames a stored entry in a typed category.</summary>
     /// <param name="dataType">The supported category.</param><param name="oldName">The existing key.</param><param name="name">The unused new key.</param><param name="themeType">The exact type key.</param>
-    /// <exception cref="NotSupportedException">The font-resource category was requested.</exception>
     public void RenameThemeItem(DataType dataType, string oldName, string name, string themeType)
     {
         CheckCategory(dataType);
@@ -21,6 +19,7 @@ public partial class Theme
         {
             case DataType.Color: RenameColor(oldName, name, themeType); break;
             case DataType.Constant: RenameConstant(oldName, name, themeType); break;
+            case DataType.Font: RenameFont(oldName, name, themeType); break;
             case DataType.FontSize: RenameFontSize(oldName, name, themeType); break;
             case DataType.Icon: RenameIcon(oldName, name, themeType); break;
             case DataType.StyleBox: RenameStyleBox(oldName, name, themeType); break;
@@ -28,7 +27,6 @@ public partial class Theme
     }
     /// <summary>Removes an existing typed entry, including an explicit placeholder.</summary>
     /// <param name="dataType">The supported category.</param><param name="name">The item key.</param><param name="themeType">The exact type key.</param>
-    /// <exception cref="NotSupportedException">The font-resource category was requested.</exception>
     public void ClearThemeItem(DataType dataType, string name, string themeType)
     {
         CheckCategory(dataType);
@@ -36,6 +34,7 @@ public partial class Theme
         {
             case DataType.Color: ClearColor(name, themeType); break;
             case DataType.Constant: ClearConstant(name, themeType); break;
+            case DataType.Font: ClearFont(name, themeType); break;
             case DataType.FontSize: ClearFontSize(name, themeType); break;
             case DataType.Icon: ClearIcon(name, themeType); break;
             case DataType.StyleBox: ClearStyleBox(name, themeType); break;
@@ -43,25 +42,22 @@ public partial class Theme
     }
     /// <summary>Lists all stored keys in one typed category, including placeholders.</summary>
     /// <param name="dataType">The supported category.</param><param name="themeType">The exact type key.</param><returns>An item-name snapshot.</returns>
-    /// <exception cref="NotSupportedException">The font-resource category was requested.</exception>
     public string[] GetThemeItemList(DataType dataType, string themeType)
     {
         CheckCategory(dataType);
-        return dataType switch { DataType.Color => GetColorList(themeType), DataType.Constant => GetConstantList(themeType), DataType.FontSize => GetFontSizeList(themeType), DataType.Icon => GetIconList(themeType), _ => GetStyleBoxList(themeType) };
+        return dataType switch { DataType.Color => GetColorList(themeType), DataType.Constant => GetConstantList(themeType), DataType.Font => GetFontList(themeType), DataType.FontSize => GetFontSizeList(themeType), DataType.Icon => GetIconList(themeType), _ => GetStyleBoxList(themeType) };
     }
     /// <summary>Lists types with a record in the selected category.</summary>
     /// <param name="dataType">The supported category.</param><returns>A type-name snapshot.</returns>
-    /// <exception cref="NotSupportedException">The font-resource category was requested.</exception>
     public string[] GetThemeItemTypeList(DataType dataType)
     {
         CheckCategory(dataType);
-        return dataType switch { DataType.Color => GetColorTypeList(), DataType.Constant => GetConstantTypeList(), DataType.FontSize => GetFontSizeTypeList(), DataType.Icon => GetIconTypeList(), _ => GetStyleBoxTypeList() };
+        return dataType switch { DataType.Color => GetColorTypeList(), DataType.Constant => GetConstantTypeList(), DataType.Font => GetFontTypeList(), DataType.FontSize => GetFontSizeTypeList(), DataType.Icon => GetIconTypeList(), _ => GetStyleBoxTypeList() };
     }
     private void CheckCategory(DataType dataType)
     {
         ThrowIfDisposed();
         if (dataType is < DataType.Color or >= DataType.Max) throw new ArgumentOutOfRangeException(nameof(dataType));
-        if (dataType == DataType.Font) throw new NotSupportedException("Font theme entries require the text-resource implementation.");
     }
 
     /// <summary>Defines or replaces a non-native type's variation base.</summary>
@@ -131,7 +127,7 @@ public partial class Theme
         lock (_gate)
         {
             ThrowIfDisposed(); ValidateName(themeType, true);
-            EnsureType(_colors, themeType); EnsureType(_constants, themeType); EnsureType(_fontSizes, themeType); EnsureType(_icons, themeType); EnsureType(_styles, themeType);
+            EnsureType(_colors, themeType); EnsureType(_constants, themeType); EnsureType(_fontSizes, themeType); EnsureType(_fonts, themeType); EnsureType(_icons, themeType); EnsureType(_styles, themeType);
         }
         Publish(true);
     }
@@ -144,6 +140,7 @@ public partial class Theme
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(themeType); List<Exception>? errors = null;
         RunPhase(() => RemoveResourceType(_icons, themeType), ref errors);
         RunPhase(() => RemoveResourceType(_styles, themeType), ref errors);
+        RunPhase(() => RemoveResourceType(_fonts, themeType), ref errors);
         lock (_gate) { ThrowIfDisposed(); _colors.Remove(themeType); _constants.Remove(themeType); _fontSizes.Remove(themeType); }
         RunPhase(() => RemoveVariationIfPresent(themeType), ref errors);
         foreach (var variation in GetTypeVariationList(themeType)) RunPhase(() => RemoveVariationIfPresent(variation), ref errors);
@@ -159,7 +156,7 @@ public partial class Theme
         lock (_gate)
         {
             ThrowIfDisposed(); RenameTypeCore(_colors, oldThemeType, themeType); RenameTypeCore(_constants, oldThemeType, themeType);
-            RenameTypeCore(_fontSizes, oldThemeType, themeType); RenameTypeCore(_icons, oldThemeType, themeType); RenameTypeCore(_styles, oldThemeType, themeType);
+            RenameTypeCore(_fontSizes, oldThemeType, themeType); RenameTypeCore(_fonts, oldThemeType, themeType); RenameTypeCore(_icons, oldThemeType, themeType); RenameTypeCore(_styles, oldThemeType, themeType);
         }
         List<Exception>? errors = null; var baseType = GetTypeVariationBase(oldThemeType);
         if (baseType.Length != 0)
@@ -180,7 +177,7 @@ public partial class Theme
         lock (_gate)
         {
             ThrowIfDisposed(); var names = new HashSet<string>(StringComparer.Ordinal);
-            names.UnionWith(_icons.Keys); names.UnionWith(_styles.Keys); names.UnionWith(_fontSizes.Keys); names.UnionWith(_colors.Keys); names.UnionWith(_constants.Keys); names.UnionWith(_variations.Keys);
+            names.UnionWith(_icons.Keys); names.UnionWith(_styles.Keys); names.UnionWith(_fontSizes.Keys); names.UnionWith(_fonts.Keys); names.UnionWith(_colors.Keys); names.UnionWith(_constants.Keys); names.UnionWith(_variations.Keys);
             return [.. names];
         }
     }

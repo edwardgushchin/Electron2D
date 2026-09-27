@@ -129,6 +129,30 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_CODECS") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LABEL_NATIVE") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_NATIVE") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT") == "1")
+{
+    UnicodeTextTests.Run(); NativeTextBreakTests.Run(); TextCaseTests.Run(); TextHelperTests.Run(); LabelSettingsTests.Run();
+    NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+    FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+    FontLifetimeTests.Run(FontTestFixtures.OpenSans);
+    FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+    LabelTests.Run(FontTestFixtures.OpenSans);
+    FontResourceLoaderTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_LOADER") == "1")
 {
     ResourceLoaderTests.Run();
@@ -216,9 +240,21 @@ GridContainerTests.Run();
 StyleBoxTests.Run();
 StyleBoxFlatTests.Run();
 ThemeResourceTests.Run();
+ThemeFontTests.Run();
 ThemeLookupTests.Run();
 PanelContainerTests.Run();
 SliderTests.Run();
+UnicodeTextTests.Run();
+NativeTextBreakTests.Run();
+TextCaseTests.Run();
+TextHelperTests.Run();
+LabelSettingsTests.Run();
+NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+FontLifetimeTests.Run(FontTestFixtures.OpenSans);
+FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
+LabelTests.Run(FontTestFixtures.OpenSans);
+FontResourceLoaderTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 namespace Electron2D;
 
 /// <summary>Owns the built-in theme for implemented controls and the universal typed fallback values.</summary>
-/// <remarks>The singleton and its built-in resources are borrowed. Font resources, project theme-file loading
+/// <remarks>The singleton and its built-in resources are borrowed. Project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
 /// Initial service construction decodes the built-in slider icons through the SVG image codec at scale one.</remarks>
@@ -19,6 +19,7 @@ public sealed class ThemeDB : ElectronObject
     private readonly List<Resource> _owned = [];
     private float _baseScale = 1;
     private int _fontSize = 16;
+    private Font? _font;
     private Texture? _icon;
     private StyleBox? _style;
     private bool _iconInitialized;
@@ -35,13 +36,31 @@ public sealed class ThemeDB : ElectronObject
         _defaultTheme.SetConstant("h_separation", "GridContainer", 4); _defaultTheme.SetConstant("v_separation", "GridContainer", 4);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
             throw;
         }
         _defaultTheme.Changed += DefaultChanged; _defaultTheme.Disposed += DefaultDisposed;
+    }
+    private void AddTextDefaults()
+    {
+        using var stream = typeof(ThemeDB).Assembly.GetManifestResourceStream("Electron2D.Fonts.OpenSans_SemiBold.woff2")
+            ?? throw new InvalidOperationException("The built-in font is missing.");
+        var bytes = new byte[checked((int)stream.Length)]; stream.ReadExactly(bytes);
+        _font = new FontFile(bytes); _owned.Add(_font); _defaultTheme.DefaultFont = _font;
+        var normal = new StyleBoxEmpty(); _owned.Add(normal);
+        var focus = new StyleBoxFlat { BGColor = new(1, 1, 1, .75f), DrawCenter = false, CornerDetail = 5 };
+        focus.SetContentMarginAll(4); focus.SetCornerRadiusAll(3); focus.SetBorderWidthAll(2); focus.SetExpandMarginAll(2); _owned.Add(focus);
+        _defaultTheme.SetStyleBox("normal", "Label", normal); _defaultTheme.SetStyleBox("focus", "Label", focus);
+        _defaultTheme.SetFont("font", "Label", null); _defaultTheme.SetFontSize("font_size", "Label", -1);
+        _defaultTheme.SetColor("font_color", "Label", Colors.White);
+        _defaultTheme.SetColor("font_shadow_color", "Label", new(0, 0, 0, 0));
+        _defaultTheme.SetColor("font_outline_color", "Label", Colors.Black);
+        _defaultTheme.SetConstant("shadow_offset_x", "Label", 1); _defaultTheme.SetConstant("shadow_offset_y", "Label", 1);
+        _defaultTheme.SetConstant("outline_size", "Label", 0); _defaultTheme.SetConstant("shadow_outline_size", "Label", 1);
+        _defaultTheme.SetConstant("line_spacing", "Label", 3);
     }
     private void AddSliderDefaults()
     {
@@ -82,7 +101,7 @@ public sealed class ThemeDB : ElectronObject
     /// <value>The shared service; consumers do not own it.</value>
     public static ThemeDB Instance => Singleton.Value;
     /// <summary>Gets the built-in theme resource for the currently implemented control families.</summary>
-    /// <returns>The borrowed mutable theme, with panel styles, shared horizontal/vertical slider skins and box/grid constants.</returns>
+    /// <returns>The borrowed mutable theme, with the embedded font, Label and panel styles, slider skins and box/grid constants.</returns>
     /// <exception cref="ObjectDisposedException">The service or its theme is disposed.</exception>
     public Theme GetDefaultTheme() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
     /// <summary>Occurs after a universal fallback assignment changes its value.</summary>
@@ -106,8 +125,17 @@ public sealed class ThemeDB : ElectronObject
         get { lock (_gate) { ThrowIfDisposed(); return _baseScale; } }
         set { lock (_gate) { ThrowIfDisposed(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_baseScale == value) return; _baseScale = value; } NotifyFallback(); }
     }
+    /// <summary>Gets or sets the borrowed font used when no theme provides a font.</summary>
+    /// <value>The embedded Open Sans SemiBold resource initially. Null is an explicit empty fallback.</value>
+    /// <remarks>The embedded font initializes its native face on the first text query.</remarks>
+    /// <exception cref="ObjectDisposedException">The service or assigned font is disposed.</exception>
+    public Font? FallbackFont
+    {
+        get { lock (_gate) { ThrowIfDisposed(); return _font; } }
+        set { lock (_gate) { ThrowIfDisposed(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_font, value)) return; _font = value; } NotifyFallback(); }
+    }
     /// <summary>Gets or sets the final integer font-size fallback for typed size lookups.</summary>
-    /// <value>Sixteen initially; this does not load or render a font resource.</value>
+    /// <value>Sixteen initially; signed values are preserved.</value>
     /// <exception cref="ObjectDisposedException">The service is disposed.</exception>
     public int FallbackFontSize
     {
