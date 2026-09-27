@@ -9,7 +9,35 @@ internal static class ThemeResourceTests
         VerifyTypesAndVariations();
         VerifyCopiesAndMerge();
         VerifyErrorsConcurrencyAndAllocations();
+        VerifyBuiltInSliderSkins();
         Console.WriteLine("Typed theme values, placeholders, aliases, variations, merge, resource graphs and allocation checks passed.");
+    }
+
+    private static void VerifyBuiltInSliderSkins()
+    {
+        var theme = ThemeDB.Instance.GetDefaultTheme();
+        foreach (var (key, color) in new[] { ("slider", new Color(.1f, .1f, .1f, .6f)), ("grabber_area", new Color(1, 1, 1, .4f)), ("grabber_area_highlight", new Color(1, 1, 1, .75f)) })
+        {
+            var style = (StyleBoxFlat)theme.GetStyleBox(key, "HSlider")!;
+            Check(ReferenceEquals(style, theme.GetStyleBox(key, "VSlider")) && style.BGColor == color && style.GetMinimumSize() == new Vector2(8, 8) &&
+                style.CornerRadiusTopLeft == 4 && style.CornerDetail == 6 && style.AntiAliasing,
+                "Slider orientations share the three built-in eight-unit padded flat styles.");
+        }
+        foreach (var (key, alpha) in new[] { ("grabber", .75f), ("grabber_highlight", 1f), ("grabber_disabled", .37f) })
+        {
+            var icon = theme.GetIcon(key, "HSlider")!;
+            using var pixels = icon.GetImage();
+            Check(ReferenceEquals(icon, theme.GetIcon(key, "VSlider")) && icon.GetSize() == new Vector2(16, 16) && pixels is not null &&
+                pixels.GetPixel(0, 0).A == 0 && MathF.Abs(pixels.GetPixel(8, 8).A - alpha) <= 1f / 255 &&
+                MathF.Abs(pixels.GetPixel(8, 8).R - 254f / 255) * pixels.GetPixel(8, 8).A <= 1f / 255,
+                "Each built-in grabber preserves its circular geometry and state opacity within one premultiplied color byte.");
+        }
+        var horizontal = theme.GetIcon("tick", "HSlider")!; var vertical = theme.GetIcon("tick", "VSlider")!;
+        using var hPixels = horizontal.GetImage(); using var vPixels = vertical.GetImage();
+        Check(horizontal.GetSize() == new Vector2(4, 8) && vertical.GetSize() == new Vector2(8, 4) &&
+            hPixels!.GetPixel(0, 4).A == 0 && MathF.Abs(hPixels.GetPixel(1, 4).A - .25f) <= 1f / 255 &&
+            vPixels!.GetPixel(4, 0).A == 0 && MathF.Abs(vPixels.GetPixel(4, 1).A - .25f) <= 1f / 255,
+            "Horizontal and vertical ticks retain their axis-specific image dimensions and translucent bars.");
     }
 
     private static void VerifyValuesAndPlaceholders()

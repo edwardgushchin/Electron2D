@@ -218,6 +218,7 @@ StyleBoxFlatTests.Run();
 ThemeResourceTests.Run();
 ThemeLookupTests.Run();
 PanelContainerTests.Run();
+SliderTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();

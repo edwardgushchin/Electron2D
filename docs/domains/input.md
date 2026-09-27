@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## Responsibility
 
@@ -66,3 +66,5 @@ The dummy suite verifies independent scancode labels and logical keycodes, relea
 - [0038: Typed input events, action state, and scene propagation](../decisions/input.md#adr-0038)
 
 SceneTree root-viewport localization occurs after raw Input state is committed and preserves the original by-event identity. CanvasItem local conversion is an explicit scene query; positional copies have distinct identities and ownership. See [canvas coordinates](../components/canvas-rendering.md#viewport-coordinates) for native verification and failure behavior.
+
+The permanent typed ui_home/ui_end defaults use Key.Home/Key.End and the existing project-setting reload path. [Slider](../classes/Slider.md) consumes them as range endpoint requests, alongside matching-axis direction actions; unhandled opposite-axis input remains available to GUI focus traversal. These actions remain rebindable. Slider repeat uses the existing internal scene-processing lane and controller action state.

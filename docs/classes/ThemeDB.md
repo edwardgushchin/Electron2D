@@ -36,7 +36,7 @@ There is no public constructor, Font fallback property or GetProjectTheme null s
 ## Property and method descriptions
 
 <a id="instance"></a><a id="getdefaulttheme"></a>
-**Singleton/default Theme:** creation is lazy and serialized. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
+**Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
 
 | Entry | Initial value |
 | --- | --- |
@@ -44,8 +44,12 @@ There is no public constructor, Font fallback property or GetProjectTheme null s
 | `Panel/panel` and `PanelContainer/panel` styles | Separate StyleBoxFlat instances; BGColor `(0.1, 0.1, 0.1, 0.6)`, zero content margins, corner radius 3, detail 5. |
 | BoxContainer/HBoxContainer/VBoxContainer `separation` | 4. |
 | GridContainer `h_separation` / `v_separation` | 4 / 4. |
+| HSlider/VSlider `slider`, `grabber_area`, `grabber_area_highlight` | Three shared StyleBoxFlat resources: content margins/radius 4, detail 6; track `(0.1,0.1,0.1,0.6)`, white fill alpha 0.4, white highlighted fill alpha 0.75. |
+| HSlider/VSlider grabber icons | Shared 16×16 circles with normal/highlight/disabled alpha 0.75/1/0.37. |
+| HSlider `tick` / VSlider `tick` | 4×8 horizontal-control tick and 8×4 vertical-control tick icons. |
+| Slider `center_grabber`, `grabber_offset`, `tick_offset` | Zero for both concrete orientations. |
 
-The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, and the first Font slice adds default font assets. This table is not a claim of a complete upstream default theme.
+The default slider icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, and the first Font slice adds default font assets. This table is not a claim of a complete upstream default theme.
 
 <a id="fallbackbasescale"></a><a id="fallbackfontsize"></a>
 **Scalar fallbacks:** used only after applicable themes provide no positive default/value. Base scale requires a finite value and otherwise preserves its sign; font size preserves signed integer state. Equal assignments are silent. Nonfinite scale throws ArgumentOutOfRangeException. These values do not load fonts or automatically rescale existing styles/constants.

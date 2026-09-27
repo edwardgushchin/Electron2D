@@ -53,7 +53,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Array](classes/Array.md) | — | Excluded | 72 |
 | [ArrayMesh](classes/ArrayMesh.md) | Mesh | Blocked | 23 |
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
-| [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Blocked | 13 |
+| [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Unimplemented | 13 |
 | [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
 | [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Blocked | 1 |
@@ -163,7 +163,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Implemented | 3 |
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
-| [CenterContainer](classes/CenterContainer.md) | Container | Blocked | 1 |
+| [CenterContainer](classes/CenterContainer.md) | Container | Unimplemented | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Implemented | 40 |
@@ -363,7 +363,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Blocked | 2 |
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
-| [HSlider](classes/HSlider.md) | Slider | Blocked | 0 |
+| [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
 | [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Blocked | 0 |
 | [HTTPClient](classes/HTTPClient.md) | RefCounted | Blocked | 103 |
 | [HTTPRequest](classes/HTTPRequest.md) | Node | Blocked | 32 |
@@ -437,7 +437,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Logger](classes/Logger.md) | RefCounted | Blocked | 7 |
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |
-| [MarginContainer](classes/MarginContainer.md) | Container | Blocked | 4 |
+| [MarginContainer](classes/MarginContainer.md) | Container | Unimplemented | 4 |
 | [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |
@@ -794,7 +794,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Skin](classes/Skin.md) | Resource | Excluded | 11 |
 | [SkinReference](classes/SkinReference.md) | RefCounted | Excluded | 2 |
 | [Sky](classes/Sky.md) | Resource | Excluded | 17 |
-| [Slider](classes/Slider.md) | Range | Blocked | 24 |
+| [Slider](classes/Slider.md) | Range | Implemented | 24 |
 | [SliderJoint3D](classes/SliderJoint3D.md) | Joint3D | Excluded | 48 |
 | [SocketServer](classes/SocketServer.md) | RefCounted | Blocked | 4 |
 | [SoftBody3D](classes/SoftBody3D.md) | MeshInstance3D | Excluded | 30 |
@@ -905,7 +905,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Blocked | 4 |
 | [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |
-| [VSlider](classes/VSlider.md) | Slider | Blocked | 2 |
+| [VSlider](classes/VSlider.md) | Slider | Implemented | 2 |
 | [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Blocked | 0 |
 | [Variant](classes/Variant.md) | — | Excluded | 0 |
 | [Vector2](classes/Vector2.md) | — | Implemented | 82 |

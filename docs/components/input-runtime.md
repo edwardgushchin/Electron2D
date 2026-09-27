@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 ## Scope
 
@@ -102,3 +102,5 @@ The optional `ELECTRON2D_TEST_INPUT_POINTER=1` Wayland run opens one display, ve
 The targeted `ELECTRON2D_TEST_CONTROL_HOVER=1` Wayland run verifies native Control cursor precedence, immediate refresh on default/filter/property changes and display cleanup. This synthetic input check does not establish physical pointer behavior or other-platform semantics.
 
 Viewport localization preserves raw Input state and the original by-event transition identity; a positional copy has a distinct InstanceID. All six positional XformedBy implementations validate derived finite coordinates before Duplicate, preventing unowned partial event copies on overflow. [CanvasCoordinateTests](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs) verify this boundary, disposal on callback failure and local-coordinate borrowing; native injection is covered by CanvasCoordinateRenderingTests.
+
+The permanent typed ui_home/ui_end defaults use Key.Home/Key.End and the existing project-setting reload path. [Slider](../classes/Slider.md) consumes them as range endpoint requests, alongside matching-axis direction actions; unhandled opposite-axis input remains available to GUI focus traversal. These actions remain rebindable. Slider repeat uses the existing internal scene-processing lane and controller action state.

@@ -1,6 +1,6 @@
 # InputMap
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -343,3 +343,5 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 Configuration operations are serialized by one lock and return snapshots. Duplicate exact bindings are ignored; missing actions and invalid values throw before mutation. A successful map mutation or internal binding-change notification clears every affected action's cached runtime contributions through `Input` before fallible public `Resource.Changed` handlers run. Copying stored state into a registered binding follows the same ordering. Binding disposal removes it and clears contributions before public disposal handlers run. Typed action definitions persist through `ProjectSettings`; loading them into the live map is explicit.
 
 Tests cover ordering, validation, deadzones, the 32-source ceiling, duplicates, exact modifiers, matching, failure-safe action-state invalidation, singleton lifetime, concurrent-safe snapshots, project-file round-trip, atomic reload/rollback, and warmed successful matching allocation. Native controller mapping databases are a distinct SDL gamepad trigger and are not represented here.
+
+The permanent typed ui_home/ui_end defaults use Key.Home/Key.End through the existing project-setting load path. [Slider](Slider.md) consumes them as range endpoint actions, while opposite-axis input can continue to GUI focus traversal. The actions remain ordinary rebindable map entries.

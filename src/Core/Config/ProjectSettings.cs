@@ -314,6 +314,16 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<InputActionSettings> InputUIDown { get; } =
         CreateDefaultDirectionalAction("ui_down", Key.Down, JoyButton.DpadDown, JoyAxis.LeftY, 1f);
 
+    /// <summary>Defines the default Home binding for moving a GUI value or caret to its beginning.</summary>
+    /// <value>The permanent typed <c>input/ui_home</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIHome { get; } =
+        CreateDefaultKeyAction("ui_home", Key.Home);
+
+    /// <summary>Defines the default End binding for moving a GUI value or caret to its end.</summary>
+    /// <value>The permanent typed <c>input/ui_end</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIEnd { get; } =
+        CreateDefaultKeyAction("ui_end", Key.End);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -397,6 +407,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(InputUIUp, isBasic: false);
         RegisterInternal(InputUIRight, isBasic: false);
         RegisterInternal(InputUIDown, isBasic: false);
+        RegisterInternal(InputUIHome, isBasic: false);
+        RegisterInternal(InputUIEnd, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1763,7 +1775,9 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUILeft) ||
         ReferenceEquals(setting, InputUIUp) ||
         ReferenceEquals(setting, InputUIRight) ||
-        ReferenceEquals(setting, InputUIDown);
+        ReferenceEquals(setting, InputUIDown) ||
+        ReferenceEquals(setting, InputUIHome) ||
+        ReferenceEquals(setting, InputUIEnd);
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {

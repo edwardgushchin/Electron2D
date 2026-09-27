@@ -5,7 +5,8 @@ namespace Electron2D;
 /// <summary>Owns the built-in theme for implemented controls and the universal typed fallback values.</summary>
 /// <remarks>The singleton and its built-in resources are borrowed. Font resources, project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
-/// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.</remarks>
+/// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
+/// Initial service construction decodes the built-in slider icons through the SVG image codec at scale one.</remarks>
 public sealed class ThemeDB : ElectronObject
 {
     private static readonly Dictionary<string, Type> NativeTypes = typeof(ElectronObject).Assembly.GetExportedTypes()
@@ -34,13 +35,54 @@ public sealed class ThemeDB : ElectronObject
         _defaultTheme.SetConstant("h_separation", "GridContainer", 4); _defaultTheme.SetConstant("v_separation", "GridContainer", 4);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
+        try { AddSliderDefaults(); }
+        catch
+        {
+            _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
+            throw;
+        }
         _defaultTheme.Changed += DefaultChanged; _defaultTheme.Disposed += DefaultDisposed;
+    }
+    private void AddSliderDefaults()
+    {
+        var track = CreateSliderStyle(new(.1f, .1f, .1f, .6f));
+        var fill = CreateSliderStyle(new(1, 1, 1, .4f));
+        var activeFill = CreateSliderStyle(new(1, 1, 1, .75f));
+        var grabber = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#fefefe" fill-opacity=".75"/></svg>"""u8);
+        var highlight = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#fefefe"/></svg>"""u8);
+        var disabled = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="7" fill="#fefefe" fill-opacity=".37"/></svg>"""u8);
+        var horizontalTick = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="4" height="8"><path fill="#fff" fill-opacity=".25" d="M1 0h2v16H1z"/></svg>"""u8);
+        var verticalTick = CreateIcon("""<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path fill="#fff" fill-opacity=".25" d="M0 3V1h16v2z"/></svg>"""u8);
+        foreach (var name in new[] { "HSlider", "VSlider" })
+        {
+            _defaultTheme.SetStyleBox("slider", name, track);
+            _defaultTheme.SetStyleBox("grabber_area", name, fill);
+            _defaultTheme.SetStyleBox("grabber_area_highlight", name, activeFill);
+            _defaultTheme.SetIcon("grabber", name, grabber);
+            _defaultTheme.SetIcon("grabber_highlight", name, highlight);
+            _defaultTheme.SetIcon("grabber_disabled", name, disabled);
+            _defaultTheme.SetIcon("tick", name, name == "HSlider" ? horizontalTick : verticalTick);
+            _defaultTheme.SetConstant("center_grabber", name, 0);
+            _defaultTheme.SetConstant("grabber_offset", name, 0);
+            _defaultTheme.SetConstant("tick_offset", name, 0);
+        }
+    }
+    private StyleBoxFlat CreateSliderStyle(Color color)
+    {
+        var style = new StyleBoxFlat { BGColor = color, CornerDetail = 6 };
+        style.SetContentMarginAll(4); style.SetCornerRadiusAll(4); _owned.Add(style);
+        return style;
+    }
+    private ImageTexture CreateIcon(ReadOnlySpan<byte> svg)
+    {
+        using var image = new Image(); image.LoadSVGFromBuffer(svg);
+        var texture = ImageTexture.CreateFromImage(image); _owned.Add(texture); return texture;
     }
     /// <summary>Gets the process-wide theme service.</summary>
     /// <value>The shared service; consumers do not own it.</value>
     public static ThemeDB Instance => Singleton.Value;
     /// <summary>Gets the built-in theme resource for the currently implemented control families.</summary>
-    /// <returns>The borrowed mutable theme, with independent Panel/PanelContainer styles and box/grid constants.</returns>
+    /// <returns>The borrowed mutable theme, with panel styles, shared horizontal/vertical slider skins and box/grid constants.</returns>
     /// <exception cref="ObjectDisposedException">The service or its theme is disposed.</exception>
     public Theme GetDefaultTheme() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
     /// <summary>Occurs after a universal fallback assignment changes its value.</summary>

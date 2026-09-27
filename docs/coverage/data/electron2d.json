@@ -1470,6 +1470,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.HSlider",
+    "kind": "type",
+    "declaringType": "Electron2D.HSlider",
+    "name": "HSlider",
+    "signature": "public class Electron2D.HSlider",
+    "visibility": "public",
+    "baseType": "Electron2D.Slider",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Image",
     "kind": "type",
     "declaringType": "Electron2D.Image",
@@ -3526,6 +3541,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Slider",
+    "kind": "type",
+    "declaringType": "Electron2D.Slider",
+    "name": "Slider",
+    "signature": "public abstract class Electron2D.Slider",
+    "visibility": "public",
+    "baseType": "Electron2D.Range",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Slider.TickPosition",
+    "kind": "type",
+    "declaringType": "Electron2D.Slider.TickPosition",
+    "name": "TickPosition",
+    "signature": "public enum Electron2D.Slider.TickPosition",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Sprite",
     "kind": "type",
     "declaringType": "Electron2D.Sprite",
@@ -4047,6 +4095,21 @@
     "signature": "public class Electron2D.VBoxContainer",
     "visibility": "public",
     "baseType": "Electron2D.BoxContainer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VSlider",
+    "kind": "type",
+    "declaringType": "Electron2D.VSlider",
+    "name": "VSlider",
+    "signature": "public class Electron2D.VSlider",
+    "visibility": "public",
+    "baseType": "Electron2D.Slider",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -6273,6 +6336,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.HSlider..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HSlider",
+    "name": ".ctor",
+    "signature": "public HSlider()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Image..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Image",
@@ -7536,6 +7612,25 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Slider..ctor(System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Slider",
+    "name": ".ctor",
+    "signature": "protected Slider(System.Boolean vertical = true)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Sprite..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Sprite",
@@ -7854,6 +7949,19 @@
     "declaringType": "Electron2D.VBoxContainer",
     "name": ".ctor",
     "signature": "public VBoxContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VSlider..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VSlider",
+    "name": ".ctor",
+    "signature": "public VSlider()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -17217,6 +17325,58 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Slider.TickPosition.Both()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Slider.TickPosition",
+    "name": "Both",
+    "signature": "public const Electron2D.Slider.TickPosition Both = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Slider.TickPosition",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Slider.TickPosition.BottomRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Slider.TickPosition",
+    "name": "BottomRight",
+    "signature": "public const Electron2D.Slider.TickPosition BottomRight = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Slider.TickPosition",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Slider.TickPosition.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Slider.TickPosition",
+    "name": "Center",
+    "signature": "public const Electron2D.Slider.TickPosition Center = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Slider.TickPosition",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.Slider.TickPosition.TopLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Slider.TickPosition",
+    "name": "TopLeft",
+    "signature": "public const Electron2D.Slider.TickPosition TopLeft = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Slider.TickPosition",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.SpriteFrames.LoopMode.Linear()",
     "kind": "enumValue",
     "declaringType": "Electron2D.SpriteFrames.LoopMode",
@@ -20022,6 +20182,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.SceneTreeTimer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Slider.DragEnded()",
+    "kind": "event",
+    "declaringType": "Electron2D.Slider",
+    "name": "DragEnded",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E DragEnded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Slider.DragStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.Slider",
+    "name": "DragStarted",
+    "signature": "public event System.Action DragStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -35486,6 +35672,19 @@
     "id": "method:Electron2D.HBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HBoxContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HSlider.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HSlider",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -54889,6 +55088,89 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Slider.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Slider",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Slider.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Slider",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Slider.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.Slider",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Slider.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Slider",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Slider.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Slider",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
@@ -60385,6 +60667,19 @@
     "id": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VBoxContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VSlider.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VSlider",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -79055,6 +79350,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.InputUIEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIEnd",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIEnd { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.InputUIFocusNext()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -79073,6 +79381,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUIFocusPrev",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIFocusPrev { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIHome()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIHome",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIHome { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -80820,6 +81141,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Slider.Editable()",
+    "kind": "property",
+    "declaringType": "Electron2D.Slider",
+    "name": "Editable",
+    "signature": "public System.Boolean Editable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Slider.Scrollable()",
+    "kind": "property",
+    "declaringType": "Electron2D.Slider",
+    "name": "Scrollable",
+    "signature": "public System.Boolean Scrollable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Slider.TickCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.Slider",
+    "name": "TickCount",
+    "signature": "public System.Int32 TickCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Slider.TicksOnBorders()",
+    "kind": "property",
+    "declaringType": "Electron2D.Slider",
+    "name": "TicksOnBorders",
+    "signature": "public System.Boolean TicksOnBorders { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Slider.TicksPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.Slider",
+    "name": "TicksPosition",
+    "signature": "public Electron2D.Slider.TickPosition TicksPosition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Slider.TickPosition",
     "value": null
   },
   {

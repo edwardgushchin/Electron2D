@@ -60,6 +60,19 @@ internal static class InputActionSettingsTests
                     "Every directional default survives project-file loading with ordered key, D-pad, and left-stick bindings.");
             }
 
+            var endpoints = new[]
+            {
+                (ProjectSettings.InputUIHome, "ui_home", Key.Home),
+                (ProjectSettings.InputUIEnd, "ui_end", Key.End),
+            };
+            foreach (var (setting, _, keycode) in endpoints)
+            {
+                Reject<InvalidOperationException>(() => loaded.Unregister(setting));
+                var bindings = loaded.Get(setting).Bindings;
+                Check(bindings is [{ Kind: InputBindingKind.Key, Keycode: var endpoint, Modifiers: 0 }] && endpoint == keycode,
+                    "Home and End survive project-file loading as permanent unmodified key actions.");
+            }
+
             map.AddAction("temporary_action");
             var loadedEvents = 0;
             void OnLoaded()
@@ -84,6 +97,15 @@ internal static class InputActionSettingsTests
                     Check(map.ActionGetEvents(name).Count == 3 && map.EventIsAction(arrow, name, exactMatch: true) &&
                         map.EventIsAction(dpad, name, exactMatch: true) && map.EventIsAction(stick, name, exactMatch: true),
                         "Every directional action matches all three default event kinds, including nonzero controller devices.");
+                }
+
+                foreach (var (_, name, keycode) in endpoints)
+                {
+                    using var endpoint = new InputEventKey { Keycode = keycode, Pressed = true };
+                    Check(map.ActionGetEvents(name).Count == 1 && map.EventIsAction(endpoint, name, exactMatch: true),
+                        "Loaded Home and End actions match their real key events.");
+                    endpoint.ShiftPressed = true;
+                    Check(!map.EventIsAction(endpoint, name, exactMatch: true), "Exact endpoint matching rejects an extra modifier.");
                 }
 
                 using var key = new InputEventKey { Keycode = Key.Space, ShiftPressed = true, Pressed = true };

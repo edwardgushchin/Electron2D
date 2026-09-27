@@ -39,6 +39,7 @@ public abstract class Range : Control
     }
     private Shared _shared = new();
     private bool _rounded;
+    private int _localSignalSuppressionDepth;
     private ulong _generation;
     private WeakReference<Range> _owner;
     private static readonly PropertyDescriptor[] RangeProperties =
@@ -60,6 +61,7 @@ public abstract class Range : Control
     /// <summary>Occurs after min/max/page/step configuration changes, following any value clamp notification.</summary>
     public event Action? Changed;
     /// <summary>Occurs after a changed shared value, following the typed value hook.</summary>
+    /// <remarks>Explicit sharing and interaction notifications can also emit when the stored value is unchanged.</remarks>
     public event Action<double>? ValueChanged;
     /// <summary>Handles a changed value, including SetValueNoSignal redraw notifications.</summary>
     /// <param name="newValue">The current shared value at delivery time.</param>
@@ -112,6 +114,18 @@ public abstract class Range : Control
     /// <exception cref="InvalidOperationException">Attached access is off-owner, mutation is capture-owned, or a shared peer cannot be mutated.</exception>
     /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
     public void SetValueNoSignal(double value) { Write(); SetValue(value, false); }
+    internal void SetRatioWithoutLocalSignals(double value)
+    {
+        EnsureMutable(); _localSignalSuppressionDepth++;
+        try { Ratio = value; }
+        finally { _localSignalSuppressionDepth--; }
+    }
+    internal void NotifySharedValueForInteraction()
+    {
+        Write(); var suppression = _localSignalSuppressionDepth; _localSignalSuppressionDepth = 0;
+        try { _shared.Notify(true); }
+        finally { _localSignalSuppressionDepth = suppression; }
+    }
     /// <summary>Gets or sets the finite shared MinValue configuration.</summary>
     /// <value>0 initially.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite.</exception>
@@ -251,9 +265,9 @@ public abstract class Range : Control
         if (value)
         {
             try { OnValueChanged(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (signal) ValueChanged?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (signal && _localSignalSuppressionDepth == 0) ValueChanged?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
         }
-        else try { Changed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        else try { if (_localSignalSuppressionDepth == 0) Changed?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) QueueRedraw();
         ThrowCollected("Range notifications failed.", errors);
     }

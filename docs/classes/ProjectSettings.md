@@ -89,6 +89,8 @@ string resourcePath = settings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<InputActionSettings> InputUIUp { get; }`](#inputuiup) | Defines up-arrow, D-pad up and left-stick-up focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIRight { get; }`](#inputuiright) | Defines right-arrow, D-pad right and left-stick-right focus navigation. |
 | [`public static ProjectSetting<InputActionSettings> InputUIDown { get; }`](#inputuidown) | Defines down-arrow, D-pad down and left-stick-down focus navigation. |
+| [`public static ProjectSetting<InputActionSettings> InputUIHome { get; }`](#inputuihome) | Defines the Home endpoint action. |
+| [`public static ProjectSetting<InputActionSettings> InputUIEnd { get; }`](#inputuiend) | Defines the End endpoint action. |
 | [`public static ProjectSettings Instance { get; }`](#p-electron2d-projectsettings-instance) | Gets the process-wide project settings registry. |
 | [`public string ProjectRoot { get; }`](#p-electron2d-projectsettings-projectroot) | Gets the current absolute project resource directory. |
 | [`public string UserDataRoot { get; }`](#p-electron2d-projectsettings-userdataroot) | Gets the current absolute user-data directory. |
@@ -1253,3 +1255,8 @@ The executable harness covers malformed definitions/features/paths, exact regist
 `PhysicsInterpolationTests` verifies the typed interpolation setting's key/default, exact registration, isolated project-file round trip and SceneTree startup sampling. Native canvas and camera pixels run through the same setting on Linux dummy compatibility and Wayland compatibility/GPU.
 
 Tests do not prove crash durability on every filesystem, symbolic-link confinement, editor presentation, packed exports, or unavailable domain settings.
+
+<a id="inputuihome"></a><a id="inputuiend"></a>
+### `InputUIHome` and `InputUIEnd`
+
+Permanent typed `input/ui_home` and `input/ui_end` definitions use one default binding each, Key.Home and Key.End. They participate in every registry, explicit InputMap loading and typed project-file round trips; live actions remain ordinary rebindable InputMap data. Slider consumes exact matching presses as MinValue/MaxValue requests through Range. Adding these defaults does not claim an implemented text caret or Font renderer.

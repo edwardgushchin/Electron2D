@@ -2506,6 +2506,146 @@
       "godot": "Theme::method:set_theme_item(int:Theme.DataType,StringName:,StringName:,Variant:)",
       "electron2d": "method:Electron2D.Theme.SetStyleBox(System.String,System.String,Electron2D.StyleBox)",
       "reason": "ADR 0001/0083: concrete typed stylebox access preserves this category without a Variant facade. The missing Font category enters the first approved Font resource slice; the generic upstream row therefore remains Partial."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_home",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIHome()",
+      "reason": "ADR 0080 with ADR 0038: permanent typed UI action setting uses the pinned Home or End keyboard binding and the existing InputMap load/round-trip path; sliders consume it as a range endpoint action."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_end",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIEnd()",
+      "reason": "ADR 0080 with ADR 0038: permanent typed UI action setting uses the pinned Home or End keyboard binding and the existing InputMap load/round-trip path; sliders consume it as a range endpoint action."
+    },
+    {
+      "godot": "Slider::enum:TickPosition",
+      "electron2d": "T:Electron2D.Slider.TickPosition",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::enum_value:TickPosition.TICK_POSITION_BOTH",
+      "electron2d": "enumValue:Electron2D.Slider.TickPosition.Both()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::enum_value:TickPosition.TICK_POSITION_BOTTOM_RIGHT",
+      "electron2d": "enumValue:Electron2D.Slider.TickPosition.BottomRight()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::enum_value:TickPosition.TICK_POSITION_CENTER",
+      "electron2d": "enumValue:Electron2D.Slider.TickPosition.Center()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::enum_value:TickPosition.TICK_POSITION_TOP_LEFT",
+      "electron2d": "enumValue:Electron2D.Slider.TickPosition.TopLeft()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:editable",
+      "electron2d": "property:Electron2D.Slider.Editable()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:scrollable",
+      "electron2d": "property:Electron2D.Slider.Scrollable()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:step",
+      "electron2d": "property:Electron2D.Range.Step()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:tick_count",
+      "electron2d": "property:Electron2D.Slider.TickCount()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:ticks_on_borders",
+      "electron2d": "property:Electron2D.Slider.TicksOnBorders()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::property:ticks_position",
+      "electron2d": "property:Electron2D.Slider.TicksPosition()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::signal:drag_ended(bool:)",
+      "electron2d": "event:Electron2D.Slider.DragEnded()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::signal:drag_started()",
+      "electron2d": "event:Electron2D.Slider.DragStarted()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:center_grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber_area",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber_area_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber_disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:grabber_offset",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:slider",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:tick",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "Slider::theme_item:tick_offset",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "VSlider::property:size_flags_horizontal",
+      "electron2d": "property:Electron2D.Control.SizeFlagsHorizontal()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "VSlider::property:size_flags_vertical",
+      "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
+      "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
     }
   ],
   "statusGroups": [
@@ -3650,7 +3790,7 @@
         "ThemeDB::method:get_default_theme()"
       ],
       "state": "Partial",
-      "reason": "ADR 0083: returns the live built-in Theme containing actual Panel/PanelContainer styles and Box/HBox/VBox/Grid separation constants. Populate and verify each remaining GUI default style/color/constant/icon family with its first complete consumer slice; default Font assets enter the SDL_ttf/HarfBuzz Font slice. This does not claim the full upstream default-theme catalog."
+      "reason": "ADR 0083: returns the live built-in Theme containing actual Panel/PanelContainer styles, HSlider/VSlider styles/icons/constants and Box/HBox/VBox/Grid separation constants. Populate and verify each remaining GUI default style/color/constant/icon family with its first complete consumer slice; default Font assets enter the SDL_ttf/HarfBuzz Font slice. This does not claim the full upstream default-theme catalog. Slider icons currently use scale one; nonunit default-theme/DPI asset generation and refresh remain incomplete."
     },
     {
       "godot": [
@@ -3665,6 +3805,88 @@
       ],
       "state": "Partial",
       "reason": "ADR 0083: live nullable borrowed fallback icon and lazy decoding of the pinned 16x16 error SVG execute at default scale one. Trigger for completion: default-theme-scale/DPI-aware icon construction and dependent refresh on active scale changes; no nonunit asset scaling is claimed."
+    },
+    {
+      "godot": [
+        "class:Slider",
+        "Slider::enum:TickPosition",
+        "Slider::enum_value:TickPosition.TICK_POSITION_BOTH",
+        "Slider::enum_value:TickPosition.TICK_POSITION_BOTTOM_RIGHT",
+        "Slider::enum_value:TickPosition.TICK_POSITION_CENTER",
+        "Slider::enum_value:TickPosition.TICK_POSITION_TOP_LEFT",
+        "Slider::property:editable",
+        "Slider::property:focus_mode",
+        "Slider::property:scrollable",
+        "Slider::property:step",
+        "Slider::property:tick_count",
+        "Slider::property:ticks_on_borders",
+        "Slider::property:ticks_position",
+        "Slider::signal:drag_ended(bool:)",
+        "Slider::signal:drag_started()",
+        "Slider::theme_item:center_grabber",
+        "Slider::theme_item:grabber",
+        "Slider::theme_item:grabber_area",
+        "Slider::theme_item:grabber_area_highlight",
+        "Slider::theme_item:grabber_disabled",
+        "Slider::theme_item:grabber_highlight",
+        "Slider::theme_item:grabber_offset",
+        "Slider::theme_item:slider",
+        "Slider::theme_item:tick",
+        "Slider::theme_item:tick_offset",
+        "class:HSlider",
+        "class:VSlider",
+        "VSlider::property:size_flags_horizontal",
+        "VSlider::property:size_flags_vertical"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0080/0083: concrete horizontal/vertical sliders consume shared Range values, complete themed state drawing/ticks, pointer drag/wheel, directional/Home/End actions and joypad repeat, with exact default descriptors and scene factories. Font and inherited native semantic accessibility retain separate dependencies; built-in nonunit icon scaling remains a ThemeDB default-asset integration. Managed SliderTests cover nested peer gestures, lifecycle, repeat and packing; warmed reused input cycles allocate zero managed bytes. SliderRenderingTests verifies eight queued-SDL pixel/input phases plus 64 measured active frames after 64 warmup frames with zero managed bytes on Linux Wayland GPU and compatibility."
+    },
+    {
+      "godot": [
+        "class:MarginContainer",
+        "MarginContainer::theme_item:margin_bottom",
+        "MarginContainer::theme_item:margin_left",
+        "MarginContainer::theme_item:margin_right",
+        "MarginContainer::theme_item:margin_top"
+      ],
+      "state": "Unimplemented",
+      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Four themed edge margins, child minimum aggregation, content rectangle fitting, maximum propagation, invalidation and exact scene factories must ship together in the next MarginContainer consumer slice."
+    },
+    {
+      "godot": [
+        "class:CenterContainer",
+        "CenterContainer::property:use_top_left"
+      ],
+      "state": "Unimplemented",
+      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Centered child fitting, UseTopLeft semantics, minimum sizing, lifecycle/invalidation and exact scene factories must ship together in the next CenterContainer consumer slice."
+    },
+    {
+      "godot": [
+        "class:AspectRatioContainer",
+        "AspectRatioContainer::enum:AlignmentMode",
+        "AspectRatioContainer::enum:StretchMode",
+        "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+        "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+        "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+        "AspectRatioContainer::enum_value:StretchMode.STRETCH_COVER",
+        "AspectRatioContainer::enum_value:StretchMode.STRETCH_FIT",
+        "AspectRatioContainer::enum_value:StretchMode.STRETCH_HEIGHT_CONTROLS_WIDTH",
+        "AspectRatioContainer::enum_value:StretchMode.STRETCH_WIDTH_CONTROLS_HEIGHT",
+        "AspectRatioContainer::property:alignment_horizontal",
+        "AspectRatioContainer::property:alignment_vertical",
+        "AspectRatioContainer::property:ratio",
+        "AspectRatioContainer::property:stretch_mode"
+      ],
+      "state": "Unimplemented",
+      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Ratio, both alignment enums, all stretch policies, minimum sizing, child fitting, lifecycle/invalidation and exact scene factories must ship together in the next AspectRatioContainer consumer slice."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:input/ui_home",
+        "ProjectSettings::property:input/ui_end"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0080/0038: registered permanent typed Home/End keyboard action defaults feed actual Slider input through the existing InputMap. Project reload, exact matching and endpoint behavior are part of the connected slider slice."
     }
   ],
   "extras": [
@@ -4319,6 +4541,56 @@
       "electron2d": "method:Electron2D.Window.OnNotification(System.Int32)",
       "state": "Implemented",
       "reason": "ADR 0083 with ADR 0008: concrete Window notification override projects inherited node/theme lifecycle, including owner refresh on theme changes and parent transitions; no new public notification capability is introduced."
+    },
+    {
+      "electron2d": "constructor:Electron2D.HSlider..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Slider..ctor(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VSlider..ctor()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.HSlider.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Slider.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Slider.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Slider.OnGUIInput(Electron2D.InputEvent)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Slider.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.Slider.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "method:Electron2D.VSlider.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
     }
   ]
 }

@@ -21,7 +21,7 @@ The implemented data categories are Color, Constant, FontSize, Icon and StyleBox
 
 [Panel](../classes/Panel.md) draws the inherited `panel` style without imposing padding on children. [PanelContainer](../classes/PanelContainer.md) combines style minimum and child bounds, draws the same key and fits eligible children inside the resolved content area. Box/HBox/VBox and Grid separation values consume actual typed constant lookup and local overrides, retaining the default gap four.
 
-ThemeDB supplies actual default entries for current panel and container consumers. It does not claim a full default asset catalog for absent buttons/sliders/text controls. GetProjectTheme is absent until a Theme resource loader and startup project configuration provide real loaded state. Numeric FontSize storage does not implement Font objects, text shaping or glyph drawing; those enter the first approved SDL_ttf/HarfBuzz Font slice.
+ThemeDB supplies actual default entries for panel/container and horizontal/vertical slider consumers. The slider families share three styles and grabber-state icons, with an axis-specific tick icon; default assets use scale one. It does not claim a full default asset catalog for absent buttons/text controls. GetProjectTheme is absent until a Theme resource loader and startup project configuration provide real loaded state. Numeric FontSize storage does not implement Font objects, text shaping or glyph drawing; those enter the first approved SDL_ttf/HarfBuzz Font slice.
 
 ## Verification and limits
 
