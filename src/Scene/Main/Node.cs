@@ -185,6 +185,8 @@ public partial class Node : ElectronObject
 
     private bool _inputEnabled;
 
+    private bool _shortcutInputEnabled;
+
     private bool _unhandledInputEnabled;
 
     private bool _unhandledKeyInputEnabled;
@@ -637,6 +639,17 @@ public partial class Node : ElectronObject
             EnsureMutable();
             _inputEnabled = value;
         }
+    }
+
+    /// <summary>Gets or sets whether this node receives keyboard, gamepad-button and shortcut events after GUI handling.</summary>
+    /// <value>False initially; overriding the callback does not enable it automatically.</value>
+    /// <remarks>The stage precedes unhandled-key and general unhandled input and obeys the node's process policy.</remarks>
+    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="ObjectDisposedException">The node has finished disposing.</exception>
+    public bool ShortcutInputEnabled
+    {
+        get { ThrowIfDisposed(); return _shortcutInputEnabled; }
+        set { EnsureMutable(); _shortcutInputEnabled = value; }
     }
 
     /// <summary>Gets or sets whether this node receives input left unhandled by earlier stages.</summary>
@@ -1562,7 +1575,15 @@ public partial class Node : ElectronObject
     {
     }
 
-    /// <summary>Receives a keyboard event that remains unhandled after the first input stage.</summary>
+    /// <summary>Receives a keyboard, gamepad-button or shortcut event left unhandled by GUI controls.</summary>
+    /// <param name="event">The live borrowed event; do not retain or dispose it.</param>
+    /// <remarks>Enable <see cref="ShortcutInputEnabled"/> to participate. Delivery is pause-aware and occurs on the scene
+    /// owner thread before unhandled-key and general unhandled input. Marking input handled stops later delivery.</remarks>
+    protected virtual void OnShortcutInput(InputEvent @event)
+    {
+    }
+
+    /// <summary>Receives a keyboard event that remains unhandled after GUI and shortcut processing.</summary>
     /// <param name="event">The live caller-owned keyboard event being dispatched.</param>
     /// <remarks>
     /// The callback runs synchronously on the scene-tree owner thread when <see cref="UnhandledKeyInputEnabled"/> is
@@ -2222,6 +2243,8 @@ public partial class Node : ElectronObject
     internal void ResetReadyAfterFailedActivation() => _readyCalled = false;
 
     internal void DispatchInput(InputEvent @event) => OnInput(@event);
+
+    internal void DispatchShortcutInput(InputEvent @event) => OnShortcutInput(@event);
 
     internal void DispatchUnhandledKeyInput(InputEventKey @event) => OnUnhandledKeyInput(@event);
 

@@ -625,7 +625,7 @@ internal sealed class TextLayout
     }
 
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
-        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false)
+        int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false)
     {
         if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
@@ -634,14 +634,14 @@ internal sealed class TextLayout
             if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
             if (!read.IsCurrent) continue;
             _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass); return; }
+            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth); return; }
             finally { _active--; }
         }
         throw Font.UnsettledRead();
     }
 
     private void DrawCore(CanvasItem canvas, Vector2 baseline, Color color, int outline, float oversampling,
-        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass)
+        int firstLine, int maxLines, int visibleCharacters, int visibleBehavior, bool outlinePass, bool clipToWidth)
     {
         if (firstLine < 0 || firstLine >= _lines.Count) return;
         var end = Key.MaxLines < 0 ? _lines.Count : Math.Min(Key.MaxLines, _lines.Count);
@@ -665,11 +665,17 @@ internal sealed class TextLayout
                 if ((!glyph.Missing && (glyph.Face is null || glyph.Index == 0)) || glyph.Tab || glyph.Virtual && glyph.Index == 0) continue;
                 if (glyph.Missing)
                 {
+                    if (clipToWidth && Key.Width > 0 && (glyph.Position.X - glyph.Offset.X < 0 || glyph.Position.X - glyph.Offset.X + glyph.Advance > Key.Width)) continue;
                     if (!outlinePass) TextMissingGlyph.Draw(canvas, Key.FontSize, origin + glyph.Position, glyph.Index, color);
                     continue;
                 }
                 for (var repeat = 0; repeat < glyph.Repeat; repeat++)
                 {
+                    if (clipToWidth && Key.Width > 0 && (!glyph.Virtual || glyph.Elongation))
+                    {
+                        var pen = glyph.Position.X - glyph.Offset.X + repeat * glyph.Advance;
+                        if (pen < 0 || pen + glyph.Advance > Key.Width) continue;
+                    }
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;
                     var image = glyph.Face!.GetGlyph(glyph.Index, Key.FontSize, outline, oversampling, position, out var rasterPosition);

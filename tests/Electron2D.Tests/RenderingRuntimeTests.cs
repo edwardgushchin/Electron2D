@@ -13,6 +13,30 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.Instance.MaxFPS = 60;
             settings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOOLTIP_NATIVE") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTooltips(backend);
+                }
+                return;
+            }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUTTON_NATIVE") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyButtons(backend);
+                }
+                return;
+            }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_BUTTON_NATIVE") == "1")
+            {
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
+                {
+                    settings.Set(ProjectSettings.RenderingMethod, backend); VerifyTextureButton(backend);
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LABEL_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })

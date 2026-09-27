@@ -3,6 +3,9 @@ namespace Electron2D;
 public sealed partial class SceneTree
 {
     private readonly List<Control> _guiHoverChain = [];
+    private readonly List<Control> _guiHoverScratch = [];
+    private readonly List<List<Control>> _guiHoverPrevious = [];
+    private int _guiHoverChangeDepth;
     private Control? _guiHoverTarget;
     private Viewport? _guiHoverViewport;
     private Vector2 _guiHoverPosition;
@@ -30,6 +33,8 @@ public sealed partial class SceneTree
     internal void ReleaseGUIHover(Control control)
     {
         EnsureOwnerThread();
+        ReleaseGUITouchFocus(control);
+        if (ReferenceEquals(control, _tooltipControl) || ReferenceEquals(control, _tooltipOwner)) CancelTooltip();
         if (!_guiHoverChain.Contains(control)) return;
         ClearGUIHover();
     }
@@ -37,10 +42,11 @@ public sealed partial class SceneTree
     internal void ClearGUIHover()
     {
         EnsureOwnerThread();
+        CancelTooltip();
         _guiHoverKnown = false;
         if (_updatingGUIHover) { _guiHoverRefreshPending = true; return; }
         List<Exception>? errors = null;
-        ChangeGUIHover(null, [], ref errors);
+        ChangeGUIHover(null, null, ref errors);
         ApplyGUICursor(ref errors);
         ThrowCollected("GUI pointer-exit callbacks failed.", errors);
     }
@@ -86,18 +92,18 @@ public sealed partial class SceneTree
                 _guiHoverRefreshPending = false;
                 var currentViewport = _guiHoverViewport ?? viewport;
                 var target = _guiHoverKnown ? FindMouseControl(currentViewport, _guiHoverPosition, ref errors) : null;
-                var chain = target is null ? [] : BuildGUIHoverChain(target, currentViewport);
+                var chain = target is null ? null : BuildGUIHoverChain(target, currentViewport);
                 ChangeGUIHover(target, chain, ref errors);
                 ApplyGUICursor(ref errors);
                 if (!_guiHoverRefreshPending) break;
             }
         }
-        finally { _updatingGUIHover = false; }
+        finally { _guiHoverScratch.Clear(); _updatingGUIHover = false; }
     }
 
-    private static List<Control> BuildGUIHoverChain(Control target, Viewport viewport)
+    private List<Control> BuildGUIHoverChain(Control target, Viewport viewport)
     {
-        var chain = new List<Control>();
+        var chain = _guiHoverScratch; chain.Clear();
         for (CanvasItem? item = target; item is not null; item = item.GetParentItem())
         {
             if (item is Control control && !control.IsDisposed && control.IsVisibleInTree &&
@@ -112,46 +118,53 @@ public sealed partial class SceneTree
         return chain;
     }
 
-    private void ChangeGUIHover(Control? target, List<Control> chain, ref List<Exception>? errors)
+    private void ChangeGUIHover(Control? target, List<Control>? chain, ref List<Exception>? errors)
     {
+        var count = chain?.Count ?? 0;
         var common = 0;
-        while (common < _guiHoverChain.Count && common < chain.Count &&
-               ReferenceEquals(_guiHoverChain[common], chain[common])) common++;
-        if (common == _guiHoverChain.Count && common == chain.Count && ReferenceEquals(target, _guiHoverTarget)) return;
+        while (common < _guiHoverChain.Count && common < count &&
+               ReferenceEquals(_guiHoverChain[common], chain![common])) common++;
+        if (common == _guiHoverChain.Count && common == count && ReferenceEquals(target, _guiHoverTarget)) return;
 
         var previousTarget = _guiHoverTarget;
-        var previousChain = _guiHoverChain.ToArray();
-        _guiHoverTarget = target;
-        _guiHoverChain.Clear();
-        _guiHoverChain.AddRange(chain);
-
-        if (!ReferenceEquals(previousTarget, target) && previousTarget is { IsDisposed: false })
-            try { previousTarget.DispatchNotification(Control.NotificationMouseExitSelf); }
-            catch (Exception error) { CollectException(ref errors, error); }
-
-        for (var index = previousChain.Length - 1; index >= common; index--)
+        var depth = _guiHoverChangeDepth++;
+        if (depth == _guiHoverPrevious.Count) _guiHoverPrevious.Add([]);
+        var previousChain = _guiHoverPrevious[depth]; previousChain.AddRange(_guiHoverChain);
+        try
         {
-            var control = previousChain[index];
-            if (control.IsDisposed) continue;
-            try { control.DispatchNotification(Control.NotificationMouseExit); }
-            catch (Exception error) { CollectException(ref errors, error); }
-            try { control.NotifyMouseExited(); }
-            catch (Exception error) { CollectException(ref errors, error); }
-        }
+            _guiHoverTarget = target;
+            _guiHoverChain.Clear();
+            if (chain is not null) _guiHoverChain.AddRange(chain);
 
-        for (var index = common; index < chain.Count; index++)
-        {
-            var control = chain[index];
-            if (control.IsDisposed || !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree) continue;
-            try { control.DispatchNotification(Control.NotificationMouseEnter); }
-            catch (Exception error) { CollectException(ref errors, error); }
-            try { control.NotifyMouseEntered(); }
-            catch (Exception error) { CollectException(ref errors, error); }
-        }
+            if (!ReferenceEquals(previousTarget, target) && previousTarget is { IsDisposed: false })
+                try { previousTarget.DispatchNotification(Control.NotificationMouseExitSelf); }
+                catch (Exception error) { CollectException(ref errors, error); }
 
-        if (!ReferenceEquals(previousTarget, target) && target is { IsDisposed: false } && ReferenceEquals(target.Tree, this))
-            try { target.DispatchNotification(Control.NotificationMouseEnterSelf); }
-            catch (Exception error) { CollectException(ref errors, error); }
+            for (var index = previousChain.Count - 1; index >= common; index--)
+            {
+                var control = previousChain[index];
+                if (control.IsDisposed) continue;
+                try { control.DispatchNotification(Control.NotificationMouseExit); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                try { control.NotifyMouseExited(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+
+            for (var index = common; index < count; index++)
+            {
+                var control = chain![index];
+                if (control.IsDisposed || !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree) continue;
+                try { control.DispatchNotification(Control.NotificationMouseEnter); }
+                catch (Exception error) { CollectException(ref errors, error); }
+                try { control.NotifyMouseEntered(); }
+                catch (Exception error) { CollectException(ref errors, error); }
+            }
+
+            if (!ReferenceEquals(previousTarget, target) && target is { IsDisposed: false } && ReferenceEquals(target.Tree, this))
+                try { target.DispatchNotification(Control.NotificationMouseEnterSelf); }
+                catch (Exception error) { CollectException(ref errors, error); }
+        }
+        finally { previousChain.Clear(); _guiHoverChangeDepth--; }
     }
 
     private void ApplyGUICursor(ref List<Exception>? errors)

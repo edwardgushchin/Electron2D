@@ -98,7 +98,8 @@ public abstract class PropertyDescriptor
 /// <remarks>
 /// Delegate execution is synchronous on the caller's thread. The descriptor is immutable, but access to an owner
 /// follows that owner's threading rules. Packed-scene storage accepts unmanaged values, strings, resources,
-/// and the explicit vector, color, float, string and polygon-index array profiles. Stored arrays are cloned
+/// node references on node owners, and the explicit vector, color, float, string and polygon-index array profiles. Node references
+/// are stored as relative paths and resolved after scene construction. Stored arrays are cloned
 /// during capture and restoration, and their revert comparison uses element values.
 /// </remarks>
 public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
@@ -220,6 +221,13 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     {
         var typedOwner = GetOwner(owner);
 
+        if (typeof(Node).IsAssignableFrom(typeof(TValue)))
+        {
+            if (owner is not Node node) throw new NotSupportedException("Stored node references require a node owner.");
+            var referenced = _getter(typedOwner) as Node;
+            return new StoredNodeReferenceValue(typeof(TValue), referenced is null ? null : node.GetPathTo(referenced));
+        }
+
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
             typeof(TValue) != typeof(string[]) &&
@@ -245,6 +253,15 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         ArgumentNullException.ThrowIfNull(value);
         ArgumentNullException.ThrowIfNull(resolveResource);
 
+        if (value is StoredNodeReferenceValue reference && reference.ValueType == typeof(TValue) && owner is Node node)
+        {
+            var resolved = reference.Path is null ? null : node.GetNodeOrNull(reference.Path);
+            if (resolved is not null && resolved is not TValue)
+                throw new InvalidOperationException($"Stored node reference '{Name}' resolves to an incompatible node type.");
+            SetValue(GetOwner(owner), resolved is null ? default! : (TValue)(object)resolved);
+            return;
+        }
+
         if (value is not StoredPropertyValue<TValue> typedValue)
             throw new InvalidOperationException($"Stored property '{Name}' has an incompatible value type.");
 
@@ -266,6 +283,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
 
     private static bool ValuesEqual(TValue left, TValue right)
     {
+        if (left is Resource?[] resources && right is Resource?[] otherResources) return resources.AsSpan().SequenceEqual(otherResources);
         if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
         if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
         if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);
@@ -284,6 +302,18 @@ internal abstract class StoredPropertyValue
     internal abstract bool TryGetValue<TValue>(out TValue value);
 
     internal abstract StoredPropertyValue TransformResources(Func<Resource, Resource> transform);
+}
+
+internal sealed class StoredNodeReferenceValue(Type type, string? path) : StoredPropertyValue
+{
+    internal string? Path { get; } = path;
+    internal override Type ValueType => type;
+    internal override bool TryGetValue<TValue>(out TValue value)
+    {
+        if (typeof(TValue) == typeof(string)) { value = (TValue)(object)(Path ?? string.Empty); return true; }
+        value = default!; return false;
+    }
+    internal override StoredPropertyValue TransformResources(Func<Resource, Resource> transform) => this;
 }
 
 internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredPropertyValue

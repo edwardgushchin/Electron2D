@@ -5,9 +5,23 @@ namespace Electron2D;
 /// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer.</remarks>
 public abstract class Texture : Resource
 {
-    // Live font caches retain residency. Retirement leaves ordinary immutable command snapshots.
+    // Font caches and attached controls retain their known state textures without retaining their owners.
     private int _retainRendererCache;
-    internal bool RetainRendererCache { get => Volatile.Read(ref _retainRendererCache) != 0; set => Volatile.Write(ref _retainRendererCache, value ? 1 : 0); }
+    private int _rendererCacheUsers;
+    internal bool RetainRendererCache { get => Volatile.Read(ref _retainRendererCache) != 0 || Volatile.Read(ref _rendererCacheUsers) != 0; set => Volatile.Write(ref _retainRendererCache, value ? 1 : 0); }
+    internal void AcquireRendererCacheResidency()
+    {
+        ThrowIfDisposed();
+        if (Interlocked.Increment(ref _rendererCacheUsers) > 0) return;
+        Interlocked.Decrement(ref _rendererCacheUsers);
+        throw new InvalidOperationException("Texture residency owner count exceeded its supported range.");
+    }
+    internal void ReleaseRendererCacheResidency()
+    {
+        if (Interlocked.Decrement(ref _rendererCacheUsers) >= 0) return;
+        Interlocked.Increment(ref _rendererCacheUsers);
+        throw new InvalidOperationException("Texture residency release has no matching owner.");
+    }
 
     private readonly object _snapshotGate = new();
     private TexturePixels? _snapshot;

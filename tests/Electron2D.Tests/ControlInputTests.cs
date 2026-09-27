@@ -57,10 +57,12 @@ internal static class ControlInputTests
         using var wheel = new InputEventMouseButton { ButtonIndex = MouseButton.WheelDown, Pressed = true, Position = new(17, 18) };
         root.PushInput(wheel, inLocalCoordinates: true);
         Check(order.SequenceEqual(["input", "child", "parent", "unhandled"]), "Wheel events pass a Stop parent by default.");
+        wheel.Pressed = false; root.PushInput(wheel, inLocalCoordinates: true); wheel.Pressed = true;
         order.Clear();
         parent.MouseForcePassScrollEvents = false;
         root.PushInput(wheel, inLocalCoordinates: true);
         Check(order.SequenceEqual(["input", "child", "parent"]), "Disabling wheel pass consumes at the Stop parent.");
+        wheel.Pressed = false; root.PushInput(wheel, inLocalCoordinates: true); wheel.Pressed = true;
 
         order.Clear();
         child.RejectHits = true;

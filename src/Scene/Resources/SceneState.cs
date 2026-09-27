@@ -125,7 +125,8 @@ public sealed class SceneState : ElectronObject
     /// <typeparam name="TValue">The requested result type.</typeparam>
     /// <param name="nodeIndex">The zero-based node index.</param>
     /// <param name="propertyIndex">The zero-based property index.</param>
-    /// <returns>The captured property value; stored vector, color and contour-index arrays are copied on each read.</returns>
+    /// <returns>The captured property value; stored arrays are copied on each read. For a stored node reference, request
+    /// string to obtain its relative path, or an empty string for null. No original or instantiated node is returned.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Either index is outside the state.</exception>
     /// <exception cref="InvalidCastException">The captured value is not compatible with <typeparamref name="TValue"/>.</exception>
     /// <exception cref="ObjectDisposedException">This state has been disposed.</exception>

@@ -1,6 +1,6 @@
 # SceneState
 
-Last updated: 2026-09-23
+Last updated: 2026-09-27
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -334,3 +334,5 @@ The type intentionally omits connection-detail accessors, editable-instance meta
 ## Decision
 
 - [0023: Typed in-memory packed scenes](../decisions/scene.md#adr-0023)
+
+For a stored typed Node reference, `GetNodePropertyValue<string>` returns its captured relative path, or an empty string for null. Querying it as a Node is rejected: metadata never retains the original scene or exposes an unfinished instance. The declared property type is still used to validate restoration after hierarchy construction.

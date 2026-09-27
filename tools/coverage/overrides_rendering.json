@@ -3651,20 +3651,6 @@
     },
     {
       "godot": [
-        "class:ThemeDB"
-      ],
-      "state": "Partial",
-      "reason": "ADR 0083: six-category Theme storage/defaults and ThemeDB/Control/Window font lookup execute with actual embedded font and implemented GUI assets. ThemeDB remains Partial for project Theme-file loading/startup gui/theme/custom ownership, full defaults for remaining GUI families, and nonunit default-theme/DPI icon construction and refresh."
-    },
-    {
-      "godot": [
-        "ThemeDB::method:get_default_theme()"
-      ],
-      "state": "Partial",
-      "reason": "ADR 0083: returns the live built-in Theme containing actual Panel/PanelContainer styles, HSlider/VSlider styles/icons/constants Box/HBox/VBox/Grid separation constants, the embedded Open Sans default font and Label styles/colors/constants/font slots. Populate and verify each remaining GUI default style/color/constant/icon family with its first complete consumer slice. This does not claim the full upstream default-theme catalog. Slider icons currently use scale one; nonunit default-theme/DPI asset generation and refresh remain incomplete."
-    },
-    {
-      "godot": [
         "ThemeDB::method:get_project_theme()"
       ],
       "state": "Blocked",

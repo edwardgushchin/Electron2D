@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-09-23
+Last updated: 2026-09-27
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -109,3 +109,5 @@ GetWidth, GetHeight and GetImage define a custom texture's readable pixel source
 ## Limits and checks
 
 The current GPU integration accepts float-sampled images up to 16384 pixels per axis. Compressed/integer-sampled formats, texture arrays and placeholder textures remain unfinished. Compatibility checks native support for high-precision images and non-power-of-two repeat before drawing. See [the component](../components/shader-materials.md) for precise format, binding and platform limits. [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) checks custom snapshot reuse and invalidation through real shader draws. [CanvasTextureTests](../../tests/Electron2D.Tests/CanvasTextureTests.cs) verifies public drawing, virtual overrides, retained updates/replacement, UV clipping and disposal on Linux Wayland and the software renderer.
+
+Attached buttons can hold internal renderer-cache residency counts for their known state textures. These counts coexist with font glyph retention and are released on replacement, tree exit and control disposal. They do not own the texture or prevent its disposal, and backend entries do not reference the control. Unleased unused entries still use ordinary eviction; native allocation on first preparation or format-changing replacement remains possible.

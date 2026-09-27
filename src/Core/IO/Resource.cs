@@ -66,6 +66,8 @@ public class Resource : ElectronObject
     private int _changeBlockDepth;
     private int _changeBlockOwnerThreadId;
     private bool _changePending;
+    private long _changeRevision;
+    internal long ChangeRevision => Volatile.Read(ref _changeRevision);
 
     /// <summary>Gets or sets whether a scene-instancing component should make this resource unique to each scene instance.</summary>
     /// <value><see langword="false"/> by default; <see langword="true"/> requests per-instance duplication.</value>
@@ -314,6 +316,7 @@ public class Resource : ElectronObject
         {
             ThrowIfDisposed();
 
+            Interlocked.Increment(ref _changeRevision);
             if (_changeBlockDepth != 0 && _changeBlockOwnerThreadId == Environment.CurrentManagedThreadId)
             {
                 _changePending = true;

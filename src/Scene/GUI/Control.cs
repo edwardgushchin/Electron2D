@@ -748,7 +748,7 @@ public partial class Control : CanvasItem
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Control>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties).Concat(ThemeProperties).Concat(TooltipProperties).Concat(ThemeOwner.Properties<Control>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Control) ? CreateControl : base.CreateSceneInstanceFactory();

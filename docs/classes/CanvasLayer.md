@@ -1,6 +1,6 @@
 # CanvasLayer
 
-Last updated: 2026-09-23
+Last updated: 2026-09-27
 
 - Declaration: `public class CanvasLayer : Node`
 - Source: [CanvasLayer.cs](../../src/Scene/Main/CanvasLayer.cs)
@@ -330,3 +330,5 @@ Typed exceptions replace native error fallthrough and reject arithmetic overflow
 GetCanvas's opaque identity awaits the first backend-neutral renderer resource-identity/lifetime slice, together with CanvasItem.GetCanvas and the corresponding low-level server operations. No fake identity is exposed. CustomViewport remains partial until independent/offscreen/nested viewport rendering and multiple native windows are implemented. Editor UI and embedded-window stacking require those actual capabilities; layer 1024 alone does not implement them. The class remains Partial in coverage for these dependencies. Existing Node gaps remain recorded on their declaring type.
 
 CanvasItem visibility masks inside every layer are tested against the destination Viewport.CanvasCullMask. The layer starts an independent canvas group, so masks on scene ancestors outside that group do not suppress it. Layer Visible remains a separate logical condition; see [mask culling](../components/canvas-rendering.md#canvas-visibility-masks).
+
+The internal root-tooltip presenter is sorted above game canvas layers, including the public maximum layer index. This internal role is not a public CanvasLayer setting and is not preserved by ordinary scene copies. Normal canvas layer ordering remains unchanged.

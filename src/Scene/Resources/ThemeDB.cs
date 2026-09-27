@@ -6,8 +6,8 @@ namespace Electron2D;
 /// <remarks>The singleton and its built-in resources are borrowed. Project theme-file loading
 /// and skins for unimplemented controls remain separate integrations. Resource changes notify attached theme
 /// owners through their scene queues. Universal fallback assignments are synchronous and suppress equal values.
-/// Initial service construction decodes the built-in slider icons through the SVG image codec at scale one.</remarks>
-public sealed class ThemeDB : ElectronObject
+/// Initial service construction decodes the built-in slider and button icons through the SVG image codec at scale one.</remarks>
+public sealed partial class ThemeDB : ElectronObject
 {
     private static readonly Dictionary<string, Type> NativeTypes = typeof(ElectronObject).Assembly.GetExportedTypes()
         .Where(type => typeof(ElectronObject).IsAssignableFrom(type) && !type.IsGenericTypeDefinition).ToDictionary(type => type.Name, StringComparer.Ordinal);
@@ -36,7 +36,7 @@ public sealed class ThemeDB : ElectronObject
         _defaultTheme.SetConstant("h_separation", "GridContainer", 4); _defaultTheme.SetConstant("v_separation", "GridContainer", 4);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
@@ -101,7 +101,7 @@ public sealed class ThemeDB : ElectronObject
     /// <value>The shared service; consumers do not own it.</value>
     public static ThemeDB Instance => Singleton.Value;
     /// <summary>Gets the built-in theme resource for the currently implemented control families.</summary>
-    /// <returns>The borrowed mutable theme, with the embedded font, Label and panel styles, slider skins and box/grid constants.</returns>
+    /// <returns>The borrowed mutable theme, with the embedded font, Label/panel/tooltip styles, button and slider skins, and box/grid constants.</returns>
     /// <exception cref="ObjectDisposedException">The service or its theme is disposed.</exception>
     public Theme GetDefaultTheme() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
     /// <summary>Occurs after a universal fallback assignment changes its value.</summary>

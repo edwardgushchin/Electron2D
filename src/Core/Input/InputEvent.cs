@@ -363,6 +363,8 @@ public abstract class InputEvent : Resource
     {
         var inputEvent = (InputEvent)target;
         CopyEventStateTo(inputEvent);
+        if (deep && this is InputEventShortcut shortcut)
+            shortcut.CopyShortcutResourceTo((InputEventShortcut)inputEvent, duplicateSubresource);
         inputEvent.BindingChanged?.Invoke(inputEvent);
     }
 

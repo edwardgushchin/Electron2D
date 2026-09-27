@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-09-24
+Last updated: 2026-09-27
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1260,3 +1260,15 @@ Tests do not prove crash durability on every filesystem, symbolic-link confineme
 ### `InputUIHome` and `InputUIEnd`
 
 Permanent typed `input/ui_home` and `input/ui_end` definitions use one default binding each, Key.Home and Key.End. They participate in every registry, explicit InputMap loading and typed project-file round trips; live actions remain ordinary rebindable InputMap data. Slider consumes exact matching presses as MinValue/MaxValue requests through Range. Adding these defaults does not claim an implemented text caret or Font renderer.
+
+## Button and tooltip settings
+
+| Definition | Stored key and default |
+| --- | --- |
+| `public static ProjectSetting<InputActionSettings> InputUIAccept { get; }` | input/ui_accept: Enter, keypad Enter, Space and gamepad A on every device. |
+| `public static ProjectSetting<InputActionSettings> InputUICancel { get; }` | input/ui_cancel: Escape and gamepad B on every device. |
+| `public static ProjectSetting<double> ButtonShortcutFeedbackHighlightTime { get; }` | gui/timers/button_shortcut_feedback_highlight_time: 0.2 seconds, finite and positive. |
+| `public static ProjectSetting<double> TooltipDelaySeconds { get; }` | gui/timers/tooltip_delay_sec: 0.5 seconds, finite and nonnegative. |
+| `public static ProjectSetting<Vector2> TooltipPositionOffset { get; }` | display/mouse_cursor/tooltip_position_offset: (10,10), finite. |
+
+These definitions are permanently registered alongside other built-in typed settings. InputUIAccept participates in initial InputMap construction and explicit project-action reload. A button samples its feedback duration on first shortcut activation; the tooltip host samples delay when scheduling and offset when placing content, using active feature overrides. Durations are unscaled frame seconds, and offset is in root viewport pixels. Invalid values fail before replacing the stored setting.

@@ -5,6 +5,7 @@ namespace Electron2D;
 /// it is a neutral scene node, not a spatial canvas item. Native ownership remains with the renderer.</remarks>
 public class CanvasLayer : Node
 {
+    internal bool IsTooltipLayer { get; init; }
     private int _layer = 1;
     private bool _visible = true, _followViewportEnabled, _componentsDirty;
     private float _followViewportScale = 1, _rotation;

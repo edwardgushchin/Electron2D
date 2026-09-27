@@ -308,7 +308,12 @@ def main():
         assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D"} else " | Partial | ") in class_rows[name]
     assert "cryptography utility contract" in class_rows["AESContext"]
     assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
-    assert "GUI/editor Shortcut" in class_rows["Shortcut"]
+    button_rows = 0
+    for name in ("BaseButton", "ButtonGroup", "Button", "CheckBox", "CheckButton", "TextureButton", "Shortcut", "InputEventShortcut"):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert rows and all(" | Implemented | " in row for row in rows), name
+        button_rows += len(rows)
+    assert button_rows == 136
     assert "layered/array texture storage" in class_rows["Texture2DArray"]
     assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
     line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]

@@ -3315,16 +3315,6 @@
     },
     {
       "godot": [
-        "Node::method:_shortcut_input(InputEvent:)",
-        "Node::method:is_processing_shortcut_input()",
-        "Node::method:set_process_shortcut_input(bool:)",
-        "Control::property:shortcut_context"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first typed GUI shortcut vertical slice under ADR 0038, including a concrete Shortcut resource, ownership and focus routing before the Node shortcut stage and Control context can deliver executable behavior. An isolated callback or empty shortcut value would be inert."
-    },
-    {
-      "godot": [
         "ProjectSettings::property:internationalization/rendering/root_node_layout_direction",
         "ProjectSettings::property:internationalization/rendering/force_right_to_left_layout_direction"
       ],

@@ -210,6 +210,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.BaseButton",
+    "kind": "type",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "BaseButton",
+    "signature": "public abstract class Electron2D.BaseButton",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.BaseButton.DrawMode",
+    "kind": "type",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "DrawMode",
+    "signature": "public enum Electron2D.BaseButton.DrawMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.BitMap",
     "kind": "type",
     "declaringType": "Electron2D.BitMap",
@@ -270,6 +303,54 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Button",
+    "kind": "type",
+    "declaringType": "Electron2D.Button",
+    "name": "Button",
+    "signature": "public class Electron2D.Button",
+    "visibility": "public",
+    "baseType": "Electron2D.BaseButton",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ButtonActionMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ButtonActionMode",
+    "name": "ButtonActionMode",
+    "signature": "public enum Electron2D.ButtonActionMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ButtonGroup",
+    "kind": "type",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "ButtonGroup",
+    "signature": "public class Electron2D.ButtonGroup",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -465,6 +546,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CheckBox",
+    "kind": "type",
+    "declaringType": "Electron2D.CheckBox",
+    "name": "CheckBox",
+    "signature": "public class Electron2D.CheckBox",
+    "visibility": "public",
+    "baseType": "Electron2D.Button",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CheckButton",
+    "kind": "type",
+    "declaringType": "Electron2D.CheckButton",
+    "name": "CheckButton",
+    "signature": "public class Electron2D.CheckButton",
+    "visibility": "public",
+    "baseType": "Electron2D.Button",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -2055,6 +2166,21 @@
     "signature": "public sealed class Electron2D.InputEventScreenTouch",
     "visibility": "public",
     "baseType": "Electron2D.InputEventFromWindow",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.InputEventShortcut",
+    "kind": "type",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "InputEventShortcut",
+    "signature": "public sealed class Electron2D.InputEventShortcut",
+    "visibility": "public",
+    "baseType": "Electron2D.InputEvent",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -3655,6 +3781,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Shortcut",
+    "kind": "type",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "Shortcut",
+    "signature": "public class Electron2D.Shortcut",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Side",
     "kind": "type",
     "declaringType": "Electron2D.Side",
@@ -4063,6 +4204,39 @@
     "baseType": "Electron2D.Resource",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextureButton",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureButton",
+    "signature": "public class Electron2D.TextureButton",
+    "visibility": "public",
+    "baseType": "Electron2D.BaseButton",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextureButtonStretchMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "TextureButtonStretchMode",
+    "signature": "public enum Electron2D.TextureButtonStretchMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -6104,6 +6278,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.BaseButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.BaseButton",
+    "name": ".ctor",
+    "signature": "protected BaseButton()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.BitMap..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.BitMap",
@@ -6145,6 +6332,51 @@
         "default": null
       }
     ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Button..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Button",
+    "name": ".ctor",
+    "signature": "public Button()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Button..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Button",
+    "name": ".ctor",
+    "signature": "public Button(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ButtonGroup..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": ".ctor",
+    "signature": "public ButtonGroup()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": null,
     "value": null
   },
@@ -6223,6 +6455,70 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CheckBox..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CheckBox",
+    "name": ".ctor",
+    "signature": "public CheckBox()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CheckBox..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CheckBox",
+    "name": ".ctor",
+    "signature": "public CheckBox(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CheckButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CheckButton",
+    "name": ".ctor",
+    "signature": "public CheckButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CheckButton..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CheckButton",
+    "name": ".ctor",
+    "signature": "public CheckButton(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -6967,6 +7263,19 @@
     "declaringType": "Electron2D.InputEventScreenTouch",
     "name": ".ctor",
     "signature": "public InputEventScreenTouch()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.InputEventShortcut..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": ".ctor",
+    "signature": "public InputEventShortcut()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -8010,6 +8319,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Shortcut..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Shortcut",
+    "name": ".ctor",
+    "signature": "public Shortcut()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Slider..ctor(System.Boolean)",
     "kind": "constructor",
     "declaringType": "Electron2D.Slider",
@@ -8168,6 +8490,19 @@
     "name": ".ctor",
     "signature": "protected Texture()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextureButton..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextureButton",
+    "name": ".ctor",
+    "signature": "public TextureButton()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -9029,6 +9364,71 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.BaseButton.DrawMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.BaseButton.DrawMode Disabled = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.BaseButton.DrawMode.Hover()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "Hover",
+    "signature": "public const Electron2D.BaseButton.DrawMode Hover = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.BaseButton.DrawMode.HoverPressed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "HoverPressed",
+    "signature": "public const Electron2D.BaseButton.DrawMode HoverPressed = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.BaseButton.DrawMode.Normal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "Normal",
+    "signature": "public const Electron2D.BaseButton.DrawMode Normal = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.BaseButton.DrawMode.Pressed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.BaseButton.DrawMode",
+    "name": "Pressed",
+    "signature": "public const Electron2D.BaseButton.DrawMode Pressed = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.BlendMode.Add()",
     "kind": "enumValue",
     "declaringType": "Electron2D.BlendMode",
@@ -9131,6 +9531,32 @@
     "parameters": [],
     "returnType": "Electron2D.BoxContainer.AlignmentMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ButtonActionMode.ButtonPress()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ButtonActionMode",
+    "name": "ButtonPress",
+    "signature": "public const Electron2D.ButtonActionMode ButtonPress = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ButtonActionMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ButtonActionMode.ButtonRelease()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ButtonActionMode",
+    "name": "ButtonRelease",
+    "signature": "public const Electron2D.ButtonActionMode ButtonRelease = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ButtonActionMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.Camera.CameraProcessCallback.Idle()",
@@ -18766,6 +19192,97 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.Keep()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "Keep",
+    "signature": "public const Electron2D.TextureButtonStretchMode Keep = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.KeepAspect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "KeepAspect",
+    "signature": "public const Electron2D.TextureButtonStretchMode KeepAspect = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.KeepAspectCentered()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "KeepAspectCentered",
+    "signature": "public const Electron2D.TextureButtonStretchMode KeepAspectCentered = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.KeepAspectCovered()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "KeepAspectCovered",
+    "signature": "public const Electron2D.TextureButtonStretchMode KeepAspectCovered = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.KeepCentered()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "KeepCentered",
+    "signature": "public const Electron2D.TextureButtonStretchMode KeepCentered = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.Scale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "Scale",
+    "signature": "public const Electron2D.TextureButtonStretchMode Scale = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextureButtonStretchMode.Tile()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextureButtonStretchMode",
+    "name": "Tile",
+    "signature": "public const Electron2D.TextureButtonStretchMode Tile = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.TextureFilter.Linear()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TextureFilter",
@@ -20622,6 +21139,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.RID, Electron2D.Entity, System.Int32, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.BaseButton.ButtonDown()",
+    "kind": "event",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ButtonDown",
+    "signature": "public event System.Action ButtonDown",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.BaseButton.ButtonUp()",
+    "kind": "event",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ButtonUp",
+    "signature": "public event System.Action ButtonUp",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.BaseButton.Pressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "Pressed",
+    "signature": "public event System.Action Pressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.BaseButton.Toggled()",
+    "kind": "event",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "Toggled",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E Toggled",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ButtonGroup.Pressed()",
+    "kind": "event",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "Pressed",
+    "signature": "public event System.Action\u003CElectron2D.BaseButton\u003E Pressed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.BaseButton\u003E",
     "value": null
   },
   {
@@ -24338,6 +24920,185 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.BaseButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.GetDrawMode()",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "GetDrawMode",
+    "signature": "public Electron2D.BaseButton.DrawMode GetDrawMode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton.DrawMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.IsHovered()",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "IsHovered",
+    "signature": "public System.Boolean IsHovered()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.OnPressed()",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "OnPressed",
+    "signature": "protected virtual System.Void OnPressed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.OnShortcutInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "OnShortcutInput",
+    "signature": "protected override System.Void OnShortcutInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.OnToggled(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "OnToggled",
+    "signature": "protected virtual System.Void OnToggled(System.Boolean toggledOn)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toggledOn",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.BaseButton.SetPressedNoSignal(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "SetPressedNoSignal",
+    "signature": "public System.Void SetPressedNoSignal(System.Boolean pressed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pressed",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.BitMap.ConvertToImage()",
     "kind": "method",
     "declaringType": "Electron2D.BitMap",
@@ -24778,6 +25539,193 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Button.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Button",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Button.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Button",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Button.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Button",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Button.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.Button",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Button.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Button",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.GetButtons()",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "GetButtons",
+    "signature": "public Electron2D.BaseButton[] GetButtons()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.GetPressedButton()",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "GetPressedButton",
+    "signature": "public Electron2D.BaseButton GetPressedButton()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BaseButton",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ButtonGroup.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -27135,6 +28083,122 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckBox.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckBox",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckBox.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckBox",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckBox.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckBox",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckBox.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckBox",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckButton.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckButton",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CheckButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CheckButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -29843,6 +30907,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.GetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetTooltip",
+    "signature": "public System.String GetTooltip(Electron2D.Vector2 atPosition = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.GetTransform()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -30245,6 +31328,63 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetTooltip",
+    "signature": "protected virtual System.String OnGetTooltip(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGetTooltipAutoTranslateModeAt(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetTooltipAutoTranslateModeAt",
+    "signature": "protected virtual Electron2D.NodeAutoTranslateMode OnGetTooltipAutoTranslateModeAt(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnMakeCustomTooltip(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnMakeCustomTooltip",
+    "signature": "protected virtual Electron2D.Control OnMakeCustomTooltip(System.String forText)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "forText",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Control",
     "value": null
   },
   {
@@ -42565,6 +43705,77 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.InputEventShortcut.AsText()",
+    "kind": "method",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "AsText",
+    "signature": "public override System.String AsText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InputEventShortcut.CopyEventStateTo(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "CopyEventStateTo",
+    "signature": "protected override System.Void CopyEventStateTo(Electron2D.InputEvent target)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InputEventShortcut.CreateEventInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "CreateEventInstance",
+    "signature": "protected override Electron2D.InputEvent CreateEventInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InputEvent",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InputEventShortcut.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.InputEventShortcut.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.InputEventWithModifiers.AsText()",
     "kind": "method",
     "declaringType": "Electron2D.InputEventWithModifiers",
@@ -48326,6 +49537,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.OnShortcutInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "OnShortcutInput",
+    "signature": "protected virtual System.Void OnShortcutInput(Electron2D.InputEvent event)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "event",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -58566,6 +59796,135 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shortcut.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.GetAsText()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "GetAsText",
+    "signature": "public System.String GetAsText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.HasValidEvent()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "HasValidEvent",
+    "signature": "public System.Boolean HasValidEvent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shortcut.MatchesEvent(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "MatchesEvent",
+    "signature": "public System.Boolean MatchesEvent(Electron2D.InputEvent event)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "event",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Slider.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Slider",
@@ -60611,6 +61970,102 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.HasPoint(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "HasPoint",
+    "signature": "protected override System.Boolean HasPoint(Electron2D.Vector2 point)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureButton.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -74453,6 +75908,136 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.BaseButton.ActionMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ActionMode",
+    "signature": "public Electron2D.ButtonActionMode ActionMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ButtonActionMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ButtonGroup()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ButtonGroup",
+    "signature": "public Electron2D.ButtonGroup ButtonGroup { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ButtonGroup",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ButtonMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ButtonMask",
+    "signature": "public Electron2D.MouseButtonMask ButtonMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MouseButtonMask",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ButtonPressed()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ButtonPressed",
+    "signature": "public System.Boolean ButtonPressed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.Disabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "Disabled",
+    "signature": "public System.Boolean Disabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.KeepPressedOutside()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "KeepPressedOutside",
+    "signature": "public System.Boolean KeepPressedOutside { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.Shortcut()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "Shortcut",
+    "signature": "public Electron2D.Shortcut Shortcut { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shortcut",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ShortcutFeedback()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ShortcutFeedback",
+    "signature": "public System.Boolean ShortcutFeedback { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ShortcutInTooltip()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ShortcutInTooltip",
+    "signature": "public System.Boolean ShortcutInTooltip { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.BaseButton.ToggleMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.BaseButton",
+    "name": "ToggleMode",
+    "signature": "public System.Boolean ToggleMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.BoxContainer.Alignment()",
     "kind": "property",
     "declaringType": "Electron2D.BoxContainer",
@@ -74484,6 +76069,188 @@
     "declaringType": "Electron2D.BoxContainer",
     "name": "Vertical",
     "signature": "public System.Boolean Vertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.Alignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "Alignment",
+    "signature": "public Electron2D.HorizontalAlignment Alignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.AutowrapMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "AutowrapMode",
+    "signature": "public Electron2D.TextAutowrapMode AutowrapMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextAutowrapMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.AutowrapTrimFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "AutowrapTrimFlags",
+    "signature": "public Electron2D.TextLineBreakFlags AutowrapTrimFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextLineBreakFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.ClipText()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "ClipText",
+    "signature": "public System.Boolean ClipText { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.ExpandIcon()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "ExpandIcon",
+    "signature": "public System.Boolean ExpandIcon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.Flat()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "Flat",
+    "signature": "public System.Boolean Flat { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.Icon()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "Icon",
+    "signature": "public Electron2D.Texture Icon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.IconAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "IconAlignment",
+    "signature": "public Electron2D.HorizontalAlignment IconAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "Language",
+    "signature": "public System.String Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.Text()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "Text",
+    "signature": "public System.String Text { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.TextDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "TextDirection",
+    "signature": "public Electron2D.TextDirection TextDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.TextOverrunBehavior()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "TextOverrunBehavior",
+    "signature": "public Electron2D.TextOverrunBehavior TextOverrunBehavior { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextOverrunBehavior",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Button.VerticalIconAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.Button",
+    "name": "VerticalIconAlignment",
+    "signature": "public Electron2D.VerticalAlignment VerticalIconAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ButtonGroup.AllowUnpress()",
+    "kind": "property",
+    "declaringType": "Electron2D.ButtonGroup",
+    "name": "AllowUnpress",
+    "signature": "public System.Boolean AllowUnpress { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -78210,6 +79977,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.ShortcutContext()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "ShortcutContext",
+    "signature": "public Electron2D.Node ShortcutContext { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.Size()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -78280,6 +80060,32 @@
     "declaringType": "Electron2D.Control",
     "name": "ThemeTypeVariation",
     "signature": "public System.String ThemeTypeVariation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.TooltipAutoTranslateMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "TooltipAutoTranslateMode",
+    "signature": "public Electron2D.NodeAutoTranslateMode TooltipAutoTranslateMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NodeAutoTranslateMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.TooltipText()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "TooltipText",
+    "signature": "public System.String TooltipText { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -80992,6 +82798,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.InputEventShortcut.Shortcut()",
+    "kind": "property",
+    "declaringType": "Electron2D.InputEventShortcut",
+    "name": "Shortcut",
+    "signature": "public Electron2D.Shortcut Shortcut { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Shortcut",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.InputEventWithModifiers.AltPressed()",
     "kind": "property",
     "declaringType": "Electron2D.InputEventWithModifiers",
@@ -82120,6 +83939,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Node.ShortcutInputEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.Node",
+    "name": "ShortcutInputEnabled",
+    "signature": "public System.Boolean ShortcutInputEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -83826,6 +85658,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ButtonShortcutFeedbackHighlightTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ButtonShortcutFeedbackHighlightTime",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E ButtonShortcutFeedbackHighlightTime { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DebugPathsColor()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -83862,6 +85707,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIAccept()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIAccept",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIAccept { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUICancel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUICancel",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUICancel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
     "value": null
   },
   {
@@ -84356,6 +86227,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.TooltipDelaySeconds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TooltipDelaySeconds",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Double\u003E TooltipDelaySeconds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.TooltipPositionOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TooltipPositionOffset",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Vector2\u003E TooltipPositionOffset { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Vector2\u003E",
     "value": null
   },
   {
@@ -85672,6 +87569,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Shortcut.Events()",
+    "kind": "property",
+    "declaringType": "Electron2D.Shortcut",
+    "name": "Events",
+    "signature": "public Electron2D.InputEvent[] Events { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InputEvent[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Slider.Editable()",
     "kind": "property",
     "declaringType": "Electron2D.Slider",
@@ -86592,6 +88502,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.FlipH()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "FlipH",
+    "signature": "public System.Boolean FlipH { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.FlipV()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "FlipV",
+    "signature": "public System.Boolean FlipV { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.IgnoreTextureSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "IgnoreTextureSize",
+    "signature": "public System.Boolean IgnoreTextureSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.StretchMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "StretchMode",
+    "signature": "public Electron2D.TextureButtonStretchMode StretchMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextureButtonStretchMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TextureClickMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureClickMask",
+    "signature": "public Electron2D.BitMap TextureClickMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BitMap",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TextureDisabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureDisabled",
+    "signature": "public Electron2D.Texture TextureDisabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TextureFocused()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureFocused",
+    "signature": "public Electron2D.Texture TextureFocused { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TextureHover()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureHover",
+    "signature": "public Electron2D.Texture TextureHover { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TextureNormal()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TextureNormal",
+    "signature": "public Electron2D.Texture TextureNormal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureButton.TexturePressed()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureButton",
+    "name": "TexturePressed",
+    "signature": "public Electron2D.Texture TexturePressed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
     "value": null
   },
   {

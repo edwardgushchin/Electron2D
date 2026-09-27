@@ -4,7 +4,7 @@ Last updated: 2026-09-27
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
-**Declaration:** `public sealed class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs) · **Component:** [Typed themes](../components/themes.md)
+**Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs) · **Component:** [Typed themes](../components/themes.md)
 
 ## Description and example
 
@@ -37,7 +37,7 @@ There is no public constructor or GetProjectTheme null stub.
 ## Property and method descriptions
 
 <a id="instance"></a><a id="getdefaulttheme"></a>
-**Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. Construction owns the embedded Open Sans SemiBold resource; its native face is loaded only by the first text query. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
+**Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider and sixteen button SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. Construction owns the embedded Open Sans SemiBold resource; its native face is loaded only by the first text query. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
 
 | Entry | Initial value |
 | --- | --- |
@@ -53,8 +53,14 @@ There is no public constructor or GetProjectTheme null stub.
 | HSlider/VSlider grabber icons | Shared 16×16 circles with normal/highlight/disabled alpha 0.75/1/0.37. |
 | HSlider `tick` / VSlider `tick` | 4×8 horizontal-control tick and 8×4 vertical-control tick icons. |
 | Slider `center_grabber`, `grabber_offset`, `tick_offset` | Zero for both concrete orientations. |
+| Button state styles | Normal gray0.1 alpha0.6, hover gray0.225 alpha0.6, pressed black alpha0.6 and disabled gray0.1 alpha0.3; margins4, radius3, detail5. Focus shares the Label outline style. |
+| Button text/icon data | Null/-1 font slots; font colors gray0.875, hover/focus gray0.95, pressed/hover-pressed white, disabled alpha0.5 and black outline; outline0, separation4, icon-max-width0 and largest-style alignment0. Icon modulation is white, with disabled alpha0.4. |
+| CheckBox | Empty state styles with margins4, shared focus; eight checked/unchecked/radio/disabled icons, white indicator colors and vertical offset0. |
+| CheckButton | Empty state styles with margins6/4/6/4, shared focus; eight checked/unchecked/disabled/mirrored switch icons, white indicator colors and vertical offset0. |
+| FlatButton variation | Inherits Button, with empty normal/hover/disabled margins4 and pressed black alpha `0.6 × 0.85`. |
+| TooltipPanel / TooltipLabel variations | TooltipPanel uses PanelContainer with black alpha0.5, margins8/2/8/2, radius3 and detail5. TooltipLabel inherits Label with font slots null/-1, gray0.875 text, transparent shadow, black outline, shadow offsets1/1 and outline0. |
 
-The default slider icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
+The default slider and button icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
 
 <a id="fallbackbasescale"></a><a id="fallbackfontsize"></a>
 **Scalar fallbacks:** used only after applicable themes provide no positive default/value. Base scale requires a finite value and otherwise preserves its sign; font size preserves signed integer state. Equal assignments are silent. Nonfinite scale throws ArgumentOutOfRangeException. These values do not load fonts or automatically rescale existing styles/constants.

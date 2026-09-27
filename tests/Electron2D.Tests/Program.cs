@@ -9,6 +9,18 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOOLTIP") == "1")
+{
+    ShortcutTests.Run(); ControlTooltipTests.Run(); TooltipLifetimeTests.Run();
+    return;
+}
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUTTONS") == "1")
+{
+    ShortcutTests.Run(); BaseButtonTests.Run(); GUIButtonRoutingTests.Run(); TextureButtonTests.Run(); ButtonTests.Run(FontTestFixtures.OpenSans); ControlTooltipTests.Run(); TooltipLifetimeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_CLIPBOARD_CHILD") == "1")
 {
     DisplayServerClipboardNativeTests.RunChild();
@@ -244,6 +256,13 @@ ThemeFontTests.Run();
 ThemeLookupTests.Run();
 PanelContainerTests.Run();
 SliderTests.Run();
+ShortcutTests.Run();
+BaseButtonTests.Run();
+GUIButtonRoutingTests.Run();
+TextureButtonTests.Run();
+ButtonTests.Run(FontTestFixtures.OpenSans);
+ControlTooltipTests.Run();
+TooltipLifetimeTests.Run();
 UnicodeTextTests.Run();
 NativeTextBreakTests.Run();
 TextCaseTests.Run();

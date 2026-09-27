@@ -209,10 +209,10 @@ public partial class Control
     }
 
     internal MouseFilter EffectiveMouseFilter =>
-        IsMouseBehaviorEnabled() ? _mouseFilter : MouseFilter.Ignore;
+        IsMouseBehaviorEnabled() && Tree?.IsTooltipControl(this) != true ? _mouseFilter : MouseFilter.Ignore;
 
     internal FocusMode EffectiveFocusMode =>
-        IsFocusBehaviorEnabled() ? _focusMode : FocusMode.None;
+        IsFocusBehaviorEnabled() && Tree?.IsTooltipControl(this) != true ? _focusMode : FocusMode.None;
 
     /// <summary>Returns the pointer filter after applying the inherited recursive policy.</summary>
     /// <returns><see cref="MouseFilter.Ignore"/> when this control's pointer behavior is disabled; otherwise <see cref="MouseFilter"/>.</returns>

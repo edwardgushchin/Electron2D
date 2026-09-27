@@ -324,6 +324,45 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<InputActionSettings> InputUIEnd { get; } =
         CreateDefaultKeyAction("ui_end", Key.End);
 
+    /// <summary>Defines Enter, keypad Enter, Space and gamepad A activation of a focused GUI control.</summary>
+    /// <value>The permanent typed input/ui_accept setting with the standard action deadzone.</value>
+    public static ProjectSetting<InputActionSettings> InputUIAccept { get; } = new("input/ui_accept", new InputActionSettings
+    {
+        Bindings =
+        [
+            new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Enter },
+            new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.KeypadEnter },
+            new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space },
+            new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.A, Device = InputMap.AllDevices }
+        ]
+    });
+
+    /// <summary>Defines Escape and gamepad B cancellation of transient GUI interactions.</summary>
+    /// <value>The permanent typed input/ui_cancel setting with the standard action deadzone.</value>
+    public static ProjectSetting<InputActionSettings> InputUICancel { get; } = new("input/ui_cancel", new InputActionSettings
+    {
+        Bindings =
+        [
+            new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Escape },
+            new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.B, Device = InputMap.AllDevices }
+        ]
+    });
+
+    /// <summary>Defines the shortcut feedback highlight duration sampled when a button first activates a shortcut.</summary>
+    /// <value>A finite positive duration in seconds; 0.2 initially.</value>
+    public static ProjectSetting<double> ButtonShortcutFeedbackHighlightTime { get; } =
+        new("gui/timers/button_shortcut_feedback_highlight_time", .2, value => double.IsFinite(value) && value > 0);
+
+    /// <summary>Defines the pointer tooltip delay in unscaled seconds.</summary>
+    /// <value>A finite nonnegative duration, 0.5 initially, sampled when a tooltip is scheduled.</value>
+    public static ProjectSetting<double> TooltipDelaySeconds { get; } =
+        new("gui/timers/tooltip_delay_sec", .5, value => double.IsFinite(value) && value >= 0);
+
+    /// <summary>Defines the tooltip offset from the pointer in viewport pixels.</summary>
+    /// <value>A finite vector, (10,10) initially. Presentation flips it near viewport edges.</value>
+    public static ProjectSetting<Vector2> TooltipPositionOffset { get; } =
+        new("display/mouse_cursor/tooltip_position_offset", new(10, 10), value => value.IsFinite());
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -409,6 +448,11 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(InputUIDown, isBasic: false);
         RegisterInternal(InputUIHome, isBasic: false);
         RegisterInternal(InputUIEnd, isBasic: false);
+        RegisterInternal(InputUIAccept, isBasic: false);
+        RegisterInternal(InputUICancel, isBasic: false);
+        RegisterInternal(ButtonShortcutFeedbackHighlightTime, isBasic: false);
+        RegisterInternal(TooltipDelaySeconds, isBasic: false);
+        RegisterInternal(TooltipPositionOffset, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1777,7 +1821,12 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUIRight) ||
         ReferenceEquals(setting, InputUIDown) ||
         ReferenceEquals(setting, InputUIHome) ||
-        ReferenceEquals(setting, InputUIEnd);
+        ReferenceEquals(setting, InputUIEnd) ||
+        ReferenceEquals(setting, InputUIAccept) ||
+        ReferenceEquals(setting, InputUICancel) ||
+        ReferenceEquals(setting, ButtonShortcutFeedbackHighlightTime) ||
+        ReferenceEquals(setting, TooltipDelaySeconds) ||
+        ReferenceEquals(setting, TooltipPositionOffset);
 
     private static string ResolveWithinRoot(string root, string relativePath)
     {

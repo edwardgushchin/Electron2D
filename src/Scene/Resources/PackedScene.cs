@@ -53,7 +53,7 @@ public sealed class PackedScene : Resource
     /// <returns>The live, detached root node. It has not entered a <see cref="SceneTree"/>.</returns>
     /// <remarks>
     /// Nodes are constructed parent-first. Stored properties and persistent groups are restored before parenting;
-    /// owners and scene-local resources are assigned after the hierarchy is complete. Only the root receives
+    /// owners and typed node references are resolved after the hierarchy is complete, followed by scene-local resources. Only the root receives
     /// <see cref="Node.NotificationSceneInstantiated"/>.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="editState"/> is not defined.</exception>
@@ -114,6 +114,9 @@ public sealed class PackedScene : Resource
                 if (ownerIndex >= 0)
                     nodes[index].Owner = nodes[ownerIndex];
             }
+
+            for (var index = 0; index < data.Nodes.Length; index++)
+                RestoreProperties(nodes[index], data.Nodes[index], resources, nodeReferences: true);
 
             var root = nodes[0];
             if (!IsBuiltInPath(resourcePath))
@@ -351,11 +354,13 @@ public sealed class PackedScene : Resource
     private static void RestoreProperties(
         Node node,
         SceneNodeData stored,
-        Resource.SceneDuplicationScope resources)
+        Resource.SceneDuplicationScope resources,
+        bool nodeReferences = false)
     {
         var descriptors = node.GetPropertyList().ToDictionary(property => property.Name, StringComparer.Ordinal);
         foreach (var property in stored.Properties)
         {
+            if ((property.Value is StoredNodeReferenceValue) != nodeReferences) continue;
             if (!descriptors.TryGetValue(property.Name, out var descriptor))
                 descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||

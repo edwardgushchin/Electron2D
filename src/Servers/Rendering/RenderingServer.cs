@@ -29,6 +29,7 @@ public sealed partial class RenderingServer : ElectronObject
     private readonly List<YSortEntry> _ySort = [];
     private readonly List<AnimatedTexture> _animatedChanges = [];
     private long _canvasStacking;
+    private bool _canvasTooltipOverlay;
     private ulong _canvasID;
     private bool _renderLoopEnabled = true;
     private bool _closing;
@@ -160,12 +161,14 @@ public sealed partial class RenderingServer : ElectronObject
                     var layer = node.GetCanvasLayerNode();
                     if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _window)) continue;
                     _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex();
+                    _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
                     _canvasID = layer?.InstanceID ?? 0;
                     OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer, _interpolationFraction));
                 }
             _order.Sort(static (x, y) =>
             {
-                var order = x.Stacking.CompareTo(y.Stacking); if (order != 0) return order;
+                var order = x.TooltipOverlay.CompareTo(y.TooltipOverlay); if (order != 0) return order;
+                order = x.Stacking.CompareTo(y.Stacking); if (order != 0) return order;
                 order = x.CanvasID.CompareTo(y.CanvasID); if (order != 0) return order;
                 order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
             });
@@ -265,7 +268,7 @@ public sealed partial class RenderingServer : ElectronObject
     {
         if (item is Parallax parallax) _repeatTransforms[parallax] = transform;
         _canvasTransforms[item] = transform;
-        _order.Add(new(item, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.EffectiveZIndex, _order.Count, transform));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
@@ -366,6 +369,6 @@ public sealed partial class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform);
+    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

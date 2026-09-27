@@ -115,7 +115,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamWAV](classes/AudioStreamWAV.md) | AudioStream | Blocked | 21 |
 | [AwaitTweener](classes/AwaitTweener.md) | Tweener | Implemented | 1 |
 | [BackBufferCopy](classes/BackBufferCopy.md) | Node2D | Blocked | 6 |
-| [BaseButton](classes/BaseButton.md) | Control | Blocked | 29 |
+| [BaseButton](classes/BaseButton.md) | Control | Implemented | 29 |
 | [BaseMaterial3D](classes/BaseMaterial3D.md) | Material | Excluded | 289 |
 | [Basis](classes/Basis.md) | — | Excluded | 42 |
 | [BitMap](classes/BitMap.md) | Resource | Implemented | 13 |
@@ -129,8 +129,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [BoxMesh](classes/BoxMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [BoxOccluder3D](classes/BoxOccluder3D.md) | Occluder3D | Excluded | 1 |
 | [BoxShape3D](classes/BoxShape3D.md) | Shape3D | Excluded | 1 |
-| [Button](classes/Button.md) | BaseButton | Blocked | 45 |
-| [ButtonGroup](classes/ButtonGroup.md) | Resource | Blocked | 5 |
+| [Button](classes/Button.md) | BaseButton | Implemented | 45 |
+| [ButtonGroup](classes/ButtonGroup.md) | Resource | Implemented | 5 |
 | [CCDIK3D](classes/CCDIK3D.md) | IterateIK3D | Excluded | 0 |
 | [CPUParticles2D](classes/CPUParticles2D.md) | Node2D | Blocked | 113 |
 | [CPUParticles3D](classes/CPUParticles3D.md) | GeometryInstance3D | Excluded | 122 |
@@ -168,8 +168,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Implemented | 40 |
 | [CharacterBody3D](classes/CharacterBody3D.md) | PhysicsBody3D | Excluded | 41 |
-| [CheckBox](classes/CheckBox.md) | Button | Blocked | 13 |
-| [CheckButton](classes/CheckButton.md) | Button | Blocked | 13 |
+| [CheckBox](classes/CheckBox.md) | Button | Implemented | 13 |
+| [CheckButton](classes/CheckButton.md) | Button | Implemented | 13 |
 | [CircleShape2D](classes/CircleShape2D.md) | Shape2D | Implemented | 1 |
 | [ClassDB](classes/ClassDB.md) | Object | Excluded | 36 |
 | [CodeEdit](classes/CodeEdit.md) | TextEdit | Blocked | 145 |
@@ -397,7 +397,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [InputEventPanGesture](classes/InputEventPanGesture.md) | InputEventGesture | Partial | 1 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | InputEventFromWindow | Partial | 9 |
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | InputEventFromWindow | Partial | 5 |
-| [InputEventShortcut](classes/InputEventShortcut.md) | InputEvent | Blocked | 1 |
+| [InputEventShortcut](classes/InputEventShortcut.md) | InputEvent | Implemented | 1 |
 | [InputEventWithModifiers](classes/InputEventWithModifiers.md) | InputEventFromWindow | Implemented | 8 |
 | [InputMap](classes/InputMap.md) | Object | Implemented | 15 |
 | [InstancePlaceholder](classes/InstancePlaceholder.md) | Node | Blocked | 3 |
@@ -774,7 +774,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Partial | 27 |
 | [ShapeCast3D](classes/ShapeCast3D.md) | Node3D | Excluded | 29 |
-| [Shortcut](classes/Shortcut.md) | Resource | Blocked | 4 |
+| [Shortcut](classes/Shortcut.md) | Resource | Implemented | 4 |
 | [Signal](classes/Signal.md) | — | Excluded | 15 |
 | [Skeleton2D](classes/Skeleton2D.md) | Node2D | Blocked | 9 |
 | [Skeleton3D](classes/Skeleton3D.md) | Node3D | Excluded | 63 |
@@ -861,7 +861,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Texture2DRD](classes/TextureRD.md) | Texture2D | Excluded | 2 |
 | [Texture3D](classes/Texture3D.md) | Texture | Excluded | 13 |
 | [Texture3DRD](classes/Texture3DRD.md) | Texture3D | Excluded | 1 |
-| [TextureButton](classes/TextureButton.md) | BaseButton | Blocked | 18 |
+| [TextureButton](classes/TextureButton.md) | BaseButton | Implemented | 18 |
 | [TextureCubemapArrayRD](classes/TextureCubemapArrayRD.md) | TextureLayeredRD | Excluded | 0 |
 | [TextureCubemapRD](classes/TextureCubemapRD.md) | TextureLayeredRD | Excluded | 0 |
 | [TextureLayered](classes/TextureLayered.md) | Texture | Blocked | 18 |

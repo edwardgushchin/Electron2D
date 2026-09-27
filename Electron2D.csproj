@@ -27,6 +27,7 @@
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Fonts/*.woff2" LogicalName="Electron2D.Fonts.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="src/Scene/Theme/Icons/*.svg" LogicalName="Electron2D.Icons.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' and '$(Electron2DNativePlatform)' != 'Web'">
     <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" />

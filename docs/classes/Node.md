@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-09-26
+Last updated: 2026-09-27
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1389,3 +1389,7 @@ GetConfigurationWarnings is an immediate typed virtual query, callable without a
 [SceneDiagnosticsTests](../../tests/Electron2D.Tests/SceneDiagnosticsTests.cs) verifies the selected-subtree boundary, detached/invalid/disposed nodes, query and subscriber failures, thread affinity and removal cleanup.
 
 ProcessMode transition snapshots now reuse preorder lists separately for each active callback reentrancy depth, preserving pre-mutation physics guards and failure continuation. Prepare each used subtree capacity/depth before a measured interval; [ScreenVisibilityTests](../../tests/Electron2D.Tests/ScreenVisibilityTests.cs) verifies 64 warmed nested changes with zero managed bytes, while [screen enablers](VisibleOnScreenEnabler.md) drive the same setter from actual render transitions. Physics resource attachment/removal retains its explicit lifecycle allocation boundary.
+
+## Shortcut input stage
+
+`public bool ShortcutInputEnabled { get; set; }` defaults to false. `protected virtual void OnShortcutInput(InputEvent @event)` receives borrowed key, gamepad-button and direct shortcut events after GUI delivery and before unhandled-key/general input. Overriding the hook does not enable it. Delivery follows reverse captured hierarchy order, owner-thread and CanProcess policy; handling stops later stages, while callback errors are collected after eligible delivery. These processing flags remain runtime configuration, as with the existing input stages. See [Shortcut](Shortcut.md), [ShortcutTests](../../tests/Electron2D.Tests/ShortcutTests.cs) and [ADR 0038](../decisions/input.md#adr-0038).

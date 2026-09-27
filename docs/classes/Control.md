@@ -273,7 +273,7 @@ Offset-transform checks verify defaults, disabled-value retention, resize-depend
 
 ### GUI input behavior
 
-The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through direct Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. A left-button press retains its target for the corresponding release and held-pointer motion. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker and respects clipping ancestors. Multiple-button capture and nested viewport routes remain incomplete.
+The top hit Control in a root viewport receives a temporary local pointer event. The root GUI picker orders by canvas layer, effective Z and reverse scene traversal; it does not yet match every renderer ordering rule. `Ignore` is skipped; `Pass` continues through canvas ancestors, delivering to eligible Control parents until handled or a `Stop` control; `Stop` handles the event automatically. Wheel events pass a `Stop` control when `MouseForcePassScrollEvents` is true. Mouse-button presses retain their target through a pressed-button mask; additional buttons share the capture until the final release. Wheel input uses complete press/release pairs, as supplied by the native adapter. Touch contacts capture independently by index; drag and release reach the capture outside its rectangle, and uncaptured drag and gestures use hit testing. A left press focuses an eligible control, with hidden visual focus. Explicit `GrabFocus` takes focus without hiding it; hiding, detaching or setting `FocusMode` to None releases it. Keyboard, controller and action events reach the focused control without bubbling. `AcceptEvent` stops later GUI and unhandled stages. Unhandled `ui_*` actions traverse focus after GUI delivery. Failures are aggregated after other eligible scene callbacks run; positional GUI copies are disposed after synchronous delivery. Hover uses the same root picker and respects clipping ancestors. Nested viewport routes remain incomplete. Processing gates apply to hit/captured and focused GUI targets.
 
 `FocusNext` and `FocusPrevious` take precedence over automatic traversal; an invalid path returns null. Directional paths can chain through ineligible controls, with cycle protection, then fall back to spatial search. Automatic traversal accepts visible `All` controls in scene order within the root viewport; explicit paths may select visible `Click` controls. Directional search uses global axis-aligned rectangles, not the full reference ranking or scroll clipping. Navigation happens after focused GUI callbacks if they leave the event unhandled. Analog navigation acts on a new press transition rather than every held motion event. No native keyboard or controller navigation has been verified for this slice.
 
@@ -365,3 +365,41 @@ Source: [Control.Theme.cs](../../src/Scene/GUI/Control.Theme.cs). All six data c
 `protected virtual TextBIDIRange[] OnStructuredTextParser(IReadOnlyList<string> options, string text)` supplies typed contexts when a text control selects `StructuredTextParser.Custom`. The default returns an empty array, retaining ordinary paragraph resolution. The options view is read-only. Returned [TextBIDIRange](TextBIDIRange.md) values use Unicode scalar offsets and supported [TextDirection](TextDirection.md) values; invalid bounds or direction throw before the consumer publishes a layout. Ranges may repeat or reorder contexts.
 
 [Label](Label.md) also consumes built-in URI, file, email and list parsers. URI/path delimiters have independent LTR contexts; components use automatic direction. Email parsing separates the local part and dotted domain. List mode accepts exactly one typed string delimiter and preserves its complete scalar length. These are actual shaping inputs, not metadata-only properties. The separate script-language-specific parser is not exposed. [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) verifies custom layout and invalid-output recovery.
+
+## Shortcuts and tooltips
+
+Source: [Control.Tooltip.cs](../../src/Scene/GUI/Control.Tooltip.cs). All access follows the scene owner-thread and mutation/capture boundaries. Disposed controls reject access.
+
+| Signature | Default / contract |
+| --- | --- |
+| `public Node? ShortcutContext { get; set; }` | Null: global shortcuts. A live weak context permits focus on itself or descendants. |
+| `public string TooltipText { get; set; }` | Empty untranslated text; null is rejected. |
+| `public NodeAutoTranslateMode TooltipAutoTranslateMode { get; set; }` | Inherit; retained enum policy for the default label. |
+| `public string GetTooltip(Vector2 atPosition = default)` | Queries untranslated text at a finite local point. |
+| `protected virtual string OnGetTooltip(Vector2 atPosition)` | Returns TooltipText by default; empty permits eligible parent lookup. |
+| `protected virtual NodeAutoTranslateMode OnGetTooltipAutoTranslateModeAt(Vector2 atPosition)` | Returns TooltipAutoTranslateMode by default. |
+| `protected virtual Control? OnMakeCustomTooltip(string forText)` | Returns null by default, or transfers a fresh detached control to the presenter. |
+
+### ShortcutContext
+
+An expired weak reference reads as null but remains inactive; assigning null explicitly restores global scope. Packed scenes store a relative node path and resolve it after construction of each independent hierarchy. The context is never a strong owner of a node.
+
+### TooltipText and TooltipAutoTranslateMode
+
+Text and modes are stored and packed. Text retains whitespace; presentation strips only outer characters U+0000 through U+0020, preserving Unicode nonbreaking spaces. Tooltip mode can be overridden per point. Inherit resolves through the owner hierarchy, Always enables translation and Disabled suppresses it. A default label validates its selected mode when created.
+
+### GetTooltip and OnGetTooltip
+
+Positions use local control coordinates and must be finite. The public method calls the hook and returns a non-null string. The presenter walks eligible parent controls while text is empty, stopping at Stop filtering or a top-level boundary. A nonempty whitespace-only string stops parent lookup and is subsequently trimmed.
+
+### OnGetTooltipAutoTranslateModeAt
+
+Receives the tooltip owner's local pointer position. Its result affects the default Label; a custom tooltip controls its own content and translation.
+
+### OnMakeCustomTooltip
+
+Receives trimmed untranslated text, including an empty string. Return null for the default Label, a new detached visible Control for custom contents, or a new hidden Control to suppress display. The presenter owns an accepted result and queues its disposal at the safe deletion point on cancellation. Tree shutdown delegates remaining owned presentation to normal hierarchy teardown. Returning an existing parented, attached, disposed or ancestor control is rejected without taking ownership. Default and custom tooltip contents cannot capture pointer input or keyboard focus.
+
+The current root-viewport host displays tooltips through an internal CanvasLayer and PanelContainer, with TooltipPanel/TooltipLabel theme variations. Mouse motion schedules an unscaled delay; movement beyond five pixels or a new target resets it before display. Text changes, pointer presses, gestures, ui_cancel, departure and target visibility/lifetime changes cancel old content. Native independent popup windows remain a separate capability. [ControlTooltipTests](../../tests/Electron2D.Tests/ControlTooltipTests.cs) covers the concrete host and ownership contract.
+
+[TooltipRenderingTests](../../tests/Electron2D.Tests/TooltipRenderingTests.cs) verifies real glyphs and custom contents above a maximum-index game layer, edge placement, native pointer transparency and 64 warmed active modulation frames with zero managed allocation on Linux Wayland GPU/compatibility. The dummy compatibility probe uses Nearest sampling, respecting its documented linear-filter limitation. Other platforms, native allocator counts and owner acceptance remain unverified.
