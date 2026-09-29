@@ -1,15 +1,15 @@
-# GpuTexture
+# GPUTexture
 
 Last updated: 2026-09-22
 
-- Declaration: `internal sealed unsafe class GpuTexture : IDisposable`
-- Source: [GpuTexture.cs](../../src/Servers/Rendering/GpuTexture.cs)
+- Declaration: `internal sealed unsafe class GPUTexture : IDisposable`
+- Source: [GPUTexture.cs](../../src/Servers/Rendering/GPUTexture.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
 ## Description
 
-Owns a sampled native 2D texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GpuCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update replaces Pixels instead.
+Owns a sampled native 2D texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update replaces Pixels instead.
 
 ## Internal usage
 
@@ -25,7 +25,7 @@ gpuTexture.CommitUpload();
 
 | Declaration | Contract |
 | --- | --- |
-| `internal GpuTexture(RenderHandle device, TexturePixels pixels)` | [Construction](#construction) |
+| `internal GPUTexture(RenderHandle device, TexturePixels pixels)` | [Construction](#construction) |
 | `internal TexturePixels Pixels` | [Pending pixels](#pending-pixels) |
 | `internal nint Handle { get; }` | [Native handle](#native-handle) |
 | `internal void Upload(nint command)` | [Upload](#upload) |
@@ -36,7 +36,7 @@ gpuTexture.CommitUpload();
 
 ### Construction
 
-`internal GpuTexture(RenderHandle device, TexturePixels pixels)`
+`internal GPUTexture(RenderHandle device, TexturePixels pixels)`
 
 Checks native sampling format support, creates an RGBA8 or RGBA32Float texture with every stored mip level, and allocates matching upload storage. Transfer creation failure releases the texture. Unsupported sampling raises NotSupportedException.
 

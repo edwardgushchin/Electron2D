@@ -108,7 +108,7 @@ public sealed partial class RenderingServer : ElectronObject
         if (method == "compatibility") backend = new CompatibilityCanvasBackend(nativeWindow);
         else
         {
-            try { backend = new GpuCanvasBackend(nativeWindow); }
+            try { backend = new GPUCanvasBackend(nativeWindow); }
             catch (Exception gpuError) when (gpuError is InvalidOperationException or NotSupportedException or DllNotFoundException &&
                 settings.GetWithOverride(ProjectSettings.RenderingFallback))
             {

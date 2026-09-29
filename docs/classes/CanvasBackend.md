@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-The shared internal contract for [GpuCanvasBackend](GpuCanvasBackend.md) and [CompatibilityCanvasBackend](CompatibilityCanvasBackend.md). RenderingServer exclusively owns one backend and serializes access on the scene thread. Games cannot construct it. Draw consumes prepared borrowed data synchronously; submission does not imply GPU completion or compositor display.
+The shared internal contract for [GPUCanvasBackend](GPUCanvasBackend.md) and [CompatibilityCanvasBackend](CompatibilityCanvasBackend.md). RenderingServer exclusively owns one backend and serializes access on the scene thread. Games cannot construct it. Draw consumes prepared borrowed data synchronously; submission does not imply GPU completion or compositor display.
 
 ## Internal usage
 

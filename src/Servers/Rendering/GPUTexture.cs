@@ -2,7 +2,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal sealed unsafe class GpuTexture : IDisposable
+internal sealed unsafe class GPUTexture : IDisposable
 {
     private readonly nint _device;
     private readonly RenderHandle _texture;
@@ -11,7 +11,7 @@ internal sealed unsafe class GpuTexture : IDisposable
     internal TexturePixels Pixels;
     internal nint Handle => _texture.DangerousGetHandle();
 
-    internal GpuTexture(RenderHandle device, TexturePixels pixels)
+    internal GPUTexture(RenderHandle device, TexturePixels pixels)
     {
         _device = device.DangerousGetHandle();
         Pixels = pixels;

@@ -1,9 +1,9 @@
-# GpuCanvasBackend
+# GPUCanvasBackend
 
 Last updated: 2026-09-23
 
-- Declaration: `internal sealed unsafe class GpuCanvasBackend : CanvasBackend`
-- Source: [GpuCanvasBackend.cs](../../src/Servers/Rendering/GpuCanvasBackend.cs)
+- Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
+- Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
 - Component: [canvas-rendering](../components/canvas-rendering.md)
 - Visibility: internal; unavailable to engine consumers.
 
@@ -18,14 +18,14 @@ GPU sampler cache keys include texel filter, repeat, effective anisotropy and mi
 This fragment belongs inside the runtime and requires the surrounding owner state.
 
 ```csharp
-using CanvasBackend backend = new GpuCanvasBackend(nativeWindow);
+using CanvasBackend backend = new GPUCanvasBackend(nativeWindow);
 ```
 
 ## Member summary
 
 | Declaration | Contract |
 | --- | --- |
-| `internal GpuCanvasBackend(SafeHandle window)` | [Construction](#construction) |
+| `internal GPUCanvasBackend(SafeHandle window)` | [Construction](#construction) |
 | `internal override string Method { get; }` | [Method](#method) |
 | `internal override string Driver { get; }` | [Driver](#driver) |
 | `internal override Vector2i GetPixelSize()` | [Pixel size](#pixel-size) |
@@ -37,7 +37,7 @@ using CanvasBackend backend = new GpuCanvasBackend(nativeWindow);
 
 ### Construction
 
-`internal GpuCanvasBackend(SafeHandle window)`
+`internal GPUCanvasBackend(SafeHandle window)`
 
 Creates the device for formats reported by ShaderCompiler, claims window, loads the built-in vertex shader and default fragment pipeline. Native zero/false results fail explicitly.
 

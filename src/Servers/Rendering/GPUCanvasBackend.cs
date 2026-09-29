@@ -3,7 +3,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal sealed unsafe class GpuCanvasBackend : CanvasBackend
+internal sealed unsafe class GPUCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _device;
     private readonly nint _window;
@@ -11,7 +11,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     private readonly byte[] _defaultFragment;
     private readonly Dictionary<(byte[] Code, BlendMode Blend), RenderHandle> _pipelines = [];
     private readonly HashSet<(byte[] Code, BlendMode Blend)> _usedPrograms = [];
-    private readonly Dictionary<Texture, GpuTexture> _textures = [];
+    private readonly Dictionary<Texture, GPUTexture> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
     private readonly HashSet<MaterialState> _usedMaterials = [];
@@ -31,7 +31,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
     internal override string Driver { get; }
     private nint Device => _device.DangerousGetHandle();
 
-    internal GpuCanvasBackend(SafeHandle window)
+    internal GPUCanvasBackend(SafeHandle window)
     {
         _window = window.DangerousGetHandle();
         var (device, relaxed) = CreateDevice();
@@ -314,7 +314,7 @@ internal sealed unsafe class GpuCanvasBackend : CanvasBackend
             var pixels = texture.CapturePixels() ?? throw new InvalidOperationException("A sampled texture has no readable image.");
             if (!_textures.TryGetValue(texture, out var gpu) || !ReferenceEquals(gpu.Pixels.Allocation, pixels.Allocation))
             {
-                var replacement = new GpuTexture(_device, pixels);
+                var replacement = new GPUTexture(_device, pixels);
                 gpu?.Dispose(); _textures[texture] = replacement;
             }
             else gpu.Pixels = pixels;

@@ -376,9 +376,9 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [CanvasGeometry](classes/CanvasGeometry.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasBackend](classes/CanvasBackend.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [RenderHandle](classes/RenderHandle.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
-| [GpuCanvasBackend](classes/GpuCanvasBackend.md) | [GpuCanvasBackend.cs](../src/Servers/Rendering/GpuCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [GPUCanvasBackend](classes/GPUCanvasBackend.md) | [GPUCanvasBackend.cs](../src/Servers/Rendering/GPUCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CompatibilityCanvasBackend](classes/CompatibilityCanvasBackend.md) | [CompatibilityCanvasBackend.cs](../src/Servers/Rendering/CompatibilityCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
-| [GpuTexture](classes/GpuTexture.md) | [GpuTexture.cs](../src/Servers/Rendering/GpuTexture.cs) | [shader-materials](components/shader-materials.md) |
+| [GPUTexture](classes/GPUTexture.md) | [GPUTexture.cs](../src/Servers/Rendering/GPUTexture.cs) | [shader-materials](components/shader-materials.md) |
 | [TexturePixels](classes/TexturePixels.md) | [Texture.cs](../src/Scene/Resources/Texture.cs) | [shader-materials](components/shader-materials.md) |
 | [GradientTextureData](classes/GradientTextureData.md) | [GradientTextureData.cs](../src/Scene/Resources/GradientTextureData.cs) | [gradients](components/gradients.md) |
 | [CurveTextureData](classes/CurveTextureData.md) | [CurveTextureData.cs](../src/Scene/Resources/CurveTextureData.cs) | [curves](components/curves.md) |
