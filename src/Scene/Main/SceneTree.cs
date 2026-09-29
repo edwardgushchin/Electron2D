@@ -138,6 +138,10 @@ public sealed partial class SceneTree : MainLoop
 
             CompleteFailedLoopConstruction();
 
+            if (root is Viewport dragViewport)
+                try { AbortGUIDragDuringRollback(dragViewport); }
+                catch (Exception rollbackError) { CollectException(errors, rollbackError); }
+
             try
             {
                 root.ExitTree(this);
@@ -974,6 +978,9 @@ public sealed partial class SceneTree : MainLoop
 
         try { CancelTooltip(rootDisposing: true); }
         catch (Exception error) { CollectException(ref errors, error); }
+        if (Root is Viewport dragViewport)
+            try { CancelGUIDrag(dragViewport); }
+            catch (Exception error) { CollectException(ref errors, error); }
 
         lock (_workGate)
         {
@@ -1427,6 +1434,39 @@ public sealed partial class SceneTree : MainLoop
     {
         if (inputEvent is InputEventMouse mouse)
         {
+            _guiDragPointer = mouse.Position;
+            if (_guiDragPayload is not null && mouse is InputEventMouseButton dragButton)
+            {
+                if (dragButton.ButtonIndex == MouseButton.Left ||
+                    dragButton.ButtonIndex == MouseButton.Right && dragButton.Pressed)
+                {
+                    CompleteGUIDrag(viewport, mouse.Position, dragButton.ButtonIndex == MouseButton.Left, ref errors);
+                    SetInputAsHandled();
+                    return;
+                }
+            }
+            if (_guiDragPayload is not null && mouse is InputEventMouseMotion)
+                UpdateGUIDrag(viewport, mouse.Position, ref errors);
+            else if (_guiDragPayload is null && mouse is InputEventMouseMotion motion && !_guiDragAttempted &&
+                _guiMouseCapture is { } source && (_guiMouseCaptureMask & 1) != 0 &&
+                (motion.ButtonMask & MouseButtonMask.Left) != 0)
+            {
+                if (!motion.Relative.IsFinite())
+                {
+                    _guiDragAttempted = true;
+                    CollectException(ref errors, new ArgumentException("Drag movement must be finite.", nameof(inputEvent)));
+                }
+                else
+                {
+                    _guiDragTravel += motion.Relative;
+                    if (_guiDragTravel.Length() > viewport.GUIDragThreshold)
+                    {
+                        _guiDragAttempted = true;
+                        BeginAutomaticGUIDrag(viewport, source, mouse.Position - _guiDragTravel, ref errors);
+                        if (_guiDragPayload is not null) UpdateGUIDrag(viewport, mouse.Position, ref errors);
+                    }
+                }
+            }
             var captured = _guiMouseCapture;
             if (captured is not null && (!ReferenceEquals(captured.Tree, this) || !captured.IsVisibleInTree || captured.EffectiveMouseFilter == MouseFilter.Ignore))
             { captured = _guiMouseCapture = null; _guiMouseCaptureMask = 0; }
@@ -1448,11 +1488,15 @@ public sealed partial class SceneTree : MainLoop
                             ? captured : FindMouseControl(viewport, mouse.Position, ref errors);
                         if (target is null) return;
                         _guiMouseCapture = target; _guiMouseCaptureMask |= bit;
+                        if (button.ButtonIndex == MouseButton.Left)
+                        { _guiDragTravel = Vector2.Zero; _guiDragAttempted = false; }
                     }
                     else
                     {
                         target = captured; _guiMouseCaptureMask &= ~bit;
                         if (_guiMouseCaptureMask == 0) _guiMouseCapture = null;
+                        if (button.ButtonIndex == MouseButton.Left)
+                        { _guiDragTravel = Vector2.Zero; _guiDragAttempted = false; }
                     }
                 }
             }
@@ -1515,6 +1559,12 @@ public sealed partial class SceneTree : MainLoop
         }
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
+        if (_guiDragPayload is not null && inputEvent.IsAction("ui_cancel", true))
+        {
+            CompleteGUIDrag(viewport, _guiDragPointer, attemptDrop: false, ref errors);
+            SetInputAsHandled();
+            return;
+        }
         var focused = _guiFocus;
         if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || !focused.CanReceiveGUIFocus || !ReferenceEquals(focused.GetViewport(), viewport)))
         {

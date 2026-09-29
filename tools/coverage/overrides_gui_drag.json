@@ -1,0 +1,116 @@
+{
+  "mappings": [
+    {
+      "godot": "Control::method:_get_drag_data(Vector2:)",
+      "electron2d": "method:Electron2D.Control.GetDragData(Electron2D.Vector2)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Control::method:_get_drag_data(Vector2:)",
+      "electron2d": "method:Electron2D.Control.OnGetDragData(Electron2D.Vector2)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Control::method:_can_drop_data(Vector2:,Variant:)",
+      "electron2d": "method:Electron2D.Control.CanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Control::method:_can_drop_data(Vector2:,Variant:)",
+      "electron2d": "method:Electron2D.Control.OnCanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Control::method:_drop_data(Vector2:,Variant:)",
+      "electron2d": "method:Electron2D.Control.DropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Control::method:_drop_data(Vector2:,Variant:)",
+      "electron2d": "method:Electron2D.Control.OnDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_cancel_drag()",
+      "electron2d": "method:Electron2D.Viewport.CancelGUIDrag()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_get_drag_data()",
+      "electron2d": "method:Electron2D.Viewport.GetGUIDragData()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_get_drag_description()",
+      "electron2d": "method:Electron2D.Viewport.GetGUIDragDescription()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_is_drag_successful()",
+      "electron2d": "method:Electron2D.Viewport.IsGUIDragSuccessful()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_is_dragging()",
+      "electron2d": "method:Electron2D.Viewport.IsGUIDragging()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "Viewport::method:gui_set_drag_description(String:)",
+      "electron2d": "method:Electron2D.Viewport.SetGUIDragDescription(System.String)",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/common/drag_threshold",
+      "electron2d": "property:Electron2D.ProjectSettings.DefaultGUIDragThreshold()",
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.DragPayload",
+      "reason": "Drag-specific typed C# value projection of the source Variant payload under ADR 0001; no general dynamic value or property container is introduced."
+    },
+    {
+      "electron2d": "T:Electron2D.DragPayload<T>",
+      "reason": "Drag-specific typed C# value projection of the source Variant payload under ADR 0001; no general dynamic value or property container is introduced."
+    },
+    {
+      "electron2d": "constructor:Electron2D.DragPayload..ctor()",
+      "reason": "Drag-specific typed C# value projection of the source Variant payload under ADR 0001; no general dynamic value or property container is introduced."
+    },
+    {
+      "electron2d": "constructor:Electron2D.DragPayload<T>..ctor(T)",
+      "reason": "Drag-specific typed C# value projection of the source Variant payload under ADR 0001; no general dynamic value or property container is introduced."
+    },
+    {
+      "electron2d": "property:Electron2D.DragPayload<T>.Value()",
+      "reason": "Drag-specific typed C# value projection of the source Variant payload under ADR 0001; no general dynamic value or property container is introduced."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "Control::method:_get_drag_data(Vector2:)",
+        "Control::method:_can_drop_data(Vector2:,Variant:)",
+        "Control::method:_drop_data(Vector2:,Variant:)",
+        "Control::method:force_drag(Variant:,Control:)",
+        "Control::method:is_drag_successful()",
+        "Control::method:set_drag_forwarding(Callable:,Callable:,Callable:)",
+        "Control::method:set_drag_preview(Control:)",
+        "Node::constant:NOTIFICATION_DRAG_BEGIN",
+        "Node::constant:NOTIFICATION_DRAG_END",
+        "Viewport::method:gui_cancel_drag()",
+        "Viewport::method:gui_get_drag_data()",
+        "Viewport::method:gui_get_drag_description()",
+        "Viewport::method:gui_is_drag_successful()",
+        "Viewport::method:gui_is_dragging()",
+        "Viewport::method:gui_set_drag_description(String:)",
+        "Viewport::property:gui_drag_threshold",
+        "ProjectSettings::property:gui/common/drag_threshold"
+      ],
+      "reason": "ADRs 0001/0038: typed DragPayload<T> drives root-viewport Control source/target hooks, threshold, forwarding, preview ownership, CanDrop/Forbidden cursor, cancellation, notifications and scene rollback. GUIDragTests and Linux Wayland GPU/compatibility GUIDragRenderingTests verify executable paths; nested viewport and cross-window routing remain separate dependencies."
+    }
+  ]
+}

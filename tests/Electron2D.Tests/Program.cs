@@ -156,6 +156,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ITEMLIST_NATIVE") == "1"
     RenderingRuntimeTests.Run();
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GUI_DRAG_NATIVE") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LAYOUT_CONTAINERS_NATIVE") == "1")
 {
     RenderingRuntimeTests.Run();
@@ -314,6 +319,7 @@ ScrollContainerTests.Run();
 ScrollThemeTests.Run();
 ItemListTests.Run();
 LayoutContainersTests.Run();
+GUIDragTests.Run();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();

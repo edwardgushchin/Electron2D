@@ -160,6 +160,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public const int NotificationApplicationPipModeExited = 2020`](#f-electron2d-node-notificationapplicationpipmodeexited) | Identifies that the application exited picture-in-picture mode. |
 | [`public const int NotificationApplicationResumed = 2014`](#f-electron2d-node-notificationapplicationresumed) | Identifies that the application resumed after suspension. |
 | [`public const int NotificationChildOrderChanged = 24`](#f-electron2d-node-notificationchildorderchanged) | Identifies the notification sent after the direct child order changes. |
+| [`public const int NotificationDragBegin = 21`](#f-electron2d-node-notificationdragbegin) | Delivered after a root-viewport GUI drag payload becomes active. |
+| [`public const int NotificationDragEnd = 22`](#f-electron2d-node-notificationdragend) | Delivered after drag result commits and payload/preview clear. |
 | [`public const int NotificationCrash = 2012`](#f-electron2d-node-notificationcrash) | Identifies a notification delivered immediately before an unrecoverable crash. |
 | [`public const int NotificationDisabled = 28`](#f-electron2d-node-notificationdisabled) | Identifies the notification sent when the effective process mode becomes disabled. |
 | [`public const int NotificationEnabled = 29`](#f-electron2d-node-notificationenabled) | Identifies the notification sent when the effective process mode stops being disabled. |
@@ -1218,6 +1220,11 @@ Occurs while this node is exiting its active scene tree.
 **Remarks:** Descendants have exited, `Node.NotificationExitTree` has run, and `Node.Tree` remains available.
 
 ## Constant Descriptions
+
+<a id="f-electron2d-node-notificationdragbegin"></a><a id="f-electron2d-node-notificationdragend"></a>
+### `NotificationDragBegin = 21` and `NotificationDragEnd = 22`
+
+The root SceneTree propagates Begin after committing a typed GUI drag payload, and End after a drop or cancellation commits success/failure and destroys the preview. Begin observers can read the active payload through the root Viewport; End observers see no active payload and can query the retained success result. Callback failures are reported after the remaining eligible notifications and mandatory cleanup are attempted. Nested viewport and cross-window drag remain separate capabilities.
 
 <a id="f-electron2d-node-notificationapplicationfocusin"></a>
 ### `public const int NotificationApplicationFocusIn = 2016`

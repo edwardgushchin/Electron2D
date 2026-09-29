@@ -171,7 +171,9 @@ public sealed partial class SceneTree
     {
         if (_guiHoverViewport is not Window || DisplayServer.Instance is not { } display) return;
         var shape = Input.Instance.DefaultCursorShape;
-        if (_guiHoverKnown && _guiHoverChain.Count != 0)
+        if (_guiDragPayload is not null)
+            shape = _guiDragPossible ? Input.CursorShape.CanDrop : Input.CursorShape.Forbidden;
+        else if (_guiHoverKnown && _guiHoverChain.Count != 0)
         {
             shape = Input.CursorShape.Arrow;
             for (var index = _guiHoverChain.Count - 1; index >= 0; index--)

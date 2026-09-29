@@ -19,6 +19,8 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 `InputUISelect`, `InputUIPageUp`, `InputUIPageDown` and `InputUIMenu` permanently register typed action defaults for list selection, paging and menu activation. `IncrementalSearchMaxIntervalMsec` registers `gui/timers/incremental_search_max_interval_msec` with a nonnegative 2000 ms default; [ItemList](../classes/ItemList.md) reads its active feature override for each typed-character search.
 
+`DefaultGUIDragThreshold` registers `gui/common/drag_threshold` as a signed integer defaulting to ten. A new [Viewport](../classes/Viewport.md) samples its active feature override once; changing a project's setting later does not rewrite a viewport's writable `GUIDragThreshold`.
+
 ## Runtime flow
 
 1. The component creates built-in application, timing, rendering, six GUI-focus input, two locale and nine pseudolocalization definitions and registers them in each registry.

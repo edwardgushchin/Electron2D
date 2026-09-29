@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 ## Responsibility
 
@@ -12,7 +12,7 @@ Input owns typed input-event values, the process-wide action map, raw and mapped
 | --- | --- | --- |
 | [Input runtime](../components/input-runtime.md) | Typed events, action bindings/state, raw device state, frame transitions, and SceneTree propagation | Implemented and verified; hardware-host gaps have exact triggers |
 
-Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), [`JoypadInfo`](../classes/JoypadInfo.md), [`InputActionSettings`](../classes/InputActionSettings.md), [`InputBindingSettings`](../classes/InputBindingSettings.md), [`InputBindingKind`](../classes/InputBindingKind.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
+Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), [`JoypadInfo`](../classes/JoypadInfo.md), [`InputActionSettings`](../classes/InputActionSettings.md), [`InputBindingSettings`](../classes/InputBindingSettings.md), [`InputBindingKind`](../classes/InputBindingKind.md), [`DragPayload`](../classes/DragPayload.md) and [`DragPayload<T>`](../classes/DragPayload.Generic.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
 
 ## Public surface
 
@@ -25,6 +25,7 @@ Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/Inp
 - Touch and drag events store signed contact indexes; the native display source generates indexes for physical contacts.
 - Input enums: complete key identifiers/modifier masks, key location, mouse buttons/mask, and standardized/raw controller axes/buttons.
 - `Node`/`SceneTree` integration: explicit opt-in callbacks, root viewport Control targeting, hover, focus ownership/notification, action navigation and handled propagation.
+- `Control`/`Viewport` GUI drag: typed payload production/acceptance/delivery and forwarding, threshold and forced starts, temporary preview ownership, cancel/drop result, drag notifications and native cursor feedback in the root viewport.
 
 ## Dependency direction
 

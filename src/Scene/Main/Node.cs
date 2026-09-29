@@ -75,6 +75,10 @@ public partial class Node : ElectronObject
 
     /// <summary>Identifies the notification sent to the root after a packed scene is completely instantiated.</summary>
     public const int NotificationSceneInstantiated = 20;
+    /// <summary>Identifies the notification after a GUI drag payload becomes active.</summary>
+    public const int NotificationDragBegin = 21;
+    /// <summary>Identifies the notification after a GUI drag ends and its result commits.</summary>
+    public const int NotificationDragEnd = 22;
 
     /// <summary>Identifies the notification propagated when this node's path changes.</summary>
     public const int NotificationPathRenamed = 23;

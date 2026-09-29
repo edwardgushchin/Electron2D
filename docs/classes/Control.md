@@ -6,7 +6,7 @@ Last updated: 2026-09-30
 
 **Inherited By:** [Label](Label.md), [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md), [ItemList](ItemList.md). BaseButton, buttons, scroll bars and ScrollContainer are current consumers.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Control : CanvasItem`
 
@@ -138,6 +138,13 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `protected virtual CursorShape OnGetCursorShape(Vector2 atPosition)` | Returns MouseDefaultCursorShape unless overridden. |
 | `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
 | `protected virtual void OnGUIInput(InputEvent inputEvent)` | Receives routed pointer or focused keyboard input. |
+| `public DragPayload? GetDragData(Vector2 atPosition)` / `protected virtual DragPayload? OnGetDragData(Vector2 atPosition)` | Produces typed data for a drag from a finite local origin. |
+| `public bool CanDropData(Vector2 atPosition, DragPayload payload)` / `protected virtual bool OnCanDropData(Vector2 atPosition, DragPayload payload)` | Tests a candidate target at finite local coordinates. |
+| `public void DropData(Vector2 atPosition, DragPayload payload)` / `protected virtual void OnDropData(Vector2 atPosition, DragPayload payload)` | Delivers an accepted payload. |
+| `public void SetDragForwarding(Func<Vector2, DragPayload?>? getData, Func<Vector2, DragPayload, bool>? canDrop, Action<Vector2, DragPayload>? drop)` | Replaces supplied virtual hooks with typed delegates. |
+| `public void ForceDrag(DragPayload payload, Control? preview = null)` | Starts an attached root-viewport drag immediately. |
+| `public void SetDragPreview(Control preview)` | Transfers a detached parentless preview to the active drag. |
+| `public bool IsDragSuccessful()` | Reports the last completed root-viewport drag result. |
 | `protected override void OnNotification(int what)` | Connects/disconnects layout sources, raises Resized after NotificationResized, and receives focus notifications. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Supplies stored layout, transform and GUI input policy. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Creates exact Control instances for PackedScene. |
@@ -287,6 +294,19 @@ Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU 
 [NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.
 
 [Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flags now execute through [Container](../classes/Container.md) and [BoxContainer](../classes/BoxContainer.md), with Range ShrinkBegin and progress Fill defaults under [ADR 0081](../decisions/rendering.md#adr-0081). [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+
+## Typed GUI drag and drop
+
+<a id="getdragdata"></a><a id="ongetdragdata"></a>
+`GetDragData` rejects nonfinite local coordinates and invokes a supplied forwarding delegate or `OnGetDragData`, which returns null by default. The left-held pointer path accumulates movement and asks the captured Control, then eligible ancestors until `MouseFilter.Stop`, for one [DragPayload](DragPayload.md). The origin is the original left-press position in each candidate's local coordinates. Returning null rejects that candidate; a preview set before a null result is destroyed.
+
+<a id="candropdata"></a><a id="oncandropdata"></a><a id="dropdata"></a><a id="ondropdata"></a>
+`CanDropData` rejects a null payload or nonfinite local point, then invokes its forwarding delegate or virtual hook; the default rejects. Hit-tested target and ancestors are tried until the first accepting Control or a stopping pointer filter. `DropData` invokes the supplied delegate or virtual hook only for an accepting target. A throwing drop callback leaves success false, but cleanup and drag-end notifications still run. Payload contents remain caller-owned.
+
+<a id="setdragforwarding"></a><a id="forcedrag"></a><a id="setdragpreview"></a><a id="isdragsuccessful"></a>
+`SetDragForwarding` stores nullable typed delegates for the three hooks; each supplied delegate replaces its virtual hook, even if it returns null or false. Delegates are disconnected on disposal. `ForceDrag` starts immediately with a nonnull payload and an optional preview. A preview must be live, detached, parentless and not queued for deletion; it becomes tree-owned and is disposed after a completed or cancelled drag. `SetDragPreview` replaces and destroys any previous preview while dragging or preparing a source callback. The active preview ignores pointer hit testing and renders above regular canvas layers. `IsDragSuccessful` reports the viewport's retained most-recent result; detached controls report false. Source removal or hiding cancels the drag.
+
+Only root-viewport drag routes execute. Nested/cross-window drag routing and native accessibility drag/drop retain separate dependencies. [GUIDragTests](../../tests/Electron2D.Tests/GUIDragTests.cs) covers typed identity, threshold, forwarded and ancestor targets, previews, cancellation, failure and activation rollback; [GUIDragRenderingTests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) verifies preview pixels and CanDrop cursor on Linux Wayland GPU and compatibility. Native allocations, other platforms and owner acceptance remain unverified; see [ADR 0038](../decisions/input.md#adr-0038) and [coverage](../coverage/classes/Control.md).
 
 ## Container size flags
 

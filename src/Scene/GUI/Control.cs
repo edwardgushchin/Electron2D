@@ -731,6 +731,7 @@ public partial class Control : CanvasItem
             try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIFocus(this); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIHover(this); } catch (Exception error) { CollectException(ref errors, error); }
+            try { Tree?.ReleaseGUIDrag(this); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Control visibility callbacks failed.", errors);
         }
         else base.OnNotification(what);
@@ -766,7 +767,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; }
+        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; _forwardGetDragData = null; _forwardCanDropData = null; _forwardDropData = null; }
         base.Dispose(disposing);
     }
 

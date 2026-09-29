@@ -399,6 +399,11 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<int> DefaultScrollDeadzone { get; } =
         new("gui/common/default_scroll_deadzone", 0);
 
+    /// <summary>Defines the initial automatic GUI drag distance for new viewports.</summary>
+    /// <value>Ten logical pixels initially; signed values retain the source setting's policy.</value>
+    public static ProjectSetting<int> DefaultGUIDragThreshold { get; } =
+        new("gui/common/drag_threshold", 10);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -495,6 +500,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(IncrementalSearchMaxIntervalMsec, isBasic: false);
         RegisterInternal(TooltipPositionOffset, isBasic: false);
         RegisterInternal(DefaultScrollDeadzone, isBasic: false);
+        RegisterInternal(DefaultGUIDragThreshold, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1874,6 +1880,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, TooltipDelaySeconds) ||
         ReferenceEquals(setting, IncrementalSearchMaxIntervalMsec) ||
         ReferenceEquals(setting, DefaultScrollDeadzone) ||
+        ReferenceEquals(setting, DefaultGUIDragThreshold) ||
         ReferenceEquals(setting, TooltipPositionOffset);
 
     private static string ResolveWithinRoot(string root, string relativePath)

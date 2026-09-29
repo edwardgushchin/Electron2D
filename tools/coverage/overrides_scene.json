@@ -5090,16 +5090,9 @@
       "reason": "First typed GUI, text-input and embedded-viewport integration after rendering (ADRs 0008 and 0028).",
       "godot": [
         "Viewport::method:get_embedded_subwindows()",
-        "Viewport::method:gui_cancel_drag()",
-        "Viewport::method:gui_get_drag_data()",
-        "Viewport::method:gui_get_drag_description()",
         "Viewport::method:gui_get_hovered_control()",
-        "Viewport::method:gui_is_drag_successful()",
-        "Viewport::method:gui_is_dragging()",
-        "Viewport::method:gui_set_drag_description(String:)",
         "Viewport::method:push_text_input(String:)",
         "Viewport::property:gui_disable_input",
-        "Viewport::property:gui_drag_threshold",
         "Viewport::property:gui_embed_subwindows",
         "Viewport::property:gui_snap_controls_to_pixels"
       ]

@@ -1240,6 +1240,32 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DragPayload",
+    "kind": "type",
+    "declaringType": "Electron2D.DragPayload",
+    "name": "DragPayload",
+    "signature": "public abstract class Electron2D.DragPayload",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.DragPayload\u003CT\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.DragPayload\u003CT\u003E",
+    "name": "DragPayload\u00601",
+    "signature": "public sealed class Electron2D.DragPayload\u003CT\u003E",
+    "visibility": "public",
+    "baseType": "Electron2D.DragPayload",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ElectronObject",
     "kind": "type",
     "declaringType": "Electron2D.ElectronObject",
@@ -6126,6 +6152,32 @@
     "value": "28"
   },
   {
+    "id": "constant:Electron2D.Node.NotificationDragBegin()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationDragBegin",
+    "signature": "public const System.Int32 NotificationDragBegin = 21",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "21"
+  },
+  {
+    "id": "constant:Electron2D.Node.NotificationDragEnd()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationDragEnd",
+    "signature": "public const System.Int32 NotificationDragEnd = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "22"
+  },
+  {
     "id": "constant:Electron2D.Node.NotificationEnabled()",
     "kind": "constant",
     "declaringType": "Electron2D.Node",
@@ -7167,6 +7219,38 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.DragPayload..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DragPayload",
+    "name": ".ctor",
+    "signature": "protected DragPayload()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.DragPayload\u003CT\u003E..ctor(T)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DragPayload\u003CT\u003E",
+    "name": ".ctor",
+    "signature": "public DragPayload\u00601(T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -31425,6 +31509,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.CanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "CanDropData",
+    "signature": "public System.Boolean CanDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "payload",
+        "type": "Electron2D.DragPayload",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -31450,6 +31558,30 @@
       {
         "name": "disposing",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.DropData(Electron2D.Vector2,Electron2D.DragPayload)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "DropData",
+    "signature": "public System.Void DropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "payload",
+        "type": "Electron2D.DragPayload",
         "default": null
       }
     ],
@@ -31512,6 +31644,30 @@
       }
     ],
     "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.ForceDrag(Electron2D.DragPayload,Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "ForceDrag",
+    "signature": "public System.Void ForceDrag(Electron2D.DragPayload payload, Electron2D.Control preview = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "payload",
+        "type": "Electron2D.DragPayload",
+        "default": null
+      },
+      {
+        "name": "preview",
+        "type": "Electron2D.Control",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -31615,6 +31771,25 @@
       }
     ],
     "returnType": "Electron2D.Control.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.GetDragData(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "GetDragData",
+    "signature": "public Electron2D.DragPayload GetDragData(Electron2D.Vector2 atPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DragPayload",
     "value": null
   },
   {
@@ -32316,6 +32491,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.IsDragSuccessful()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "IsDragSuccessful",
+    "signature": "public System.Boolean IsDragSuccessful()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.IsLayoutRTL()",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -32326,6 +32514,54 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnCanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnCanDropData",
+    "signature": "protected virtual System.Boolean OnCanDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "payload",
+        "type": "Electron2D.DragPayload",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnDropData(Electron2D.Vector2,Electron2D.DragPayload)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnDropData",
+    "signature": "protected virtual System.Void OnDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "payload",
+        "type": "Electron2D.DragPayload",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -32364,6 +32600,25 @@
       }
     ],
     "returnType": "Electron2D.Control.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGetDragData(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetDragData",
+    "signature": "protected virtual Electron2D.DragPayload OnGetDragData(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DragPayload",
     "value": null
   },
   {
@@ -32790,6 +33045,54 @@
       {
         "name": "position",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetDragForwarding(System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E,System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload, System.Boolean\u003E,System.Action\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetDragForwarding",
+    "signature": "public System.Void SetDragForwarding(System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E getData, System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload, System.Boolean\u003E canDrop, System.Action\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E drop)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "getData",
+        "type": "System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E",
+        "default": null
+      },
+      {
+        "name": "canDrop",
+        "type": "System.Func\u003CElectron2D.Vector2, Electron2D.DragPayload, System.Boolean\u003E",
+        "default": null
+      },
+      {
+        "name": "drop",
+        "type": "System.Action\u003CElectron2D.Vector2, Electron2D.DragPayload\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.SetDragPreview(Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "SetDragPreview",
+    "signature": "public System.Void SetDragPreview(Electron2D.Control preview)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "preview",
+        "type": "Electron2D.Control",
         "default": null
       }
     ],
@@ -72474,6 +72777,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Viewport.CancelGUIDrag()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "CancelGUIDrag",
+    "signature": "public System.Void CancelGUIDrag()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Viewport.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Viewport",
@@ -72535,6 +72851,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.GetGUIDragData()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetGUIDragData",
+    "signature": "public Electron2D.DragPayload GetGUIDragData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DragPayload",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.GetGUIDragDescription()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GetGUIDragDescription",
+    "signature": "public System.String GetGUIDragDescription()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -72600,6 +72942,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.IsGUIDragSuccessful()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "IsGUIDragSuccessful",
+    "signature": "public System.Boolean IsGUIDragSuccessful()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.IsGUIDragging()",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "IsGUIDragging",
+    "signature": "public System.Boolean IsGUIDragging()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -72689,6 +73057,25 @@
       {
         "name": "enable",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Viewport.SetGUIDragDescription(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Viewport",
+    "name": "SetGUIDragDescription",
+    "signature": "public System.Void SetGUIDragDescription(System.String description)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "description",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -83044,6 +83431,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.DragPayload\u003CT\u003E.Value()",
+    "kind": "property",
+    "declaringType": "Electron2D.DragPayload\u003CT\u003E",
+    "name": "Value",
+    "signature": "public T Value { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "T",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ElectronObject.CanTranslateMessages()",
     "kind": "property",
     "declaringType": "Electron2D.ElectronObject",
@@ -88647,6 +89047,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DefaultGUIDragThreshold()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DefaultGUIDragThreshold",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E DefaultGUIDragThreshold { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DefaultScrollDeadzone()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -93116,6 +93529,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.GUIDragThreshold()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "GUIDragThreshold",
+    "signature": "public System.Int32 GUIDragThreshold { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

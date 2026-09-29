@@ -5,7 +5,7 @@ namespace Electron2D;
 /// and embedded viewports are not implemented. Canvas transforms, sampling and pixel-snapping policies apply to the root renderer. Window input is localized through the inverse final transform.</remarks>
 public abstract partial class Viewport : Node
 {
-    private protected Viewport() { }
+    private protected Viewport() => _guiDragThreshold = ProjectSettings.Instance.GetWithOverride(ProjectSettings.DefaultGUIDragThreshold);
 
     /// <summary>Returns the client rectangle in viewport coordinates.</summary>
     /// <returns>A zero-origin rectangle in client units, independent of desktop and node position.</returns>

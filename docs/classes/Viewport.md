@@ -1,12 +1,12 @@
 # Viewport
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 **Inherits:** [Node](Node.md)
 
 **Inherited By:** [Window](Window.md)
 
-- **Source:** [`src/Scene/Main/Viewport.cs`](../../src/Scene/Main/Viewport.cs), [`src/Scene/Main/Viewport.PhysicsInterpolation.cs`](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs)
+- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
@@ -162,15 +162,27 @@ Construction samples the active ProjectSettings.AnisotropicFilteringLevel overri
 
 All three properties are stored by PackedScene. Undefined/negative/Max enum writes throw ArgumentOutOfRangeException before mutation; scene capture and off-owner writes throw InvalidOperationException; disposed access throws ObjectDisposedException. They neither allocate GPU resources nor open a window until normal rendering consumes the state. Nested/offscreen viewport activation remains unsupported.
 
+## Typed GUI drag
+
+| Declaration | Default | Contract |
+| --- | --- | --- |
+| `public int GUIDragThreshold { get; set; }` | Project setting, normally 10 | Signed local-pixel travel that an automatic left-held drag must exceed. |
+
+The constructor samples the active `ProjectSettings.DefaultGUIDragThreshold` once. Negative values attempt on the first motion; an equal travel length does not start a drag. The threshold is a stored typed scene property. The root Viewport alone owns the current drag; a nested viewport does not gain drag routing merely by exposing these methods.
+
 ## Methods
 
 | Member | Contract |
 | --- | --- |
-| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling/pixel-snapping properties and runtime canvas transforms to neutral node descriptors. |
+| [`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`](#getpropertydescriptors) | Adds stored sampling, pixel-snapping, drag-threshold and runtime canvas-transform properties to neutral node descriptors. |
 | [`protected override void Dispose(bool disposing)`](#dispose) | Clears this class's subscribers, then disposes inherited state. Overrides must call base. Engine.Run separately releases native ownership after scene teardown. |
 | [`protected override void OnNotification(int what)`](#onnotification) | Resets camera presentation history on the inherited interpolation notification. |
 | [`public Camera? GetCamera()`](#getcamera) | Returns the borrowed active camera, or null. |
 | [`public Control? GetGUIFocusOwner()`](#getguifocusowner) | Returns the root viewport's borrowed focused control, or null. |
+| [`public DragPayload? GetGUIDragData()`](#getguidragdata) | Returns the active borrowed payload or null. |
+| [`public string GetGUIDragDescription()`](#getguidragdescription) / [`void SetGUIDragDescription(string description)`](#setguidragdescription) | Reads or changes the description retained until completion. |
+| [`public bool IsGUIDragging()`](#isguidragging) / [`bool IsGUIDragSuccessful()`](#isguidragsuccessful) | Reports active/preparing state and the retained last result. |
+| [`public void CancelGUIDrag()`](#cancelguidrag) | Cancels the root drag, destroys its preview and sends drag-end notification. |
 | [`public abstract Rect2 GetVisibleRect()`](#getvisiblerect) | Returns the client rectangle in viewport coordinates. |
 | [`public bool IsInputHandled()`](#isinputhandled) | Reports whether the current scene input event has been handled. |
 | [`public void PushInput(InputEvent inputEvent, bool inLocalCoordinates = false)`](#pushinput) | Delivers a borrowed input event directly to this viewport's scene. |
@@ -191,6 +203,12 @@ All three properties are stored by PackedScene. Undefined/negative/Max enum writ
 Extends Node descriptors with three typed stored sampling properties, two stored pixel-snapping flags, and two non-stored runtime canvas transforms. Window adds its own properties through base chaining. Descriptors retain each property's validation and use the active project anisotropy default.
 
 ## Method Descriptions
+
+<a id="getguidragdata"></a><a id="isguidragging"></a><a id="isguidragsuccessful"></a>
+`GetGUIDragData` exposes the exact borrowed [DragPayload](DragPayload.md) identity while active and null after completion. `IsGUIDragging` is also true while a source callback prepares payload and preview. `IsGUIDragSuccessful` retains the last completed result until another drop or cancellation completes; a newly started drag does not clear it. Cancellation and a throwing delivery report false. Detached or non-root viewports return null/false.
+
+<a id="getguidragdescription"></a><a id="setguidragdescription"></a><a id="cancelguidrag"></a>
+`SetGUIDragDescription` rejects null and stores host-facing text until the drag ends. `GetGUIDragDescription` returns that text or the localized generic "Drag-and-drop data" label when empty. `CancelGUIDrag` ends an active root drag, clears payload/description and the tree-owned preview, and delivers `Node.NotificationDragEnd` after state commits. Attached access obeys scene owner-thread rules. `GUIDragTests` checks cancellation, threshold and scene capture; [native drag rendering tests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) check GPU/compatibility preview pixels and cursor selection. Nested and cross-window routes remain blocked by separate ownership work.
 
 <a id="onnotification"></a>
 ### `protected override void OnNotification(int what)`

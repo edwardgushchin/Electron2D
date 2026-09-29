@@ -1,12 +1,12 @@
 # SceneTree
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 **Inherits:** [MainLoop](MainLoop.md)
 
 **Inherited By:** —
 
-- **Source:** [`src/Scene/Main/SceneTree.cs`](../../src/Scene/Main/SceneTree.cs), [`src/Scene/Main/SceneTree.SceneChange.cs`](../../src/Scene/Main/SceneTree.SceneChange.cs), [`src/Scene/Main/SceneTree.GUIHover.cs`](../../src/Scene/Main/SceneTree.GUIHover.cs), [`src/Scene/Main/SceneTree.Physics.cs`](../../src/Scene/Main/SceneTree.Physics.cs), [`src/Scene/Main/SceneTree.PhysicsInterpolation.cs`](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
+- **Source:** [SceneTree.cs](../../src/Scene/Main/SceneTree.cs), [SceneTree.GUIDrag.cs](../../src/Scene/Main/SceneTree.GUIDrag.cs), [SceneTree.GUIHover.cs](../../src/Scene/Main/SceneTree.GUIHover.cs), [SceneTree.SceneChange.cs](../../src/Scene/Main/SceneTree.SceneChange.cs), [SceneTree.Physics.cs](../../src/Scene/Main/SceneTree.Physics.cs), [SceneTree.PhysicsInterpolation.cs](../../src/Scene/Main/SceneTree.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed partial class SceneTree : MainLoop`
 
@@ -765,6 +765,8 @@ Frame and flush execution cannot be re-entered and cannot begin during node life
 For a Viewport root, input dispatch first removes the viewport final transform unless PushInput specifies local coordinates. Positional copies are borrowed during callbacks and disposed afterward, including failures; non-positional/local input retains identity. Execution/re-entry guards run before conversion. Node-root trees retain the original event path. See [Viewport.PushInput](Viewport.md#pushinput) and [coordinate tests](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs).
 
 `Input.ParseInputEvent` first asks the active SceneTree to validate its owner thread and execution barrier, commits raw/action state only after that succeeds, and then dispatches through MainLoop's internal boundary. The tree captures pre-order once and visits the snapshot in reverse for Node stages. It runs `Node.OnInput`, then root viewport `Control.OnGUIInput` and `GUIInput` for hit pointer or focused keyboard/controller input, then root viewport `ui_*` focus navigation when unhandled, then `Node.OnShortcutInput` for key, gamepad-button and direct shortcut events, then for key events `Node.OnUnhandledKeyInput`, then `Node.OnUnhandledInput`. Root GUI focus is stored by the tree and exposed through Viewport.GetGUIFocusOwner. Transfer sends the previous Control's exit notification/event, the viewport's GUIFocusChanged event, then the new Control's enter notification/event; explicit release sends only exit. Each Node stage requires its matching enable flag and current `CanProcess()` eligibility. `SetInputAsHandled()` stops immediately. Removed, moved-to-another-tree, disposed, disabled, or newly added candidates are handled by snapshot revalidation. GUI targets are rechecked for visibility, membership and CanProcess eligibility. Touch captures are independent by contact index and mouse captures retain all pressed button bits. User callback failures are aggregated after other eligible callbacks run; committed Input state is not rolled back. Dispatch is owner-thread and non-reentrant; navigation searches the live Control hierarchy.
+
+The same root GUI stage now owns one typed drag state: it accumulates left-held motion past `Viewport.GUIDragThreshold`, asks the captured Control/ancestors for a borrowed [DragPayload](DragPayload.md), then checks the hit target/ancestors in local coordinates. A temporary internal top-layer CanvasLayer owns the optional preview; active motion updates preview/cursor and left release/press attempts delivery. Right press, `ui_cancel`, hidden source and explicit viewport cancellation end without success. `Node.NotificationDragBegin` sees the active payload; `NotificationDragEnd` sees the committed result and cleared payload. Drop/notification failures continue cleanup. Scene activation rollback closes an already-started preview before hierarchy exit. [GUIDragTests](../../tests/Electron2D.Tests/GUIDragTests.cs) covers these transitions; [GUIDragRenderingTests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) checks GPU/compatibility pixels and cursor. Nested/cross-window routing remains absent.
 
 ## Lifecycle and failure safety
 
