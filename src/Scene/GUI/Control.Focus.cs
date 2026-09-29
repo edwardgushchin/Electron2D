@@ -151,7 +151,7 @@ public partial class Control
                 if (!control.IsVisibleInTree || control.TopLevel) return;
                 output.Add(control);
             }
-            for (var index = 0; index < node.ChildCount; index++) Visit(node.GetChild(index), output);
+            for (var index = 0; index < node.GetChildCount(includeInternal: true); index++) Visit(node.GetChild(index, includeInternal: true), output);
         }
         Visit(viewport, controls);
         return controls;

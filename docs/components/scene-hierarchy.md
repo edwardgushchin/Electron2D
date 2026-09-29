@@ -1,6 +1,6 @@
 # Scene hierarchy component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 ## Scope and owned types
 
@@ -21,7 +21,9 @@ The accepted hierarchy is implemented under [ADR 0008](../decisions/scene.md#adr
 | [ProcessMode](../classes/ProcessMode.md) | enum | Pause-aware processing policy on Node. |
 | [NodeAutoTranslateMode](../classes/NodeAutoTranslateMode.md) | enum | Inherited automatic translation policy on Node. |
 
-[Sprite](../classes/Sprite.md) and [Parallax](../classes/Parallax.md) derive from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [CanvasLayer](../classes/CanvasLayer.md) derives directly from Node and establishes an independent canvas. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control has executable layout, transform, root viewport pointer routing, hover/cursor selection, keyboard focus and Tab/arrow navigation. The root Viewport exposes the focused Control, explicit release and a focus-change event; Control receives focus notifications before its focus events. Button will be reached through the absent BaseButton. Themes, containers and complete GUI routing remain unimplemented.
+[Sprite](../classes/Sprite.md) and [Parallax](../classes/Parallax.md) derive from Entity. [Timer](../classes/Timer.md) and [Viewport](../classes/Viewport.md) derive from Node; [Window](../classes/Window.md) derives from Viewport. [CanvasLayer](../classes/CanvasLayer.md) derives directly from Node and establishes an independent canvas. [Camera](../classes/Camera.md) derives from Entity and owns viewport tracking; CollisionShape remains a future spatial type. Control has executable layout, transform, root viewport pointer routing, hover/cursor selection, keyboard focus and Tab/arrow navigation. The root Viewport exposes the focused Control, explicit release and a focus-change event; Control receives focus notifications before its focus events. Buttons, typed themes, box/grid layout and scroll containers now execute through this hierarchy; broader GUI routing remains incomplete.
+
+`Node.InternalMode` partitions children into Front, ordinary and Back ranges. Ordinary public child queries omit internal children by default, while lifecycle, processing, input, theme and canvas traversals include them. PackedScene captures ordinary owned children and constructors recreate internal implementation children. ScrollContainer uses five real internal children for bars, hints and focus decoration. [ScrollInternalNodeTests](../../tests/Electron2D.Tests/ScrollInternalNodeTests.cs) covers order, movement, processing and capture.
 
 [RemoteTransform](../classes/RemoteTransform.md) also derives from Entity. It weakly targets another spatial node by path, resolves the target on tree entry or an explicit cache refresh, and transfers selected transform components through the existing queued global or synchronous local notification path. It rejects hierarchy feedback and remote-target cycles; PackedScene stores the path and policy, not the live target.
 

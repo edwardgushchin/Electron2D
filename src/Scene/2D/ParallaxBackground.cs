@@ -123,7 +123,7 @@ public sealed class ParallaxBackground : CanvasLayer
         if (!_finalOffset.IsFinite()) throw new InvalidOperationException("Background scroll overflowed finite coordinates.");
         var (offset, scale) = GetLayerMotion();
         List<Exception>? errors = null;
-        foreach (var child in Children.ToArray())
+        foreach (var child in AllChildren.ToArray())
             if (child is ParallaxLayer layer && !layer.IsDisposed && ReferenceEquals(layer.Parent, this))
                 try { layer.ApplyBackground(offset, scale); }
                 catch (Exception error) { CollectException(ref errors, error); }

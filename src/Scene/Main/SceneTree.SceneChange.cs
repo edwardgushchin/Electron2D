@@ -55,7 +55,7 @@ public sealed partial class SceneTree
         if (node is Viewport)
             throw new NotSupportedException("A child viewport requires multiwindow or offscreen rendering support.");
         node.EnsureSceneActivationAvailable();
-        if (Root.Children.Any(child => !ReferenceEquals(child, _currentScene) && StringComparer.Ordinal.Equals(child.Name, node.Name)))
+        if (Root.AllChildren.Any(child => !ReferenceEquals(child, _currentScene) && StringComparer.Ordinal.Equals(child.Name, node.Name)))
             throw new InvalidOperationException("A child with this scene name already exists under the tree root.");
 
         Exception? removalError = null;

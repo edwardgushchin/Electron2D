@@ -1,6 +1,6 @@
 # ProjectSettings API coverage
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 Godot source: [doc/classes/ProjectSettings.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -308,7 +308,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 | [`property bool filesystem/import/fbx2gltf/enabled = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first asset loader, pack, and file-format settings slice (ADRs 0013 and 0023). |
 | [`property bool filesystem/import/fbx2gltf/enabled.android = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first asset loader, pack, and file-format settings slice (ADRs 0013 and 0023). |
 | [`property bool filesystem/import/fbx2gltf/enabled.web = false`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first asset loader, pack, and file-format settings slice (ADRs 0013 and 0023). |
-| [`property int gui/common/default_scroll_deadzone = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first typed 2D GUI and theme-settings slice after rendering (ADR 0028). |
+| [`property int gui/common/default_scroll_deadzone = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | [`public static Electron2D.ProjectSetting<System.Int32> DefaultScrollDeadzone { get;  }`](../../classes/ProjectSettings.md) | Implemented | Typed built-in signed integer setting, sampled with active override by each new ScrollContainer; the registry and constructor preserve the default zero value. |
 | [`property int gui/common/drag_threshold = 10`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first typed 2D GUI and theme-settings slice after rendering (ADR 0028). |
 | [`property int gui/common/show_focus_state_on_pointer_event = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first typed 2D GUI and theme-settings slice after rendering (ADR 0028). |
 | [`property bool gui/common/snap_controls_to_pixels = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ProjectSettings.xml) | — | Blocked | Trigger: first typed 2D GUI and theme-settings slice after rendering (ADR 0028). |

@@ -204,6 +204,7 @@ public partial class Node : ElectronObject
     {
         _name = ClassName;
         _childrenView = _children.AsReadOnly();
+        _publicChildrenView = new OrdinaryChildrenView(this);
     }
 
     /// <summary>Gets or sets the node name used in sibling lookup and paths.</summary>
@@ -485,9 +486,9 @@ public partial class Node : ElectronObject
         }
     }
 
-    /// <summary>Gets a live read-only view of the ordered direct children.</summary>
-    /// <value>A view backed by this node's child list; later hierarchy changes are visible through it.</value>
-    public IReadOnlyList<Node> Children => _childrenView;
+    /// <summary>Gets a live read-only view of the ordered ordinary direct children.</summary>
+    /// <value>A view excluding internal children; later hierarchy changes are visible through it.</value>
+    public IReadOnlyList<Node> Children => _publicChildrenView;
 
     /// <summary>Gets the number of direct children.</summary>
     /// <value>The current child count.</value>
@@ -497,7 +498,7 @@ public partial class Node : ElectronObject
         get
         {
             ThrowIfDisposed();
-            return _children.Count;
+            return ExternalChildCount;
         }
     }
 
@@ -807,7 +808,13 @@ public partial class Node : ElectronObject
     /// This node is disposing on another thread or has finished disposing, or disposal of <paramref name="child"/> has started.
     /// </exception>
     /// <exception cref="AggregateException">One or more structural, lifecycle, notification, or event callbacks fail after insertion begins.</exception>
-    public void AddChild(Node child) => InsertChild(child, _children.Count);
+    /// <param name="internalMode">Whether the child belongs to the internal front/back range; Disabled by default.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The internal mode is not defined.</exception>
+    public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)
+    {
+        if (!Enum.IsDefined(internalMode)) throw new ArgumentOutOfRangeException(nameof(internalMode));
+        InsertChild(child, ChildInsertionIndex(internalMode), internalMode);
+    }
 
     /// <summary>Inserts a detached node immediately after this node in its parent's child order.</summary>
     /// <param name="sibling">The live node to insert.</param>
@@ -829,7 +836,7 @@ public partial class Node : ElectronObject
         if (Parent is null)
             throw new InvalidOperationException("A root or detached node cannot add a sibling.");
 
-        Parent.InsertChild(sibling, GetIndex() + 1);
+        Parent.InsertChild(sibling, GetIndex(includeInternal: true) + 1, _internalMode);
     }
 
     /// <summary>Removes a direct child without disposing it.</summary>
@@ -866,7 +873,10 @@ public partial class Node : ElectronObject
         if (oldIndex < 0)
             throw new ArgumentException("The node is not a direct child.", nameof(child));
 
-        index = NormalizeChildIndex(index, _children.Count);
+        var start = child._internalMode switch { InternalMode.Front => 0, InternalMode.Back => _children.Count - _internalBackCount, _ => _internalFrontCount };
+        var count = child._internalMode switch { InternalMode.Front => _internalFrontCount, InternalMode.Back => _internalBackCount, _ => ExternalChildCount };
+        if (child._internalMode == InternalMode.Disabled && index == count) index--;
+        index = start + NormalizeChildIndex(index, count);
         if (oldIndex == index)
             return;
 
@@ -932,7 +942,7 @@ public partial class Node : ElectronObject
         oldParent.RemoveChildCore(this);
         try
         {
-            newParent.InsertChild(this, newParent._children.Count);
+            newParent.InsertChild(this, newParent.ChildInsertionIndex(InternalMode.Disabled));
         }
         finally
         {
@@ -952,23 +962,27 @@ public partial class Node : ElectronObject
 
     /// <summary>Gets a direct child by index.</summary>
     /// <param name="index">The child index; negative values count from the end.</param>
+    /// <param name="includeInternal">Whether front/back implementation children participate in indexing.</param>
     /// <returns>The selected direct child.</returns>
     /// <exception cref="ArgumentOutOfRangeException">This node has no children or <paramref name="index"/> is outside the valid range.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public Node GetChild(int index)
+    public Node GetChild(int index, bool includeInternal = false)
     {
         ThrowIfDisposed();
-        index = NormalizeChildIndex(index, _children.Count);
-        return _children[index];
+        index = NormalizeChildIndex(index, includeInternal ? _children.Count : ExternalChildCount);
+        return _children[index + (includeInternal ? 0 : _internalFrontCount)];
     }
 
     /// <summary>Gets this node's index in its parent's ordered child list.</summary>
+    /// <param name="includeInternal">Whether implementation children participate; required when this node is internal.</param>
     /// <returns>The zero-based sibling index, or <c>-1</c> when this node has no parent.</returns>
     /// <exception cref="ObjectDisposedException">This node is disposing on another thread or has finished disposing.</exception>
-    public int GetIndex()
+    /// <exception cref="InvalidOperationException">An internal node is queried without including internal children.</exception>
+    public int GetIndex(bool includeInternal = false)
     {
         ThrowIfDisposed();
-        return Parent?._children.IndexOf(this) ?? -1;
+        if (!includeInternal && IsInternalChild) throw new InvalidOperationException("An internal child requires includeInternal indexing.");
+        return Parent is null ? -1 : Parent._children.IndexOf(this) - (includeInternal ? 0 : Parent._internalFrontCount);
     }
 
     /// <summary>Returns this node's current configuration warnings for tooling.</summary>
@@ -1715,6 +1729,7 @@ public partial class Node : ElectronObject
             }
 
             _children.Clear();
+            _internalFrontCount = _internalBackCount = 0;
             _groups.Clear();
             _owner = null;
 
@@ -2307,7 +2322,7 @@ public partial class Node : ElectronObject
             child.PropagatePathRenamed();
     }
 
-    private void InsertChild(Node child, int index)
+    private void InsertChild(Node child, int index, InternalMode internalMode = InternalMode.Disabled)
     {
         EnsureMutable();
         EnsureChildOrderMutable();
@@ -2318,6 +2333,8 @@ public partial class Node : ElectronObject
 
         var tree = Tree;
         _children.Insert(index, child);
+        ChangeInternalChildCount(internalMode, 1);
+        child._internalMode = internalMode;
         child.Parent = this;
         List<Exception>? errors = null;
 
@@ -2433,6 +2450,7 @@ public partial class Node : ElectronObject
         }
 
         _children.Remove(child);
+        ChangeInternalChildCount(child._internalMode, -1);
         child.Parent = null;
         child.ClearInvalidOwnersRecursive();
 

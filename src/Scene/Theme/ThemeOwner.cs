@@ -121,7 +121,7 @@ internal sealed class ThemeOwner : IDisposable
     {
         if (owner._disposed || owner._owner.IsDisposed) return;
         _propagation.Add(owner);
-        for (var index = 0; index < owner._owner.ChildCount; index++) if (From(owner._owner.GetChild(index)) is { } child) Capture(child);
+        for (var index = 0; index < owner._owner.GetChildCount(includeInternal: true); index++) if (From(owner._owner.GetChild(index, includeInternal: true)) is { } child) Capture(child);
     }
     private bool StillDescendant(ThemeOwner candidate)
     {

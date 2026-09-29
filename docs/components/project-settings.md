@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 ## Scope
 
@@ -14,6 +14,8 @@ This Core component provides the process-wide typed settings registry, isolated 
 | [`ProjectSettings`](../classes/ProjectSettings.md) | Registry, metadata, override, persistence, event, and virtual-path owner |
 
 The input action records are defined by the [Input runtime](input-runtime.md); this component registers six typed defaults and provides the internal typed group snapshot used by explicit `InputMap` reload. Two locale and nine pseudolocalization settings have executable consumers in [Localization](localization.md). Both types are implemented in [`src/Core/Config/ProjectSettings.cs`](../../src/Core/Config/ProjectSettings.cs).
+
+`DefaultScrollDeadzone` registers `gui/common/default_scroll_deadzone` as a signed integer defaulting to zero. Each new [ScrollContainer](../classes/ScrollContainer.md) samples its active feature override once during construction; an existing container keeps its own writable `ScrollDeadzone` value.
 
 ## Runtime flow
 

@@ -815,10 +815,10 @@
       "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node)",
+      "electron2d": "method:Electron2D.Node.AddChild(Electron2D.Node,Electron2D.Node.InternalMode)",
       "godot": "Node::method:add_child(Node:,bool:,int:Node.InternalMode)",
       "state": "Partial",
-      "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
+      "reason": "ADR 0008: typed InternalMode inserts front/ordinary/back children and ScrollInternalNodeTests verifies processing, indexing and packing. The reference force_readable_name policy is not exposed because the current typed hierarchy requires explicit unique names; this missing naming behavior keeps the row Partial."
     },
     {
       "electron2d": "method:Electron2D.Node.AddSibling(Electron2D.Node)",
@@ -857,7 +857,7 @@
       "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetChild(System.Int32)",
+      "electron2d": "method:Electron2D.Node.GetChild(System.Int32,System.Boolean)",
       "godot": "Node::method:get_child(int:,bool:)",
       "state": "Partial",
       "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
@@ -869,7 +869,7 @@
       "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."
     },
     {
-      "electron2d": "method:Electron2D.Node.GetIndex()",
+      "electron2d": "method:Electron2D.Node.GetIndex(System.Boolean)",
       "godot": "Node::method:get_index(bool:)",
       "state": "Partial",
       "reason": "The declaring layer follows the accepted Node/CanvasItem/Entity hierarchy (ADR 0008); SceneHierarchyTests checks mixed trees and packed instances. Full reference defaults, lifecycle and ordering still require the per-member audit."

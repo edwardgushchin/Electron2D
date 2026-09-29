@@ -42,7 +42,7 @@ public class CanvasLayer : Node
             try { VisibilityChanged?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             if (!IsDisposed)
-                foreach (var child in Children.ToArray())
+                foreach (var child in AllChildren.ToArray())
                     if (child is CanvasItem item && !item.IsDisposed && ReferenceEquals(item.Parent, this))
                         try { item.PropagateVisibilityChanged(); }
                         catch (Exception error) { CollectException(ref errors, error); }

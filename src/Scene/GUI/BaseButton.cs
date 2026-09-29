@@ -338,6 +338,7 @@ public abstract class BaseButton : Control
                     case NotificationMouseExit: _hovered = false; QueueRedraw(); break;
                     case NotificationFocusEnter: QueueRedraw(); break;
                     case NotificationFocusExit: CancelButtonInteraction(); break;
+                    case NotificationScrollBegin: CancelButtonInteraction(); break;
                     case NotificationPaused:
                     case NotificationDisabled:
                         if (!CanProcess())

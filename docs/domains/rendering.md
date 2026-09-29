@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 ## Responsibility
 
@@ -14,6 +14,7 @@ Rendering turns retained scene commands and typed resources into frames for the 
 | --- | --- | --- |
 | [Canvas rendering](../components/canvas-rendering.md) | [RenderingServer](../classes/RenderingServer.md), CanvasItem drawing, [Line](../classes/Line.md), [Parallax](../classes/Parallax.md), [Sprite](../classes/Sprite.md) and [AnimatedSprite](../classes/AnimatedSprite.md) nodes, [AnimatedTexture](../classes/AnimatedTexture.md) and Texture drawing | Executable rectangle/line/stroke/curve/polygon/primitive/texture/repeated canvas path; full API incomplete |
 | [Typed themes](../components/themes.md) | [ThemeDB](../classes/ThemeDB.md), Control/Window owner lookup and overrides, [Panel](../classes/Panel.md), [PanelContainer](../classes/PanelContainer.md), box/grid constants and Label fonts/effects | Six executable typed data categories and current GUI consumers; project-theme/default-catalog gaps remain explicit |
+| [Scrolling](../components/scrolling.md) | [ScrollBar](../classes/ScrollBar.md), [HScrollBar](../classes/HScrollBar.md), [VScrollBar](../classes/VScrollBar.md), [ScrollContainer](../classes/ScrollContainer.md) | Clipped content, themed bars/hints, focus and wheel/pan/touch input on both current backends |
 | [Text](../components/text.md) | [Font](../classes/Font.md), [FontFile](../classes/FontFile.md), [LabelSettings](../classes/LabelSettings.md), canvas text and [Label](../classes/Label.md) | FreeType/HarfBuzz fractional shaping, private ICU dictionary boundaries, Unicode layout, fallbacks and glyph textures on both current Linux backends |
 | [Shader materials](../components/shader-materials.md) | Shader, ShaderMaterial, CanvasItemMaterial, Material, Texture, ImageTexture and AtlasTexture, owned by Resources | Executable HLSL/GLSL import, typed uniforms and sampled textures; five fixed blend modes on Wayland GPU/compatibility hardware; broader language profile incomplete |
 

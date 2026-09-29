@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -361,7 +361,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
-| [HScrollBar](classes/HScrollBar.md) | ScrollBar | Blocked | 2 |
+| [HScrollBar](classes/HScrollBar.md) | ScrollBar | Implemented | 2 |
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
 | [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
 | [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Blocked | 0 |
@@ -758,8 +758,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScriptExtension](classes/ScriptExtension.md) | Script | Blocked | 37 |
 | [ScriptLanguage](classes/ScriptLanguage.md) | Object | Blocked | 6 |
 | [ScriptLanguageExtension](classes/ScriptLanguageExtension.md) | ScriptLanguage | Blocked | 91 |
-| [ScrollBar](classes/ScrollBar.md) | Range | Blocked | 15 |
-| [ScrollContainer](classes/ScrollContainer.md) | Container | Blocked | 39 |
+| [ScrollBar](classes/ScrollBar.md) | Range | Implemented | 15 |
+| [ScrollContainer](classes/ScrollContainer.md) | Container | Implemented | 39 |
 | [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Implemented | 2 |
 | [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Partial | 2 |
@@ -903,7 +903,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Excluded | 1 |
 | [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Blocked | 0 |
-| [VScrollBar](classes/VScrollBar.md) | ScrollBar | Blocked | 4 |
+| [VScrollBar](classes/VScrollBar.md) | ScrollBar | Implemented | 4 |
 | [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |
 | [VSlider](classes/VSlider.md) | Slider | Implemented | 2 |
 | [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Blocked | 0 |

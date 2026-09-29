@@ -147,7 +147,7 @@ public class Container : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        for (var index = 0; index < ChildCount; index++) if (GetChild(index) is Control child)
+        for (var index = 0; index < GetChildCount(includeInternal: true); index++) if (GetChild(index, includeInternal: true) is Control child)
             { child.SizeFlagsChanged -= ChildSizeChanged; child.MinimumSizeChanged -= ChildSizeChanged; child.MaximumSizeChanged -= ChildSizeChanged; child.VisibilityChanged -= ChildVisibility; child.ContainerMaximum = null; }
         try { base.Dispose(disposing); }
         finally { PreSortChildren = null; SortChildren = null; }

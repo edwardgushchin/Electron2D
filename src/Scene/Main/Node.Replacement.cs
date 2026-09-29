@@ -39,7 +39,7 @@ public partial class Node
             throw new NotSupportedException("Child viewports require multiwindow or offscreen rendering support.");
         if (parent is not null && parent._children.Any(sibling => !ReferenceEquals(sibling, this) && sibling.Name == node.Name))
             throw new InvalidOperationException("The replacement name conflicts with a sibling.");
-        if (_children.Any(child => node._children.Any(existing => existing.Name == child.Name)))
+        if (Children.Any(child => node._children.Any(existing => existing.Name == child.Name)))
             throw new InvalidOperationException("A moved child name conflicts with a replacement child.");
 
         var owner = _owner;
@@ -47,7 +47,8 @@ public partial class Node
             .Where(descendant => !ReferenceEquals(descendant, this) && descendant._owner is not null)
             .Select(descendant => (Node: descendant, Owner: descendant._owner!))
             .ToArray();
-        var index = GetIndex();
+        if (IsInternalChild) throw new InvalidOperationException("An internal node cannot be replaced through ordinary child indexing.");
+        var index = GetIndex(includeInternal: true);
         if (keepGroups)
             foreach (var (group, persistent) in _groups)
                 node.AddToGroup(group, persistent);
@@ -92,7 +93,7 @@ public partial class Node
             ThrowCollected("A replacement callback changed the replacement topology.", errors);
         }
 
-        foreach (var child in _children.ToArray())
+        foreach (var child in GetChildren())
         {
             if (!ReferenceEquals(child.Parent, this)) continue;
             try { RemoveChildCore(child); }

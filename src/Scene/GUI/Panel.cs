@@ -38,8 +38,8 @@ public class PanelContainer : Container
     {
         var margins = GetThemeStyleBox("panel")?.GetMinimumSize() ?? Vector2.Zero;
         var maximum = GetChildMaximum(margins); var minimum = Vector2.Zero;
-        for (var index = 0; index < ChildCount; index++)
-            if (Sortable(GetChild(index), true) && GetChild(index) is Control child)
+        for (var index = 0; index < GetChildCount(includeInternal: true); index++)
+            if (Sortable(GetChild(index, includeInternal: true), true) && GetChild(index, includeInternal: true) is Control child)
             {
                 child.ContainerMaximum = maximum;
                 minimum = minimum.Max(child.GetBoundMinimumSize());
@@ -61,8 +61,8 @@ public class PanelContainer : Container
         _arranging = true; var expectedTree = Tree;
         try
         {
-            for (var index = 0; index < ChildCount; index++)
-                if (Sortable(GetChild(index)) && GetChild(index) is Control child) _children.Add(child);
+            for (var index = 0; index < GetChildCount(includeInternal: true); index++)
+                if (Sortable(GetChild(index, includeInternal: true)) && GetChild(index, includeInternal: true) is Control child) _children.Add(child);
             var style = GetThemeStyleBox("panel");
             var margins = style?.GetMinimumSize() ?? Vector2.Zero; var offset = style?.GetOffset() ?? Vector2.Zero;
             var size = (Size - margins).Max(Vector2.Zero); var maximum = GetChildMaximum(margins);

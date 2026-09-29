@@ -47,8 +47,8 @@ public abstract partial class Viewport
     private Camera? FindCamera(Node node)
     {
         if (node is Camera camera && camera.CanTrack(this)) return camera;
-        for (var i = 0; i < node.ChildCount; i++)
-            if (FindCamera(node.GetChild(i)) is { } result) return result;
+        for (var i = 0; i < node.GetChildCount(includeInternal: true); i++)
+            if (FindCamera(node.GetChild(i, includeInternal: true)) is { } result) return result;
         return null;
     }
 }

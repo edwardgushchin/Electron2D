@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -41,8 +41,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | Member | Contract |
 | --- | --- |
 | [`public NodeAutoTranslateMode AutoTranslateMode { get; set; }`](#p-electron2d-node-autotranslatemode) | Gets or sets the inherited automatic translation policy. |
-| [`public int ChildCount { get; }`](#p-electron2d-node-childcount) | Gets the number of direct children. |
-| [`public IReadOnlyList<Node> Children { get; }`](#p-electron2d-node-children) | Gets a live read-only view of the ordered direct children. |
+| [`public int ChildCount { get; }`](#p-electron2d-node-childcount) | Gets the ordinary direct-child count. |
+| [`public IReadOnlyList<Node> Children { get; }`](#p-electron2d-node-children) | Gets a live read-only view of ordinary direct children. |
 | [`public bool InputEnabled { get; set; }`](#p-electron2d-node-inputenabled) | Gets or sets whether this node receives the first input-propagation stage. |
 | [`public bool IsInsideTree { get; }`](#p-electron2d-node-isinsidetree) | Gets whether this node currently belongs to a scene tree. |
 | [`public bool IsNodeReady { get; }`](#p-electron2d-node-isnodeready) | Gets whether SceneTree-managed ready delivery has occurred since construction or the last ready reset. |
@@ -71,7 +71,7 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | --- | --- |
 | [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
 | [`public virtual string[] GetConfigurationWarnings()`](#diagnostics-getconfigurationwarnings) | Returns this node's current configuration warnings for tooling. |
-| [`public void AddChild(Node child)`](#m-electron2d-node-addchild-electron2d-scenenode) | Appends a detached node as the last direct child. |
+| [`public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`](#m-electron2d-node-addchild-electron2d-scenenode) | Adds an ordinary or front/back internal direct child. |
 | [`public void AddSibling(Node sibling)`](#m-electron2d-node-addsibling-electron2d-scenenode) | Inserts a detached node immediately after this node in its parent's child order. |
 | [`public void AddToGroup(string group, bool persistent = false)`](#m-electron2d-node-addtogroup-system-string-system-boolean) | Adds this node to a case-sensitive group. |
 | [`public string Atr(string message, string? context = null)`](#m-electron2d-node-atr-system-string-system-string) | Translates a singular message when automatic translation is enabled. |
@@ -88,9 +88,11 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 | [`public IReadOnlyList<Node> FindChildren(string pattern, bool recursive = true)`](#m-electron2d-node-findchildren-system-string-system-boolean) | Finds all descendants whose names match a wildcard pattern. |
 | [`public IReadOnlyList<TNode> FindChildren<TNode>(string pattern = "*", bool recursive = true)`](#m-electron2d-node-findchildren-1-system-string-system-boolean) | Finds all descendants of a requested type whose names match a wildcard pattern. |
 | [`public Node FindParent(string pattern)`](#m-electron2d-node-findparent-system-string) | Finds the nearest ancestor whose name matches a wildcard pattern. |
-| [`public Node GetChild(int index)`](#m-electron2d-node-getchild-system-int32) | Gets a direct child by index. |
+| [`public Node GetChild(int index, bool includeInternal = false)`](#m-electron2d-node-getchild-system-int32) | Gets a direct child from the selected view. |
+| `public int GetChildCount(bool includeInternal = false)` | Counts ordinary or all direct children. |
+| `public Node[] GetChildren(bool includeInternal = false)` | Returns a caller-owned child snapshot. |
 | [`public IReadOnlyList<string> GetGroups()`](#m-electron2d-node-getgroups) | Returns this node's group memberships. |
-| [`public int GetIndex()`](#m-electron2d-node-getindex) | Gets this node's index in its parent's ordered child list. |
+| [`public int GetIndex(bool includeInternal = false)`](#m-electron2d-node-getindex) | Gets this node's index in its selected sibling partition. |
 | [`public string GetTreeString()`](#m-electron2d-node-gettreestring) | Lists this node and descendants as relative paths in tree order. |
 | [`public string GetTreeStringPretty()`](#m-electron2d-node-gettreestringpretty) | Formats this subtree with Unicode branches. |
 | [`public Node GetNode(string path)`](#m-electron2d-node-getnode-system-string) | Resolves a required relative or absolute node path. |
@@ -204,7 +206,7 @@ Returns the nearest inherited parent domain, or the main empty domain without a 
 <a id="p-electron2d-node-childcount"></a>
 ### `public int ChildCount { get; }`
 
-Gets the number of direct children.
+Gets the number of ordinary direct children. `GetChildCount(true)` includes front and back internal children.
 
 **Value:** The current child count.
 
@@ -213,7 +215,7 @@ Gets the number of direct children.
 <a id="p-electron2d-node-children"></a>
 ### `public IReadOnlyList<Node> Children { get; }`
 
-Gets a live read-only view of the ordered direct children.
+Gets a live read-only view of ordinary direct children. Internal children remain in the engine hierarchy and are exposed through `GetChildren(true)` or `GetChild(index, true)`.
 
 **Value:** A view backed by this node's child list; later hierarchy changes are visible through it.
 
@@ -533,11 +535,13 @@ ObjectDisposedException: This node is disposed.
 
 
 <a id="m-electron2d-node-addchild-electron2d-scenenode"></a>
-### `public void AddChild(Node child)`
+### `public void AddChild(Node child, InternalMode internalMode = InternalMode.Disabled)`
 
-Appends a detached node as the last direct child.
+Adds a detached node to the end of the selected ordinary, internal-front or internal-back partition. See [InternalMode](Node.InternalMode.md). Ordinary children stay between front and back children; all children still enter, process, draw and receive notifications.
 
 **Parameter `child`:** The live node to adopt.
+
+**Parameter `internalMode`:** Disabled by default; Front and Back are the two internal partitions. Undefined values throw `ArgumentOutOfRangeException` before insertion.
 
 **Remarks:** If this node is active, the child's subtree enters immediately and receives ready where eligible.
 
@@ -739,17 +743,23 @@ Finds the nearest ancestor whose name matches a wildcard pattern.
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
 <a id="m-electron2d-node-getchild-system-int32"></a>
-### `public Node GetChild(int index)`
+### `public Node GetChild(int index, bool includeInternal = false)`
 
 Gets a direct child by index.
 
-**Parameter `index`:** The child index; negative values count from the end.
+**Parameter `index`:** The index in the selected view; negative values count from the end.
+
+**Parameter `includeInternal`:** False by default. True includes front and back internal children in scene order.
 
 **Returns:** The selected direct child.
 
 **System.ArgumentOutOfRangeException:** This node has no children or `index` is outside the valid range.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+### `public int GetChildCount(bool includeInternal = false)` and `public Node[] GetChildren(bool includeInternal = false)`
+
+`GetChildCount` returns the count in the selected view. `GetChildren` returns a new caller-owned array of borrowed node identities in that order. The default view omits front/back internal children; `includeInternal: true` includes every direct child. Attached queries use the scene owner thread, and disposed nodes reject both methods.
 
 <a id="m-electron2d-node-getgroups"></a>
 ### `public IReadOnlyList<string> GetGroups()`
@@ -761,13 +771,17 @@ Returns this node's group memberships.
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
 
 <a id="m-electron2d-node-getindex"></a>
-### `public int GetIndex()`
+### `public int GetIndex(bool includeInternal = false)`
 
 Gets this node's index in its parent's ordered child list.
 
-**Returns:** The zero-based sibling index, or -1 when this node has no parent.
+**Returns:** The zero-based ordinary sibling index, or full scene index when `includeInternal` is true; -1 when detached. An internal child queried without `includeInternal` throws `InvalidOperationException`.
 
 **System.ObjectDisposedException:** This node is disposing on another thread or has finished disposing.
+
+### Internal child partitions
+
+`AddChild` inserts Front children before ordinary children and Back children afterward. `AddSibling` preserves the current node's partition. `MoveChild` indexes and reorders only within its child's partition; the ordinary range accepts its end index as its last position. `RemoveChild` detaches without disposal, and a later ordinary `AddChild` resets the detached node's mode. `Reparent` also makes it ordinary. Ordinary scene capture omits internal children; a container constructor reconstructs its own internals on instantiation. Internal nodes remain in lifecycle, processing, theme, rendering and input traversals. [ScrollInternalNodeTests](../../tests/Electron2D.Tests/ScrollInternalNodeTests.cs) checks both views, ordering, movement, process callbacks and packed-scene omission.
 
 <a id="m-electron2d-node-getnode-system-string"></a>
 ### `public Node GetNode(string path)`

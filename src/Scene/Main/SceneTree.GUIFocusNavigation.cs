@@ -7,8 +7,8 @@ public sealed partial class SceneTree
         if (inputEvent is not InputEventJoypadMotion && !inputEvent.IsPressed()) return;
         var from = _guiFocus;
         if (from is null)
-            for (var index = 0; index < viewport.ChildCount; index++)
-                if (viewport.GetChild(index) is Control { TopLevel: false, IsVisibleInTree: true } control)
+            for (var index = 0; index < viewport.GetChildCount(includeInternal: true); index++)
+                if (viewport.GetChild(index, includeInternal: true) is Control { TopLevel: false, IsVisibleInTree: true } control)
                 { from = control; break; }
         if (from is null) return;
 

@@ -160,7 +160,7 @@ public sealed partial class RenderingServer : ElectronObject
                 {
                     var layer = node.GetCanvasLayerNode();
                     if (layer is not null && !ReferenceEquals(layer.CanvasViewport, _window)) continue;
-                    _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex();
+                    _canvasStacking = layer is null ? 0 : ((long)layer.Layer << 32) + (uint)layer.GetIndex(includeInternal: true);
                     _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
                     _canvasID = layer?.InstanceID ?? 0;
                     OrderCanvas(node, framebufferTransform * _window.GetCanvasRenderTransform(layer, _interpolationFraction));
@@ -224,7 +224,7 @@ public sealed partial class RenderingServer : ElectronObject
     private void Capture(Node node)
     {
         if (node is CanvasItem item) _nodes.Add(item);
-        for (var i = 0; i < node.ChildCount; i++) Capture(node.GetChild(i));
+        for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) Capture(node.GetChild(i, includeInternal: true));
     }
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
@@ -318,16 +318,16 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void OrderChildren(CanvasItem item, Transform transform, bool behind)
     {
-        for (var index = 0; index < item.ChildCount; index++)
-            if (item.GetChild(index) is CanvasItem { TopLevel: false } child && child.ShowBehindParent == behind)
+        for (var index = 0; index < item.GetChildCount(includeInternal: true); index++)
+            if (item.GetChild(index, includeInternal: true) is CanvasItem { TopLevel: false } child && child.ShowBehindParent == behind)
                 OrderCanvas(child, transform);
     }
 
     private void CollectYSort(CanvasItem parent, Transform parentTransform)
     {
-        for (var index = 0; index < parent.ChildCount; index++)
+        for (var index = 0; index < parent.GetChildCount(includeInternal: true); index++)
         {
-            if (parent.GetChild(index) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
+            if (parent.GetChild(index, includeInternal: true) is not CanvasItem { TopLevel: false } child || !child.Visible || (child.VisibilityLayer & _window.CanvasCullMask) == 0) continue;
             var local = child.GetInterpolatedVisualTransform(_interpolationFraction);
             if (_window.SnapTransformsToPixel) local.Origin = CanvasGeometry.Snap(local.Origin);
             var transform = parentTransform * local;

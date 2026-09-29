@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 ## Responsibility
 
@@ -26,7 +26,7 @@ Production types include [`Polygon`](../classes/Polygon.md), [`Line`](../classes
 
 The Control branch also exposes [`FocusBehaviorRecursive`](../classes/FocusBehaviorRecursive.md) and [`MouseBehaviorRecursive`](../classes/MouseBehaviorRecursive.md) for direct-Control subtree input policy; [ControlRecursiveBehaviorTests](../../tests/Electron2D.Tests/ControlRecursiveBehaviorTests.cs) checks their root viewport behavior.
 
-- `Node`: neutral ordered hierarchy, lifecycle, paths/groups including owner-scoped `%Name`, subtree replacement, inherited physics-interpolation policy/reset, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
+- `Node`: neutral ordered hierarchy with ordinary and [front/back internal child partitions](../classes/Node.InternalMode.md), lifecycle, paths/groups including owner-scoped `%Name`, subtree replacement, inherited physics-interpolation policy/reset, depth-first diagnostics and notification propagation, processing/input, packed ownership and deletion.
 - `CanvasItem : Node`: abstract retained drawing, visibility, materials, modulation, Z, shared transform queries, texture sampling policies and local geometry notifications through ItemRectChanged. Z ordering, borrowed material/modulation inheritance and draw-transform state now have managed and Wayland pixel audits; its local transform query is fulfilled by owner-guarded Entity/Control overrides. Other canvas rows retain their own status.
 - `Entity : CanvasItem`: spatial position, rotation, scale, skew and helpers; Sprite, AnimatedSprite, Parallax, ParallaxLayer, Path, PathFollow and RemoteTransform derive directly from it. All 23 own spatial members and its type row have pinned semantic audits, including near-zero scale replacement, reflected-basis direction, point-only global translation, typed relative-chain errors and rotation/skew/angle behavior; inherited canvas and scene gaps remain on their own coverage rows.
 - `RemoteTransform`: borrowed target-path binding and selected local/global spatial transfer through the scene transform-notification lanes.

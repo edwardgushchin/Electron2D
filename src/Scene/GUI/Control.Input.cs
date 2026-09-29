@@ -19,7 +19,10 @@ public enum FocusMode
     /// <summary>Can receive focus by pointer press or an explicit request.</summary>
     Click = 1,
     /// <summary>Can also receive focus through keyboard or controller navigation.</summary>
-    All = 2
+    All = 2,
+    /// <summary>Receives focus only while a screen reader is active.</summary>
+    /// <remarks>The current runtime has no accessibility service, so this value is retained but cannot take focus.</remarks>
+    Accessibility = 3
 }
 
 /// <summary>Controls whether focus eligibility is inherited, disabled, or restored in a control subtree.</summary>
@@ -93,6 +96,10 @@ public partial class Control
     public const int NotificationFocusEnter = 43;
     /// <summary>This control lost keyboard focus, before <see cref="FocusExited"/>.</summary>
     public const int NotificationFocusExit = 44;
+    /// <summary>A touch-scroll gesture crossed its deadzone in an ancestor scroll container.</summary>
+    public const int NotificationScrollBegin = 47;
+    /// <summary>A touch-scroll gesture or its inertial continuation ended in an ancestor scroll container.</summary>
+    public const int NotificationScrollEnd = 48;
     /// <summary>This control became the directly hovered control.</summary>
     public const int NotificationMouseEnterSelf = 60;
     /// <summary>This control stopped being the directly hovered control.</summary>
@@ -213,6 +220,8 @@ public partial class Control
 
     internal FocusMode EffectiveFocusMode =>
         IsFocusBehaviorEnabled() && Tree?.IsTooltipControl(this) != true ? _focusMode : FocusMode.None;
+
+    internal bool CanReceiveGUIFocus => EffectiveFocusMode is FocusMode.Click or FocusMode.All;
 
     /// <summary>Returns the pointer filter after applying the inherited recursive policy.</summary>
     /// <returns><see cref="MouseFilter.Ignore"/> when this control's pointer behavior is disabled; otherwise <see cref="MouseFilter"/>.</returns>

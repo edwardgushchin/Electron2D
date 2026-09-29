@@ -1,6 +1,6 @@
 # Typed themes and lookup
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 ## Scope and owned types
 
@@ -21,7 +21,7 @@ The implemented data categories are Color, Constant, Font, FontSize, Icon and St
 
 [Panel](../classes/Panel.md) draws the inherited `panel` style without imposing padding on children. [PanelContainer](../classes/PanelContainer.md) combines style minimum and child bounds, draws the same key and fits eligible children inside the resolved content area. Box/HBox/VBox and Grid separation values consume actual typed constant lookup and local overrides, retaining the default gap four.
 
-ThemeDB supplies actual default entries for panel/container, horizontal/vertical slider and Label consumers. The slider families share three styles and grabber-state icons, with an axis-specific tick icon; default assets use scale one. It does not claim a full default asset catalog for absent GUI families. GetProjectTheme is absent until a Theme resource loader and startup project configuration provide real loaded state. The built-in DefaultFont and initial FallbackFont share an owned embedded Open Sans SemiBold resource with deferred native loading. Font slots/defaults, inherited lookup and local overrides borrow actual Font resources; replacements invalidate text consumers through the same scene notification path. The font implementation supplies shaping and glyph drawing under ADR 0046.
+ThemeDB supplies actual default entries for panel/container, horizontal/vertical slider, Label, button/check and scroll consumers. The slider families share three styles and grabber-state icons, with an axis-specific tick icon; default assets use scale one. Scrollbar orientations share three grabber styles, the existing control focus style and one live zero-size image across all arrow-state slots; their tracks have separate axis margins. ScrollContainer adds an empty panel, a separate expanded focus border and two exact SVG scroll hints. Padding and separation constants absent from the source catalog retain zero fallback rather than becoming invented stored entries. It does not claim a full default asset catalog for absent GUI families. GetProjectTheme is absent until a Theme resource loader and startup project configuration provide real loaded state. The built-in DefaultFont and initial FallbackFont share an owned embedded Open Sans SemiBold resource with deferred native loading. Font slots/defaults, inherited lookup and local overrides borrow actual Font resources; replacements invalidate text consumers through the same scene notification path. The font implementation supplies shaping and glyph drawing under ADR 0046.
 
 ## Verification and limits
 

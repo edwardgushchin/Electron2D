@@ -254,6 +254,16 @@ public partial class Control : CanvasItem
             maximum.Y >= 0 ? Mathf.Min(minimum.Y, maximum.Y) : minimum.Y);
     }
 
+    internal virtual Vector2 GetDesiredSize() => Vector2.Zero;
+
+    internal Vector2 GetBoundDesiredSize()
+    {
+        var minimum = GetCombinedMinimumSize().Max(GetDesiredSize());
+        var maximum = GetCombinedMaximumSize();
+        return new(maximum.X >= 0 ? Mathf.Min(minimum.X, maximum.X) : minimum.X,
+            maximum.Y >= 0 ? Mathf.Min(minimum.Y, maximum.Y) : minimum.Y);
+    }
+
     /// <summary>Requests a coalesced minimum-size update after an intrinsic minimum changes.</summary>
     public void UpdateMinimumSize()
     {
@@ -267,8 +277,8 @@ public partial class Control : CanvasItem
     public void UpdateMaximumSize()
     {
         EnsureMutable();
-        for (var index = 0; index < ChildCount; index++)
-            if (GetChild(index) is Control { TopLevel: false } control)
+        for (var index = 0; index < GetChildCount(includeInternal: true); index++)
+            if (GetChild(index, includeInternal: true) is Control { TopLevel: false } control)
             {
                 control.ContainerMaximum = null;
                 control.UpdateMaximumSize();

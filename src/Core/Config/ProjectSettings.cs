@@ -363,6 +363,11 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<Vector2> TooltipPositionOffset { get; } =
         new("display/mouse_cursor/tooltip_position_offset", new(10, 10), value => value.IsFinite());
 
+    /// <summary>Defines the initial touch-scroll deadzone in logical pixels for new scroll containers.</summary>
+    /// <value>Zero initially; signed values retain the source setting's permissive contract.</value>
+    public static ProjectSetting<int> DefaultScrollDeadzone { get; } =
+        new("gui/common/default_scroll_deadzone", 0);
+
     private static readonly ProjectSettings SharedInstance = CreateSharedInstance();
 
     private readonly object _gate = new();
@@ -453,6 +458,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(ButtonShortcutFeedbackHighlightTime, isBasic: false);
         RegisterInternal(TooltipDelaySeconds, isBasic: false);
         RegisterInternal(TooltipPositionOffset, isBasic: false);
+        RegisterInternal(DefaultScrollDeadzone, isBasic: false);
     }
 
     /// <summary>Gets the process-wide project settings registry.</summary>
@@ -1826,6 +1832,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUICancel) ||
         ReferenceEquals(setting, ButtonShortcutFeedbackHighlightTime) ||
         ReferenceEquals(setting, TooltipDelaySeconds) ||
+        ReferenceEquals(setting, DefaultScrollDeadzone) ||
         ReferenceEquals(setting, TooltipPositionOffset);
 
     private static string ResolveWithinRoot(string root, string relativePath)

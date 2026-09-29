@@ -1,10 +1,10 @@
 # ThemeDB
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
-**Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs) · **Component:** [Typed themes](../components/themes.md)
+**Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs), [ThemeDB.Scroll.cs](../../src/Scene/Resources/ThemeDB.Scroll.cs) · **Component:** [Typed themes](../components/themes.md)
 
 ## Description and example
 
@@ -37,14 +37,14 @@ There is no public constructor or GetProjectTheme null stub.
 ## Property and method descriptions
 
 <a id="instance"></a><a id="getdefaulttheme"></a>
-**Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider and sixteen button SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. Construction owns the embedded Open Sans SemiBold resource; its native face is loaded only by the first text query. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
+**Singleton/default Theme:** creation is lazy and serialized; construction decodes the five slider, sixteen button and two scroll-hint SVG icons once through the existing image codec. Failure releases partial owned defaults and propagates. The fallback error icon remains separately lazy. Construction owns the embedded Open Sans SemiBold resource; its native face is loaded only by the first text query. GetDefaultTheme returns the same mutable Theme, rejecting a disposed service or default Theme. Its current built-in data is:
 
 | Entry | Initial value |
 | --- | --- |
 | DefaultBaseScale / DefaultFontSize | 1 / 16. |
 | DefaultFont | Service-owned embedded Open Sans SemiBold, initially also FallbackFont. |
 | Label font/font_size | Null/-1 slots resolve the defaults. |
-| Label styles | Empty `normal`; white alpha0.75 outline `focus` with margins4, radius3, detail5, borders2 and expansion2. |
+| Label styles | Empty `normal`; hollow `focus` with BGColor white alpha0.75, default border gray0.8 alpha1, margins4, radius3, detail5, borders2 and expansion2. |
 | Label text colors/constants | White font, transparent shadow, black outline; shadow offsets1/1, outline0, shadow-outline1 and line-spacing3; absent paragraph spacing resolves constant fallback0. |
 | `Panel/panel` and `PanelContainer/panel` styles | Separate StyleBoxFlat instances; BGColor `(0.1, 0.1, 0.1, 0.6)`, zero content margins, corner radius 3, detail 5. |
 | BoxContainer/HBoxContainer/VBoxContainer `separation` | 4. |
@@ -58,9 +58,16 @@ There is no public constructor or GetProjectTheme null stub.
 | CheckBox | Empty state styles with margins4, shared focus; eight checked/unchecked/radio/disabled icons, white indicator colors and vertical offset0. |
 | CheckButton | Empty state styles with margins6/4/6/4, shared focus; eight checked/unchecked/disabled/mirrored switch icons, white indicator colors and vertical offset0. |
 | FlatButton variation | Inherits Button, with empty normal/hover/disabled margins4 and pressed black alpha `0.6 × 0.85`. |
+| HScrollBar/VScrollBar `scroll` | Separate gray0.1 alpha0.6 flat styles, radius10/detail6; margins0/4/0/4 horizontally and4/0/4/0 vertically. |
+| Scrollbar grabber states | Three shared H/V flat styles, margins4/radius10/detail6: white alpha0.4 normal, white alpha0.75 highlight, gray0.75 alpha0.75 pressed. |
+| Scrollbar `scroll_focus` | The same resource as the existing Button/Label focus style. |
+| Scrollbar increment/decrement states | All twelve H/V normal/highlight/pressed slots share one live uninitialized ImageTexture, size0×0. These are explicit empty icons, not missing entries or visible arrow replacements. |
+| ScrollContainer panel/focus | Empty panel with untouched raw margins−1. Separate hollow focus: BG/border white alpha0.75, margins4, radius3/detail5, border2 and expansion4. |
+| ScrollContainer hints | Exact horizontal24×32 and vertical32×24 white SVG alpha ramps, modulated with opaque black. |
+| Scrollbar padding / container separation | Absent named constants resolve to0; Has remains false until an override or theme supplies an item. |
 | TooltipPanel / TooltipLabel variations | TooltipPanel uses PanelContainer with black alpha0.5, margins8/2/8/2, radius3 and detail5. TooltipLabel inherits Label with font slots null/-1, gray0.875 text, transparent shadow, black outline, shadow offsets1/1 and outline0. |
 
-The default slider and button icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
+The default slider, button and scroll-hint icons currently use scale one; nonunit default-theme/DPI construction and refresh remain incomplete. The missing standard data for other GUI families is a real coverage gap. Their complete first consumer slices must add the matching styles/colors/constants/icons, while the current Font slice supplies the embedded font and Label defaults. This table is not a claim of a complete upstream default theme.
 
 <a id="fallbackbasescale"></a><a id="fallbackfontsize"></a>
 **Scalar fallbacks:** used only after applicable themes provide no positive default/value. Base scale requires a finite value and otherwise preserves its sign; font size preserves signed integer state. Equal assignments are silent. Nonfinite scale throws ArgumentOutOfRangeException. These values do not load fonts or automatically rescale existing styles/constants.
@@ -85,3 +92,5 @@ The default slider and button icons currently use scale one; nonunit default-the
 GetProjectTheme remains absent until a Theme resource-file loader and typed `gui/theme/custom` startup validation/ownership policy return actual loaded state. Font fallback and font objects execute in the FreeType/HarfBuzz Font resource/loading/shaping slice. Missing GUI default data remains Partial; font theme storage and lookup are executable.
 
 [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. See [coverage](../coverage/classes/ThemeDB.md), [Theme](Theme.md) and [ADR 0083](../decisions/rendering.md#adr-0083). The built-in font and icons retain their [runtime attribution notice](../../licence/THIRD_PARTY_NOTICES.md).
+
+[ScrollThemeTests](../../tests/Electron2D.Tests/ScrollThemeTests.cs) checks the scrollbar style values and H/V aliases, twelve explicit empty-icon slots, absent padding/separation keys, the distinct container focus geometry, exact embedded SVG hashes and decoded gradient direction/pixels. These new checks await the coordinated scroll-slice run; no scroll consumer native verification is claimed here yet.

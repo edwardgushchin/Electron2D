@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 ## Scope
 
@@ -50,6 +50,8 @@ The component reads typed versioned action records from `ProjectSettings` only d
 ## Current implementation status and exclusions
 
 `Control.ClipContents` now excludes pointer targets outside any direct canvas ancestor's local rectangle and refreshes hover when toggled. It does not alter a pressed control's normal outside-release capture. [ControlClipTests](../../tests/Electron2D.Tests/ControlClipTests.cs) verifies the root viewport path; nested viewport routing remains separate.
+
+Wheel events hit-test independently and never claim mouse-button capture; their momentary press therefore cannot redirect a later click. Touch-style left-button presses and motion can reach a ScrollContainer above a stopping child without delivering the event to intervening controls. After the configured deadzone, the container sends scroll-begin notification through its subtree so BaseButton cancels a pending press. [ScrollBarTests](../../tests/Electron2D.Tests/ScrollBarTests.cs) and [ScrollContainerTests](../../tests/Electron2D.Tests/ScrollContainerTests.cs) cover both routing paths. Native source touch emulation still follows the existing Input and DisplayServer policies.
 
 Keyboard, mouse buttons/motion, touch/drag, magnify/pan gestures, controller buttons/axes, direct action and shortcut events, action maps, raw key/mouse/controller and action queries, vector composition, transition latches, release-all, and Node propagation are implemented.
 

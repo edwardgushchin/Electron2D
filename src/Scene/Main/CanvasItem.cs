@@ -529,8 +529,8 @@ public abstract partial class CanvasItem : Node
         if (_globalTransformInvalid) return;
         _globalTransformInvalid = true;
         if (_notifyTransformChanges && IsInsideTree) Tree!.QueueTransformNotification(this);
-        for (var i = 0; i < ChildCount; i++)
-            if (GetChild(i) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
+        for (var i = 0; i < GetChildCount(includeInternal: true); i++)
+            if (GetChild(i, includeInternal: true) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
                 child.PropagateGlobalTransformChanged();
     }
 
@@ -564,7 +564,7 @@ public abstract partial class CanvasItem : Node
                 try { Hidden?.Invoke(this); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
-            foreach (var child in Children.ToArray())
+            foreach (var child in AllChildren.ToArray())
             {
                 if (child is not CanvasItem item || item.IsDisposed || !ReferenceEquals(item.Parent, this)) continue;
                 try { item.PropagateVisibilityChanged(); }

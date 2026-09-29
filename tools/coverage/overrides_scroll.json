@@ -1,0 +1,409 @@
+{
+  "mappings": [
+    {
+      "godot": "Node::enum:InternalMode",
+      "electron2d": "T:Electron2D.Node.InternalMode",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "Node::enum_value:InternalMode.INTERNAL_MODE_DISABLED",
+      "electron2d": "enumValue:Electron2D.Node.InternalMode.Disabled()",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "Node::enum_value:InternalMode.INTERNAL_MODE_FRONT",
+      "electron2d": "enumValue:Electron2D.Node.InternalMode.Front()",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "Node::enum_value:InternalMode.INTERNAL_MODE_BACK",
+      "electron2d": "enumValue:Electron2D.Node.InternalMode.Back()",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "Node::method:get_child_count(bool:)",
+      "electron2d": "method:Electron2D.Node.GetChildCount(System.Boolean)",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "Node::method:get_children(bool:)",
+      "electron2d": "method:Electron2D.Node.GetChildren(System.Boolean)",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": "ScrollBar::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollBar::property:step",
+      "electron2d": "property:Electron2D.Range.Step()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "VScrollBar::property:size_flags_horizontal",
+      "electron2d": "property:Electron2D.Control.SizeFlagsHorizontal()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "VScrollBar::property:size_flags_vertical",
+      "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollContainer::method:get_h_scroll_bar()",
+      "electron2d": "method:Electron2D.ScrollContainer.GetHScrollBar()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollContainer::method:get_v_scroll_bar()",
+      "electron2d": "method:Electron2D.ScrollContainer.GetVScrollBar()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollContainer::property:scroll_hint_mode",
+      "electron2d": "property:Electron2D.ScrollContainer.HintMode()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollContainer::property:clip_contents",
+      "electron2d": "property:Electron2D.Control.ClipContents()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ScrollContainer::property:propagate_maximum_size",
+      "electron2d": "property:Electron2D.Control.PropagateMaximumSize()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/common/default_scroll_deadzone",
+      "electron2d": "property:Electron2D.ProjectSettings.DefaultScrollDeadzone()",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "HScrollBar::theme_item:padding_bottom",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key padding_bottom resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "HScrollBar::theme_item:padding_top",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key padding_top resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "VScrollBar::theme_item:padding_left",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key padding_left resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "VScrollBar::theme_item:padding_right",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key padding_right resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:decrement",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key decrement resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:decrement_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key decrement_highlight resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:decrement_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key decrement_pressed resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key grabber resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:grabber_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key grabber_highlight resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:grabber_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key grabber_pressed resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:increment",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key increment resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:increment_highlight",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key increment_highlight resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:increment_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key increment_pressed resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:scroll",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollBar::theme_item:scroll_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll_focus resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key focus resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key panel resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scroll_hint_horizontal",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll_hint_horizontal resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scroll_hint_horizontal_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll_hint_horizontal_color resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scroll_hint_vertical",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll_hint_vertical resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scroll_hint_vertical_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scroll_hint_vertical_color resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scrollbar_h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scrollbar_h_separation resolves through inherited typed lookup and verified defaults."
+    },
+    {
+      "godot": "ScrollContainer::theme_item:scrollbar_v_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified. Theme key scrollbar_v_separation resolves through inherited typed lookup and verified defaults."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:HScrollBar",
+        "HScrollBar::theme_item:padding_bottom",
+        "HScrollBar::theme_item:padding_top"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "class:VScrollBar",
+        "VScrollBar::property:size_flags_horizontal",
+        "VScrollBar::property:size_flags_vertical",
+        "VScrollBar::theme_item:padding_left",
+        "VScrollBar::theme_item:padding_right"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "class:ScrollBar",
+        "ScrollBar::property:custom_step",
+        "ScrollBar::property:focus_mode",
+        "ScrollBar::property:step",
+        "ScrollBar::signal:scrolling()",
+        "ScrollBar::theme_item:decrement",
+        "ScrollBar::theme_item:decrement_highlight",
+        "ScrollBar::theme_item:decrement_pressed",
+        "ScrollBar::theme_item:grabber",
+        "ScrollBar::theme_item:grabber_highlight",
+        "ScrollBar::theme_item:grabber_pressed",
+        "ScrollBar::theme_item:increment",
+        "ScrollBar::theme_item:increment_highlight",
+        "ScrollBar::theme_item:increment_pressed",
+        "ScrollBar::theme_item:scroll",
+        "ScrollBar::theme_item:scroll_focus"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "class:ScrollContainer",
+        "ScrollContainer::enum:ScrollHintMode",
+        "ScrollContainer::enum:ScrollMode",
+        "ScrollContainer::enum_value:ScrollHintMode.SCROLL_HINT_MODE_ALL",
+        "ScrollContainer::enum_value:ScrollHintMode.SCROLL_HINT_MODE_BOTTOM_AND_RIGHT",
+        "ScrollContainer::enum_value:ScrollHintMode.SCROLL_HINT_MODE_DISABLED",
+        "ScrollContainer::enum_value:ScrollHintMode.SCROLL_HINT_MODE_TOP_AND_LEFT",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_AUTO",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_DISABLED",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_MAXIMIZE_FIRST",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_RESERVE",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_SHOW_ALWAYS",
+        "ScrollContainer::enum_value:ScrollMode.SCROLL_MODE_SHOW_NEVER",
+        "ScrollContainer::method:ensure_control_visible(Control:)",
+        "ScrollContainer::method:get_h_scroll_bar()",
+        "ScrollContainer::method:get_v_scroll_bar()",
+        "ScrollContainer::property:clip_contents",
+        "ScrollContainer::property:draw_focus_border",
+        "ScrollContainer::property:follow_focus",
+        "ScrollContainer::property:horizontal_scroll_mode",
+        "ScrollContainer::property:propagate_maximum_size",
+        "ScrollContainer::property:scroll_deadzone",
+        "ScrollContainer::property:scroll_hint_mode",
+        "ScrollContainer::property:scroll_horizontal",
+        "ScrollContainer::property:scroll_horizontal_by_default",
+        "ScrollContainer::property:scroll_horizontal_custom_step",
+        "ScrollContainer::property:scroll_vertical",
+        "ScrollContainer::property:scroll_vertical_custom_step",
+        "ScrollContainer::property:tile_scroll_hint",
+        "ScrollContainer::property:vertical_scroll_mode",
+        "ScrollContainer::signal:scroll_ended()",
+        "ScrollContainer::signal:scroll_started()",
+        "ScrollContainer::theme_item:focus",
+        "ScrollContainer::theme_item:panel",
+        "ScrollContainer::theme_item:scroll_hint_horizontal",
+        "ScrollContainer::theme_item:scroll_hint_horizontal_color",
+        "ScrollContainer::theme_item:scroll_hint_vertical",
+        "ScrollContainer::theme_item:scroll_hint_vertical_color",
+        "ScrollContainer::theme_item:scrollbar_h_separation",
+        "ScrollContainer::theme_item:scrollbar_v_separation"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "Node::enum:InternalMode",
+        "Node::enum_value:InternalMode.INTERNAL_MODE_DISABLED",
+        "Node::enum_value:InternalMode.INTERNAL_MODE_FRONT",
+        "Node::enum_value:InternalMode.INTERNAL_MODE_BACK",
+        "Node::method:get_child_count(bool:)",
+        "Node::method:get_children(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: InternalMode preserves front/ordinary/back indexing while engine lifecycle, input and rendering traverse all children; ScrollInternalNodeTests checks order, movement, processing and PackedScene omission."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:gui/common/default_scroll_deadzone"
+      ],
+      "state": "Implemented",
+      "reason": "Typed built-in signed integer setting, sampled with active override by each new ScrollContainer; the registry and constructor preserve the default zero value."
+    },
+    {
+      "godot": [
+        "Node::method:get_child(int:,bool:)",
+        "Node::method:get_index(bool:)",
+        "Node::method:move_child(Node:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0008: ordinary/front/back child indexing and partition-local movement execute with negative indices, invalid-range rejection, sibling insertion and reparenting. ScrollInternalNodeTests checks detached and attached traversal, packing and boundary movement."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.HScrollBar..ctor()",
+      "state": "Implemented",
+      "reason": "C# typed construction of the existing HScrollBar concept; this constructor has no separate class-reference row. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VScrollBar..ctor()",
+      "state": "Implemented",
+      "reason": "C# typed construction of the existing VScrollBar concept; this constructor has no separate class-reference row. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ScrollBar..ctor(System.Boolean)",
+      "state": "Implemented",
+      "reason": "C# typed construction of the existing ScrollBar concept; this constructor has no separate class-reference row. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ScrollContainer..ctor()",
+      "state": "Implemented",
+      "reason": "C# typed construction of the existing ScrollContainer concept; this constructor has no separate class-reference row. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.HScrollBar.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for HScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.VScrollBar.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for VScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollBar.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollBar.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollBar.OnGUIInput(Electron2D.InputEvent)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollBar.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollBar.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollBar, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.CreateSceneInstanceFactory()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.GetConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.OnGUIInput(Electron2D.InputEvent)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.OnGetMinimumSize()",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "electron2d": "method:Electron2D.ScrollContainer.OnNotification(System.Int32)",
+      "state": "Implemented",
+      "reason": "C# override implements inherited Node/Control/Range behavior for ScrollContainer, including typed packing, input, drawing, diagnostics or cleanup; the own-class XML has no separate declaration. ADRs 0008/0038/0083: ScrollBar and ScrollContainer execute themed range and clipped content with typed wheel/pan/touch, internal bars/hints, focus and scene packing. ScrollBarTests, ScrollContainerTests, ScrollThemeTests and Linux Wayland GPU/compatibility ScrollRenderingTests verify managed and pixel behavior; 64 warmed active frames allocate zero managed bytes. Native allocation, other platforms and owner acceptance remain unverified."
+    }
+  ]
+}

@@ -77,8 +77,8 @@ public class BoxContainer : Container
     protected override Vector2 OnGetMinimumSize()
     {
         var minimum = Vector2.Zero; var count = 0;
-        for (var index = 0; index < ChildCount; index++)
-            if (Sortable(GetChild(index), true) && GetChild(index) is Control child)
+        for (var index = 0; index < GetChildCount(includeInternal: true); index++)
+            if (Sortable(GetChild(index, includeInternal: true), true) && GetChild(index, includeInternal: true) is Control child)
             {
                 var size = child.GetBoundMinimumSize().Ceil();
                 if (_vertical) { minimum.X = MathF.Max(minimum.X, size.X); minimum.Y += size.Y + (count == 0 ? 0 : Separation); }
@@ -109,8 +109,8 @@ public class BoxContainer : Container
         _slots.Clear(); var stretchMinimum = 0; var stretchAvailable = 0; var ratioTotal = 0f;
         var size = Size.Floor(); var maximum = GetCombinedMaximumSize();
         var propagating = PropagateMaximumSize && (_vertical ? maximum.Y : maximum.X) >= 0;
-        for (var index = 0; index < ChildCount; index++)
-            if (Sortable(GetChild(index)) && GetChild(index) is Control child)
+        for (var index = 0; index < GetChildCount(includeInternal: true); index++)
+            if (Sortable(GetChild(index, includeInternal: true)) && GetChild(index, includeInternal: true) is Control child)
             {
                 child.ContainerMaximum = propagating ? maximum : null;
                 var minimum = child.GetBoundMinimumSize().Ceil(); var max = child.GetCombinedMaximumSize();

@@ -1665,6 +1665,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.HScrollBar",
+    "kind": "type",
+    "declaringType": "Electron2D.HScrollBar",
+    "name": "HScrollBar",
+    "signature": "public class Electron2D.HScrollBar",
+    "visibility": "public",
+    "baseType": "Electron2D.ScrollBar",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.HSlider",
     "kind": "type",
     "declaringType": "Electron2D.HSlider",
@@ -2716,6 +2731,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Node.InternalMode",
+    "kind": "type",
+    "declaringType": "Electron2D.Node.InternalMode",
+    "name": "InternalMode",
+    "signature": "public enum Electron2D.Node.InternalMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NodeAutoTranslateMode",
     "kind": "type",
     "declaringType": "Electron2D.NodeAutoTranslateMode",
@@ -3673,6 +3706,72 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ScrollBar",
+    "kind": "type",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "ScrollBar",
+    "signature": "public abstract class Electron2D.ScrollBar",
+    "visibility": "public",
+    "baseType": "Electron2D.Range",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ScrollContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollContainer",
+    "signature": "public class Electron2D.ScrollContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ScrollContainer.ScrollHintMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "name": "ScrollHintMode",
+    "signature": "public enum Electron2D.ScrollContainer.ScrollHintMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ScrollContainer.ScrollMode",
+    "kind": "type",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "ScrollMode",
+    "signature": "public enum Electron2D.ScrollContainer.ScrollMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SegmentShape",
     "kind": "type",
     "declaringType": "Electron2D.SegmentShape",
@@ -4586,6 +4685,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VScrollBar",
+    "kind": "type",
+    "declaringType": "Electron2D.VScrollBar",
+    "name": "VScrollBar",
+    "signature": "public class Electron2D.VScrollBar",
+    "visibility": "public",
+    "baseType": "Electron2D.ScrollBar",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VSlider",
     "kind": "type",
     "declaringType": "Electron2D.VSlider",
@@ -5275,6 +5389,32 @@
     "parameters": [],
     "returnType": "System.Int32",
     "value": "40"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationScrollBegin()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationScrollBegin",
+    "signature": "public const System.Int32 NotificationScrollBegin = 47",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "47"
+  },
+  {
+    "id": "constant:Electron2D.Control.NotificationScrollEnd()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Control",
+    "name": "NotificationScrollEnd",
+    "signature": "public const System.Int32 NotificationScrollEnd = 48",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "48"
   },
   {
     "id": "constant:Electron2D.Control.NotificationThemeChanged()",
@@ -6985,6 +7125,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.HScrollBar..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HScrollBar",
+    "name": ".ctor",
+    "signature": "public HScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.HSlider..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.HSlider",
@@ -8241,6 +8394,38 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ScrollBar..ctor(System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": ".ctor",
+    "signature": "protected ScrollBar(System.Boolean vertical = true)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ScrollContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": ".ctor",
+    "signature": "public ScrollContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.SegmentShape..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.SegmentShape",
@@ -8711,6 +8896,19 @@
     "declaringType": "Electron2D.VBoxContainer",
     "name": ".ctor",
     "signature": "public VBoxContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VScrollBar..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VScrollBar",
+    "name": ".ctor",
+    "signature": "public VScrollBar()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -11832,6 +12030,19 @@
     "parameters": [],
     "returnType": "Electron2D.FocusBehaviorRecursive",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FocusMode.Accessibility()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FocusMode",
+    "name": "Accessibility",
+    "signature": "public const Electron2D.FocusMode Accessibility = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FocusMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.FocusMode.All()",
@@ -17736,6 +17947,45 @@
     "value": "2"
   },
   {
+    "id": "enumValue:Electron2D.Node.InternalMode.Back()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.InternalMode",
+    "name": "Back",
+    "signature": "public const Electron2D.Node.InternalMode Back = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.InternalMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.InternalMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.InternalMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.Node.InternalMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.InternalMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Node.InternalMode.Front()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Node.InternalMode",
+    "name": "Front",
+    "signature": "public const Electron2D.Node.InternalMode Front = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Node.InternalMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.NodeAutoTranslateMode.Always()",
     "kind": "enumValue",
     "declaringType": "Electron2D.NodeAutoTranslateMode",
@@ -18332,6 +18582,136 @@
     "parameters": [],
     "returnType": "Electron2D.ScreenEnableMode",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.All()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "name": "All",
+    "signature": "public const Electron2D.ScrollContainer.ScrollHintMode All = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.BottomAndRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "name": "BottomAndRight",
+    "signature": "public const Electron2D.ScrollContainer.ScrollHintMode BottomAndRight = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ScrollContainer.ScrollHintMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollHintMode.TopAndLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "name": "TopAndLeft",
+    "signature": "public const Electron2D.ScrollContainer.ScrollHintMode TopAndLeft = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.Auto()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "Auto",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode Auto = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.MaximizeFirst()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "MaximizeFirst",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode MaximizeFirst = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.Reserve()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "Reserve",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode Reserve = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.ShowAlways()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "ShowAlways",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode ShowAlways = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ScrollContainer.ScrollMode.ShowNever()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ScrollContainer.ScrollMode",
+    "name": "ShowNever",
+    "signature": "public const Electron2D.ScrollContainer.ScrollMode ShowNever = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.Shader.Mode.CanvasItem()",
@@ -22127,6 +22507,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.SceneTreeTimer\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ScrollBar.Scrolling()",
+    "kind": "event",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "Scrolling",
+    "signature": "public event System.Action Scrolling",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ScrollContainer.ScrollEnded()",
+    "kind": "event",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollEnded",
+    "signature": "public event System.Action ScrollEnded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ScrollContainer.ScrollStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollStarted",
+    "signature": "public event System.Action ScrollStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -39723,6 +40142,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.HScrollBar.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HScrollBar",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.HSlider.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HSlider",
@@ -48751,11 +49183,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.AddChild(Electron2D.Node)",
+    "id": "method:Electron2D.Node.AddChild(Electron2D.Node,Electron2D.Node.InternalMode)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "AddChild",
-    "signature": "public System.Void AddChild(Electron2D.Node child)",
+    "signature": "public System.Void AddChild(Electron2D.Node child, Electron2D.Node.InternalMode internalMode = Disabled)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -48764,6 +49196,11 @@
         "name": "child",
         "type": "Electron2D.Node",
         "default": null
+      },
+      {
+        "name": "internalMode",
+        "type": "Electron2D.Node.InternalMode",
+        "default": "Disabled"
       }
     ],
     "returnType": "System.Void",
@@ -49083,11 +49520,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetChild(System.Int32)",
+    "id": "method:Electron2D.Node.GetChild(System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "GetChild",
-    "signature": "public Electron2D.Node GetChild(System.Int32 index)",
+    "signature": "public Electron2D.Node GetChild(System.Int32 index, System.Boolean includeInternal = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -49096,9 +49533,52 @@
         "name": "index",
         "type": "System.Int32",
         "default": null
+      },
+      {
+        "name": "includeInternal",
+        "type": "System.Boolean",
+        "default": "false"
       }
     ],
     "returnType": "Electron2D.Node",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.GetChildCount(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetChildCount",
+    "signature": "public System.Int32 GetChildCount(System.Boolean includeInternal = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "includeInternal",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Node.GetChildren(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "GetChildren",
+    "signature": "public Electron2D.Node[] GetChildren(System.Boolean includeInternal = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "includeInternal",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.Node[]",
     "value": null
   },
   {
@@ -49128,15 +49608,21 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.Node.GetIndex()",
+    "id": "method:Electron2D.Node.GetIndex(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
     "name": "GetIndex",
-    "signature": "public System.Int32 GetIndex()",
+    "signature": "public System.Int32 GetIndex(System.Boolean includeInternal = false)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "includeInternal",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
     "returnType": "System.Int32",
     "value": null
   },
@@ -58702,6 +59188,243 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ScrollBar.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollBar.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollBar.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollBar.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollBar.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.EnsureControlVisible(Electron2D.Control)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "EnsureControlVisible",
+    "signature": "public System.Void EnsureControlVisible(Electron2D.Control control)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "control",
+        "type": "Electron2D.Control",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.GetHScrollBar()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "GetHScrollBar",
+    "signature": "public Electron2D.HScrollBar GetHScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HScrollBar",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.GetVScrollBar()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "GetVScrollBar",
+    "signature": "public Electron2D.VScrollBar GetVScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VScrollBar",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ScrollContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SegmentShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.SegmentShape",
@@ -65868,6 +66591,19 @@
     "id": "method:Electron2D.VBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VBoxContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VScrollBar.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VScrollBar",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -85697,6 +86433,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DefaultScrollDeadzone()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DefaultScrollDeadzone",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E DefaultScrollDeadzone { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -87371,6 +88120,175 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollBar.CustomStep()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollBar",
+    "name": "CustomStep",
+    "signature": "public System.Single CustomStep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.DrawFocusBorder()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "DrawFocusBorder",
+    "signature": "public System.Boolean DrawFocusBorder { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.FollowFocus()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "FollowFocus",
+    "signature": "public System.Boolean FollowFocus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.HintMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "HintMode",
+    "signature": "public Electron2D.ScrollContainer.ScrollHintMode HintMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollHintMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.HorizontalScrollMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "HorizontalScrollMode",
+    "signature": "public Electron2D.ScrollContainer.ScrollMode HorizontalScrollMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollDeadzone()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollDeadzone",
+    "signature": "public System.Int32 ScrollDeadzone { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollHorizontal()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollHorizontal",
+    "signature": "public System.Int32 ScrollHorizontal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollHorizontalByDefault()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollHorizontalByDefault",
+    "signature": "public System.Boolean ScrollHorizontalByDefault { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollHorizontalCustomStep()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollHorizontalCustomStep",
+    "signature": "public System.Single ScrollHorizontalCustomStep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollVertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollVertical",
+    "signature": "public System.Int32 ScrollVertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.ScrollVerticalCustomStep()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "ScrollVerticalCustomStep",
+    "signature": "public System.Single ScrollVerticalCustomStep { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.TileScrollHint()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "TileScrollHint",
+    "signature": "public System.Boolean TileScrollHint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ScrollContainer.VerticalScrollMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ScrollContainer",
+    "name": "VerticalScrollMode",
+    "signature": "public Electron2D.ScrollContainer.ScrollMode VerticalScrollMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ScrollContainer.ScrollMode",
     "value": null
   },
   {

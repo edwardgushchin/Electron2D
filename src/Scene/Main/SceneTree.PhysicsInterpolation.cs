@@ -51,8 +51,8 @@ public sealed partial class SceneTree
                     }
                 }
                 catch (Exception error) { CollectException(errors ??= [], error); }
-                for (var index = node.ChildCount - 1; index >= 0; index--)
-                    _scheduleTraversal.Add(node.GetChild(index));
+                for (var index = node.GetChildCount(includeInternal: true) - 1; index >= 0; index--)
+                    _scheduleTraversal.Add(node.GetChild(index, includeInternal: true));
             }
         }
     }

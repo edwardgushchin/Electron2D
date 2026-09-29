@@ -580,7 +580,7 @@ public sealed partial class SceneTree : MainLoop
     {
         EnsureOwnerThread();
         if (Root is not Viewport viewport || !ReferenceEquals(control.GetViewport(), viewport) ||
-            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || control.EffectiveFocusMode == FocusMode.None)
+            !ReferenceEquals(control.Tree, this) || !control.IsVisibleInTree || !control.CanReceiveGUIFocus)
             return;
         if (ReferenceEquals(_guiFocus, control))
         {
@@ -614,7 +614,7 @@ public sealed partial class SceneTree : MainLoop
     internal void RefreshGUIFocus()
     {
         EnsureOwnerThread();
-        if (_guiFocus is { } focused && focused.EffectiveFocusMode == FocusMode.None)
+        if (_guiFocus is { } focused && !focused.CanReceiveGUIFocus)
             ReleaseGUIFocus(focused);
     }
 
@@ -1351,7 +1351,7 @@ public sealed partial class SceneTree : MainLoop
                 physics ? node.PhysicsProcessPriority : node.ProcessPriority,
                 order++));
 
-            var children = node.Children;
+            var children = node.AllChildren;
             for (var index = children.Count - 1; index >= 0; index--)
                 _scheduleTraversal.Add(children[index]);
         }
@@ -1370,7 +1370,7 @@ public sealed partial class SceneTree : MainLoop
             _scheduleTraversal.RemoveAt(last);
             _inputTraversal.Add(node);
 
-            var children = node.Children;
+            var children = node.AllChildren;
             for (var index = children.Count - 1; index >= 0; index--)
                 _scheduleTraversal.Add(children[index]);
         }
@@ -1435,18 +1435,25 @@ public sealed partial class SceneTree : MainLoop
             var press = mouse is InputEventMouseButton { Pressed: true };
             if (mouse is InputEventMouseButton button)
             {
-                var bit = (int)button.ButtonIndex is > 0 and <= 32 ? 1u << ((int)button.ButtonIndex - 1) : 0;
-                if (button.Pressed)
+                if (button.ButtonIndex is >= MouseButton.WheelUp and <= MouseButton.WheelRight)
                 {
-                    target = _guiMouseCaptureMask != 0 && (_guiMouseCaptureMask & bit) == 0
-                        ? captured : FindMouseControl(viewport, mouse.Position, ref errors);
-                    if (target is null) return;
-                    _guiMouseCapture = target; _guiMouseCaptureMask |= bit;
+                    target = FindMouseControl(viewport, mouse.Position, ref errors);
                 }
                 else
                 {
-                    target = captured; _guiMouseCaptureMask &= ~bit;
-                    if (_guiMouseCaptureMask == 0) _guiMouseCapture = null;
+                    var bit = (int)button.ButtonIndex is > 0 and <= 32 ? 1u << ((int)button.ButtonIndex - 1) : 0;
+                    if (button.Pressed)
+                    {
+                        target = _guiMouseCaptureMask != 0 && (_guiMouseCaptureMask & bit) == 0
+                            ? captured : FindMouseControl(viewport, mouse.Position, ref errors);
+                        if (target is null) return;
+                        _guiMouseCapture = target; _guiMouseCaptureMask |= bit;
+                    }
+                    else
+                    {
+                        target = captured; _guiMouseCaptureMask &= ~bit;
+                        if (_guiMouseCaptureMask == 0) _guiMouseCapture = null;
+                    }
                 }
             }
             else target = captured ?? FindMouseControl(viewport, mouse.Position, ref errors);
@@ -1456,7 +1463,7 @@ public sealed partial class SceneTree : MainLoop
                 {
                     if (item is Control focus)
                     {
-                        if (focus.EffectiveFocusMode != FocusMode.None)
+                        if (focus.CanReceiveGUIFocus)
                         {
                             try { if (focus.HitTest(mouse.Position)) SetGUIFocus(focus, hideFocus: true); }
                             catch (Exception error) { CollectException(ref errors, error); }
@@ -1509,7 +1516,7 @@ public sealed partial class SceneTree : MainLoop
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
         var focused = _guiFocus;
-        if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || focused.EffectiveFocusMode == FocusMode.None || !ReferenceEquals(focused.GetViewport(), viewport)))
+        if (focused is not null && (focused.IsDisposed || !ReferenceEquals(focused.Tree, this) || !focused.IsVisibleInTree || !focused.CanReceiveGUIFocus || !ReferenceEquals(focused.GetViewport(), viewport)))
         {
             try { ReleaseGUIFocus(focused); } catch (Exception error) { CollectException(ref errors, error); }
             focused = null;
@@ -1523,10 +1530,15 @@ public sealed partial class SceneTree : MainLoop
     private void DispatchGUIPositional(Viewport viewport, Control target, InputEvent input, bool pointerEvent, ref List<Exception>? errors)
     {
         if (target.IsDisposed || !ReferenceEquals(target.Tree, this) || !target.CanProcess()) return;
+        var touchScroll = input is InputEventMouseButton { ButtonIndex: MouseButton.Left } or InputEventMouseMotion &&
+            (Input.Instance.EmulateTouchFromMouse || DisplayServer.Instance?.IsTouchscreenAvailable() == true);
+        var scrollOnly = false;
         for (CanvasItem? item = target; item is not null && !_inputHandled;)
         {
             if (item.IsDisposed || !ReferenceEquals(item.Tree, this) || !ReferenceEquals(item.GetViewport(), viewport)) break;
             var next = item.TopLevel ? null : item.GetParentItem();
+            if (scrollOnly && item is not ScrollContainer) { item = next; continue; }
+            if (item is ScrollContainer) scrollOnly = false;
             if (item is Control current && current.EffectiveMouseFilter != MouseFilter.Ignore && current.IsVisibleInTree)
             {
                 var filter = current.EffectiveMouseFilter; var forcePassWheel = current.MouseForcePassScrollEvents;
@@ -1551,10 +1563,20 @@ public sealed partial class SceneTree : MainLoop
                 if (current.IsDisposed || !ReferenceEquals(current.Tree, this)) break;
                 var wheel = input is InputEventMouseButton { ButtonIndex: >= MouseButton.WheelUp and <= MouseButton.WheelRight };
                 if (pointerEvent && filter == MouseFilter.Stop && (!wheel || !forcePassWheel) && !_inputHandled)
-                    SetInputAsHandled();
+                {
+                    if (touchScroll && HasScrollContainerAncestor(next)) scrollOnly = true;
+                    else SetInputAsHandled();
+                }
             }
             item = next;
         }
+    }
+
+    private static bool HasScrollContainerAncestor(CanvasItem? item)
+    {
+        for (; item is not null; item = item.TopLevel ? null : item.GetParentItem())
+            if (item is ScrollContainer) return true;
+        return false;
     }
 
     private Control? GetGUITouchCapture(Viewport viewport, int index)

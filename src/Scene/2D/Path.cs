@@ -59,7 +59,7 @@ public class Path : Entity
         EnsureMutable();
         if (tree.DebugPathsHint) InvalidateCanvas();
         List<Exception>? errors = null;
-        foreach (var child in Children.ToArray())
+        foreach (var child in AllChildren.ToArray())
         {
             if (IsDisposed || !ReferenceEquals(Tree, tree)) break;
             if (child is not PathFollow follow || follow.IsDisposed || !ReferenceEquals(follow.Parent, this) || !ReferenceEquals(follow.Tree, tree)) continue;

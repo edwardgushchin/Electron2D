@@ -123,7 +123,7 @@ public abstract partial class CanvasItem
 
     internal static void PropagateTextureSampling(Node parent, bool filter)
     {
-        foreach (var child in parent.Children)
+        foreach (var child in parent.AllChildren)
         {
             if (child is CanvasItem item && (filter ? item._textureFilter == TextureFilter.ParentNode : item._textureRepeat == TextureRepeat.ParentNode))
                 item.UpdateTextureSampling(filter);

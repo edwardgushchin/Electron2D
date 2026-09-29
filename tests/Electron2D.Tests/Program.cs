@@ -146,6 +146,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LABEL_NATIVE") == "1")
     RenderingRuntimeTests.Run();
     return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCROLL_NATIVE") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_NATIVE") == "1")
 {
@@ -293,6 +298,10 @@ ControlInputTests.Run();
 ControlFocusNavigationTests.Run();
 ControlRecursiveBehaviorTests.Run();
 ControlClipTests.Run();
+ScrollInternalNodeTests.Run();
+ScrollBarTests.Run();
+ScrollContainerTests.Run();
+ScrollThemeTests.Run();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
 CanvasSamplingTests.Run();

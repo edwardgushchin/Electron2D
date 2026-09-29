@@ -52,11 +52,12 @@ public class GridContainer : Container
     protected override Vector2 OnGetMinimumSize()
     {
         var configuredColumns = _columns;
-        Prepare(ref _minimumColumns, Math.Min(ChildCount, configuredColumns));
-        Prepare(ref _minimumRows, ChildCount == 0 ? 0 : (ChildCount - 1) / configuredColumns + 1);
+        var childCount = GetChildCount(includeInternal: true);
+        Prepare(ref _minimumColumns, Math.Min(childCount, configuredColumns));
+        Prepare(ref _minimumRows, childCount == 0 ? 0 : (childCount - 1) / configuredColumns + 1);
         var count = 0;
-        for (var index = 0; index < ChildCount; index++)
-            if (Sortable(GetChild(index), true) && GetChild(index) is Control child)
+        for (var index = 0; index < childCount; index++)
+            if (Sortable(GetChild(index, includeInternal: true), true) && GetChild(index, includeInternal: true) is Control child)
             {
                 var minimum = child.GetBoundMinimumSize(); var column = count % configuredColumns; var row = count / configuredColumns;
                 _minimumColumns[column] = Math.Max(_minimumColumns[column], Pixel(minimum.X));
@@ -77,7 +78,7 @@ public class GridContainer : Container
         _children.Clear();
         try
         {
-            for (var index = 0; index < ChildCount; index++) if (Sortable(GetChild(index)) && GetChild(index) is Control child) _children.Add(child);
+            for (var index = 0; index < GetChildCount(includeInternal: true); index++) if (Sortable(GetChild(index, includeInternal: true)) && GetChild(index, includeInternal: true) is Control child) _children.Add(child);
             if (_children.Count == 0) return;
             var columns = _columns; var horizontalGap = HSeparation; var verticalGap = VSeparation;
             var columnCount = Math.Min(_children.Count, columns); var rowCount = (_children.Count - 1) / columns + 1;
