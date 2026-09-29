@@ -1,8 +1,8 @@
 # Container
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md)
 
 **Declaration:** `public class Container : Control` · **Source:** [Container.cs](../../src/Scene/GUI/Container.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 

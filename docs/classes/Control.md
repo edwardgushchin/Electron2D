@@ -32,6 +32,8 @@ A zero additional scale is accepted. When visual-only is false it makes the logi
 
 The root viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
+[MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md) and [AspectRatioContainer](AspectRatioContainer.md) now consume the same bound minimum, fill/shrink flags and deferred Container fitting; the margin and aspect variants also use maximum propagation and RTL alignment respectively.
+
 ## Example
 
 ```csharp

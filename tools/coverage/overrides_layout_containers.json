@@ -1,0 +1,115 @@
+{
+  "mappings": [
+    {
+      "godot": "MarginContainer::theme_item:margin_left",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The built-in MarginContainer key is explicitly stored as zero and resolves through owner theme lookup."
+    },
+    {
+      "godot": "MarginContainer::theme_item:margin_top",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The built-in MarginContainer key is explicitly stored as zero and resolves through owner theme lookup."
+    },
+    {
+      "godot": "MarginContainer::theme_item:margin_right",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The built-in MarginContainer key is explicitly stored as zero and resolves through owner theme lookup."
+    },
+    {
+      "godot": "MarginContainer::theme_item:margin_bottom",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The built-in MarginContainer key is explicitly stored as zero and resolves through owner theme lookup."
+    },
+    {
+      "godot": "AspectRatioContainer::property:stretch_mode",
+      "electron2d": "property:Electron2D.AspectRatioContainer.Stretch()",
+      "reason": "ADRs 0081/0083: the three live Container specializations use deferred child fitting, typed theme constants, exact scene factories and verified geometry on current Linux Wayland GPU and compatibility backends; native allocations and other platforms remain unverified. The nested enum retains all four numeric values."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.AspectRatioContainer..ctor()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CenterContainer..ctor()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MarginContainer..ctor()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.OnGetMinimumSize()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.AspectRatioContainer.OnNotification(System.Int32)",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.OnGetMinimumSize()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.CenterContainer.OnNotification(System.Int32)",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.GetMarginSize(Electron2D.Side)",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.OnGetMinimumSize()",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.MarginContainer.OnNotification(System.Int32)",
+      "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
+    }
+  ]
+}

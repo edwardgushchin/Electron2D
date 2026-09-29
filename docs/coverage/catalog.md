@@ -53,7 +53,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Array](classes/Array.md) | — | Excluded | 72 |
 | [ArrayMesh](classes/ArrayMesh.md) | Mesh | Blocked | 23 |
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
-| [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Unimplemented | 13 |
+| [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Implemented | 13 |
 | [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
 | [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Blocked | 1 |
@@ -163,7 +163,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Implemented | 3 |
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
-| [CenterContainer](classes/CenterContainer.md) | Container | Unimplemented | 1 |
+| [CenterContainer](classes/CenterContainer.md) | Container | Implemented | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
 | [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Implemented | 40 |
@@ -437,7 +437,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Logger](classes/Logger.md) | RefCounted | Blocked | 7 |
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |
-| [MarginContainer](classes/MarginContainer.md) | Container | Unimplemented | 4 |
+| [MarginContainer](classes/MarginContainer.md) | Container | Implemented | 4 |
 | [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |

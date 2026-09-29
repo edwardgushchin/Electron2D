@@ -49,6 +49,7 @@ There is no public constructor or GetProjectTheme null stub.
 | `Panel/panel` and `PanelContainer/panel` styles | Separate StyleBoxFlat instances; BGColor `(0.1, 0.1, 0.1, 0.6)`, zero content margins, corner radius 3, detail 5. |
 | BoxContainer/HBoxContainer/VBoxContainer `separation` | 4. |
 | GridContainer `h_separation` / `v_separation` | 4 / 4. |
+| MarginContainer `margin_left` / `margin_top` / `margin_right` / `margin_bottom` | Four explicitly stored zero-valued constants, individually overridable. |
 | HSlider/VSlider `slider`, `grabber_area`, `grabber_area_highlight` | Three shared StyleBoxFlat resources: content margins/radius 4, detail 6; track `(0.1,0.1,0.1,0.6)`, white fill alpha 0.4, white highlighted fill alpha 0.75. |
 | HSlider/VSlider grabber icons | Shared 16×16 circles with normal/highlight/disabled alpha 0.75/1/0.37. |
 | HSlider `tick` / VSlider `tick` | 4×8 horizontal-control tick and 8×4 vertical-control tick icons. |

@@ -3706,16 +3706,16 @@
         "MarginContainer::theme_item:margin_right",
         "MarginContainer::theme_item:margin_top"
       ],
-      "state": "Unimplemented",
-      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Four themed edge margins, child minimum aggregation, content rectangle fitting, maximum propagation, invalidation and exact scene factories must ship together in the next MarginContainer consumer slice."
+      "state": "Implemented",
+      "reason": "ADRs 0081/0083: MarginContainer executes four explicitly stored theme margins, signed inner fitting, bound minimum/maximum propagation, deferred invalidation and exact scene capture. LayoutContainersTests checks theme, visibility, signed margins, callbacks, packing and 64 warmed active zero-allocation cycles; LayoutContainersRenderingTests checks pixels on Linux Wayland GPU and compatibility. Native allocation, other platforms and owner acceptance remain unverified."
     },
     {
       "godot": [
         "class:CenterContainer",
         "CenterContainer::property:use_top_left"
       ],
-      "state": "Unimplemented",
-      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Centered child fitting, UseTopLeft semantics, minimum sizing, lifecycle/invalidation and exact scene factories must ship together in the next CenterContainer consumer slice."
+      "state": "Implemented",
+      "reason": "ADRs 0081/0083: CenterContainer executes floor-centered minimum allocations or local-origin centering, desired/minimum policy, deferred child updates and typed scene capture. LayoutContainersTests checks odd sizes, top-left mode, callbacks, packing and 64 warmed active zero-allocation cycles; LayoutContainersRenderingTests checks pixels on Linux Wayland GPU and compatibility. Native allocation, other platforms and owner acceptance remain unverified."
     },
     {
       "godot": [
@@ -3734,8 +3734,8 @@
         "AspectRatioContainer::property:ratio",
         "AspectRatioContainer::property:stretch_mode"
       ],
-      "state": "Unimplemented",
-      "reason": "ADR 0081/0083: Container fitting/scheduling and typed Theme lookup are implemented; no absent GUI/theme/backend prerequisite remains. Ratio, both alignment enums, all stretch policies, minimum sizing, child fitting, lifecycle/invalidation and exact scene factories must ship together in the next AspectRatioContainer consumer slice."
+      "state": "Implemented",
+      "reason": "ADRs 0081/0083: AspectRatioContainer executes positive finite ratio, four stretch and three alignment values, RTL mirroring, bound child minima, deferred fitting and typed scene capture. Nonpositive/nonfinite ratios reject before mutation to preserve finite C# geometry. LayoutContainersTests checks policies, bounds, RTL, callbacks, packing and 64 warmed active zero-allocation cycles; LayoutContainersRenderingTests checks pixels on Linux Wayland GPU and compatibility. Native allocation, other platforms and owner acceptance remain unverified."
     },
     {
       "godot": [
