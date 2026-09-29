@@ -64,14 +64,23 @@ internal static class InputActionSettingsTests
             {
                 (ProjectSettings.InputUIHome, "ui_home", Key.Home),
                 (ProjectSettings.InputUIEnd, "ui_end", Key.End),
+                (ProjectSettings.InputUIPageUp, "ui_page_up", Key.PageUp),
+                (ProjectSettings.InputUIPageDown, "ui_page_down", Key.PageDown),
+                (ProjectSettings.InputUIMenu, "ui_menu", Key.Menu),
             };
             foreach (var (setting, _, keycode) in endpoints)
             {
                 Reject<InvalidOperationException>(() => loaded.Unregister(setting));
                 var bindings = loaded.Get(setting).Bindings;
                 Check(bindings is [{ Kind: InputBindingKind.Key, Keycode: var endpoint, Modifiers: 0 }] && endpoint == keycode,
-                    "Home and End survive project-file loading as permanent unmodified key actions.");
+                    "List navigation and menu defaults survive project-file loading as permanent unmodified key actions.");
             }
+            var selectBindings = loaded.Get(ProjectSettings.InputUISelect).Bindings;
+            Check(selectBindings is
+            [
+            { Kind: InputBindingKind.JoypadButton, JoyButtonIndex: JoyButton.Y, Device: InputMap.AllDevices },
+            { Kind: InputBindingKind.Key, Keycode: Key.Space, Modifiers: 0 }
+            ], "List selection retains the ordered Y-button and Space defaults.");
 
             map.AddAction("temporary_action");
             var loadedEvents = 0;
@@ -107,6 +116,11 @@ internal static class InputActionSettingsTests
                     endpoint.ShiftPressed = true;
                     Check(!map.EventIsAction(endpoint, name, exactMatch: true), "Exact endpoint matching rejects an extra modifier.");
                 }
+                using var selectKey = new InputEventKey { Keycode = Key.Space, Pressed = true };
+                using var selectButton = new InputEventJoypadButton { ButtonIndex = JoyButton.Y, Device = 7, Pressed = true };
+                Check(map.EventIsAction(selectKey, "ui_select", exactMatch: true) &&
+                      map.EventIsAction(selectButton, "ui_select", exactMatch: true),
+                    "Loaded list selection matches both keyboard and controller defaults.");
 
                 using var key = new InputEventKey { Keycode = Key.Space, ShiftPressed = true, Pressed = true };
                 using var plainKey = new InputEventKey { Keycode = Key.Space, Pressed = true };

@@ -17,6 +17,8 @@ The input action records are defined by the [Input runtime](input-runtime.md); t
 
 `DefaultScrollDeadzone` registers `gui/common/default_scroll_deadzone` as a signed integer defaulting to zero. Each new [ScrollContainer](../classes/ScrollContainer.md) samples its active feature override once during construction; an existing container keeps its own writable `ScrollDeadzone` value.
 
+`InputUISelect`, `InputUIPageUp`, `InputUIPageDown` and `InputUIMenu` permanently register typed action defaults for list selection, paging and menu activation. `IncrementalSearchMaxIntervalMsec` registers `gui/timers/incremental_search_max_interval_msec` with a nonnegative 2000 ms default; [ItemList](../classes/ItemList.md) reads its active feature override for each typed-character search.
+
 ## Runtime flow
 
 1. The component creates built-in application, timing, rendering, six GUI-focus input, two locale and nine pseudolocalization definitions and registers them in each registry.

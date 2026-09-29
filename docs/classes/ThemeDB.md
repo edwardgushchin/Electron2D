@@ -64,6 +64,7 @@ There is no public constructor or GetProjectTheme null stub.
 | Scrollbar increment/decrement states | All twelve H/V normal/highlight/pressed slots share one live uninitialized ImageTexture, size0×0. These are explicit empty icons, not missing entries or visible arrow replacements. |
 | ScrollContainer panel/focus | Empty panel with untouched raw margins−1. Separate hollow focus: BG/border white alpha0.75, margins4, radius3/detail5, border2 and expansion4. |
 | ScrollContainer hints | Exact horizontal24×32 and vertical32×24 white SVG alpha ramps, modulated with opaque black. |
+| ItemList | Gray0.1 alpha0.6 panel; shared Button focus/cursor; hovered/selected styles; font slots null/-1; gray0.65 text, white selected text, guide alpha0.25; h/v/icon gaps4, line separation2, outline0 and the shared vertical scroll hint. |
 | Scrollbar padding / container separation | Absent named constants resolve to0; Has remains false until an override or theme supplies an item. |
 | TooltipPanel / TooltipLabel variations | TooltipPanel uses PanelContainer with black alpha0.5, margins8/2/8/2, radius3 and detail5. TooltipLabel inherits Label with font slots null/-1, gray0.875 text, transparent shadow, black outline, shadow offsets1/1 and outline0. |
 

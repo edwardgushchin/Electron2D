@@ -1267,6 +1267,11 @@ Permanent typed `input/ui_home` and `input/ui_end` definitions use one default b
 | --- | --- |
 | `public static ProjectSetting<InputActionSettings> InputUIAccept { get; }` | input/ui_accept: Enter, keypad Enter, Space and gamepad A on every device. |
 | `public static ProjectSetting<InputActionSettings> InputUICancel { get; }` | input/ui_cancel: Escape and gamepad B on every device. |
+| `public static ProjectSetting<InputActionSettings> InputUISelect { get; }` | input/ui_select: Space and gamepad Y on every device. |
+| `public static ProjectSetting<InputActionSettings> InputUIPageUp { get; }` | input/ui_page_up: Page Up. |
+| `public static ProjectSetting<InputActionSettings> InputUIPageDown { get; }` | input/ui_page_down: Page Down. |
+| `public static ProjectSetting<InputActionSettings> InputUIMenu { get; }` | input/ui_menu: Menu key. |
+| `public static ProjectSetting<int> IncrementalSearchMaxIntervalMsec { get; }` | gui/timers/incremental_search_max_interval_msec: 2000 ms, nonnegative; ItemList reads the active override for incremental search. |
 | `public static ProjectSetting<double> ButtonShortcutFeedbackHighlightTime { get; }` | gui/timers/button_shortcut_feedback_highlight_time: 0.2 seconds, finite and positive. |
 | `public static ProjectSetting<double> TooltipDelaySeconds { get; }` | gui/timers/tooltip_delay_sec: 0.5 seconds, finite and nonnegative. |
 | `public static ProjectSetting<Vector2> TooltipPositionOffset { get; }` | display/mouse_cursor/tooltip_position_offset: (10,10), finite. |

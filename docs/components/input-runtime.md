@@ -8,6 +8,8 @@ This component converts caller-supplied typed events into raw device state, name
 
 `InputMap` initializes ordinary, rebindable `ui_focus_next`/`ui_focus_prev` and `ui_left`/`ui_up`/`ui_right`/`ui_down` actions from typed `ProjectSettings` defaults. The first two use Tab and Shift+Tab; each directional action uses its arrow key, D-pad button and signed left-stick axis on any controller. Explicit `LoadFromProjectSettings` validates registered version-one `input/<action>` definitions and replaces the map after project settings load. An unhandled root viewport action can move Control focus after the focused Control receives GUI input. A left-stick transition moves focus once while held and can move again after returning to neutral. Automatic traversal requires `FocusMode.All`; an explicit path may select `Click`. Nested viewport ownership, scroll clipping and exact spatial ranking remain open.
 
+ItemList also consumes typed `ui_select`, `ui_page_up`, `ui_page_down` and `ui_menu` defaults for focused selection, paging and menu input. These actions are ordinary rebindable InputMap entries. Incremental Unicode-key search uses the nonnegative project search interval.
+
 The public `InputMap.LoadFromProjectSettings()` reads the process registry; the isolated registry overload uses the same candidate preparation. Active typed feature overrides, all five bindable event families and built-in UI defaults are included. A malformed later binding, unidentified key, unsupported version or 33rd serialized record fails before the live map changes; a successful swap invalidates old pressed contributions before `ProjectSettingsLoaded`.
 
 ## Owned types

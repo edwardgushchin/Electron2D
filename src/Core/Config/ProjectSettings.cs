@@ -324,6 +324,32 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<InputActionSettings> InputUIEnd { get; } =
         CreateDefaultKeyAction("ui_end", Key.End);
 
+    /// <summary>Defines Space and any controller's Y button for focused list selection.</summary>
+    /// <value>The permanent typed <c>input/ui_select</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUISelect { get; } = new("input/ui_select", new InputActionSettings
+    {
+        Bindings =
+        [
+            new InputBindingSettings { Kind = InputBindingKind.JoypadButton, JoyButtonIndex = JoyButton.Y, Device = InputMap.AllDevices },
+            new InputBindingSettings { Kind = InputBindingKind.Key, Keycode = Key.Space }
+        ]
+    });
+
+    /// <summary>Defines Page Up for moving a focused list by one visible page.</summary>
+    /// <value>The permanent typed <c>input/ui_page_up</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIPageUp { get; } =
+        CreateDefaultKeyAction("ui_page_up", Key.PageUp);
+
+    /// <summary>Defines Page Down for moving a focused list by one visible page.</summary>
+    /// <value>The permanent typed <c>input/ui_page_down</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIPageDown { get; } =
+        CreateDefaultKeyAction("ui_page_down", Key.PageDown);
+
+    /// <summary>Defines the keyboard Menu key for focused list context input.</summary>
+    /// <value>The permanent typed <c>input/ui_menu</c> setting.</value>
+    public static ProjectSetting<InputActionSettings> InputUIMenu { get; } =
+        CreateDefaultKeyAction("ui_menu", Key.Menu);
+
     /// <summary>Defines Enter, keypad Enter, Space and gamepad A activation of a focused GUI control.</summary>
     /// <value>The permanent typed input/ui_accept setting with the standard action deadzone.</value>
     public static ProjectSetting<InputActionSettings> InputUIAccept { get; } = new("input/ui_accept", new InputActionSettings
@@ -357,6 +383,11 @@ public sealed class ProjectSettings : ElectronObject
     /// <value>A finite nonnegative duration, 0.5 initially, sampled when a tooltip is scheduled.</value>
     public static ProjectSetting<double> TooltipDelaySeconds { get; } =
         new("gui/timers/tooltip_delay_sec", .5, value => double.IsFinite(value) && value >= 0);
+
+    /// <summary>Defines the maximum pause between ItemList incremental-search characters.</summary>
+    /// <value>Two thousand milliseconds initially; nonnegative values are accepted.</value>
+    public static ProjectSetting<int> IncrementalSearchMaxIntervalMsec { get; } =
+        new("gui/timers/incremental_search_max_interval_msec", 2000, value => value >= 0);
 
     /// <summary>Defines the tooltip offset from the pointer in viewport pixels.</summary>
     /// <value>A finite vector, (10,10) initially. Presentation flips it near viewport edges.</value>
@@ -453,10 +484,15 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(InputUIDown, isBasic: false);
         RegisterInternal(InputUIHome, isBasic: false);
         RegisterInternal(InputUIEnd, isBasic: false);
+        RegisterInternal(InputUISelect, isBasic: false);
+        RegisterInternal(InputUIPageUp, isBasic: false);
+        RegisterInternal(InputUIPageDown, isBasic: false);
+        RegisterInternal(InputUIMenu, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
         RegisterInternal(ButtonShortcutFeedbackHighlightTime, isBasic: false);
         RegisterInternal(TooltipDelaySeconds, isBasic: false);
+        RegisterInternal(IncrementalSearchMaxIntervalMsec, isBasic: false);
         RegisterInternal(TooltipPositionOffset, isBasic: false);
         RegisterInternal(DefaultScrollDeadzone, isBasic: false);
     }
@@ -1828,10 +1864,15 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, InputUIDown) ||
         ReferenceEquals(setting, InputUIHome) ||
         ReferenceEquals(setting, InputUIEnd) ||
+        ReferenceEquals(setting, InputUISelect) ||
+        ReferenceEquals(setting, InputUIPageUp) ||
+        ReferenceEquals(setting, InputUIPageDown) ||
+        ReferenceEquals(setting, InputUIMenu) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
         ReferenceEquals(setting, ButtonShortcutFeedbackHighlightTime) ||
         ReferenceEquals(setting, TooltipDelaySeconds) ||
+        ReferenceEquals(setting, IncrementalSearchMaxIntervalMsec) ||
         ReferenceEquals(setting, DefaultScrollDeadzone) ||
         ReferenceEquals(setting, TooltipPositionOffset);
 

@@ -1,0 +1,369 @@
+{
+  "mappings": [
+    {
+      "godot": "ItemList::method:get_h_scroll_bar()",
+      "electron2d": "method:Electron2D.ItemList.GetHScrollBar()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::method:get_v_scroll_bar()",
+      "electron2d": "method:Electron2D.ItemList.GetVScrollBar()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::method:get_selected_items()",
+      "electron2d": "method:Electron2D.ItemList.GetSelectedItems()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:clip_contents",
+      "electron2d": "property:Electron2D.Control.ClipContents()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:icon_mode",
+      "electron2d": "property:Electron2D.ItemList.IconDisplayMode()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:scroll_hint_mode",
+      "electron2d": "property:Electron2D.ItemList.HintMode()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:select_mode",
+      "electron2d": "property:Electron2D.ItemList.SelectionMode()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:gui/timers/incremental_search_max_interval_msec",
+      "electron2d": "property:Electron2D.ProjectSettings.IncrementalSearchMaxIntervalMsec()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:item_{index}/disabled",
+      "electron2d": "method:Electron2D.ItemList.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:item_{index}/icon",
+      "electron2d": "method:Electron2D.ItemList.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:item_{index}/selectable",
+      "electron2d": "method:Electron2D.ItemList.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::property:item_{index}/text",
+      "electron2d": "method:Electron2D.ItemList.GetPropertyDescriptors()",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:cursor",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:cursor_unfocused",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_hovered_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_hovered_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:guide_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:hovered",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:hovered_selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:hovered_selected_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:icon_margin",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:line_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:panel",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:scroll_hint",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:scroll_hint_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:selected",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:selected_focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "godot": "ItemList::theme_item:v_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ItemList..ctor()",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.CreateSceneInstanceFactory()",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.Dispose(System.Boolean)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.FindMetadata`1(T)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.IsPosAtEndOfItems(Electron2D.Vector2)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.OnGetMinimumSize()",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.OnGetTooltip(Electron2D.Vector2)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.OnNotification(System.Int32)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "method:Electron2D.ItemList.TryGetItemMetadata`1(System.Int32,ref T)",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    },
+    {
+      "electron2d": "property:Electron2D.ItemList.Current()",
+      "reason": "Typed C# lifecycle, navigation or metadata companion for the executable ItemList under ADRs 0008/0038; no separate pinned XML declaration."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "ItemList::enum:IconMode",
+        "ItemList::enum:ScrollHintMode",
+        "ItemList::enum:SelectMode",
+        "ItemList::enum_value:IconMode.ICON_MODE_LEFT",
+        "ItemList::enum_value:IconMode.ICON_MODE_TOP",
+        "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_BOTH",
+        "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_BOTTOM",
+        "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_DISABLED",
+        "ItemList::enum_value:ScrollHintMode.SCROLL_HINT_MODE_TOP",
+        "ItemList::enum_value:SelectMode.SELECT_MULTI",
+        "ItemList::enum_value:SelectMode.SELECT_SINGLE",
+        "ItemList::enum_value:SelectMode.SELECT_TOGGLE",
+        "ItemList::method:add_icon_item(Texture2D:,bool:)",
+        "ItemList::method:add_item(String:,Texture2D:,bool:)",
+        "ItemList::method:clear()",
+        "ItemList::method:deselect(int:)",
+        "ItemList::method:deselect_all()",
+        "ItemList::method:force_update_list_size()",
+        "ItemList::method:get_h_scroll_bar()",
+        "ItemList::method:get_item_at_position(Vector2:,bool:)",
+        "ItemList::method:get_item_auto_translate_mode(int:)",
+        "ItemList::method:get_item_custom_bg_color(int:)",
+        "ItemList::method:get_item_custom_fg_color(int:)",
+        "ItemList::method:get_item_icon(int:)",
+        "ItemList::method:get_item_icon_modulate(int:)",
+        "ItemList::method:get_item_icon_region(int:)",
+        "ItemList::method:get_item_language(int:)",
+        "ItemList::method:get_item_metadata(int:)",
+        "ItemList::method:get_item_rect(int:,bool:)",
+        "ItemList::method:get_item_text(int:)",
+        "ItemList::method:get_item_text_direction(int:)",
+        "ItemList::method:get_item_tooltip(int:)",
+        "ItemList::method:get_selected_items()",
+        "ItemList::method:get_v_scroll_bar()",
+        "ItemList::method:is_anything_selected()",
+        "ItemList::method:is_item_disabled(int:)",
+        "ItemList::method:is_item_icon_transposed(int:)",
+        "ItemList::method:is_item_selectable(int:)",
+        "ItemList::method:is_item_tooltip_enabled(int:)",
+        "ItemList::method:is_selected(int:)",
+        "ItemList::method:move_item(int:,int:)",
+        "ItemList::method:remove_item(int:)",
+        "ItemList::method:select(int:,bool:)",
+        "ItemList::method:set_item_auto_translate_mode(int:,int:Node.AutoTranslateMode)",
+        "ItemList::method:set_item_custom_bg_color(int:,Color:)",
+        "ItemList::method:set_item_custom_fg_color(int:,Color:)",
+        "ItemList::method:set_item_disabled(int:,bool:)",
+        "ItemList::method:set_item_icon(int:,Texture2D:)",
+        "ItemList::method:set_item_icon_modulate(int:,Color:)",
+        "ItemList::method:set_item_icon_region(int:,Rect2:)",
+        "ItemList::method:set_item_icon_transposed(int:,bool:)",
+        "ItemList::method:set_item_language(int:,String:)",
+        "ItemList::method:set_item_metadata(int:,Variant:)",
+        "ItemList::method:set_item_selectable(int:,bool:)",
+        "ItemList::method:set_item_text(int:,String:)",
+        "ItemList::method:set_item_text_direction(int:,int:Control.TextDirection)",
+        "ItemList::method:set_item_tooltip(int:,String:)",
+        "ItemList::method:set_item_tooltip_enabled(int:,bool:)",
+        "ItemList::method:sort_items_by_text()",
+        "ItemList::property:allow_reselect",
+        "ItemList::property:allow_rmb_select",
+        "ItemList::property:allow_search",
+        "ItemList::property:clip_contents",
+        "ItemList::property:focus_mode",
+        "ItemList::property:icon_mode",
+        "ItemList::property:item_count",
+        "ItemList::property:item_{index}/disabled",
+        "ItemList::property:item_{index}/icon",
+        "ItemList::property:item_{index}/selectable",
+        "ItemList::property:item_{index}/text",
+        "ItemList::property:select_mode",
+        "ItemList::theme_item:cursor",
+        "ItemList::theme_item:cursor_unfocused",
+        "ItemList::theme_item:focus",
+        "ItemList::theme_item:font",
+        "ItemList::theme_item:font_color",
+        "ItemList::theme_item:font_hovered_color",
+        "ItemList::theme_item:font_hovered_selected_color",
+        "ItemList::theme_item:font_outline_color",
+        "ItemList::theme_item:font_selected_color",
+        "ItemList::theme_item:font_size",
+        "ItemList::theme_item:guide_color",
+        "ItemList::theme_item:h_separation",
+        "ItemList::theme_item:hovered",
+        "ItemList::theme_item:hovered_selected",
+        "ItemList::theme_item:hovered_selected_focus",
+        "ItemList::theme_item:icon_margin",
+        "ItemList::theme_item:line_separation",
+        "ItemList::theme_item:outline_size",
+        "ItemList::theme_item:panel",
+        "ItemList::theme_item:scroll_hint",
+        "ItemList::theme_item:scroll_hint_color",
+        "ItemList::theme_item:selected",
+        "ItemList::theme_item:selected_focus",
+        "ItemList::theme_item:v_separation",
+        "ProjectSettings::property:gui/timers/incremental_search_max_interval_msec",
+        "ProjectSettings::property:input/ui_select",
+        "ProjectSettings::property:input/ui_page_up",
+        "ProjectSettings::property:input/ui_page_down",
+        "ProjectSettings::property:input/ui_menu"
+      ],
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. InputActionSettingsTests, ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:ItemList",
+        "ItemList::method:center_on_current(bool:,bool:)",
+        "ItemList::method:ensure_current_is_visible()",
+        "ItemList::property:auto_height",
+        "ItemList::property:auto_width",
+        "ItemList::property:fixed_column_width",
+        "ItemList::property:fixed_icon_size",
+        "ItemList::property:icon_scale",
+        "ItemList::property:max_columns",
+        "ItemList::property:max_text_lines",
+        "ItemList::property:same_column_width",
+        "ItemList::property:scroll_hint_mode",
+        "ItemList::property:text_overrun_behavior",
+        "ItemList::property:tile_scroll_hint",
+        "ItemList::property:wraparound_items",
+        "ItemList::signal:empty_clicked(Vector2:,int:)",
+        "ItemList::signal:item_activated(int:)",
+        "ItemList::signal:item_clicked(int:,Vector2:,int:)",
+        "ItemList::signal:item_selected(int:)",
+        "ItemList::signal:multi_selected(int:,bool:)"
+      ],
+      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified. Mixed auto-size/scroll/layout extremes and complete keyboard, callback reentry and signal ordering still require executable verification."
+    }
+  ]
+}

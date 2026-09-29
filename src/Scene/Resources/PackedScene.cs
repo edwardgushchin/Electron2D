@@ -362,6 +362,12 @@ public sealed class PackedScene : Resource
         {
             if ((property.Value is StoredNodeReferenceValue) != nodeReferences) continue;
             if (!descriptors.TryGetValue(property.Name, out var descriptor))
+            {
+                // A preceding stored count can expose indexed typed properties on this same node.
+                descriptors = node.GetPropertyList().ToDictionary(candidate => candidate.Name, StringComparer.Ordinal);
+                descriptors.TryGetValue(property.Name, out descriptor);
+            }
+            if (descriptor is null)
                 descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType);
             if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
