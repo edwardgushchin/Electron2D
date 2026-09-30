@@ -1,6 +1,6 @@
 # Display domain
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 ## Responsibility
 
@@ -15,6 +15,8 @@ Own the native display connection, borrowed operating-system display/window and 
 ## Public surface
 
 [`DisplayServer`](../classes/DisplayServer.md) provides process singleton access, main-window and display queries, native light/dark-theme queries, [borrowed native display/window identities](../classes/DisplayServer.HandleType.md) through `WindowGetNativeHandle`, typed native notifications including `SystemThemeChanged`, `WindowDpiChanged`, and complete client-rectangle changes through `WindowRectChanged`, clipboard and IME state, pointer control, basic native dialogs, and deterministic disposal. The handle query is implemented in [`DisplayServer.Windows.cs`](../../src/Servers/Display/DisplayServer.Windows.cs) over SDL window properties. See the complete public member reference and [coverage inventory](../coverage/classes/DisplayServer.md).
+
+The existing `TextInput` and `TextEditing` events remain the native full-string/preedit boundary. During Engine.Run, root Window forwards them to SceneTree after DisplayServer commits IME state; focused Control receives the typed text stream. DisplayServer does not synthesize or attribute an InputEventKey from a later SDL commit.
 
 ## Dependency direction
 

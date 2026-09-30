@@ -4048,7 +4048,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Defined key text and matching are audited, including 191 pinned Linux display names. Native per-key Unicode correlation, IME/composition and physical keyboard layout verification remain prerequisites for the full type under ADR 0038; inherited Resource lifecycle is classified separately.",
+      "reason": "Defined key text and matching are audited, including 191 pinned Linux display names. Native committed strings and IME composition now reach focused Controls separately; a per-key Unicode source and physical keyboard layout verification remain prerequisites for full InputEventKey parity under ADR 0038. Inherited Resource lifecycle is classified separately.",
       "godot": [
         "class:InputEventKey"
       ]
@@ -5091,7 +5091,6 @@
       "godot": [
         "Viewport::method:get_embedded_subwindows()",
         "Viewport::method:gui_get_hovered_control()",
-        "Viewport::method:push_text_input(String:)",
         "Viewport::property:gui_disable_input",
         "Viewport::property:gui_embed_subwindows",
         "Viewport::property:gui_snap_controls_to_pixels"

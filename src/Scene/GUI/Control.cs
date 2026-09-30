@@ -767,7 +767,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; _forwardGetDragData = null; _forwardCanDropData = null; _forwardDropData = null; }
+        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; TextInput = null; IMECompositionChanged = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; _forwardGetDragData = null; _forwardCanDropData = null; _forwardDropData = null; }
         base.Dispose(disposing);
     }
 

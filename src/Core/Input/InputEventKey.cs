@@ -4,8 +4,10 @@ namespace Electron2D;
 
 /// <summary>Represents a keyboard key press, release, or operating-system repeat.</summary>
 /// <remarks>
-/// A host event normally supplies logical, physical, label, and Unicode data. An action binding should generally set
-/// only one of <see cref="Keycode"/>, <see cref="PhysicalKeycode"/>, or <see cref="KeyLabel"/>.
+/// A caller-created event may supply logical, physical, label, and Unicode data. The current native keyboard adapter
+/// supplies the three key identities but keeps Unicode zero: complete committed strings and IME preedit reach the
+/// focused Control on a separate typed scene path without guessing which key produced them. An action binding should
+/// generally set only one of <see cref="Keycode"/>, <see cref="PhysicalKeycode"/>, or <see cref="KeyLabel"/>.
 /// </remarks>
 public sealed class InputEventKey : InputEventWithModifiers
 {
@@ -80,6 +82,7 @@ public sealed class InputEventKey : InputEventWithModifiers
 
     /// <summary>Gets or sets the Unicode scalar produced by the press.</summary>
     /// <value>Zero when no text scalar is associated with the event.</value>
+    /// <remarks>Native SDL key events currently retain zero; native committed text is delivered separately.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is not zero or a valid Unicode scalar.</exception>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
     /// <exception cref="Exception">A <see cref="Resource.Changed"/> handler throws after the value is assigned.</exception>

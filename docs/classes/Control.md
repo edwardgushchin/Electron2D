@@ -6,7 +6,7 @@ Last updated: 2026-09-30
 
 **Inherited By:** [Label](Label.md), [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md), [ItemList](ItemList.md). BaseButton, buttons, scroll bars and ScrollContainer are current consumers.
 
-- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
+- **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.TextInput.cs](../../src/Scene/GUI/Control.TextInput.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Control : CanvasItem`
 
@@ -138,6 +138,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `protected virtual CursorShape OnGetCursorShape(Vector2 atPosition)` | Returns MouseDefaultCursorShape unless overridden. |
 | `protected virtual bool HasPoint(Vector2 point)` | Tests a local point against the half-open rectangle; override for a custom hit shape. |
 | `protected virtual void OnGUIInput(InputEvent inputEvent)` | Receives routed pointer or focused keyboard input. |
+| `protected virtual void OnTextInput(string text)` | Receives one complete native committed-text string before subscribers. |
+| `protected virtual void OnIMECompositionChanged(string text, Vector2i selection)` | Receives the current uncommitted preedit and codepoint selection. |
 | `public DragPayload? GetDragData(Vector2 atPosition)` / `protected virtual DragPayload? OnGetDragData(Vector2 atPosition)` | Produces typed data for a drag from a finite local origin. |
 | `public bool CanDropData(Vector2 atPosition, DragPayload payload)` / `protected virtual bool OnCanDropData(Vector2 atPosition, DragPayload payload)` | Tests a candidate target at finite local coordinates. |
 | `public void DropData(Vector2 atPosition, DragPayload payload)` / `protected virtual void OnDropData(Vector2 atPosition, DragPayload payload)` | Delivers an accepted payload. |
@@ -158,6 +160,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public event Action? MinimumSizeChanged` | Raised after deferred reflow when the combined minimum actually changes while visible and attached. |
 | `public event Action? MaximumSizeChanged` | Raised after deferred reflow when the combined maximum actually changes while visible and attached. |
 | `public event Action<InputEvent>? GUIInput` | Raised after OnGUIInput with the same borrowed event. |
+| `public event Action<string>? TextInput` | Raised after OnTextInput for one complete native commit. |
+| `public event Action<string, Vector2i>? IMECompositionChanged` | Raised after OnIMECompositionChanged for the current preedit. |
 | `public event Action? FocusEntered` | Raised after NotificationFocusEnter when this control gains keyboard focus. |
 | `public event Action? FocusExited` | Raised after NotificationFocusExit when focus is released or transferred. |
 | `public event Action? MouseEntered` | Raised when the pointer enters the control or a reachable child. |
@@ -294,6 +298,14 @@ Targeted scene-hierarchy pixel checks passed on Linux Wayland compatibility/GPU 
 [NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.
 
 [Range](../classes/Range.md) and [TextureProgressBar](../classes/TextureProgressBar.md) now execute shared double value policy and textured linear/centered/radial fills. Nine-patch partial progress reuses the real retained geometry/tint path. Their inherited vertical size flags now execute through [Container](../classes/Container.md) and [BoxContainer](../classes/BoxContainer.md), with Range ShrinkBegin and progress Fill defaults under [ADR 0081](../decisions/rendering.md#adr-0081). [RangeProgressTests](../../tests/Electron2D.Tests/RangeProgressTests.cs) and [native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) verify the current scope and allocation/platform limits under [ADR 0080](../decisions/rendering.md#adr-0080).
+
+## Native committed text and IME composition
+
+<a id="ontextinput"></a><a id="event-textinput"></a>
+The active main-window SDL text commit is delivered to the root viewport's currently focused, visible and processing Control as one complete string. A commit may contain multiple Unicode scalars or one IME result. `OnTextInput` runs before `TextInput` subscribers; failure in one phase does not suppress the other, and the native event pump reports collected failures after later queued events. No `InputEventKey` or key-to-text association is synthesized. A derived text control enables native input with `Window.SetIMEActive(true)` while focused and manages its own caret/undo policy.
+
+<a id="onimecompositionchanged"></a><a id="event-imecompositionchanged"></a>
+For a native preedit update, DisplayServer first commits `IMEGetText` and the Unicode-codepoint start/length from `IMEGetSelection`. The scene-wide `Node.NotificationOsImeUpdate` then runs, followed by the focused Control's `OnIMECompositionChanged` and `IMECompositionChanged` event. An empty string clears preedit. Notification failure does not suppress the focused typed callback; hidden, detached and paused/non-processing focus targets are skipped. The native host and derived text control remain responsible for enabling/disabling IME and clearing consumer-specific preedit on focus loss. [TextDeliveryTests](../../tests/Electron2D.Tests/TextDeliveryTests.cs) checks focus, phases and failure continuation; [TextDeliveryNativeTests](../../tests/Electron2D.Tests/TextDeliveryNativeTests.cs) checks actual SDL text/editing events on Linux Wayland GPU and compatibility. Real input methods, visible candidate UI, other platforms and owner acceptance remain unverified. See [ADR 0038](../decisions/input.md#adr-0038) and [coverage](../coverage/classes/Control.md).
 
 ## Typed GUI drag and drop
 

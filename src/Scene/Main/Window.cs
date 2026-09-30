@@ -272,6 +272,8 @@ public partial class Window : Viewport
         _display.WindowMouseEntered += HandleMouseEntered;
         _display.WindowMouseExited += HandleMouseExited;
         _display.WindowDpiChanged += HandleDPIChanged;
+        _display.TextInput += HandleTextInput;
+        _display.TextEditing += HandleTextEditing;
         _display.FilesDropped += HandleFilesDropped;
         _renderer = RenderingServer.Open(this, _display.AcquireRenderingWindow());
         _display.SetGraphicsHandleQuery(_renderer.GetNativeHandle);
@@ -301,6 +303,8 @@ public partial class Window : Viewport
         display.WindowMouseEntered -= HandleMouseEntered;
         display.WindowMouseExited -= HandleMouseExited;
         display.WindowDpiChanged -= HandleDPIChanged;
+        display.TextInput -= HandleTextInput;
+        display.TextEditing -= HandleTextEditing;
         display.FilesDropped -= HandleFilesDropped;
         try { display.Dispose(); _display = null; }
         catch (Exception error) when (renderFailure is not null) { throw new AggregateException(renderFailure, error); }
@@ -344,6 +348,8 @@ public partial class Window : Viewport
         ThrowCollected("Window pointer-exit callbacks failed.", errors);
     }
     private void HandleDPIChanged() => DpiChanged?.Invoke();
+    private void HandleTextInput(string text) => Tree?.DispatchCommittedText(this, text);
+    private void HandleTextEditing(string text, Vector2i selection) => Tree?.DispatchIMEComposition(this, text, selection);
     private void HandleFilesDropped(IReadOnlyList<string> paths) => FilesDropped?.Invoke(paths);
 
     private void CommitSize(Vector2i size)

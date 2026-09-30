@@ -1,6 +1,6 @@
 # InputEventKey
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 **Inherits:** [InputEventWithModifiers](InputEventWithModifiers.md)
 
@@ -26,7 +26,7 @@ Represents a keyboard key press, release, or operating-system repeat.
 A caller-created event can supply logical, physical, label, and Unicode data. An action binding should generally set
 only one of [`InputEventKey.Keycode`](InputEventKey.md#p-electron2d-inputeventkey-keycode), [`InputEventKey.PhysicalKeycode`](InputEventKey.md#p-electron2d-inputeventkey-physicalkeycode), or [`InputEventKey.KeyLabel`](InputEventKey.md#p-electron2d-inputeventkey-keylabel).
 
-The current SDL display adapter supplies `Keycode` from the native key event, `PhysicalKeycode` from its scancode, and `KeyLabel` independently from the unmodified scancode under the active layout. A printable non-Latin label can therefore differ from the logical key. Left/right modifier scancodes set `Location` to the matching side; other scancodes use `Unspecified`. On a modifier key's own event, the adapter removes that modifier's bit from the event and retains other held modifiers. That adapter leaves `Unicode` at zero; committed text uses a separate text-input event. SDL key events contain no produced text scalar, and a text-input event may contain multiple scalars or an IME commit without identifying a corresponding key press. Native key-event Unicode needs a per-key Unicode source and verified IME/composition semantics in the first native keyboard/text adapter slice. Code constructing this type directly may assign a valid Unicode scalar.
+The current SDL display adapter supplies `Keycode` from the native key event, `PhysicalKeycode` from its scancode, and `KeyLabel` independently from the unmodified scancode under the active layout. A printable non-Latin label can therefore differ from the logical key. Left/right modifier scancodes set `Location` to the matching side; other scancodes use `Unspecified`. On a modifier key's own event, the adapter removes that modifier's bit from the event and retains other held modifiers. That adapter leaves `Unicode` at zero; complete committed strings and IME composition now reach the focused Control through a separate scene text path. SDL key events contain no produced text scalar, and a text-input event may contain multiple scalars or an IME commit without identifying a corresponding key press. Native per-key Unicode remains an exact missing source; the string path does not create a synthetic key event. Code constructing this type directly may assign a valid Unicode scalar.
 
 ## Examples
 

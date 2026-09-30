@@ -1,6 +1,6 @@
 # MainLoop
 
-Last updated: 2026-09-23
+Last updated: 2026-09-30
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -288,7 +288,7 @@ Identifies a notification delivered immediately before an unrecoverable crash.
 <a id="f-electron2d-mainloop-notificationosimeupdate"></a>
 ### `public const int NotificationOsImeUpdate = 2013`
 
-Identifies an input-method composition update supplied by the operating system.
+Identifies an input-method composition update supplied by the operating system. During Engine.Run, the root Window invokes this on its SceneTree after DisplayServer commits the preedit text and codepoint selection; SceneTree propagates the notification to its live hierarchy before focused Control typed composition callbacks.
 
 <a id="f-electron2d-mainloop-notificationapplicationresumed"></a>
 ### `public const int NotificationApplicationResumed = 2014`

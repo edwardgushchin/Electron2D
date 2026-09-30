@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 ## Scope
 
@@ -17,6 +17,8 @@ This Scene component provides the concrete [Main loop](main-loop.md), owns one a
 | [`GroupCallFlags`](../classes/GroupCallFlags.md) | Order, deferral, and uniqueness policy for typed group operations |
 
 Tween types are owned by the separate [Tweening component](tweening.md) but registered and advanced here.
+
+Native committed-text delivery is now an owner-thread root-viewport phase separate from ordinary InputEvent traversal. Window calls SceneTree after the DisplayServer event pump has committed the text or preedit; a composition update first propagates `NotificationOsImeUpdate` across live nodes, then the eligible focused Control receives its typed hook/event. Text commits are delivered as one string even when they contain multiple scalars, without fabricating a key event. The phase rejects reentry and continues the focused callback after notification failure. [TextDeliveryTests](../../tests/Electron2D.Tests/TextDeliveryTests.cs) and [TextDeliveryNativeTests](../../tests/Electron2D.Tests/TextDeliveryNativeTests.cs) verify managed and Linux Wayland GPU/compatibility paths. Nested viewport routing and per-key Unicode remain separate dependencies.
 
 ## Runtime flow
 

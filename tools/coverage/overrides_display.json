@@ -905,7 +905,6 @@
       "reason": "Typed Input delivery and DisplayServer events replace callback setters on the current main window. Complete key/text association requires the first native text-input and IME integration slice; per-window callback routing requires the first multiwindow window-host slice. Both must verify owner-thread ordering and callback failure behavior before these adapted contracts are complete (ADRs 0038/0040).",
       "godot": [
         "DisplayServer::method:window_set_input_event_callback(Callable:,int:)",
-        "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
         "DisplayServer::method:window_set_window_event_callback(Callable:,int:)"
       ]
     },

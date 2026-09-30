@@ -1303,7 +1303,7 @@ Identifies an engine-internal process callback notification.
 <a id="f-electron2d-node-notificationosimeupdate"></a>
 ### `public const int NotificationOsImeUpdate = 2013`
 
-Identifies an input-method composition update supplied by the operating system.
+Identifies an input-method composition update supplied by the operating system. During Engine.Run, all live root-scene nodes receive it after DisplayServer commits `IMEGetText` and `IMEGetSelection` and before the focused Control's typed composition callback. The notification also runs without a GUI focus owner; callback failures do not suppress later eligible nodes or the focused text-control phase.
 
 <a id="f-electron2d-node-notificationosmemorywarning"></a>
 ### `public const int NotificationOsMemoryWarning = 2009`

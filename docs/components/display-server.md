@@ -1,6 +1,6 @@
 # Display server component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 ## Scope
 
@@ -17,6 +17,8 @@ This component owns the native SDL video connection, one main window, display an
 3. Window, quit, system-theme change, main-window display-content-scale change, focus, pointer enter/exit, committed text, and composition events reach typed callbacks. `WindowRectChanged` delivers the complete observed client rectangle after each native move or resize, with state committed before the callback. Theme, content-scale, and rectangle notifications retain native queue order. `IsDarkMode` reads current SDL theme state; `IsDarkModeSupported` uses a cached Settings portal capability on Linux Wayland and X11 and current SDL theme state elsewhere. Unchanged rectangles and foreign-window events are ignored. A completed file drop delivers one ordered path list. Focus loss clears touch indexes, invokes the window callback and application notification, then releases pressed input even when a handler fails. Native file-dialog results are copied on SDL's callback thread and delivered on the owner thread during a later event pump.
    On Wayland, IME composition offsets use Unicode codepoints and unknown negative native offsets become zero. The requested client-pixel caret is converted to SDL logical window coordinates using current pixel density before positioning the 1×10 candidate area while text input is active. Native readback passed at densities one and 1.25; actual input-method popup placement remains unverified.
 4. The host completes and pumps pending native file dialogs, then disposes the server after stopping its loop. Cursor, window, and video ownership are released, then the process singleton is cleared.
+
+The scene Window now consumes the existing `TextInput` and `TextEditing` events during Engine.Run. DisplayServer commits preedit/selection state before its text callbacks and clears it before a committed string callback; the root SceneTree then notifies live nodes and the focused Control in that order. DisplayServer itself retains only native event/IME ownership. A committed string can contain multiple Unicode scalars and is not assigned to a preceding key event. [TextDeliveryNativeTests](../../tests/Electron2D.Tests/TextDeliveryNativeTests.cs) verifies this bridge on Linux Wayland GPU and compatibility; a real input-method popup remains unverified.
 
 ## Dependencies and interactions
 

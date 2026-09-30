@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -17,6 +17,8 @@ A configurable native root window that owns scene children.
 Pass a detached window to `Engine.Run(Window)`. The runtime opens its native window before scene entry and releases it after scene teardown. One root window is supported. The client size uses pixels on Wayland and native window units elsewhere. On Android the actual fullscreen surface size replaces the initial requested size; nonzero configured minimum or maximum dimensions fail at startup. The root canvas renders after scene processing; embedded windows are not implemented.
 
 Native lifetime belongs to Engine.Run. Viewport inherits the neutral Node; canvas children supply their own transforms and visibility. Window.Position uses native desktop coordinates. Direct SceneTree(Window) activation and insertion of a Viewport as a child are rejected. The root canvas supports retained rectangles, lines, textures and GPU shader materials. Offscreen and multiwindow rendering remain incomplete; see the [coverage page](../coverage/classes/Window.md).
+
+`SetIMEActive(true)` enables native committed-text and preedit events for this root window. During Engine.Run, Window forwards those already-committed DisplayServer updates into its SceneTree: the currently focused, visible and processing Control receives a whole committed string or typed preedit, while every live node receives `NotificationOsImeUpdate` for a composition change. A derived text control activates/deactivates native input with its focus lifecycle and manages its own caret and preedit state. This bridge does not fabricate `InputEventKey.Unicode` or support nested/cross-window text routing.
 
 ## Examples
 

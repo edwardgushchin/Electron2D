@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 ## Scope and types
 
@@ -17,6 +17,8 @@ Window properties configure title, positive client size, minimum/maximum constra
 Interactive `Window.StartDrag` and `StartResize` remain blocked with their DisplayServer counterparts: SDL hit testing identifies draggable edges but does not start an interactive move or resize. An X11 window-manager request or Wayland xdg_toplevel request with the initiating pointer serial, followed by compositor verification, is required.
 
 Window also forwards effective mouse entry/exit, content-scale changes and completed file-drop snapshots before frame callbacks. Native IME activation/caret placement, taskbar progress requests, decorated geometry, maximization capability and centering are available on Window with the existing platform limits. Signal failures remain visible after the native queue drains; scene and native cleanup still run.
+
+While active, Window additionally subscribes to DisplayServer committed-text and composition callbacks. It forwards each whole string into the root SceneTree's focused Control route and sends composition updates through the existing scene-wide IME notification before the focused typed callback. It unsubscribes before closing the native display. Text widgets still control when `SetIMEActive` is enabled and own their caret/preedit lifecycle. The bridge does not infer a producing key from a later SDL text event or activate nested/cross-window routing.
 
 Viewport shares SceneTree's current handled-input flag. PushInput accepts client input by default and viewport input with inLocalCoordinates true. Conversion removes the final transform, owns and finally disposes positional copies, and preserves caller input. Neither path changes Input polling state. Child nodes discover their Window/Viewport through ancestor lookup.
 

@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -24,7 +24,7 @@ Owns one native SDL video connection and its main window.
 
 `WindowRectChanged` delivers a complete `Rect2i` for the main window's client area after a native move or size change. Its position uses the driver's desktop coordinates; on Wayland the position is conventionally `(0, 0)` because a reliable global top-level position is unavailable. Its size uses client pixels on Wayland and native window units on other drivers. Each callback receives the rectangle as it stood at that event in native queue order; duplicate rectangles and events for other windows are ignored. The Wayland convention does not make the global-position query or setter available.
 
-Native key events carry independent logical, physical, and unmodified layout-label identities. Left/right control, shift, alt, and GUI scancodes set the corresponding `InputEventKey.Location`; all other scancodes use `Unspecified`. The native adapter leaves `InputEventKey.Unicode` at zero while committed text is delivered separately. SDL key events contain no produced text scalar; text-input events may contain multiple scalars or an IME commit without identifying a corresponding key press. Populating native key-event Unicode requires a per-key Unicode source with verified IME/composition semantics in the first native keyboard/text adapter slice.
+Native key events carry independent logical, physical, and unmodified layout-label identities. Left/right control, shift, alt, and GUI scancodes set the corresponding `InputEventKey.Location`; all other scancodes use `Unspecified`. The native adapter leaves `InputEventKey.Unicode` at zero while committed text is delivered separately. SDL key events contain no produced text scalar; text-input events may contain multiple scalars or an IME commit without identifying a corresponding key press. The root Window now forwards each complete committed string and composition update to its focused Control/scene after DisplayServer state commits. Populating native key-event Unicode still requires a per-key Unicode source; the separate string bridge does not invent key attribution.
 
 Native message dialogs block the owner thread and return a typed button index through a callback. Native file choosers return asynchronously, possibly from an SDL worker thread; `ProcessEvents` delivers copied paths to game callbacks on the owner thread. A server with a pending chooser or an undelivered chooser result cannot be disposed; keep pumping until its callback runs. A dropped group of files produces one ordered `FilesDropped` list when SDL reports completion; interrupted groups are discarded. Wayland does not expose a reliable global desktop pointer position, so `MouseGetPosition` reads the last window-relative SDL pointer state; the mouse-focus screen selector uses index zero.
 

@@ -1,0 +1,60 @@
+{
+  "mappings": [
+    {
+      "godot": "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
+      "electron2d": "event:Electron2D.Control.TextInput()",
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey."
+    },
+    {
+      "godot": "DisplayServer::method:window_set_input_text_callback(Callable:,int:)",
+      "electron2d": "method:Electron2D.Control.OnTextInput(System.String)",
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_OS_IME_UPDATE",
+      "electron2d": "event:Electron2D.Control.IMECompositionChanged()",
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_OS_IME_UPDATE",
+      "electron2d": "method:Electron2D.Control.OnIMECompositionChanged(System.String,Electron2D.Vector2i)",
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_OS_IME_UPDATE",
+      "electron2d": "constant:Electron2D.Node.NotificationOsImeUpdate()",
+      "reason": "ADR 0038: the original node notification ID now also executes for native composition updates after DisplayServer commits its text and selection."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "godot": [
+        "DisplayServer::method:window_set_input_text_callback(Callable:,int:)"
+      ],
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey. Main-window delivery executes; the source window-ID callback family still needs native multiwindow ownership and routing."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "Node::constant:NOTIFICATION_OS_IME_UPDATE",
+        "MainLoop::constant:NOTIFICATION_OS_IME_UPDATE"
+      ],
+      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey. Composition state commits in DisplayServer before recursive scene notification."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "InputEventKey::property:unicode"
+      ],
+      "reason": "Native SDL key events still carry Unicode zero. Complete committed strings and IME composition reach focused Controls separately under ADR 0038; per-key Unicode attribution needs a native source that identifies the producing key without guessing from later SDL text events."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "Viewport::method:push_text_input(String:)"
+      ],
+      "reason": "The pinned method calls a focused editor-specific _set_text path, or its embedded subwindow equivalent. Native committed-text delivery does not provide that programmatic editor replacement contract; it requires a typed text-control owner and embedded subwindow focus routing."
+    }
+  ]
+}

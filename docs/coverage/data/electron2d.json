@@ -22237,6 +22237,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.Control.IMECompositionChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "IMECompositionChanged",
+    "signature": "public event System.Action\u003CSystem.String, Electron2D.Vector2i\u003E IMECompositionChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, Electron2D.Vector2i\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.Control.MaximumSizeChanged()",
     "kind": "event",
     "declaringType": "Electron2D.Control",
@@ -22312,6 +22325,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Control.TextInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.Control",
+    "name": "TextInput",
+    "signature": "public event System.Action\u003CSystem.String\u003E TextInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
     "value": null
   },
   {
@@ -32686,6 +32712,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.OnIMECompositionChanged(System.String,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnIMECompositionChanged",
+    "signature": "protected virtual System.Void OnIMECompositionChanged(System.String text, Electron2D.Vector2i selection)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "selection",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.OnMakeCustomTooltip(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -32745,6 +32795,25 @@
       }
     ],
     "returnType": "Electron2D.TextBIDIRange[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnTextInput(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnTextInput",
+    "signature": "protected virtual System.Void OnTextInput(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

@@ -191,7 +191,9 @@ public partial class Window
 
     /// <summary>Enables or disables native text input for the active window.</summary>
     /// <param name="active">Whether to accept committed text and composition updates.</param>
-    /// <remarks>Enable while a text field owns focus. Disabling clears native composition state.</remarks>
+    /// <remarks>Enable while a text field owns focus. During Engine.Run, committed text and composition reach the
+    /// focused Control through its typed hooks and events. Disabling clears native composition state; the text
+    /// control owns its own preedit cleanup when focus or native window focus changes.</remarks>
     /// <exception cref="InvalidOperationException">The window is inactive, accessed off-thread, or the request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public void SetIMEActive(bool active) { EnsureMutable(); GetDisplay().WindowSetIMEActive(active); }
