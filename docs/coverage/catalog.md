@@ -217,7 +217,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
 | [DTLSServer](classes/DTLSServer.md) | RefCounted | Blocked | 2 |
-| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Unimplemented | 4 |
+| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Partial | 4 |
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |
 | [Dictionary](classes/Dictionary.md) | — | Excluded | 40 |
 | [DirAccess](classes/DirAccess.md) | RefCounted | Partial | 40 |

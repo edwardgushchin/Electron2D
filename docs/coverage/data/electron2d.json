@@ -1012,6 +1012,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DampedSpringJoint",
+    "kind": "type",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "DampedSpringJoint",
+    "signature": "public sealed class Electron2D.DampedSpringJoint",
+    "visibility": "public",
+    "baseType": "Electron2D.Joint",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DeepDuplicateMode",
     "kind": "type",
     "declaringType": "Electron2D.DeepDuplicateMode",
@@ -7260,6 +7275,19 @@
     "declaringType": "Electron2D.CurveXYZTexture",
     "name": ".ctor",
     "signature": "public CurveXYZTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.DampedSpringJoint..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": ".ctor",
+    "signature": "public DampedSpringJoint()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -34753,6 +34781,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DampedSpringJoint.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DampedSpringJoint.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -83665,6 +83719,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DampedSpringJoint.Damping()",
+    "kind": "property",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "Damping",
+    "signature": "public System.Single Damping { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DampedSpringJoint.Length()",
+    "kind": "property",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "Length",
+    "signature": "public System.Single Length { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DampedSpringJoint.RestLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "RestLength",
+    "signature": "public System.Single RestLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DampedSpringJoint.Stiffness()",
+    "kind": "property",
+    "declaringType": "Electron2D.DampedSpringJoint",
+    "name": "Stiffness",
+    "signature": "public System.Single Stiffness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

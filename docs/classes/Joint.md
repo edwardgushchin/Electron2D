@@ -3,7 +3,7 @@
 Last updated: 2026-09-30
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
-**Inherited By:** [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md)
+**Inherited By:** [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md), [DampedSpringJoint](DampedSpringJoint.md)
 
 - **Source:** [Joint.cs](../../src/Scene/2D/Joint.cs)
 - **Declaration:** `public abstract class Joint : Entity`
@@ -13,7 +13,7 @@ Last updated: 2026-09-30
 
 The base spatial role for constraints between two distinct [PhysicsBody](PhysicsBody.md) nodes. `NodeA` and `NodeB` use the existing string node-path syntax and resolve from the joint in its scene tree. The joint stores configuration while detached. After both endpoints belong to the same active physics world, its concrete subclass creates a solver constraint. Invalid paths, non-body nodes, duplicate endpoints or bodies outside the same world leave it unconfigured and produce warnings. It reconnects after a body reenters, and the old constraint is removed before a body or the joint exits. The global anchor is sampled when the connection is made; moving the joint node alone does not retune an existing constraint. The node itself draws no geometry.
 
-`Joint` is an engine-owned abstract base; applications instantiate [PinJoint](PinJoint.md) or [GrooveJoint](GrooveJoint.md). A public joint RID and per-joint positional bias are not yet exposed. See [coverage](../coverage/classes/Joint2D.md) for exact dependency triggers.
+`Joint` is an engine-owned abstract base; applications instantiate [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md) or [DampedSpringJoint](DampedSpringJoint.md). A public joint RID and per-joint positional bias are not yet exposed. See [coverage](../coverage/classes/Joint2D.md) for exact dependency triggers.
 
 ## Example
 
@@ -57,4 +57,4 @@ The scene owner thread owns attached mutation and queries. Property writes rejec
 
 ## Verification and decisions
 
-[PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs) and [GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) cover two concrete solver roles, path changes, body exit/reentry, active collision changes, packing, thread rejection and invalid-geometry recovery. The architecture is [ADR 0084](../decisions/physics.md#adr-0084) and [ADR 0085](../decisions/physics.md#adr-0085).
+[PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs), [GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) and [DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) cover three concrete joint roles, path changes, body exit/reentry, active collision changes, packing, thread/phase rejection and invalid-geometry recovery. [The physics joint decisions](../decisions/physics-joints.md) define those roles.

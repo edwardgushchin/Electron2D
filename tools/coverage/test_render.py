@@ -264,6 +264,10 @@ def main():
     assert " | Partial | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))
     assert all(" | Implemented | " in next(row for row in groove_rows if row.startswith(f"| [`property float {name}"))
                for name in ("initial_offset", "length"))
+    spring_rows = pages[CLASS_PAGES / "DampedSpringJoint2D.md"].splitlines()
+    assert " | Partial | " in next(row for row in spring_rows if row.startswith("| [`class DampedSpringJoint2D"))
+    assert all(" | Implemented | " in next(row for row in spring_rows if row.startswith(f"| [`property float {name}"))
+               for name in ("damping", "length", "rest_length", "stiffness"))
     area_rows = [row for row in pages[CLASS_PAGES / "Area2D.md"].splitlines()
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(area_rows) == 36

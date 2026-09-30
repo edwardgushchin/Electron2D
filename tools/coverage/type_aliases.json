@@ -29,6 +29,7 @@
     "Joint2D": "Joint",
     "PinJoint2D": "PinJoint",
     "GrooveJoint2D": "GrooveJoint",
+    "DampedSpringJoint2D": "DampedSpringJoint",
     "Shape2D": "Shape",
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",

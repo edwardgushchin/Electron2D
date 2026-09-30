@@ -164,6 +164,10 @@ public abstract class Joint : Entity
 
     internal B2JointId BackendID => _jointID;
 
+    internal virtual void PrepareSolverStep(float delta) { }
+    internal virtual void ValidateSolverStep(PhysicsSpace space) { }
+    internal virtual void ApplySolverStep() { }
+
     internal virtual void ValidateJointConfiguration(PhysicsBody first, PhysicsBody second, Transform transform)
     {
         ValidateAnchor(first.ToLocal(transform.Origin));

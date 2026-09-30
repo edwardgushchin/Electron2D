@@ -9,6 +9,7 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     private readonly List<KinematicStepForce> _kinematicStepForces = [];
+    private readonly Dictionary<int, (double X, double Y, double Angular)> _jointImpulseVelocities = [];
     private readonly record struct KinematicStepForce(B2BodyId ID, B2Vec2 Force, float Torque);
 
     private void StepKinematicPaths(double delta)
@@ -20,7 +21,7 @@ internal sealed partial class PhysicsSpace
         foreach (var body in _serverColliders)
             if (!body.IsArea && body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
                 minimumExtent = MathF.Min(minimumExtent, PhysicsBodyRuntime.Simulation(body.BackendID).minExtent);
-        if (minimumExtent == B2_HUGE) { b2World_Step(_worldID, (float)delta, 4); return; }
+        if (minimumExtent == B2_HUGE) { StepBackend((float)delta); return; }
         var travel = 0d;
         foreach (var body in _bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
         foreach (var body in _serverColliders)
@@ -31,7 +32,7 @@ internal sealed partial class PhysicsSpace
         if (!double.IsFinite(countValue) || countValue > int.MaxValue)
             throw new InvalidOperationException("Kinematic displacement exceeds the finite integration range.");
         var steps = Math.Max(1, (int)countValue);
-        if (steps == 1) { b2World_Step(_worldID, (float)delta, 4); return; }
+        if (steps == 1) { StepBackend((float)delta); return; }
         _kinematicStepForces.Clear();
         foreach (var body in _bodies) Capture(body.BackendID);
         foreach (var body in _serverColliders) if (!body.IsArea) Capture(body.BackendID);
@@ -44,8 +45,35 @@ internal sealed partial class PhysicsSpace
                     var sim = PhysicsBodyRuntime.Simulation(body.ID);
                     sim.force = body.Force; sim.torque = body.Torque;
                 }
-            b2World_Step(_worldID, subDelta, 4);
+            StepBackend(subDelta);
         }
+    }
+
+    private void StepBackend(float delta)
+    {
+        foreach (var joint in _joints) joint.PrepareSolverStep(delta);
+        _jointImpulseVelocities.Clear();
+        foreach (var joint in _joints) joint.ValidateSolverStep(this);
+        foreach (var joint in _joints) joint.ApplySolverStep();
+        b2World_Step(_worldID, delta, 4);
+    }
+
+    internal void ValidateJointImpulse(B2BodyId id, B2Vec2 impulse, B2Vec2 point)
+    {
+        if (b2Body_GetType(id) != B2BodyType.b2_dynamicBody) return;
+        if (!_jointImpulseVelocities.TryGetValue(id.index1, out var velocity))
+        {
+            var linear = b2Body_GetLinearVelocity(id);
+            velocity = (linear.X, linear.Y, b2Body_GetAngularVelocity(id));
+        }
+        var body = PhysicsBodyRuntime.Simulation(id);
+        velocity.X += (double)body.invMass * impulse.X;
+        velocity.Y += (double)body.invMass * impulse.Y;
+        var moment = ((double)point.X - body.center.X) * impulse.Y - ((double)point.Y - body.center.Y) * impulse.X;
+        velocity.Angular += body.invInertia * moment;
+        if (!float.IsFinite((float)velocity.X) || !float.IsFinite((float)velocity.Y) || !float.IsFinite((float)velocity.Angular))
+            throw new InvalidOperationException("Combined joint impulses exceed the finite physics velocity range.");
+        _jointImpulseVelocities[id.index1] = velocity;
     }
 
     private static void MeasureTravel(B2BodyId id, int shapeCount, double delta, ref float minimumExtent, ref double travel)

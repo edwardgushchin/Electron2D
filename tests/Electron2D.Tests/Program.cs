@@ -251,6 +251,7 @@ PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
 PinJointTests.Run();
 GrooveJointTests.Run();
+DampedSpringJointTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();

@@ -943,6 +943,18 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.DampedSpringJoint..ctor()",
+      "reason": "Typed scene spring construction projects the node factory and default geometry/coefficients (ADR 0086)."
+    },
+    {
+      "electron2d": "method:Electron2D.DampedSpringJoint.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory preserves the concrete spring node role (ADRs 0005 and 0086)."
+    },
+    {
+      "electron2d": "method:Electron2D.DampedSpringJoint.GetPropertyDescriptors()",
+      "reason": "Typed PackedScene storage projects spring geometry, relaxed length and physical coefficients (ADRs 0005 and 0086)."
+    },
+    {
       "electron2d": "constructor:Electron2D.GrooveJoint..ctor()",
       "reason": "C# construction of the concrete finite-guide scene joint projects the reference node factory and defaults (ADR 0085)."
     },
@@ -1659,12 +1671,17 @@
     {
       "godot": ["SceneTree::property:debug_collisions_hint"],
       "state": "Unimplemented",
-      "reason": "Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint gizmos on both current renderers (ADR 0085); no runtime drawing owner exists yet."
+      "reason": "Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint/DampedSpringJoint gizmos on both current renderers (ADRs 0085 and 0086); no runtime drawing owner exists yet."
     },
     {
-      "godot": ["class:DampedSpringJoint2D", "DampedSpringJoint2D::property:damping", "DampedSpringJoint2D::property:length", "DampedSpringJoint2D::property:rest_length", "DampedSpringJoint2D::property:stiffness"],
-      "state": "Unimplemented",
-      "reason": "Shared scene-joint ownership now executes under ADR 0084; next spring slice must verify conversion of scene stiffness/damping to Box2D distance-joint hertz/ratio, local anchor geometry and zero rest-length behavior in an actual dynamic solve."
+      "godot": ["class:DampedSpringJoint2D"],
+      "state": "Partial",
+      "reason": "Anchor Hooke force, effective-mass axial drag and native filter-joint ownership execute under ADR 0086; inherited Joint RID/bias remain Blocked and physics debug drawing still needs the scene debug-canvas flag/pass."
+    },
+    {
+      "godot": ["DampedSpringJoint2D::property:damping", "DampedSpringJoint2D::property:length", "DampedSpringJoint2D::property:rest_length", "DampedSpringJoint2D::property:stiffness"],
+      "state": "Implemented",
+      "reason": "DampedSpringJointTests verifies Hooke/mass response, pure axial exponential drag, anchor torque, momentum/equilibrium, stretch beyond Length, signed/coincident geometry, live settings, sleep/freeze, custom integration, collisions, packing, numeric/thread rollback, kinematic duration and warm allocation. Nonnegative finite coefficients/relaxed length and consistent zero-rest fallback are typed adaptations under ADR 0086."
     },
     {
       "godot": ["class:GrooveJoint2D"],
