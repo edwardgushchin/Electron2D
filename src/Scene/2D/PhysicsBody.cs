@@ -300,7 +300,7 @@ public abstract class PhysicsBody : CollisionObject
         foreach (var node in ShapeSlots)
         {
             if (!node.Active) continue;
-            if (!node.Owner.Transform.IsFinite() || !node.Owner.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Owner.Transform.Skew))
+            if (!node.Transform.IsFinite() || !node.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
 
@@ -322,7 +322,7 @@ public abstract class PhysicsBody : CollisionObject
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact));
             definition.enablePreSolveEvents = contact is not null ||
                 PhysicsServer.Instance.HasBodyCollisionExceptions(GetRID());
-            node.Shape.AppendToBody(_bodyID, node.Owner.Transform.Origin, node.Owner.Transform.Rotation, definition, _backendShapes);
+            node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
         }
 
         OnShapesRebuilt();

@@ -399,3 +399,64 @@ Make validates geometry and every local anchor radius through ten million scene 
 Detached caller-owned connections retain sampled local frames and connect once both bodies share an active world; temporary departure or cross-world membership suspends them. Reentry uses fresh native IDs. Endpoint free clears dependents; world free leaves live resources detached and configured. Scene GetRID is borrowed and stable until node disposal; raw same-role server make/clear persists until scene geometry/path/name edits or reentry reclaim it. Scalar edits are bidirectional without replacing the public node. No joint owns or frees endpoint bodies.
 
 [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers all three actual server responses, world pin, bidirectional settings, clear/replacement, defaults, lifecycle/failure/phase/thread rollback, independent exceptions and 64 warmed active typed-setting/spring frames with zero managed allocation on Linux/.NET 10. Native allocations, broad-scene stability/performance, other platforms and owner visual acceptance remain unverified. General joint positional bias/correction speed/force caps, linear pin softness and scene debug drawing remain exact coverage gaps; angular spring tuning does not supply them.
+
+<a id="shape-slots"></a>
+## Indexed body and Area geometry
+
+Source: [PhysicsServer.ShapeSlots.cs](../../src/Servers/Physics/PhysicsServer.ShapeSlots.cs). All indexed methods accept scene or caller-owned collider RIDs and use zero-based global logical indices. One compound shape can create several fixtures, each reporting its same slot index. Disabled/disposed slots still count; a retained disposed resource produces an empty shape RID. [ADR 0088](../decisions/physics-shape-slots.md#adr-0088) owns the shared projection.
+
+| Signature | Contract |
+| --- | --- |
+| `public RID BodyGetShape(RID body, int index)` | Borrowed shape identity, or empty for a disposed retained resource. |
+| `public RID AreaGetShape(RID area, int index)` | Same contract for an Area. |
+| `public Transform BodyGetShapeTransform(RID body, int index)` | Effective local slot pose. |
+| `public Transform AreaGetShapeTransform(RID area, int index)` | Effective local sensor pose. |
+| `public void BodySetShape(RID body, int index, RID shape)` | Replace geometry, retain index/pose/policies, borrow the shape. |
+| `public void AreaSetShape(RID area, int index, RID shape)` | Same for a sensor slot. |
+| `public void BodySetShapeTransform(RID body, int index, Transform transform)` | Finite unit-scale, zero-skew local pose for one slot. |
+| `public void AreaSetShapeTransform(RID area, int index, Transform transform)` | Same for a sensor slot. |
+| `public void BodyClearShapes(RID body)` | Remove all indexed shapes without freeing resources. |
+| `public void AreaClearShapes(RID area)` | Remove all sensor slots without freeing resources. |
+| `public void BodySetShapeAsOneWayCollision(RID body, int index, bool enable, float margin, Vector2? direction = null)` | One slot's directional body contacts/motion; null means down. |
+
+### Example
+
+Partial snippet: `bodyRID` is a live scene or server body. The caller owns `geometry` until FreeRID; its free removes any remaining slots that use it.
+
+```csharp
+var physics = PhysicsServer.Instance;
+var geometry = physics.RectangleShapeCreate();
+physics.BodyAddShape(bodyRID, geometry);
+int index = physics.BodyGetShapeCount(bodyRID) - 1;
+physics.BodySetShapeTransform(bodyRID, index, new Transform(0, Vector2.One, 0, new Vector2(40, 0)));
+RID sameGeometry = physics.BodyGetShape(bodyRID, index);
+physics.BodyRemoveShape(bodyRID, index);
+physics.FreeRID(geometry);
+```
+
+<a id="bodygetshape"></a>
+<a id="areagetshape"></a>
+**BodyGetShape / AreaGetShape:** Return the effective slot's shape identity. Caller-created shape IDs remain caller-owned; managed Shape IDs remain resource-owned. Getters confer no release ownership. An absent index throws ArgumentOutOfRangeException; wrong/stale collider identities throw ArgumentException. An active world requires its owner thread outside solver/sync phases.
+
+<a id="bodysetshape"></a>
+<a id="areasetshape"></a>
+**BodySetShape / AreaSetShape:** Replace the indexed geometry with a live owned or borrowed shape RID, preserving index, pose, disabled and one-way settings. The previous resource remains live. Scene owner lookup reports current geometry, while child Shape properties are unchanged. A later child resource edit rebuilds its group. Raw-server fixtures rebuild immediately; scene fixtures prepare before the next query/step. Invalid IDs/indices reject before slot mutation.
+
+<a id="bodygetshapetransform"></a>
+<a id="areagetshapetransform"></a>
+<a id="bodysetshapetransform"></a>
+<a id="areasetshapetransform"></a>
+**Slot pose pairs:** Read/write translation and rotation relative to the collider. Numeric input must be finite, with unit scale and zero skew. Moving one slot never moves its body, siblings or stored child node. A later group/child transform assignment reclaims its corresponding raw pose overrides. The effective pose participates in query/contact geometry and automatic mass-center/inertia calculation.
+
+<a id="bodyclearshapes"></a>
+<a id="areaclearshapes"></a>
+**Clear pairs:** Idempotently remove all slots and native fixtures. Shapes remain live. Scene groups and child configuration remain, with empty group shape lists; a subsequent child resource edit can repopulate its group. Per-index removal shifts all later indices and query tags. Retained contact results still describe their sampled indices.
+
+<a id="bodysetshapeasonewaycollision"></a>
+**BodySetShapeAsOneWayCollision:** Changes one slot's full directional policy. Margin is finite/nonnegative scene units. Direction is finite and normalized, preserving zero; null supplies local down. Slot/body rotation carries it into world coordinates. The existing pre-solve callback gates ordinary contacts and the shared motion kernel gates sweeps/recovery. An Area RID rejects. A later scene group one-way setting restores the full group policy.
+
+### Shared geometry lifetime and verification
+
+Existing add/count/disable/remove methods now address scene slots too. Raw scene addition creates a transient null-owner group with no hidden child. Structural edits do not free geometry or persist through PackedScene. Owned shape data replacement preserves the RID, refreshes RID-backed users and retires an old borrowed geometry view. Such a view cannot be disposed separately; obtain independent data through ShapeGetData. A retirement observer exception propagates after the new data commit. Shape free removes users and unregisters the RID even if its geometry's disposal observer throws. Every related active world's owner/phase is preflighted before shared data mutation/free.
+
+[PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) covers real queries, body/Area scene/server roles, slot/group/child independence, replacement/clear/reindex, borrowed/owned identity, callback/phase/thread/numeric failures, mass-center geometry and real one-way contacts/motion. Sixty-four warmed indexed reads, unchanged writes and active solver frames allocate zero managed bytes on Linux/.NET 10. Native allocation, structural-edit allocation budgets, other platforms and owner visual acceptance remain unverified.

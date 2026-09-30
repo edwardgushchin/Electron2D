@@ -253,6 +253,7 @@ PinJointTests.Run();
 GrooveJointTests.Run();
 DampedSpringJointTests.Run();
 PhysicsServerJointTests.Run();
+PhysicsServerShapeSlotTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();

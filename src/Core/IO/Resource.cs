@@ -12,6 +12,12 @@ namespace Electron2D;
 /// </remarks>
 public class Resource : ElectronObject
 {
+    /// <summary>Returns a resource's typed backend identity, or empty when it has no registered backend role.</summary>
+    /// <returns>Empty for base managed resources; Shape overrides return stable physics shape identities.</returns>
+    /// <remarks>Overrides project an existing backend role. Rendering resource RID registration remains incomplete.</remarks>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public virtual RID GetRID() { ThrowIfDisposed(); return default; }
+
     private const string LocalPathPrefix = "local://";
     private const string EmbeddedPathSeparator = "::";
     private const int SceneUniqueIdLength = 5;

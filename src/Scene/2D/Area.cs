@@ -319,7 +319,7 @@ public sealed partial class Area : CollisionObject
         foreach (var node in ShapeSlots)
         {
             if (!node.Active) continue;
-            if (!node.Owner.Transform.IsFinite() || !node.Owner.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Owner.Transform.Skew))
+            if (!node.Transform.IsFinite() || !node.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
 
@@ -335,7 +335,7 @@ public sealed partial class Area : CollisionObject
             var node = ShapeSlots[index];
             if (!node.Active) continue;
             definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, null));
-            node.Shape.AppendToBody(_bodyID, node.Owner.Transform.Origin, node.Owner.Transform.Rotation, definition, _backendShapes);
+            node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
         }
         _appliedShapeRevisions.Clear();
         foreach (var node in ShapeSlots) _appliedShapeRevisions.Add(node.Revision);

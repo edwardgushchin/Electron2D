@@ -383,7 +383,7 @@ Games can control solver bodies through typed callbacks, manually integrate sele
 <a id="adr-0071"></a>
 ## ADR 0071: Shape-owner groups and global logical collision slots
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionObject owner API, child binding and shared body/Area geometry
@@ -396,7 +396,7 @@ Body/Area geometry previously consisted only of direct child providers. The appl
 ### Decision
 
 - Expose all 21 typed owner operations. Use uint owner IDs, sorted owner enumeration and zero/max-current-plus-one allocation; deleting the highest ID permits reuse. Store arbitrary ElectronObject/null identity weakly. Groups borrow live Shape resources, retain logical disposed/disabled slots and never dispose caller resources. Missing IDs/indices and malformed inputs throw typed exceptions before mutation.
-- Store one append-order global slot per resource, with an independent group-local list. Adding to an earlier owner still appends globally; removal renumbers later slots across all groups. ShapeFindOwner reverses the current global mapping. Compound native fixtures share the resource slot's index. Motion owner lookup resolves the weak group object rather than assuming a scene child.
+- Raw scene/server indexed geometry now uses the shared slots and transient per-slot overrides under [ADR 0088](physics-shape-slots.md#adr-0088). Store one append-order global slot per resource, with an independent group-local list. Adding to an earlier owner still appends globally; removal renumbers later slots across all groups. ShapeFindOwner reverses the current global mapping. Compound native fixtures share the resource slot's index. Motion owner lookup resolves the weak group object rather than assuming a scene child.
 - Route both Body and Area fixture preparation through the same slots, resource revisions, local group pose and disabled policy. Public poses require finite unit scale/zero skew; child transforms preserve the existing pre-rebuild gate. Body groups apply normalized local one-way direction rotated by group pose plus finite nonnegative recovery margin. Manual defaults are false/zero-margin/down; child defaults remain their configured options. Area one-way setters have no effect. Zero direction is preserved.
 - Bind CollisionShape/CollisionPolygon groups at parenting, keep them across tree exit, synchronize child configuration on entry, and remove them at unparenting/disposal. Active local-transform notifications update only transform; detached notifications stay inactive. Independent public owner overrides do not rewrite child properties; a later corresponding child edit updates that field. Child resource/contour replacement clears and rebuilds that group while retaining its ID.
 - Keep manual groups transient; PackedScene reconstructs child groups from existing stored node/resource configuration. GetShapeOwners allocates caller-owned output; warmed unchanged slot/fixture/solver work reuses capacity. Configuration and structural changes may allocate. Indices in retained contact results describe their sampled step and can become stale after structural reindexing.

@@ -190,9 +190,16 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 96, "Partial": 10, "Unimplemented": 64, "Blocked": 11, "Excluded": 34}
+                "Implemented": 107, "Partial": 10, "Unimplemented": 53, "Blocked": 11, "Excluded": 34}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_get_shape", "body_get_shape_transform", "body_set_shape", "body_set_shape_transform",
+                            "body_clear_shapes", "body_set_shape_as_one_way_collision", "area_get_shape",
+                            "area_get_shape_transform", "area_set_shape", "area_set_shape_transform", "area_clear_shapes"))
+    resource_rows = pages[CLASS_PAGES / "Resource.md"].splitlines()
+    assert " | Partial | " in next(row for row in resource_rows if row.startswith("| [`method get_rid("))
+    assert " | Implemented | " in next(row for row in resource_rows if row.startswith("| [`method _get_rid("))
     area_parameter_rows = [row for row in server_rows if "AreaParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
     assert len(area_parameter_rows) == 11 and all(" | Excluded | " in row for row in area_parameter_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method area_{action}_param(" in row)

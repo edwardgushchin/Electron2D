@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md)
 
@@ -65,3 +65,18 @@ Queries can run on any thread while resources remain unchanged and alive. Privat
 ## Limits and verification
 
 Circle and rectangle bounds, validation and copying are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs); [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks the capsule; [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks off-center line bounds and fixtures; [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) checks compound solid contours; [ConcavePolygonShapeTests](../../tests/Electron2D.Tests/ConcavePolygonShapeTests.cs) checks hollow paired contours. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks borrowed RID lifetime, edits and direct query geometry. [ShapeCollisionTests](../../tests/Electron2D.Tests/ShapeCollisionTests.cs) checks static and swept contacts, all ordinary family pairings, rounded corners, contact order/depth, whole convex boundaries, hollow/special pairs, sixteen-deepest-pair retention, invalid/disposed inputs, callback-failure edits and off-thread queries. Sixty-four warmed active, full-contour and empty-contact queries each allocate zero managed bytes on Linux/.NET 10. Successful contact arrays allocate caller-owned output. Native allocation, large-world throughput, other platforms and owner visual acceptance remain unverified. Canvas debug drawing requires renderer resource identity; custom solver bias requires a verified backend mapping. See [ADR 0063](../decisions/physics.md#adr-0063) for direct query ownership.
+
+## Physics identity and server-owned views
+
+| Signature | Contract |
+| --- | --- |
+| `public override RID GetRID()` | Lazily register and return this geometry's stable physics identity. |
+| `protected override void ValidateDisposal()` | Reject separate disposal of a server-owned geometry view before lifetime changes. |
+
+<a id="getrid"></a>
+**GetRID:** Returns a nonempty borrowed physics shape RID stable across geometry edits until resource disposal. Scene/server slots and resource query parameters use that same identity. Disposed resources throw ObjectDisposedException; FreeRID rejects a managed-resource-owned identity. A geometry view obtained from a server-backed scene owner shares the caller-owned server shape RID.
+
+<a id="validatedisposal"></a>
+**ValidateDisposal:** An owned server RID controls its private geometry view. The view cannot be disposed by a borrower (InvalidOperationException before disposal), including concurrently with owner-controlled retirement; ShapeSetData retires an old held view and FreeRID retires the current view. Other managed shapes retain caller-controlled disposal. For independent data, request ShapeGetData rather than retain a borrowed view across replacement.
+
+[PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies identity, query projection, view retirement, callback failures and guarded lifetime under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). No rendering-resource RID support is implied.

@@ -22,12 +22,20 @@ public abstract partial class CollisionObject
     internal sealed class ShapeSlot(ShapeOwner owner, Shape shape, int index)
     {
         internal ShapeOwner Owner { get; } = owner;
-        internal Shape Shape { get; } = shape;
+        internal PhysicsServerShape? ServerShape;
+        internal Shape Shape => ServerShape?.Geometry ?? shape;
+        internal Transform? TransformOverride;
+        internal bool? DisabledOverride;
+        internal bool? OneWayOverride;
+        internal float MarginOverride;
+        internal Vector2 DirectionOverride;
+        internal Transform Transform => TransformOverride ?? Owner.Transform;
         internal int Index = index;
         internal ulong Revision => Shape.IsDisposed ? ulong.MaxValue : Shape.GeometryRevision;
-        internal bool Active => !Owner.Disabled && !Shape.IsDisposed;
-        internal OneWayContactData? OneWay => Owner.OneWay
-            ? new(Owner.Direction.Rotated(Owner.Transform.Rotation), Owner.Margin) : null;
+        internal bool Active => !(DisabledOverride ?? Owner.Disabled) && !Shape.IsDisposed;
+        internal OneWayContactData? OneWay => (OneWayOverride ?? Owner.OneWay)
+            ? new((OneWayOverride.HasValue ? DirectionOverride : Owner.Direction).Rotated(Transform.Rotation),
+                OneWayOverride.HasValue ? MarginOverride : Owner.Margin) : null;
     }
 
     internal IReadOnlyList<ShapeSlot> ShapeSlots => _shapeSlots;
@@ -80,14 +88,20 @@ public abstract partial class CollisionObject
     public void ShapeOwnerSetTransform(uint ownerID, Transform transform)
     {
         EnsureMutable(); var owner = LookupShapeOwner(ownerID); ValidateOwnerTransform(transform);
-        owner.Transform = transform; MarkShapesDirty();
+        owner.Transform = transform;
+        foreach (var slot in owner.Shapes) slot.TransformOverride = null;
+        MarkShapesDirty();
     }
 
     /// <summary>Sets whether a group contributes active collision fixtures.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <param name="disabled">True removes active response/sensing without removing indexed shapes.</param>
     public void ShapeOwnerSetDisabled(uint ownerID, bool disabled)
-    { EnsureMutable(); LookupShapeOwner(ownerID).Disabled = disabled; MarkShapesDirty(); }
+    {
+        EnsureMutable(); var owner = LookupShapeOwner(ownerID); owner.Disabled = disabled;
+        foreach (var slot in owner.Shapes) slot.DisabledOverride = null;
+        MarkShapesDirty();
+    }
 
     /// <summary>Tests a group's disabled policy.</summary>
     /// <param name="ownerID">A current owner ID.</param>
@@ -98,7 +112,10 @@ public abstract partial class CollisionObject
     /// <param name="ownerID">A current owner ID.</param>
     /// <param name="enable">Whether response uses the configured pass-through direction.</param>
     public void ShapeOwnerSetOneWayCollision(uint ownerID, bool enable)
-    { EnsureMutable(); if (this is Area) return; LookupShapeOwner(ownerID).OneWay = enable; MarkShapesDirty(); }
+    {
+        EnsureMutable(); if (this is Area) return; var owner = LookupShapeOwner(ownerID); owner.OneWay = enable;
+        ResetOneWayOverrides(owner); MarkShapesDirty();
+    }
 
     /// <summary>Tests a group's one-way policy.</summary>
     /// <param name="ownerID">A current owner ID.</param>
@@ -113,7 +130,7 @@ public abstract partial class CollisionObject
     {
         EnsureMutable(); if (this is Area) return; var owner = LookupShapeOwner(ownerID);
         if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
-        owner.Margin = margin; MarkShapesDirty();
+        owner.Margin = margin; ResetOneWayOverrides(owner); MarkShapesDirty();
     }
 
     /// <summary>Gets a group's one-way recovery margin.</summary>
@@ -128,7 +145,7 @@ public abstract partial class CollisionObject
     public void ShapeOwnerSetOneWayCollisionDirection(uint ownerID, Vector2 direction)
     {
         EnsureMutable(); if (this is Area) return; var owner = LookupShapeOwner(ownerID);
-        owner.Direction = CollisionShape.NormalizeOneWayDirection(direction); MarkShapesDirty();
+        owner.Direction = CollisionShape.NormalizeOneWayDirection(direction); ResetOneWayOverrides(owner); MarkShapesDirty();
     }
 
     /// <summary>Gets a group's normalized local pass-through direction.</summary>
@@ -156,7 +173,9 @@ public abstract partial class CollisionObject
     /// <summary>Gets a group's borrowed shape at a local index.</summary>
     /// <param name="ownerID">A current owner ID.</param>
     /// <param name="shapeIndex">Zero-based group-local index.</param>
-    /// <returns>The original resource identity.</returns>
+    /// <returns>The current borrowed resource identity; server-backed geometry belongs to its server RID.</returns>
+    /// <remarks>Raw server replacement updates this slot. A server-owned geometry view expires on data replacement/free
+    /// and cannot be disposed by a borrower.</remarks>
     public Shape ShapeOwnerGetShape(uint ownerID, int shapeIndex) => Slot(ownerID, shapeIndex).Shape;
 
     /// <summary>Gets the global collision index of a group-local shape.</summary>
@@ -186,6 +205,51 @@ public abstract partial class CollisionObject
     {
         ReadOwners(); if ((uint)shapeIndex >= (uint)_shapeSlots.Count) throw new ArgumentOutOfRangeException(nameof(shapeIndex));
         return _shapeSlots[shapeIndex].Owner.ID;
+    }
+
+    internal ShapeSlot GlobalShapeSlot(int index)
+    {
+        ReadOwners();
+        return (uint)index < (uint)_shapeSlots.Count ? _shapeSlots[index] : throw new ArgumentOutOfRangeException(nameof(index));
+    }
+
+    internal void AddServerShape(PhysicsServerShape shape, Transform transform, bool disabled)
+    {
+        ValidateOwnerTransform(transform);
+        var id = CreateShapeOwner(null);
+        var owner = _shapeOwners[id]; owner.Transform = transform; owner.Disabled = disabled;
+        AddOwnerShape(owner, shape.Geometry);
+        owner.Shapes[0].ServerShape = shape;
+    }
+
+    internal void RemoveGlobalShape(int index)
+    {
+        var slot = GlobalShapeSlot(index); slot.Owner.Shapes.Remove(slot);
+        _shapeSlots.RemoveAt(index); Reindex(); MarkShapesDirty();
+    }
+
+    internal void ClearGlobalShapes()
+    {
+        foreach (var owner in _shapeOwners.Values) owner.Shapes.Clear();
+        _shapeSlots.Clear(); MarkShapesDirty();
+    }
+
+    internal bool UsesServerShape(PhysicsServerShape shape)
+    {
+        foreach (var slot in _shapeSlots)
+            if (ReferenceEquals(slot.ServerShape, shape) || ReferenceEquals(slot.Shape, shape.Geometry)) return true;
+        return false;
+    }
+
+    internal void RemoveServerShape(PhysicsServerShape shape)
+    {
+        for (var index = _shapeSlots.Count - 1; index >= 0; index--)
+            if (ReferenceEquals(_shapeSlots[index].ServerShape, shape) || ReferenceEquals(_shapeSlots[index].Shape, shape.Geometry)) RemoveGlobalShape(index);
+    }
+
+    private static void ResetOneWayOverrides(ShapeOwner owner)
+    {
+        foreach (var slot in owner.Shapes) slot.OneWayOverride = null;
     }
 
     private void ReadOwners() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
@@ -238,7 +302,9 @@ public abstract partial class CollisionObject
     internal void ChildTransformChanged(ICollisionGeometry child)
     {
         if (!_childOwners.TryGetValue(child, out var id)) return;
-        _shapeOwners[id].Transform = child.Node.Transform; MarkShapesDirty();
+        var owner = _shapeOwners[id]; owner.Transform = child.Node.Transform;
+        foreach (var slot in owner.Shapes) slot.TransformOverride = null;
+        MarkShapesDirty();
     }
     internal uint? ChildOwnerID(ICollisionGeometry child) => _childOwners.TryGetValue(child, out var id) ? id : null;
     internal void ChildDisabledChanged(ICollisionGeometry child)

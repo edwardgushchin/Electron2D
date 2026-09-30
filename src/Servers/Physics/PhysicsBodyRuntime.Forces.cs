@@ -42,7 +42,7 @@ internal sealed partial class PhysicsBodyRuntime
             for (var index = 0; index < body.ShapeSlots.Count; index++)
             {
                 var slot = body.ShapeSlots[index];
-                if (slot.Active) PhysicsMass.AppendGeometry(slot.Shape, slot.Owner.Transform, MassProxies);
+                if (slot.Active) PhysicsMass.AppendGeometry(slot.Shape, slot.Transform, MassProxies);
             }
         }
         else owners.Server!.AppendMassGeometry(MassProxies);

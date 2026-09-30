@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-09-27
+Last updated: 2026-09-30
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -502,3 +502,12 @@ Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` perfor
 The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. There is no general asset loader/saver, import pipeline, scene/resource file format, renderer RID, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
 
 Engine consumers can detect content changes through an internal monotonic revision advanced by EmitChanged before public observers, including inside notification-coalescing batches. This preserves Changed ordering and permits retained controls to recover when an earlier observer throws. It is not a public version or serialization identity. Custom resource authors still report meaningful mutations through EmitChanged.
+
+## Backend resource identity
+
+| Signature | Contract |
+| --- | --- |
+| `public virtual RID GetRID()` | Empty for a base managed resource; concrete backend roles override typed RID dispatch. |
+
+<a id="getrid"></a>
+**GetRID:** The base resource has no backend identity and returns empty after its disposal guard. C# overrides replace the source dispatcher/hook pair. [Shape.GetRID](Shape.md#getrid) supplies stable physics shape identity; other native resource-family registration remains incomplete, including renderer texture/material/shader RIDs. This is a Partial family-wide projection, with an executable base/physics contract under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) checks empty base dispatch and concrete shape identity.

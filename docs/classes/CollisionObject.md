@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -148,3 +148,9 @@ New manual groups default to false, zero margin and local down direction. Body s
 Owner IDs and slot indices are distinct. Missing owner IDs, negative/absent local or global indices throw ArgumentOutOfRangeException. Null/disposed shape additions throw ArgumentNullException/ObjectDisposedException. Malformed numeric values reject before mutation. All attached reads and writes require the SceneTree owner thread; writes also obey scene capture/disposal guards. GetShapeOwners allocates its caller-owned result; unchanged fixture/solver work reuses prepared capacity.
 
 [ShapeOwnerTests](../../tests/Electron2D.Tests/ShapeOwnerTests.cs) verifies defaults, ID reuse, weak identity, interleaved global/local ordering, removals/copies/errors, manual motion/query/solver fixtures, arbitrary owner results, transform/disabled/one-way policies, Area sensing, revision updates after callback failure, parenting/tree/packing lifecycle, resource disposal and 64 warmed solver frames with zero managed allocations on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+## Raw indexed geometry projection
+
+[PhysicsServer indexed methods](PhysicsServer.md#shape-slots) address these same global slots under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). A raw pose, disabled flag or one-way policy changes only its selected slot; stored owner fields and child properties remain. A corresponding group/child edit restores that policy for the whole group. Raw shape replacement updates the resource returned by ShapeOwnerGetShape without changing child Shape properties. Raw addition creates a transient null-owner group. Removal/clear keep current owner identities, adjust group-local lists and renumber global slots; clear leaves children configured, and a later child resource edit can repopulate its group.
+
+A server-backed geometry returned by ShapeOwnerGetShape is borrowed from its server RID. Separate disposal rejects. ShapeSetData replaces the RID's copy and retires a held old geometry view; FreeRID removes users and retires its current view. ShapeGetData supplies an independent long-lived copy. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies these interactions, actual native geometry and one-way response, mass poses, owner/phase/lifetime rejection and warmed allocation.

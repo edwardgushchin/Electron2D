@@ -54814,6 +54814,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaClearShapes(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaClearShapes",
+    "signature": "public System.Void AreaClearShapes(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaCreate()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -55055,6 +55074,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaGetShape(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetShape",
+    "signature": "public Electron2D.RID AreaGetShape(Electron2D.RID area, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaGetShapeCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -55071,6 +55114,30 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetShapeTransform(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetShapeTransform",
+    "signature": "public Electron2D.Transform AreaGetShapeTransform(Electron2D.RID area, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
     "value": null
   },
   {
@@ -55496,6 +55563,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaSetShape(Electron2D.RID,System.Int32,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetShape",
+    "signature": "public System.Void AreaSetShape(Electron2D.RID area, System.Int32 index, Electron2D.RID shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaSetShapeDisabled(Electron2D.RID,System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -55518,6 +55614,35 @@
       {
         "name": "disabled",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaSetShapeTransform(Electron2D.RID,System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaSetShapeTransform",
+    "signature": "public System.Void AreaSetShapeTransform(Electron2D.RID area, System.Int32 index, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],
@@ -55862,6 +55987,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyClearShapes(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyClearShapes",
+    "signature": "public System.Void BodyClearShapes(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyCreate()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -56160,6 +56304,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetShape(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetShape",
+    "signature": "public Electron2D.RID BodyGetShape(Electron2D.RID body, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetShapeCount(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -56176,6 +56344,30 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetShapeTransform(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetShapeTransform",
+    "signature": "public Electron2D.Transform BodyGetShapeTransform(Electron2D.RID body, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
     "value": null
   },
   {
@@ -56788,6 +56980,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodySetShape(Electron2D.RID,System.Int32,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetShape",
+    "signature": "public System.Void BodySetShape(Electron2D.RID body, System.Int32 index, Electron2D.RID shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetShapeAsOneWayCollision(Electron2D.RID,System.Int32,System.Boolean,System.Single,System.Nullable\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetShapeAsOneWayCollision",
+    "signature": "public System.Void BodySetShapeAsOneWayCollision(Electron2D.RID body, System.Int32 index, System.Boolean enable, System.Single margin, System.Nullable\u003CElectron2D.Vector2\u003E direction = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "System.Nullable\u003CElectron2D.Vector2\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodySetShapeDisabled(Electron2D.RID,System.Int32,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -56810,6 +57070,35 @@
       {
         "name": "disabled",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetShapeTransform(Electron2D.RID,System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetShapeTransform",
+    "signature": "public System.Void BodySetShapeTransform(Electron2D.RID body, System.Int32 index, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
         "default": null
       }
     ],
@@ -61033,6 +61322,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Resource.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Resource",
+    "name": "GetRID",
+    "signature": "public virtual Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Resource.OnPathCacheSet(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.Resource",
@@ -63366,6 +63668,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "GetRID",
+    "signature": "public override Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.Shape",
@@ -63376,6 +63691,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

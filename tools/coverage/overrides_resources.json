@@ -19,6 +19,21 @@
       "godot": "ResourceLoader::method:load(String:,String:,int:ResourceLoader.CacheMode)",
       "electron2d": "method:Electron2D.ResourceLoader.Load`1(System.String,Electron2D.ResourceLoader.CacheMode)",
       "reason": "A generic resource type replaces the string type hint; synchronous image-texture loading uses the accepted path cache."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.Resource.GetRID()",
+      "reason": "ADR 0088: virtual C# dispatcher returns empty for managed base resources and stable actual physics identities for Shape; rendering family projections remain explicit."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.Shape.GetRID()",
+      "reason": "ADR 0088: virtual C# dispatcher returns empty for managed base resources and stable actual physics identities for Shape; rendering family projections remain explicit."
+    },
+    {
+      "godot": "Resource::method:_get_rid()",
+      "electron2d": "method:Electron2D.Resource.GetRID()",
+      "reason": "ADR 0088 / ADR 0001: C# virtual GetRID collapses the source dispatcher/override hook into typed dispatch; base returns empty and Shape supplies actual physics RID ownership."
     }
   ],
   "statusGroups": [
@@ -101,6 +116,20 @@
       ],
       "state": "Unimplemented",
       "reason": "Directory access exists; trigger: resource-aware directory listing with type/extension filtering and path policy."
+    },
+    {
+      "godot": [
+        "Resource::method:get_rid()"
+      ],
+      "state": "Partial",
+      "reason": "Base managed empty identity and stable physics Shape identities execute under ADR 0088; remaining native texture/material/shader RID getters require their RenderingServer resource-identity registration and lifetime layer, entering that first complete slice."
+    },
+    {
+      "godot": [
+        "Resource::method:_get_rid()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0088: typed C# virtual GetRID replaces dispatcher/hook indirection; base empty return, custom override dispatch and Shape specialization execute."
     }
   ]
 }

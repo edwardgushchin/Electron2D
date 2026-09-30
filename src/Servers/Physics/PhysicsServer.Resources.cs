@@ -87,21 +87,25 @@ public sealed partial class PhysicsServer
                 EnsureColliderSpaceAccessible(collider);
                 users.Add(collider);
             }
+        var sceneUsers = SceneShapeUsers(entry);
+        foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
         var copy = (Shape)data.Duplicate();
         var previous = entry.Geometry;
+        copy.BindServerOwnedRID(shape);
         entry.Geometry = copy;
         try
         {
             foreach (var collider in users) collider.RebuildShapes();
+            foreach (var scene in sceneUsers) scene.MarkShapesDirty();
         }
         catch
         {
             entry.Geometry = previous;
             foreach (var collider in users) collider.RebuildShapes();
-            copy.Dispose();
+            copy.ReleaseServerGeometry();
             throw;
         }
-        previous.Dispose();
+        previous.ReleaseServerGeometry();
     }
 
     /// <summary>Returns a caller-owned duplicate of server shape geometry.</summary>
@@ -113,11 +117,12 @@ public sealed partial class PhysicsServer
         var entry = GetShape(shape);
         foreach (var collider in SnapshotColliders())
             if (collider.UsesShape(entry)) EnsureColliderSpaceAccessible(collider);
+        foreach (var scene in SceneShapeUsers(entry)) EnsureSceneShapeAccess(scene);
         return (Shape)entry.Geometry.Duplicate();
     }
 
     /// <summary>Adds a typed server shape to a body as one indexed owner slot.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="shape">A live server shape RID.</param>
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
@@ -125,7 +130,7 @@ public sealed partial class PhysicsServer
         AddShape(body, shape, transform ?? Transform.Identity, disabled, isArea: false);
 
     /// <summary>Adds a typed server shape to an Area sensor as one indexed owner slot.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="shape">A live server shape RID.</param>
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
@@ -133,65 +138,71 @@ public sealed partial class PhysicsServer
         AddShape(area, shape, transform ?? Transform.Identity, disabled, isArea: true);
 
     /// <summary>Gets the number of indexed shape slots on a body, including disabled slots.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current slot count.</returns>
     public int BodyGetShapeCount(RID body)
     {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.ShapeCount;
+        var owners = ShapeOwners(body, isArea: false);
+        return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 
     /// <summary>Gets the number of indexed shape slots on an Area, including disabled slots.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <returns>The current slot count.</returns>
     public int AreaGetShapeCount(RID area)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.ShapeCount;
+        var owners = ShapeOwners(area, isArea: true);
+        return owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
     }
 
     /// <summary>Enables or disables one indexed body shape slot.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no fixtures.</param>
     public void BodySetShapeDisabled(RID body, int index, bool disabled)
     {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetShapeDisabled(index, disabled);
+        var owners = ShapeOwners(body, isArea: false, writing: true);
+        if (owners.Scene is { } scene)
+        {
+            var slot = scene.GlobalShapeSlot(index);
+            if ((slot.DisabledOverride ?? slot.Owner.Disabled) == disabled) return;
+            slot.DisabledOverride = disabled; scene.MarkShapesDirty();
+        }
+        else owners.Server!.SetShapeDisabled(index, disabled);
     }
 
     /// <summary>Enables or disables one indexed Area shape slot.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no sensor fixtures.</param>
     public void AreaSetShapeDisabled(RID area, int index, bool disabled)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetShapeDisabled(index, disabled);
+        var owners = ShapeOwners(area, isArea: true, writing: true);
+        if (owners.Scene is { } scene)
+        {
+            var slot = scene.GlobalShapeSlot(index);
+            if ((slot.DisabledOverride ?? slot.Owner.Disabled) == disabled) return;
+            slot.DisabledOverride = disabled; scene.MarkShapesDirty();
+        }
+        else owners.Server!.SetShapeDisabled(index, disabled);
     }
 
     /// <summary>Removes one indexed body shape slot and its fixtures.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     public void BodyRemoveShape(RID body, int index)
     {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        collider.RemoveShapeAt(index);
+        var owners = ShapeOwners(body, isArea: false, writing: true);
+        if (owners.Scene is { } scene) scene.RemoveGlobalShape(index); else owners.Server!.RemoveShapeAt(index);
     }
 
     /// <summary>Removes one indexed Area shape slot and its fixtures.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     public void AreaRemoveShape(RID area, int index)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        collider.RemoveShapeAt(index);
+        var owners = ShapeOwners(area, isArea: true, writing: true);
+        if (owners.Scene is { } scene) scene.RemoveGlobalShape(index); else owners.Server!.RemoveShapeAt(index);
     }
 
     /// <summary>Moves a body into a live space, or detaches it with an empty RID.</summary>
@@ -233,7 +244,7 @@ public sealed partial class PhysicsServer
     }
 
     /// <summary>Changes an Area's translation and rotation in scene units.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
     public void AreaSetTransform(RID area, Transform transform)
     {
@@ -306,7 +317,7 @@ public sealed partial class PhysicsServer
     }
 
     /// <summary>Sets an Area's 32 collision-layer bits.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
     public void AreaSetCollisionLayer(RID area, uint layer)
     {
@@ -315,7 +326,7 @@ public sealed partial class PhysicsServer
     }
 
     /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="monitorable">The sensing policy; server Areas default false.</param>
     /// <remarks>The next nonzero overlap scan adopts the policy. Attached changes require the space owner thread.</remarks>
     public void AreaSetMonitorable(RID area, bool monitorable)
@@ -390,12 +401,12 @@ public sealed partial class PhysicsServer
             var users = SnapshotColliders();
             foreach (var user in users)
                 if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user);
-            foreach (var user in users)
-            {
-                user.RemoveShape(shape);
-            }
-            shape.Geometry.Dispose();
-            lock (_registryGate) _serverShapes.Remove(rid);
+            var sceneUsers = SceneShapeUsers(shape);
+            foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
+            foreach (var user in users) user.RemoveShape(shape);
+            foreach (var scene in sceneUsers) scene.RemoveServerShape(shape);
+            try { shape.Geometry.ReleaseServerGeometry(); }
+            finally { lock (_registryGate) _serverShapes.Remove(rid); }
         }
     }
 
@@ -411,6 +422,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         var rid = RID.Allocate();
+        geometry.BindServerOwnedRID(rid);
         lock (_registryGate) _serverShapes.Add(rid, new(rid, geometry));
         return rid;
     }
@@ -419,7 +431,7 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         lock (_registryGate)
-            return _serverShapes.TryGetValue(rid, out var shape) ? shape :
+            return _serverShapes.TryGetValue(rid, out var shape) && !shape.Geometry.IsDisposed ? shape :
                 throw new ArgumentException("The RID is not a live server shape.", nameof(rid));
     }
 
@@ -465,10 +477,10 @@ public sealed partial class PhysicsServer
 
     private void AddShape(RID owner, RID shape, Transform transform, bool disabled, bool isArea)
     {
-        var collider = GetCollider(owner, isArea);
+        var owners = ShapeOwners(owner, isArea, writing: true);
         var resource = GetShape(shape);
-        EnsureColliderSpaceAccessible(collider);
-        collider.AddShape(resource, transform, disabled);
+        if (owners.Scene is { } scene) scene.AddServerShape(resource, transform, disabled);
+        else owners.Server!.AddShape(resource, transform, disabled);
     }
 
     private void SetSpace(RID owner, RID spaceRID, bool isArea)

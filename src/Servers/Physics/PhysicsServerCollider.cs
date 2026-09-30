@@ -26,7 +26,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     private float _angularVelocity;
     private PhysicsServer.BodyMode _mode = PhysicsServer.BodyMode.Rigid;
 
-    private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled);
+    private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled,
+        bool OneWay = false, float Margin = 0, Vector2 Direction = default);
 
     internal RID RID { get; } = rid;
     internal B2BodyId BackendID => _bodyID;
@@ -117,6 +118,36 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         _slots[index] = previous with { Disabled = disabled };
         try { RebuildShapes(); }
         catch { _slots[index] = previous; RebuildShapes(); throw; }
+    }
+
+    private ShapeSlot Slot(int index) => (uint)index < (uint)_slots.Count ? _slots[index] :
+        throw new ArgumentOutOfRangeException(nameof(index));
+
+    internal PhysicsServerShape GetShape(int index) => Slot(index).Shape;
+    internal Transform GetShapeTransform(int index) => Slot(index).LocalTransform;
+
+    internal void SetShape(int index, PhysicsServerShape shape) => ReplaceSlot(index, Slot(index) with { Shape = shape });
+    internal void SetShapeTransform(int index, Transform transform)
+    {
+        ValidateTransform(transform);
+        ReplaceSlot(index, Slot(index) with { LocalTransform = transform });
+    }
+    internal void SetShapeOneWay(int index, bool enable, float margin, Vector2 direction) =>
+        ReplaceSlot(index, Slot(index) with { OneWay = enable, Margin = margin, Direction = direction });
+
+    private void ReplaceSlot(int index, ShapeSlot next)
+    {
+        var previous = Slot(index);
+        if (previous == next) return;
+        _slots[index] = next;
+        try { RebuildShapes(); }
+        catch { _slots[index] = previous; RebuildShapes(); throw; }
+    }
+
+    internal void ClearShapes()
+    {
+        if (_slots.Count == 0) return;
+        _slots.Clear(); RebuildShapes();
     }
 
     internal void RemoveShapeAt(int index)
@@ -232,7 +263,10 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         {
             var slot = _slots[index];
             if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
-            definition.userData = new B2UserData(new PhysicsFixtureTag(RID, index, null));
+            var contact = !IsArea && slot.OneWay
+                ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
+            definition.enablePreSolveEvents = !IsArea && (contact is not null || PhysicsServer.Instance.HasBodyCollisionExceptions(RID));
+            definition.userData = new B2UserData(new PhysicsFixtureTag(RID, index, contact));
             slot.Shape.Geometry.AppendToBody(_bodyID, slot.LocalTransform.Origin,
                 slot.LocalTransform.Rotation, definition, _backendShapes);
         }

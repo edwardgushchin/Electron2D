@@ -7,12 +7,15 @@ using static Box2D.NET.B2Shapes;
 namespace Electron2D;
 
 /// <summary>Defines reusable two-dimensional collision geometry.</summary>
-/// <remarks>A <see cref="CollisionShape"/> borrows a Shape resource; callers retain its ownership.</remarks>
+/// <remarks>A <see cref="CollisionShape"/> borrows caller-owned geometry. Geometry obtained from a server-backed
+/// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.</remarks>
 public abstract partial class Shape : Resource
 {
     private ulong _revision;
     private readonly object _queryRIDGate = new();
     private RID _queryRID;
+    private bool _serverOwned;
+    private int _serverReleaseThread;
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
     /// <returns>The local-axis bounds, including drawing padding for a separation ray; a shape need not be centered on its origin.</returns>
@@ -24,7 +27,10 @@ public abstract partial class Shape : Resource
 
     internal ulong GeometryRevision => _revision;
 
-    internal RID GetQueryRID()
+    /// <summary>Returns the stable physics identity of this geometry.</summary>
+    /// <returns>A borrowed shape RID retained across edits until resource disposal; server-owned views share their owning RID.</returns>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public override RID GetRID()
     {
         lock (_queryRIDGate)
         {
@@ -32,6 +38,27 @@ public abstract partial class Shape : Resource
             return _queryRID.IsValid() ? _queryRID :
                 _queryRID = PhysicsServer.Instance.RegisterBorrowedShape(this);
         }
+    }
+
+    internal void BindServerOwnedRID(RID rid)
+    {
+        lock (_queryRIDGate) { _queryRID = rid; _serverOwned = true; }
+    }
+
+    internal void ReleaseServerGeometry()
+    {
+        lock (_queryRIDGate) _serverReleaseThread = Environment.CurrentManagedThreadId;
+        try { Dispose(); }
+        finally { lock (_queryRIDGate) _serverReleaseThread = 0; }
+    }
+
+    /// <summary>Preserves the lifetime of geometry borrowed from a caller-owned server shape.</summary>
+    /// <exception cref="InvalidOperationException">The server RID owns this geometry; release that RID instead.</exception>
+    protected override void ValidateDisposal()
+    {
+        lock (_queryRIDGate)
+            if (_serverOwned && _serverReleaseThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("This geometry is borrowed from a server shape RID.");
+        base.ValidateDisposal();
     }
 
     internal void EmitGeometryChanged()
@@ -50,7 +77,7 @@ public abstract partial class Shape : Resource
         {
             RID rid;
             lock (_queryRIDGate) { rid = _queryRID; _queryRID = default; }
-            if (rid.IsValid()) PhysicsServer.Instance.UnregisterBorrowedShape(rid);
+            if (rid.IsValid() && !_serverOwned) PhysicsServer.Instance.UnregisterBorrowedShape(rid);
         }
         base.Dispose(disposing);
     }

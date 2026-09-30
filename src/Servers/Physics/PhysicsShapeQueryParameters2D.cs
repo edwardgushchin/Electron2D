@@ -38,7 +38,7 @@ public sealed class PhysicsShapeQueryParameters2D : ElectronObject
             ThrowIfDisposed();
             ArgumentNullException.ThrowIfNull(value);
             if (value.IsDisposed) throw new ObjectDisposedException(nameof(value));
-            var rid = value.GetQueryRID();
+            var rid = value.GetRID();
             _shape = value;
             _shapeRID = rid;
         }

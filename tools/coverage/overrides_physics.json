@@ -1029,6 +1029,11 @@
       "godot": "Joint2D::method:get_rid()",
       "electron2d": "method:Electron2D.Joint.GetRID()",
       "reason": "ADR 0087: stable scene-owned physics joint RID from construction until disposal, shared with typed PhysicsServer operations."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_shape_as_one_way_collision(RID:,int:,bool:,float:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetShapeAsOneWayCollision(Electron2D.RID,System.Int32,System.Boolean,System.Single,System.Nullable<Electron2D.Vector2>)",
+      "reason": "ADR 0088: nullable direction default projects local downward, finite normalization preserves zero; shared existing contact/motion kernels execute the policy."
     }
   ],
   "extras": [
@@ -1775,6 +1780,11 @@
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorMaxTorque(Electron2D.RID,System.Single)",
       "reason": "Typed projection of the accepted finite motor torque cap needed for this native pin motor, shared with PinJoint.MotorMaxTorque; not a generic joint force cap.",
       "adr": "ADRs 0084, 0087"
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.ValidateDisposal()",
+      "reason": "Existing resource lifetime guard protects geometry borrowed from an owned server shape RID; rejecting separate disposal preserves the resource and RID owner.",
+      "adr": "ADR 0088"
     }
   ],
   "statusGroups": [
@@ -3107,6 +3117,23 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: verified linear pin-anchor compliance in the native revolute solver (ADRs 0084/0087). Enters the first anchor-compliance slice with PinJoint.Softness and the remaining typed server parameter branch; angular spring compliance is a different capability."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:area_clear_shapes(RID:)",
+        "PhysicsServer2D::method:area_get_shape(RID:,int:)",
+        "PhysicsServer2D::method:area_get_shape_transform(RID:,int:)",
+        "PhysicsServer2D::method:area_set_shape(RID:,int:,RID:)",
+        "PhysicsServer2D::method:area_set_shape_transform(RID:,int:,Transform2D:)",
+        "PhysicsServer2D::method:body_clear_shapes(RID:)",
+        "PhysicsServer2D::method:body_get_shape(RID:,int:)",
+        "PhysicsServer2D::method:body_get_shape_transform(RID:,int:)",
+        "PhysicsServer2D::method:body_set_shape(RID:,int:,RID:)",
+        "PhysicsServer2D::method:body_set_shape_as_one_way_collision(RID:,int:,bool:,float:,Vector2:)",
+        "PhysicsServer2D::method:body_set_shape_transform(RID:,int:,Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0088: scene/server global logical slots support actual geometry replacement, effective local poses, disabled state, clear/reindex and body one-way contacts/motion. PhysicsServerShapeSlotTests checks native query/solver response, independent group/child overrides, shape RID/view lifetime, effective mass poses, callback/thread/phase/numeric rollback and 64 warmed reads/unchanged writes/solver frames with zero managed allocation."
     }
   ]
 }
