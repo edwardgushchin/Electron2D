@@ -26,6 +26,8 @@
     "Area2D": "Area",
     "AnimatableBody2D": "AnimatableBody",
     "CharacterBody2D": "CharacterBody",
+    "Joint2D": "Joint",
+    "PinJoint2D": "PinJoint",
     "Shape2D": "Shape",
     "CircleShape2D": "CircleShape",
     "CapsuleShape2D": "CapsuleShape",

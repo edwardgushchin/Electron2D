@@ -459,3 +459,23 @@ Freeze currently selects only a static body. The pinned FreezeMode offers Static
 ### Consequences and verification
 
 RigidFreezeModeTests covers values/defaults, unfrozen invariance, immediate queries/zero delta, rotation and idle behavior, real moderate/fast path contacts, preserved force duration/single callback, mass/lock restoration, MakeStatic override/reentry, packed state, numeric/thread/phase/disposal errors, synchronized sibling idle regression and 64 warmed active subdivided solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms, broad-scene performance and owner visual acceptance remain unverified.
+
+<a id="adr-0084"></a>
+## ADR 0084: Scene-owned pin constraints
+
+Last updated: 2026-09-30
+
+- Status: Accepted
+- Scope: Joint and PinJoint scene-node ownership, collision policy, angular limits and motor
+- Depends on: [0008](scene.md#adr-0008), [0054](#adr-0054), [0061](#adr-0061), [0063](#adr-0063)
+
+### Decision
+
+- Map Joint2D and PinJoint2D to `Joint : Entity` and `PinJoint : Joint`. NodeA/NodeB are stored string paths under the accepted Node path contract. After both distinct PhysicsBody endpoints enter one SceneTree world, a pin fixes their local anchors at the joint's global origin. The backend handle belongs to the scene world, is rebuilt on changed paths or tree reentry, and is destroyed before either body leaves. Moving the joint node alone does not retune existing anchors. Detached or unresolved paths leave the public configuration intact; a later body entry can connect on the next fixed step. Invalid scaled/skewed joint geometry fails that step and can be corrected.
+- DisableCollision defaults true. Rebuilding the joint also refreshes endpoint fixtures when this policy changes so an already-overlapping pair begins or ends contact on the next step. Pin angular limits and motor speed update an active revolute solver without recreating the joint. The angle starts at zero relative to the two body poses at attachment. Validate finite ordered limits inside the backend's ±0.99π range before enabling or changing an active limit. Motor torque is a separate stored `MotorMaxTorque` property, default 10 N·m, because this backend requires a finite torque cap for simultaneous stable limits and motor response; callers can tune it for inertia.
+- Keep `Joint.GetRID` Blocked until the public PhysicsServer joint resource and stable joint/body/world RID lifetime are implemented. Keep positional `Bias` Blocked until a verified per-joint linear correction mapping exists, and `PinJoint.Softness` Blocked until linear anchor compliance exists. Angular spring parameters do not implement either. The concrete pin class is therefore Partial while its delivered member behavior is executable. DampedSpringJoint and GrooveJoint remain separate types: the former needs an explicit stiffness/damping conversion and the latter needs a sliding anchor with free rotation.
+- A warmed static/dynamic pin step reuses the solver's read-only identity state; the pinned backend patch is proposed upstream in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). The checked Linux/.NET 10 path allocates zero managed bytes over 64 active frames; no native or cross-platform allocation claim is made.
+
+### Consequences
+
+PinJointTests covers a real pendulum, angular limit and motor response, collision changes on an already-overlapping pair, live edits, path and body exit/reentry, invalid-input recovery, PackedScene, owner-thread rejection and warmed allocation. Native allocator accounting, other platforms and owner acceptance remain unverified.

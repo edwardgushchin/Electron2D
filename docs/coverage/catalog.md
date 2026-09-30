@@ -413,7 +413,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [JavaObject](classes/JavaObject.md) | RefCounted | Blocked | 2 |
 | [JavaScriptBridge](classes/JavaScriptBridge.md) | Object | Blocked | 11 |
 | [JavaScriptObject](classes/JavaScriptObject.md) | RefCounted | Blocked | 0 |
-| [Joint2D](classes/Joint2D.md) | Node2D | Unimplemented | 5 |
+| [Joint2D](classes/Joint2D.md) | Node2D | Partial | 5 |
 | [Joint3D](classes/Joint3D.md) | Node3D | Excluded | 5 |
 | [JointLimitation3D](classes/JointLimitation3D.md) | Resource | Excluded | 0 |
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
@@ -636,7 +636,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Partial | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
-| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Unimplemented | 6 |
+| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Partial | 6 |
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |
 | [PlaceholderCubemap](classes/PlaceholderCubemap.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |

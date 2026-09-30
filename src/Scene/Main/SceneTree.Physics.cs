@@ -41,6 +41,18 @@ public sealed partial class SceneTree
         _physicsSpace?.Remove(body);
     }
 
+    internal void RegisterPhysicsJoint(Joint joint)
+    {
+        EnsureOwnerThread();
+        EnsurePhysicsSpace().Add(joint);
+    }
+
+    internal void UnregisterPhysicsJoint(Joint joint)
+    {
+        EnsureOwnerThread();
+        _physicsSpace?.Remove(joint);
+    }
+
     internal void RegisterPhysicsArea(Area area)
     {
         EnsureOwnerThread();

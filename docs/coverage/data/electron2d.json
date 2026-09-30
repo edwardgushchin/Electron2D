@@ -2443,6 +2443,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Joint",
+    "kind": "type",
+    "declaringType": "Electron2D.Joint",
+    "name": "Joint",
+    "signature": "public abstract class Electron2D.Joint",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.JoyAxis",
     "kind": "type",
     "declaringType": "Electron2D.JoyAxis",
@@ -3392,6 +3407,21 @@
     "signature": "public sealed class Electron2D.PhysicsTestMotionResult2D",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PinJoint",
+    "kind": "type",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "PinJoint",
+    "signature": "public sealed class Electron2D.PinJoint",
+    "visibility": "public",
+    "baseType": "Electron2D.Joint",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -8085,6 +8115,19 @@
     "declaringType": "Electron2D.PhysicsTestMotionResult2D",
     "name": ".ctor",
     "signature": "public PhysicsTestMotionResult2D()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PinJoint..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PinJoint",
+    "name": ".ctor",
+    "signature": "public PinJoint()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -47009,6 +47052,90 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Joint.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.OnReady()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "OnReady",
+    "signature": "protected override System.Void OnReady()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.KinematicCollision2D.GetAngle(System.Nullable\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.KinematicCollision2D",
@@ -56962,6 +57089,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PinJoint.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PinJoint.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -86321,6 +86474,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Joint.DisableCollision()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "DisableCollision",
+    "signature": "public System.Boolean DisableCollision { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Joint.NodeA()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "NodeA",
+    "signature": "public System.String NodeA { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Joint.NodeB()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "NodeB",
+    "signature": "public System.String NodeB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.JoypadInfo.ProductID()",
     "kind": "property",
     "declaringType": "Electron2D.JoypadInfo",
@@ -88827,6 +89019,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.AngularLimitEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "AngularLimitEnabled",
+    "signature": "public System.Boolean AngularLimitEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.AngularLimitLower()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "AngularLimitLower",
+    "signature": "public System.Single AngularLimitLower { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.AngularLimitUpper()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "AngularLimitUpper",
+    "signature": "public System.Single AngularLimitUpper { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.MotorEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "MotorEnabled",
+    "signature": "public System.Boolean MotorEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.MotorMaxTorque()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "MotorMaxTorque",
+    "signature": "public System.Single MotorMaxTorque { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PinJoint.MotorTargetVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "MotorTargetVelocity",
+    "signature": "public System.Single MotorTargetVelocity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

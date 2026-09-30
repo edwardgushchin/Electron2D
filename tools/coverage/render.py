@@ -590,7 +590,7 @@ def render():
             updated = "2026-09-25"
         if name in {"Area2D", "CharacterBody2D", "PhysicsBody2D", "PhysicsServer2D", "PhysicsDirectSpaceState2D", "Shape2D", "SeparationRayShape2D", "PhysicsTestMotionParameters2D", "Geometry2D", "PhysicsDirectBodyState2D", "RigidBody2D", "CollisionObject2D", "CollisionShape2D", "CollisionPolygon2D"}:
             updated = "2026-09-26"
-        if name in {"Node", "Control", "ProjectSettings", "ScrollBar", "HScrollBar", "VScrollBar", "ScrollContainer"}:
+        if name in {"Node", "Control", "ProjectSettings", "ScrollBar", "HScrollBar", "VScrollBar", "ScrollContainer", "Joint2D", "PinJoint2D", "DampedSpringJoint2D", "GrooveJoint2D"}:
             updated = "2026-09-30"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

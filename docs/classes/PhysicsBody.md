@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-26
 
 ## Description
 
-The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, one-way side, local pose and collision-filter changes are applied before the next physics step or motion query. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. `MoveAndCollide` and `TestMove` run kinematic sweeps over the registered space; body-owned RID exceptions suppress a body pair in both those sweeps and ordinary solver contacts. `GetGravity()` exposes the last resolved field for a dynamic body.
+The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Attached [Joint](Joint.md) constraints are released before the backend body is destroyed. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, one-way side, local pose and collision-filter changes are applied before the next physics step or motion query. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. `MoveAndCollide` and `TestMove` run kinematic sweeps over the registered space; body-owned RID exceptions suppress a body pair in both those sweeps and ordinary solver contacts. `GetGravity()` exposes the last resolved field for a dynamic body.
 
 ## API summary
 

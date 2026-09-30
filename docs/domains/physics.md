@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 ## Responsibility
 
@@ -12,12 +12,15 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 | --- | --- | --- |
 | [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape methods and debug color incomplete |
 | [Scene physics bodies](../components/physics-bodies.md) | [`CollisionObject`](../classes/CollisionObject.md), [`PhysicsBody`](../classes/PhysicsBody.md), [`KinematicCollision2D`](../classes/KinematicCollision2D.md), [`CharacterBody`](../classes/CharacterBody.md), [`CharacterMotionMode`](../classes/CharacterMotionMode.md), [`CharacterPlatformOnLeave`](../classes/CharacterPlatformOnLeave.md), [`RigidBody`](../classes/RigidBody.md), [`StaticBody`](../classes/StaticBody.md), [`AnimatableBody`](../classes/AnimatableBody.md), [`PhysicsMaterial`](../classes/PhysicsMaterial.md) | Dynamic/static/kinematic motion, grounded/floating character sliding, platform carry, body sweeps, contacts, forces, fields and filtering executable; wider body/server contracts incomplete |
+| [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md) | Revolute body anchors, collision suppression, angular limits and motor executable; RID, positional bias, pin softness and other joint families remain incomplete |
 | [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World2D`](../classes/World2D.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs, joints and wider server methods incomplete |
 | [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio and shape events incomplete |
 
 ## Public surface
 
 `RigidBody`, `StaticBody`, `AnimatableBody` and `CharacterBody` inherit the spatial `Entity` role through `PhysicsBody` and `CollisionObject`; `Area` is the parallel `CollisionObject` branch. `CollisionShape : Entity` must be their direct child to supply a borrowed Shape resource. Circle, capsule, segment, convex polygon, concave segment collection and rectangle resources expose their pinned dimensions and local bounds. Bodies and areas expose 32 collision-layer/mask bits. RigidBody, StaticBody and AnimatableBody can borrow a PhysicsMaterial with friction, bounce, rough and absorbent settings. A dynamic body exposes force/torque, damping, sleep, contact reports and field gravity. CharacterBody exposes caller-driven `Velocity`, grounded/floating slide and floor snap, platform carry and the inherited last-step `GetGravity()` query without automatically applying gravity. Areas expose monitoring, overlap events and priority gravity/damping fields.
+
+`PinJoint : Joint : Entity` connects two distinct PhysicsBody paths at one spatial anchor. It supports connected-body collision policy, relative angular limits, angular motor speed and a tunable torque cap. SceneTree owns the backend joint with its physics world; body/joint exit releases that handle before body destruction. Joint-specific RID and tuning gaps are tracked separately in coverage.
 
 ## Runtime flow and invariants
 

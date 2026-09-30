@@ -1,0 +1,60 @@
+# Joint
+
+Last updated: 2026-09-30
+
+**Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
+**Inherited By:** [PinJoint](PinJoint.md)
+
+- **Source:** [Joint.cs](../../src/Scene/2D/Joint.cs)
+- **Declaration:** `public abstract class Joint : Entity`
+- **Component:** [Physics joints](../components/physics-joints.md)
+
+## Description
+
+The base spatial role for constraints between two distinct [PhysicsBody](PhysicsBody.md) nodes. `NodeA` and `NodeB` use the existing string node-path syntax and resolve from the joint in its scene tree. The joint stores configuration while detached. After both endpoints belong to the same active physics world, its concrete subclass creates a solver constraint. Invalid paths, non-body nodes, duplicate endpoints or bodies outside the same world leave it unconfigured and produce warnings. It reconnects after a body reenters, and the old constraint is removed before a body or the joint exits. The global anchor is sampled when the connection is made; moving the joint node alone does not retune an existing constraint. The node itself draws no geometry.
+
+`Joint` is an engine-owned abstract base; applications instantiate [PinJoint](PinJoint.md). A public joint RID, per-joint positional bias and other solver types are not yet exposed. See [coverage](../coverage/classes/Joint2D.md) for exact dependency triggers.
+
+## Example
+
+```csharp
+var pin = new PinJoint { NodeA = "../Base", NodeB = "../Door", DisableCollision = true };
+root.AddChild(pin); // Base and Door are PhysicsBody siblings under root.
+```
+
+The snippet assumes `root` is a Node, the two named bodies are or will be its children, and a SceneTree will advance fixed physics frames.
+
+## API summary
+
+| Member | Default | Contract |
+| --- | --- | --- |
+| `private protected Joint()` | — | Creates a detached base for engine-owned concrete joints. |
+| `public string NodeA { get; set; }` | `""` | Path from this node to the first body. |
+| `public string NodeB { get; set; }` | `""` | Path from this node to the second body. |
+| `public bool DisableCollision { get; set; }` | `true` | Suppress mutual body contacts while joined. |
+| `public override string[] GetConfigurationWarnings()` | — | Return current missing/invalid endpoint warnings. |
+| `protected override void OnEnterTree()` / `OnReady()` / `OnExitTree()` | — | Register, configure and release the scene constraint. |
+| `protected override void Dispose(bool disposing)` | — | Release the constraint before base disposal. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | — | Store path and collision settings in PackedScene. |
+
+## Property descriptions
+
+### `NodeA` and `NodeB`
+
+An empty string leaves the joint unconfigured; `null` rejects before mutation. Paths use [Node](Node.md) resolution, including relative `..` and active absolute paths. Both endpoints must be distinct PhysicsBody nodes in the joint's scene world. Changes take effect before the next nonzero fixed step. A later body entry can satisfy a previously unresolved path. These properties are stored by PackedScene and retain their text through detach/reentry.
+
+### `DisableCollision`
+
+True suppresses physical contacts between the connected pair while the constraint exists. A live change rebuilds the solver joint and refreshes both bodies' fixtures so already-overlapping shapes adopt the new policy at the next step. Their ordinary collision layer/mask and explicit body exceptions continue to apply.
+
+## Method and lifecycle descriptions
+
+### `GetConfigurationWarnings()`
+
+Returns a caller-owned array, including base warnings. While attached, it reports missing/non-body endpoints, a duplicate body, or endpoints outside the same active world. Detached joints return only base warnings. It does not force a solver step or cache a warning snapshot.
+
+The scene owner thread owns attached mutation and queries. Property writes reject during a solver step. Joint creation needs finite unit-scale, zero-skew global geometry; invalid geometry fails the frame and can be corrected before the next one. A completed joint keeps both body-local anchors until a path change or tree reentry rebuilds it. Fixed-step callbacks run before joint preparation, so a path edit in a callback affects that step. Native allocation, non-Linux platforms and visual acceptance are unverified.
+
+## Verification and decisions
+
+[PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs) covers concrete solver behavior, path changes, body exit/reentry, active collision changes, packing, thread rejection and invalid-geometry recovery. The architecture is [ADR 0084](../decisions/physics.md#adr-0084).

@@ -20,7 +20,7 @@ Owns one active node hierarchy and coordinates its lifecycle, input, frames, gro
 
 `SceneTree` is the concrete [`MainLoop`](MainLoop.md) that owns one active root [`Node`](Node.md) hierarchy. An optional `CurrentScene` selects one direct child; in-memory scene changes keep the root alive, remove the old scene immediately, and enter the new scene at a deferred safe point. It establishes lifecycle and owner-thread boundaries, accepts direct frame calls or scheduling through [`Engine`](Engine.md), propagates typed input and system notifications, manages pause state, reusable Node [`Timer`](Timer.md) scheduling, lightweight tree timers, [`Tween`](Tween.md) sequences, typed group operations, deferred actions, and queued deletion, and finalizes the complete hierarchy.
 
-The tree registers its existing physics world with [PhysicsServer](PhysicsServer.md) when the first body/Area enters or a CanvasItem asks for [World2D](World2D.md). Its fixed physics lane steps that same space; `World2D.Space` and its direct query view have stable identities until tree teardown. A query prepares pending shape/pose edits even before the first fixed step.
+The tree registers its existing physics world with [PhysicsServer](PhysicsServer.md) when the first body, Area or [Joint](Joint.md) enters, or a CanvasItem asks for [World2D](World2D.md). Its fixed physics lane steps that same space; `World2D.Space` and its direct query view have stable identities until tree teardown. The lane prepares scene bodies and pin constraints before the solver. A query prepares pending shape/pose edits even before the first fixed step.
 
 An enabled [RayCast](RayCast.md) samples its cached result through Node's internal physics callback before the backend step. Scene pause/process eligibility and physics priority govern this callback; a forced update can query immediately from the owner thread, including while automatic sampling is disabled. A ray result is held between samples.
 
@@ -76,7 +76,7 @@ tree.ProcessFrame(1.0 / 60.0);
 | [`public Tween CreateTween()`](#m-electron2d-scenetree-createtween) | Creates a valid tween processed by this tree. |
 | [`public IReadOnlyList<Tween> GetProcessedTweens()`](#m-electron2d-scenetree-getprocessedtweens) | Returns the tweens currently registered for processing. |
 | [`public void ProcessFrame(double delta)`](#m-electron2d-scenetree-processframe-system-double) | Runs one host-driven process frame, process timers, process tweens, and one deferred safe point. |
-| [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs physics callbacks, body simulation and area monitoring before physics timers and tweens. |
+| [`public void PhysicsFrame(double delta)`](#m-electron2d-scenetree-physicsframe-system-double) | Runs physics callbacks, body/joint simulation and area monitoring before physics timers and tweens. |
 | [`public void SetInputAsHandled()`](#m-electron2d-scenetree-setinputashandled) | Marks the input event currently being dispatched as handled. |
 | [`public bool IsInputHandled()`](#m-electron2d-scenetree-isinputhandled) | Gets whether the input event currently being dispatched has been handled. |
 | [`public IReadOnlyList<Node> GetNodesInGroup(string group)`](#m-electron2d-scenetree-getnodesingroup-system-string) | Returns every current node in a group in depth-first pre-order. |
