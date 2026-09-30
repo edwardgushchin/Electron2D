@@ -260,6 +260,10 @@ def main():
     assert all(" | Blocked | " in next(row for row in joint_rows if row.startswith(f"| [`{prefix}"))
                for prefix in ("method get_rid()", "property float bias"))
     assert " | Blocked | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))
+    groove_rows = pages[CLASS_PAGES / "GrooveJoint2D.md"].splitlines()
+    assert " | Partial | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))
+    assert all(" | Implemented | " in next(row for row in groove_rows if row.startswith(f"| [`property float {name}"))
+               for name in ("initial_offset", "length"))
     area_rows = [row for row in pages[CLASS_PAGES / "Area2D.md"].splitlines()
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(area_rows) == 36

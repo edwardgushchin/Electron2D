@@ -357,7 +357,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GridContainer](classes/GridContainer.md) | Container | Implemented | 3 |
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
-| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Unimplemented | 2 |
+| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Partial | 2 |
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Blocked | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |

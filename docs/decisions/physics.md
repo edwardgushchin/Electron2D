@@ -479,3 +479,22 @@ Last updated: 2026-09-30
 ### Consequences
 
 PinJointTests covers a real pendulum, angular limit and motor response, collision changes on an already-overlapping pair, live edits, path and body exit/reentry, invalid-input recovery, PackedScene, owner-thread rejection and warmed allocation. Native allocator accounting, other platforms and owner acceptance remain unverified.
+
+<a id="adr-0085"></a>
+## ADR 0085: Finite groove constraint with free rotation
+
+Last updated: 2026-09-30
+
+- Status: Accepted
+- Scope: GrooveJoint scene geometry and solver integration
+- Depends on: [0084](#adr-0084), [0054](#adr-0054), [0008](scene.md#adr-0008)
+
+### Decision
+
+- Map GrooveJoint2D to `GrooveJoint : Joint`. Its local-Y segment runs from zero to signed Length=50 by default; InitialOffset=25 samples body B's local anchor from the transformed point. The Box2D wheel constraint permits free relative rotation and translation along body A's local guide axis. Disable the wheel spring and rotational motor, enable lower/upper limits at the segment endpoints, and convert public scene units by 0.01. Zero length is a point limit; negative length reverses the interval; an offset outside it is pulled toward an endpoint.
+- A live Length edit updates native limits without reanchoring either body. A live InitialOffset edit rebuilds the joint before the next fixed step. Bound both signed distances to the backend's 100,000-meter joint extent (ten million scene units); validate finite values, transformed endpoints and local anchors before native mutation. A rejected geometry step preserves the previous joint. Retain inherited path, collision and lifecycle behavior. The class remains Partial for inherited joint RID/bias and because physics debug drawing needs a scene debug-canvas flag and draw pass; its two own public properties execute.
+- Reuse the read-only identity body state in wheel warm-start and solve static branches to remove 576 managed bytes per four-substep active frame. This vendor hot-path change is included in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102).
+
+### Consequences
+
+GrooveJointTests covers sliding endpoints, free rotation, transformed/reversed/zero-length guides, out-of-range anchors, live edits, PackedScene, body exit/reentry, numeric/thread rollback and 64 warmed active frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified.

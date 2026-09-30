@@ -943,6 +943,18 @@
   ],
   "extras": [
     {
+      "electron2d": "constructor:Electron2D.GrooveJoint..ctor()",
+      "reason": "C# construction of the concrete finite-guide scene joint projects the reference node factory and defaults (ADR 0085)."
+    },
+    {
+      "electron2d": "method:Electron2D.GrooveJoint.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory preserves the concrete groove joint role (ADRs 0005 and 0085)."
+    },
+    {
+      "electron2d": "method:Electron2D.GrooveJoint.GetPropertyDescriptors()",
+      "reason": "Typed PackedScene storage hook for groove Length and InitialOffset (ADRs 0005 and 0085)."
+    },
+    {
       "electron2d": "constructor:Electron2D.PinJoint..ctor()",
       "reason": "C# construction of the concrete scene pin role projects the reference node factory and defaults (ADR 0084)."
     },
@@ -1645,14 +1657,24 @@
   ],
   "statusGroups": [
     {
+      "godot": ["SceneTree::property:debug_collisions_hint"],
+      "state": "Unimplemented",
+      "reason": "Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint gizmos on both current renderers (ADR 0085); no runtime drawing owner exists yet."
+    },
+    {
       "godot": ["class:DampedSpringJoint2D", "DampedSpringJoint2D::property:damping", "DampedSpringJoint2D::property:length", "DampedSpringJoint2D::property:rest_length", "DampedSpringJoint2D::property:stiffness"],
       "state": "Unimplemented",
       "reason": "Shared scene-joint ownership now executes under ADR 0084; next spring slice must verify conversion of scene stiffness/damping to Box2D distance-joint hertz/ratio, local anchor geometry and zero rest-length behavior in an actual dynamic solve."
     },
     {
-      "godot": ["class:GrooveJoint2D", "GrooveJoint2D::property:initial_offset", "GrooveJoint2D::property:length"],
-      "state": "Unimplemented",
-      "reason": "Shared scene-joint ownership now executes under ADR 0084; next groove slice must implement a finite sliding segment with free relative rotation, verify wheel-joint local frames and endpoint limits, and exercise live geometry changes in the solver."
+      "godot": ["class:GrooveJoint2D"],
+      "state": "Partial",
+      "reason": "Finite body-A guide and freely rotating body-B slider execute under ADR 0085; inherited Joint RID/bias remain Blocked, and physics debug drawing still requires a scene debug-canvas flag and draw pass."
+    },
+    {
+      "godot": ["GrooveJoint2D::property:initial_offset", "GrooveJoint2D::property:length"],
+      "state": "Implemented",
+      "reason": "GrooveJointTests verifies actual finite sliding, rotation, signed/zero length, offset outside endpoints, live solver updates, packing, lifecycle, invalid rollback and warmed zero managed allocation under ADR 0085."
     },
     {
       "godot": ["class:Joint2D", "class:PinJoint2D"],

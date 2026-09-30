@@ -134,6 +134,7 @@ public abstract class Joint : Entity
         var transform = GlobalTransform;
         if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics joints require unit global scale and zero skew.");
+        ValidateJointConfiguration(bodyA, bodyB, transform);
         DetachJoint();
         _jointID = CreateJoint(space, bodyA, bodyB, transform);
         if (_jointID.index1 == 0) throw new InvalidOperationException("The physics solver did not create the joint.");
@@ -162,6 +163,20 @@ public abstract class Joint : Entity
     }
 
     internal B2JointId BackendID => _jointID;
+
+    internal virtual void ValidateJointConfiguration(PhysicsBody first, PhysicsBody second, Transform transform)
+    {
+        ValidateAnchor(first.ToLocal(transform.Origin));
+        ValidateAnchor(second.ToLocal(transform.Origin));
+    }
+
+    internal static void ValidateAnchor(Vector2 local)
+    {
+        var backend = Shape.ToBackend(local);
+        if (!local.IsFinite() || !float.IsFinite(backend.X) || !float.IsFinite(backend.Y))
+            throw new InvalidOperationException("Joint anchors must fit the finite physics coordinate range.");
+    }
+
     internal B2JointDef BaseDefinition(PhysicsBody first, PhysicsBody second, Transform transform)
     {
         var definition = b2DefaultJointDef();

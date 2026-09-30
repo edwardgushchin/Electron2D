@@ -250,6 +250,7 @@ NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
 PinJointTests.Run();
+GrooveJointTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();
