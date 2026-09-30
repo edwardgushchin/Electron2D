@@ -8,6 +8,24 @@ public abstract class Texture : Resource
     // Font caches and attached controls retain their known state textures without retaining their owners.
     private int _retainRendererCache;
     private int _rendererCacheUsers;
+    private readonly object _ridGate = new();
+    private RID _renderingRID;
+
+    /// <summary>Returns the stable rendering identity of this texture resource.</summary>
+    /// <returns>A borrowed RID retained until resource disposal, independent of the active rendering window.</returns>
+    /// <remarks>The identity retains this resource's virtual drawing behavior. It does not transfer ownership;
+    /// RenderingServer.FreeRID and server texture mutation reject it. Uninitialized resources still have a valid identity.
+    /// Concrete views may instead forward their current source identity.</remarks>
+    /// <exception cref="ObjectDisposedException">The texture is disposed.</exception>
+    public override RID GetRID()
+    {
+        lock (_ridGate)
+        {
+            ThrowIfDisposed();
+            return _renderingRID.IsValid() ? _renderingRID : _renderingRID = RenderingTextureRegistry.Register(this);
+        }
+    }
+
     internal bool RetainRendererCache { get => Volatile.Read(ref _retainRendererCache) != 0 || Volatile.Read(ref _rendererCacheUsers) != 0; set => Volatile.Write(ref _retainRendererCache, value ? 1 : 0); }
     internal void AcquireRendererCacheResidency()
     {
@@ -152,7 +170,16 @@ public abstract class Texture : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { Changed -= InvalidatePixels; lock (_snapshotGate) _snapshot = null; }
+        if (disposing)
+        {
+            Changed -= InvalidatePixels;
+            lock (_ridGate)
+            {
+                if (_renderingRID.IsValid()) RenderingTextureRegistry.Remove(_renderingRID);
+                _renderingRID = default;
+            }
+            lock (_snapshotGate) _snapshot = null;
+        }
         base.Dispose(disposing);
     }
 }

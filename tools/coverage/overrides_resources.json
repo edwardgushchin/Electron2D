@@ -34,6 +34,16 @@
       "godot": "Resource::method:_get_rid()",
       "electron2d": "method:Electron2D.Resource.GetRID()",
       "reason": "ADR 0088 / ADR 0001: C# virtual GetRID collapses the source dispatcher/override hook into typed dispatch; base returns empty and Shape supplies actual physics RID ownership."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.Texture.GetRID()",
+      "reason": "ADR 0028: stable borrowed logical Texture identity before renderer startup, weak registration and resource disposal; typed CanvasItem RID drawing preserves virtual resource behavior. Server-created textures have separate active-renderer ownership; generic material/shader IDs remain pending."
+    },
+    {
+      "godot": "Resource::method:get_rid()",
+      "electron2d": "method:Electron2D.AtlasTexture.GetRID()",
+      "reason": "AtlasTexture forwards the current underlying source RID, including nested views; empty atlas returns empty. Disposing the view does not release the borrowed source identity; source replacement changes the forwarded RID. Pinned atlas_texture.cpp and RenderingTextureRIDTests verify this sibling contract."
     }
   ],
   "statusGroups": [
@@ -122,7 +132,7 @@
         "Resource::method:get_rid()"
       ],
       "state": "Partial",
-      "reason": "Base managed empty identity and stable physics Shape identities execute under ADR 0088; remaining native texture/material/shader RID getters require their RenderingServer resource-identity registration and lifetime layer, entering that first complete slice."
+      "reason": "Base empty managed identity, stable Shape physics identities (ADR 0088) and weak resource-owned Texture rendering identities (ADR 0028) execute. Remaining material/shader RID getters enter the first actual server material/shader registration/lifetime slice. TextureRD/external/drawable/layered resource families retain their exact backend integration triggers."
     },
     {
       "godot": [

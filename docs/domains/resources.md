@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 ## Responsibility
 
@@ -111,3 +111,5 @@ Shader reflection separates the reserved float32 TIME input from material values
 FreeType 2.13.3 and HarfBuzz remain internal; shaping retains 26.6 precision, contextual features and scalar clusters. Private ICU 78.3 supplies dictionary word/line boundaries alongside the managed Unicode 17 layout helpers. Serialized native operations run on the font worker; active-reader leases protect native source retirement. Immutable glyph-image snapshots already recorded by a canvas remain usable after font replacement or disposal. The snapshots hold CPU pixels, and retirement ends their forced backend residency without keeping the owning font alive.
 
 [LabelSettings](../classes/LabelSettings.md) borrows a Font and stores base font/outline/shadow values plus ordered stacked effects, with typed indexed descriptors and ordinary resource graph copying. [Label](../classes/Label.md) is the scene consumer for these effects, inherited font themes and text layout. [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs), [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs), [FontLifetimeTests](../../tests/Electron2D.Tests/FontLifetimeTests.cs), [LabelSettingsTests](../../tests/Electron2D.Tests/LabelSettingsTests.cs) and [ThemeFontTests](../../tests/Electron2D.Tests/ThemeFontTests.cs) cover the implemented resource contracts. Font discovery, variable/palette editing, bitmap/cache authoring, MSDF, public TextServer RID operations and Theme file import remain separate capabilities; see [Text](../components/text.md) and [ADR 0046](../decisions/rendering.md#adr-0046) for precise verification and platform limits.
+
+The [texture identity slice](../components/canvas-rendering.md#texture-resource-identities) links borrowed resource RID lifetime to actual server-owned texture creation/update/replacement/free and retained CanvasItem drawing. Owned identities expire with the active renderer; borrowed resources survive. It executes on both native baseline backends with explicit format/platform limits.

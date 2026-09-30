@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 

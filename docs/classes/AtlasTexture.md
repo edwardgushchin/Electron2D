@@ -1,6 +1,6 @@
 # AtlasTexture
 
-Last updated: 2026-09-26
+Last updated: 2026-10-01
 
 - Declaration: `public sealed class AtlasTexture : Texture`
 - Source: [AtlasTexture.cs](../../src/Scene/Resources/AtlasTexture.cs)
@@ -39,6 +39,7 @@ This constructs resources and a detached node; scene attachment uses the normal 
 | `Rect2 Region { get; set; }` | Stored source rectangle; calculations floor only its size. |
 | `Rect2 Margin { get; set; }` | Drawing offset and total extra size. |
 | `bool FilterClip { get; set; }` | Restrict sampling to the selected region's texel centers. |
+| [`public override RID GetRID()`](#rendering-identity) | Borrows the current source RID, or empty without a source. |
 | `override int GetWidth()` | Effective logical width including applicable margin. |
 | `override int GetHeight()` | Effective logical height including applicable margin. |
 | `override Vector2 GetSize()` | Dimensions from one serialized traversal. |
@@ -145,3 +146,9 @@ The pinned SDL software triangle input truncates source UVs to integer texels as
 CanvasItem.DrawPolygon and DrawColoredPolygon capture the immediate Region as normalized UV mapping and borrow the ultimate source. They ignore Margin and FilterClip; a zero region size collapses UVs, and nested regions are not composed. Missing UVs sample the full source at zero. DrawPrimitive samples the full source without remapping. An empty atlas uses white sampling for these raw geometry commands. Metadata changes require redraw; existing recorded commands retain their source even if this view is replaced or disposed. [CanvasItem](CanvasItem.md#drawpolygon) documents validation, reentrant size callbacks and lifetime.
 
 [NinePatchRect](../classes/NinePatchRect.md) now records one retained panel command with fixed borders, independent Stretch/Tile/TileFit axes and optional center. Live base/atlas dimensions resolve before splitting; ordinary atlas region drawing reuses that resolver. Signed margins drive Control intrinsic minimum size and inherited pointer filtering defaults to Ignore. All nine native axis combinations, center/flip/atlas/constant UV and 64 warmed resized frames are checked by [NinePatchRenderingTests](../../tests/Electron2D.Tests/NinePatchRenderingTests.cs), under [ADR 0079](../decisions/rendering.md#adr-0079). Dense CPU geometry limits, native allocator counts, other platforms and owner acceptance remain explicit.
+
+## Rendering identity
+
+`public override RID GetRID()`
+
+Forwards the current source's RID under the atlas graph gate, recursively for nested views. An empty atlas returns empty. The identity describes the full underlying texture; region/margin/filter clipping apply when drawing the AtlasTexture object. RID overloads draw the resolved source rather than the view. Source assignment changes the forwarded identity; view disposal does not release that identity. This view and source disposal guards apply. [RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks nested/empty/source-change/view-disposal behavior and backing image/format queries.

@@ -327,7 +327,7 @@ public abstract partial class CanvasItem
         foreach (var command in _canvasCommands)
         {
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
-            if (skipping) continue;
+            if (skipping || command.Texture is ServerTexture { IsDisposed: true }) continue;
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }
             var first = vertices.Count;
             CanvasGeometry.Append(vertices, command, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);

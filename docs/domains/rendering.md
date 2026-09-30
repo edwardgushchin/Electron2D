@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 ## Responsibility
 
@@ -93,3 +93,5 @@ Label consumes inherited theme fonts or borrowed LabelSettings, performs wrappin
 [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) and [LabelRenderingTests](../../tests/Electron2D.Tests/LabelRenderingTests.cs) pass focused Linux Wayland GPU/compatibility pixel and lifetime checks. Each test's warmed active-frame scope passes 64 measured frames with zero managed bytes. These results do not measure native allocations or establish broad-scene performance, other-platform text execution or owner acceptance. The private ICU build is integrated for Linux x64/ARM64 profiles; only Linux x64 execution is verified.
 
 The [GUI buttons and shortcuts component](../components/gui-buttons.md) connects the existing theme/text canvas with button actions, groups, texture masks, shortcut resources and tooltip presentation. Its verification section records the measured input-copy allocation boundary and current native gates.
+
+The [texture identity slice](../components/canvas-rendering.md#texture-resource-identities) links borrowed resource RID lifetime to actual server-owned texture creation/update/replacement/free and retained CanvasItem drawing. Owned identities expire with the active renderer; borrowed resources survive. It executes on both native baseline backends with explicit format/platform limits.

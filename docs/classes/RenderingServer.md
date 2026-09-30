@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-09-26
+Last updated: 2026-10-01
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-26
 
 ## Description
 
-Renders the active root Window's retained CanvasItem commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public constructor or independent lifetime. Consumers draw through CanvasItem and Texture; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
+Renders the active root Window's retained CanvasItem commands. Engine.Run creates the service after acquiring the native window, drives it on the scene owner thread and closes it during cleanup. There is no public constructor or independent lifetime. Consumers draw through CanvasItem and Texture, including live texture RIDs; owned SDL handles remain internal. DisplayServer exposes supported borrowed native context identities under ADR 0042.
 
 The service supports rectangles, lines, polygons, short primitives and textures using source-alpha blending into an RGBA8 framebuffer. Shader materials require GPU rendering. Startup settings select `gpu` or `compatibility` and whether GPU initialization may fall back. This does not implement live device migration or recovery.
 
@@ -56,6 +56,16 @@ Largest accepted CanvasLayer.Layer value. It draws after every smaller layer ind
 | `string GetCurrentRenderingDriverName()` | Actual native driver name. |
 | `Color GetDefaultClearColor()` | Current clear color. |
 | `void SetDefaultClearColor(Color color)` | Sets a finite clear color for later frames. |
+| [`public RID Texture2DCreate(Image image)`](#texture2dcreate) | Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. |
+| [`public RID Texture2DPlaceholderCreate()`](#texture2dplaceholdercreate) | Creates a drawable 4×4 RGBA8 magenta/black checkerboard. |
+| [`public Image Texture2DGet(RID texture)`](#texture2dget) | Returns a caller-owned copy of original backing pixels and mipmaps. |
+| [`public void Texture2DUpdate(RID texture, Image image, int layer = 0)`](#texture2dupdate) | Copies and validates matching source width, height, format and mipmap state before publication. |
+| [`public void TextureReplace(RID texture, RID byTexture)`](#texturereplace) | Both identities must be live and owned by this renderer. |
+| [`public Image.Format TextureGetFormat(RID texture)`](#texturegetformat) | Reports original backing format, including the full atlas source format. |
+| [`public void TextureSetSizeOverride(RID texture, int width, int height)`](#texturesetsizeoverride) | Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. |
+| [`public void TextureSetPath(RID texture, string path)`](#texturesetpath) | Sets diagnostic metadata for a server-owned texture. |
+| [`public string TextureGetPath(RID texture)`](#texturegetpath) | Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. |
+| [`public void FreeRID(RID rid)`](#freerid) | Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. |
 | `event Action? FramePreDraw` | Before capture and command preparation. |
 | `event Action? FramePostDraw` | After submitting the canvas frame. |
 
@@ -86,6 +96,68 @@ Returns the current color, initialized from ProjectSettings.DefaultClearColor. R
 ### SetDefaultClearColor
 
 Validates all channels before changing state. Nonfinite values throw ArgumentException without mutation. Normalized framebuffer channels clamp to zero through one; this is not an HDR framebuffer. Requires the owner thread.
+
+### Texture2DCreate
+
+`public RID Texture2DCreate(Image image)`
+
+Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. Input disposal or later image edits do not affect the new texture. Compressed/integer formats fail explicitly. Creation/upload allocation is outside the warmed replay guarantee.
+
+### Texture2DPlaceholderCreate
+
+`public RID Texture2DPlaceholderCreate()`
+
+Creates a drawable 4×4 RGBA8 magenta/black checkerboard. It supports the same update, size/path, replacement and free operations as an ordinary server texture.
+
+### Texture2DGet
+
+`public Image Texture2DGet(RID texture)`
+
+Returns a caller-owned copy of original backing pixels and mipmaps. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Readback uses the authoritative managed snapshot, not a GPU stall.
+
+### Texture2DUpdate
+
+`public void Texture2DUpdate(RID texture, Image image, int layer = 0)`
+
+Copies and validates matching source width, height, format and mipmap state before publication. A failure preserves prior pixels. Logical size overrides do not change required source dimensions. Compatible updates retain the allocation token for backend reuse; retained commands sample new pixels without QueueRedraw. Only layer zero is integrated; nonzero layers throw ArgumentOutOfRangeException until the 2D array resource/renderer slice.
+
+### TextureReplace
+
+`public void TextureReplace(RID texture, RID byTexture)`
+
+Both identities must be live and owned by this renderer. Transfers replacement pixels, logical dimensions and path to the destination object, preserving its RID and retained references. Different pixel configurations are allowed. Consumes byTexture; any commands referring to that consumed object stop drawing. Equal validated RIDs do nothing. Disposal callback errors propagate after publication and removal of the consumed identity; destination state remains committed.
+
+### TextureGetFormat
+
+`public Image.Format TextureGetFormat(RID texture)`
+
+Reports original backing format, including the full atlas source format. Empty resource RIDs report RGBA8 for the rendering placeholder; the resource itself retains its empty metadata.
+
+### TextureSetSizeOverride
+
+`public void TextureSetSizeOverride(RID texture, int width, int height)`
+
+Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. Unlike ImageTexture.SetSizeOverride, zero is invalid. Existing recorded geometry/normalized source coordinates remain fixed; QueueRedraw records the new logical size. Invalid dimensions leave state unchanged.
+
+### TextureSetPath
+
+`public void TextureSetPath(RID texture, string path)`
+
+Sets diagnostic metadata for a server-owned texture. Null is rejected; empty and ordinary strings are accepted. It performs no file loading and does not register a ResourcePath cache entry.
+
+### TextureGetPath
+
+`public string TextureGetPath(RID texture)`
+
+Returns owned diagnostic metadata or a borrowed resource’s ResourcePath. An empty path is valid.
+
+### FreeRID
+
+`public void FreeRID(RID rid)`
+
+Removes a live server-owned texture RID, releases its managed payload and disposes the internal resource. Later retained commands referencing it draw nothing; a second free or lookup throws ArgumentException. Borrowed resource RIDs require resource disposal and throw InvalidOperationException here. Identity removal commits before disposal callbacks run. This method currently handles textures; canvas, material and shader RID ownership are separate incomplete families.
+
+All texture instance methods require the active scene owner thread and a live renderer. Empty, stale and wrong-kind RIDs throw ArgumentException; mutation/free/replace of borrowed or foreign identities throw InvalidOperationException. Writes are allowed during scene callbacks, canvas recording and FramePreDraw/FramePostDraw, but rejected during geometry replay/native submission and shutdown. Getter calls remain available at frame events. Renderer shutdown drains every owned texture even if disposal callbacks fail, attempts backend cleanup independently, detaches Instance and then propagates collected errors. Borrowed resource identities survive renderer shutdown.
 
 ## Event descriptions
 
@@ -122,3 +194,7 @@ Before ordering/traversing a canvas branch, RenderingServer independently tests 
 After FramePreDraw, RenderingServer advances its per-run clock by the captured scaled process step and wraps it by the active [RenderingTimeRolloverSeconds](ProjectSettings.md#renderingtimerolloverseconds). CanvasItem evaluates ordered interval/transform commands against that value each frame. Disabled rendering or an invisible root skips both submission and clock advancement. Tree pause leaves time advancing; TimeScale zero freezes it. The GPU backend sends the same clock to optional reserved TIME uniforms; see [shader render time](../components/shader-materials.md#render-time). See [canvas timing verification](../components/canvas-rendering.md#animation-intervals-and-rectangles).
 
 Retained screen regions now sample the same actual render transforms, layer/mask/clip/repetition and inherited alpha as submitted canvases. All states commit before queued screen events; failures continue later nodes and membership epochs reject stale delivery. [VisibleOnScreenNotifier](../classes/VisibleOnScreenNotifier.md) and [VisibleOnScreenEnabler](../classes/VisibleOnScreenEnabler.md) provide the current runtime API. Both Linux Wayland backends and 64 warmed active neutral-target transitions are verified by [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs), under [ADR 0078](../decisions/rendering.md#adr-0078). Native allocations, other platforms, independent offscreen viewports and editor gizmo drawing remain outside this verification.
+
+## Texture RID verification
+
+[RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks stable resource identity before startup, independent duplicates, weak collection/sweeping, wrong-kind/stale/thread/disposal guards, placeholder pixels, copied input/output, update configuration rollback, logical size bounds, replacement/consumption, retained drawing and shutdown after callback failure. Native Linux Wayland GPU and compatibility pixel checks verify red → blue → green → freed destinations, atlas source identity/drawing and the checkerboard; dummy/software executes the same baseline. Each backend has 20 warmup frames, then 64 frames with RID lookup/redraw/submission and 64 retained frames with no managed allocation on the owner thread between FramePreDraw and FramePostDraw. This excludes the host event loop, resource creation/update/replacement, image copying/readback and native/backend allocations. Other platforms and owner visual acceptance remain unverified. Proxy/layered/drawable/native-device textures and material/shader/canvas server identities remain separately tracked in coverage.

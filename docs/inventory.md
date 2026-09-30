@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
@@ -365,7 +365,7 @@ This assembly row records the current build, not complete platform delivery. The
 
 | Domain | Component | Type | Source | Current behavior |
 | --- | --- | --- | --- | --- |
-| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.cs](../src/Servers/Rendering/RenderingServer.cs) | Root-window rectangle/line/texture submission, clear color, frame events and backend identity; broader API incomplete |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.cs](../src/Servers/Rendering/RenderingServer.cs) | Root-window retained drawing, owned 2D texture RID creation/update/replacement/free, borrowed texture identities, clear color, frame events and backend identity; broader API incomplete |
 
 ## Shader and texture resources
 
@@ -402,6 +402,8 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [GPUCanvasBackend](classes/GPUCanvasBackend.md) | [GPUCanvasBackend.cs](../src/Servers/Rendering/GPUCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CompatibilityCanvasBackend](classes/CompatibilityCanvasBackend.md) | [CompatibilityCanvasBackend.cs](../src/Servers/Rendering/CompatibilityCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [GPUTexture](classes/GPUTexture.md) | [GPUTexture.cs](../src/Servers/Rendering/GPUTexture.cs) | [shader-materials](components/shader-materials.md) |
+| [RenderingTextureRegistry](classes/RenderingTextureRegistry.md), [RenderingTextureRegistry.Entry](classes/RenderingTextureRegistry.md#entry) | [RenderingTextureRegistry.cs](../src/Servers/Rendering/RenderingTextureRegistry.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [ServerTexture](classes/ServerTexture.md) | [RenderingTextureRegistry.cs](../src/Servers/Rendering/RenderingTextureRegistry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [TexturePixels](classes/TexturePixels.md) | [Texture.cs](../src/Scene/Resources/Texture.cs) | [shader-materials](components/shader-materials.md) |
 | [GradientTextureData](classes/GradientTextureData.md) | [GradientTextureData.cs](../src/Scene/Resources/GradientTextureData.cs) | [gradients](components/gradients.md) |
 | [CurveTextureData](classes/CurveTextureData.md) | [CurveTextureData.cs](../src/Scene/Resources/CurveTextureData.cs) | [curves](components/curves.md) |

@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -481,7 +481,7 @@ The reference inheritance chain is `Resource -> RefCounted -> Object`. Electron2
 | `setup_local_to_scene_requested` | Implemented as an obsolete typed compatibility event |
 | `_reset_state`, `_set_path_cache`, `_setup_local_to_scene` | Implemented as protected typed hooks |
 | `copy_from`, `duplicate`, `duplicate_deep`, `emit_changed`, `generate_scene_unique_id`, `is_built_in`, `reset_state`, `set_path_cache`, `setup_local_to_scene`, `take_over_path` | Implemented with the typed adaptations documented above; explicit hook delegates replace reflective always/never-duplicate property flags |
-| `_get_rid`, `get_rid` | Deferred until a renderer/resource-handle domain defines RID ownership |
+| `_get_rid`, `get_rid` | Typed virtual GetRID executes for base managed resources, physics Shape and rendering Texture; material/shader identities remain incomplete |
 | `get_local_scene` and automatic local-to-scene duplication/setup | Implemented for in-memory `PackedScene`; root association precedes setup and persists until resource disposal |
 | `get_id_for_path`, `set_id_for_path` | Deferred with editor/import serialization because their mapping is tooling-only |
 | Synchronous loader cache modes for image textures | Implemented through typed [`ResourceLoader`](ResourceLoader.md) on this weak path registry |
@@ -499,7 +499,7 @@ Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` perfor
 
 `tests/Electron2D.Tests/Program.cs` verifies defaults, property descriptors, event rules, validation, concurrent ID generation, path conflict/transfer/raw-cache/disposal behavior, concurrent path claims, built-in classification, setup ordering and failure aggregation, every duplication mode, forced and forbidden nested duplication, shallow and typed-container semantics, aliases, cycles, external resources, serialized concurrent copy/reset/coalescing behavior, unsupported and invalid factories, partial-graph rollback, packed-scene local duplication/aliasing/root association/setup/ownership, and access after disposal.
 
-The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. There is no general asset loader/saver, import pipeline, scene/resource file format, renderer RID, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
+The first synchronous image-texture file loader uses the existing weak path cache; it does not own loaded resources or introduce native-payload leases. There is no general asset loader/saver, import pipeline, scene/resource file format, general renderer material/shader RID ownership, editor path-ID table, or automatic reflection-based discovery. In-memory packed scenes implement automatic scene-local behavior, but derived resources still implement typed copying explicitly.
 
 Engine consumers can detect content changes through an internal monotonic revision advanced by EmitChanged before public observers, including inside notification-coalescing batches. This preserves Changed ordering and permits retained controls to recover when an earlier observer throws. It is not a public version or serialization identity. Custom resource authors still report meaningful mutations through EmitChanged.
 
@@ -510,4 +510,4 @@ Engine consumers can detect content changes through an internal monotonic revisi
 | `public virtual RID GetRID()` | Empty for a base managed resource; concrete backend roles override typed RID dispatch. |
 
 <a id="getrid"></a>
-**GetRID:** The base resource has no backend identity and returns empty after its disposal guard. C# overrides replace the source dispatcher/hook pair. [Shape.GetRID](Shape.md#getrid) supplies stable physics shape identity; other native resource-family registration remains incomplete, including renderer texture/material/shader RIDs. This is a Partial family-wide projection, with an executable base/physics contract under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) checks empty base dispatch and concrete shape identity.
+**GetRID:** The base resource has no backend identity and returns empty after its disposal guard. C# overrides replace the source dispatcher/hook pair. [Shape.GetRID](Shape.md#getrid) supplies stable physics shape identity; [Texture.GetRID](Texture.md#getrid) supplies stable borrowed rendering identity. Material/shader registration remains incomplete. This is a Partial family-wide projection, with an executable base/physics/texture contract under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) checks empty base dispatch and concrete shape identity.

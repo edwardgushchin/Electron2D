@@ -2571,6 +2571,71 @@
       "godot": "VSlider::property:size_flags_vertical",
       "electron2d": "property:Electron2D.Control.SizeFlagsVertical()",
       "reason": "ADR 0080/0083: typed slider property/event/default or inherited theme lookup is consumed by real orientation-specific interaction and drawing. Theme names retain their pinned meaning; H/V factories and stored descriptors preserve the actual inherited defaults."
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_create(Image:)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DCreate(Electron2D.Image)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_get(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DGet(Electron2D.RID)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_placeholder_create()",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DPlaceholderCreate()",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_update(RID:,Image:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DUpdate(Electron2D.RID,Electron2D.Image,System.Int32)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_get_format(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureGetFormat(Electron2D.RID)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_set_size_override(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureSetSizeOverride(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_set_path(RID:,String:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureSetPath(Electron2D.RID,System.String)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_get_path(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureGetPath(Electron2D.RID)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:texture_replace(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "RenderingServer::method:free_rid(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.FreeRID(Electron2D.RID)",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
+    },
+    {
+      "godot": "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawTexture(Electron2D.RID,Electron2D.Vector2,System.Nullable<Electron2D.Color>)",
+      "reason": "RID overload projects the same retained Texture drawing through live resource/server texture identity; resolves to the existing virtual Texture hook, preserving virtual dispatch for the resolved source (AtlasTexture.GetRID forwards the underlying texture). CanvasItem replaces a raw canvas RID under ADR 0028. Native RenderingTextureRIDTests proves update/replace/free and warmed allocation boundaries."
+    },
+    {
+      "godot": "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRect(Electron2D.RID,Electron2D.Rect2,System.Boolean,System.Nullable<Electron2D.Color>,System.Boolean)",
+      "reason": "RID overload projects the same retained Texture drawing through live resource/server texture identity; resolves to the existing virtual Texture hook, preserving virtual dispatch for the resolved source (AtlasTexture.GetRID forwards the underlying texture). CanvasItem replaces a raw canvas RID under ADR 0028. Native RenderingTextureRIDTests proves update/replace/free and warmed allocation boundaries."
+    },
+    {
+      "godot": "CanvasItem::method:draw_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,bool:,bool:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawTextureRectRegion(Electron2D.RID,Electron2D.Rect2,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Boolean,System.Boolean)",
+      "reason": "RID overload projects the same retained Texture drawing through live resource/server texture identity; resolves to the existing virtual Texture hook, preserving virtual dispatch for the resolved source (AtlasTexture.GetRID forwards the underlying texture). CanvasItem replaces a raw canvas RID under ADR 0028. Native RenderingTextureRIDTests proves update/replace/free and warmed allocation boundaries."
     }
   ],
   "statusGroups": [
@@ -3902,6 +3967,126 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: first native or embedded popup/subwindow host with owned window/viewport composition, renderer references, per-window input/focus/capture routing and popup-stack hide/unwind behavior (ADRs 0008/0040). Root-only Viewport and GUI/theme are already executable; this is the remaining Window.popup/embedded ownership prerequisite. Popup base enters that first host slice; PopupMenu then delivers its menu model, theme and interaction as one complete consumer slice."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_2d_create(Image:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Compressed/integer-sampled formats require their native upload/sampling and backend capability slice (ADRs 0028/0039); creation remains Partial until those format branches execute."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_2d_get(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Implemented owned/source-backed 2D image copy, atlas backing pixels and empty-resource placeholder query. Additional external/native/device/drawable storage needs its own image-readback integration in the first resource slice."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_2d_placeholder_create()"
+      ],
+      "state": "Implemented",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Drawable 4x4 RGBA8 magenta/black checkerboard supports ordinary update/replace/free."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_2d_update(RID:,Image:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Only ordinary 2D layer zero executes; nonzero layers enter the first owned 2D-array/layered upload/sampling slice. Compressed/integer upload branches enter their format slice."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_get_format(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Original backing and placeholder formats execute for current owned/borrowed 2D textures; external/native/device/drawable storage format identity enters each first actual resource integration."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_set_size_override(RID:,int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Both logical axes are 1..16384, without resampling; zero is rejected, matching server storage rather than the ImageTexture per-axis adaptation."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_set_path(RID:,String:)"
+      ],
+      "state": "Implemented",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Diagnostic metadata only; no file loading or ResourcePath cache registration."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_get_path(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned diagnostic path or borrowed resource ResourcePath."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_replace(RID:,RID:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy redirection and layered/drawable resource transfer enter those resource families’ first complete lifecycle slices."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:free_rid(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family’s first actual server-resource slice."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_proxy_create(RID:)",
+        "RenderingServer::method:texture_proxy_update(RID:,RID:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Current texture RID ownership is ready; next complete proxy slice must add stable source links/retargeting, invalidation after source free, replacement redirection, cycle/proxy guards and retained canvas/backend sampling. No native prerequisite blocks selecting it now."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_2d_layer_get(RID:,int:)",
+        "RenderingServer::method:texture_2d_layered_create(Image[]:,int:RenderingServer.TextureLayeredType)",
+        "RenderingServer::method:texture_2d_layered_placeholder_create(int:RenderingServer.TextureLayeredType)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: actual typed TextureArray storage with per-layer configuration, native 2D-array upload/sampling/capability checks and shader binding; these methods enter that first complete array integration slice. Ordinary owned 2D texture RIDs now exist; a raw flag/store is insufficient."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
+        "RenderingServer::method:texture_create_from_native_handle(int:RenderingServer.TextureType,int:Image.Format,int:,int:,int:,int:,int:,int:RenderingServer.TextureLayeredType)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: safe borrowed external texture identity/import ownership and sRGB view contract for GPU and compatibility drivers, including invalidation/cleanup/capability checks; enters the first native texture interop slice under ADR 0028 without exposing owned SDL types/handles."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",
+        "RenderingServer::method:texture_rd_create(RID:,int:RenderingServer.TextureLayeredType)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: backend-neutral typed device-texture borrowing/import and sRGB/layer view integration with actual lifetime and shader/canvas sampling; enters the first TextureRD/device-resource slice under ADR 0028. Current logical texture RID is not a native device texture RID."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_drawable_create(int:,int:,int:RenderingServer.TextureDrawableFormat,Color:,bool:)",
+        "RenderingServer::method:texture_drawable_blit_rect(RID[]:,Rect2i:,RID:,Color:,RID[]:,int:)",
+        "RenderingServer::method:texture_drawable_generate_mipmaps(RID:)",
+        "RenderingServer::method:texture_drawable_get_default_material()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: owned 2D render-target/drawable storage, format-aware target creation/blit/mipmap passes and drawable material RID lifetime; enter the first offscreen drawable integration under ADR 0028. Root canvas rendering and sampled texture RIDs do not supply these target operations."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:texture_set_force_redraw_if_visible(RID:,bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: selective-frame/damage submission scheduler that consumes visibility-driven texture invalidation; enters that first scheduler slice under ADR 0028. Current Engine.Run submits every enabled visible root frame, so storing this flag alone would be inert."
     }
   ],
   "extras": [

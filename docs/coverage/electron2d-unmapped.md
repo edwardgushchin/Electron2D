@@ -1,6 +1,6 @@
 # Electron2D declarations without an audited upstream row
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.
 

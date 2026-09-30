@@ -7,7 +7,8 @@ namespace Electron2D;
 /// <remarks>Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
 /// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Lights, general canvas clipping, offscreen public viewports and device recovery
-/// are not integrated. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
+/// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
+/// placeholders and explicit free; resource texture RIDs remain borrowed. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed partial class RenderingServer : ElectronObject
 {
     /// <summary>Specifies the smallest canvas-layer index, drawn before every greater layer index.</summary>
@@ -34,6 +35,7 @@ public sealed partial class RenderingServer : ElectronObject
     private bool _renderLoopEnabled = true;
     private bool _closing;
     private bool _rendering;
+    private bool _submittingTextures;
     private Color _clearColor;
     private static RenderingServer? _instance;
 
@@ -172,6 +174,7 @@ public sealed partial class RenderingServer : ElectronObject
                 order = x.CanvasID.CompareTo(y.CanvasID); if (order != 0) return order;
                 order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
             });
+            _submittingTextures = true;
             foreach (var item in _order)
             {
                 CanvasItem? repeatSource = null;
@@ -215,10 +218,11 @@ public sealed partial class RenderingServer : ElectronObject
                 if (batch.Material is not null && _backend.Method != "gpu")
                     throw new NotSupportedException("A shader material requires GPU rendering; compatibility fallback cannot draw it.");
             _backend.Draw(CollectionsMarshal.AsSpan(_vertices), CollectionsMarshal.AsSpan(_batches), _clearColor, present: true, CanvasTime);
+            _submittingTextures = false;
             DispatchScreenVisibility(tree);
             FramePostDraw?.Invoke();
         }
-        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear(); _rendering = false; }
+        finally { _nodes.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear(); _submittingTextures = false; _rendering = false; }
     }
 
     private void Capture(Node node)
@@ -352,13 +356,19 @@ public sealed partial class RenderingServer : ElectronObject
     {
         if (disposing)
         {
-            try { _backend.Dispose(); }
+            List<Exception>? errors = null;
+            try
+            {
+                try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
+                try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+            }
             finally
             {
                 FramePreDraw = FramePostDraw = null;
                 _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 if (ReferenceEquals(Instance, this)) Volatile.Write(ref _instance, null);
             }
+            if (errors is not null) throw new AggregateException("Rendering cleanup failed.", errors);
         }
         base.Dispose(disposing);
     }

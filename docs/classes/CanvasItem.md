@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 **Inherits:** [Node](Node.md)
 
@@ -191,6 +191,9 @@ Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../..
 | [`public void DrawSetTransform(Vector2 position, float rotation = 0f, Vector2? scale = null)`](#m-electron2d-canvasitem-drawsettransform-electron2d-vector2-system-single-system-nullable-electron2d-vector2) | Records an additional transform for subsequent commands. It executes only when its animation interval is visible; each replay starts with identity. |
 | [`public void DrawSetTransformMatrix(Transform transform)`](#m-electron2d-canvasitem-drawsettransformmatrix-electron2d-transform) | Records the full additional transform for subsequent commands. It executes only when its animation interval is visible; DrawEndAnimation retains the last executed transform. |
 | [`public void DrawStyleBox(StyleBox styleBox, Rect2 rect)`](#drawstylebox) | Records borrowed style decoration during this item's canvas recording. |
+| [`public void DrawTexture(RID texture, Vector2 position, Color? modulate = null)`](#texture-rid-overloads) | Resolves a live texture RID and preserves virtual drawing. |
+| [`public void DrawTextureRect(RID texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`](#texture-rid-overloads) | Resolves a live texture RID and preserves virtual drawing. |
+| [`public void DrawTextureRectRegion(RID texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#texture-rid-overloads) | Resolves a live texture RID and preserves virtual drawing. |
 | [`public void DrawTexture(Texture texture, Vector2 position, Color? modulate = null)`](#m-electron2d-canvasitem-drawtexture-electron2d-texture-electron2d-vector2-system-nullable-electron2d-color) | Draws a borrowed texture at its logical size during this item's canvas recording. |
 | [`public void DrawTextureRect(Texture texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`](#m-electron2d-canvasitem-drawtexturerect-electron2d-texture-electron2d-rect2-system-boolean-system-nullable-electron2d-color-system-boolean) | Stretches or repeats a borrowed texture over a local rectangle during canvas recording. |
 | [`public void DrawTextureRectRegion(Texture texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`](#m-electron2d-canvasitem-drawtexturerectregion-electron2d-texture-electron2d-rect2-electron2d-rect2-system-nullable-electron2d-color-system-boolean-system-boolean) | Stretches a source region of a borrowed texture over a local rectangle during canvas recording. |
@@ -1092,3 +1095,25 @@ Draws the outline of a shaped Unicode paragraph during this item's recording.
 Errors: `ArgumentNullException` — The font or text is null.; `ArgumentException` — Text, geometry, color or an option is invalid.; `InvalidOperationException` — Called outside this item's recording scope or off the owner thread.; `ObjectDisposedException` — The node or required resource is disposed.
 
 [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) verifies all six entrypoints, independent raster pixels, fallback scripts, clipping, transforms, modulation and 64 warmed active frames without managed allocation on Linux Wayland GPU and compatibility. Other platforms, native allocator counts and owner acceptance remain unverified.
+
+## Texture RID overloads
+
+### DrawTexture with RID
+
+`public void DrawTexture(RID texture, Vector2 position, Color? modulate = null)`
+
+Resolves a live server-owned or resource-owned texture RID, then uses the corresponding Texture overload and its virtual drawing hook. Geometry, modulation, flips, transpose, UV clipping and owner/recording checks are unchanged.
+
+### DrawTextureRect with RID
+
+`public void DrawTextureRect(RID texture, Rect2 rect, bool tile, Color? modulate = null, bool transpose = false)`
+
+Resolves a live server-owned or resource-owned texture RID, then uses the corresponding Texture overload and its virtual drawing hook. Geometry, modulation, flips, transpose, UV clipping and owner/recording checks are unchanged.
+
+### DrawTextureRectRegion with RID
+
+`public void DrawTextureRectRegion(RID texture, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)`
+
+Resolves a live server-owned or resource-owned texture RID, then uses the corresponding Texture overload and its virtual drawing hook. Geometry, modulation, flips, transpose, UV clipping and owner/recording checks are unchanged.
+
+These overloads borrow the resolved texture; they neither own nor free it. Empty/stale/wrong-kind identities throw ArgumentException. AtlasTexture.GetRID resolves the underlying source identity, so RID drawing uses that full texture; object-based atlas drawing retains its view. Empty ordinary resource drawing remains a no-op. Owned texture update/replacement changes pixels in retained commands without QueueRedraw. Freed/consumed server textures are skipped on subsequent replay; existing resource-disposal failure behavior is unchanged. Recorded geometry remains fixed after size changes. See [RenderingServer texture lifecycle](RenderingServer.md#texture-rid-verification) and [native/managed checks](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs).

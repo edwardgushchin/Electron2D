@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, shared SPIR-V shaders, browser WebGPU, and SDL_Renderer fallback
 
-Last updated: 2026-09-25
+Last updated: 2026-10-01
 
 ### Status
 
@@ -49,6 +49,8 @@ The pinned SDL GPU API has no browser backend. A standalone Chrome probe rendere
 - Fallback is a rendering-initialization policy, not a promise of live backend migration. Runtime switching and recovery after graphics-device loss are deferred until their real lifecycle can be implemented and tested.
 - Native resources remain internal and are deterministically released through `SafeHandle`-based ownership. Engine-owned render-frame hot paths have zero managed and engine-owned native allocations after preparation under ADR 0014; backend-internal allocations require separate measurement.
 - The first complete rendering vertical slice must specify the concrete public types, baseline operation set, threading contract, supported HLSL and GLSL profiles, SPIR-V capabilities, shader interfaces, pinned import/build compiler integrations, cache/import pipeline, material model, backend-selection setting and device-loss policy. The two source languages, import/build compilation phase and common SPIR-V runtime path are already decided above. None is represented now by an empty API.
+
+Texture identities use the existing process-wide RID allocator. Resource-owned Texture.GetRID borrows a weak logical identity independent of the active renderer; typed CanvasItem RID overloads resolve that texture for drawing. AtlasTexture forwards its current underlying source RID (empty without a source), so RID drawing uses the backing texture; object-based atlas drawing preserves region/margin behavior. Server-created 2D textures belong to the active Engine.Run renderer and expire at FreeRID or shutdown. Getters expose copied backing pixels/format (including placeholder pixels for empty resources); mutation/free never silently take ownership of a borrowed resource. Retained destination references observe compatible updates and replacement without rerecording, while consumed/freed server identities stop drawing. This is the same typed canvas adaptation as node-based canvas recording, not a public native-device handle. General texture proxy, layered and drawable resources retain their own coverage dependencies.
 
 ### Consequences
 

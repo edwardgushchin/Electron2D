@@ -1,6 +1,6 @@
 # Texture API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-10-01
 
 The reference Texture and Texture2D contracts share one Electron2D Texture page under [ADR 0004](../../decisions/product.md#adr-0004). Each source declaration remains accounted for below.
 

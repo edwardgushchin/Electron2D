@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -34,6 +34,7 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 
 | Declaration | Contract |
 | --- | --- |
+| [`public override RID GetRID()`](#getrid) | Stable borrowed logical rendering identity. |
 | `protected Texture()` | Registers invalidation of cached custom image data on Changed. |
 | `abstract int GetWidth()` | Logical width in pixels. |
 | `abstract int GetHeight()` | Logical height in pixels. |
@@ -67,6 +68,12 @@ Reports the original complete mip-chain configuration. GPU upload includes every
 Counts levels following the base image. It is zero for a texture without mipmaps or pixels.
 
 ## Method descriptions
+
+### GetRID
+
+`public override RID GetRID()`
+
+The base texture implementation returns a lazily registered stable, non-reused resource identity, including for an uninitialized texture. AtlasTexture instead forwards its current source RID, or empty without a source. It is independent of an active renderer and safe across concurrent identity reads. The registry holds a weak resource reference; disposal removes the identity and future lookup fails. Duplicates get different identities. Server texture getters return copied backing data/format; CanvasItem RID overloads draw the resolved resource. Atlas RID drawing uses the underlying full texture; pass the atlas object to retain its view behavior. Server mutation and FreeRID reject borrowed identities, so resources remain responsible for their own disposal. Renderer shutdown leaves borrowed RIDs valid. Empty resources keep their original empty size/image, while server image/format getters expose rendering placeholder data.
 
 ### GetWidth
 

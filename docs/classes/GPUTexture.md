@@ -1,6 +1,6 @@
 # GPUTexture
 
-Last updated: 2026-09-22
+Last updated: 2026-10-01
 
 - Declaration: `internal sealed unsafe class GPUTexture : IDisposable`
 - Source: [GPUTexture.cs](../../src/Servers/Rendering/GPUTexture.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-22
 
 ## Description
 
-Owns a sampled native 2D texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update replaces Pixels instead.
+Owns a sampled native 2D texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update or RenderingServer.Texture2DUpdate replaces Pixels instead. TextureReplace transfers a different allocation token when needed and triggers ordinary backend replacement.
 
 ## Internal usage
 

@@ -202,6 +202,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_HANDLES") == "1")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER") == "1")
 {
     RenderingRuntimeTests.Run();
@@ -242,6 +248,7 @@ FastNoiseLiteTests.Run();
 AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
+RenderingRuntimeTests.VerifyTextureRIDResources();
 SceneHierarchyTests.Run();
 SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();

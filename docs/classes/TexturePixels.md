@@ -1,6 +1,6 @@
 # TexturePixels
 
-Last updated: 2026-09-23
+Last updated: 2026-10-01
 
 - Declaration: `internal sealed class TexturePixels`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-The immutable pixel payload shared by ImageTexture and curve-texture snapshots and backend caches. Source preserves original format/mips; Upload contains a sampling-compatible copy. Array data is engine-owned and must never be mutated after publication. Allocation is the only mutable identity token, assigned before publishing an Update snapshot to preserve an existing GPU allocation.
+The immutable pixel payload shared by ImageTexture, server-owned textures and generated texture snapshots and backend caches. Source preserves original format/mips; Upload contains a sampling-compatible copy. Array data is engine-owned and must never be mutated after publication. Allocation is the only mutable identity token, assigned before publishing an Update snapshot to preserve an existing GPU allocation.
 
 ## Internal usage
 
@@ -68,6 +68,8 @@ Four for RGBA8 uploads; sixteen for RGBA32Float uploads.
 `internal static TexturePixels FromImage(Image image)`
 
 Copies a live Image under its snapshot contract and converts for upload. Rejects null, empty data, axes outside 1..16384 and compressed/integer-sampled formats. Image disposal propagates. Construction and conversion may allocate; this is not a frame replay operation.
+
+Server texture updates use the same compatible allocation token; TextureReplace transfers the replacement snapshot/token rather than mutating immutable arrays.
 
 ### Image copy
 

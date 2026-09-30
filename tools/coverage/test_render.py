@@ -384,6 +384,19 @@ def main():
     for name in ('canvas_light_create(', 'canvas_item_create(', 'mesh_create(', 'texture_2d_create('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Excluded | ' not in row, f'Shared or 2D API was excluded: {row}'
+    for name in ('texture_2d_placeholder_create(', 'texture_set_size_override(', 'texture_get_path(', 'texture_set_path('):
+        row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
+        assert ' | Implemented | ' in row and 'RenderingTextureRIDTests' in row, row
+    for name in ('texture_2d_create(', 'texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'texture_replace(', 'free_rid('):
+        row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
+        assert ' | Partial | ' in row and 'RenderingTextureRIDTests' in row, row
+    for name in ('texture_proxy_create(', 'texture_proxy_update('):
+        row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
+        assert ' | Unimplemented | ' in row and 'ownership is ready' in row, row
+    canvas_rows = pages[CLASS_PAGES / "CanvasItem.md"].splitlines()
+    for name in ('draw_texture(', 'draw_texture_rect(', 'draw_texture_rect_region('):
+        row, = [line for line in canvas_rows if line.startswith(f'| [`method {name}')]
+        assert 'Electron2D.RID texture' in row, row
     assert sum(summary["states"].values()) == summary["upstream_types"] + summary["upstream_members"]
     assert (summary["mapped_engine"] + summary["reviewed_extras"] + summary["unmapped_engine"]
             == summary["electron2d_declarations"])

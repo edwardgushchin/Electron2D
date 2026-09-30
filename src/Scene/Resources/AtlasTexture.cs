@@ -18,6 +18,13 @@ public sealed class AtlasTexture : Texture
     /// <summary>Creates an empty view with a logical size of one pixel on each axis.</summary>
     public AtlasTexture() { }
 
+    /// <summary>Returns the borrowed rendering identity of the underlying texture.</summary>
+    /// <returns>The source's RID, or an empty RID when no source is assigned.</returns>
+    /// <remarks>Nested views resolve to the underlying source. The RID describes its full backing texture;
+    /// use this AtlasTexture object for region/margin drawing. Disposing the view does not release the source RID.</remarks>
+    /// <exception cref="ObjectDisposedException">This view or its source is disposed.</exception>
+    public override RID GetRID() { lock (GraphGate) { ThrowIfDisposed(); return _atlas?.GetRID() ?? default; } }
+
     /// <summary>Gets or sets the borrowed source texture.</summary>
     /// <value>Null by default. An empty source draws nothing.</value>
     /// <remarks>Only nested atlas views forward Changed. Pixel updates on other textures remain visible through
