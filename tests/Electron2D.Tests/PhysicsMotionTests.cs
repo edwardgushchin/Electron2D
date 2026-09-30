@@ -16,7 +16,7 @@ internal static class PhysicsMotionTests
     private static void VerifyServerMotion()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var mover = server.BodyCreate();
         var obstacle = server.BodyCreate();
         var circleRID = server.CircleShapeCreate();

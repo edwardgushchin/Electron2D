@@ -13,6 +13,7 @@ The process-wide registry for typed 2D physics RIDs. It registers each SceneTree
 ```csharp
 var server = PhysicsServer.Instance;
 RID space = server.SpaceCreate();
+server.SpaceSetActive(space, true);
 RID body = server.BodyCreate();
 RID shape = server.CircleShapeCreate();
 using var circle = new CircleShape { Radius = 12 };
@@ -33,7 +34,7 @@ server.FreeRID(space);
 | --- | --- |
 | `public static PhysicsServer Instance { get; }` | Shared process server. |
 | `public enum BodyMode` | [Static, Kinematic, Rigid, RigidLinear](PhysicsServer.BodyMode.md). |
-| `public RID SpaceCreate()` | Caller-owned independent physics space. |
+| `public RID SpaceCreate()` | Caller-owned inactive independent physics space. |
 | `public void SpaceStep(RID space, double delta)` | Advance only an explicitly created space; zero delta is inert. |
 | `public PhysicsDirectSpaceState SpaceGetDirectState(RID space)` | Cached query view of any live server/scene space. |
 | `public bool BodyTestMotion(RID body, PhysicsTestMotionParameters2D parameters, PhysicsTestMotionResult2D? result = null)` | Test a scene or server body against its current space without moving it; optionally fill typed output. |
@@ -66,7 +67,7 @@ server.FreeRID(space);
 <a id="spaces"></a>
 ### Space creation, access and stepping
 
-`SpaceCreate` allocates one real Box2D world with the current sampled 2D project gravity default. `SpaceGetDirectState` returns a live view of any registered explicit or SceneTree space; disposing a view allows the next lookup to create another. `SpaceStep` accepts a finite nonnegative delta only for explicit spaces, so it cannot double-step a scene world. The SceneTree advances its own registered space in its fixed physics lane. Space mutation and querying require the creating/owning thread and reject a world currently stepping. Explicit spaces with server-created bodies advance the real solver, not a parallel query-only representation. Scene Area and RigidBody damping reduction is separate and does not yet apply to server-only bodies.
+`SpaceCreate` allocates one inactive real Box2D world with the current sampled 2D project gravity default. `SpaceGetDirectState` returns a live view of any registered explicit or SceneTree space; disposing a view allows the next lookup to create another. `SpaceStep` accepts a finite nonnegative delta only for explicit spaces, so it cannot double-step a scene world. The SceneTree activates and advances its own registered space in its fixed physics lane. Caller-created worlds need SpaceSetActive(space, true) before SpaceStep can simulate; global/local suspension skips the solver interval without accumulating time. Space mutation and querying require the creating/owning thread and reject a world currently stepping. Explicit spaces with server-created bodies advance the real solver, not a parallel query-only representation. Scene Area and RigidBody damping reduction is separate and does not yet apply to server-only bodies.
 
 <a id="colliders"></a>
 ### Collider creation, shapes and ownership
@@ -309,6 +310,7 @@ Source: [PhysicsServer.Joints.cs](../../src/Servers/Physics/PhysicsServer.Joints
 ```csharp
 var physics = PhysicsServer.Instance;
 var space = physics.SpaceCreate();
+physics.SpaceSetActive(space, true);
 var first = physics.BodyCreate();
 var second = physics.BodyCreate();
 var link = physics.JointCreate();
@@ -460,3 +462,35 @@ physics.FreeRID(geometry);
 Existing add/count/disable/remove methods now address scene slots too. Raw scene addition creates a transient null-owner group with no hidden child. Structural edits do not free geometry or persist through PackedScene. Owned shape data replacement preserves the RID, refreshes RID-backed users and retires an old borrowed geometry view. Such a view cannot be disposed separately; obtain independent data through ShapeGetData. A retirement observer exception propagates after the new data commit. Shape free removes users and unregisters the RID even if its geometry's disposal observer throws. Every related active world's owner/phase is preflighted before shared data mutation/free.
 
 [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) covers real queries, body/Area scene/server roles, slot/group/child independence, replacement/clear/reindex, borrowed/owned identity, callback/phase/thread/numeric failures, mass-center geometry and real one-way contacts/motion. Sixty-four warmed indexed reads, unchanged writes and active solver frames allocate zero managed bytes on Linux/.NET 10. Native allocation, structural-edit allocation budgets, other platforms and owner visual acceptance remain unverified.
+
+<a id="activity"></a>
+## World activation and suspension
+
+Source: [PhysicsServer.Activity.cs](../../src/Servers/Physics/PhysicsServer.Activity.cs).
+
+| Signature | Contract |
+| --- | --- |
+| `public void SetActive(bool active)` | Atomic process-wide policy for subsequent world intervals; default true. |
+| `public void SpaceSetActive(RID space, bool active)` | Local activation for a live scene or caller-owned world. |
+| `public bool SpaceIsActive(RID space)` | Stored local policy, independent of global suspension. |
+
+```csharp
+var physics = PhysicsServer.Instance;
+RID space = physics.SpaceCreate(); // Inactive.
+physics.SpaceSetActive(space, true);
+physics.SpaceStep(space, 1d / 60);
+physics.SpaceSetActive(space, false); // Retain this world's simulation state.
+physics.SpaceStep(space, 10);        // Skipped; no time backlog.
+physics.FreeRID(space);
+```
+
+<a id="setactive"></a>
+**SetActive:** The server starts enabled. Any thread may atomically disable/enable later world steps. A running interval completes; the flag is sampled at each world's next boundary. Queries, explicit configuration and scene scheduling remain available. This does not change any world's local flag.
+
+<a id="spacesetactive"></a>
+**SpaceSetActive:** Set the local world gate. New caller-owned spaces default false; SceneTree activates its world. Body motion, forces, joints, integration callbacks and monitoring advance only when both local/global policies permit. Skipped intervals retain native state, direct views, previous Step and pending one-step forces; resume integrates only its current delta. World cleanup and queries/configuration still work while inactive. The owner thread is required; a solver-phase write rejects before mutation. Post-solver callbacks can change later policy.
+
+<a id="spaceisactive"></a>
+**SpaceIsActive:** Return the local flag, even while the global server is suspended. It does not report effective scene ProcessMode or SceneTree.Paused. Reads require owner-thread access outside solver stepping. Wrong/stale RID throws ArgumentException; off-owner/in-solver access throws InvalidOperationException.
+
+[PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks native motion/spring and pending-force behavior, inactive queries, defaults, callback/timer continuation, phase/thread/lifetime guards, callback failure and 64 warmed global/local cycles with skipped/active frames without managed allocation on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance remain unverified. [ADR 0089](../decisions/physics-activity.md#adr-0089) defines this profile. ProcessInfo counters remain a separate verification/integration slice.

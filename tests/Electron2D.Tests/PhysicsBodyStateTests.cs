@@ -132,7 +132,7 @@ internal static class PhysicsBodyStateTests
     private static void VerifyServerCallbacksAndLifetime()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); var body = server.BodyCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var body = server.BodyCreate();
         Check(server.BodyGetDirectState(body) is null, "A detached server body has no direct view.");
         server.BodySetSpace(body, space); server.BodySetOmitForceIntegration(body, true);
         var sequence = new List<int>();

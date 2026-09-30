@@ -35,7 +35,7 @@ internal static class PhysicsServerShapeSlotTests
     private static void VerifyExplicitSlots()
     {
         var physics = PhysicsServer.Instance;
-        var space = physics.SpaceCreate(); var body = physics.BodyCreate(); var area = physics.AreaCreate();
+        var space = physics.SpaceCreate(); physics.SpaceSetActive(space, true); var body = physics.BodyCreate(); var area = physics.AreaCreate();
         var circle = physics.CircleShapeCreate(); var rectangle = physics.RectangleShapeCreate();
         try
         {
@@ -175,6 +175,7 @@ internal static class PhysicsServerShapeSlotTests
         var root = new Node(); if (sceneBody is not null) root.AddChild(sceneBody);
         using var tree = new SceneTree(root);
         var space = sceneBody?.GetWorld2D()!.Space ?? physics.SpaceCreate();
+        if (!sceneMode) physics.SpaceSetActive(space, true);
         var platform = sceneBody?.GetRID() ?? physics.BodyCreate();
         try
         {

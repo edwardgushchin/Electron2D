@@ -145,7 +145,7 @@ internal static class PhysicsQueryTests
     private static void VerifyServerResourcesAndPointQueries()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         var shape = server.CircleShapeCreate();
         using var circle = new CircleShape();
@@ -258,7 +258,7 @@ internal static class PhysicsQueryTests
         var movedPosition = server.BodyGetTransform(body).Origin.Y;
         Check(movedPosition > 50,
             "Explicit server spaces advance a dynamic body through the real solver.");
-        var transientSpace = server.SpaceCreate();
+        var transientSpace = server.SpaceCreate(); server.SpaceSetActive(transientSpace, true);
         server.BodySetSpace(body, transientSpace);
         Check(MathF.Abs(server.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f &&
               server.SpaceGetDirectState(transientSpace).IntersectRay(ray)?.ColliderRID == body,
@@ -281,7 +281,7 @@ internal static class PhysicsQueryTests
         Check(server.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
             "RigidLinear remains an executable distinct mode with rotation locking.");
         server.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        var otherSpace = server.SpaceCreate();
+        var otherSpace = server.SpaceCreate(); server.SpaceSetActive(otherSpace, true);
         server.BodySetSpace(body, otherSpace);
         Check(server.BodyGetSpace(body) == otherSpace &&
               server.SpaceGetDirectState(otherSpace).IntersectRay(ray)?.ColliderRID == body,
@@ -311,7 +311,7 @@ internal static class PhysicsQueryTests
     private static void VerifyServerShapeFamilies()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         var capsuleRID = server.CapsuleShapeCreate();

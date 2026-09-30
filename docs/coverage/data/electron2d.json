@@ -57915,6 +57915,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SetActive(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SetActive",
+    "signature": "public System.Void SetActive(System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "active",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.ShapeGetData(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -57987,6 +58006,49 @@
       }
     ],
     "returnType": "Electron2D.PhysicsDirectSpaceState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceIsActive(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceIsActive",
+    "signature": "public System.Boolean SpaceIsActive(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetActive(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetActive",
+    "signature": "public System.Void SpaceSetActive(Electron2D.RID space, System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "active",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

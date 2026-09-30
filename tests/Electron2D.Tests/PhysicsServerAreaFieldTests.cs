@@ -90,7 +90,7 @@ internal static class PhysicsServerAreaFieldTests
 
     private static void VerifyServerResponseAndSpaceDefaults()
     {
-        var server = PhysicsServer.Instance; var space = server.SpaceCreate(); var body = server.BodyCreate(); var area = server.AreaCreate(); var shape = server.CircleShapeCreate();
+        var server = PhysicsServer.Instance; var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var body = server.BodyCreate(); var area = server.AreaCreate(); var shape = server.CircleShapeCreate();
         try
         {
             server.BodyAddShape(body, shape); server.AreaAddShape(area, shape); server.BodySetSpace(body, space); server.AreaSetSpace(area, space);
@@ -121,7 +121,7 @@ internal static class PhysicsServerAreaFieldTests
 
     private static void VerifyPointGravityAndFailures()
     {
-        var server = PhysicsServer.Instance; var space = server.SpaceCreate(); var body = server.BodyCreate(); var area = server.AreaCreate(); var shape = server.CircleShapeCreate();
+        var server = PhysicsServer.Instance; var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var body = server.BodyCreate(); var area = server.AreaCreate(); var shape = server.CircleShapeCreate();
         try
         {
             server.AreaAddShape(area, shape); server.BodyAddShape(body, shape); server.AreaSetSpace(area, space); server.BodySetSpace(body, space);

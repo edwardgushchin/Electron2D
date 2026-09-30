@@ -28,7 +28,7 @@ internal static class PhysicsServerJointTests
     private static void VerifyServerRolesAndReplacement()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); var shape = server.CircleShapeCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var shape = server.CircleShapeCreate();
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 100), mass: 2);
         var joint = server.JointCreate();
@@ -181,7 +181,7 @@ internal static class PhysicsServerJointTests
     private static void VerifyLifetimeAndRollback()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate(); var other = server.SpaceCreate(); var shape = server.CircleShapeCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true); var other = server.SpaceCreate(); server.SpaceSetActive(other, true); var shape = server.CircleShapeCreate();
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 20));
         var joint = server.JointCreate(); var area = server.AreaCreate();
@@ -208,7 +208,7 @@ internal static class PhysicsServerJointTests
             Reject<InvalidOperationException>(() => Task.Run(() => server.FreeRID(second)).GetAwaiter().GetResult());
             Task.Run(() =>
             {
-                var workerSpace = server.SpaceCreate();
+                var workerSpace = server.SpaceCreate(); server.SpaceSetActive(workerSpace, true);
                 try { Reject<InvalidOperationException>(() => server.BodySetSpace(second, workerSpace)); }
                 finally { server.FreeRID(workerSpace); }
             }).GetAwaiter().GetResult();
@@ -233,7 +233,7 @@ internal static class PhysicsServerJointTests
             server.FreeRID(space);
             Check(server.JointGetType(joint) == PhysicsServer.JointType.Pin,
                 "World destruction releases native joints while retaining live body/local-frame configuration.");
-            space = server.SpaceCreate();
+            space = server.SpaceCreate(); server.SpaceSetActive(space, true);
             server.BodySetSpace(first, space); server.BodySetSpace(second, space); server.SpaceStep(space, 1d / 60);
             Check(server.JointGetType(joint) == PhysicsServer.JointType.Pin,
                 "Detached bodies can reconnect the same joint RID in a replacement world.");

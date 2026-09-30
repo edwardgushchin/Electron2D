@@ -2,8 +2,8 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    /// <summary>Creates a physics space independent of any scene tree.</summary>
-    /// <returns>A caller-owned space RID that can be queried, stepped and freed.</returns>
+    /// <summary>Creates an inactive physics space independent of any scene tree.</summary>
+    /// <returns>A caller-owned space RID; activate it with SpaceSetActive before advancing simulation.</returns>
     public RID SpaceCreate()
     {
         ThrowIfDisposed();
@@ -20,7 +20,7 @@ public sealed partial class PhysicsServer
 
     /// <summary>Advances one explicitly created space by a finite nonnegative fixed delta.</summary>
     /// <param name="space">A caller-owned space RID.</param>
-    /// <param name="delta">Elapsed seconds; zero leaves the world unchanged.</param>
+    /// <param name="delta">Elapsed seconds; zero or an inactive space/server leaves solver state unchanged.</param>
     /// <exception cref="ArgumentOutOfRangeException">Delta is negative or nonfinite.</exception>
     /// <exception cref="InvalidOperationException">The caller is off the space owner thread or the world is stepping.</exception>
     public void SpaceStep(RID space, double delta)

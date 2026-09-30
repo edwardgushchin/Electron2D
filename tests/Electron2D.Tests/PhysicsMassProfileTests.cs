@@ -75,7 +75,7 @@ internal static class PhysicsMassProfileTests
     private static void VerifyServerProfile()
     {
         var server = PhysicsServer.Instance;
-        var body = server.BodyCreate(); var shape = server.CircleShapeCreate(); var space = server.SpaceCreate();
+        var body = server.BodyCreate(); var shape = server.CircleShapeCreate(); var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         try
         {
             Check(server.BodyGetMass(body) == 1 && server.BodyGetInertia(body) == 0 && server.BodyGetCenterOfMass(body) == Vector2.Zero,

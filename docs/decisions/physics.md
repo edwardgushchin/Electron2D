@@ -7,7 +7,7 @@ This bounded document owns executable two-dimensional bodies, shapes and areas. 
 <a id="adr-0054"></a>
 ## ADR 0054: Box2D-backed scene bodies and collision shapes
 
-Last updated: 2026-09-24
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: First typed scene-body and shape vertical slice
@@ -59,7 +59,7 @@ This active decision is maintained in [physics-monitoring.md](physics-monitoring
 <a id="adr-0059"></a>
 ## ADR 0059: Capsule collision resource and fixture geometry
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Concrete capsule Shape resource for existing body and area fixtures
@@ -82,7 +82,7 @@ Rigid and static bodies gain capsule contact response, and areas gain capsule se
 <a id="adr-0060"></a>
 ## ADR 0060: Fixed-step kinematic platform motion
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: AnimatableBody scene role and synchronized kinematic movement
@@ -105,7 +105,7 @@ Games can animate moving platforms and doors that push or carry dynamic bodies, 
 <a id="adr-0061"></a>
 ## ADR 0061: Two-sided segment fixtures and zero-area body mass
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: SegmentShape resource and executable static, dynamic and area fixtures
@@ -130,7 +130,7 @@ Games can construct two-sided terrain edges and line sensors and attach segments
 <a id="adr-0062"></a>
 ## ADR 0062: Compound convex collision fixtures
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Convex polygon resource, point-cloud hull and multiple fixtures per CollisionShape
@@ -153,7 +153,7 @@ Games can collide and sense with a solid convex contour containing more than eig
 <a id="adr-0063"></a>
 ## ADR 0063: Shared RID identity and world-scoped physics queries
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Public identity, ownership and access model for 2D physics server resources and direct queries
@@ -171,7 +171,7 @@ Before this slice, the scene ran an internal Box2D world but had no public RID, 
 - Expose that scene space through the applicable World2D.Space and World2D.DirectSpaceState roles and CanvasItem world access. These physics members may execute before World2D canvas and navigation-map members, which retain their own exact coverage gaps. A direct-space state is a view of its owning live space, not a second world.
 - Keep ordinary gameplay object-oriented: scene nodes and typed ray/shape query objects expose collider references where available. Direct query parameters also retain RID exclusions and shape RID selection; typed C# result values retain collider RID and stable shape-owner index even when no scene CollisionObject exists. Specify each operation's no-hit, ordering, copy and maximum-result behavior in its implementing slice. Do not add Variant, dynamic dictionaries, public Box2D types or backend IDs.
 - Build the public server and query layer in connected executable slices: shared RID/space/body/shape lifetime, world access, ray/point queries, direct shape sweeps and scene query nodes, then shape-index events and remaining applicable server methods. RayCast and ShapeCast consume the same direct-space view; other absent declarations retain their own implementation gates. An accepted architecture does not mark any absent declaration Implemented. Attached queries respect scene owner-thread and backend world-lock boundaries.
-- The first executing slice registers each CollisionObject RID for its managed lifetime and each SceneTree's existing PhysicsSpace as one server space. Fixture tags carry collider RID and direct shape-owner index through compound shape rebuilds. Server-created spaces, bodies, Areas and the six existing Shape families attach to the same solver; explicit spaces use typed host stepping. World2D exposes Space and DirectSpaceState, and attached CanvasItems share that physics view. Typed ray/point parameters copy RID exclusions and results carry RID, optional scene collider, instance ID and shape index. A direct query prepares pending scene geometry before searching and rejects off-owner or in-step access.
+- The first executing slice registers each CollisionObject RID for its managed lifetime and each SceneTree's existing PhysicsSpace as one server space. Fixture tags carry collider RID and direct shape-owner index through compound shape rebuilds. Server-created spaces, bodies, Areas and the six existing Shape families attach to the same solver; explicit spaces start inactive and use typed host stepping after SpaceSetActive(true), under [ADR 0089](physics-activity.md#adr-0089). World2D exposes Space and DirectSpaceState, and attached CanvasItems share that physics view. Typed ray/point parameters copy RID exclusions and results carry RID, optional scene collider, instance ID and shape index. A direct query prepares pending scene geometry before searching and rejects off-owner or in-step access.
 - Scan the current fixture lists for ray, point and shape queries so a collider with collision mask zero remains eligible by its layer. The backend world query's reciprocal filter would incorrectly remove it. Ray results choose nearest fraction with RID/index tie order; point and shape results deduplicate by owner and apply their cap after RID/index ordering. Shape queries accept caller-owned resources or live shape RIDs. Resource assignment lazily registers a borrowed server RID; owner disposal invalidates it, while geometry edits mark server fixtures dirty before a later query. `IntersectShape` includes swept intersections. `CastMotion` ignores initial overlap and brackets the first new hit with eight refinements. `CollideShape` returns ordered query/collider point pairs and `GetRestInfo` selects the deepest contact with point velocity. Result records remain typed and keep RID/index even for server-only colliders. The current path is linear in fixture count, with a future broad-phase optimization gated by measured large-world cost. Point canvas-instance filtering, viewport world transitions, joint solver tuning/debug drawing and wider server methods keep explicit coverage gaps; no vendored source changes are needed.
 - ShapeCast borrows its configured Shape, converts its local target to global motion, casts once to find the earliest safe/unsafe bracket, and gathers typed rest contacts at that impact pose. Each returned collider RID is excluded from later rest queries until `MaxResults` is reached. Zero local motion queries the current pose and retains zero fractions. Leaving a collision parent removes its automatic RID exclusion in both scene query nodes. Automatic sampling runs in the internal fixed physics lane; a forced update can run while disabled. Options and borrowed shape survive PackedScene, while contact snapshots and explicit exceptions do not. The node reuses query and exclusion storage on warmed frames. Debug rendering and virtual tile collider projection keep separate exact coverage gaps.
 - Test motion for scene and server body RIDs in their registered space, using a supplied finite unit-scale global pose, displacement, recovery margin and copied RID/instance exclusions. Scan current body fixtures with reciprocal collision filters; Areas do not block. Recover initial penetration in up to four steps, then bracket the first new impact with eight sweep refinements. A deep residual overlap stops motion at zero safe fraction. Return typed collider/local shape-owner indices, point, outward normal, depth, point velocity, safe/unsafe fractions, travel and remainder. A completed miss clears stale contact fields. Scene `TestMove` and test-only `MoveAndCollide` leave the pose unchanged; regular `MoveAndCollide` applies safe travel. Separation-ray participation remains blocked until its shape resource exists. Reuse candidate storage and indexed fixture scans so warmed unchanged scene tests allocate no managed bytes.
@@ -190,7 +190,7 @@ Game code can query its current world through typed scene access, scene query no
 <a id="adr-0064"></a>
 ## ADR 0064: Hollow paired-segment collision resource
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: ConcavePolygonShape resource and hollow multi-segment body/area fixtures
@@ -215,7 +215,7 @@ Games can use reusable multi-edge terrain, open contours and hollow line sensors
 <a id="adr-0065"></a>
 ## ADR 0065: One-way scene-body contacts
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionShape one-way flag and local direction on scene physics bodies
@@ -238,7 +238,7 @@ Static, kinematic and dynamic scene-body fixtures accept contacts from the confi
 <a id="adr-0066"></a>
 ## ADR 0066: Direct scene collision polygons
 
-Last updated: 2026-09-25
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionPolygon scene node, solid convex decomposition and closed hollow edges
@@ -261,7 +261,7 @@ One node now supplies solid concave terrain, hollow closed boundaries or sensors
 <a id="adr-0067"></a>
 ## ADR 0067: Character sliding and platform following
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Caller-driven CharacterBody grounded/floating motion and typed slide snapshots
@@ -291,7 +291,7 @@ Caller-driven grounded and floating characters can move along current shapes, sn
 <a id="adr-0068"></a>
 ## ADR 0068: Directed separation rays in queries and body motion
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: SeparationRayShape resource, directed sensing and shared body-motion contact
@@ -320,7 +320,7 @@ Character ray floors, ray-specific body tests and direct/Area sensing execute in
 <a id="adr-0069"></a>
 ## ADR 0069: Standalone resource collision regions and boundary contacts
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Shape.Collide, CollideWithMotion and the two contact-array variants
@@ -351,7 +351,7 @@ Games can test reusable geometry for placement and procedural tools without ente
 <a id="adr-0070"></a>
 ## ADR 0070: Live body state and post-solver integration callbacks
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: PhysicsDirectBodyState, RigidBody custom integration and typed body callbacks
@@ -413,7 +413,7 @@ Games can create procedural multi-shape groups without hidden scene nodes, disab
 <a id="adr-0072"></a>
 ## ADR 0072: Disabled scene collision participation
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionObject disable policy across all current Body and Area siblings
@@ -438,7 +438,7 @@ Games can deactivate collision branches, keep disabled scenery solid, or leave a
 <a id="adr-0075"></a>
 ## ADR 0075: Static and kinematic frozen body roles
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: RigidBody freeze policy and current kinematic body-path integration

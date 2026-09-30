@@ -50,7 +50,7 @@ internal static class SeparationRayShapeTests
     private static void VerifyQueries()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var floor = server.BodyCreate();
         var floorRID = server.RectangleShapeCreate();
         using var rectangle = new RectangleShape { Size = new(200, 10) };

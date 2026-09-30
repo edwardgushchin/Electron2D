@@ -79,6 +79,7 @@ public sealed partial class PhysicsServer : ElectronObject
 
     internal RID RegisterSceneSpace(PhysicsSpace space)
     {
+        space.SetActive(true);
         var rid = RID.Allocate();
         space.RID = rid;
         lock (_registryGate) _sceneSpaces.Add(rid, space);

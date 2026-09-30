@@ -97,7 +97,7 @@ internal static class PhysicsCollisionExceptionTests
     private static void VerifyServerBodyExceptions()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var mover = server.BodyCreate();
         var floor = server.BodyCreate();
         var sensor = server.AreaCreate();

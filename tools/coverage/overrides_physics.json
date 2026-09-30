@@ -3134,6 +3134,32 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0088: scene/server global logical slots support actual geometry replacement, effective local poses, disabled state, clear/reindex and body one-way contacts/motion. PhysicsServerShapeSlotTests checks native query/solver response, independent group/child overrides, shape RID/view lifetime, effective mass poses, callback/thread/phase/numeric rollback and 64 warmed reads/unchanged writes/solver frames with zero managed allocation."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:set_active(bool:)",
+        "PhysicsServer2D::method:space_is_active(RID:)",
+        "PhysicsServer2D::method:space_set_active(RID:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0089: atomic global enable and owner-thread local world policy gate actual native/body/joint/monitor steps; explicit SpaceCreate defaults inactive and SceneTree activates its world. PhysicsActivityTests verifies native motion/spring, paused queries/configuration, pending force and previous interval retention, no catchup, scene callbacks/timers, errors/thread/lifetime boundaries and 64 warmed mixed skipped/active frames without managed allocation."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:CCDMode",
+        "PhysicsServer2D::enum_value:CCDMode.CCD_MODE_CAST_RAY",
+        "PhysicsServer2D::enum_value:CCDMode.CCD_MODE_CAST_SHAPE",
+        "PhysicsServer2D::enum_value:CCDMode.CCD_MODE_DISABLED",
+        "PhysicsServer2D::method:body_get_continuous_collision_detection_mode(RID:)",
+        "PhysicsServer2D::method:body_set_continuous_collision_detection_mode(RID:,int:PhysicsServer2D.CCDMode)",
+        "RigidBody2D::enum:CCDMode",
+        "RigidBody2D::enum_value:CCDMode.CCD_MODE_CAST_RAY",
+        "RigidBody2D::enum_value:CCDMode.CCD_MODE_CAST_SHAPE",
+        "RigidBody2D::enum_value:CCDMode.CCD_MODE_DISABLED",
+        "RigidBody2D::property:continuous_cd"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: distinct per-body Disabled/CastRay/CastShape integration, with ray-versus-full-shape sweeps and preservation of other bodies' native CCD policy (ADR 0054). Box2D bullet alone cannot represent the three branches. These values/properties/server methods enter the first complete per-body CCD slice; world activation does not implement them."
     }
   ]
 }

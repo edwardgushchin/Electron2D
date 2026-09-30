@@ -38,7 +38,7 @@ internal static class PhysicsShapeQueryTests
         Check(ReferenceEquals(query.Shape, circle), "An equal RID assignment retains the borrowed resource.");
         Reject<InvalidOperationException>(() => server.FreeRID(borrowedRID));
         Reject<InvalidOperationException>(() => server.ShapeSetData(borrowedRID, circle));
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         server.BodySetMode(body, PhysicsServer.BodyMode.Static);
         server.BodyAddShape(body, borrowedRID);
@@ -77,7 +77,7 @@ internal static class PhysicsShapeQueryTests
     private static void VerifyOverlapAndMotion()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         var floorRID = server.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
@@ -180,7 +180,7 @@ internal static class PhysicsShapeQueryTests
     private static void VerifyContactsAndRestInfo()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         var floorRID = server.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
@@ -235,7 +235,7 @@ internal static class PhysicsShapeQueryTests
     private static void VerifyContactPairFamilies()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var direct = server.SpaceGetDirectState(space);
         using var circle = new CircleShape();
         using var capsule = new CapsuleShape();
@@ -278,7 +278,7 @@ internal static class PhysicsShapeQueryTests
     private static void VerifyCompoundAndHollowQueries()
     {
         var server = PhysicsServer.Instance;
-        var space = server.SpaceCreate();
+        var space = server.SpaceCreate(); server.SpaceSetActive(space, true);
         var body = server.BodyCreate();
         var circleRID = server.CircleShapeCreate();
         using var circle = new CircleShape { Radius = 5 };

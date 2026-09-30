@@ -63,6 +63,14 @@ internal sealed partial class PhysicsSpace : IDisposable
         b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
     }
 
+    internal bool IsActive { get; private set; }
+
+    internal void SetActive(bool active)
+    {
+        EnsureQueryAccess();
+        IsActive = active;
+    }
+
     internal B2WorldId WorldID => _worldID;
     internal IReadOnlyList<PhysicsBody> Bodies => _bodies;
     internal IReadOnlyList<Area> Areas => _areas;
@@ -193,7 +201,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void Step(double delta)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
-        if (delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
+        EnsureQueryAccess();
+        if (!IsActive || !PhysicsServer.Instance.IsActive || delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
         _stepping = true;
         List<Exception>? errors = null;
