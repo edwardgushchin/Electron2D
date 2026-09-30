@@ -51,10 +51,10 @@ internal sealed partial class PhysicsSpace
 
     private void StepBackend(float delta)
     {
-        foreach (var joint in _joints) joint.PrepareSolverStep(delta);
+        foreach (var joint in _jointRuntimes) joint.PrepareSolverStep(delta);
         _jointImpulseVelocities.Clear();
-        foreach (var joint in _joints) joint.ValidateSolverStep(this);
-        foreach (var joint in _joints) joint.ApplySolverStep();
+        foreach (var joint in _jointRuntimes) joint.ValidateSolverStep(this);
+        foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
         b2World_Step(_worldID, delta, 4);
     }
 

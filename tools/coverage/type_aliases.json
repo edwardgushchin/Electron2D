@@ -103,6 +103,7 @@
     "PhysicsServer2D.AreaBodyStatus": "PhysicsServer.AreaBodyStatus",
     "PhysicsServer2D.AreaSpaceOverrideMode": "Area.SpaceOverride",
     "VisibleOnScreenEnabler2D.EnableMode": "ScreenEnableMode",
-    "TextureProgressBar.FillMode": "TextureProgressFillMode"
+    "TextureProgressBar.FillMode": "TextureProgressFillMode",
+    "PhysicsServer2D.JointType": "PhysicsServer.JointType"
   }
 }

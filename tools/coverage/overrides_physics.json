@@ -939,6 +939,96 @@
       "godot": "PhysicsServer2D::method:area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaSetPriority(Electron2D.RID,System.Int32)",
       "reason": "ADR 0056: concrete typed field branch shares scene/server Area state and the space default Area; current exact-overlap priority reduction executes all ten parameter capabilities."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitLower(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitUpper(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorTargetVelocity(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitLower(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitUpper(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorTargetVelocity(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetRestLength(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetStiffness(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetDamping(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetRestLength(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetStiffness(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetDamping(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitEnabled(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorEnabled(Electron2D.RID)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation."
+    },
+    {
+      "godot": "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.PhysicsServer.JointType.Empty()",
+      "reason": "ADR 0087: backend get-type uses numeric MAX=3 for an allocated/cleared unconfigured joint; typed Empty=3 preserves that observable state."
+    },
+    {
+      "godot": "Joint2D::method:get_rid()",
+      "electron2d": "method:Electron2D.Joint.GetRID()",
+      "reason": "ADR 0087: stable scene-owned physics joint RID from construction until disposal, shared with typed PhysicsServer operations."
     }
   ],
   "extras": [
@@ -1665,41 +1755,87 @@
       "electron2d": "method:Electron2D.CollisionObject.OnNotification(System.Int32)",
       "reason": "Overrides the existing Node disabled/enabled notification hook to apply the stored collision policy; manual notifications preserve effective ProcessMode and add no independent capability.",
       "adr": "ADR 0072"
+    },
+    {
+      "electron2d": "method:Electron2D.Joint.ValidateDisposal()",
+      "reason": "Preflight related-world owner/phase before beginning existing object disposal, including pending server connections. Projects existing joint/body lifetime without a new independent capability.",
+      "adr": "ADR 0087"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBody.ValidateDisposal()",
+      "reason": "Preflight related-world owner/phase before beginning existing object disposal, including pending server connections. Projects existing joint/body lifetime without a new independent capability.",
+      "adr": "ADR 0087"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorMaxTorque(Electron2D.RID)",
+      "reason": "Typed projection of the accepted finite motor torque cap needed for this native pin motor, shared with PinJoint.MotorMaxTorque; not a generic joint force cap.",
+      "adr": "ADRs 0084, 0087"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorMaxTorque(Electron2D.RID,System.Single)",
+      "reason": "Typed projection of the accepted finite motor torque cap needed for this native pin motor, shared with PinJoint.MotorMaxTorque; not a generic joint force cap.",
+      "adr": "ADRs 0084, 0087"
     }
   ],
   "statusGroups": [
     {
-      "godot": ["SceneTree::property:debug_collisions_hint"],
+      "godot": [
+        "SceneTree::property:debug_collisions_hint"
+      ],
       "state": "Unimplemented",
       "reason": "Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint/DampedSpringJoint gizmos on both current renderers (ADRs 0085 and 0086); no runtime drawing owner exists yet."
     },
     {
-      "godot": ["class:DampedSpringJoint2D"],
+      "godot": [
+        "class:DampedSpringJoint2D"
+      ],
       "state": "Partial",
-      "reason": "Anchor Hooke force, effective-mass axial drag and native filter-joint ownership execute under ADR 0086; inherited Joint RID/bias remain Blocked and physics debug drawing still needs the scene debug-canvas flag/pass."
+      "reason": "Anchor Hooke force, effective-mass axial drag and native filter-joint ownership execute under ADR 0086; inherited Joint bias remains Blocked and physics debug drawing still needs the scene debug-canvas flag/pass."
     },
     {
-      "godot": ["DampedSpringJoint2D::property:damping", "DampedSpringJoint2D::property:length", "DampedSpringJoint2D::property:rest_length", "DampedSpringJoint2D::property:stiffness"],
+      "godot": [
+        "DampedSpringJoint2D::property:damping",
+        "DampedSpringJoint2D::property:length",
+        "DampedSpringJoint2D::property:rest_length",
+        "DampedSpringJoint2D::property:stiffness"
+      ],
       "state": "Implemented",
       "reason": "DampedSpringJointTests verifies Hooke/mass response, pure axial exponential drag, anchor torque, momentum/equilibrium, stretch beyond Length, signed/coincident geometry, live settings, sleep/freeze, custom integration, collisions, packing, numeric/thread rollback, kinematic duration and warm allocation. Nonnegative finite coefficients/relaxed length and consistent zero-rest fallback are typed adaptations under ADR 0086."
     },
     {
-      "godot": ["class:GrooveJoint2D"],
+      "godot": [
+        "class:GrooveJoint2D"
+      ],
       "state": "Partial",
-      "reason": "Finite body-A guide and freely rotating body-B slider execute under ADR 0085; inherited Joint RID/bias remain Blocked, and physics debug drawing still requires a scene debug-canvas flag and draw pass."
+      "reason": "Finite body-A guide and freely rotating body-B slider execute under ADR 0085; inherited Joint bias remains Blocked, and physics debug drawing still requires a scene debug-canvas flag and draw pass."
     },
     {
-      "godot": ["GrooveJoint2D::property:initial_offset", "GrooveJoint2D::property:length"],
+      "godot": [
+        "GrooveJoint2D::property:initial_offset",
+        "GrooveJoint2D::property:length"
+      ],
       "state": "Implemented",
       "reason": "GrooveJointTests verifies actual finite sliding, rotation, signed/zero length, offset outside endpoints, live solver updates, packing, lifecycle, invalid rollback and warmed zero managed allocation under ADR 0085."
     },
     {
-      "godot": ["class:Joint2D", "class:PinJoint2D"],
+      "godot": [
+        "class:Joint2D",
+        "class:PinJoint2D"
+      ],
       "state": "Partial",
-      "reason": "Scene-owned pin constraints, path resolution, collision policy, angular limits and motor execute under ADR 0084; Joint RID, positional bias and pin-anchor softness retain exact blocked solver/identity prerequisites."
+      "reason": "Scene-owned pin constraints, path resolution, collision policy, angular limits and motor execute under ADR 0084; Stable shared RID executes under ADR 0087; positional bias and pin-anchor softness retain exact blocked solver prerequisites."
     },
     {
-      "godot": ["Joint2D::property:disable_collision", "Joint2D::property:node_a", "Joint2D::property:node_b", "PinJoint2D::property:angular_limit_enabled", "PinJoint2D::property:angular_limit_lower", "PinJoint2D::property:angular_limit_upper", "PinJoint2D::property:motor_enabled", "PinJoint2D::property:motor_target_velocity"],
+      "godot": [
+        "Joint2D::property:disable_collision",
+        "Joint2D::property:node_a",
+        "Joint2D::property:node_b",
+        "PinJoint2D::property:angular_limit_enabled",
+        "PinJoint2D::property:angular_limit_lower",
+        "PinJoint2D::property:angular_limit_upper",
+        "PinJoint2D::property:motor_enabled",
+        "PinJoint2D::property:motor_target_velocity"
+      ],
       "state": "Implemented",
       "reason": "PinJointTests checks actual constraints, typed path resolution, connected-body contacts, angular limits, motor speed and torque, live edits, tree exit/reentry, packing and warmed zero managed allocation under ADR 0084."
     },
@@ -2372,13 +2508,6 @@
     },
     {
       "godot": [
-        "Joint2D::method:get_rid()"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: public typed physics RID identity and joint/body/world handle lifetime before exposing a scene joint handle (ADR 0061)."
-    },
-    {
-      "godot": [
         "Joint2D::property:bias"
       ],
       "state": "Blocked",
@@ -2910,6 +3039,74 @@
         "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_LINEAR_DAMP_OVERRIDE_MODE",
         "PhysicsServer2D::enum_value:AreaParameter.AREA_PARAM_PRIORITY"
       ]
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:joint_create()",
+        "PhysicsServer2D::method:joint_clear(RID:)",
+        "PhysicsServer2D::method:joint_get_type(RID:)",
+        "PhysicsServer2D::method:joint_disable_collisions_between_bodies(RID:,bool:)",
+        "PhysicsServer2D::method:joint_is_disabled_collisions_between_bodies(RID:)",
+        "PhysicsServer2D::method:joint_make_pin(RID:,Vector2:,RID:,RID:)",
+        "PhysicsServer2D::method:joint_make_groove(RID:,Vector2:,Vector2:,Vector2:,RID:,RID:)",
+        "PhysicsServer2D::method:joint_make_damped_spring(RID:,Vector2:,Vector2:,RID:,RID:)",
+        "PhysicsServer2D::method:pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+        "PhysicsServer2D::method:pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+        "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+        "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+        "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_MAX",
+        "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_GROOVE",
+        "PhysicsServer2D::enum:JointType",
+        "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_DAMPED_SPRING",
+        "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_PIN",
+        "Joint2D::method:get_rid()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation. Pin permits an empty second body; groove/spring require two. Empty=3 adapts the actual unconfigured MAX return, not an additional solver role. Raw spring factory damping is 1.5; scene damping is 1 and automatic zero-rest differs from literal server zero."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+        "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0087: shared scene/server RID, body-local frames and actual native pin/groove/spring kernels; PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation. Typed lower/upper/target-velocity pairs execute; the softness branch remains Blocked on a verified linear anchor compliance kernel, entering its first slice."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:PinJointFlag.PIN_JOINT_FLAG_MOTOR_ENABLED",
+        "PhysicsServer2D::enum_value:DampedSpringParam.DAMPED_SPRING_REST_LENGTH",
+        "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_LIMIT_LOWER",
+        "PhysicsServer2D::enum_value:DampedSpringParam.DAMPED_SPRING_STIFFNESS",
+        "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_MOTOR_TARGET_VELOCITY",
+        "PhysicsServer2D::enum_value:PinJointFlag.PIN_JOINT_FLAG_ANGULAR_LIMIT_ENABLED",
+        "PhysicsServer2D::enum:DampedSpringParam",
+        "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_LIMIT_UPPER",
+        "PhysicsServer2D::enum_value:DampedSpringParam.DAMPED_SPRING_DAMPING",
+        "PhysicsServer2D::enum:PinJointParam",
+        "PhysicsServer2D::enum:PinJointFlag"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0001/0087: numeric selection containers/values are replaced by concrete typed spring coefficient pairs and pin flag/limit/speed pairs. This excludes only the selector representation; softness capability has a separate exact Blocked row."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_BIAS",
+        "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_MAX_FORCE",
+        "PhysicsServer2D::enum:JointParam",
+        "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_MAX_BIAS",
+        "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+        "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: verified per-joint positional correction bias, maximum correction speed and maximum joint impulse/force mappings in the native solver (ADR 0087). General parameter operations enter the first complete correction/cap slice; angular springs or a motor torque cap do not supply those three semantics."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_SOFTNESS"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: verified linear pin-anchor compliance in the native revolute solver (ADRs 0084/0087). Enters the first anchor-compliance slice with PinJoint.Softness and the remaining typed server parameter branch; angular spring compliance is a different capability."
     }
   ]
 }

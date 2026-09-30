@@ -1,12 +1,12 @@
 # PhysicsServer
 
-Last updated: 2026-09-26
+Last updated: 2026-09-30
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
 ## Description
 
-The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas and the six implemented shape families. A server-created collider can join either kind of space; [World2D](World2D.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
+The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the six implemented shape families. A server-created collider can join either kind of space; [World2D](World2D.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
 ## Example
 
@@ -58,7 +58,7 @@ server.FreeRID(space);
 | `public void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
 | `public void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
 | `public void AreaSetCollisionLayer(RID area, uint layer)` | Rebuild Area sensor fixtures with 32-bit queryable layers. |
-| `public void FreeRID(RID rid)` | Free a caller-owned space, body, Area or shape. |
+| `public void FreeRID(RID rid)` | Free a caller-owned space, body, Area, joint or shape. |
 | `protected override void ValidateDisposal()` | Reject consumer disposal of the singleton. |
 
 ## Method descriptions
@@ -85,11 +85,11 @@ server.FreeRID(space);
 <a id="free"></a>
 ### `FreeRID`
 
-Frees only caller-owned server resources. A shape free removes its slots from live users; a body/Area free detaches its backend object; a space free detaches its server colliders and invalidates retained query views. Collider RIDs remain live and detached after their space is freed, so they can be assigned to another space. SceneTree spaces and scene CollisionObject RIDs must be released by their owning objects; attempting to free them here throws. Stale or wrong-kind RIDs reject without resolving to a later resource. The `RID` value itself remains nonzero after free.
+Frees only caller-owned server resources. Joint free removes its native handle and pair contribution, then invalidates its RID; body free clears dependent joints. World free suspends caller-owned connections with local frames/settings retained. A shape free removes its slots from live users; a body/Area free detaches its backend object; a space free detaches its server colliders and invalidates retained query views. Collider RIDs remain live and detached after their space is freed, so they can be assigned to another space. SceneTree spaces, scene joint RIDs and scene CollisionObject RIDs must be released by their owning objects; attempting to free them here throws. Stale or wrong-kind RIDs reject without resolving to a later resource. The `RID` value itself remains nonzero after free.
 
 ## Verification and limits
 
-[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Remaining server methods, world-boundary/separation-ray/custom shapes, joints and direct body state remain separate slices. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Remaining server methods, world-boundary/separation-ray/custom shapes, joint tuning/debug drawing and wider direct body state remain separate slices. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 `SeparationRayShapeCreate()` returns caller-owned default directed geometry. ShapeSetData copies length and slope policy; ShapeGetData returns an independent copy. Direct shape/body motion and sensing execute; ordinary ray solver impulses remain incomplete on the [resource class](SeparationRayShape.md).
 
@@ -267,3 +267,135 @@ physics.AreaSetLinearDamp(areaRID, 2);
 ```
 
 [PhysicsServerAreaFieldTests](../../tests/Electron2D.Tests/PhysicsServerAreaFieldTests.cs) checks defaults, all ten branches, scene projection, mixed mode/priority/filter/lifecycle, actual server response, mutable space defaults/point fallback, failure recovery, callbacks/guards and zero managed bytes over 64 warmed active field frames on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance are unverified. [ADR 0056](../decisions/physics-fields.md#adr-0056) owns the shared profile and typed selector adaptation.
+
+<a id="joints"></a>
+## Joint resources and typed settings
+
+Source: [PhysicsServer.Joints.cs](../../src/Servers/Physics/PhysicsServer.Joints.cs). The [JointType enum](PhysicsServer.JointType.md) reports Pin, Groove, DampedSpring or Empty. Joint identities and scalar settings share the scene kernels under [ADR 0087](../decisions/physics-joints.md#adr-0087).
+
+### Joint method summary
+
+| Signature | Contract |
+| --- | --- |
+| `public RID JointCreate()` | Caller-owned Empty identity, collision suppression true. |
+| `public void JointClear(RID joint)` | Remove connection, preserve RID and collision policy. |
+| `public JointType JointGetType(RID joint)` | Configured role, including pending connections and Empty. |
+| `public void JointDisableCollisionsBetweenBodies(RID joint, bool disable)` | Change pair suppression while preserving anchors. |
+| `public bool JointIsDisabledCollisionsBetweenBodies(RID joint)` | Stored policy, even for Empty. |
+| `public void JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB = default)` | Global pivot; empty body B binds A to the fixed world. |
+| `public void JointMakeGroove(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB, RID bodyA = default, RID bodyB = default)` | Finite global guide on A; both body RIDs required. |
+| `public void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default)` | Two required bodies, global anchors, force and axial drag. |
+| `public float DampedSpringJointGetDamping(RID joint)` | [Shared concrete parameter](#dampedspringjointgetdamping). |
+| `public float DampedSpringJointGetRestLength(RID joint)` | [Shared concrete parameter](#dampedspringjointgetrestlength). |
+| `public float DampedSpringJointGetStiffness(RID joint)` | [Shared concrete parameter](#dampedspringjointgetstiffness). |
+| `public void DampedSpringJointSetDamping(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetdamping). |
+| `public void DampedSpringJointSetRestLength(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetrestlength). |
+| `public void DampedSpringJointSetStiffness(RID joint, float value)` | [Shared concrete parameter](#dampedspringjointsetstiffness). |
+| `public bool PinJointGetAngularLimitEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitenabled). |
+| `public float PinJointGetAngularLimitLower(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitlower). |
+| `public float PinJointGetAngularLimitUpper(RID joint)` | [Shared concrete parameter](#pinjointgetangularlimitupper). |
+| `public bool PinJointGetMotorEnabled(RID joint)` | [Shared concrete parameter](#pinjointgetmotorenabled). |
+| `public float PinJointGetMotorMaxTorque(RID joint)` | [Shared concrete parameter](#pinjointgetmotormaxtorque). |
+| `public float PinJointGetMotorTargetVelocity(RID joint)` | [Shared concrete parameter](#pinjointgetmotortargetvelocity). |
+| `public void PinJointSetAngularLimitEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetangularlimitenabled). |
+| `public void PinJointSetAngularLimitLower(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitlower). |
+| `public void PinJointSetAngularLimitUpper(RID joint, float value)` | [Shared concrete parameter](#pinjointsetangularlimitupper). |
+| `public void PinJointSetMotorEnabled(RID joint, bool value)` | [Shared concrete parameter](#pinjointsetmotorenabled). |
+| `public void PinJointSetMotorMaxTorque(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotormaxtorque). |
+| `public void PinJointSetMotorTargetVelocity(RID joint, float value)` | [Shared concrete parameter](#pinjointsetmotortargetvelocity). |
+
+### Example
+
+```csharp
+var physics = PhysicsServer.Instance;
+var space = physics.SpaceCreate();
+var first = physics.BodyCreate();
+var second = physics.BodyCreate();
+var link = physics.JointCreate();
+try
+{
+    physics.BodySetMode(first, PhysicsServer.BodyMode.Static);
+    physics.BodySetTransform(second, new Transform(0, Vector2.One, 0, new Vector2(0, 50)));
+    physics.BodySetGravityScale(second, 0);
+    physics.BodySetSpace(first, space);
+    physics.BodySetSpace(second, space);
+    physics.JointMakeDampedSpring(link, Vector2.Zero, new Vector2(0, 50), first, second);
+    physics.DampedSpringJointSetRestLength(link, 25);
+    physics.SpaceStep(space, 1d / 60);
+}
+finally
+{
+    physics.FreeRID(link);
+    physics.FreeRID(first);
+    physics.FreeRID(second);
+    physics.FreeRID(space);
+}
+```
+
+### Joint method descriptions
+
+<a id="jointcreate"></a>
+**JointCreate:** Allocates a nonempty RID for an Empty resource. It has no native constraint and may be configured before body attachment. The caller releases it through FreeRID.
+
+<a id="jointclear"></a>
+**JointClear:** Removes the native handle and active collision contribution and forgets endpoints, retaining identity, scalar records and collision policy. Concrete operations reject a caller-owned Empty role. A scene-owned Empty role retains access to its concrete node's settings. A raw scene clear persists until a path/geometry/name edit or reentry; it does not alter stored NodeA/NodeB text.
+
+<a id="jointgettype"></a>
+**JointGetType:** Returns the configured role, which remains concrete while a connection waits for body attachment or temporarily spans different worlds. It returns Empty after allocation, clear or final endpoint free. A disposed RID rejects.
+
+<a id="jointdisablecollisionsbetweenbodies"></a>
+<a id="jointisdisabledcollisionsbetweenbodies"></a>
+**Collision policy pair:** True by default. Set/get the shared node/server policy. Active changes preserve local anchors and refresh contact fixtures. Each disabled connection independently contributes to both bodies' contact and motion-test exceptions; snapshots deduplicate explicit and joint targets. Clearing/freeing/toggling one joint cannot remove another joint or explicit exception's contribution. An Empty resource stores policy for its next make.
+
+<a id="jointmakepin"></a>
+**JointMakePin:** Samples the finite global scene-unit pivot into body-local frames. Distinct live bodies may be scene nodes or caller-owned colliders. An empty bodyB selects a hidden shape-free static world anchor; the first body remains a live required RID. Replaces the old connection while preserving identity/collision policy and resets pin limits/motor to disabled/zero, torque cap to 10 N·m. Relative angle is zero at sampling.
+
+<a id="jointmakegroove"></a>
+**JointMakeGroove:** Samples global endpoints into A's local finite guide and the global anchor into B's local frame. Equal endpoints form a point limit; endpoint order supplies axis direction. Rotation remains free. Despite the empty defaults in the signature, both RIDs must be distinct live bodies. Segment and anchor distances use the ten-million-scene-unit extent guard.
+
+<a id="jointmakedampedspring"></a>
+**JointMakeDampedSpring:** Samples two finite global anchors into distinct required bodies. Resets relaxed separation to their distance, stiffness to 20 kg/s² and damping to 1.5 kg/s. It executes the shared Hooke/effective-mass axial-drag rule, including pure damping. Anchor separation is bounded to ten million scene units. Length is not a stretch cap.
+
+<a id="pinjointgetangularlimitenabled"></a>
+<a id="pinjointsetangularlimitenabled"></a>
+**PinJointGetAngularLimitEnabled / PinJointSetAngularLimitEnabled:** Enable finite ordered relative-angle limits. Enabling validates both stored endpoints. Default: false. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="pinjointgetangularlimitlower"></a>
+<a id="pinjointsetangularlimitlower"></a>
+**PinJointGetAngularLimitLower / PinJointSetAngularLimitLower:** Lower relative angle in radians. With limits enabled, bounds must be ordered inside ±0.99π. Default: 0. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="pinjointgetangularlimitupper"></a>
+<a id="pinjointsetangularlimitupper"></a>
+**PinJointGetAngularLimitUpper / PinJointSetAngularLimitUpper:** Upper relative angle in radians. With limits enabled, bounds must be ordered inside ±0.99π. Default: 0. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="pinjointgetmotorenabled"></a>
+<a id="pinjointsetmotorenabled"></a>
+**PinJointGetMotorEnabled / PinJointSetMotorEnabled:** Enable the angular motor with the configured target velocity and torque cap. Default: false. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="pinjointgetmotortargetvelocity"></a>
+<a id="pinjointsetmotortargetvelocity"></a>
+**PinJointGetMotorTargetVelocity / PinJointSetMotorTargetVelocity:** Finite relative radians per second, signed for direction. Default: 0. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="pinjointgetmotormaxtorque"></a>
+<a id="pinjointsetmotormaxtorque"></a>
+**PinJointGetMotorMaxTorque / PinJointSetMotorMaxTorque:** Finite nonnegative torque cap in newton-meters; required by the native motor and shared with PinJoint.MotorMaxTorque. Default: 10. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="dampedspringjointgetrestlength"></a>
+<a id="dampedspringjointsetrestlength"></a>
+**DampedSpringJointGetRestLength / DampedSpringJointSetRestLength:** Finite nonnegative relaxed separation in scene units, at most ten million. A raw server zero is literal. For a scene automatic zero, the getter reports abs(Length); a server write selects literal policy until the scene RestLength setter restores automatic policy. Default: initial anchor distance. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="dampedspringjointgetstiffness"></a>
+<a id="dampedspringjointsetstiffness"></a>
+**DampedSpringJointGetStiffness / DampedSpringJointSetStiffness:** Finite nonnegative Hooke coefficient in kg/s²; zero supports a pure damper. Default: 20. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+<a id="dampedspringjointgetdamping"></a>
+<a id="dampedspringjointsetdamping"></a>
+**DampedSpringJointGetDamping / DampedSpringJointSetDamping:** Finite nonnegative axial drag in kg/s; zero leaves elastic response undamped. Default: 1.5 raw / 1 scene. The getter returns the shared value; the setter updates that same record and active solver response without resampling anchors. Wrong concrete roles reject.
+
+### Joint lifetime, errors and verification
+
+Make validates geometry and every local anchor radius through ten million scene units, distinct live body identities and current world compatibility before removing the previous connection. Related active worlds require their owning thread and reject solver/synchronization phases. These checks also guard pending detached endpoints, membership changes and disposal; rejected operations preserve object lifetime. Wrong/stale/body/Area RIDs or wrong concrete setting roles throw ArgumentException; nonfinite or invalid scalar ranges throw ArgumentOutOfRangeException. A scene joint cannot be changed to another concrete node role or active foreign world (InvalidOperationException).
+
+Detached caller-owned connections retain sampled local frames and connect once both bodies share an active world; temporary departure or cross-world membership suspends them. Reentry uses fresh native IDs. Endpoint free clears dependents; world free leaves live resources detached and configured. Scene GetRID is borrowed and stable until node disposal; raw same-role server make/clear persists until scene geometry/path/name edits or reentry reclaim it. Scalar edits are bidirectional without replacing the public node. No joint owns or frees endpoint bodies.
+
+[PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers all three actual server responses, world pin, bidirectional settings, clear/replacement, defaults, lifecycle/failure/phase/thread rollback, independent exceptions and 64 warmed active typed-setting/spring frames with zero managed allocation on Linux/.NET 10. Native allocations, broad-scene stability/performance, other platforms and owner visual acceptance remain unverified. General joint positional bias/correction speed/force caps, linear pin softness and scene debug drawing remain exact coverage gaps; angular spring tuning does not supply them.

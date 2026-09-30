@@ -54,6 +54,7 @@ public sealed partial class PhysicsServer : ElectronObject
 
     internal void UnregisterSceneObject(RID rid)
     {
+        ClearJointsForBody(rid);
         lock (_registryGate)
         {
             _sceneObjects.Remove(rid);

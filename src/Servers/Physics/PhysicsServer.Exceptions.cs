@@ -3,6 +3,7 @@ namespace Electron2D;
 public sealed partial class PhysicsServer
 {
     private readonly Dictionary<RID, List<RID>> _bodyExceptions = [];
+    private readonly Dictionary<RID, List<RID>> _jointBodyExceptions = [];
 
     /// <summary>Excludes two bodies from ordinary contact and motion tests when either body lists the other.</summary>
     /// <param name="body">The live scene or server body that owns the exception entry.</param>
@@ -48,13 +49,20 @@ public sealed partial class PhysicsServer
         var space = GetBodySpace(body);
         space?.EnsureQueryAccess();
         lock (_registryGate)
-            return _bodyExceptions.TryGetValue(body, out var entries) ? entries.ToArray() : [];
+        {
+            var result = _bodyExceptions.TryGetValue(body, out var entries) ? new List<RID>(entries) : [];
+            if (_jointBodyExceptions.TryGetValue(body, out var joints))
+                foreach (var target in joints)
+                    if (!result.Contains(target)) result.Add(target);
+            return result.ToArray();
+        }
     }
 
     internal bool HasBodyCollisionExceptions(RID body)
     {
         lock (_registryGate)
-            return _bodyExceptions.TryGetValue(body, out var entries) && entries.Count != 0;
+            return _bodyExceptions.TryGetValue(body, out var entries) && entries.Count != 0 ||
+                _jointBodyExceptions.TryGetValue(body, out var joints) && joints.Count != 0;
     }
 
     internal bool BodiesExcepted(RID first, RID second)
@@ -62,7 +70,34 @@ public sealed partial class PhysicsServer
         // ponytail: A small per-body list and registry lock suffice until large-world contact profiling says otherwise.
         lock (_registryGate)
             return _bodyExceptions.TryGetValue(first, out var firstEntries) && firstEntries.Contains(second) ||
-                _bodyExceptions.TryGetValue(second, out var secondEntries) && secondEntries.Contains(first);
+                _bodyExceptions.TryGetValue(second, out var secondEntries) && secondEntries.Contains(first) ||
+                _jointBodyExceptions.TryGetValue(first, out var joints) && joints.Contains(second);
+    }
+
+    internal void JointCollisionContribution(RID first, RID second, bool add)
+    {
+        lock (_registryGate)
+        {
+            Update(first, second); Update(second, first);
+        }
+        TryInvalidate(first); TryInvalidate(second);
+
+        void Update(RID body, RID target)
+        {
+            if (!_jointBodyExceptions.TryGetValue(body, out var entries))
+            {
+                if (!add) return;
+                _jointBodyExceptions.Add(body, entries = []);
+            }
+            // Repeated entries retain one contribution per joint, independent of explicit exceptions.
+            if (add) entries.Add(target); else entries.Remove(target);
+            if (entries.Count == 0) _jointBodyExceptions.Remove(body);
+        }
+        void TryInvalidate(RID body)
+        {
+            try { InvalidateBodyContacts(body); }
+            catch (ArgumentException) { }
+        }
     }
 
     private PhysicsSpace? GetBodySpace(RID body)

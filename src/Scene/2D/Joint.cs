@@ -1,6 +1,4 @@
 using Box2D.NET;
-using static Box2D.NET.B2Joints;
-using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
@@ -23,14 +21,22 @@ public abstract class Joint : Entity
     private PhysicsSpace? _space;
     private PhysicsBody? _bodyA;
     private PhysicsBody? _bodyB;
-    private B2JointId _jointID;
+    private bool _serverOverride;
     private string _nodeA = string.Empty;
     private string _nodeB = string.Empty;
-    private bool _disableCollision = true;
     private bool _dirty = true;
 
     /// <summary>Creates a detached, unconnected joint.</summary>
-    private protected Joint() { }
+    /// <param name="type">The immutable concrete scene role.</param>
+    private protected Joint(PhysicsServer.JointType type) => Runtime = PhysicsServer.Instance.RegisterSceneJoint(this, type);
+
+    internal PhysicsJointRuntime Runtime { get; }
+    internal PhysicsSpace? AttachmentSpace => _space;
+    internal bool HasServerOverride => _serverOverride;
+
+    /// <summary>Gets the stable physics server identity of this scene joint.</summary>
+    /// <returns>A nonempty RID unchanged by connection rebuilds, clear or tree reentry.</returns>
+    public RID GetRID() { ThrowIfDisposed(); return Runtime.RID; }
 
     /// <summary>Gets or sets the node path to the first physics body.</summary>
     /// <value>An empty path by default. An unresolved or non-body path leaves the joint unconfigured.</value>
@@ -70,21 +76,14 @@ public abstract class Joint : Entity
     }
 
     /// <summary>Gets or sets whether the connected bodies omit mutual contacts.</summary>
-    /// <value>True by default. A change rebuilds the solver joint before the next physics step.</value>
-    /// <remarks>Changing this value also refreshes endpoint fixtures so existing overlaps adopt the new policy.</remarks>
+    /// <value>True by default. A change updates contact policy without resampling the local anchors.</value>
+    /// <remarks>Changing this value refreshes endpoint fixtures and the pair contribution used by body motion tests.
+    /// Other joints and explicit body exceptions can independently retain suppression.</remarks>
     /// <exception cref="InvalidOperationException">An attached write is off the owner thread or occurs during a solver step.</exception>
     public bool DisableCollision
     {
-        get { ThrowIfDisposed(); return _disableCollision; }
-        set
-        {
-            EnsureJointChange();
-            if (_disableCollision == value) return;
-            _disableCollision = value;
-            MarkJointDirty();
-            _bodyA?.MarkShapesDirty();
-            _bodyB?.MarkShapesDirty();
-        }
+        get { ThrowIfDisposed(); return Runtime.DisableCollision; }
+        set { EnsureJointChange(); Runtime.SetDisableCollision(value); }
     }
 
     /// <summary>Returns warnings for missing, invalid or duplicate body endpoints.</summary>
@@ -108,14 +107,17 @@ public abstract class Joint : Entity
 
     internal void AttachBackend(PhysicsSpace space)
     {
+        Runtime.EnsureAccess();
+        Runtime.Clear();
         _space = space;
+        _serverOverride = false;
         _dirty = true;
     }
 
     internal void PrepareBackend()
     {
         var space = _space;
-        if (space is null) return;
+        if (space is null || _serverOverride) return;
         if (_bodyA is { } first && _bodyB is { } second &&
             (!ReferenceEquals(first.Space, space) || !ReferenceEquals(second.Space, space)))
             _dirty = true;
@@ -135,9 +137,7 @@ public abstract class Joint : Entity
         if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics joints require unit global scale and zero skew.");
         ValidateJointConfiguration(bodyA, bodyB, transform);
-        DetachJoint();
-        _jointID = CreateJoint(space, bodyA, bodyB, transform);
-        if (_jointID.index1 == 0) throw new InvalidOperationException("The physics solver did not create the joint.");
+        ConfigureJoint(space, bodyA, bodyB, transform);
         _bodyA = bodyA;
         _bodyB = bodyB;
         _dirty = false;
@@ -152,21 +152,18 @@ public abstract class Joint : Entity
 
     internal void BodyArrived()
     {
-        if (_jointID.index1 == 0) _dirty = true;
+        if (BackendID.index1 == 0 && !_serverOverride) _dirty = true;
     }
 
     internal void DetachBackend()
     {
         DetachJoint();
         _space = null;
+        _serverOverride = false;
         _dirty = true;
     }
 
-    internal B2JointId BackendID => _jointID;
-
-    internal virtual void PrepareSolverStep(float delta) { }
-    internal virtual void ValidateSolverStep(PhysicsSpace space) { }
-    internal virtual void ApplySolverStep() { }
+    internal B2JointId BackendID => Runtime.BackendID;
 
     internal virtual void ValidateJointConfiguration(PhysicsBody first, PhysicsBody second, Transform transform)
     {
@@ -181,40 +178,32 @@ public abstract class Joint : Entity
             throw new InvalidOperationException("Joint anchors must fit the finite physics coordinate range.");
     }
 
-    internal B2JointDef BaseDefinition(PhysicsBody first, PhysicsBody second, Transform transform)
-    {
-        var definition = b2DefaultJointDef();
-        definition.bodyIdA = first.BackendID;
-        definition.bodyIdB = second.BackendID;
-        definition.localFrameA.p = Shape.ToBackend(first.ToLocal(transform.Origin));
-        definition.localFrameB.p = Shape.ToBackend(second.ToLocal(transform.Origin));
-        definition.localFrameA.q = b2MakeRot(transform.Rotation - first.GlobalRotation);
-        definition.localFrameB.q = b2MakeRot(transform.Rotation - second.GlobalRotation);
-        definition.collideConnected = !_disableCollision;
-        return definition;
-    }
+    internal abstract void ConfigureJoint(PhysicsSpace space, PhysicsBody first, PhysicsBody second, Transform transform);
 
-    internal abstract B2JointId CreateJoint(PhysicsSpace space, PhysicsBody first, PhysicsBody second, Transform transform);
+    internal void MarkServerOverride()
+    {
+        _serverOverride = true; _dirty = false; _bodyA = _bodyB = null;
+    }
 
     internal void EnsureJointChange()
     {
         EnsureMutable();
         _space?.EnsureQueryAccess();
+        Runtime.EnsureAccess();
     }
 
-    internal void MarkJointDirty() => _dirty = true;
+    internal void MarkJointDirty() { _serverOverride = false; _dirty = true; }
 
     private PhysicsBody? Resolve(string path) => string.IsNullOrWhiteSpace(path) ? null : GetNodeOrNull(path) as PhysicsBody;
 
     private void OnNodeRenamed(SceneTree tree, Node node)
     {
-        _dirty = true;
+        MarkJointDirty();
     }
 
     private void DetachJoint()
     {
-        if (_jointID.index1 != 0) b2DestroyJoint(_jointID, wakeAttached: true);
-        _jointID = default;
+        Runtime.Clear();
         _bodyA = null;
         _bodyB = null;
     }
@@ -246,10 +235,20 @@ public abstract class Joint : Entity
         finally { base.OnExitTree(); }
     }
 
+    /// <summary>Checks scene and dependent joint world ownership before beginning disposal.</summary>
+    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping.</exception>
+    protected override void ValidateDisposal()
+    {
+        _space?.EnsureQueryAccess();
+        Runtime.EnsureAccess();
+        base.ValidateDisposal();
+    }
+
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing) _space?.Remove(this);
+        if (disposing) PhysicsServer.Instance.UnregisterSceneJoint(Runtime.RID);
         base.Dispose(disposing);
     }
 }

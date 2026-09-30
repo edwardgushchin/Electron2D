@@ -324,9 +324,10 @@ public sealed partial class PhysicsServer
         if (owners.Scene is { } scene) scene.Monitorable = monitorable; else owners.Server!.Monitorable = monitorable;
     }
 
-    /// <summary>Frees a server-owned space, collider or shape RID.</summary>
+    /// <summary>Frees a server-owned space, collider, shape or joint RID.</summary>
     /// <param name="rid">A live caller-owned server resource identity.</param>
-    /// <remarks>SceneTree-owned spaces and CollisionObject RIDs are released by their scene owners.</remarks>
+    /// <remarks>Scene-owned spaces, collision objects and joints are released by their scene owners.
+    /// Freeing a body clears dependent joint connections before removing its identity.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
     /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped.</exception>
     public void FreeRID(RID rid)
@@ -335,11 +336,16 @@ public sealed partial class PhysicsServer
         PhysicsSpace? space = null;
         PhysicsServerCollider? collider = null;
         PhysicsServerShape? shape = null;
+        PhysicsJointRuntime? joint = null;
         lock (_registryGate)
         {
             if (_ownedSpaces.Contains(rid)) space = _sceneSpaces[rid];
             else if (_serverColliders.TryGetValue(rid, out collider)) { }
             else if (_serverShapes.TryGetValue(rid, out shape)) { }
+            else if (_jointRuntimes.TryGetValue(rid, out joint))
+            {
+                if (joint.Scene is not null) throw new InvalidOperationException("The joint RID is owned by its scene node.");
+            }
             else if (_sceneSpaces.ContainsKey(rid) || _sceneObjects.ContainsKey(rid))
                 throw new InvalidOperationException("The RID is owned by a scene tree or collision node.");
             else throw new ArgumentException("The RID is not a live server resource.", nameof(rid));
@@ -358,9 +364,11 @@ public sealed partial class PhysicsServer
         else if (collider is not null)
         {
             EnsureColliderSpaceAccessible(collider);
+            if (!collider.IsArea) EnsureJointBodyMembershipChange(rid);
             try { if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider); }
             finally
             {
+                if (!collider.IsArea) ClearJointsForBody(rid);
                 lock (_registryGate)
                 {
                     _serverColliders.Remove(rid);
@@ -369,6 +377,11 @@ public sealed partial class PhysicsServer
                     _bodyExceptions.Remove(rid);
                 }
             }
+        }
+        else if (joint is not null)
+        {
+            joint.EnsureAccess(); joint.Clear();
+            lock (_registryGate) _jointRuntimes.Remove(rid);
         }
         else if (shape is not null)
         {

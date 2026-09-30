@@ -190,7 +190,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 79, "Partial": 8, "Unimplemented": 101, "Blocked": 4, "Excluded": 23}
+                "Implemented": 96, "Partial": 10, "Unimplemented": 64, "Blocked": 11, "Excluded": 34}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     area_parameter_rows = [row for row in server_rows if "AreaParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
@@ -257,8 +257,18 @@ def main():
                     "Implemented": implemented, "Partial": partial, "Blocked": blocked}
     joint_rows = pages[CLASS_PAGES / "Joint2D.md"].splitlines()
     pin_rows = pages[CLASS_PAGES / "PinJoint2D.md"].splitlines()
-    assert all(" | Blocked | " in next(row for row in joint_rows if row.startswith(f"| [`{prefix}"))
-               for prefix in ("method get_rid()", "property float bias"))
+    assert " | Implemented | " in next(row for row in joint_rows if row.startswith("| [`method get_rid()"))
+    assert " | Blocked | " in next(row for row in joint_rows if row.startswith("| [`property float bias"))
+    server_joint_rows = pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
+    for name, state in (("joint_create", "Implemented"), ("joint_clear", "Implemented"),
+                        ("joint_make_pin", "Implemented"), ("joint_make_groove", "Implemented"),
+                        ("joint_make_damped_spring", "Implemented"), ("joint_get_type", "Implemented"),
+                        ("pin_joint_get_param", "Partial"), ("pin_joint_set_param", "Partial"),
+                        ("pin_joint_get_flag", "Implemented"), ("pin_joint_set_flag", "Implemented"),
+                        ("damped_spring_joint_get_param", "Implemented"), ("damped_spring_joint_set_param", "Implemented"),
+                        ("joint_get_param", "Blocked"), ("joint_set_param", "Blocked")):
+        assert f" | {state} | " in next(row for row in server_joint_rows if row.startswith(f"| [`method {name}("))
+    assert " | Blocked | " in next(row for row in server_joint_rows if row.startswith("| [`enum_value PIN_JOINT_SOFTNESS"))
     assert " | Blocked | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))
     groove_rows = pages[CLASS_PAGES / "GrooveJoint2D.md"].splitlines()
     assert " | Partial | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))

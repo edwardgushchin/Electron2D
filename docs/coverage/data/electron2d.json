@@ -3387,6 +3387,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsServer.JointType",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer.JointType",
+    "name": "JointType",
+    "signature": "public enum Electron2D.PhysicsServer.JointType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsShapeQueryParameters2D",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsShapeQueryParameters2D",
@@ -18862,6 +18880,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PhysicsServer.BodyMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.JointType.DampedSpring()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.JointType",
+    "name": "DampedSpring",
+    "signature": "public const Electron2D.PhysicsServer.JointType DampedSpring = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.JointType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.JointType.Empty()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.JointType",
+    "name": "Empty",
+    "signature": "public const Electron2D.PhysicsServer.JointType Empty = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.JointType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.JointType.Groove()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.JointType",
+    "name": "Groove",
+    "signature": "public const Electron2D.PhysicsServer.JointType Groove = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.JointType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.JointType.Pin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.JointType",
+    "name": "Pin",
+    "signature": "public const Electron2D.PhysicsServer.JointType Pin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.JointType",
     "value": "0"
   },
   {
@@ -47205,6 +47275,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Joint.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "GetRID",
+    "signature": "public Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Joint.OnEnterTree()",
     "kind": "method",
     "declaringType": "Electron2D.Joint",
@@ -47236,6 +47319,19 @@
     "declaringType": "Electron2D.Joint",
     "name": "OnReady",
     "signature": "protected override System.Void OnReady()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Joint.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Joint",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
     "visibility": "protected",
     "baseType": null,
     "interfaces": null,
@@ -53926,6 +54022,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsBody.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsBody",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectBodyState.AddConstantCentralForce(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectBodyState",
@@ -56861,6 +56970,135 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointGetDamping(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointGetDamping",
+    "signature": "public System.Single DampedSpringJointGetDamping(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointGetRestLength(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointGetRestLength",
+    "signature": "public System.Single DampedSpringJointGetRestLength(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointGetStiffness(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointGetStiffness",
+    "signature": "public System.Single DampedSpringJointGetStiffness(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointSetDamping(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointSetDamping",
+    "signature": "public System.Void DampedSpringJointSetDamping(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointSetRestLength(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointSetRestLength",
+    "signature": "public System.Void DampedSpringJointSetRestLength(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.DampedSpringJointSetStiffness(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "DampedSpringJointSetStiffness",
+    "signature": "public System.Void DampedSpringJointSetStiffness(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.FreeRID(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -56873,6 +57111,475 @@
       {
         "name": "rid",
         "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointClear(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointClear",
+    "signature": "public System.Void JointClear(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointCreate",
+    "signature": "public Electron2D.RID JointCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointDisableCollisionsBetweenBodies(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointDisableCollisionsBetweenBodies",
+    "signature": "public System.Void JointDisableCollisionsBetweenBodies(Electron2D.RID joint, System.Boolean disable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "disable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointGetType(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointGetType",
+    "signature": "public Electron2D.PhysicsServer.JointType JointGetType(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsServer.JointType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointIsDisabledCollisionsBetweenBodies(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointIsDisabledCollisionsBetweenBodies",
+    "signature": "public System.Boolean JointIsDisabledCollisionsBetweenBodies(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointMakeDampedSpring(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointMakeDampedSpring",
+    "signature": "public System.Void JointMakeDampedSpring(Electron2D.RID joint, Electron2D.Vector2 anchorA, Electron2D.Vector2 anchorB, Electron2D.RID bodyA, Electron2D.RID bodyB = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "anchorA",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "anchorB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "bodyA",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bodyB",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointMakeGroove(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointMakeGroove",
+    "signature": "public System.Void JointMakeGroove(Electron2D.RID joint, Electron2D.Vector2 groove1A, Electron2D.Vector2 groove2A, Electron2D.Vector2 anchorB, Electron2D.RID bodyA = default, Electron2D.RID bodyB = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "groove1A",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "groove2A",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "anchorB",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "bodyA",
+        "type": "Electron2D.RID",
+        "default": "default"
+      },
+      {
+        "name": "bodyB",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointMakePin(Electron2D.RID,Electron2D.Vector2,Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointMakePin",
+    "signature": "public System.Void JointMakePin(Electron2D.RID joint, Electron2D.Vector2 anchor, Electron2D.RID bodyA, Electron2D.RID bodyB = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "anchor",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "bodyA",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bodyB",
+        "type": "Electron2D.RID",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitEnabled(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetAngularLimitEnabled",
+    "signature": "public System.Boolean PinJointGetAngularLimitEnabled(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitLower(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetAngularLimitLower",
+    "signature": "public System.Single PinJointGetAngularLimitLower(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitUpper(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetAngularLimitUpper",
+    "signature": "public System.Single PinJointGetAngularLimitUpper(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetMotorEnabled(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetMotorEnabled",
+    "signature": "public System.Boolean PinJointGetMotorEnabled(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetMotorMaxTorque(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetMotorMaxTorque",
+    "signature": "public System.Single PinJointGetMotorMaxTorque(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetMotorTargetVelocity(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetMotorTargetVelocity",
+    "signature": "public System.Single PinJointGetMotorTargetVelocity(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitEnabled(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetAngularLimitEnabled",
+    "signature": "public System.Void PinJointSetAngularLimitEnabled(Electron2D.RID joint, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitLower(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetAngularLimitLower",
+    "signature": "public System.Void PinJointSetAngularLimitLower(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitUpper(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetAngularLimitUpper",
+    "signature": "public System.Void PinJointSetAngularLimitUpper(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetMotorEnabled(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetMotorEnabled",
+    "signature": "public System.Void PinJointSetMotorEnabled(Electron2D.RID joint, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetMotorMaxTorque(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetMotorMaxTorque",
+    "signature": "public System.Void PinJointSetMotorMaxTorque(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetMotorTargetVelocity(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetMotorTargetVelocity",
+    "signature": "public System.Void PinJointSetMotorTargetVelocity(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
         "default": null
       }
     ],

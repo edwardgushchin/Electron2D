@@ -1,8 +1,4 @@
-using Box2D.NET;
 using static Box2D.NET.B2Constants;
-using static Box2D.NET.B2Joints;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2WheelJoints;
 
 namespace Electron2D;
 
@@ -24,7 +20,7 @@ public sealed class GrooveJoint : Joint
     private float _initialOffset = 25f;
 
     /// <summary>Creates a detached groove with a 50-unit length and 25-unit second-body offset.</summary>
-    public GrooveJoint() { }
+    public GrooveJoint() : base(PhysicsServer.JointType.Groove) { }
 
     /// <summary>Gets or sets the signed distance from the groove origin to its far endpoint.</summary>
     /// <value>50 scene units by default. Zero keeps the anchor at one point while permitting rotation.</value>
@@ -40,10 +36,8 @@ public sealed class GrooveJoint : Joint
             ValidateExtent(value, nameof(value));
             if (_length == value) return;
             _length = value;
-            if (BackendID.index1 != 0)
-                b2WheelJoint_SetLimits(BackendID, MathF.Min(0, value) * PhysicsSpace.MetersPerUnit,
-                    MathF.Max(0, value) * PhysicsSpace.MetersPerUnit);
-            else MarkJointDirty();
+            Runtime.SetGrooveLength(value);
+            if (BackendID.index1 == 0 || HasServerOverride) MarkJointDirty();
         }
     }
 
@@ -74,21 +68,8 @@ public sealed class GrooveJoint : Joint
         ValidateAnchor(second.ToLocal(anchorB));
     }
 
-    internal override B2JointId CreateJoint(PhysicsSpace space, PhysicsBody first, PhysicsBody second, Transform transform)
-    {
-        var definition = b2DefaultWheelJointDef();
-        definition.@base = BaseDefinition(first, second, transform);
-        var anchorB = transform * new Vector2(0, _initialOffset);
-        definition.@base.localFrameB.p = Shape.ToBackend(second.ToLocal(anchorB));
-        var axisAngle = transform.Rotation + MathF.PI / 2f;
-        definition.@base.localFrameA.q = b2MakeRot(axisAngle - first.GlobalRotation);
-        definition.@base.localFrameB.q = b2MakeRot(axisAngle - second.GlobalRotation);
-        definition.enableSpring = false;
-        definition.enableLimit = true;
-        definition.lowerTranslation = MathF.Min(0, _length) * PhysicsSpace.MetersPerUnit;
-        definition.upperTranslation = MathF.Max(0, _length) * PhysicsSpace.MetersPerUnit;
-        return b2CreateWheelJoint(space.WorldID, definition);
-    }
+    internal override void ConfigureJoint(PhysicsSpace space, PhysicsBody first, PhysicsBody second, Transform transform) =>
+        Runtime.ConfigureSceneGroove(transform, _length, _initialOffset, first.GetRID(), second.GetRID());
 
     private static void ValidateExtent(float value, string name)
     {

@@ -18,6 +18,8 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     private readonly List<PhysicsBody> _bodies = [];
     private readonly List<Joint> _joints = [];
+    private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
+    private B2BodyId _jointWorldBody;
     private readonly List<Area> _areas = [];
     private readonly List<PhysicsServerCollider> _serverColliders = [];
     private readonly List<(PhysicsAreaFields Fields, uint Mask, IReadOnlyList<B2ShapeId> Shapes, Transform Transform)> _fieldAreas = [];
@@ -86,20 +88,25 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot enter a world while it is stepping.");
+        PhysicsServer.Instance.EnsureJointBodyMembershipChange(body.PhysicsRID);
         _bodies.EnsureCapacity(_bodies.Count + 1);
         body.AttachBackend(this);
         _bodies.Add(body);
         foreach (var joint in _joints) joint.BodyArrived();
+        PhysicsServer.Instance.NotifyJointBodySpaceChanged(body.PhysicsRID);
     }
 
     internal void Remove(PhysicsBody body)
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
+        PhysicsServer.Instance.EnsureJointBodyMembershipChange(body.PhysicsRID);
         if (!_bodies.Remove(body)) return;
+        foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(body.PhysicsRID);
         foreach (var joint in _joints) joint.BodyLeaving(body);
         if (body is RigidBody departing) departing.CaptureBackendSleep();
         body.DetachBackend();
+        PhysicsServer.Instance.NotifyJointBodySpaceChanged(body.PhysicsRID);
         if (body is RigidBody removed) removed.ClearContactState();
         foreach (var other in _bodies)
             if (other is RigidBody rigid) rigid.ForgetContact(body, _contactEvents);
@@ -114,6 +121,20 @@ internal sealed partial class PhysicsSpace : IDisposable
         _joints.EnsureCapacity(_joints.Count + 1);
         joint.AttachBackend(this);
         _joints.Add(joint);
+    }
+
+    internal void AddJointRuntime(PhysicsJointRuntime runtime) => _jointRuntimes.Add(runtime);
+    internal void RemoveJointRuntime(PhysicsJointRuntime runtime) => _jointRuntimes.Remove(runtime);
+
+    internal B2BodyId GetJointWorldBody()
+    {
+        if (_jointWorldBody.index1 == 0)
+        {
+            var definition = b2DefaultBodyDef();
+            definition.type = B2BodyType.b2_staticBody;
+            _jointWorldBody = b2CreateBody(_worldID, definition);
+        }
+        return _jointWorldBody;
     }
 
     internal void Remove(Joint joint)
@@ -136,19 +157,24 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Server colliders cannot enter while stepping.");
+        if (!collider.IsArea) PhysicsServer.Instance.EnsureJointBodyMembershipChange(collider.RID);
         _serverColliders.EnsureCapacity(_serverColliders.Count + 1);
         collider.AttachBackend(this, spaceRID);
         _serverColliders.Add(collider);
+        if (!collider.IsArea) PhysicsServer.Instance.NotifyJointBodySpaceChanged(collider.RID);
     }
 
     internal void Remove(PhysicsServerCollider collider)
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
+        if (!collider.IsArea) PhysicsServer.Instance.EnsureJointBodyMembershipChange(collider.RID);
         if (!_serverColliders.Remove(collider)) return;
+        if (!collider.IsArea) foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(collider.RID);
         foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
         ForgetAreaMonitors(collider.RID);
         collider.DetachBackend();
+        if (!collider.IsArea) PhysicsServer.Instance.NotifyJointBodySpaceChanged(collider.RID);
         DispatchEvents();
     }
 
@@ -224,6 +250,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();
+        while (_jointRuntimes.Count > 0) _jointRuntimes[^1].DetachSpace();
         foreach (var body in _bodies)
         {
             if (body is RigidBody departing) departing.CaptureBackendSleep();
@@ -232,6 +259,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
         foreach (var area in _areas) { area.DetachBackend(); area.ClearOverlaps(); }
         foreach (var collider in _serverColliders) collider.DetachBackend();
+        foreach (var body in _bodies) PhysicsServer.Instance.NotifyJointBodySpaceChanged(body.PhysicsRID);
+        foreach (var collider in _serverColliders)
+            if (!collider.IsArea) PhysicsServer.Instance.NotifyJointBodySpaceChanged(collider.RID);
         _bodies.Clear();
         _areas.Clear();
         _serverColliders.Clear();

@@ -191,8 +191,8 @@ public abstract class PhysicsBody : CollisionObject
         PhysicsServer.Instance.BodyRemoveCollisionException(GetRID(), body.GetRID());
     }
 
-    /// <summary>Returns current scene body exceptions in insertion order.</summary>
-    /// <returns>A caller-owned array; server-only or freed entries have null scene objects.</returns>
+    /// <summary>Returns deduplicated explicit and active-joint body exceptions.</summary>
+    /// <returns>A caller-owned array with explicit entries first, then active joint targets; server-only or freed entries have null scene objects.</returns>
     /// <exception cref="InvalidOperationException">An attached body is read off its scene owner thread.</exception>
     public PhysicsBody?[] GetCollisionExceptions()
     {
@@ -268,6 +268,15 @@ public abstract class PhysicsBody : CollisionObject
     {
         try { Tree?.UnregisterPhysicsBody(this); }
         finally { base.OnExitTree(); }
+    }
+
+    /// <summary>Checks scene and dependent joint world ownership before beginning disposal.</summary>
+    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping.</exception>
+    protected override void ValidateDisposal()
+    {
+        Tree?.EnsurePhysicsParticipationChange();
+        PhysicsServer.Instance.EnsureJointBodyMembershipChange(PhysicsRID);
+        base.ValidateDisposal();
     }
 
     /// <inheritdoc />
