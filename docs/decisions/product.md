@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-09-25
+Last updated: 2026-10-01
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -81,7 +81,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-09-24
+Last updated: 2026-10-01
 
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -100,6 +100,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - The public image-texture resource is `Texture`; `ImageTexture` derives directly from it. All image textures are two-dimensional by product definition, so there is no `Texture2D` suffix or empty dimension-neutral parent. The reference `Texture` and `Texture2D` contracts share one `Texture.md` coverage page. Coverage names for `Texture2DArray`, `Texture2DArrayRD`, and `Texture2DRD` are `TextureArray`, `TextureArrayRD`, and `TextureRD`. Source identities and declarations remain intact inside the comparison; these names do not authorize new runtime types or change implementation states. Shader-language intrinsic names and internal backend identifiers retain their native spelling.
 - The reference `Geometry2D` maps to Electron2D `Geometry`, because the product has no 3D geometry counterpart. Keep `Geometry2D` only as the pinned source identity in internal coverage; the public class page and source use `Geometry`. This naming change preserves the applicable geometry API obligation and does not mark absent methods implemented.
 - The reference `AStar2D` and `AStarGrid2D` map to Electron2D `AStar` and `AStarGrid`. Both algorithms operate only in two dimensions, and their graph/grid roles remain distinct without dimensional suffixes. Keep the pinned names in internal coverage; ADRs 0052 and 0053 own their separate behavior contracts.
+- The reference `GodotInstance` maps to Electron2D `ElectronInstance`. Keep the pinned reference name only in internal design and coverage; implementation and public signatures use `ElectronInstance`. This is an accepted name mapping for the engine-instance role, not an implemented type or a second runtime alias. Its applicable lifecycle API remains an obligation tracked in coverage.
 - The applicable 2D physics source types `Shape2D`, `CircleShape2D`, `RectangleShape2D`, `CollisionShape2D`, `CollisionObject2D`, `PhysicsBody2D`, `RigidBody2D` and `StaticBody2D` map to `Shape`, `CircleShape`, `RectangleShape`, `CollisionShape`, `CollisionObject`, `PhysicsBody`, `RigidBody` and `StaticBody`. The dimensional suffix is redundant in this product; ADR 0054 preserves their inheritance and tracks the first executable scene-body profile without claiming missing members complete.
 - The reference `Line2D` maps to Electron2D `Line : Entity`, because this product has no 3D line-node counterpart. Keep `Line2D` only as the pinned source identity in internal coverage; production source, public signatures and class documentation use `Line`. The rename preserves all applicable line-node members and their behavior; unfinished members remain coverage gaps.
 - The reference `Marker2D` maps to Electron2D `Marker : Entity`, without a redundant dimensional suffix. Keep `Marker2D` only as the pinned source identity in internal coverage. The rename preserves the applicable inherited spatial API and the editor gizmo obligation; it does not imply that editor drawing exists in the runtime.

@@ -4,6 +4,7 @@
     "Node2D": "Entity",
     "WeakRef": "WeakRef<T>",
     "Object": "ElectronObject",
+    "GodotInstance": "ElectronInstance",
     "Transform2D": "Transform",
     "Texture2D": "Texture",
     "MethodTweener": "MethodTweener<TValue>",
