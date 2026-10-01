@@ -1,6 +1,6 @@
 # Container
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md)
 
@@ -60,3 +60,5 @@ Order is NotificationPreSortChildren (50), PreSortChildren, NotificationSortChil
 Owner/lifetime guards apply to reads and mutations; scene capture rejects mutation. Removing controls clears parent allocation caches and listeners. An own MaximumSizeChanged event requests sorting even when the container rectangle does not resize; parent maximum updates clear obsolete child allocation caches before refresh, so later fits can use raised bounds. A direct Control child changing TopLevel clears its parent allocation cache and requests minimum refresh/sort, updating its layout eligibility automatically. Cached action queues and reusable box slots allocate zero managed bytes after capacity preparation in the measured small hierarchy. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) checks phases, coalescing, failures, membership, flags/default reverts/packing, stale cross-tree sorts and captured batches. [Native checks](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) render actual child rectangles on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, other platforms and owner acceptance remain unverified.
 
 AccessibilityRegion remains Blocked: native semantic landmark publication/update/removal needs the accessibility service and viewport/control semantic identity. [Coverage](../coverage/classes/Container.md) leaves the class Partial for that exact dependency. No inert semantic property is exposed. See [ADR 0081](../decisions/rendering.md#adr-0081).
+
+[FlowContainer](FlowContainer.md) and its fixed HFlow/VFlow subclasses consume the same deferred sort/lifecycle/final-fit hooks for wrapping layout, alongside box/grid containers.

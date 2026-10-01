@@ -97,3 +97,5 @@ The [GUI buttons and shortcuts component](../components/gui-buttons.md) connects
 The [texture identity slice](../components/canvas-rendering.md#texture-resource-identities) links borrowed resource RID lifetime to actual server-owned texture creation/update/replacement/free and retained CanvasItem drawing. Owned identities expire with the active renderer; borrowed resources survive. It executes on both native baseline backends with explicit format/platform limits.
 
 [Texture proxies](../components/canvas-rendering.md#texture-proxies) now provide real borrowed-source retargeting and shared native sampling through stable owned aliases. Source/intermediate release leaves reconnectable empty aliases; owned source allocations remain until free/shutdown.
+
+[Wrapping flow layout](../components/canvas-rendering.md#flow-layout) now arranges ordinary controls across rows/columns with relative last-wrap alignment, weighted caps and RTL/reverse. It uses the same theme, deferred lifecycle and backend-neutral retained canvas.

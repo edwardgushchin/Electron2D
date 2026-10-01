@@ -1,6 +1,6 @@
 # ThemeDB
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
@@ -96,3 +96,5 @@ GetProjectTheme remains absent until a Theme resource-file loader and typed `gui
 [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. See [coverage](../coverage/classes/ThemeDB.md), [Theme](Theme.md) and [ADR 0083](../decisions/rendering.md#adr-0083). The built-in font and icons retain their [runtime attribution notice](../../licence/THIRD_PARTY_NOTICES.md).
 
 [ScrollThemeTests](../../tests/Electron2D.Tests/ScrollThemeTests.cs) checks the scrollbar style values and H/V aliases, twelve explicit empty-icon slots, absent padding/separation keys, the distinct container focus geometry, exact embedded SVG hashes and decoded gradient direction/pixels. These new checks await the coordinated scroll-slice run; no scroll consumer native verification is claimed here yet.
+
+Built-in FlowContainer/HFlowContainer/VFlowContainer entries provide h_separation and v_separation at four pixels through ordinary type-chain lookup. No new theme service or loader is introduced; [flow integration](../components/canvas-rendering.md#flow-layout) consumes them.

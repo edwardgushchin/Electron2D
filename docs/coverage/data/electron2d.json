@@ -1438,6 +1438,57 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.FlowContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "FlowContainer",
+    "signature": "public class Electron2D.FlowContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FlowContainer.AlignmentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "AlignmentMode",
+    "signature": "public enum Electron2D.FlowContainer.AlignmentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "kind": "type",
+    "declaringType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "name": "LastWrapAlignmentMode",
+    "signature": "public enum Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FocusBehaviorRecursive",
     "kind": "type",
     "declaringType": "Electron2D.FocusBehaviorRecursive",
@@ -1779,6 +1830,21 @@
     "signature": "public class Electron2D.HBoxContainer",
     "visibility": "public",
     "baseType": "Electron2D.BoxContainer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.HFlowContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.HFlowContainer",
+    "name": "HFlowContainer",
+    "signature": "public class Electron2D.HFlowContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.FlowContainer",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -4939,6 +5005,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VFlowContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.VFlowContainer",
+    "name": "VFlowContainer",
+    "signature": "public class Electron2D.VFlowContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.FlowContainer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VScrollBar",
     "kind": "type",
     "declaringType": "Electron2D.VScrollBar",
@@ -7385,6 +7466,38 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.FlowContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": ".ctor",
+    "signature": "public FlowContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FlowContainer..ctor(System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": ".ctor",
+    "signature": "protected FlowContainer(System.Boolean vertical)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Font..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Font",
@@ -7481,6 +7594,19 @@
     "declaringType": "Electron2D.HBoxContainer",
     "name": ".ctor",
     "signature": "public HBoxContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.HFlowContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HFlowContainer",
+    "name": ".ctor",
+    "signature": "public HFlowContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -9299,6 +9425,19 @@
     "declaringType": "Electron2D.VBoxContainer",
     "name": ".ctor",
     "signature": "public VBoxContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VFlowContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VFlowContainer",
+    "name": ".ctor",
+    "signature": "public VFlowContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12485,6 +12624,97 @@
     "parameters": [],
     "returnType": "Electron2D.FillEnum",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "Begin",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode Begin = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "Center",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode Center = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.AlignmentMode.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.AlignmentMode",
+    "name": "End",
+    "signature": "public const Electron2D.FlowContainer.AlignmentMode End = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.LastWrapAlignmentMode.Begin()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "name": "Begin",
+    "signature": "public const Electron2D.FlowContainer.LastWrapAlignmentMode Begin = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.LastWrapAlignmentMode.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "name": "Center",
+    "signature": "public const Electron2D.FlowContainer.LastWrapAlignmentMode Center = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.LastWrapAlignmentMode.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "name": "End",
+    "signature": "public const Electron2D.FlowContainer.LastWrapAlignmentMode End = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.FlowContainer.LastWrapAlignmentMode.Inherit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "name": "Inherit",
+    "signature": "public const Electron2D.FlowContainer.LastWrapAlignmentMode Inherit = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.FocusBehaviorRecursive.Disabled()",
@@ -39258,6 +39488,103 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.FlowContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.GetLineCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "GetLineCount",
+    "signature": "public System.Int32 GetLineCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FlowContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Font.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.Font",
@@ -41493,6 +41820,19 @@
     "id": "method:Electron2D.HBoxContainer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HBoxContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HFlowContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HFlowContainer",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -70628,6 +70968,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VFlowContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VFlowContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VScrollBar.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VScrollBar",
@@ -86160,6 +86513,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.UnixPermissionFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.Alignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "Alignment",
+    "signature": "public Electron2D.FlowContainer.AlignmentMode Alignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.AlignmentMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.HSeparation()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "HSeparation",
+    "signature": "public System.Int32 HSeparation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.LastWrapAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "LastWrapAlignment",
+    "signature": "public Electron2D.FlowContainer.LastWrapAlignmentMode LastWrapAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FlowContainer.LastWrapAlignmentMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.ReverseFill()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "ReverseFill",
+    "signature": "public System.Boolean ReverseFill { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.VSeparation()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "VSeparation",
+    "signature": "public System.Int32 VSeparation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FlowContainer.Vertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.FlowContainer",
+    "name": "Vertical",
+    "signature": "public System.Boolean Vertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

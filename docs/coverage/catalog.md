@@ -296,7 +296,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FileAccess](classes/FileAccess.md) | RefCounted | Partial | 91 |
 | [FileDialog](classes/FileDialog.md) | ConfirmationDialog | Blocked | 106 |
 | [FileSystemDock](classes/FileSystemDock.md) | EditorDock | Blocked | 13 |
-| [FlowContainer](classes/FlowContainer.md) | Container | Blocked | 16 |
+| [FlowContainer](classes/FlowContainer.md) | Container | Implemented | 16 |
 | [FogMaterial](classes/FogMaterial.md) | Material | Excluded | 6 |
 | [FogVolume](classes/FogVolume.md) | VisualInstance3D | Excluded | 3 |
 | [FoldableContainer](classes/FoldableContainer.md) | Container | Blocked | 36 |
@@ -359,7 +359,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
 | [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Partial | 2 |
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
-| [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Blocked | 0 |
+| [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Blocked | 3 |
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Implemented | 2 |
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
@@ -902,7 +902,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [UndoRedo](classes/UndoRedo.md) | Object | Blocked | 27 |
 | [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Excluded | 1 |
 | [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
-| [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Blocked | 0 |
+| [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Implemented | 4 |
 | [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |
 | [VSlider](classes/VSlider.md) | Slider | Implemented | 2 |

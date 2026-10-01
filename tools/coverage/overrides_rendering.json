@@ -2646,6 +2646,21 @@
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
       "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+    },
+    {
+      "godot": "FlowContainer::theme_item:h_separation",
+      "electron2d": "property:Electron2D.FlowContainer.HSeparation()",
+      "reason": "Typed local/inherited theme constant projection, default four, with runtime layout consumption and checked signed pixel geometry under ADRs 0081/0083."
+    },
+    {
+      "godot": "FlowContainer::theme_item:v_separation",
+      "electron2d": "property:Electron2D.FlowContainer.VSeparation()",
+      "reason": "Typed local/inherited theme constant projection, default four, with runtime layout consumption and checked signed pixel geometry under ADRs 0081/0083."
+    },
+    {
+      "godot": "FlowContainer::method:get_line_count()",
+      "electron2d": "method:Electron2D.FlowContainer.GetLineCount()",
+      "reason": "Cached count query retained as a method, including zero before first layout and one after empty visible sorting under ADR 0081."
     }
   ],
   "statusGroups": [
@@ -4097,6 +4112,43 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: selective-frame/damage submission scheduler that consumes visibility-driven texture invalidation; enters that first scheduler slice under ADR 0028. Current Engine.Run submits every enabled visible root frame, so storing this flag alone would be inert."
+    },
+    {
+      "godot": [
+        "class:FlowContainer",
+        "FlowContainer::enum:AlignmentMode",
+        "FlowContainer::enum:LastWrapAlignmentMode",
+        "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+        "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+        "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+        "FlowContainer::enum_value:LastWrapAlignmentMode.LAST_WRAP_ALIGNMENT_BEGIN",
+        "FlowContainer::enum_value:LastWrapAlignmentMode.LAST_WRAP_ALIGNMENT_CENTER",
+        "FlowContainer::enum_value:LastWrapAlignmentMode.LAST_WRAP_ALIGNMENT_END",
+        "FlowContainer::enum_value:LastWrapAlignmentMode.LAST_WRAP_ALIGNMENT_INHERIT",
+        "FlowContainer::method:get_line_count()",
+        "FlowContainer::property:alignment",
+        "FlowContainer::property:last_wrap_alignment",
+        "FlowContainer::property:reverse_fill",
+        "FlowContainer::property:vertical",
+        "FlowContainer::theme_item:h_separation",
+        "FlowContainer::theme_item:v_separation"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0081: actual row/column wrapping, integer bound minima/maxima, capped positive-weight extras with per-child truncation, all relative last-wrap alignment choices, RTL/reverse, visibility/top-level/order/resize, typed theme gaps, owner/capture/disposal guards and exact factories/packing execute. FlowContainerTests verifies state/geometry/callbacks/membership/maximum/overflow and zero warmed managed allocations; FlowContainerRenderingTests verifies six pixel states and 64 active plus 64 idle warmed layout/record/render frames on Linux GPU/compatibility/dummy. Nonpositive stored ratios receive no extra space and an oversized first child creates no artificial empty wrap under the pre-release geometry correction. TextureRect fit-mode multi-wrap stabilization enters its first own control slice; inherited accessibility remains separately tracked."
+    },
+    {
+      "godot": [
+        "class:HFlowContainer"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0081: actual row/column wrapping, integer bound minima/maxima, capped positive-weight extras with per-child truncation, all relative last-wrap alignment choices, RTL/reverse, visibility/top-level/order/resize, typed theme gaps, owner/capture/disposal guards and exact factories/packing execute. FlowContainerTests verifies state/geometry/callbacks/membership/maximum/overflow and zero warmed managed allocations; FlowContainerRenderingTests verifies six pixel states and 64 active plus 64 idle warmed layout/record/render frames on Linux GPU/compatibility/dummy. Nonpositive stored ratios receive no extra space and an oversized first child creates no artificial empty wrap under the pre-release geometry correction. TextureRect fit-mode multi-wrap stabilization enters its first own control slice; inherited accessibility remains separately tracked."
+    },
+    {
+      "godot": [
+        "class:VFlowContainer"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0081: actual row/column wrapping, integer bound minima/maxima, capped positive-weight extras with per-child truncation, all relative last-wrap alignment choices, RTL/reverse, visibility/top-level/order/resize, typed theme gaps, owner/capture/disposal guards and exact factories/packing execute. FlowContainerTests verifies state/geometry/callbacks/membership/maximum/overflow and zero warmed managed allocations; FlowContainerRenderingTests verifies six pixel states and 64 active plus 64 idle warmed layout/record/render frames on Linux GPU/compatibility/dummy. Nonpositive stored ratios receive no extra space and an oversized first child creates no artificial empty wrap under the pre-release geometry correction. TextureRect fit-mode multi-wrap stabilization enters its first own control slice; inherited accessibility remains separately tracked."
     }
   ],
   "extras": [
@@ -4801,6 +4853,66 @@
       "electron2d": "method:Electron2D.VSlider.CreateSceneInstanceFactory()",
       "state": "Implemented",
       "reason": "ADR 0080 with 0003/0008/0023: typed fixed-axis construction, inherited minimum/GUI/notification hooks, stored defaults, exact scene factories and deterministic interaction cleanup project the existing slider concept."
+    },
+    {
+      "electron2d": "constructor:Electron2D.FlowContainer..ctor()",
+      "reason": "Typed managed construction of the existing wrapping container concept, preserving default orientation or the fixed HFlow/VFlow role under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "constructor:Electron2D.FlowContainer..ctor(System.Boolean)",
+      "reason": "Typed managed construction of the existing wrapping container concept, preserving default orientation or the fixed HFlow/VFlow role under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "constructor:Electron2D.HFlowContainer..ctor()",
+      "reason": "Typed managed construction of the existing wrapping container concept, preserving default orientation or the fixed HFlow/VFlow role under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "constructor:Electron2D.VFlowContainer..ctor()",
+      "reason": "Typed managed construction of the existing wrapping container concept, preserving default orientation or the fixed HFlow/VFlow role under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory for the existing wrapping-container class; preserves exact generic/fixed scene identity and inherited state under ADRs 0023/0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "Typed protected projection of inherited Container allowed-size-flag hooks, with actual primary versus cross-axis choices under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "Typed protected projection of inherited Container allowed-size-flag hooks, with actual primary versus cross-axis choices under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.GetPropertyDescriptors()",
+      "reason": "Typed descriptor/storage projection of the existing flow configuration and local theme constants; fixed orientation is omitted under ADRs 0005/0023/0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.OnGetMinimumSize()",
+      "reason": "C# protected hook projects inherited Control minimum-size query for flow primary child bounds and cached cross extent under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.FlowContainer.OnNotification(System.Int32)",
+      "reason": "C# override of inherited numeric notifications routes existing Container sort/minimum/translation stages into actual flow geometry under ADR 0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.HFlowContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory for the existing wrapping-container class; preserves exact generic/fixed scene identity and inherited state under ADRs 0023/0081.",
+      "adr": "ADRs 0005/0023/0081"
+    },
+    {
+      "electron2d": "method:Electron2D.VFlowContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed PackedScene factory for the existing wrapping-container class; preserves exact generic/fixed scene identity and inherited state under ADRs 0023/0081.",
+      "adr": "ADRs 0005/0023/0081"
     }
   ]
 }

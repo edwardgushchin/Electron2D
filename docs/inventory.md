@@ -439,3 +439,12 @@ There are currently no production types for packed/exported virtual filesystems,
 | [TextureButton](classes/TextureButton.md) | [source](../src/Scene/GUI/TextureButton.cs) | Texture-state button and bitmap hit mask |
 | [TextureButtonStretchMode](classes/TextureButtonStretchMode.md) | [source](../src/Scene/GUI/TextureButton.cs) | Texture scaling modes |
 | [StoredNodeReferenceValue](classes/StoredNodeReferenceValue.md) | [source](../src/Core/Object/PropertyDescriptor.cs) | Deferred typed node-reference path |
+
+## Wrapping flow layout
+
+| Domain | Component | Type | Source | Current behavior |
+| --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#flow-layout) | [FlowContainer](classes/FlowContainer.md), [HFlowContainer](classes/HFlowContainer.md), [VFlowContainer](classes/VFlowContainer.md) | [FlowContainer.cs](../src/Scene/GUI/FlowContainer.cs) | Row/column wrapping, capped weighted expansion, relative last-wrap alignment, RTL/reverse, theme gaps, packed identities |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#flow-layout) | [FlowContainer.AlignmentMode](classes/FlowContainer.AlignmentMode.md), [FlowContainer.LastWrapAlignmentMode](classes/FlowContainer.LastWrapAlignmentMode.md) | [FlowContainer.cs](../src/Scene/GUI/FlowContainer.cs) | Typed numeric layout choices |
+
+Private FlowContainer Slot/Line scratch records are documented on its class page; they retain current-pass references only.

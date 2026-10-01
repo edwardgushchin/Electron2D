@@ -156,7 +156,7 @@ def main():
     shape_query_rows = [row for row in pages[CLASS_PAGES / "PhysicsShapeQueryParameters2D.md"].splitlines()
                         if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_query_rows) == 10 and all(" | Implemented | " in row for row in shape_query_rows)
-    for name, count in (("Range", 18), ("TextureProgressBar", 32), ("BoxContainer", 9), ("HBoxContainer", 1), ("VBoxContainer", 1), ("GridContainer", 4)):
+    for name, count in (("Range", 18), ("TextureProgressBar", 32), ("BoxContainer", 9), ("HBoxContainer", 1), ("VBoxContainer", 1), ("GridContainer", 4), ("FlowContainer", 17), ("HFlowContainer", 1), ("VFlowContainer", 1)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count
         assert all(" | Implemented | " in row for row in rows)

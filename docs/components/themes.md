@@ -1,6 +1,6 @@
 # Typed themes and lookup
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 ## Scope and owned types
 
@@ -30,3 +30,5 @@ ThemeDB supplies actual default entries for panel/container, horizontal/vertical
 [MarginContainer](../classes/MarginContainer.md) adds four explicit zero-valued edge constants. Positive or negative local/ancestor overrides change its intrinsic minimum, child allocation and propagated maximum through the same owner notification path; [LayoutContainersTests](../../tests/Electron2D.Tests/LayoutContainersTests.cs) checks default presence, live changes and scene capture.
 
 [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. [ThemeFontTests](../../tests/Electron2D.Tests/ThemeFontTests.cs) adds all font-category operations, default/item alias subscriptions, deep copying, merge/clear, background bulk suppression, owner lifetime and typed override packing. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified. Existing renderer and platform limits remain in [canvas rendering](canvas-rendering.md) and [ADR 0021](../decisions/product.md#adr-0021).
+
+FlowContainer/HFlowContainer/VFlowContainer now resolve built-in h_separation/v_separation constants (four each), inherited type/variation values and typed local overrides through the existing owner cache. Theme changes refresh flow minimums and queue sorting. [Flow tests](../../tests/Electron2D.Tests/FlowContainerTests.cs) verify executable defaults and configuration.
