@@ -107,7 +107,7 @@ Child minimum/maximum/flags/order/visibility and own resize/theme/direction/tran
 
 Two pre-release corrections preserve geometry bounds: an oversized first child does not insert an artificial leading empty wrap, and nonpositive stored stretch ratios receive no expansion rather than a negative allocation or over-allocation of positive peers. Source values remain accepted. Signed gaps and independent integer truncation remain intact. Checked integer arithmetic rejects overflow; finite sum overflow rejects before placement. Large-line capped refit is quadratic and uses reused lists, pending a measured need for another allocator.
 
-TextureRect fit-to-size modes do not exist in the current runtime. Their first slice must integrate the reference multi-wrap stabilization/fitting rule to prevent size-dependent minimum loops; no speculative TextureRect alias is added here. Inherited accessibility and broader viewport/editor limits stay in their own coverage rows.
+[TextureRect](TextureRect.md) FitWidth/FitWidthProportional/FitHeight/FitHeightProportional now retain current child sizes before ordinary fitting when there are multiple wraps, preventing wrap feedback. Positions still apply alignment/RTL/reverse rules; single-wrap layout uses normal fitting. TextureRectTests checks all four modes over both orientations and direction combinations. Inherited accessibility and broader viewport/editor limits stay in their own coverage rows.
 
 ## Verification
 

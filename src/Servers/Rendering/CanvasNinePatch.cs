@@ -6,7 +6,12 @@ internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, Nine
     internal void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snap)
     {
         var texture = command.Texture!;
-        var destination = new Rect2(command.A, command.B);
+        var destination = new Rect2(command.A, command.B.Abs());
+        if (command.B.X < 0 || command.B.Y < 0)
+        {
+            var reflectX = command.B.X < 0 ? -1 : 1; var reflectY = command.B.Y < 0 ? -1 : 1;
+            transform *= new Transform(new Vector2(reflectX, 0), new Vector2(0, reflectY), new Vector2(reflectX < 0 ? 2 * command.A.X + destination.Size.X : 0, reflectY < 0 ? 2 * command.A.Y + destination.Size.Y : 0));
+        }
         var source = command.Source;
         while (texture is AtlasTexture atlas)
         {

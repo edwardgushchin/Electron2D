@@ -208,6 +208,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == 
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RECT") == "1")
+{
+    RenderingRuntimeTests.Run();
+    return;
+}
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOW_LAYOUT") == "1")
 {
     RenderingRuntimeTests.Run();
@@ -295,6 +301,7 @@ RangeProgressTests.Run();
 BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();
+TextureRectTests.Run();
 StyleBoxTests.Run();
 StyleBoxFlatTests.Run();
 ThemeResourceTests.Run();

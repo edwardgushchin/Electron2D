@@ -195,13 +195,14 @@ public class FlowContainer : Container
                 var slot = _slots[index]; var main = checked(slot.Main + slot.Extra);
                 var height = (slot.CrossFlags & (SizeFlags.Fill | SizeFlags.ShrinkCenter | SizeFlags.ShrinkEnd)) != 0 ? line.Cross : slot.Cross;
                 var rect = vertical ? new Rect2(cross, offset, height, main) : new Rect2(offset, cross, main, height);
+                if (_lines.Count > 1 && slot.Child is TextureRect { HasSizeDependentMinimum: true }) rect.Size = slot.Child.Size;
                 var position = rect.Position;
                 if (reverse && !vertical) position.Y = size.Y - position.Y - rect.Size.Y;
                 if ((!vertical && rtl) || vertical && rtl != reverse) position.X = size.X - position.X - rect.Size.X;
                 rect.Position = position;
                 if (!rect.IsFinite() || main < 0 || height < 0) throw new InvalidOperationException("Flow layout exceeds finite geometry bounds.");
                 slot.Rect = rect; _slots[index] = slot;
-                if (index + 1 < line.Start + line.Count) offset = checked(offset + main + mainGap);
+                if (index + 1 < line.Start + line.Count) offset = checked(offset + Pixel(vertical ? rect.Size.Y : rect.Size.X) + mainGap);
             }
             _lines[lineIndex] = line;
             if (lineIndex + 1 < _lines.Count) cross = checked(cross + line.Cross + crossGap);

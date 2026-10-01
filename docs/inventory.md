@@ -448,3 +448,11 @@ There are currently no production types for packed/exported virtual filesystems,
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#flow-layout) | [FlowContainer.AlignmentMode](classes/FlowContainer.AlignmentMode.md), [FlowContainer.LastWrapAlignmentMode](classes/FlowContainer.LastWrapAlignmentMode.md) | [FlowContainer.cs](../src/Scene/GUI/FlowContainer.cs) | Typed numeric layout choices |
 
 Private FlowContainer Slot/Line scratch records are documented on its class page; they retain current-pass references only.
+
+## Image controls
+
+| Domain | Component | Types | Source | Current implementation |
+| --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#texture-rectangles) | [TextureRect](classes/TextureRect.md), [TextureRectExpandMode](classes/TextureRectExpandMode.md), [TextureRectStretchMode](classes/TextureRectStretchMode.md) | [TextureRect.cs](../src/Scene/GUI/TextureRect.cs) | Borrowed textures, six minimum policies, seven placements, reflected atlas tiles, revision/lifetime tracking and flow stabilization |
+
+Private TextureRect.SourceState is documented on its class page and owns no resource.
