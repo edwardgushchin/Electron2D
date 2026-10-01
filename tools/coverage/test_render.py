@@ -392,7 +392,7 @@ def main():
         assert ' | Partial | ' in row and 'RenderingTextureRIDTests' in row, row
     for name in ('texture_proxy_create(', 'texture_proxy_update('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
-        assert ' | Unimplemented | ' in row and 'ownership is ready' in row, row
+        assert ' | Partial | ' in row and 'RenderingTextureProxyTests' in row and 'actual methods' in row, row
     canvas_rows = pages[CLASS_PAGES / "CanvasItem.md"].splitlines()
     for name in ('draw_texture(', 'draw_texture_rect(', 'draw_texture_rect_region('):
         row, = [line for line in canvas_rows if line.startswith(f'| [`method {name}')]

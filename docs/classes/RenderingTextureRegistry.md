@@ -22,6 +22,8 @@ var texture = RenderingTextureRegistry.Resolve(rid);
 
 | Declaration | Contract |
 | --- | --- |
+| `internal static Texture PlaceholderTexture { get; }` | Lazy immutable checkerboard drawable shared by empty-source proxy replay. |
+| `internal static Texture? ResolveProxySource(RID rid)` | Iteratively follows live alias links to a root, or returns null. |
 | `internal static TexturePixels PlaceholderPixels { get; }` | Immutable lazy fallback pixel payload. |
 | `internal static RID Register(Texture texture, RenderingServer? owner = null)` | Assigns a fresh identity and records borrowed/owned lifetime. |
 | `internal static Texture Resolve(RID rid)` | Returns a live logical resource or rejects an invalid/stale/wrong-kind identity. |
@@ -57,3 +59,11 @@ Private sealed `Entry(Texture texture, RenderingServer? owner)` stores `WeakRefe
 ## Verification and limits
 
 [RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks identity, duplication, concurrent access, weak collection/cold sweeping, wrong-kind/stale/disposal errors and warmed zero managed allocations. Native create/update/replace/draw/free/shutdown runs through both renderer backends. The single gate follows existing physics RID bookkeeping; contention and native allocations are not measured. See [ADR 0028](../decisions/rendering.md#adr-0028) and [ADR 0014](../decisions/resources.md#adr-0014).
+
+### ResolveProxySource
+
+Follows RID links under the existing gate, using weak source lookup and never copying pixels or retaining the root in an alias. Ends on a non-proxy source or returns null when any source/intermediate link is gone. Creation links a fresh identity to existing sources; updates reject proxy targets, so cycles cannot be introduced. The 256-level managed check demonstrates iterative resolution and zero warmed allocations.
+
+### PlaceholderTexture
+
+A lazy internal ServerTexture over PlaceholderPixels, with no public RID. It remains a process-wide managed fallback; each renderer owns and releases any prepared native allocation. It renders actual checkerboard pixels when a live empty source has no snapshot. A disconnected alias is skipped rather than given this fallback.

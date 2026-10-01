@@ -249,6 +249,7 @@ AnimatedSpriteTests.Run();
 AnimatedTextureTests.Run();
 RenderingRuntimeTests.VerifyAtlasResources();
 RenderingRuntimeTests.VerifyTextureRIDResources();
+RenderingRuntimeTests.VerifyTextureProxyResources();
 SceneHierarchyTests.Run();
 SceneChangeTests.Run();
 NodeTreeDiagnosticsTests.Run();

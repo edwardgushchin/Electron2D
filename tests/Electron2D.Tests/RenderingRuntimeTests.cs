@@ -19,6 +19,7 @@ internal static partial class RenderingRuntimeTests
                 {
                     settings.Set(ProjectSettings.RenderingMethod, backend);
                     VerifyRenderingTextureRIDs(backend);
+                    VerifyTextureProxies(backend);
                 }
                 return;
             }

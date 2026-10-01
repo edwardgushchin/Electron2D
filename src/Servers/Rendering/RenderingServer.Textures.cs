@@ -32,6 +32,44 @@ public sealed partial class RenderingServer
         return Texture2DCreate(image);
     }
 
+    /// <summary>Creates an owned alias of an existing rendering texture.</summary>
+    /// <param name="baseTexture">A live resource-owned or server-owned texture RID, including another proxy.</param>
+    /// <returns>A stable owned proxy RID; its source pixels remain borrowed.</returns>
+    /// <remarks>Retained commands sample the current source without copying pixels or native texture storage.
+    /// Freeing the source or an intermediate proxy leaves this identity alive but with no image/draw output.
+    /// Freeing the proxy never frees its source. Empty source resources use their rendering placeholder.</remarks>
+    /// <exception cref="ArgumentException">The source RID is stale or not a texture.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is off-owner, submitting or shutting down.</exception>
+    /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
+    public RID TextureProxyCreate(RID baseTexture)
+    {
+        EnsureTextureChange();
+        var source = RenderingTextureRegistry.Resolve(baseTexture);
+        var texture = new ServerTexture(baseTexture, source);
+        var rid = RenderingTextureRegistry.Register(texture, this);
+        texture.Bind(rid); _ownedTextureRIDs.Add(rid);
+        return rid;
+    }
+
+    /// <summary>Retargets an owned proxy to a live non-proxy texture without changing its identity.</summary>
+    /// <param name="texture">A live proxy RID owned by this renderer.</param>
+    /// <param name="proxyTo">A live non-proxy resource-owned or server-owned source RID.</param>
+    /// <remarks>Validation precedes publication. Current pixels, logical size, format and diagnostic path follow
+    /// the new source; existing retained destination geometry stays fixed. Cyclic/proxy targets are rejected.</remarks>
+    /// <exception cref="ArgumentException">A RID is stale or not a texture.</exception>
+    /// <exception cref="InvalidOperationException">The destination is not an owned proxy, the source is a proxy,
+    /// or the renderer is off-owner, submitting or shutting down.</exception>
+    /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
+    public void TextureProxyUpdate(RID texture, RID proxyTo)
+    {
+        EnsureTextureChange();
+        var target = RenderingTextureRegistry.Owned(texture, this);
+        var source = RenderingTextureRegistry.Resolve(proxyTo);
+        if (!target.IsProxy || source is ServerTexture { IsProxy: true })
+            throw new InvalidOperationException("Proxy updates require an owned proxy and a non-proxy source.");
+        target.SetProxyTarget(proxyTo, source);
+    }
+
     /// <summary>Transfers an owned texture's pixels and metadata into another stable owned identity.</summary>
     /// <param name="texture">The destination RID whose identity and retained draw references survive.</param>
     /// <param name="byTexture">The replacement RID, consumed after the transfer.</param>
@@ -45,22 +83,35 @@ public sealed partial class RenderingServer
         EnsureTextureChange();
         var target = RenderingTextureRegistry.Owned(texture, this);
         var source = RenderingTextureRegistry.Owned(byTexture, this);
+        if (target.IsProxy || source.IsProxy) throw new InvalidOperationException("A proxy cannot be replaced or consumed as replacement pixels.");
         if (texture == byTexture) return;
         target.Pixels = source.Pixels; target.Size = source.Size; target.Path = source.Path;
+        foreach (var rid in _ownedTextureRIDs)
+        {
+            var proxy = RenderingTextureRegistry.Owned(rid, this);
+            if (proxy.IsProxy && proxy.ProxyTarget == byTexture) proxy.RedirectProxy(texture);
+        }
         FreeRID(byTexture);
     }
 
     /// <summary>Returns an independent image copy of a live rendering texture.</summary>
     /// <param name="texture">A caller-owned or resource-owned texture RID.</param>
-    /// <returns>A caller-owned image, including checkerboard pixels for an uninitialized resource texture.</returns>
+    /// <returns>A caller-owned image, including checkerboard pixels for an uninitialized resource texture;
+    /// null for a live proxy whose source has been released.</returns>
     /// <remarks>Uses original backing pixels, including the full source of an atlas view. Does not stall the GPU.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a texture.</exception>
     /// <exception cref="InvalidOperationException">The renderer is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
-    public Image Texture2DGet(RID texture)
+    public Image? Texture2DGet(RID texture)
     {
         EnsureOwner();
-        return (RenderingTextureRegistry.Resolve(texture).CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
+        var source = RenderingTextureRegistry.Resolve(texture);
+        if (source is ServerTexture { IsProxy: true } proxy)
+        {
+            source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
+            if (source is null) return null;
+        }
+        return (source.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels).CopyImage();
     }
 
     /// <summary>Updates an owned two-dimensional texture while preserving its allocation parameters.</summary>
@@ -79,6 +130,7 @@ public sealed partial class RenderingServer
         EnsureTextureChange();
         if (layer != 0) throw new ArgumentOutOfRangeException(nameof(layer));
         var target = RenderingTextureRegistry.Owned(texture, this);
+        if (target.IsProxy) throw new InvalidOperationException("Update the source pixels of a proxy texture.");
         var pixels = TexturePixels.FromImage(image);
         var old = target.Pixels.Source; var next = pixels.Source;
         if (old.Width != next.Width || old.Height != next.Height || old.Format != next.Format || old.HasMipmaps != next.HasMipmaps)
@@ -93,7 +145,11 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentException">The RID is stale or not a texture.</exception>
     /// <exception cref="InvalidOperationException">The renderer is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
-    public Image.Format TextureGetFormat(RID texture) { EnsureOwner(); return RenderingTextureRegistry.Resolve(texture).CapturePixels()?.Source.Format ?? Image.Format.Rgba8; }
+    public Image.Format TextureGetFormat(RID texture)
+    {
+        EnsureOwner(); var source = RenderingTextureRegistry.Resolve(texture);
+        return source is ServerTexture { IsProxy: true } proxy ? proxy.PixelFormat : source.CapturePixels()?.Source.Format ?? Image.Format.Rgba8;
+    }
 
     /// <summary>Changes an owned texture's logical drawing size without resampling pixels.</summary>
     /// <param name="texture">A live server-owned texture RID.</param>
@@ -109,7 +165,7 @@ public sealed partial class RenderingServer
         if (width is < 1 or > 16384) throw new ArgumentOutOfRangeException(nameof(width));
         if (height is < 1 or > 16384) throw new ArgumentOutOfRangeException(nameof(height));
         var target = RenderingTextureRegistry.Owned(texture, this);
-        target.Size = new(width, height);
+        target.SetDisplaySize(new(width, height));
     }
 
     /// <summary>Sets diagnostic path metadata for an owned rendering texture.</summary>

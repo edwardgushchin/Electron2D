@@ -73,3 +73,5 @@ Disposes texture and transfer SafeHandles; device retention is released with the
 ## Verification and limits
 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
+
+RID proxy batches resolve to their root Texture before cache preparation; each root gets one allocation regardless of alias count. Prepared server-owned source allocations remain cached until free/shutdown. Retargeting among already prepared roots retains their native handles. [Proxy tests](../../tests/Electron2D.Tests/RenderingTextureProxyTests.cs) check sharing and stable handles on both backends.

@@ -126,7 +126,7 @@ internal static partial class RenderingRuntimeTests
                         Check(unchanged.GetPixel(0, 0).IsEqualApprox(Colors.Red), "Texture output is an independent copy.");
                         using var atlasPixels = server.Texture2DGet(atlasRID)!;
                         Check(atlasPixels.Size == new Vector2i(2, 2) && server.TextureGetFormat(atlasRID) == Image.Format.Rgba8, "Server queries use atlas backing pixels and format.");
-                        using var emptyPixels = server.Texture2DGet(emptyResource.GetRID());
+                        using var emptyPixels = server.Texture2DGet(emptyResource.GetRID())!;
                         Check(emptyPixels.Size == new Vector2i(4, 4) && emptyPixels.GetPixel(0, 0) == Colors.Magenta && server.TextureGetFormat(emptyResource.GetRID()) == Image.Format.Rgba8 && emptyResource.GetImage() is null, "An empty resource RID exposes rendering placeholder data without initializing the resource.");
                         Reject<ArgumentException>(() => server.Texture2DUpdate(owned, green));
                         Reject<ArgumentException>(() => server.Texture2DUpdate(owned, mipmaps));

@@ -2453,7 +2453,7 @@
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],
       "state": "Partial",
-      "reason": "Typed transform and linear-velocity server branches execute; remaining BodyState values need corresponding typed solver-state methods and callback integration (ADR 0063)."
+      "reason": "Existing typed transform/linear-velocity branches are server-only. Full scene/server state parity requires remaining angular/sleep/can-sleep pairs and exact deferred kinematic targets. Static linear/angular velocities additionally require a normal and tangential stationary contact-point velocity channel: native static dummy solver state is zero and scalar tangentSpeed alone is insufficient (ADR 0075). Those branches enter the first complete stationary-contact solver integration alongside StaticBody constant velocities; no inert stored flags or narrowed dynamic-only completion is claimed."
     },
     {
       "godot": [

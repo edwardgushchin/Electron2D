@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -494,3 +494,7 @@ physics.FreeRID(space);
 **SpaceIsActive:** Return the local flag, even while the global server is suspended. It does not report effective scene ProcessMode or SceneTree.Paused. Reads require owner-thread access outside solver stepping. Wrong/stale RID throws ArgumentException; off-owner/in-solver access throws InvalidOperationException.
 
 [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks native motion/spring and pending-force behavior, inactive queries, defaults, callback/timer continuation, phase/thread/lifetime guards, callback failure and 64 warmed global/local cycles with skipped/active frames without managed allocation on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance remain unverified. [ADR 0089](../decisions/physics-activity.md#adr-0089) defines this profile. ProcessInfo counters remain a separate verification/integration slice.
+
+## Body-state completion dependency
+
+The transform/linear-velocity state facade is still server-only and Partial. Full scene/server state parity needs typed angular velocity, sleep and can-sleep access, deferred kinematic transform targets and exact static surface velocity. The latter requires an actual normal/tangential contact-point velocity channel while pose stays fixed; native static bodies use zero dummy solver state, so storing values or tangentSpeed alone is insufficient. It enters the first stationary-contact solver integration under [ADR 0075](../decisions/physics.md#adr-0075), together with StaticBody constant surface velocities; no feature patch was added to vendored code.

@@ -365,7 +365,9 @@ This assembly row records the current build, not complete platform delivery. The
 
 | Domain | Component | Type | Source | Current behavior |
 | --- | --- | --- | --- | --- |
-| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.cs](../src/Servers/Rendering/RenderingServer.cs) | Root-window retained drawing, owned 2D texture RID creation/update/replacement/free, borrowed texture identities, clear color, frame events and backend identity; broader API incomplete |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md) | [RenderingServer](classes/RenderingServer.md) | [RenderingServer.cs](../src/Servers/Rendering/RenderingServer.cs) | Root-window retained drawing, owned 2D texture RID creation/update/replacement/free, borrowed-source proxy aliases, borrowed texture identities, clear color, frame events and backend identity; broader API incomplete |
+
+Proxies reuse the existing ServerTexture/RenderingTextureRegistry types and resolve root storage during replay; no additional public resource type or native backend is introduced.
 
 ## Shader and texture resources
 

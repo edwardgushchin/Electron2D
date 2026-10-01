@@ -95,3 +95,5 @@ Label consumes inherited theme fonts or borrowed LabelSettings, performs wrappin
 The [GUI buttons and shortcuts component](../components/gui-buttons.md) connects the existing theme/text canvas with button actions, groups, texture masks, shortcut resources and tooltip presentation. Its verification section records the measured input-copy allocation boundary and current native gates.
 
 The [texture identity slice](../components/canvas-rendering.md#texture-resource-identities) links borrowed resource RID lifetime to actual server-owned texture creation/update/replacement/free and retained CanvasItem drawing. Owned identities expire with the active renderer; borrowed resources survive. It executes on both native baseline backends with explicit format/platform limits.
+
+[Texture proxies](../components/canvas-rendering.md#texture-proxies) now provide real borrowed-source retargeting and shared native sampling through stable owned aliases. Source/intermediate release leaves reconnectable empty aliases; owned source allocations remain until free/shutdown.

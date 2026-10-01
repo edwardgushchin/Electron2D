@@ -61453,6 +61453,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureProxyCreate",
+    "signature": "public Electron2D.RID TextureProxyCreate(Electron2D.RID baseTexture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "baseTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureProxyUpdate",
+    "signature": "public System.Void TextureProxyUpdate(Electron2D.RID texture, Electron2D.RID proxyTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "proxyTo",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",

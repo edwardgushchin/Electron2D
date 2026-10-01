@@ -329,8 +329,16 @@ public abstract partial class CanvasItem
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
             if (skipping || command.Texture is ServerTexture { IsDisposed: true }) continue;
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }
+            var replay = command;
+            if (command.Texture is ServerTexture { IsProxy: true } proxy)
+            {
+                var source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
+                if (source is null) continue;
+                if (source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
+                replay = command with { Texture = source };
+            }
             var first = vertices.Count;
-            CanvasGeometry.Append(vertices, command, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
+            CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);
             var count = vertices.Count - first;
             if (count == 0) continue;
             if (!capturedMaterial)
@@ -341,10 +349,10 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == command.Texture &&
+            if (batches.Count != 0 && batches[^1] is var last && last.Material == material && last.Texture == replay.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
                 batches[^1] = last with { Count = last.Count + count };
-            else batches.Add(new(first, count, material, command.Texture, filter, repeat, anisotropy, blend, clip));
+            else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, clip));
         }
     }
 

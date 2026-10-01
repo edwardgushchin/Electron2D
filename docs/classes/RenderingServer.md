@@ -58,8 +58,10 @@ Largest accepted CanvasLayer.Layer value. It draws after every smaller layer ind
 | `void SetDefaultClearColor(Color color)` | Sets a finite clear color for later frames. |
 | [`public RID Texture2DCreate(Image image)`](#texture2dcreate) | Copies a live nonempty image, validates axes 1..16384 and supported sampling formats, and returns a renderer-owned identity. |
 | [`public RID Texture2DPlaceholderCreate()`](#texture2dplaceholdercreate) | Creates a drawable 4×4 RGBA8 magenta/black checkerboard. |
-| [`public Image Texture2DGet(RID texture)`](#texture2dget) | Returns a caller-owned copy of original backing pixels and mipmaps. |
+| [`public Image? Texture2DGet(RID texture)`](#texture2dget) | Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. |
 | [`public void Texture2DUpdate(RID texture, Image image, int layer = 0)`](#texture2dupdate) | Copies and validates matching source width, height, format and mipmap state before publication. |
+| [`public RID TextureProxyCreate(RID baseTexture)`](#textureproxycreate) | Owned alias of a borrowed source, including nested proxies. |
+| [`public void TextureProxyUpdate(RID texture, RID proxyTo)`](#textureproxyupdate) | Retargets an owned proxy to a non-proxy source. |
 | [`public void TextureReplace(RID texture, RID byTexture)`](#texturereplace) | Both identities must be live and owned by this renderer. |
 | [`public Image.Format TextureGetFormat(RID texture)`](#texturegetformat) | Reports original backing format, including the full atlas source format. |
 | [`public void TextureSetSizeOverride(RID texture, int width, int height)`](#texturesetsizeoverride) | Sets both logical drawing axes in 1..16384 without reallocating or resampling pixels. |
@@ -111,9 +113,9 @@ Creates a drawable 4×4 RGBA8 magenta/black checkerboard. It supports the same u
 
 ### Texture2DGet
 
-`public Image Texture2DGet(RID texture)`
+`public Image? Texture2DGet(RID texture)`
 
-Returns a caller-owned copy of original backing pixels and mipmaps. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Readback uses the authoritative managed snapshot, not a GPU stall.
+Returns a caller-owned copy of original backing pixels and mipmaps, or null for a live proxy whose source has been released. Atlas RIDs expose their full backing image, while object-based atlas drawing retains the view. Empty resource RIDs return the 4×4 rendering placeholder without initializing the resource or changing its own GetImage result. Readback uses the authoritative managed snapshot, not a GPU stall.
 
 ### Texture2DUpdate
 
@@ -121,11 +123,36 @@ Returns a caller-owned copy of original backing pixels and mipmaps. Atlas RIDs e
 
 Copies and validates matching source width, height, format and mipmap state before publication. A failure preserves prior pixels. Logical size overrides do not change required source dimensions. Compatible updates retain the allocation token for backend reuse; retained commands sample new pixels without QueueRedraw. Only layer zero is integrated; nonzero layers throw ArgumentOutOfRangeException until the 2D array resource/renderer slice.
 
+### TextureProxyCreate
+
+`public RID TextureProxyCreate(RID baseTexture)`
+
+Creates a distinct owned RID aliasing a live borrowed or owned texture, including another proxy. No pixel copy or native texture allocation is created for the alias: canvas replay resolves the current source into ordinary backend batches. Nested resolution is iterative. The proxy itself remains alive if its source or an intermediate proxy is freed, disposed or collected; it then returns null image data and draws nothing. Its last format/size/path metadata remains available. Freeing an alias never frees its source. Empty ordinary resources supply their rendering checkerboard when sampled through a proxy. Wrong-kind/stale inputs reject before registration. The alias retains RID links, not ownership of borrowed source resources.
+
+A partial snippet inside an active node’s OnReady callback (retain both RIDs in the node and draw the alias in OnDraw):
+
+```csharp
+var server = RenderingServer.Instance!;
+using var image = Image.CreateEmpty(16, 16, false, Image.Format.Rgba8);
+image.Fill(Colors.Red);
+RID source = server.Texture2DCreate(image);
+RID alias = server.TextureProxyCreate(source);
+// Later, on the owner thread: server.TextureProxyUpdate(alias, anotherSource);
+// OnDraw: DrawTexture(alias, Vector2.Zero);
+// Explicit cleanup before shutdown: server.FreeRID(alias); server.FreeRID(source);
+```
+
+### TextureProxyUpdate
+
+`public void TextureProxyUpdate(RID texture, RID proxyTo)`
+
+Requires a renderer-owned proxy and a live non-proxy source. Rejects ordinary destinations, borrowed destinations, self/proxy targets and wrong-kind/stale identities before mutation. Source callbacks during metadata acquisition may throw; the old target remains unchanged. Retargeting keeps the proxy RID, updates its source, resets a proxy-local size override and copies the new diagnostic path. Future retained replay samples the current root image/format/size without OnDraw; recorded destination geometry and normalized source regions remain fixed. Source replacement redirects aliases before consuming the replacement RID. A disconnected proxy can be retargeted and resume drawing. Owner/submission/shutdown boundaries match texture mutations.
+
 ### TextureReplace
 
 `public void TextureReplace(RID texture, RID byTexture)`
 
-Both identities must be live and owned by this renderer. Transfers replacement pixels, logical dimensions and path to the destination object, preserving its RID and retained references. Different pixel configurations are allowed. Consumes byTexture; any commands referring to that consumed object stop drawing. Equal validated RIDs do nothing. Disposal callback errors propagate after publication and removal of the consumed identity; destination state remains committed.
+Both identities must be live and owned by this renderer. Transfers replacement pixels, logical dimensions and path to the destination object, preserving its RID and retained references. Proxies of the consumed source redirect to the destination before source disposal; destination proxies continue sampling its replacement pixels. Proxy RIDs cannot be replacement operands. Different pixel configurations are allowed. Consumes byTexture; any commands referring to that consumed object stop drawing. Equal validated RIDs do nothing. Disposal callback errors propagate after publication and removal of the consumed identity; destination state remains committed.
 
 ### TextureGetFormat
 
@@ -197,4 +224,8 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 
 ## Texture RID verification
 
-[RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks stable resource identity before startup, independent duplicates, weak collection/sweeping, wrong-kind/stale/thread/disposal guards, placeholder pixels, copied input/output, update configuration rollback, logical size bounds, replacement/consumption, retained drawing and shutdown after callback failure. Native Linux Wayland GPU and compatibility pixel checks verify red → blue → green → freed destinations, atlas source identity/drawing and the checkerboard; dummy/software executes the same baseline. Each backend has 20 warmup frames, then 64 frames with RID lookup/redraw/submission and 64 retained frames with no managed allocation on the owner thread between FramePreDraw and FramePostDraw. This excludes the host event loop, resource creation/update/replacement, image copying/readback and native/backend allocations. Other platforms and owner visual acceptance remain unverified. Proxy/layered/drawable/native-device textures and material/shader/canvas server identities remain separately tracked in coverage.
+[RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks stable resource identity before startup, independent duplicates, weak collection/sweeping, wrong-kind/stale/thread/disposal guards, placeholder pixels, copied input/output, update configuration rollback, logical size bounds, replacement/consumption, retained drawing and shutdown after callback failure. Native Linux Wayland GPU and compatibility pixel checks verify red → blue → green → freed destinations, atlas source identity/drawing and the checkerboard; dummy/software executes the same baseline. Each backend has 20 warmup frames, then 64 frames with RID lookup/redraw/submission and 64 retained frames with no managed allocation on the owner thread between FramePreDraw and FramePostDraw. This excludes the host event loop, resource creation/update/replacement, image copying/readback and native/backend allocations. Other platforms and owner visual acceptance remain unverified. Layered/drawable/native-device textures and material/shader/canvas server identities remain separately tracked in coverage.
+
+## Proxy verification and storage
+
+[RenderingTextureProxyTests](../../tests/Electron2D.Tests/RenderingTextureProxyTests.cs) checks 256-level iterative chains and warm lookup, source edits/disposal, failed source callback rollback, owner/type/stale/proxy operand guards, nested aliases, source replacement redirection, disconnected images/draws, retarget recovery, empty-resource checkerboard and independent copied outputs. Native pixels run on Linux Wayland GPU/compatibility and dummy/software. After 20 warmup frames, 64 active source retarget/replay/submission frames and 64 unchanged retained frames allocate no managed bytes between FramePreDraw and FramePostDraw on the owner thread. Native source handles remain stable; cache checks show no per-alias texture storage. Owned source textures retain prepared cache allocations until free/shutdown, so alternating already prepared owned sources does not allocate another native texture. First use of a new source and changed pixel configuration may allocate. Backend-internal/native allocator totals, other platforms and owner acceptance remain unverified. Layered/external/device/drawable alias sampling enters those storage families’ first integration slices.
