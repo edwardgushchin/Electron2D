@@ -420,6 +420,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioStreamRandomizer",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "AudioStreamRandomizer",
+    "signature": "public sealed class Electron2D.AudioStreamRandomizer",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "name": "PlaybackMode",
+    "signature": "public enum Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioStreamWAV",
     "kind": "type",
     "declaringType": "Electron2D.AudioStreamWAV",
@@ -7252,6 +7285,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AudioStreamRandomizer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": ".ctor",
+    "signature": "public AudioStreamRandomizer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AudioStreamWAV..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AudioStreamWAV",
@@ -10906,6 +10952,45 @@
     "parameters": [],
     "returnType": "Electron2D.AudioStreamPlayer.MixTarget",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.Random()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "name": "Random",
+    "signature": "public const Electron2D.AudioStreamRandomizer.PlaybackMode Random = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.RandomNoRepeats()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "name": "RandomNoRepeats",
+    "signature": "public const Electron2D.AudioStreamRandomizer.PlaybackMode RandomNoRepeats = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.Sequential()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "name": "Sequential",
+    "signature": "public const Electron2D.AudioStreamRandomizer.PlaybackMode Sequential = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.AudioStreamWAV.Format.IMAADPCM()",
@@ -29357,6 +29442,313 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.AddStream(System.Int32,Electron2D.AudioStream,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "AddStream",
+    "signature": "public System.Void AddStream(System.Int32 index, Electron2D.AudioStream stream, System.Single weight = 1f)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      },
+      {
+        "name": "weight",
+        "type": "System.Single",
+        "default": "1f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.GetStream(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "GetStream",
+    "signature": "public Electron2D.AudioStream GetStream(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStream",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.GetStreamProbabilityWeight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "GetStreamProbabilityWeight",
+    "signature": "public System.Single GetStreamProbabilityWeight(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.IsMetaStream()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "IsMetaStream",
+    "signature": "public override System.Boolean IsMetaStream()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.MoveStream(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "MoveStream",
+    "signature": "public System.Void MoveStream(System.Int32 indexFrom, System.Int32 indexTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "indexFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "indexTo",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.OnGetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "OnGetLength",
+    "signature": "protected override System.Double OnGetLength()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.OnGetStreamName()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "OnGetStreamName",
+    "signature": "protected override System.String OnGetStreamName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.AudioStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.OnIsMonophonic()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "OnIsMonophonic",
+    "signature": "protected override System.Boolean OnIsMonophonic()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.RemoveStream(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "RemoveStream",
+    "signature": "public System.Void RemoveStream(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.SetStream(System.Int32,Electron2D.AudioStream)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "SetStream",
+    "signature": "public System.Void SetStream(System.Int32 index, Electron2D.AudioStream stream)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamRandomizer.SetStreamProbabilityWeight(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "SetStreamProbabilityWeight",
+    "signature": "public System.Void SetStreamProbabilityWeight(System.Int32 index, System.Single weight)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "weight",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -85064,6 +85456,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamRandomizer.Mode()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "Mode",
+    "signature": "public Electron2D.AudioStreamRandomizer.PlaybackMode Mode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamRandomizer.PlaybackMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamRandomizer.RandomPitch()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "RandomPitch",
+    "signature": "public System.Single RandomPitch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamRandomizer.RandomPitchSemitones()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "RandomPitchSemitones",
+    "signature": "public System.Single RandomPitchSemitones { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamRandomizer.RandomVolumeOffsetDB()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "RandomVolumeOffsetDB",
+    "signature": "public System.Single RandomVolumeOffsetDB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamRandomizer.StreamsCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamRandomizer",
+    "name": "StreamsCount",
+    "signature": "public System.Int32 StreamsCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

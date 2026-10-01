@@ -16,6 +16,7 @@ public class AudioStreamPlayer : Node
         Center = 2
     }
     private AudioStream? _stream;
+    private bool _audioOperation;
     private readonly Dictionary<PropertyDescriptor, StoredPropertyValue> _parameters = [];
     private bool _autoplay;
     private volatile bool _registered;
@@ -129,31 +130,45 @@ public class AudioStreamPlayer : Node
     /// <summary>Occurs when one or more voices complete naturally during an owner-thread frame.</summary>
     /// <remarks>Explicit Stop and stream replacement do not emit Finished.</remarks>
     public event Action? Finished;
-    private void PrepareVoices()
+    private AudioStreamPlayback PreparePlayback()
     {
-        if (_stream is null) return;
-        if (_type == AudioServer.PlaybackType.Sample) throw new NotSupportedException("Prepared sample-driver playback requires its separate native sample storage integration.");
-        var server = AudioServer.Instance; var context = server.Native;
-        while (_voices.Count < _maximum)
-        {
-            var playback = _stream.InstantiatePlayback();
-            FAudioStreamVoice? voice = null;
-            try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, resource => resource); voice = context.CreateStream(playback, server.ResolveBus(_bus)); voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); _voices.Add(voice); _ages.Add(0); }
-            catch { voice?.Dispose(); playback.Dispose(); throw; }
-        }
+        var playback = _stream!.InstantiatePlayback();
+        try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, static resource => resource); return playback; }
+        catch { playback.Dispose(); throw; }
     }
-    /// <summary>Starts a voice at a requested stream time, replacing the oldest when capacity is full.</summary>
+    private FAudioStreamVoice CreateVoice(AudioStreamPlayback playback)
+    {
+        var server = AudioServer.Instance; var voice = server.Native.CreateStream(playback, server.ResolveBus(_bus));
+        try { voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); return voice; }
+        catch { voice.Dispose(); throw; }
+    }
+    /// <summary>Creates one fresh playback and starts a voice at a requested stream time, replacing the oldest when capacity is full.</summary>
+    /// <remarks>Native slots are prepared lazily and reused. A replaced slot disposes its old borrowed playback handle.
+    /// Stream callbacks cannot reenter player mutation or disposal while an audio operation is in progress.</remarks>
     /// <param name="fromPosition">Finite seconds; zero initially.</param>
     /// <exception cref="InvalidOperationException">The node is detached or native output is unavailable.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The time is nonfinite.</exception>
     public void Play(double fromPosition = 0)
     {
         EnsureMutable(); if (!IsInsideTree) throw new InvalidOperationException("Audio playback requires an attached player."); if (!double.IsFinite(fromPosition)) throw new ArgumentOutOfRangeException(nameof(fromPosition)); if (_stream is null) return;
-        if (_stream.IsMonophonic()) Stop();
-        TrimVoices(); PrepareVoices(); var index = 0;
-        for (var i = 1; i < _voices.Count; i++) if (_ages[i] < _ages[index]) index = i;
-        for (var i = 0; i < _voices.Count; i++) if (!_voices[i].Playing) { index = i; break; }
-        _ages[index] = checked(++_sequence); _voices[index].Play(fromPosition); _voices[index].Pause(!CanProcess());
+        if (_type == AudioServer.PlaybackType.Sample) throw new NotSupportedException("Prepared sample-driver playback requires its separate native sample storage integration.");
+        _audioOperation = true;
+        try
+        {
+            if (_stream.IsMonophonic()) StopVoices();
+            TrimVoices(); var index = -1;
+            for (var i = 0; i < _voices.Count; i++) if (!_voices[i].Playing) { index = i; break; }
+            if (index < 0 && _voices.Count >= _maximum) { index = 0; for (var i = 1; i < _voices.Count; i++) if (_ages[i] < _ages[index]) index = i; }
+            var playback = PreparePlayback(); FAudioStreamVoice? voice = index < 0 ? null : _voices[index];
+            try
+            {
+                if (voice is null) { voice = CreateVoice(playback); index = _voices.Count; _voices.Add(voice); _ages.Add(0); }
+                else voice.ReplacePlayback(playback);
+            }
+            catch { if (voice is null || !ReferenceEquals(voice.Playback, playback)) playback.Dispose(); throw; }
+            _ages[index] = checked(++_sequence); voice.Play(fromPosition); voice.Pause(!CanProcess());
+        }
+        finally { _audioOperation = false; }
     }
     /// <summary>Stops active voices and starts one voice at the requested time.</summary>
     /// <param name="toPosition">Finite seconds.</param>
@@ -161,9 +176,17 @@ public class AudioStreamPlayer : Node
     /// <summary>Stops all voices without emitting Finished.</summary>
     public void Stop()
     {
-        EnsureMutable(); List<Exception>? errors = null;
-        foreach (var voice in _voices) try { voice.Stop(); } catch (Exception error) { CollectException(ref errors, error); }
+        EnsureMutable(); _audioOperation = true; try { StopVoices(); } finally { _audioOperation = false; }
+    }
+    private void StopVoices()
+    {
+        List<Exception>? errors = null;
+        foreach (var voice in _voices) try { StopVoice(voice); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Audio stopping failed.", errors);
+    }
+    private void StopVoice(FAudioStreamVoice voice)
+    {
+        var previous = _audioOperation; _audioOperation = true; try { voice.Stop(); } finally { _audioOperation = previous; }
     }
     /// <summary>Gets whether any voice is actively playing rather than paused.</summary>
     /// <returns>False for an empty/stopped player.</returns>
@@ -176,6 +199,7 @@ public class AudioStreamPlayer : Node
     public bool HasStreamPlayback() { Check(); return LastActive() >= 0; }
     /// <summary>Returns the most recently prepared borrowed stream playback.</summary>
     /// <returns>The active player-owned playback; stopped pool slots are not exposed.</returns>
+    /// <remarks>The handle becomes disposed when its slot is replaced, removed or released. Bus graph edits retain it.</remarks>
     /// <exception cref="InvalidOperationException">No playback is prepared.</exception>
     public AudioStreamPlayback GetStreamPlayback() { Check(); if (!HasStreamPlayback()) throw new InvalidOperationException("No active stream playback is available."); return _voices[LastActive()].Playback; }
     private int LastActive()
@@ -246,6 +270,10 @@ public class AudioStreamPlayer : Node
     }
     internal void ReleaseVoices()
     {
+        var previous = _audioOperation; _audioOperation = true; try { ReleaseVoiceStorage(); } finally { _audioOperation = previous; }
+    }
+    private void ReleaseVoiceStorage()
+    {
         List<Exception>? errors = null;
         foreach (var voice in _voices)
         {
@@ -277,8 +305,8 @@ public class AudioStreamPlayer : Node
                     var ended = false;
                     foreach (var voice in _voices) if (voice.Playing)
                         {
-                            try { if (voice.Finished) { voice.Stop(); ended = true; } }
-                            catch (Exception error) { try { voice.Stop(); } catch (Exception cleanup) { CollectException(ref errors, cleanup); } CollectException(ref errors, error); }
+                            try { if (voice.Finished) { StopVoice(voice); ended = true; } }
+                            catch (Exception error) { try { StopVoice(voice); } catch (Exception cleanup) { CollectException(ref errors, cleanup); } CollectException(ref errors, error); }
                         }
                     if (ended) Finished?.Invoke();
                 }
@@ -310,10 +338,10 @@ public class AudioStreamPlayer : Node
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(AudioStreamPlayer) ? CreatePlayer : base.CreateSceneInstanceFactory();
     private static Node CreatePlayer() => new AudioStreamPlayer();
     /// <inheritdoc />
-    protected override void ValidateMutation() { base.ValidateMutation(); if (_registered) AudioServer.Instance.Check(); }
+    protected override void ValidateMutation() { base.ValidateMutation(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player mutation."); if (_registered) AudioServer.Instance.Check(); }
     /// <inheritdoc />
     /// <remarks>A detached player retaining audio registration still requires its configuration owner.</remarks>
-    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_registered) AudioServer.Instance.Check(); }
+    protected override void ValidateDisposal() { base.ValidateDisposal(); if (_audioOperation) throw new InvalidOperationException("Audio playback operations do not allow reentrant player disposal."); if (_registered) AudioServer.Instance.Check(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {

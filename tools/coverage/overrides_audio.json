@@ -699,6 +699,106 @@
       "godot": "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)",
       "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
       "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::enum:PlaybackMode",
+      "electron2d": "T:Electron2D.AudioStreamRandomizer.PlaybackMode",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM",
+      "electron2d": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.Random()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM_NO_REPEATS",
+      "electron2d": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.RandomNoRepeats()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_SEQUENTIAL",
+      "electron2d": "enumValue:Electron2D.AudioStreamRandomizer.PlaybackMode.Sequential()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:add_stream(int:,AudioStream:,float:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.AddStream(System.Int32,Electron2D.AudioStream,System.Single)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:get_stream(int:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.GetStream(System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:get_stream_probability_weight(int:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.GetStreamProbabilityWeight(System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:move_stream(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.MoveStream(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:remove_stream(int:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.RemoveStream(System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:set_stream(int:,AudioStream:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.SetStream(System.Int32,Electron2D.AudioStream)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::method:set_stream_probability_weight(int:,float:)",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.SetStreamProbabilityWeight(System.Int32,System.Single)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:playback_mode",
+      "electron2d": "property:Electron2D.AudioStreamRandomizer.Mode()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:random_pitch",
+      "electron2d": "property:Electron2D.AudioStreamRandomizer.RandomPitch()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:random_pitch_semitones",
+      "electron2d": "property:Electron2D.AudioStreamRandomizer.RandomPitchSemitones()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:random_volume_offset_db",
+      "electron2d": "property:Electron2D.AudioStreamRandomizer.RandomVolumeOffsetDB()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:stream_{index}/stream",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.GetStream(System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:stream_{index}/stream",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.SetStream(System.Int32,Electron2D.AudioStream)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:stream_{index}/weight",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.GetStreamProbabilityWeight(System.Int32)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:stream_{index}/weight",
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.SetStreamProbabilityWeight(System.Int32,System.Single)",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamRandomizer::property:streams_count",
+      "electron2d": "property:Electron2D.AudioStreamRandomizer.StreamsCount()",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
     }
   ],
   "extras": [
@@ -1013,6 +1113,46 @@
     {
       "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingParameter()",
       "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamRandomizer..ctor()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.Dispose(System.Boolean)",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.GetPropertyDescriptors()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.IsMetaStream()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.OnGetLength()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.OnGetStreamName()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.OnInstantiatePlayback()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamRandomizer.OnIsMonophonic()",
+      "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
     }
   ],
   "statusGroups": [
@@ -1542,6 +1682,26 @@
         "AudioStreamPlaylist::property:shuffle",
         "AudioStreamPlaylist::property:stream_count",
         "AudioStreamPolyphonic::property:polyphony",
+        "AudioStreamSynchronized::constant:MAX_STREAMS",
+        "AudioStreamSynchronized::method:get_sync_stream(int:)",
+        "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
+        "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
+        "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
+        "AudioStreamSynchronized::property:stream_count",
+        "class:AudioStreamInteractive",
+        "class:AudioStreamPlaybackInteractive",
+        "class:AudioStreamPlaybackPlaylist",
+        "class:AudioStreamPlaybackPolyphonic",
+        "class:AudioStreamPlaybackSynchronized",
+        "class:AudioStreamPlaylist",
+        "class:AudioStreamPolyphonic",
+        "class:AudioStreamSynchronized"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate.",
+      "godot": [
         "AudioStreamRandomizer::enum:PlaybackMode",
         "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM",
         "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM_NO_REPEATS",
@@ -1560,21 +1720,7 @@
         "AudioStreamRandomizer::property:stream_{index}/stream",
         "AudioStreamRandomizer::property:stream_{index}/weight",
         "AudioStreamRandomizer::property:streams_count",
-        "AudioStreamSynchronized::constant:MAX_STREAMS",
-        "AudioStreamSynchronized::method:get_sync_stream(int:)",
-        "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
-        "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
-        "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
-        "AudioStreamSynchronized::property:stream_count",
-        "class:AudioStreamInteractive",
-        "class:AudioStreamPlaybackInteractive",
-        "class:AudioStreamPlaybackPlaylist",
-        "class:AudioStreamPlaybackPolyphonic",
-        "class:AudioStreamPlaybackSynchronized",
-        "class:AudioStreamPlaylist",
-        "class:AudioStreamPolyphonic",
-        "class:AudioStreamRandomizer",
-        "class:AudioStreamSynchronized"
+        "class:AudioStreamRandomizer"
       ]
     },
     {

@@ -110,7 +110,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamPlayer3D](classes/AudioStreamPlayer3D.md) | Node3D | Excluded | 38 |
 | [AudioStreamPlaylist](classes/AudioStreamPlaylist.md) | AudioStream | Blocked | 8 |
 | [AudioStreamPolyphonic](classes/AudioStreamPolyphonic.md) | AudioStream | Blocked | 1 |
-| [AudioStreamRandomizer](classes/AudioStreamRandomizer.md) | AudioStream | Blocked | 18 |
+| [AudioStreamRandomizer](classes/AudioStreamRandomizer.md) | AudioStream | Implemented | 18 |
 | [AudioStreamSynchronized](classes/AudioStreamSynchronized.md) | AudioStream | Blocked | 6 |
 | [AudioStreamWAV](classes/AudioStreamWAV.md) | AudioStream | Implemented | 21 |
 | [AwaitTweener](classes/AwaitTweener.md) | Tweener | Implemented | 1 |

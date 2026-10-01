@@ -9,6 +9,10 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_RANDOMIZER_HOST") == "1") { AudioRandomizerHostTests.Run(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_RANDOMIZER") == "1") { AudioRandomizerTests.Run(native: true); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_COMPRESSED") == "1") { AudioCompressedTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_SPEAKERS") == "1") { AudioSpeakerTests.Run(); return; }
@@ -316,6 +320,7 @@ FlowContainerTests.Run();
 SplitContainerTests.Run();
 AudioResourceTests.Run();
 AudioCompressedTests.Run(native: false);
+AudioRandomizerTests.Run();
 TextureRectTests.Run();
 StyleBoxTests.Run();
 StyleBoxFlatTests.Run();

@@ -41,3 +41,5 @@ Abstract Resource extension contract with independent caller-owned playback inst
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioStream.md) retains missing and Partial members separately.
+
+[AudioStreamRandomizer](AudioStreamRandomizer.md) is an executable meta-stream consumer. It captures a selected child at InstantiatePlayback and queries all child monophonic policies; standard source factories are called once per actual player Play. Optional metadata and parameters not overridden by a concrete stream retain base behavior.

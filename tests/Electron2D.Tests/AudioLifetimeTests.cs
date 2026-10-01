@@ -12,7 +12,7 @@ internal static class AudioLifetimeTests
     internal static void Run()
     {
         using var stream = new CustomStream(); var root = new Node(); var player = new AudioStreamPlayer { Stream = stream, MaxPolyphony = 2 }; root.AddChild(player); using var tree = new SceneTree(root); player.Play(); var first = player.GetStreamPlayback(); player.Play();
-        Check(!first.IsPlaying() || ReferenceEquals(first, player.GetStreamPlayback()), "Monophonic custom streams stop prior voices.");
+        Check(first.IsDisposed || !first.IsPlaying() || ReferenceEquals(first, player.GetStreamPlayback()), "Monophonic custom streams stop prior voices.");
         player.Seek(.2); Check(player.GetPlaybackPosition() >= .2, "Generic concrete seek starts one cursor.");
         stream.FailMix = true; var failed = false;
         for (var i = 0; i < 20 && !failed; i++) { Thread.Sleep(10); try { tree.ProcessFrame(.01); } catch (Exception) { failed = true; } }

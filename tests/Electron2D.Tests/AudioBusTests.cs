@@ -19,7 +19,12 @@ internal static class AudioBusTests
         Check(completed && !player.IsPlaying(), "Natural end emits Finished through owner-thread processing."); tree.Dispose(); server.CloseNative(); server.BusCount = 1; server.BusLayoutChanged -= Changed;
         Console.WriteLine("Audio buses native routing, gain/mute/solo, graph lifecycle, polyphony and natural completion passed.");
         void Changed() => events++;
-        float Peak() { native.PrepareCapture(native.MixRate / 5 * native.Channels); Thread.Sleep(80); return native.CapturedPCM().Select(MathF.Abs).DefaultIfEmpty(0).Max(); }
+        float Peak()
+        {
+            native.PrepareCapture(native.MixRate / 5 * native.Channels); var target = native.MixPasses + Math.Max(4, (native.MixRate / 12 + native.QuantumFrames - 1) / native.QuantumFrames); var started = System.Diagnostics.Stopwatch.GetTimestamp();
+            while (native.MixPasses < target) { if (System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalSeconds > 5) throw new InvalidOperationException("Native bus mix deadline."); Thread.Sleep(1); }
+            return native.CapturedPCM().Select(MathF.Abs).DefaultIfEmpty(0).Max();
+        }
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

@@ -8,7 +8,7 @@ Last updated: 2026-10-02
 
 ## Description
 
-Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; usage tagging, native sample handles and concrete composite parameters retain their own dependencies.
+Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player; replacement/removal/release of its native slot disposes that old handle. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; usage tagging, native sample handles and concrete composite parameters retain their own dependencies.
 
 ## API summary
 

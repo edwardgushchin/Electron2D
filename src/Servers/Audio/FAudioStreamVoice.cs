@@ -7,7 +7,7 @@ namespace Electron2D;
 internal sealed unsafe class FAudioStreamVoice : IDisposable
 {
     private readonly FAudioContext _context;
-    private readonly AudioStreamPlayback _playback;
+    private AudioStreamPlayback _playback;
     private readonly Vector2[] _frames;
     private readonly float[] _ring;
     private GCHandle _pin, _self;
@@ -58,7 +58,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     {
         Check(); lock (_context.Gate)
         {
-            Stop(); _playback.Start(position); _ring.AsSpan().Clear(); _cursor = 0; _error = null; _ending = false; _paused = false;
+            _active = false; _paused = false; StopNative(); _playback.Start(position); _ring.AsSpan().Clear(); _cursor = 0; _error = null; _ending = false; _paused = false;
             var buffer = new F.FAudioBuffer { AudioBytes = (uint)(_ring.Length * 4), pAudioData = _pin.AddrOfPinnedObject(), LoopCount = F.FAUDIO_LOOP_INFINITE, LoopLength = (uint)(_ring.Length / 2) };
             FAudioContext.Check(F.FAudioSourceVoice_SubmitSourceBuffer(_voice, ref buffer, 0), "prepare looping stream ring"); FAudioContext.Check(F.FAudioSourceVoice_Start(_voice, 0, 0), "start streamed source"); _active = true;
         }
@@ -67,7 +67,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     {
         Check(); lock (_context.Gate)
         {
-            _active = false; _paused = false; try { _playback.Stop(); } finally { StopNative(); }
+            var active = _active; _active = false; _paused = false; try { if (active) _playback.Stop(); } finally { StopNative(); }
         }
     }
     private void StopNative()
@@ -96,6 +96,10 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
             if (target == AudioStreamPlayer.MixTarget.Surround)
                 for (var i = 4; i < channels; i += 2) { matrix[i * 2] = gain; matrix[(i + 1) * 2 + 1] = gain; }
         }
+    }
+    internal void ReplacePlayback(AudioStreamPlayback playback)
+    {
+        Check(); lock (_context.Gate) { Stop(); var old = _playback; _playback = playback; old.Dispose(); }
     }
     internal AudioStreamPlayback Playback => _playback;
     public void Dispose()
