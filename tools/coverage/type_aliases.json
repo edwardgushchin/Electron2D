@@ -4,6 +4,7 @@
     "Node2D": "Entity",
     "WeakRef": "WeakRef<T>",
     "Object": "ElectronObject",
+    "CSharpScript": "Script",
     "GodotInstance": "ElectronInstance",
     "Transform2D": "Transform",
     "Texture2D": "Texture",

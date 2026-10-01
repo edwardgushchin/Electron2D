@@ -4,7 +4,7 @@
 import json
 import re
 
-from render import CLASS_PAGES, DATA, choose, coverage_target, render
+from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, render
 
 
 def check_texture_pages(pages, upstream):
@@ -58,6 +58,17 @@ def main():
 
     pages, summary = render()
     check_texture_pages(pages, upstream)
+    aliases = json.loads(ALIASES.read_text())
+    assert aliases["classes"]["CSharpScript"] == "Script", "C# scripts must share the concrete Script identity"
+    for name in ("Script", "CSharpScript"):
+        content = pages[CLASS_PAGES / f"{name}.md"]
+        assert "ADR 0091" in content
+        item = next(item for item in upstream["types"] if item["name"] == name)
+        rows = [line for line in content.splitlines() if line.startswith("| [`")]
+        assert len(rows) == len(item["members"]) + 1, f"Lost scripting declarations: {name}"
+        if not any(item["id"] == "T:Electron2D.Script" for item in engine):
+            assert "one future concrete" in content
+            assert all("| Blocked |" in row for row in rows), "Naming must not claim an implemented scripting resource"
     class_rows = {
         name: next(line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines()
                    if line.startswith(f"| [`class {name}`]"))

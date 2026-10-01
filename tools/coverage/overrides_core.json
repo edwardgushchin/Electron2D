@@ -1081,6 +1081,46 @@
     }
   ],
   "statusGroups": [
+    {
+      "godot": [
+        "class:CSharpScript",
+        "CSharpScript::method:new()",
+        "class:Script",
+        "Script::method:can_instantiate()",
+        "Script::method:get_base_script()",
+        "Script::method:get_global_name()",
+        "Script::method:get_instance_base_type()",
+        "Script::method:get_property_default_value(StringName:)",
+        "Script::method:get_script_constant_map()",
+        "Script::method:get_script_method_list()",
+        "Script::method:get_script_property_list()",
+        "Script::method:get_script_signal_list()",
+        "Script::method:has_script_method(StringName:)",
+        "Script::method:has_script_signal(StringName:)",
+        "Script::method:has_source_code()",
+        "Script::method:instance_has(Object:)",
+        "Script::method:is_abstract()",
+        "Script::method:is_tool()",
+        "Script::method:reload(bool:)",
+        "Script::property:source_code"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists."
+    },
+    {
+      "godot": [
+        "Object::method:get_script()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: ADR 0091 Script resource/type-catalog slice and executable owner-to-script metadata association for supported C# objects. The single concrete Script identity is accepted, but neither the resource nor this getter is implemented; a Node subtype or reserved ScriptChanged event is not that association."
+    },
+    {
+      "godot": [
+        "Object::method:set_script(Variant:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted."
+    },
     {"godot": ["Input::method:get_connected_joypads()", "Input::method:get_joy_guid(int:)", "Input::method:get_joy_name(int:)", "Input::method:is_joy_known(int:)", "Input::method:has_joy_light(int:)", "Input::method:has_joy_vibration(int:)", "Input::method:get_joy_vibration_duration(int:)", "Input::method:get_joy_vibration_remaining_duration(int:)", "Input::method:get_joy_vibration_strength(int:)", "Input::method:is_joy_vibrating(int:)", "Input::method:set_joy_light(int:,Color:)", "Input::method:start_joy_vibration(int:,float:,float:,float:)", "Input::method:stop_joy_vibration(int:)", "Input::property:ignore_joypad_on_unfocused_application", "Input::method:should_ignore_device(int:,int:)", "ProjectSettings::property:input_devices/joypads/ignore_joypad_on_unfocused_application"], "state": "Implemented", "reason": "The SDL joystick/gamepad host owns native handles and stable logical IDs; Input retains typed metadata and vibration state. Virtual-controller tests cover initial/hotplug discovery, known/raw mapping, GUID/name/capabilities, two-motor rumble including zero/expired duration, LED callbacks, unfocused suppression, ignored vendor/product IDs, project startup and per-device state on dummy and Linux Wayland. Physical hardware and other platforms remain unverified."},
     {"godot": ["Input::method:add_joy_mapping(String:,bool:)", "Input::method:remove_joy_mapping(String:)"], "state": "Partial", "reason": "A persistent typed SDL mapping overlay upgrades connected or future raw joysticks and restores raw delivery after removal without changing logical IDs; virtual tests pass on dummy and Wayland. Full SDL2 binding-string parser diagnostics, global database precedence and platform mapping variants remain to audit."},
     {"godot": ["Input::method:get_joy_info(int:)"], "state": "Partial", "reason": "JoypadInfo supplies raw name, vendor/product IDs and optional serial through SDL for mapped and raw devices. Steam Input and XInput platform-specific indices are not available in the current typed projection; Windows/macOS/iOS and physical-device values remain to verify."},

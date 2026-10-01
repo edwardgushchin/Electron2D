@@ -32,7 +32,7 @@ The existing typed C# surface, scene lifecycle, documentation and executable che
 - Editor operations belong to the separately shipped editor application under ADR 0027. Development tools may be separate executable consumers under ADR 0004. Portable scene/resource loading, saving and execution belong to their runtime domains and remain part of `Electron2D.dll`. Runtime code never depends on an agent, editor or game assembly.
 - Every first-party editor/tool/game consumes the public runtime API. Missing reusable capabilities must enter their owning runtime slices; agent integration grants no blanket internal access, reflection bypass, backend exposure or duplicate scene/physics/render implementation.
 - Clients use a documented CLI and machine-readable request/result contracts. Provider-specific integrations may adapt those contracts; no particular agent, model provider, network service, SDK, daemon or connection protocol is required by this decision. Command spelling and transport versions are established by their first executable slices.
-- C# authoring and scenario programs use ordinary compiled .NET projects and typed APIs. This decision does not introduce a new scripting language, interpreter or universal runtime invocation system.
+- C# authoring and scenario programs use ordinary compiled .NET projects and typed APIs. [ADR 0091](scripting.md#adr-0091) selects C# as the only scripting language and one future concrete Script resource, preserving ordinary Node execution and explicit missing binding/authoring capabilities. This decision does not introduce an interpreter or universal runtime invocation system.
 
 #### Three distinct execution modes
 

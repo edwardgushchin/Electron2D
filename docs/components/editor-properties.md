@@ -1,10 +1,12 @@
 # Typed editor properties component
 
-Last updated: 2026-09-23
+Last updated: 2026-10-01
 
 ## Scope
 
 This Core component exposes engine properties to future tooling and typed packed-scene storage without `Variant`, string-based mutation, or dictionary-shaped metadata.
+
+The C# integration selected by [ADR 0091](../decisions/scripting.md#adr-0091) reuses these explicit typed descriptors for user-node properties and future Script metadata; ordinary public C# properties do not become stored/editor properties automatically. A project type catalog, source/build association, file reconstruction and automated registration remain separate absent capabilities. This component introduces neither a Script resource nor a runtime reflection scanner.
 
 ## Owned types
 

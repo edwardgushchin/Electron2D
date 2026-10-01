@@ -9,7 +9,7 @@ Decisions in this log: [0001](#adr-0001), [0002](#adr-0002), [0004](#adr-0004), 
 <a id="adr-0001"></a>
 ## ADR 0001: Use typed C# without Variant
 
-Last updated: 2026-09-24
+Last updated: 2026-10-01
 
 - Status: Accepted
 - Scope: Entire engine API
@@ -21,6 +21,8 @@ Godot uses `Variant` as a universal value container for scripting, dynamic prope
 ### Decision
 
 Electron2D will not implement `Variant`. Public APIs use concrete types, generics, overloads, typed collections, properties, methods, delegates, and events. The engine will not recreate Variant through pervasive `object`, `dynamic`, or untyped metadata dictionaries.
+
+C# is the sole scripting language under [ADR 0091](scripting.md#adr-0091). User code executes as ordinary compiled Node subclasses. Code-as-asset integration uses one future concrete `Script : Resource`; the reference Script/CSharpScript types merge into that identity without losing applicable API. No separate CSharpScript type, interpreter or empty resource is introduced.
 
 Godot's typed `Packed*Array` container classes have no Electron2D-owned equivalents. Applicable public parameters and properties use C# typed arrays, spans, or other standard typed collections with ownership and copying specified at each API boundary. This excludes the duplicate container classes and their ordinary collection methods, not an in-scope feature merely because its reference signature uses a packed array. Specialized byte encoding, decoding, and compression operations require their own typed API mapping or explicit exclusion after a semantic audit.
 

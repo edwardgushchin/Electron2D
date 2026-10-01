@@ -592,7 +592,7 @@ def render():
             updated = "2026-09-26"
         if name in {"Node", "Control", "ProjectSettings", "ScrollBar", "HScrollBar", "VScrollBar", "ScrollContainer", "Joint2D", "PinJoint2D", "DampedSpringJoint2D", "GrooveJoint2D"}:
             updated = "2026-09-30"
-        if name in {"RenderingServer", "CanvasItem", "Resource", "Texture", "Texture2D", "PhysicsServer2D", "FlowContainer", "HFlowContainer", "VFlowContainer"}:
+        if name in {"RenderingServer", "CanvasItem", "Resource", "Texture", "Texture2D", "PhysicsServer2D", "FlowContainer", "HFlowContainer", "VFlowContainer", "Script", "CSharpScript"}:
             updated = "2026-10-01"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
@@ -603,6 +603,8 @@ def render():
                  f"Godot base: {inherited}. "
                  f"Electron2D type: {', '.join(engine_link(engine_by_id[f'T:{owner}']) for owner in owners) if owners else '—'}.", "",
                  "Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.", ""])
+        if name in {"Script", "CSharpScript"}:
+            lines.extend(["[ADR 0091](../../decisions/scripting.md#adr-0091) maps both reference classes to one future concrete Electron2D `Script : Resource` for C#. No separate CSharpScript type is planned. All source declarations remain accounted for; the resource and its applicable API are not implemented.", ""])
         if name == "PackedColorArray":
             lines.extend(["The separate packed container is excluded under [ADR 0001](../../decisions/product.md#adr-0001). Implemented call sites project color sequences to `Color[]` or `ReadOnlySpan<Color>`; see [Gradient](Gradient.md) and [CanvasItem](CanvasItem.md). Their copying and ownership contracts are audited on those APIs. Binary conversion remains a separate row below.", ""])
         if name == "DisplayServer":

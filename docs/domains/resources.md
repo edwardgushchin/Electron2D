@@ -10,6 +10,8 @@ The Resources domain defines reusable typed data, portable CPU image buffers and
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve/font resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
+[ADR 0091](../decisions/scripting.md#adr-0091) selects one future concrete `Script : Resource` for C# code-as-asset metadata and typed construction. It merges the reference Script/CSharpScript roles and does not own a particular Node's gameplay state. No Script production type or loader is implemented; add it only with a real code/scene/editor consumer and the existing Resource lifetime/storage checks.
+
 ## Component inventory
 
 | Component | Types | State |

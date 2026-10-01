@@ -120,7 +120,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - No untyped metadata store.
 - No reflection-based property or method invocation.
 - No 3D rectangle, transform, node, renderer, or physics type. Three- and four-component vectors are numeric values, not scene types.
-- No script attachment, script runtime, editor application, or general file serialization. Only the typed `ScriptChanged` notification contract exists for the confirmed future scripting component.
+- User C# Node subclasses execute ordinary callbacks, but script assets/attachment, editor application and general scene-file serialization are absent. [ADR 0091](../decisions/scripting.md#adr-0091) selects one future concrete `Script : Resource` for C# and merges the reference Script/CSharpScript identities; no separate production CSharpScript exists. `ScriptChanged` remains a reserved typed notification, not an implemented binding service.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
 - No complete target build/package/test matrix, Android host/package, iOS host/bundle, Web browser host/build/storage integration, signing pipeline, or complete native/browser verification exists yet. Current native verification is Linux-only: the root host and canvas have Wayland checks, with narrower XWayland display/context probes. This does not establish complete X11 or other-target acceptance.
