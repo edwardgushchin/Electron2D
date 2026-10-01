@@ -1,12 +1,14 @@
 # Core domain
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 ## Responsibility
 
 Core owns behavior shared by engine objects independently of scene, rendering, audio, physics, asset, or platform backends, plus the MainLoop/Engine integration points used by the separate typed Input domain.
 
 The domain is part of the 2D-only runtime for Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web and is compiled into the single production assembly `Electron2D.dll`.
+
+[ADR 0090](../decisions/agent-native.md#adr-0090) makes programmatic authoring, batch execution and observable verification an accepted product requirement. Core supplies the existing typed object/property, lifecycle, scheduling and I/O foundations; shared editor/CLI operations remain outside the runtime. Manual scheduling does not by itself implement a headless project runner, persistent scene format or public rendered capture. Those missing capabilities remain explicit implementation work.
 
 Its production sources are grouped by upstream module under `src/Core/`: `Config`, `IO`, `Math`, `Object`, `OS`, and `String`. These directories do not alter the flat public `Electron2D` namespace.
 

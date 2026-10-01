@@ -95,6 +95,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 ### Decision
 
 - Electron2D supports only two-dimensional games.
+- Electron2D is agent-native: programmatic project/scene authoring, batch execution and observable verification are product requirements under [ADR 0090](agent-native.md#adr-0090). That decision preserves this complete applicable typed API and packaging boundary; its missing tooling remains implementation work.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - Three-component numeric values are allowed for ordinary data and shader uniforms under ADR 0033; their component count does not add a three-dimensional scene domain.
 - The public image-texture resource is `Texture`; `ImageTexture` derives directly from it. All image textures are two-dimensional by product definition, so there is no `Texture2D` suffix or empty dimension-neutral parent. The reference `Texture` and `Texture2D` contracts share one `Texture.md` coverage page. Coverage names for `Texture2DArray`, `Texture2DArrayRD`, and `Texture2DRD` are `TextureArray`, `TextureArrayRD`, and `TextureRD`. Source identities and declarations remain intact inside the comparison; these names do not authorize new runtime types or change implementation states. Shader-language intrinsic names and internal backend identifiers retain their native spelling.
@@ -308,7 +309,7 @@ ADR 0028 selects a capability-driven GPU-primary and SDL_Renderer-fallback archi
 <a id="adr-0027"></a>
 ## ADR 0027: Self-hosted editor and game project boundary
 
-Last updated: 2026-09-22
+Last updated: 2026-10-01
 
 ### Status
 
@@ -331,6 +332,8 @@ The repository has three one-way product layers:
 Examples teach a user how to build with the public engine API. They may cover individual features such as shaders, lighting, audio, and networking, or complete small games such as a platformer or top-down game. Their code and explanations must be useful as application examples. Example source and project files must not name or depend on SDL, Box2D, or another implementation backend; this includes the application bootstrap. API conformance probes, injected events, failure fixtures, diagnostic harnesses, and coverage checks belong in `tests/` or development tools, even when they run an example's production path. Examples follow executable user API. The window/input consumer configures Window and calls Engine.Run; its former duplicate ApplicationHost has been removed. Native acceptance probes and failure fixtures remain in tests.
 
 The editor and every first-party game must be built with Electron2D's public runtime API. Their scenes, UI, rendering, input, resources, and lifecycle must use Electron2D facilities as those domains become implemented. A minimal .NET entry point, platform launcher, and packaging metadata are allowed, but they must only start/host Electron2D through its public API; they must not become an alternative game or editor UI framework.
+
+Under [ADR 0090](agent-native.md#adr-0090), the editor's CLI/batch and visual frontends share project/scene authoring operations, validation and persistence. Project operations must execute without creating editor UI. Headless simulation and rendered batch are separate runtime capability profiles; reusable prerequisites still enter their owning runtime slices through the public API. No CLI, scene format or capture implementation is implied by this requirement.
 
 Dependency direction is strict:
 

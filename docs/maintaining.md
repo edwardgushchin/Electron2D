@@ -1,8 +1,10 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
+
+For project/scene authoring, editor automation, batch execution and capture work, apply the accepted [agent-native contract](decisions/agent-native.md#adr-0090). Verify the supported programmatic path through public runtime capabilities, including error/cleanup cases and machine-readable results. File authoring requires fresh-process load verification; capture requires the actual renderer and its stated backend limits. Keep headless simulation, rendered batch, native/platform verification and human acceptance separate. Record missing prerequisites in coverage and current-state documentation; do not add commands or report end-to-end agent support before they execute.
 
 ## Release license audit
 

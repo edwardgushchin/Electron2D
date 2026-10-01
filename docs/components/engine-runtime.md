@@ -1,10 +1,12 @@
 # Engine runtime component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-01
 
 ## Scope
 
 This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Manual embedding can still supply elapsed time.
+
+The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses this lifecycle/scheduling foundation for future batch execution. A batch host must preserve ordinary activation/Ready, input, process/physics, failure and teardown semantics while supplying its explicit clock and execution budget. Current manual entry points are implemented; a unified project runner, headless Window/viewport host and public capture workflow are not. Authoring without UI, no-render simulation and rendered batch remain separate capability profiles.
 
 ## Owned types
 

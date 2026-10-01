@@ -1,12 +1,13 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-09-30
+Last updated: 2026-10-01
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
 | Decision domain | Canonical document | ADRs |
 | --- | --- | --- |
 | Product architecture | [product.md](product.md) | 0001, 0002, 0004, 0012, 0017, 0021, 0027, 0030, 0045, 0051 |
+| Agent-native development | [agent-native.md](agent-native.md) | 0090 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016, 0050 |
 | Core configuration, data, and I/O | [core-data-io.md](core-data-io.md) | 0018, 0019, 0020, 0022, 0048, 0049 |
 | Core math | [core-math.md](core-math.md) | 0024, 0025, 0026, 0029, 0032, 0033, 0034, 0035 |

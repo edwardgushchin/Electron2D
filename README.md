@@ -2,6 +2,8 @@
 
 Electron2D is a typed C# 2D game-engine runtime. The runtime is built as `Electron2D.dll`; applications supply their own platform host and native SDL libraries. Current runtime targets and **verified renderer behavior** are separate below.
 
+Electron2D is designed to be **agent-native**: coding agents and human developers should be able to create, inspect, modify, build, run and verify projects through documented programmatic operations. [ADR 0090](docs/decisions/agent-native.md#adr-0090) defines shared CLI/editor operations, headless simulation and rendered batch verification. This is an accepted architecture requirement; the unified project tooling, scene-file persistence and public capture workflow remain to be implemented.
+
 ## Platforms and renderers
 
 | Platform | Runtime ID / ABI | SDL_Renderer canvas | SDL_GPU canvas and ShaderMaterial | Other programmable GPU path |
