@@ -1,6 +1,6 @@
 # AudioStreamPlaybackResampled
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Declaration:** `public abstract class Electron2D.AudioStreamPlaybackResampled` · **Source:** [AudioStreamPlaybackResampled.cs](../../src/Scene/Resources/AudioStreamPlaybackResampled.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-01
 
 ## Description
 
-Abstract prepared cubic resampler with 128 source frames plus four history frames and an unsigned 16-bit fractional cursor. BeginResample clears history and prefills the source block. Decode position includes prefetch; ordinary concrete Seek does not implicitly reset interpolation history. Target frequency is AudioServer.GetMixRate; local rateScale and global PlaybackSpeedScale multiply source sampling rate. Zero rate retains a frozen cursor. Negative/nonfinite or overflowing ratios throw. The concrete mixed count marks the first silence; buffers/history are reused after preparation. Source callbacks use Span<Vector2> instead of pointer/count. This own class contract is implemented; broader AudioStreamPlayback sample/parameter hooks remain inherited gaps.
+Abstract prepared cubic resampler with 128 source frames plus four history frames and an unsigned 16-bit fractional cursor. BeginResample clears history, prefills the source block and resets its end marker. End markers include the four history entries so short/tail blocks report source-frame counts without losing four frames. Decode position includes prefetch; ordinary concrete Seek does not implicitly reset interpolation history. Target frequency is AudioServer.GetMixRate; local rateScale and global PlaybackSpeedScale multiply source sampling rate. Zero rate retains a frozen cursor. Negative/nonfinite or overflowing ratios throw. The concrete mixed count marks the first silence; buffers/history are reused after preparation. Source callbacks use Span<Vector2> instead of pointer/count. This own class contract is implemented; broader AudioStreamPlayback sample hooks and complete composite parameter surfaces remain inherited gaps.
 
 ## API summary
 

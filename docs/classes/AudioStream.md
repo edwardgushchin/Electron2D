@@ -1,6 +1,6 @@
 # AudioStream
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Declaration:** `public abstract class Electron2D.AudioStream` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-01
 
 ## Description
 
-Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list, but player-to-playback parameter propagation and usage tagging remain separate prerequisites. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. Sample generation/registration is not implemented.
+Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list, but player-to-playback typed descriptor propagation executes; usage tagging and complete composite parameter surfaces retain their own prerequisites. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. Sample generation/registration is not implemented.
 
 ## API summary
 

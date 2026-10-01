@@ -1,0 +1,16 @@
+{
+  "sha256": {
+    "mono-mp3.f32": "bd763a423488e667c16b710f6e91fd9fe15d3a68d8ade8c72c5af7a201fb37b8",
+    "mono.mp3": "09e8ae2ef4ef933c4c145b24db675474112fece93d6a007103aea800c4280d8e",
+    "short.ogg": "3b8b9a41d7b487c7973f2b697a58f1902b318992f601e059a7ec086330766434",
+    "surround-ogg.f32": "018ddc86d4da97bef125193bb562ed62240a046643735d1fe93a1a9727a48e8f",
+    "surround.ogg": "7d028dd7befc45c379d048405def744e9790ef17022a38a2531e6695003e6677",
+    "tone-mp3.f32": "e3ffe8c32ae9b000eac46516696a9ae12d1d34aab76a27ddd5d7a33269ab2ee2",
+    "tone-ogg.f32": "b221c7fb42f077af1f03e54f11dfa2760df7125f01a4312b50994e6891570567",
+    "tone.mp3": "41eea6eb01db85b598b822ff656fd43e0e78d38fbee49f5e21423097318a9846",
+    "tone.ogg": "7b763b35de063be8800044dec429b4c90ac4b2de2917472996091ec19a49e5cb",
+    "multiplex.ogg": "fcefa6f96da0bd2ae8309493cd213c224fc8c9db563d0728d3a57540b93b9871"
+  },
+  "oracle": "MP3: FFmpeg float decoding; Vorbis: DecodeVorbis.c linked to native libvorbisfile. Little-endian IEEE float interleaved PCM.",
+  "ffmpeg": "ffmpeg version n9.0.2 Copyright (c) 2000-2026 the FFmpeg developers"
+}

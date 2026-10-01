@@ -15,7 +15,7 @@ public abstract class AudioStreamPlaybackResampled : AudioStreamPlayback
     /// <exception cref="ObjectDisposedException">The playback is disposed.</exception>
     public void BeginResample()
     {
-        ThrowIfDisposed(); _buffer.AsSpan(0, 4).Clear(); var count = OnMixResampled(_buffer.AsSpan(4)); if ((uint)count > BufferLength) throw new InvalidOperationException("Audio source reported an invalid mixed frame count."); _offset = 0;
+        ThrowIfDisposed(); _buffer.AsSpan(0, 4).Clear(); var count = OnMixResampled(_buffer.AsSpan(4)); if ((uint)count > BufferLength) throw new InvalidOperationException("Audio source reported an invalid mixed frame count."); _end = count == BufferLength ? -1 : count + 4; _offset = 0;
     }
     /// <summary>Supplies source stereo frames before resampling.</summary>
     /// <param name="buffer">Prepared writable output span.</param>
@@ -42,7 +42,7 @@ public abstract class AudioStreamPlaybackResampled : AudioStreamPlayback
             {
                 _buffer.AsSpan(BufferLength, 4).CopyTo(_buffer); var count = OnMixResampled(_buffer.AsSpan(4));
                 if ((uint)count > BufferLength) throw new InvalidOperationException("Audio source reported an invalid mixed frame count.");
-                _end = count == BufferLength ? -1 : count; _offset -= BufferLength << FractionBits;
+                _end = count == BufferLength ? -1 : count + 4; _offset -= BufferLength << FractionBits;
             }
         }
         return mixed < 0 ? buffer.Length : mixed;

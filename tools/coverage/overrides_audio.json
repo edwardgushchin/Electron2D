@@ -584,6 +584,121 @@
       "godot": "AudioStream::method:_get_parameter_list()",
       "electron2d": "method:Electron2D.AudioStream.GetParameterList()",
       "reason": "ADR 0001/0047: typed PropertyDescriptor[] replaces the untyped dictionary list; the custom list callback executes, while player parameter propagation needs the typed playback-parameter slice."
+    },
+    {
+      "godot": "AudioStreamMP3::method:load_from_buffer(PackedByteArray:)",
+      "electron2d": "method:Electron2D.AudioStreamMP3.LoadFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::method:load_from_file(String:)",
+      "electron2d": "method:Electron2D.AudioStreamMP3.LoadFromFile(System.String)",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:bar_beats",
+      "electron2d": "property:Electron2D.AudioStreamMP3.BarBeats()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:beat_count",
+      "electron2d": "property:Electron2D.AudioStreamMP3.BeatCount()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:bpm",
+      "electron2d": "property:Electron2D.AudioStreamMP3.BPM()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:data",
+      "electron2d": "property:Electron2D.AudioStreamMP3.Data()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:loop",
+      "electron2d": "property:Electron2D.AudioStreamMP3.Loop()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamMP3::property:loop_offset",
+      "electron2d": "property:Electron2D.AudioStreamMP3.LoopOffset()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.LoadFromBuffer(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::method:load_from_file(String:)",
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.LoadFromFile(System.String)",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:bar_beats",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.BarBeats()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:beat_count",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.BeatCount()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:bpm",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.BPM()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:loop",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.Loop()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:loop_offset",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.LoopOffset()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:packet_sequence",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.PacketSequence()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamOggVorbis::property:tags",
+      "electron2d": "property:Electron2D.AudioStreamOggVorbis.Tags()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "OggPacketSequence::method:get_length()",
+      "electron2d": "method:Electron2D.OggPacketSequence.GetLength()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "OggPacketSequence::property:granule_positions",
+      "electron2d": "property:Electron2D.OggPacketSequence.GranulePositions()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "OggPacketSequence::property:packet_data",
+      "electron2d": "property:Electron2D.OggPacketSequence.PacketData()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "OggPacketSequence::property:sampling_rate",
+      "electron2d": "property:Electron2D.OggPacketSequence.SamplingRate()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_get_parameter(StringName:)",
+      "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)",
+      "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate."
     }
   ],
   "extras": [
@@ -730,6 +845,174 @@
     {
       "electron2d": "method:Electron2D.AudioStreamPlayer.ValidateDisposal()",
       "reason": "Typed Node mutation/disposal validation preserves registered audio ownership after tree exit and rejects foreign operations before state changes (ADRs 0005/0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamMP3..ctor()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamOggVorbis..ctor()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.OggPacketSequence..ctor()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.CreateDuplicateInstance()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.Dispose(System.Boolean)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnGetBPM()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnGetBarBeats()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnGetBeatCount()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnGetLength()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnGetParameterList()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnHasLoop()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnInstantiatePlayback()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.OnIsMonophonic()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.CreateDuplicateInstance()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.Dispose(System.Boolean)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetBPM()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetBarBeats()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetBeatCount()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetLength()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetParameterList()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnGetTags()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnHasLoop()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnInstantiatePlayback()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.OnIsMonophonic()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetLoopCount()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetPlaybackPosition()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetStreamSamplingRate()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnIsPlaying()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnMixResampled(System.Span<Electron2D.Vector2>)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnSeek(System.Double)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnStart(System.Double)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnStop()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.GetParameter`2(PropertyDescriptor<TPlayback, TValue>)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.SetParameter`2(PropertyDescriptor<TPlayback, TValue>,TValue)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.OggPacketSequence.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.OggPacketSequence.CreateDuplicateInstance()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.OggPacketSequence.Dispose(System.Boolean)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.OggPacketSequence.InstantiatePlayback()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.OggPacketSequencePlayback.Dispose(System.Boolean)",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioStreamPlayback.LoopingParameter()",
+      "reason": "Typed construction, packet cursor factory, inherited resource/playback overrides and descriptor/player propagation project existing compressed audio ownership, metadata and parameter concepts (ADRs 0001/0013/0047)."
     }
   ],
   "statusGroups": [
@@ -808,7 +1091,6 @@
         "AudioStreamPlayback::method:stop()",
         "AudioStreamPlaybackResampled::method:_get_stream_sampling_rate()",
         "AudioStreamPlaybackResampled::method:_mix_resampled(AudioFrame*:,int:)",
-        "AudioStreamPlaybackResampled::method:begin_resample()",
         "AudioStreamPlayer::enum:MixTarget",
         "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_CENTER",
         "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_STEREO",
@@ -844,7 +1126,6 @@
         "AudioStreamWAV::property:mix_rate",
         "AudioStreamWAV::property:stereo",
         "AudioStreamWAV::property:tags",
-        "class:AudioStreamPlaybackResampled",
         "class:AudioStreamWAV"
       ]
     },
@@ -1137,8 +1418,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: typed per-playback parameter descriptors/defaults and player propagation for custom/composite streams under ADR 0001; no Variant or arbitrary string dispatch is admitted.",
+      "state": "Partial",
+      "reason": "Typed nullable LoopingOverride executes for compressed playbacks; other custom/composite parameters enter their resource slices. Player descriptors apply typed values without untyped string dispatch (ADRs 0001/0047).",
       "godot": [
         "AudioStreamPlayback::method:_get_parameter(StringName:)",
         "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)"
@@ -1297,8 +1578,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: pinned internal NLayer decoding, frame seeking/loop/metadata and corruption checks feeding the existing FAudio stream path (ADR 0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047: copied mono/stereo compressed resources, validated imports, independently checked PCM, version-bound packet cursors, seek/EOF/beat loops, typed looping override and actual FAudio PCM. Warmed mixing is allocation-free; cold decoding prepares full PCM. Native allocation/platform/physical listening limits remain separate.",
       "godot": [
         "AudioStreamMP3::method:load_from_buffer(PackedByteArray:)",
         "AudioStreamMP3::method:load_from_file(String:)",
@@ -1308,30 +1589,38 @@
         "AudioStreamMP3::property:data",
         "AudioStreamMP3::property:loop",
         "AudioStreamMP3::property:loop_offset",
-        "class:AudioStreamMP3"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: pinned internal NVorbis decoding plus Ogg packet/seek/loop/metadata resources feeding the existing FAudio stream path (ADR 0047).",
-      "godot": [
-        "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
-        "AudioStreamOggVorbis::method:load_from_file(String:)",
         "AudioStreamOggVorbis::property:bar_beats",
         "AudioStreamOggVorbis::property:beat_count",
         "AudioStreamOggVorbis::property:bpm",
         "AudioStreamOggVorbis::property:loop",
         "AudioStreamOggVorbis::property:loop_offset",
-        "AudioStreamOggVorbis::property:packet_sequence",
         "AudioStreamOggVorbis::property:tags",
         "OggPacketSequence::method:get_length()",
         "OggPacketSequence::property:granule_positions",
         "OggPacketSequence::property:packet_data",
         "OggPacketSequence::property:sampling_rate",
-        "class:AudioStreamOggVorbis",
+        "class:AudioStreamMP3",
         "class:AudioStreamPlaybackOggVorbis",
         "class:OggPacketSequence",
         "class:OggPacketSequencePlayback"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Mono/stereo Vorbis executes. Pinned NVorbis 0.10.5 submap/residue decoding produces incorrect six-channel PCM against native libvorbisfile; >2 channels explicitly reject. Trigger: verified multichannel submap channel-bundle decoding against retained surround.ogg/libvorbisfile fixtures before accepting these imports (ADR 0047).",
+      "godot": [
+        "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
+        "AudioStreamOggVorbis::method:load_from_file(String:)",
+        "AudioStreamOggVorbis::property:packet_sequence",
+        "class:AudioStreamOggVorbis"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native 2/4/6/8-channel PCM checks cover current behavior. Other platforms and physical listening remain unverified. Short/restarted blocks reset their end marker, and terminal counts include the four history entries; regression checks retain complete source-frame counts.",
+      "godot": [
+        "AudioStreamPlaybackResampled::method:begin_resample()",
+        "class:AudioStreamPlaybackResampled"
       ]
     }
   ]

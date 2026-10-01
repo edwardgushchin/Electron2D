@@ -594,6 +594,8 @@ def render():
             updated = "2026-09-30"
         if name in {"RenderingServer", "CanvasItem", "Resource", "Texture", "Texture2D", "PhysicsServer2D", "FlowContainer", "HFlowContainer", "VFlowContainer", "Script", "CSharpScript", "AudioServer", "AudioStream", "AudioStreamWAV", "AudioStreamPlayer", "AudioStreamPlayback", "AudioStreamPlaybackResampled"}:
             updated = "2026-10-01"
+        if name in {"AudioStreamMP3", "AudioStreamOggVorbis", "AudioStreamPlaybackOggVorbis", "OggPacketSequence", "OggPacketSequencePlayback", "AudioStreamPlayback", "AudioStreamPlaybackResampled", "AudioStreamPlayer", "ResourceLoader"}:
+            updated = "2026-10-02"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

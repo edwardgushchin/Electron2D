@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 **Inherits:** None; static C# service
 
@@ -70,3 +70,7 @@ The coverage page keeps the general `ResourceLoader` type and its load/exists/ex
 ## Font file integration
 
 A font owns its validated encoded bytes and native glyph data. Ignore returns a distinct independent FontFile without replacing a cached identity. Reuse does not reread a live cached font; Replace and ReplaceDeep validate the new file before committing to the same font. Malformed input preserves the old character map, metrics and layout. Disposing the font removes its weak path entry and retires its owned glyph state. Extension discovery describes the supported SFNT containers; it does not promise system-font search or bitmap-font import. [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs) verifies actual WOFF2 loading, base views, concurrent reuse, replacement, rollback and weak-cache lifetime.
+
+## Audio files
+
+WAV, MP3 and Ogg Vorbis participate through exact concrete types and compatible AudioStream/Resource base views. Discovery reports wav/mp3/ogg. Uncached existence requires a compatible extension; format mismatch rejects explicit audio loads. Reuse borrows the live cached identity; Ignore and IgnoreDeep preserve that identity while returning independent owned resources. Replace/ReplaceDeep validate before publishing into the same concrete audio wrapper and issue Changed afterward. A malformed file preserves old state; a throwing Changed callback follows committed replacement. Ogg reload owns an independent imported packet copy and retains retired imports for old playback captures. There is no external dependency graph in these file formats, so their deep cache modes equal ordinary modes. AudioCompressedTests checks identity, independent ignores, retained playback after reload, malformed rollback and typed discovery. General scene-file serialization and public format registration remain their own coverage dependencies.

@@ -1,0 +1,34 @@
+#nullable disable
+#pragma warning disable CS1591
+// Integration changes: private namespace, top-level visibility and preserved-source diagnostic policy.
+using Electron2D.NVorbisBindings.Contracts;
+using System;
+
+namespace Electron2D.NVorbisBindings
+{
+    /// <summary>
+    /// Event data for when a new logical stream is found in a container.
+    /// </summary>
+    [Serializable]
+    internal class NewStreamEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="NewStreamEventArgs"/> with the specified <see cref="IStreamDecoder"/>.
+        /// </summary>
+        /// <param name="streamDecoder">An <see cref="IStreamDecoder"/> instance.</param>
+        public NewStreamEventArgs(IStreamDecoder streamDecoder)
+        {
+            StreamDecoder = streamDecoder ?? throw new ArgumentNullException(nameof(streamDecoder));
+        }
+
+        /// <summary>
+        /// Gets new the <see cref="IStreamDecoder"/> instance.
+        /// </summary>
+        public IStreamDecoder StreamDecoder { get; }
+
+        /// <summary>
+        /// Gets or sets whether to ignore the logical stream associated with the packet provider.
+        /// </summary>
+        public bool IgnoreStream { get; set; }
+    }
+}

@@ -95,12 +95,12 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamGenerator](classes/AudioStreamGenerator.md) | AudioStream | Blocked | 8 |
 | [AudioStreamGeneratorPlayback](classes/AudioStreamGeneratorPlayback.md) | AudioStreamPlaybackResampled | Blocked | 6 |
 | [AudioStreamInteractive](classes/AudioStreamInteractive.md) | AudioStream | Blocked | 41 |
-| [AudioStreamMP3](classes/AudioStreamMP3.md) | AudioStream | Blocked | 8 |
+| [AudioStreamMP3](classes/AudioStreamMP3.md) | AudioStream | Implemented | 8 |
 | [AudioStreamMicrophone](classes/AudioStreamMicrophone.md) | AudioStream | Blocked | 0 |
-| [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | AudioStream | Blocked | 9 |
+| [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | AudioStream | Partial | 9 |
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | RefCounted | Partial | 19 |
 | [AudioStreamPlaybackInteractive](classes/AudioStreamPlaybackInteractive.md) | AudioStreamPlayback | Blocked | 3 |
-| [AudioStreamPlaybackOggVorbis](classes/AudioStreamPlaybackOggVorbis.md) | AudioStreamPlaybackResampled | Blocked | 0 |
+| [AudioStreamPlaybackOggVorbis](classes/AudioStreamPlaybackOggVorbis.md) | AudioStreamPlaybackResampled | Implemented | 0 |
 | [AudioStreamPlaybackPlaylist](classes/AudioStreamPlaybackPlaylist.md) | AudioStreamPlayback | Blocked | 0 |
 | [AudioStreamPlaybackPolyphonic](classes/AudioStreamPlaybackPolyphonic.md) | AudioStreamPlayback | Blocked | 6 |
 | [AudioStreamPlaybackResampled](classes/AudioStreamPlaybackResampled.md) | AudioStreamPlayback | Implemented | 3 |
@@ -505,8 +505,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [OccluderInstance3D](classes/OccluderInstance3D.md) | VisualInstance3D | Excluded | 5 |
 | [OccluderPolygon2D](classes/OccluderPolygon2D.md) | Resource | Blocked | 7 |
 | [OfflineMultiplayerPeer](classes/OfflineMultiplayerPeer.md) | MultiplayerPeer | Blocked | 0 |
-| [OggPacketSequence](classes/OggPacketSequence.md) | Resource | Blocked | 4 |
-| [OggPacketSequencePlayback](classes/OggPacketSequencePlayback.md) | RefCounted | Blocked | 0 |
+| [OggPacketSequence](classes/OggPacketSequence.md) | Resource | Implemented | 4 |
+| [OggPacketSequencePlayback](classes/OggPacketSequencePlayback.md) | RefCounted | Implemented | 0 |
 | [OmniLight3D](classes/OmniLight3D.md) | Light3D | Excluded | 8 |
 | [OpenXRAPIExtension](classes/OpenXRAPIExtension.md) | RefCounted | Excluded | 55 |
 | [OpenXRAction](classes/OpenXRAction.md) | Resource | Excluded | 8 |

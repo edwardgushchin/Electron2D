@@ -1,6 +1,6 @@
 # AudioStreamPlayer
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Declaration:** `public class Electron2D.AudioStreamPlayer` · **Source:** [AudioStreamPlayer.cs](../../src/Scene/Audio/AudioStreamPlayer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -80,3 +80,21 @@ Non-spatial Node with borrowed Stream and owned pooled playbacks/native voices. 
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioStreamPlayer.md) retains missing and Partial members separately.
+
+## Typed stream parameters
+
+| Complete signature | Contract |
+| --- | --- |
+| `public void SetParameter<TPlayback, TValue>(PropertyDescriptor<TPlayback, TValue> parameter, TValue value) where TPlayback : AudioStreamPlayback` | Validate the declared writable descriptor, apply it to every prepared voice under the audio gate and retain it for later Play. |
+| `public TValue GetParameter<TPlayback, TValue>(PropertyDescriptor<TPlayback, TValue> parameter) where TPlayback : AudioStreamPlayback` | Read authored state or the descriptor's typed revert value. |
+
+### SetParameter and GetParameter
+
+Off-owner/capture-owned mutation and unknown/read-only descriptors reject before state changes. Missing stream, incompatible owner/default and disposed player/stream reject. Cold validation can instantiate a temporary playback before native voices exist. Generic setter callbacks can fail after some voice updates; caller code must coordinate that error. Stream replacement clears authored parameters; null looping restores stream policy. PackedScene retains the concrete looping override. These explicit authoring/query operations allocate; repeated native mixing is prepared separately.
+
+```csharp
+using var stream = AudioStreamMP3.LoadFromFile("res://audio/theme.mp3");
+var player = new AudioStreamPlayer { Stream = stream };
+player.SetParameter(AudioStreamPlayback.LoopingParameter, (bool?)true);
+// Attach the player to a scene; Play/Autoplay owns native output.
+```

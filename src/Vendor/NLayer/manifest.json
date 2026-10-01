@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/naudio/NLayer",
+  "tag": "v3.0.0",
+  "commit": "046c7ce422970f8f0f0bc205d6c6341bcb7debf1",
+  "archiveSha256": "270828a7b451d30f93a2e3495cf4a54a37cf9587f0d4bdf091013c4a034e4a9d",
+  "sources": {
+    "MpegFrameDecoder.cs": "65361fd6d2e25128f7f60ff6c86855d3b14b833aaf778aa2fe3e6ce8cd9b04c5",
+    "MpegFile.cs": "39d3178389530d49706ee1aa6861d2fd2c8bc7c5039115224bfcdcb0a63c60b8",
+    "IMpegFrame.cs": "562bf839ba59b91fec4ed6940984e41318a4fa2bf44e8d9fe764918dd80b8de9",
+    "Enums.cs": "ea13989cafa259baf6a2740899c3325265dc8d9e6cc4dd75bd417175b421c895",
+    "Decoder/VBRInfo.cs": "4baca28802e33663320ee3f6e68b537ec2775f864f394ee2e0da5b68821883e3",
+    "Decoder/RiffHeaderFrame.cs": "54630c2b38bfa3f769a29d35940be849d257872e0723ab44efc3b887594d2718",
+    "Decoder/MpegStreamReader.cs": "1b3fbed283405a957963de647358712a7e055d36b660d2e33df48baf248b151b",
+    "Decoder/MpegFrame.cs": "d3983a37b38f4044ca627760a7db51760942002a92dbc4333466ad97e548c299",
+    "Decoder/LayerIIIDecoder.cs": "23bf221aed434eb04650072205571fb836a3a028038af4fa90a56f18148f818d",
+    "Decoder/LayerIIDecoderBase.cs": "2d541e4be78383266311e05e2d7c0c41b9077d05be2605e5c7495e85c46f2ee4",
+    "Decoder/LayerIIDecoder.cs": "55accb422f03ab36ff815e8ee4a7089f2317bef041b4fb65d3498358d4414c82",
+    "Decoder/LayerIDecoder.cs": "c25f743862f09cf2bcc9bf3b5f85f28d20d7ecd89a60baaff763b603334b3725",
+    "Decoder/LayerDecoderBase.cs": "a224fd2e74745d4664cffb85367b97297d3426c5d9376040bc5672414bbd31f9",
+    "Decoder/ID3Frame.cs": "027348dbd5c7b206fb7003e8f1a69fb9f015d84d8907a6311034b8f16bf65e22",
+    "Decoder/Huffman.cs": "3aac5e07f9af7134e2a2cca473f311c86093ebe8301735e364e58e53395010c6",
+    "Decoder/FrameBase.cs": "8676940bc6fae0601ef80ab6ea187b7e83a53be69f898a643c1cabdc7437142b",
+    "Decoder/BitReservoir.cs": "4ed184472b74e174d7048064eaefcfd73afc031034ef3e74883c37d865fb9280"
+  },
+  "patches": [
+    "Engine-private namespace and top-level visibility.",
+    "Disable nullable/missing XML diagnostics for preserved upstream sources; decoder algorithms unchanged."
+  ],
+  "archiveUrl": "https://codeload.github.com/naudio/NLayer/tar.gz/refs/tags/v3.0.0"
+}

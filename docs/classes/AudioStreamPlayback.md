@@ -1,6 +1,6 @@
 # AudioStreamPlayback
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Declaration:** `public abstract class Electron2D.AudioStreamPlayback` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-01
 
 ## Description
 
-Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player. Concrete cursors can include decode prefetch. Typed parameter propagation, usage tagging and native sample-playback handles are absent.
+Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; usage tagging, native sample handles and concrete composite parameters retain their own dependencies.
 
 ## API summary
 
@@ -50,3 +50,14 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioStreamPlayback.md) retains missing and Partial members separately.
+
+## Typed looping parameter
+
+| Complete signature | Contract |
+| --- | --- |
+| `public static PropertyDescriptor<AudioStreamPlayback, bool?> LoopingParameter { get; }` | Descriptor for the existing nullable looping parameter on supporting compressed streams. |
+| `public bool? LoopingOverride { get; set; }` | Null uses stream defaults; true/false force policy. Atomic owner/audio thread publication; disposed playback rejects. |
+
+### LoopingOverride
+
+Assignments update policy for subsequent source mixing; they do not reset time/history. Parameterless playbacks do not consume it. Use a descriptor from Stream.GetParameterList with AudioStreamPlayer.SetParameter for owned player voices; changing a borrowed playback directly requires synchronization with its owner.

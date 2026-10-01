@@ -1,6 +1,6 @@
 # ResourceLoader API coverage
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 Godot source: [doc/classes/ResourceLoader.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/ResourceLoader.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 

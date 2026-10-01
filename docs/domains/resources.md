@@ -1,12 +1,12 @@
 # Resources domain
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## Responsibility
 
 Shader import retains logical bool and boolean vectors/arrays in validated SPIR-V metadata. Materials expose bool scalars and int vector masks; raw unsigned fields retain their numeric types. Both source languages and compatible external artifacts share reflection and backend checks. See [the boolean contract](../components/shader-materials.md#boolean-type-information).
 
-The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding, PNG/JPEG saving and synchronous ImageTexture/FontFile loading are executable. General asset loading remains incomplete. SDL_image is an approved internal dependency for the codec integration.
+The Resources domain defines reusable typed data, portable CPU image buffers and binary masks used by textures, atlases, importers, and other assets across the runtime targets. It contains the common resource contract, managed `Image` and `BitMap`, and the partial shader/material integration described below. Texture resources, ordinary Node/Texture drawing and sampled shader bindings are executable; PNG/JPEG/WebP/BMP/TGA/SVG file/buffer decoding, PNG/JPEG saving and synchronous ImageTexture/FontFile/WAV/MP3/Ogg loading are executable. General asset loading remains incomplete. SDL_image is an approved internal dependency for the codec integration.
 
 Resource base and image sources live under `src/Core/IO/`; shader/material/texture/frame-library/curve/font resources live under `src/Scene/Resources/`. The public namespace remains `Electron2D`.
 
@@ -22,7 +22,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 | [Typed themes](../components/themes.md) | [Theme](../classes/Theme.md), [Theme.DataType](../classes/Theme.DataType.md) | Six typed data categories including borrowed Font resources, exact copies and scene lookup integration |
 | [Resource base](../components/resources.md) | [`Resource`](../classes/Resource.md), [`DeepDuplicateMode`](../classes/DeepDuplicateMode.md) | Implemented and verified |
 | [Text](../components/text.md) | [Font](../classes/Font.md), [FontFile](../classes/FontFile.md), [LabelSettings](../classes/LabelSettings.md) | Validated encoded bytes, fractional metrics/shaping, borrowed fallbacks, cached glyph textures and shared label effects |
-| [Resource loading](../components/resource-loading.md) | [`ResourceLoader`](../classes/ResourceLoader.md), [`ResourceLoader.CacheMode`](../classes/ResourceLoader.CacheMode.md) | Synchronous image-texture and dynamic font files use the weak path cache; general loader remains Partial |
+| [Resource loading](../components/resource-loading.md) | [`ResourceLoader`](../classes/ResourceLoader.md), [`ResourceLoader.CacheMode`](../classes/ResourceLoader.CacheMode.md) | Synchronous image-texture, dynamic font and audio files use the weak path cache; general loader remains Partial |
 | [Images](../components/images.md) | [`Image`](../classes/Image.md), [`BitMap`](../classes/BitMap.md), Image's seven nested enums, [`ImageMetrics`](../classes/ImageMetrics.md), [`ClockDirection`](../classes/ClockDirection.md) | Managed image and mask processing implemented and verified; six native load formats and PNG/JPEG saving; further codec semantics pending; copied pixels feed textures |
 | [Noise](../components/noise.md) | [`Noise`](../classes/Noise.md), [`FastNoiseLite`](../classes/FastNoiseLite.md), [`NoiseTexture`](../classes/NoiseTexture.md) | Abstract and built-in 1D/2D samplers, plus generated texture with gradient, normal-map and mipmap processing |
 | [Shader materials](../components/shader-materials.md) | [`Shader`](../classes/Shader.md), [`Shader.Mode`](../classes/Shader.Mode.md), [`Material`](../classes/Material.md), [`ShaderMaterial`](../classes/ShaderMaterial.md), [`CanvasItemMaterial`](../classes/CanvasItemMaterial.md) and its [`BlendMode`](../classes/BlendMode.md), [`Texture`](../classes/Texture.md), [`ImageTexture`](../classes/ImageTexture.md), [`AtlasTexture`](../classes/AtlasTexture.md) | SPIR-V fragment programs and typed uniforms execute on Linux Wayland/Vulkan; fixed canvas blending executes on Wayland GPU and compatibility hardware, with software limited to Mix; further mappings remain pending |
@@ -31,7 +31,7 @@ Resource base and image sources live under `src/Core/IO/`; shader/material/textu
 
 The domain exposes resource name/path/scene configuration, built-in classification, synchronous change/setup events, local-scene association, reset and raw-cache hooks, copy and graph-preserving duplication, explicit deep-copy policy, scene ID generation, path takeover, typed property descriptors, deterministic disposal, and typed CPU image storage/processing across uncompressed and raw GPU-compressed formats.
 
-ResourceLoader uses the existing process-wide weak path cache to load ImageTexture and dynamic FontFile resources. Typed generic load, existence and extension discovery cover both integrated format families. Reuse retains a live cached wrapper, Ignore returns an unregistered independent wrapper, and Replace decodes before updating the same cached texture or font; deep modes coincide with their ordinary modes for leaf image/font files. Callers own loaded resources. Live Wayland compatibility/GPU Sprite pixels pass before and after a file replacement.
+ResourceLoader uses the existing process-wide weak path cache to load ImageTexture, dynamic FontFile and WAV/MP3/Ogg AudioStream resources. Typed generic load, existence and extension discovery cover the integrated image/font/audio format families. Reuse retains a live cached wrapper, Ignore returns an unregistered independent wrapper, and Replace decodes before updating the same cached texture, font or audio wrapper; deep modes coincide with their ordinary modes for leaf image/font/audio files. Callers own loaded resources. Live Wayland compatibility/GPU Sprite pixels pass before and after a file replacement.
 
 BitMap adds a packed boolean grid with Image alpha import, L8 export, nearest resize, region mutation, circular morphology and marching-squares polygon extraction. Its operations are managed and independent of a physics or rendering backend.
 
@@ -49,7 +49,7 @@ AnimatedTexture stores up to 256 borrowed texture slots with per-slot duration, 
 
 Resources depends on Core and, narrowly, Scene's `Node` type for `Resource.GetLocalScene()`. Image and BitMap processing use Core `Color`, `Vector2`, `Vector2i`, and `Rect2i`. Scene's packed-scene component in turn depends on Resources for typed resource duplication, so ADR 0023 accepts a contained Resources↔Scene type cycle inside the single `Electron2D.dll`. Resource base and managed image/mask processing remain independent of rendering/importing/editor. Image file/buffer codecs use internal SDL3-CS and FileAccess without exposing native handles.
 
-Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. ResourceLoader consumes `Image.LoadFromFile`, `ImageTexture.CreateFromImage`/`SetImage`, transactional `FontFile` decoding, `FileAccess` path policy and Resource's weak path registry. Resource base and Image retain their independent managed behavior.
+Concrete Shader/ShaderMaterial resources use the internal rendering reflection and uniform-upload path. SDL3-CS and the already packaged SPIRV-Cross native library remain internal; public material APIs expose engine value types and typed descriptors. ResourceLoader consumes `Image.LoadFromFile`, `ImageTexture.CreateFromImage`/`SetImage`, transactional `FontFile` and compressed audio decoding, `FileAccess` path policy and Resource's weak path registry. Resource base and Image retain their independent managed behavior.
 
 ## Domain-wide invariants
 
@@ -71,7 +71,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 
 ## Current limitations
 
-`Image`, `BitMap`, and `FastNoiseLite` are concrete managed assets; `Noise` is their abstract sampling contract. NoiseTexture has managed and Linux Wayland native pixel checks but no other-platform verification. The synchronous loader covers ImageTexture and dynamic FontFile sources with a weak cache: there is no general loader/saver, complete image-codec family, public format-loader plugin, UID/dependency graph, threaded loading, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. BitMap has no physics collision consumer yet. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039 and ResourceLoader coverage.
+`Image`, `BitMap`, and `FastNoiseLite` are concrete managed assets; `Noise` is their abstract sampling contract. NoiseTexture has managed and Linux Wayland native pixel checks but no other-platform verification. The synchronous loader covers ImageTexture, dynamic FontFile and WAV/MP3/Ogg sources with a weak cache: there is no general loader/saver, complete image-codec family, public format-loader plugin, UID/dependency graph, threaded loading, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. BitMap has no physics collision consumer yet. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039 and ResourceLoader coverage.
 
 ## Decisions
 
@@ -121,3 +121,5 @@ The [texture identity slice](../components/canvas-rendering.md#texture-resource-
 ## Audio resources
 
 The [audio component](../components/audio-playback.md) adds reusable AudioStream, independent AudioStreamPlayback/Resampled and copied AudioStreamWAV with typed AudioWAVImportOptions. Static WAV import/save and independent Resource duplication execute; player PackedScene state borrows the source. Generic ResourceLoader audio registration and file scene authoring remain separate absent integration. Internal PCM/IMA/QOA preparation feeds the native server through bounded buffers; no public backend type is exposed.
+
+Audio import/playback ownership and codec verification are documented in the [audio component](../components/audio-playback.md). AudioCompressedTests verifies generic cache identity, ignored resources, validated replacement, retained old playback and malformed rollback; multichannel Vorbis retains its pinned decoder dependency.

@@ -58,6 +58,11 @@ public abstract class AudioStream : Resource
     /// <summary>Reports an actual custom parameter-list change.</summary>
     /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
     protected void NotifyParameterListChanged() { ThrowIfDisposed(); ParameterListChanged?.Invoke(); }
+    internal virtual void ReloadFrom(AudioStream source)
+    {
+        ThrowIfDisposed(); if (source.GetType() != GetType()) throw new InvalidOperationException("Audio reload types differ.");
+        source.CopyCustomStateTo(this, false, DeepDuplicateMode.Internal, static r => r, static r => r); EmitChanged();
+    }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { ParameterListChanged = null; base.Dispose(disposing); }
 }
@@ -69,6 +74,18 @@ public abstract class AudioStreamPlayback : ElectronObject
 {
     /// <summary>Initializes the independent playback extension state.</summary>
     protected AudioStreamPlayback() { }
+    private int _loopingOverride = -1;
+    /// <summary>Gets the typed nullable looping parameter descriptor.</summary>
+    /// <value>Null restores the concrete stream loop policy; true/false overrides it on supporting streams.</value>
+    public static PropertyDescriptor<AudioStreamPlayback, bool?> LoopingParameter { get; } = new(nameof(LoopingOverride), p => p.LoopingOverride, (p, v) => p.LoopingOverride = v, _ => null, stored: true);
+    /// <summary>Gets or sets the typed looping override for supporting compressed or composite playbacks.</summary>
+    /// <value>Null initially; updates are atomic across owner/audio threads. Parameterless streams do not consume it.</value>
+    /// <exception cref="ObjectDisposedException">The playback is disposed.</exception>
+    public bool? LoopingOverride
+    {
+        get { ThrowIfDisposed(); var value = Volatile.Read(ref _loopingOverride); return value < 0 ? null : value != 0; }
+        set { ThrowIfDisposed(); Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); }
+    }
     /// <summary>Starts playback from a position in seconds.</summary>
     /// <param name="fromPosition">Requested time, zero by default.</param>
     /// <exception cref="ArgumentOutOfRangeException">The time is not finite.</exception>

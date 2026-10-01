@@ -1,6 +1,6 @@
 # Resource loading component
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 ## Scope and owned types
 
@@ -33,3 +33,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 ## Dynamic font files
 
 [FontFile](../classes/FontFile.md) shares the same serialized path-cache decision and caller ownership used by image textures. `Load<FontFile>` and compatible Font/Resource views create an actual decoded font; Ignore yields an independent instance, Reuse preserves the cached wrapper and Replace validates bytes before updating the same wrapper. The font source owns native faces and glyph textures; the loader never owns or leases them. `ttf`, `otf`, `woff`, `woff2`, `ttc` and `otc` participate in typed extension discovery. Bitmap fonts, system discovery, public format plugins and threaded loading retain their separate dependencies. [FontResourceLoaderTests](../../tests/Electron2D.Tests/FontResourceLoaderTests.cs) verifies WOFF2 data, concurrent reuse, rollback and cache lifetime.
+
+## Audio files
+
+WAV, MP3 and Ogg Vorbis participate through exact concrete types and compatible AudioStream/Resource base views. Discovery reports wav/mp3/ogg. Uncached existence requires a compatible extension; format mismatch rejects explicit audio loads. Reuse borrows the live cached identity; Ignore and IgnoreDeep preserve that identity while returning independent owned resources. Replace/ReplaceDeep validate before publishing into the same concrete audio wrapper and issue Changed afterward. A malformed file preserves old state; a throwing Changed callback follows committed replacement. Ogg reload owns an independent imported packet copy and retains retired imports for old playback captures. There is no external dependency graph in these file formats, so their deep cache modes equal ordinary modes. AudioCompressedTests checks identity, independent ignores, retained playback after reload, malformed rollback and typed discovery. General scene-file serialization and public format registration remain their own coverage dependencies.

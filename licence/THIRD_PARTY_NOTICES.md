@@ -8,6 +8,8 @@ Electron2D-authored code is licensed under the [MIT license](Electron2D-LICENSE.
 | --- | --- | --- |
 | SDL3-CS managed bindings | zlib | [UPSTREAM-LICENSE](SDL3-CS-LICENSE.txt) |
 | FAudio native mixer and internal FAudio# binding | zlib | [FAudio](FAudio-LICENSE.txt), [FAudio#](FAudioSharp-LICENSE.txt) |
+| NLayer 3.0.0 internal MP3 decoder | MIT | [NLayer](NLayer-LICENSE.txt) |
+| NVorbis 0.10.5 internal Vorbis decoder | MIT | [NVorbis](NVorbis-LICENSE.txt) |
 | qoa-fu managed codec | MIT | [qoa-fu](QOA-LICENSE.txt) |
 | Box2D.NET managed backend | MIT | [LICENSE](Box2D.NET-LICENSE.txt) |
 | Clipper2 managed geometry | BSL-1.0 | [LICENSE](Clipper2-LICENSE.txt) |
@@ -57,7 +59,7 @@ This inventory comes from a self-contained `linux-x64` HostExample publish on 20
 
 Portions of this software are copyright © 2024 The FreeType Project (www.freetype.org). All rights reserved. FreeType is used under the FreeType License, not its alternative GPL license. The MonoGame wrapper's pinned build revision is `dcb1a58dc93c6b926fdce157ff66e4afd0e2914c`, with FreeType source `42608f77f20749dd6ddc9e0536788eaad70ea4b5`; its Linux build statically links dependencies and pins the zlib/libpng/HarfBuzz source wraps above. The delivered `libfreetype.so` SHA-256 is `28b83d3c5db8cc8d283ff68f3a63e2a491b7a9bfadc30388ad4a3838eb634bd7`. Exact Brotli build provenance remains to be reconciled before a release; the retained upstream MIT notice is included now. Native asset versions and file presence do not prove cross-platform execution.
 
-The publish contains 49 license and notice files, copied byte-for-byte into `licence/` by the Electron2D project. The private ICU closure is pinned to source commit `21d1eb0f306e1141c10931e914dfc038c06121da`; its 60-item data package is reproduced from the official release archive, with SHA-256 `64e407b570a21a4b740531a14cd95f0cefc46cef3d8224fd09a0dd386fb7016a`. ICU symbols are hidden and independently suffixed, so the private library does not replace the platform ICU used by .NET. The referenced .NET and DirectXShaderCompiler texts came from the exact NuGet runtime packages listed above; libwebp's COPYING came from the Image package. The other texts were obtained from the corresponding upstream projects and retained without changing their terms.
+The publish contains 51 license and notice files, copied byte-for-byte into `licence/` by the Electron2D project. The private ICU closure is pinned to source commit `21d1eb0f306e1141c10931e914dfc038c06121da`; its 60-item data package is reproduced from the official release archive, with SHA-256 `64e407b570a21a4b740531a14cd95f0cefc46cef3d8224fd09a0dd386fb7016a`. ICU symbols are hidden and independently suffixed, so the private library does not replace the platform ICU used by .NET. The referenced .NET and DirectXShaderCompiler texts came from the exact NuGet runtime packages listed above; libwebp's COPYING came from the Image package. The other texts were obtained from the corresponding upstream projects and retained without changing their terms.
 
 ## Release audit boundary
 

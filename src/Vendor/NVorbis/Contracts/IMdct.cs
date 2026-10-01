@@ -1,0 +1,10 @@
+#nullable disable
+#pragma warning disable CS1591
+// Integration changes: private namespace, top-level visibility and preserved-source diagnostic policy.
+namespace Electron2D.NVorbisBindings.Contracts
+{
+    interface IMdct
+    {
+        void Reverse(float[] samples, int sampleCount);
+    }
+}

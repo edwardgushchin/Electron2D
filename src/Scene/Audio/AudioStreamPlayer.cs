@@ -16,6 +16,7 @@ public class AudioStreamPlayer : Node
         Center = 2
     }
     private AudioStream? _stream;
+    private readonly Dictionary<PropertyDescriptor, StoredPropertyValue> _parameters = [];
     private bool _autoplay;
     private volatile bool _registered;
     private string _bus = "Master";
@@ -36,7 +37,7 @@ public class AudioStreamPlayer : Node
     public AudioStream? Stream
     {
         get { Check(); return _stream; }
-        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_stream, value)) return; ReleaseVoices(); _stream = value; }
+        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_stream, value)) return; ReleaseVoices(); _parameters.Clear(); _stream = value; }
     }
     /// <summary>Gets or sets Autoplay configuration.</summary>
     /// <value>False; actual EnterTree starts a configured stream.</value>
@@ -137,7 +138,7 @@ public class AudioStreamPlayer : Node
         {
             var playback = _stream.InstantiatePlayback();
             FAudioStreamVoice? voice = null;
-            try { voice = context.CreateStream(playback, server.ResolveBus(_bus)); voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); _voices.Add(voice); _ages.Add(0); }
+            try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, resource => resource); voice = context.CreateStream(playback, server.ResolveBus(_bus)); voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); _voices.Add(voice); _ages.Add(0); }
             catch { voice?.Dispose(); playback.Dispose(); throw; }
         }
     }
@@ -182,6 +183,52 @@ public class AudioStreamPlayer : Node
         var result = -1;
         for (var i = 0; i < _voices.Count; i++) if (_voices[i].Playing && (result < 0 || _ages[i] > _ages[result])) result = i;
         return result;
+    }
+    /// <summary>Writes a declared typed stream parameter and applies it to all prepared voices.</summary>
+    /// <typeparam name="TPlayback">Playback owner type declared by the parameter.</typeparam>
+    /// <typeparam name="TValue">Exact parameter value type.</typeparam>
+    /// <param name="parameter">A descriptor returned by the current stream parameter list.</param>
+    /// <param name="value">Typed value; null can restore a nullable parameter's stream default.</param>
+    /// <exception cref="InvalidOperationException">The descriptor is undeclared or playback types disagree.</exception>
+    /// <exception cref="ObjectDisposedException">The player or stream is disposed.</exception>
+    public void SetParameter<TPlayback, TValue>(PropertyDescriptor<TPlayback, TValue> parameter, TValue value) where TPlayback : AudioStreamPlayback
+    {
+        EnsureMutable(); ValidateParameter(parameter);
+        if (_voices.Count == 0)
+        {
+            using var temporary = _stream!.InstantiatePlayback();
+            if (temporary is not TPlayback owner) throw new InvalidOperationException("Parameter playback type differs from the stream.");
+            parameter.SetValue(owner, value);
+        }
+        else
+        {
+            lock (AudioServer.Instance.Native.Gate)
+            {
+                foreach (var voice in _voices) if (voice.Playback is not TPlayback) throw new InvalidOperationException("Parameter playback type differs from the stream.");
+                foreach (var voice in _voices) parameter.SetValue((TPlayback)voice.Playback, value);
+            }
+        }
+        _parameters[parameter] = new StoredPropertyValue<TValue>(value);
+    }
+    /// <summary>Reads an authored typed parameter or the stream's declared revert value.</summary>
+    /// <typeparam name="TPlayback">Declared playback owner type.</typeparam>
+    /// <typeparam name="TValue">Exact parameter value type.</typeparam>
+    /// <param name="parameter">A descriptor returned by the current stream parameter list.</param>
+    /// <returns>The authored value, or the configured typed revert value before an override exists.</returns>
+    /// <exception cref="InvalidOperationException">The descriptor, playback type or default is unavailable.</exception>
+    /// <exception cref="ObjectDisposedException">The player or stream is disposed.</exception>
+    public TValue GetParameter<TPlayback, TValue>(PropertyDescriptor<TPlayback, TValue> parameter) where TPlayback : AudioStreamPlayback
+    {
+        Check(); ValidateParameter(parameter);
+        if (_parameters.TryGetValue(parameter, out var stored) && stored.TryGetValue<TValue>(out var value)) return value;
+        using var temporary = _stream!.InstantiatePlayback();
+        if (temporary is not TPlayback owner || !parameter.TryGetRevertValue(owner, out var result)) throw new InvalidOperationException("The typed parameter default is unavailable.");
+        return result;
+    }
+    private void ValidateParameter(PropertyDescriptor parameter)
+    {
+        ArgumentNullException.ThrowIfNull(parameter);
+        if (_stream is null || !_stream.GetParameterList().Contains(parameter) || parameter.IsReadOnly) throw new InvalidOperationException("The stream does not declare this writable parameter.");
     }
     internal void RefreshVolume() { var gate = AudioServer.Instance.ResolveSourceGain(_bus, 1); foreach (var voice in _voices) voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), gate); }
     internal void RefreshPitch() { foreach (var voice in _voices) voice.SetPitch(_pitch); }
@@ -253,7 +300,12 @@ public class AudioStreamPlayer : Node
         new PropertyDescriptor<AudioStreamPlayer, AudioServer.PlaybackType>(nameof(PlaybackType), p => p.PlaybackType, (p, v) => p.PlaybackType = v, _ => AudioServer.PlaybackType.Default, stored: true),
     ];
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(PlayerProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        var properties = base.GetPropertyDescriptors().Concat(PlayerProperties);
+        return _stream?.GetParameterList().Contains(AudioStreamPlayback.LoopingParameter) == true ? properties.Append(LoopParameterProperty) : properties;
+    }
+    private static readonly PropertyDescriptor<AudioStreamPlayer, bool?> LoopParameterProperty = new("Parameters/LoopingOverride", p => p.GetParameter(AudioStreamPlayback.LoopingParameter), (p, v) => p.SetParameter(AudioStreamPlayback.LoopingParameter, v), _ => null, stored: true);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(AudioStreamPlayer) ? CreatePlayer : base.CreateSceneInstanceFactory();
     private static Node CreatePlayer() => new AudioStreamPlayer();
@@ -270,7 +322,7 @@ public class AudioStreamPlayer : Node
         {
             try { ReleaseVoices(); } catch (Exception error) { CollectException(ref errors, error); }
             if (_registered) { _registered = false; try { AudioServer.Instance.Detach(this); } catch (Exception error) { CollectException(ref errors, error); } }
-            _stream = null; Finished = null;
+            _parameters.Clear(); _stream = null; Finished = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Audio player teardown failed.", errors);

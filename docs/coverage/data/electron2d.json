@@ -312,6 +312,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioStreamMP3",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "AudioStreamMP3",
+    "signature": "public sealed class Electron2D.AudioStreamMP3",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamOggVorbis",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "AudioStreamOggVorbis",
+    "signature": "public sealed class Electron2D.AudioStreamOggVorbis",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioStreamPlayback",
     "kind": "type",
     "declaringType": "Electron2D.AudioStreamPlayback",
@@ -319,6 +349,21 @@
     "signature": "public abstract class Electron2D.AudioStreamPlayback",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamPlaybackOggVorbis",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "AudioStreamPlaybackOggVorbis",
+    "signature": "public sealed class Electron2D.AudioStreamPlaybackOggVorbis",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStreamPlaybackResampled",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -3304,6 +3349,36 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.OggPacketSequence",
+    "kind": "type",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "OggPacketSequence",
+    "signature": "public sealed class Electron2D.OggPacketSequence",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.OggPacketSequencePlayback",
+    "kind": "type",
+    "declaringType": "Electron2D.OggPacketSequencePlayback",
+    "name": "OggPacketSequencePlayback",
+    "signature": "public sealed class Electron2D.OggPacketSequencePlayback",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -7112,6 +7187,32 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AudioStreamMP3..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": ".ctor",
+    "signature": "public AudioStreamMP3()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioStreamOggVorbis..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": ".ctor",
+    "signature": "public AudioStreamOggVorbis()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AudioStreamPlayback..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AudioStreamPlayback",
@@ -8505,6 +8606,19 @@
     "declaringType": "Electron2D.NoiseTexture",
     "name": ".ctor",
     "signature": "public NoiseTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.OggPacketSequence..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": ".ctor",
+    "signature": "public OggPacketSequence()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -28153,6 +28267,445 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamMP3.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.LoadFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "LoadFromBuffer",
+    "signature": "public static Electron2D.AudioStreamMP3 LoadFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E streamData)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "streamData",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamMP3",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.LoadFromFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "LoadFromFile",
+    "signature": "public static Electron2D.AudioStreamMP3 LoadFromFile(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamMP3",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnGetBPM()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnGetBPM",
+    "signature": "protected override System.Double OnGetBPM()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnGetBarBeats()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnGetBarBeats",
+    "signature": "protected override System.Int32 OnGetBarBeats()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnGetBeatCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnGetBeatCount",
+    "signature": "protected override System.Int32 OnGetBeatCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnGetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnGetLength",
+    "signature": "protected override System.Double OnGetLength()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnGetParameterList",
+    "signature": "protected override Electron2D.PropertyDescriptor[] OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnHasLoop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnHasLoop",
+    "signature": "protected override System.Boolean OnHasLoop()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.AudioStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMP3.OnIsMonophonic()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "OnIsMonophonic",
+    "signature": "protected override System.Boolean OnIsMonophonic()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.LoadFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "LoadFromBuffer",
+    "signature": "public static Electron2D.AudioStreamOggVorbis LoadFromBuffer(System.ReadOnlySpan\u003CSystem.Byte\u003E streamData)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "streamData",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamOggVorbis",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.LoadFromFile(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "LoadFromFile",
+    "signature": "public static Electron2D.AudioStreamOggVorbis LoadFromFile(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamOggVorbis",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetBPM()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetBPM",
+    "signature": "protected override System.Double OnGetBPM()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetBarBeats()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetBarBeats",
+    "signature": "protected override System.Int32 OnGetBarBeats()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetBeatCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetBeatCount",
+    "signature": "protected override System.Int32 OnGetBeatCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetLength",
+    "signature": "protected override System.Double OnGetLength()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetParameterList",
+    "signature": "protected override Electron2D.PropertyDescriptor[] OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnGetTags()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnGetTags",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E OnGetTags()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnHasLoop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnHasLoop",
+    "signature": "protected override System.Boolean OnHasLoop()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.AudioStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamOggVorbis.OnIsMonophonic()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "OnIsMonophonic",
+    "signature": "protected override System.Boolean OnIsMonophonic()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamPlayback.GetLoopCount()",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamPlayback",
@@ -28381,6 +28934,128 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetLoopCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnGetLoopCount",
+    "signature": "protected override System.Int32 OnGetLoopCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetPlaybackPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnGetPlaybackPosition",
+    "signature": "protected override System.Double OnGetPlaybackPosition()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnGetStreamSamplingRate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnGetStreamSamplingRate",
+    "signature": "protected override System.Single OnGetStreamSamplingRate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnIsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnIsPlaying",
+    "signature": "protected override System.Boolean OnIsPlaying()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnMixResampled(System.Span\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnMixResampled",
+    "signature": "protected override System.Int32 OnMixResampled(System.Span\u003CElectron2D.Vector2\u003E buffer)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnSeek(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnSeek",
+    "signature": "protected override System.Void OnSeek(System.Double time)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnStart(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnStart",
+    "signature": "protected override System.Void OnStart(System.Double fromPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromPosition",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackOggVorbis.OnStop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackOggVorbis",
+    "name": "OnStop",
+    "signature": "protected override System.Void OnStop()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamPlaybackResampled.BeginResample()",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamPlaybackResampled",
@@ -28479,6 +29154,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlayer.GetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayer",
+    "name": "GetParameter",
+    "signature": "public TValue GetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
     "value": null
   },
   {
@@ -28597,6 +29291,30 @@
       {
         "name": "toPosition",
         "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlayer.SetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlayer",
+    "name": "SetParameter",
+    "signature": "public System.Void SetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
         "default": null
       }
     ],
@@ -56089,6 +56807,122 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequence.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequence.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequence.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequence.GetLength()",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "GetLength",
+    "signature": "public System.Double GetLength()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequence.InstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "InstantiatePlayback",
+    "signature": "public Electron2D.OggPacketSequencePlayback InstantiatePlayback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OggPacketSequencePlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OggPacketSequencePlayback.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OggPacketSequencePlayback",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -83895,6 +84729,201 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AudioStreamMP3.BPM()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "BPM",
+    "signature": "public System.Double BPM { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamMP3.BarBeats()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "BarBeats",
+    "signature": "public System.Int32 BarBeats { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamMP3.BeatCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "BeatCount",
+    "signature": "public System.Int32 BeatCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamMP3.Data()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "Data",
+    "signature": "public System.Byte[] Data { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamMP3.Loop()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "Loop",
+    "signature": "public System.Boolean Loop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamMP3.LoopOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamMP3",
+    "name": "LoopOffset",
+    "signature": "public System.Double LoopOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.BPM()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "BPM",
+    "signature": "public System.Double BPM { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.BarBeats()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "BarBeats",
+    "signature": "public System.Int32 BarBeats { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.BeatCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "BeatCount",
+    "signature": "public System.Int32 BeatCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.Loop()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "Loop",
+    "signature": "public System.Boolean Loop { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.LoopOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "LoopOffset",
+    "signature": "public System.Double LoopOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.PacketSequence()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "PacketSequence",
+    "signature": "public Electron2D.OggPacketSequence PacketSequence { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OggPacketSequence",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamOggVorbis.Tags()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamOggVorbis",
+    "name": "Tags",
+    "signature": "public System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E Tags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamPlayback.LoopingOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "LoopingOverride",
+    "signature": "public System.Nullable\u003CSystem.Boolean\u003E LoopingOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Nullable\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamPlayback.LoopingParameter()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamPlayback",
+    "name": "LoopingParameter",
+    "signature": "public static Electron2D.PropertyDescriptor\u003CElectron2D.AudioStreamPlayback, System.Nullable\u003CSystem.Boolean\u003E\u003E LoopingParameter { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor\u003CElectron2D.AudioStreamPlayback, System.Nullable\u003CSystem.Boolean\u003E\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AudioStreamPlayer.Autoplay()",
     "kind": "property",
     "declaringType": "Electron2D.AudioStreamPlayer",
@@ -93005,6 +94034,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OggPacketSequence.GranulePositions()",
+    "kind": "property",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "GranulePositions",
+    "signature": "public System.Int64[] GranulePositions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OggPacketSequence.PacketData()",
+    "kind": "property",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "PacketData",
+    "signature": "public System.Byte[][][] PacketData { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[][][]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OggPacketSequence.SamplingRate()",
+    "kind": "property",
+    "declaringType": "Electron2D.OggPacketSequence",
+    "name": "SamplingRate",
+    "signature": "public System.Single SamplingRate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

@@ -4,7 +4,7 @@ Last updated: 2026-10-01
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1318 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1324 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 936 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -59,8 +59,10 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
 | [Noise](classes/Noise.md) | 0 | 4 |
+| [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | 0 | 3 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
+| [AudioStreamPlayback](classes/AudioStreamPlayback.md) | 0 | 2 |
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
 | [InputEventMouse](classes/InputEventMouse.md) | 0 | 2 |
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
@@ -100,7 +102,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
-| Trigger: pinned internal NVorbis decoding plus Ogg packet/seek/loop/metadata resources feeding the existing FAudio stream path (ADR 0047). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
@@ -137,7 +138,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
-| Trigger: pinned internal NLayer decoding, frame seeking/loop/metadata and corruption checks feeding the existing FAudio stream path (ADR 0047). | 1 |
 | Trigger: platform font discovery, matching and owned fallback faces over the integrated FontFile backend (ADR 0046). | 1 |
 | Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090). | 1 |
 | Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
