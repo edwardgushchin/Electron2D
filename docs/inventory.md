@@ -456,3 +456,11 @@ Private FlowContainer Slot/Line scratch records are documented on its class page
 | [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#texture-rectangles) | [TextureRect](classes/TextureRect.md), [TextureRectExpandMode](classes/TextureRectExpandMode.md), [TextureRectStretchMode](classes/TextureRectStretchMode.md) | [TextureRect.cs](../src/Scene/GUI/TextureRect.cs) | Borrowed textures, six minimum policies, seven placements, reflected atlas tiles, revision/lifetime tracking and flow stabilization |
 
 Private TextureRect.SourceState is documented on its class page and owns no resource.
+
+## Resizable split panels
+
+| Domain | Component | Types | Source | Current implementation |
+| --- | --- | --- | --- | --- |
+| [Rendering](domains/rendering.md) | [Canvas rendering](components/canvas-rendering.md#split-panels) | [SplitContainer](classes/SplitContainer.md), [HSplitContainer](classes/HSplitContainer.md), [VSplitContainer](classes/VSplitContainer.md), [SplitContainer.DraggerVisibility](classes/SplitContainer.DraggerVisibility.md) | [API](../src/Scene/GUI/SplitContainer.cs), [layout](../src/Scene/GUI/SplitContainer.Layout.cs), [input](../src/Scene/GUI/SplitContainer.Input.cs) | Multi-panel offsets/constraints, real drag areas, touch images, nested intersections and typed scenes |
+
+Private SplitContainer Slot/Dragger/SourceState and reusable scratch records are documented on its class page. ThemeDB.Split.cs contributes four embedded icons and bar/touch theme entries without a new exported type.

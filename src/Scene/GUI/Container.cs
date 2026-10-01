@@ -91,7 +91,7 @@ public class Container : Control
     /// <param name="child">A live direct child control.</param>
     /// <param name="rect">Finite nonnegative destination allocation.</param>
     /// <remarks>Minimum/maximum bounds apply; end takes priority over center. Horizontal shrink respects RTL.
-    /// Resets anchors to zero, assigns the rectangle in one reflow, then resets rotation and scale.</remarks>
+    /// Resets anchors to zero, assigns the rectangle in one reflow, then resets rotation and scale. Required transform resets are attempted after callback failure; disposed or reparented children are skipped.</remarks>
     /// <exception cref="ArgumentNullException">The child is null.</exception>
     /// <exception cref="ArgumentException">The child is not live/direct or the rectangle is invalid.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
@@ -100,7 +100,7 @@ public class Container : Control
     {
         EnsureMutable(); ArgumentNullException.ThrowIfNull(child);
         if (child.IsDisposed || !ReferenceEquals(child.Parent, this)) throw new ArgumentException("Layout requires a live direct child.", nameof(child));
-        if (!rect.IsFinite() || rect.Size.X < 0 || rect.Size.Y < 0) throw new ArgumentException("Layout allocation must be finite and nonnegative.", nameof(rect));
+        if (!rect.IsFinite() || !rect.End.IsFinite() || rect.Size.X < 0 || rect.Size.Y < 0) throw new ArgumentException("Layout allocation must be finite and nonnegative.", nameof(rect));
         var minimum = child.GetBoundMinimumSize(); var position = rect.Position; var size = rect.Size;
         if ((child.SizeFlagsHorizontal & SizeFlags.Fill) == 0)
         {
@@ -115,7 +115,16 @@ public class Container : Control
             if ((child.SizeFlagsVertical & SizeFlags.ShrinkEnd) != 0) position.Y += rect.Size.Y - size.Y;
             else if ((child.SizeFlagsVertical & SizeFlags.ShrinkCenter) != 0) position.Y += MathF.Floor((rect.Size.Y - size.Y) / 2);
         }
-        child.SetContainerRect(new(position, size)); child.Rotation = 0; child.Scale = Vector2.One;
+        List<Exception>? errors = null;
+        try { child.SetContainerRect(new(position, size)); } catch (Exception error) { (errors ??= []).Add(error); }
+        if (!child.IsDisposed && ReferenceEquals(child.Parent, this))
+        {
+            try { child.Rotation = 0; } catch (Exception error) { (errors ??= []).Add(error); }
+            if (!child.IsDisposed && ReferenceEquals(child.Parent, this))
+                try { child.Scale = Vector2.One; } catch (Exception error) { (errors ??= []).Add(error); }
+        }
+        if (errors is { Count: 1 }) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
+        ThrowCollected("Container child fitting callbacks failed.", errors);
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)

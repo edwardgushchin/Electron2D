@@ -4,7 +4,7 @@ Last updated: 2026-10-01
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** —
 
-**Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs), [ThemeDB.Scroll.cs](../../src/Scene/Resources/ThemeDB.Scroll.cs) · **Component:** [Typed themes](../components/themes.md)
+**Declaration:** `public sealed partial class ThemeDB : ElectronObject` · **Source:** [ThemeDB.cs](../../src/Scene/Resources/ThemeDB.cs), [ThemeDB.Buttons.cs](../../src/Scene/Resources/ThemeDB.Buttons.cs), [ThemeDB.Scroll.cs](../../src/Scene/Resources/ThemeDB.Scroll.cs), [ThemeDB.Split.cs](../../src/Scene/Resources/ThemeDB.Split.cs) · **Component:** [Typed themes](../components/themes.md)
 
 ## Description and example
 
@@ -98,3 +98,7 @@ GetProjectTheme remains absent until a Theme resource-file loader and typed `gui
 [ScrollThemeTests](../../tests/Electron2D.Tests/ScrollThemeTests.cs) checks the scrollbar style values and H/V aliases, twelve explicit empty-icon slots, absent padding/separation keys, the distinct container focus geometry, exact embedded SVG hashes and decoded gradient direction/pixels. These new checks await the coordinated scroll-slice run; no scroll consumer native verification is claimed here yet.
 
 Built-in FlowContainer/HFlowContainer/VFlowContainer entries provide h_separation and v_separation at four pixels through ordinary type-chain lookup. No new theme service or loader is introduced; [flow integration](../components/canvas-rendering.md#flow-layout) consumes them.
+
+## Split defaults
+
+The built-in theme now supplies SplitContainer/HSplitContainer/VSplitContainer separation=12, minimum_grab_thickness=6, autohide=1, empty bar backgrounds, four directional SVG grabber/touch assets and inherited touch tints .3/.6/1. The icons use the existing runtime adaptation notice and ordinary theme resource ownership. SplitContainerTests and native split checks exercise lookup, minimum contribution, drawing and attached residency; nonunit scale and the remaining default GUI catalog retain existing limits.

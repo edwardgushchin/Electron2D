@@ -364,7 +364,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [HScrollBar](classes/HScrollBar.md) | ScrollBar | Implemented | 2 |
 | [HSeparator](classes/HSeparator.md) | Separator | Blocked | 0 |
 | [HSlider](classes/HSlider.md) | Slider | Implemented | 0 |
-| [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Blocked | 0 |
+| [HSplitContainer](classes/HSplitContainer.md) | SplitContainer | Implemented | 0 |
 | [HTTPClient](classes/HTTPClient.md) | RefCounted | Blocked | 103 |
 | [HTTPRequest](classes/HTTPRequest.md) | Node | Blocked | 32 |
 | [HashingContext](classes/HashingContext.md) | RefCounted | Blocked | 7 |
@@ -803,7 +803,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SphereShape3D](classes/SphereShape3D.md) | Shape3D | Excluded | 1 |
 | [SpinBox](classes/SpinBox.md) | Range | Blocked | 43 |
 | [SplineIK3D](classes/SplineIK3D.md) | ChainIK3D | Excluded | 9 |
-| [SplitContainer](classes/SplitContainer.md) | Container | Blocked | 35 |
+| [SplitContainer](classes/SplitContainer.md) | Container | Partial | 35 |
 | [SpotLight3D](classes/SpotLight3D.md) | Light3D | Excluded | 7 |
 | [SpringArm3D](classes/SpringArm3D.md) | Node3D | Excluded | 8 |
 | [SpringBoneCollision3D](classes/SpringBoneCollision3D.md) | Node3D | Excluded | 5 |
@@ -906,7 +906,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Implemented | 4 |
 | [VSeparator](classes/VSeparator.md) | Separator | Blocked | 0 |
 | [VSlider](classes/VSlider.md) | Slider | Implemented | 2 |
-| [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Blocked | 0 |
+| [VSplitContainer](classes/VSplitContainer.md) | SplitContainer | Implemented | 0 |
 | [Variant](classes/Variant.md) | — | Excluded | 0 |
 | [Vector2](classes/Vector2.md) | — | Implemented | 82 |
 | [Vector2i](classes/Vector2i.md) | — | Implemented | 53 |

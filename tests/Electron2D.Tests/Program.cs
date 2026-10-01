@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPLIT") == "1") { SplitContainerTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOOLTIP") == "1")
 {
     ShortcutTests.Run(); ControlTooltipTests.Run(); TooltipLifetimeTests.Run();
@@ -208,6 +210,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == 
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPLIT_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RECT") == "1")
 {
     RenderingRuntimeTests.Run();
@@ -301,6 +305,7 @@ RangeProgressTests.Run();
 BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();
+SplitContainerTests.Run();
 TextureRectTests.Run();
 StyleBoxTests.Run();
 StyleBoxFlatTests.Run();

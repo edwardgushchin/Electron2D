@@ -1883,6 +1883,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.HSplitContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.HSplitContainer",
+    "name": "HSplitContainer",
+    "signature": "public class Electron2D.HSplitContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.SplitContainer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.HorizontalAlignment",
     "kind": "type",
     "declaringType": "Electron2D.HorizontalAlignment",
@@ -4266,6 +4281,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SplitContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "SplitContainer",
+    "signature": "public class Electron2D.SplitContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.Container",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SplitContainer.DraggerVisibility",
+    "kind": "type",
+    "declaringType": "Electron2D.SplitContainer.DraggerVisibility",
+    "name": "DraggerVisibility",
+    "signature": "public enum Electron2D.SplitContainer.DraggerVisibility",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Sprite",
     "kind": "type",
     "declaringType": "Electron2D.Sprite",
@@ -5093,6 +5141,21 @@
     "signature": "public class Electron2D.VSlider",
     "visibility": "public",
     "baseType": "Electron2D.Slider",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VSplitContainer",
+    "kind": "type",
+    "declaringType": "Electron2D.VSplitContainer",
+    "name": "VSplitContainer",
+    "signature": "public class Electron2D.VSplitContainer",
+    "visibility": "public",
+    "baseType": "Electron2D.SplitContainer",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -7692,6 +7755,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.HSplitContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.HSplitContainer",
+    "name": ".ctor",
+    "signature": "public HSplitContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Image..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Image",
@@ -9116,6 +9192,38 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.SplitContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": ".ctor",
+    "signature": "public SplitContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SplitContainer..ctor(System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": ".ctor",
+    "signature": "protected SplitContainer(System.Boolean vertical)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Sprite..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Sprite",
@@ -9528,6 +9636,19 @@
     "declaringType": "Electron2D.VSlider",
     "name": ".ctor",
     "signature": "public VSlider()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VSplitContainer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VSplitContainer",
+    "name": ".ctor",
+    "signature": "public VSplitContainer()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -19788,6 +19909,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.SplitContainer.DraggerVisibility.Hidden()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SplitContainer.DraggerVisibility",
+    "name": "Hidden",
+    "signature": "public const Electron2D.SplitContainer.DraggerVisibility Hidden = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SplitContainer.DraggerVisibility",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.SplitContainer.DraggerVisibility.HiddenCollapsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SplitContainer.DraggerVisibility",
+    "name": "HiddenCollapsed",
+    "signature": "public const Electron2D.SplitContainer.DraggerVisibility HiddenCollapsed = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SplitContainer.DraggerVisibility",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.SplitContainer.DraggerVisibility.Visible()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.SplitContainer.DraggerVisibility",
+    "name": "Visible",
+    "signature": "public const Electron2D.SplitContainer.DraggerVisibility Visible = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SplitContainer.DraggerVisibility",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.SpriteFrames.LoopMode.Linear()",
     "kind": "enumValue",
     "declaringType": "Electron2D.SpriteFrames.LoopMode",
@@ -23789,6 +23949,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SplitContainer.DragEnded()",
+    "kind": "event",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragEnded",
+    "signature": "public event System.Action DragEnded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SplitContainer.DragStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragStarted",
+    "signature": "public event System.Action DragStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.SplitContainer.Dragged()",
+    "kind": "event",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "Dragged",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E Dragged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
     "value": null
   },
   {
@@ -42092,6 +42291,19 @@
     "id": "method:Electron2D.HSlider.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.HSlider",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.HSplitContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.HSplitContainer",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -65318,6 +65530,154 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SplitContainer.ClampSplitOffset(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "ClampSplitOffset",
+    "signature": "public System.Void ClampSplitOffset(System.Int32 priorityIndex = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "priorityIndex",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.GetAllowedSizeFlagsHorizontal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "GetAllowedSizeFlagsHorizontal",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsHorizontal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.GetAllowedSizeFlagsVertical()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "GetAllowedSizeFlagsVertical",
+    "signature": "protected override Electron2D.Control.SizeFlags[] GetAllowedSizeFlagsVertical()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control.SizeFlags[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.GetDragAreaControl()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "GetDragAreaControl",
+    "signature": "public Electron2D.Control GetDragAreaControl()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.GetDragAreaControls()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "GetDragAreaControls",
+    "signature": "public Electron2D.Control[] GetDragAreaControls()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Control[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SplitContainer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Sprite.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Sprite",
@@ -71320,6 +71680,19 @@
     "id": "method:Electron2D.VSlider.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.VSlider",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VSplitContainer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.VSplitContainer",
     "name": "CreateSceneInstanceFactory",
     "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
     "visibility": "protected",
@@ -94025,6 +94398,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Slider.TickPosition",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.Collapsed()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "Collapsed",
+    "signature": "public System.Boolean Collapsed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DragAreaMarginBegin()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragAreaMarginBegin",
+    "signature": "public System.Int32 DragAreaMarginBegin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DragAreaMarginEnd()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragAreaMarginEnd",
+    "signature": "public System.Int32 DragAreaMarginEnd { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DragAreaOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragAreaOffset",
+    "signature": "public System.Int32 DragAreaOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DragNestedIntersections()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DragNestedIntersections",
+    "signature": "public System.Boolean DragNestedIntersections { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DraggerVisibilityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DraggerVisibilityMode",
+    "signature": "public Electron2D.SplitContainer.DraggerVisibility DraggerVisibilityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SplitContainer.DraggerVisibility",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.DraggingEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "DraggingEnabled",
+    "signature": "public System.Boolean DraggingEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.SplitOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "SplitOffset",
+    "signature": "public System.Int32 SplitOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.SplitOffsets()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "SplitOffsets",
+    "signature": "public System.Int32[] SplitOffsets { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.TouchDraggerEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "TouchDraggerEnabled",
+    "signature": "public System.Boolean TouchDraggerEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SplitContainer.Vertical()",
+    "kind": "property",
+    "declaringType": "Electron2D.SplitContainer",
+    "name": "Vertical",
+    "signature": "public System.Boolean Vertical { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

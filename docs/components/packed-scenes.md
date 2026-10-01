@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 ## Scope
 
@@ -42,7 +42,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Only root-owned descendant branches are present. Parent order, sibling order, owner paths, persistent groups, and typed stored values are deterministic.
 - Stored `Node.UniqueNameInOwner` flags are restored before owner assignment; owner-scoped `%Name` lookup is available after instantiation, including for a nested packed scene's own root.
 - Reference-free values such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), [`Transform`](../classes/Transform.md), and [`TimerProcessCallback`](../classes/TimerProcessCallback.md) are captured and restored directly, including HDR, negative, integer, affine, or enum components, without conversion to strings or a universal container.
-- Stored `Vector2[]`, `Color[]`, and `int[][]` contour arrays are copied at capture and on each state read or instance restore; nested index arrays are copied individually. Resource-valued properties continue to follow scene-local duplication policy.
+- Stored `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and `int[][]` contour arrays are copied at capture and on each state read or instance restore; nested index arrays are copied individually. Resource-valued properties continue to follow scene-local duplication policy.
 - Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.
 - Scene-local duplication preserves graph identity. External non-local resources remain shared; created duplicates are owned and disposed by the returned root.
@@ -67,7 +67,7 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 - No text/binary scene loader or saver, exported-pack integration, UID/import remapping, dependency scanning, or missing-resource recovery.
 - No inherited/nested scene authoring, editable-instance metadata, placeholders, pinned properties, script preservation, or implemented editor edit state.
 - No persistent typed event endpoint schema. Runtime C# event subscriptions and `EventConnection` tokens are intentionally not copied.
-- No general node-reference property encoding/remapping and no arbitrary reference-shaped stored property values. `Vector2[]`, `Color[]`, and `int[][]` contours are explicit copied value-array exceptions.
+- Typed node references use the implemented relative-path profile; no arbitrary reference-shaped stored property values are accepted. `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and `int[][]` contours are explicit copied value-array exceptions.
 - No hidden scene activation: `Instantiate()` returns detached; `SceneTree` lifecycle remains explicit.
 
 ## Verification
@@ -88,3 +88,5 @@ The implemented runtime treats any valid owned hierarchy uniformly: callers can 
 During reconstruction, each captured property must match a writable stored descriptor on the fresh target with the exact captured value type. Control/Window theme overrides have one bounded extension under [ADR 0083](../decisions/rendering.md#adr-0083): when a fresh target has no descriptor yet, the engine can reconstruct only the reserved `ThemeColorOverride/`, `ThemeConstantOverride/`, `ThemeFontSizeOverride/`, `ThemeIconOverride/` and `ThemeStyleBoxOverride/` families with exact `Color?`, `int?`, `int?`, `Texture` and `StyleBox` value types. The descriptor is newly bound to the target's typed theme API. Unknown prefixes, other node roles, non-stored entries and mismatched types still fail. Captured source-owner delegates are never reused, and this does not add Variant values or general string member dispatch.
 
 Theme/variation and actual override entries are captured independently of computed Box/Grid separation aliases. This preserves inherited values after instantiation instead of freezing a resolved gap as a new local override. Existing hierarchy/resource rollback, exact factory identity and scene-local graph policy remain unchanged. [ThemeResourceTests](../../tests/Electron2D.Tests/ThemeResourceTests.cs) verifies typed values, placeholders, alias subscriptions, variations, merge/copy, guards and concurrency; [ThemeLookupTests](../../tests/Electron2D.Tests/ThemeLookupTests.cs) verifies owner priority, deferred/detached caches, batching, reentry, fallback policy and typed override packing. [PanelContainerTests](../../tests/Electron2D.Tests/PanelContainerTests.cs) verifies defaults, background draw order, content bounds, eligibility, failure continuation and sorting after failed theme callbacks. Resource updates and active lookup pass 64 warmed cycles with zero managed bytes. [ThemePanelRenderingTests](../../tests/Electron2D.Tests/ThemePanelRenderingTests.cs) verifies seven visual phases and 64 warmed notification/layout/recording/render frames with zero managed bytes from ProcessFrameStarted through FramePostDraw on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, nonunit default-icon scaling, other platforms and owner acceptance remain unverified.
+
+SplitContainer offsets extend the explicit scalar-array profiles with `int[]`. Snapshots/restoration clone these arrays and revert compares elements. The exact SplitContainer/HSplitContainer/VSplitContainer factories reconstruct internal drag controls while ordinary Node.Owner selection and internal-child omission stay unchanged; runtime custom controls added below drag areas are not captured through those omitted internal branches. SplitContainerTests verifies configuration packing and source-snapshot independence.

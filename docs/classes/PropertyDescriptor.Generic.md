@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -175,7 +175,7 @@ The descriptor is immutable after construction. Revert values are not snapshots:
 - An owner of the wrong runtime type passed through the base API throws `ArgumentException`.
 - Writes to a read-only descriptor and reverts without a revert factory throw `InvalidOperationException`.
 - A validator returning `false` causes `ArgumentOutOfRangeException` before the setter runs.
-- A stored property whose declared value is neither a string, a `Resource` subtype, nor a reference-free value type throws `NotSupportedException` during packed capture.
+- A stored property whose declared value is neither a string, a `Resource` subtype, a reference-free value type, a typed Node reference, nor an explicitly supported array profile throws `NotSupportedException` during packed capture.
 - Resource-valued storage is remapped through the current scene's alias-preserving duplication scope before the setter runs.
 - Exceptions from user-supplied delegates propagate unchanged.
 
@@ -192,3 +192,7 @@ The executable test covers typed get/set, validation rejection, revert-value ret
 The explicit packed-scene array profile includes `float[]` tab increments and `string[]` structured-text options. Capture, state reads and restoration clone these arrays; structural element equality drives revert checks. Label setters still enforce finite tab increments with a positive repeated cycle and nonnull parser options when restoring stored values. This extends the existing vector/color/polygon-index array profiles without accepting arbitrary managed reference graphs. [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) exercises real scene packing and independent array snapshots.
 
 Stored typed Node references on node owners use [StoredNodeReferenceValue](StoredNodeReferenceValue.md): capture records a relative path and reconstruction resolves it after the complete hierarchy exists. This does not allow arbitrary object graphs. Resource-array revert comparisons use reference identity element by element; storage of arbitrary resource arrays remains outside the supported node-property profiles. Shortcut owns and duplicates its event array through its Resource hook instead.
+
+## Integer array storage
+
+SplitContainer.SplitOffsets adds the exact `int[]` packed profile under ADR 0023. Capture, state reads and restoration clone the array; element equality drives revert instead of array reference equality. SplitContainerTests verifies captured-source changes and independently mutable public snapshots. Other array/reference graphs remain rejected.

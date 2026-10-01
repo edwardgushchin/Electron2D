@@ -232,6 +232,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
             typeof(TValue) != typeof(string) &&
             typeof(TValue) != typeof(string[]) &&
             typeof(TValue) != typeof(float[]) &&
+            typeof(TValue) != typeof(int[]) &&
             typeof(TValue) != typeof(Vector2[]) &&
             typeof(TValue) != typeof(Color[]) &&
             typeof(TValue) != typeof(int[][]) &&
@@ -285,6 +286,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     {
         if (left is Resource?[] resources && right is Resource?[] otherResources) return resources.AsSpan().SequenceEqual(otherResources);
         if (left is string[] strings && right is string[] otherStrings) return strings.AsSpan().SequenceEqual(otherStrings);
+        if (left is int[] integers && right is int[] otherIntegers) return integers.AsSpan().SequenceEqual(otherIntegers);
         if (left is float[] numbers && right is float[] otherNumbers) return numbers.AsSpan().SequenceEqual(otherNumbers);
         if (left is Vector2[] points && right is Vector2[] otherPoints) return points.AsSpan().SequenceEqual(otherPoints);
         if (left is Color[] colors && right is Color[] otherColors) return colors.AsSpan().SequenceEqual(otherColors);
@@ -352,6 +354,7 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
     {
         string[] strings => (TValue)(object)strings.Clone(),
         float[] numbers => (TValue)(object)numbers.Clone(),
+        int[] integers => (TValue)(object)integers.Clone(),
         Vector2[] points => (TValue)(object)points.Clone(),
         Color[] colors => (TValue)(object)colors.Clone(),
         int[][] contours => (TValue)(object)contours.Select(indices => (int[])indices.Clone()).ToArray(),

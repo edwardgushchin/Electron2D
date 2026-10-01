@@ -2771,6 +2771,191 @@
       "godot": "TextureRect::property:texture",
       "electron2d": "property:Electron2D.TextureRect.Texture()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:HSplitContainer",
+      "electron2d": "T:Electron2D.HSplitContainer",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:SplitContainer",
+      "electron2d": "T:Electron2D.SplitContainer",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::enum:DraggerVisibility",
+      "electron2d": "T:Electron2D.SplitContainer.DraggerVisibility",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::enum_value:DraggerVisibility.DRAGGER_HIDDEN",
+      "electron2d": "enumValue:Electron2D.SplitContainer.DraggerVisibility.Hidden()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::enum_value:DraggerVisibility.DRAGGER_HIDDEN_COLLAPSED",
+      "electron2d": "enumValue:Electron2D.SplitContainer.DraggerVisibility.HiddenCollapsed()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::enum_value:DraggerVisibility.DRAGGER_VISIBLE",
+      "electron2d": "enumValue:Electron2D.SplitContainer.DraggerVisibility.Visible()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::method:clamp_split_offset(int:)",
+      "electron2d": "method:Electron2D.SplitContainer.ClampSplitOffset(System.Int32)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::method:get_drag_area_control()",
+      "electron2d": "method:Electron2D.SplitContainer.GetDragAreaControl()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::method:get_drag_area_controls()",
+      "electron2d": "method:Electron2D.SplitContainer.GetDragAreaControls()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:collapsed",
+      "electron2d": "property:Electron2D.SplitContainer.Collapsed()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:drag_area_margin_begin",
+      "electron2d": "property:Electron2D.SplitContainer.DragAreaMarginBegin()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:drag_area_margin_end",
+      "electron2d": "property:Electron2D.SplitContainer.DragAreaMarginEnd()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:drag_area_offset",
+      "electron2d": "property:Electron2D.SplitContainer.DragAreaOffset()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:drag_nested_intersections",
+      "electron2d": "property:Electron2D.SplitContainer.DragNestedIntersections()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:dragger_visibility",
+      "electron2d": "property:Electron2D.SplitContainer.DraggerVisibilityMode()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:dragging_enabled",
+      "electron2d": "property:Electron2D.SplitContainer.DraggingEnabled()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:split_offset",
+      "electron2d": "property:Electron2D.SplitContainer.SplitOffset()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:split_offsets",
+      "electron2d": "property:Electron2D.SplitContainer.SplitOffsets()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:touch_dragger_enabled",
+      "electron2d": "property:Electron2D.SplitContainer.TouchDraggerEnabled()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::property:vertical",
+      "electron2d": "property:Electron2D.SplitContainer.Vertical()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::signal:drag_ended()",
+      "electron2d": "event:Electron2D.SplitContainer.DragEnded()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::signal:drag_started()",
+      "electron2d": "event:Electron2D.SplitContainer.DragStarted()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::signal:dragged(int:)",
+      "electron2d": "event:Electron2D.SplitContainer.Dragged()",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:autohide",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:h_grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:h_touch_dragger",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:minimum_grab_thickness",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:split_bar_background",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:touch_dragger",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:touch_dragger_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:touch_dragger_hover_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:touch_dragger_pressed_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:v_grabber",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "SplitContainer::theme_item:v_touch_dragger",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:VSplitContainer",
+      "electron2d": "T:Electron2D.VSplitContainer",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -4287,6 +4472,62 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "SplitContainer::property:drag_area_highlight_in_editor"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first self-hosted editor executable context and selected-control drag-area overlay slice under ADR 0027. Runtime has no editor hint/overlay; implement actual gold/red highlight publication there, not an inert boolean."
+    },
+    {
+      "godot": [
+        "class:HSplitContainer",
+        "SplitContainer::enum:DraggerVisibility",
+        "SplitContainer::enum_value:DraggerVisibility.DRAGGER_HIDDEN",
+        "SplitContainer::enum_value:DraggerVisibility.DRAGGER_HIDDEN_COLLAPSED",
+        "SplitContainer::enum_value:DraggerVisibility.DRAGGER_VISIBLE",
+        "SplitContainer::method:clamp_split_offset(int:)",
+        "SplitContainer::method:get_drag_area_control()",
+        "SplitContainer::method:get_drag_area_controls()",
+        "SplitContainer::property:collapsed",
+        "SplitContainer::property:drag_area_margin_begin",
+        "SplitContainer::property:drag_area_margin_end",
+        "SplitContainer::property:drag_area_offset",
+        "SplitContainer::property:drag_nested_intersections",
+        "SplitContainer::property:dragger_visibility",
+        "SplitContainer::property:dragging_enabled",
+        "SplitContainer::property:split_offset",
+        "SplitContainer::property:split_offsets",
+        "SplitContainer::property:touch_dragger_enabled",
+        "SplitContainer::property:vertical",
+        "SplitContainer::signal:drag_ended()",
+        "SplitContainer::signal:drag_started()",
+        "SplitContainer::signal:dragged(int:)",
+        "SplitContainer::theme_item:autohide",
+        "SplitContainer::theme_item:grabber",
+        "SplitContainer::theme_item:h_grabber",
+        "SplitContainer::theme_item:h_touch_dragger",
+        "SplitContainer::theme_item:minimum_grab_thickness",
+        "SplitContainer::theme_item:separation",
+        "SplitContainer::theme_item:split_bar_background",
+        "SplitContainer::theme_item:touch_dragger",
+        "SplitContainer::theme_item:touch_dragger_color",
+        "SplitContainer::theme_item:touch_dragger_hover_color",
+        "SplitContainer::theme_item:touch_dragger_pressed_color",
+        "SplitContainer::theme_item:v_grabber",
+        "SplitContainer::theme_item:v_touch_dragger",
+        "class:VSplitContainer"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": [
+        "class:SplitContainer"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate. The remaining own property drag_area_highlight_in_editor requires the first real editor context/overlay slice under ADR 0027."
     }
   ],
   "extras": [
@@ -5079,6 +5320,58 @@
     {
       "electron2d": "method:Electron2D.TextureRect.OnNotification(System.Int32)",
       "reason": "Typed C# construction, inherited Control minimum/notification/warning/storage/factory hook or managed borrowed-resource teardown for the executable TextureRect under ADRs 0008/0023/0028/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.HSplitContainer..ctor()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.SplitContainer..ctor()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.SplitContainer..ctor(System.Boolean)",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VSplitContainer..ctor()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.HSplitContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.Dispose(System.Boolean)",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.GetAllowedSizeFlagsHorizontal()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.GetAllowedSizeFlagsVertical()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.GetPropertyDescriptors()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.OnGetMinimumSize()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.SplitContainer.OnNotification(System.Int32)",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
+    },
+    {
+      "electron2d": "method:Electron2D.VSplitContainer.CreateSceneInstanceFactory()",
+      "reason": "Typed C# constructor or inherited layout/lifecycle/storage/factory/teardown projection for executable SplitContainer/HSplitContainer/VSplitContainer under ADRs 0008/0023/0081; no separate own pinned XML row."
     }
   ]
 }

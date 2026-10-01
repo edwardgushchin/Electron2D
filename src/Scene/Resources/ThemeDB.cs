@@ -38,7 +38,7 @@ public sealed partial class ThemeDB : ElectronObject
         foreach (var side in new[] { "left", "top", "right", "bottom" }) _defaultTheme.SetConstant("margin_" + side, "MarginContainer", 0);
         var fallback = new StyleBoxFlat { BGColor = new(1, .365f, .365f), DrawCenter = false, CornerDetail = 1 };
         fallback.SetContentMarginAll(4); fallback.SetBorderWidthAll(2); _style = fallback; _owned.Add(fallback);
-        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); }
+        try { AddSliderDefaults(); AddTextDefaults(); AddButtonDefaults(); AddScrollDefaults(); AddItemListDefaults(); AddSplitDefaults(); }
         catch
         {
             _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
@@ -103,7 +103,7 @@ public sealed partial class ThemeDB : ElectronObject
     /// <value>The shared service; consumers do not own it.</value>
     public static ThemeDB Instance => Singleton.Value;
     /// <summary>Gets the built-in theme resource for the currently implemented control families.</summary>
-    /// <returns>The borrowed mutable theme, with the embedded font, Label/panel/tooltip styles, button, slider and scroll skins/hints, and box/grid constants.</returns>
+    /// <returns>The borrowed mutable theme, with the embedded font, Label/panel/tooltip styles, button, slider and scroll skins/hints, box/grid/flow constants and split-bar/touch skins.</returns>
     /// <exception cref="ObjectDisposedException">The service or its theme is disposed.</exception>
     public Theme GetDefaultTheme() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
     /// <summary>Occurs after a universal fallback assignment changes its value.</summary>

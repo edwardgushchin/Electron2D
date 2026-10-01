@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-01
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md), [FlowContainer](FlowContainer.md), [SplitContainer](SplitContainer.md)
 
 **Declaration:** `public class Container : Control` · **Source:** [Container.cs](../../src/Scene/GUI/Container.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -62,3 +62,5 @@ Owner/lifetime guards apply to reads and mutations; scene capture rejects mutati
 AccessibilityRegion remains Blocked: native semantic landmark publication/update/removal needs the accessibility service and viewport/control semantic identity. [Coverage](../coverage/classes/Container.md) leaves the class Partial for that exact dependency. No inert semantic property is exposed. See [ADR 0081](../decisions/rendering.md#adr-0081).
 
 [FlowContainer](FlowContainer.md) and its fixed HFlow/VFlow subclasses consume the same deferred sort/lifecycle/final-fit hooks for wrapping layout, alongside box/grid containers.
+
+The shared FitChildInRect path now attempts rotation and scale reset after a committed rectangle resize callback fails, collecting errors after required stages. It skips further mutation if the child was disposed or reparented during a callback. SplitContainerTests verifies a failing first-panel resize still resets its visual transform and fits later panels. This applies to every current layout consumer.

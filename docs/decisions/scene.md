@@ -193,7 +193,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 ### Status
 
@@ -221,7 +221,7 @@ Add one runtime-only packed-scene component to the Scene domain and the existing
 
 `Node.Owner` is the storage-selection boundary. The root is always stored; traversal is parent-first depth-first, and only branches whose first descendant is owned by that root are included. The root does not own itself. Persistent group flags are captured; runtime-only groups are not.
 
-Stored node state comes only from writable `PropertyDescriptor<TOwner, TValue>` instances explicitly marked `stored: true`. Strings, resources, reference-free value types and the explicit string/float/vector/color/contour array profiles are accepted. Typed Node references on node owners are captured as relative paths, without retaining the original node. Arbitrary objects, other collections, delegates, dynamic values and reflection-discovered members are rejected. Names and hierarchy metadata have dedicated fields.
+Stored node state comes only from writable `PropertyDescriptor<TOwner, TValue>` instances explicitly marked `stored: true`. Strings, resources, reference-free value types and the explicit string/int/float/vector/color/contour array profiles are accepted. Typed Node references on node owners are captured as relative paths, without retaining the original node. Arbitrary objects, other collections, delegates, dynamic values and reflection-discovered members are rejected. Names and hierarchy metadata have dedicated fields.
 
 Derived node types opt in through `CreateSceneInstanceFactory()`. The factory must be static, outlive the source, and return a fresh default node of the exact source runtime type. Factory execution carries a context-local barrier that rejects both new-`SceneTree` construction and entry into an existing active tree before a node is returned. Capture stores the source identity; issuance rejects the source and any node already returned for that packed state.
 

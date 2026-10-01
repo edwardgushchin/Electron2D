@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-09-27
+Last updated: 2026-10-01
 
 **Inherits:** [Resource](Resource.md)
 
@@ -200,7 +200,7 @@ For each included node, capture stores:
 - every writable [`PropertyDescriptor`](PropertyDescriptor.md) whose `IsStored` flag is `true`, except `Name`, which has its dedicated field;
 - runtime-only empty metadata for nested-scene instances and placeholders, which are not authored by the current implementation.
 
-Supported stored values are strings, `Resource` subtypes, value types that contain no managed references, and copied `Vector2[]`, `Color[]`, and nested `int[][]` contour arrays. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and enums such as [`TimerProcessCallback`](TimerProcessCallback.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Other reference-shaped values such as arbitrary objects, collections, delegates, and node references are rejected with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
+Supported stored values are strings, `Resource` subtypes, value types that contain no managed references, and copied `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and nested `int[][]` contour arrays. This includes [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector3`](Vector3.md), [`Vector3i`](Vector3i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and enums such as [`TimerProcessCallback`](TimerProcessCallback.md), whose numeric, ordinary/HDR, negative, integer, affine, or enum components are copied exactly. Other reference-shaped values such as arbitrary objects, collections and delegates are rejected; supported typed Node references use relative paths with `NotSupportedException`; no reflection-driven discovery or invocation, dynamic value container, or string-addressed property call is used.
 
 `Pack(null)` fails before capture and preserves the previous state. Once a non-null capture begins, the published state is cleared first. Any later factory/property/schema/capture failure leaves the packed scene empty. Both the empty transition and a successful replacement are visible to a live `SceneState`. `Changed` is emitted after the attempt; a throwing handler does not roll back the already committed result.
 
