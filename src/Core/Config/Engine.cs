@@ -88,6 +88,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(Input));
         _singletons.Add(nameof(InputMap), InputMap.Instance);
         _singletonNames.Add(nameof(InputMap));
+        _singletons.Add(nameof(AudioServer), AudioServer.Instance);
+        _singletonNames.Add(nameof(AudioServer));
     }
 
     /// <summary>Gets the process-wide engine instance.</summary>
@@ -344,10 +346,12 @@ public sealed partial class Engine : ElectronObject
     /// <summary>Finalizes and detaches the current application loop.</summary>
     /// <remarks>
     /// The loop becomes unavailable through <see cref="MainLoop"/> after finalization returns or throws. The engine
-    /// returns to its idle state and may start a different loop. The detached loop is not disposed.
+    /// returns to its idle state and may start a different loop. Native audio output and player voice slots are closed even
+    /// after finalization fails. The detached loop and borrowed streams are not disposed.
     /// </remarks>
     /// <exception cref="InvalidOperationException">The runtime is not running, the caller is not its owner thread, or the call occurs during a frame or lifecycle transition.</exception>
-    /// <exception cref="Exception">Loop finalization throws. Detachment still completes.</exception>
+    /// <exception cref="Exception">Loop finalization or audio cleanup throws. Detachment still completes.</exception>
+    /// <exception cref="AggregateException">Several finalization or cleanup operations fail.</exception>
     public void Stop()
     {
         if (Volatile.Read(ref _applicationRun) != 0)
@@ -357,18 +361,19 @@ public sealed partial class Engine : ElectronObject
         if (Interlocked.CompareExchange(ref _runtimeState, RuntimeStopping, RuntimeRunning) != RuntimeRunning)
             throw new InvalidOperationException("The engine can stop only a running MainLoop outside frame execution.");
 
-        try
-        {
-            var mainLoop = Volatile.Read(ref _mainLoop) ??
-                throw new InvalidOperationException("The running engine has no MainLoop.");
-            mainLoop.FinalizeLoop();
-        }
+        List<Exception>? errors = null;
+        try { (Volatile.Read(ref _mainLoop) ?? throw new InvalidOperationException("The running engine has no MainLoop.")).FinalizeLoop(); }
+        catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { AudioServer.CloseForEngine(); }
+        catch (Exception error) { Node.CollectException(ref errors, error); }
         finally
         {
             Volatile.Write(ref _mainLoop, null);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
             Volatile.Write(ref _runtimeState, RuntimeIdle);
         }
+        if (errors is { Count: 1 }) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
+        Node.ThrowCollected("Engine shutdown failed.", errors);
     }
 
     /// <summary>Registers a named, non-owned engine singleton.</summary>
@@ -376,8 +381,8 @@ public sealed partial class Engine : ElectronObject
     /// <param name="instance">The live object to expose.</param>
     /// <remarks>
     /// Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
-    /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>
-    /// <c>ProjectSettings</c>, <c>Input</c>, and <c>InputMap</c> are already occupied by built-in process singletons.
+    /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>,
+    /// <c>ProjectSettings</c>, <c>Input</c>, <c>InputMap</c>, and <c>AudioServer</c> are already occupied by built-in process singletons.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="instance"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>
@@ -411,7 +416,8 @@ public sealed partial class Engine : ElectronObject
         if (string.Equals(name, nameof(Engine), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ProjectSettings), StringComparison.Ordinal) ||
             string.Equals(name, nameof(Input), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(InputMap), StringComparison.Ordinal))
+            string.Equals(name, nameof(InputMap), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(AudioServer), StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");
         }

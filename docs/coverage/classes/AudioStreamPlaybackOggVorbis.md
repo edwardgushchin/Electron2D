@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioStreamPlaybackOggVorbis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/vorbis/doc_classes/AudioStreamPlaybackOggVorbis.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioStreamPlaybackOggVorbis`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/vorbis/doc_classes/AudioStreamPlaybackOggVorbis.xml) | — | Blocked | Trigger: pinned internal NVorbis decoding plus Ogg packet/seek/loop/metadata resources feeding the existing FAudio stream path (ADR 0047). |

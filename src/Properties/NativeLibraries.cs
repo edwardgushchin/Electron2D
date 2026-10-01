@@ -15,10 +15,11 @@ internal static class NativeLibraries
         {
             if (name == "HarfBuzzSharp") return NativeLibrary.Load("libHarfBuzzSharp", assembly, path);
             if (!OperatingSystem.IsLinux()) return 0;
-            if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross")) return 0;
+            if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
             // NuGet aliases are separate files. Use the same SONAME as native dependents and load core first,
             // otherwise two SDL copies disagree about the ownership of surfaces, windows and GPU objects.
             var core = Sdl.Value;
+            if (name == "FAudio") return NativeLibrary.Load("libFAudio.so.0", assembly, path);
             return name == "SDL3" ? core : 0;
         });
     }

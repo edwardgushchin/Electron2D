@@ -4,7 +4,7 @@ Last updated: 2026-10-01
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1305 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1318 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 936 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -45,6 +45,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
+| [AudioStreamPlayer](classes/AudioStreamPlayer.md) | 0 | 8 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
 | [Area2D](classes/Area2D.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
@@ -66,6 +67,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | 0 | 2 |
 | [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
+| [AudioStream](classes/AudioStream.md) | 0 | 1 |
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | 0 | 1 |
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | 0 | 1 |
@@ -80,13 +82,14 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| Audio: trigger is the first audio mixing and playback slice. | 56 |
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 43 |
 | Networking: trigger is the first networking and multiplayer slice. | 41 |
+| Trigger: typed AudioEffect/AudioEffectInstance resources and ordered FAPO chain ownership, bypass/enable/reorder with real processed PCM; current private meter is observation, not a public effect (ADR 0047). | 30 |
 | Animation: trigger is the first scene animation slice. | 28 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
+| Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047). | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 8 |
@@ -97,15 +100,17 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
+| Trigger: pinned internal NVorbis decoding plus Ogg packet/seek/loop/metadata resources feeding the existing FAudio stream path (ADR 0047). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first typed networking-security integration slice with a portable crypto backend (ADR 0021). | 3 |
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | ADR 0091 maps Script and CSharpScript to one future concrete C# Script : Resource, preserving applicable inherited/own capabilities and typed creation without a provider subclass. Trigger: first real script-resource loader/editor/authoring slice with compiled-type registration, source/build association, usable typed metadata, factories and lifetime/failure verification. Ordinary Node callbacks do not implement this resource API; no production Script exists. | 2 |
+| Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047). | 2 |
+| Trigger: bounded producer/consumer PCM ring, underrun/skip accounting and typed generator playback over the now executable stream path (ADR 0047). | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first 2D offscreen composition and framebuffer-copy slice (ADR 0028). | 2 |
-| Trigger: first audio decoding and playback slice. | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028). | 2 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |
@@ -116,8 +121,10 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
+| Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047). | 2 |
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 2 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
+| Trigger: SDL3 capture device ownership, bounded input ring and resampling, then microphone/recording integration; output-only FAudio does not supply input frames (ADR 0047). | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: first 2D skeleton bone and physics-body ownership integration. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
@@ -130,7 +137,9 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
 | Trigger: first typed multiplayer replication slice after scene persistence (ADR 0023). | 1 |
 | Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
+| Trigger: pinned internal NLayer decoding, frame seeking/loop/metadata and corruption checks feeding the existing FAudio stream path (ADR 0047). | 1 |
 | Trigger: platform font discovery, matching and owned fallback faces over the integrated FontFile backend (ADR 0046). | 1 |
+| Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090). | 1 |
 | Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
 | Trigger: typed live body-state callback and solver ownership over the PhysicsServer space. | 1 |
 | Trigger: variable-font instance coordinates, variation metadata and per-instance shaping/raster cache identity over the integrated FreeType/HarfBuzz backend (ADR 0046). | 1 |

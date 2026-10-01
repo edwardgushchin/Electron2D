@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DAudioNativeRID Condition="'$(Electron2DAudioNativeRID)' == '' and '$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</Electron2DAudioNativeRID>
+    <Electron2DAudioNativeRID Condition="'$(Electron2DAudioNativeRID)' == ''">$(NETCoreSdkRuntimeIdentifier)</Electron2DAudioNativeRID>
+    <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == '' and '$(Electron2DNativePlatform)' == 'Linux' and ('$(Electron2DAudioNativeRID)' == 'linux-x64' or '$(Electron2DAudioNativeRID)' == 'linux-arm64')">true</Electron2DAudioNativeEnabled>
+    <Electron2DAudioNativeEnabled Condition="'$(Electron2DAudioNativeEnabled)' == ''">false</Electron2DAudioNativeEnabled>
+    <Electron2DAudioNativeJobs Condition="'$(Electron2DAudioNativeJobs)' == ''">4</Electron2DAudioNativeJobs>
+    <_Electron2DAudioSource>$(MSBuildThisFileDirectory)../src/Vendor/FAudio</_Electron2DAudioSource>
+    <_Electron2DAudioBuild>$(MSBuildThisFileDirectory)../obj/audio-native/$(Electron2DAudioNativeRID)</_Electron2DAudioBuild>
+    <_Electron2DAudioLibrary>$(_Electron2DAudioBuild)/libFAudio.so.0</_Electron2DAudioLibrary>
+    <_Electron2DAudioLibrary Condition="'$(Electron2DAudioNativeLibrary)' != ''">$(Electron2DAudioNativeLibrary)</_Electron2DAudioLibrary>
+    <_Electron2DAudioToolchainArg Condition="'$(Electron2DAudioNativeToolchain)' != ''">-DCMAKE_TOOLCHAIN_FILE=&quot;$(Electron2DAudioNativeToolchain)&quot;</_Electron2DAudioToolchainArg>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DAudioInput Include="$(_Electron2DAudioSource)/**/*.c;$(_Electron2DAudioSource)/**/*.h;$(_Electron2DAudioSource)/**/CMakeLists.txt;$(_Electron2DAudioSource)/manifest.json;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DAudioLibrary)" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'" Link="libFAudio.so.0" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+  <Target Name="ValidateElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DAudioNativeEnabled)' == 'true'">
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' or ('$(Electron2DAudioNativeRID)' != 'linux-x64' and '$(Electron2DAudioNativeRID)' != 'linux-arm64')" Text="The current audio native profile requires Linux x64/ARM64; a foreign profile must not package a host library." />
+    <Error Condition="'$(Electron2DAudioNativeLibrary)' != '' and !Exists('$(_Electron2DAudioLibrary)')" Text="Electron2DAudioNativeLibrary must name an existing target library." />
+    <Error Condition="'$(Electron2DAudioNativeLibrary)' == '' and '$(Electron2DAudioNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)' and '$(Electron2DAudioNativeToolchain)' == ''" Text="Cross-RID audio builds require a target CMake toolchain or prebuilt target library." />
+    <Error Condition="'$(Electron2DAudioNativeLibrary)' == '' and !$([MSBuild]::IsOSPlatform('Linux')) and '$(Electron2DAudioNativeToolchain)' == ''" Text="Building Linux audio on another OS requires an explicit CMake toolchain or prebuilt target library." />
+  </Target>
+  <Target Name="BuildElectron2DAudioNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" DependsOnTargets="ValidateElectron2DAudioNative" Condition="'$(Electron2DAudioNativeEnabled)' == 'true' and '$(Electron2DAudioNativeLibrary)' == ''" Inputs="@(_Electron2DAudioInput);$(Electron2DAudioNativeToolchain)" Outputs="$(_Electron2DAudioLibrary)">
+    <Exec Command="cmake -S &quot;$(_Electron2DAudioSource)&quot; -B &quot;$(_Electron2DAudioBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SDL3=ON -DXNASONG=OFF -DBUILD_TESTS=OFF -DBUILD_UTILS=OFF $(_Electron2DAudioToolchainArg)" />
+    <Exec Command="cmake --build &quot;$(_Electron2DAudioBuild)&quot; --target FAudio-shared --config Release --parallel $(Electron2DAudioNativeJobs)" />
+  </Target>
+</Project>

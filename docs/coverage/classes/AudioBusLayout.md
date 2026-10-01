@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioBusLayout`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioBusLayout.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioBusLayout`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioBusLayout.xml) | — | Blocked | Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090). |

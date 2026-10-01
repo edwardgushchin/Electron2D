@@ -60,7 +60,7 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 - Scene depends on Core's `Mathf`/`Vector2`/`Transform` math, Resources including `Resource`, and .NET collections and filesystem-name matching.
 - Resources has a narrow reciprocal dependency on `Node` for `Resource.GetLocalScene()` under ADR 0023. This is an intentional in-assembly type cycle, not another managed assembly.
 - Scene depends on the Input domain's typed event values and process-wide service boundary for propagation.
-- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and fixed-step collision execution to the internal physics space; it has no direct SDL3-CS dependency, audio, asset loading/saving, file serialization, scripting, networking, or Localization.
+- Window now depends on the backend-neutral DisplayServer API for its native lifetime. Scene delegates drawing to the backend-neutral RenderingServer and fixed-step collision execution to the internal physics space; non-spatial AudioStreamPlayer now borrows audio resources and uses AudioServer for native playback lifetime. Scene nodes have no direct SDL3-CS dependency, general asset loading/saving, file serialization, scripting, networking, or Localization.
 - Future gameplay, rendering and GUI input types may depend on Scene. Current physics bodies and areas use Scene's spatial hierarchy and fixed frame.
 - Scene must not introduce 3D types. Non-spatial, canvas and spatial behavior belongs to Node, CanvasItem and Entity respectively under ADR 0008; these layers are implemented.
 - Scene lifecycle and game-state semantics must not vary by target platform; native event generation remains a host boundary.
@@ -153,3 +153,5 @@ Root viewport canvas/final transforms are connected to retained rendering, scene
 [Transform invalidation and delivery](../components/scene-hierarchy.md#transform-invalidation-and-delivery) integrates cached canvas coordinates, coalesced global notifications, synchronous opted-in local notifications and ForceUpdateTransform. Camera and PathFollow follow the same timing; queues cancel on exit, disposal and activation rollback.
 
 [Canvas animation intervals and rectangle geometry](../components/canvas-rendering.md#animation-intervals-and-rectangles) execute in the retained command path. The render clock follows captured scaled process steps and the active wrap setting; the same clock feeds the optional GPU fragment [TIME built-in](../components/shader-materials.md#render-time).
+
+The [audio playback component](../components/audio-playback.md) supplies AudioStreamPlayer : Node with runtime autoplay, polyphony, owner-frame completion and retained cursor pause on tree exit. Native output belongs to the audio server and closes during engine teardown; PackedScene retains the borrowed stream and typed player configuration.

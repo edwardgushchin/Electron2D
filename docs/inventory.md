@@ -355,11 +355,25 @@ This assembly row records the current build, not complete platform delivery. The
 | Self-hosted editor | [`editor/Electron2D.Editor/`](../editor/Electron2D.Editor/) | Future executable references `Electron2D.dll`; runtime never references editor | Directory boundary reserved; no project or source implemented |
 | First-party games/examples | [`examples/`](../examples/) | Each executable references `Electron2D.dll`; runtime never references examples | First window/input example implemented; future feature and game examples pending |
 
-## Selected but not integrated dependencies
+## Audio
 
-| Dependency | Intended role | Packaging | Current state |
-| --- | --- | --- | --- |
-| `Box2D.NET` | Future 2D collision and rigid-body backend | Managed source to be compiled into `Electron2D.dll` | Approved by ADR 0012; no package reference, physics code, or shipping artifact exists yet |
+| Domain | Component | Production type | Source | Documentation | State |
+| --- | --- | --- | --- | --- | --- |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioServer](classes/AudioServer.md) | [AudioServer.cs](../src/Servers/Audio/AudioServer.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStream](classes/AudioStream.md) | [AudioStream.cs](../src/Scene/Resources/AudioStream.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | [AudioStream.cs](../src/Scene/Resources/AudioStream.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamPlaybackResampled](classes/AudioStreamPlaybackResampled.md) | [AudioStreamPlaybackResampled.cs](../src/Scene/Resources/AudioStreamPlaybackResampled.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamWAV](classes/AudioStreamWAV.md) | [AudioStreamWAV.cs](../src/Scene/Resources/AudioStreamWAV.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioWAVImportOptions](classes/AudioWAVImportOptions.md) | [AudioWAVImportOptions.cs](../src/Scene/Resources/AudioWAVImportOptions.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamPlayer](classes/AudioStreamPlayer.md) | [AudioStreamPlayer.cs](../src/Scene/Audio/AudioStreamPlayer.cs) | Current | Executable WAV/stream/bus output; broader capabilities recorded in coverage |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioServer.PlaybackType](classes/AudioServer.PlaybackType.md) | [AudioServer.cs](../src/Servers/Audio/AudioServer.cs) | Current | Typed numeric selector |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioServer.SpeakerMode](classes/AudioServer.SpeakerMode.md) | [AudioServer.cs](../src/Servers/Audio/AudioServer.cs) | Current | Typed numeric selector |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamWAV.Format](classes/AudioStreamWAV.Format.md) | [AudioStreamWAV.cs](../src/Scene/Resources/AudioStreamWAV.cs) | Current | Typed numeric selector |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamWAV.LoopMode](classes/AudioStreamWAV.LoopMode.md) | [AudioStreamWAV.cs](../src/Scene/Resources/AudioStreamWAV.cs) | Current | Typed numeric selector |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioStreamPlayer.MixTarget](classes/AudioStreamPlayer.MixTarget.md) | [AudioStreamPlayer.cs](../src/Scene/Audio/AudioStreamPlayer.cs) | Current | Typed numeric selector |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | FAudioContext, FAudioStreamVoice, AudioPCMCodec | [`src/Servers/Audio/`](../src/Servers/Audio/) | [Internal ownership](components/audio-playback.md#runtime-flow-and-invariants) | Internal native lifetime, bounded stream buffers and cold codecs |
+
+Selected NVorbis/NLayer decoder sources remain unintegrated until their executable Ogg/MP3 slices. Box2D.NET is already integrated internally in the physics component; FAudio and qoa-fu are integrated internally in audio. Backend/vendor helper types are implementation details and never exported.
 
 ## Rendering
 

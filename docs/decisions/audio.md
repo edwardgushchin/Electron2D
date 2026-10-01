@@ -1,6 +1,6 @@
 # Electron2D audio decisions
 
-Last updated: 2026-09-23
+Last updated: 2026-10-01
 
 This bounded log owns the architectural decisions for audio. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,11 +9,11 @@ Decisions in this log: [0047](#adr-0047).
 <a id="adr-0047"></a>
 ## ADR 0047: Use FAudio over SDL3 with managed audio decoders
 
-Last updated: 2026-09-23
+Last updated: 2026-10-01
 
 ### Status
 
-Accepted. The audio domain and FAudio integration are not yet implemented.
+Accepted. The first WAV/non-spatial stream/bus output slice executes through FAudio on Linux x64; remaining capabilities are recorded in coverage.
 
 ### Context
 
@@ -32,7 +32,7 @@ Electron2D needs audio playback, bus routing and effects through an engine-owned
 ### Consequences
 
 - SDL3 remains the platform foundation and FAudio supplies the mix graph. Public audio types and lifecycle remain Electron2D-owned; audio decoding adds no further native deployment library.
-- The managed decoder source and FAudio# binding join the single engine assembly only with an executable slice. This decision does not add dependencies now or claim audio playback, codec support, bus behavior or platform acceptance before that slice is verified.
+- The managed decoder source and FAudio# binding join the single engine assembly only with an executable slice. FAudio 26.09 and qoa-fu are now pinned/internal in the first executable output slice; NVorbis and NLayer remain selected for subsequent codec slices. Current behavior and native/platform/physical verification limits are documented in the [audio component](../components/audio-playback.md).
 
 ### Rejected alternatives
 

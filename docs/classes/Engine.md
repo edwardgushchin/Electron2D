@@ -16,9 +16,9 @@ Last updated: 2026-09-24
 
 Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
-`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), and [`InputMap`](InputMap.md) entries.
+`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), [`InputMap`](InputMap.md), and [`AudioServer`](AudioServer.md) entries.
 
-Engine.Run(Window) owns the elapsed-time source, native event pump, waiting/frame pacing and final disposal for ordinary windowed scenes. Manual embedding retains caller ownership. `Engine.Stop()` finalizes and detaches the loop but deliberately does not dispose it. The registry retains references but never acquires disposal ownership.
+Engine.Run(Window) owns the elapsed-time source, native event pump, waiting/frame pacing and final disposal for ordinary windowed scenes. Manual embedding retains caller ownership. `Engine.Stop()` finalizes and detaches the loop, closes native audio output and clears player slots, but deliberately does not dispose the loop. Finalization and native cleanup failures are collected after both stages. The registry retains references but never acquires disposal ownership.
 
 [`Engine.Instance`](Engine.md#p-electron2d-engine-instance) is created once for the process and cannot be disposed. For manual embedding, a host attaches one [`Engine.MainLoop`](Engine.md#p-electron2d-engine-mainloop), supplies finite elapsed time to
 [`Engine.AdvanceFrame(Double)`](Engine.md#m-electron2d-engine-advanceframe-system-double), and finally calls [`Engine.Stop`](Engine.md#m-electron2d-engine-stop).
@@ -290,7 +290,7 @@ Registers a named, non-owned engine singleton.
 - `InvalidOperationException`: The name is already registered.
 
 **Remarks:** Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
-remove its registration; the registering component must unregister it during teardown. The name `Engine``ProjectSettings`, `Input`, and `InputMap` are already occupied by built-in process singletons.
+remove its registration; the registering component must unregister it during teardown. The name `Engine`, `ProjectSettings`, `Input`, `InputMap`, and `AudioServer` are already occupied by built-in process singletons.
 
 <a id="m-electron2d-engine-unregistersingleton-system-string"></a>
 ### `public void UnregisterSingleton(string name)`
@@ -424,7 +424,7 @@ Lifecycle/frame entry is atomic and non-reentrant. `MainLoop` is visible during 
 - The active loop is never implicitly disposed.
 - `Start`, `AdvanceFrame`, and `Stop` cannot overlap or re-enter.
 - Names are nonblank, ordinal, and unique; missing removal/lookup is an error.
-- The process-wide `Engine`, `ProjectSettings`, `Input`, and `InputMap` registry entries cannot be removed through Engine.
+- The process-wide `Engine`, `ProjectSettings`, `Input`, `InputMap`, and `AudioServer` registry entries cannot be removed through Engine.
 
 ## Threading guarantees and non-guarantees
 
@@ -434,7 +434,7 @@ No background thread, clock, sleep, synchronization context, or native pump is c
 
 ## Dependencies and interactions
 
-The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, `Input`, `InputMap`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. There is no SDL3-CS, renderer, native input backend, audio, logger, scripting, movie writer, editor, collision-physics, or asset dependency.
+The class depends on `ElectronObject`, `MainLoop`, `EngineVersionInfo`, `ProjectSettings`, `Input`, `InputMap`, `AudioServer`, the .NET Base Class Library, and reflection over its own assembly metadata. `SceneTree` can be attached because it is already initialized after successful construction. There is no SDL3-CS, logger, scripting, movie writer, editor, collision-physics, or asset dependency in manual frame scheduling. Engine.Run integrates the root-window renderer/input lifecycle, and both run/stop paths close AudioServer native output.
 
 ## Verification and known limitations
 

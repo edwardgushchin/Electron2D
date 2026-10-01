@@ -10,7 +10,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioListener2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
-| [`method clear_current() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
-| [`method is_current() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
-| [`method make_current() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioListener2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047). |
+| [`method clear_current() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047). |
+| [`method is_current() -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047). |
+| [`method make_current() -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioListener2D.xml) | — | Blocked | Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047). |

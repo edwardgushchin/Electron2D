@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioStreamPlaybackSynchronized`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/interactive_music/doc_classes/AudioStreamPlaybackSynchronized.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioStreamPlaybackSynchronized`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/interactive_music/doc_classes/AudioStreamPlaybackSynchronized.xml) | — | Blocked | Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047). |

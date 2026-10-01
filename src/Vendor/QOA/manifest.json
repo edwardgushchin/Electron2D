@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/pfusik/qoa-fu",
+  "commit": "70679a2d6223e25e37d7b421b2a14cd4e7d2b5b5",
+  "archiveSha256": "ec9349087d770689bc978fa4e520906814b07e6ce1a3c50e7a25272db3542a49",
+  "source": "transpiled/QOA.cs",
+  "sourceSha256": "32ff05a4163a4cd1a28b1a7523f9a4c49f4fd7ad3b3c6486a2cfbc57856fa237",
+  "patches": [
+    "Internal top-level codec types and engine-private namespace; codec logic unchanged.",
+    "Disable CS0675 for preserved generator bit packing; codec arithmetic unchanged."
+  ]
+}

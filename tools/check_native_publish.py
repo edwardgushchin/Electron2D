@@ -59,9 +59,19 @@ def check(rid: str, publish: Path) -> None:
     if platform == "Linux":
         assert private_text.is_file(), "Missing private ICU text backend"
         check_private_text(rid, private_text)
+        audio = publish / "libFAudio.so.0"
+        assert audio.is_file(), "Missing pinned native audio backend"
+        header = audio.read_bytes()[:20]
+        assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "Audio ELF architecture mismatch"
+        dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(audio)], text=True)
+        needed = re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic)
+        assert "libSDL3.so.0" in needed and not any("SDL2" in name for name in needed), f"Audio must share SDL3: {needed}"
+        assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
+        assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.glob("libicu*")), "A private text publish must not deliver global ICU libraries"
-        print(f"{rid}: self-contained host, SDL/FreeType/HarfBuzz and private text backend verified (9 exports, no global ICU dependency)")
+        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text backend verified (9 exports, no global ICU dependency)")
     else:
+        assert not list(publish.glob("libFAudio*")), "Linux audio library leaked into a foreign publish"
         assert not private_text.exists(), "Linux private text backend leaked into a foreign publish"
         print(f"{rid}: self-contained host and {platform} SDL/FreeType/HarfBuzz payload verified; private text backend is not supplied")
 

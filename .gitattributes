@@ -4,3 +4,5 @@ src/Vendor/UnicodeText/** -whitespace
 src/Vendor/ICU/** -whitespace
 licence/** -whitespace
 tests/Electron2D.Tests/Fixtures/Fonts/LICENSE.* -whitespace
+src/Vendor/FAudio/** -whitespace
+src/Vendor/QOA/** -whitespace

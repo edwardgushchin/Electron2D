@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioSample`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioSample.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioSample`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioSample.xml) | — | Blocked | Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047). |

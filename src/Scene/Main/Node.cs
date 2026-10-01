@@ -2295,7 +2295,8 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
-    /// <remarks>Derived node property setters should call this before changing state that can be stored in a packed scene.</remarks>
+    /// <remarks>Derived node property setters should call this before changing state that can be stored in a packed scene.
+    /// Existing disposal/capture/thread guards run before the virtual ValidateMutation hook.</remarks>
     /// <exception cref="InvalidOperationException">Scene capture is active or an attached node is accessed off the tree owner thread.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
     protected void EnsureMutable()
@@ -2305,6 +2306,7 @@ public partial class Node : ElectronObject
         EnsureNotSceneCapture();
 
         Tree?.EnsureOwnerThread();
+        ValidateMutation();
     }
 
     private void EnsureNotSceneCapture()

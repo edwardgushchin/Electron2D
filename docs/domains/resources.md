@@ -117,3 +117,7 @@ FreeType 2.13.3 and HarfBuzz remain internal; shaping retains 26.6 precision, co
 The [texture identity slice](../components/canvas-rendering.md#texture-resource-identities) links borrowed resource RID lifetime to actual server-owned texture creation/update/replacement/free and retained CanvasItem drawing. Owned identities expire with the active renderer; borrowed resources survive. It executes on both native baseline backends with explicit format/platform limits.
 
 [Texture proxies](../components/canvas-rendering.md#texture-proxies) now provide real borrowed-source retargeting and shared native sampling through stable owned aliases. Source/intermediate release leaves reconnectable empty aliases; owned source allocations remain until free/shutdown.
+
+## Audio resources
+
+The [audio component](../components/audio-playback.md) adds reusable AudioStream, independent AudioStreamPlayback/Resampled and copied AudioStreamWAV with typed AudioWAVImportOptions. Static WAV import/save and independent Resource duplication execute; player PackedScene state borrows the source. Generic ResourceLoader audio registration and file scene authoring remain separate absent integration. Internal PCM/IMA/QOA preparation feeds the native server through bounded buffers; no public backend type is exposed.

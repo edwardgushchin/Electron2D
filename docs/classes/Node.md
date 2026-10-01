@@ -1414,3 +1414,5 @@ ProcessMode transition snapshots now reuse preorder lists separately for each ac
 ## Shortcut input stage
 
 `public bool ShortcutInputEnabled { get; set; }` defaults to false. `protected virtual void OnShortcutInput(InputEvent @event)` receives borrowed key, gamepad-button and direct shortcut events after GUI delivery and before unhandled-key/general input. Overriding the hook does not enable it. Delivery follows reverse captured hierarchy order, owner-thread and CanProcess policy; handling stops later stages, while callback errors are collected after eligible delivery. These processing flags remain runtime configuration, as with the existing input stages. See [Shortcut](Shortcut.md), [ShortcutTests](../../tests/Electron2D.Tests/ShortcutTests.cs) and [ADR 0038](../decisions/input.md#adr-0038).
+
+Node.EnsureMutable retains its disposal/capture/tree-thread guards and then dispatches the virtual ValidateMutation hook. This lets subclasses with retained native ownership reject mutations after tree exit; AudioLifetimeTests checks detached audio registration and rejection before state changes.

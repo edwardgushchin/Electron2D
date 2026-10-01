@@ -9,6 +9,12 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_SPEAKERS") == "1") { AudioSpeakerTests.Run(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_HOST") == "1") { AudioPublicScenarioTests.Run(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO") == "1") { AudioLifetimeTests.VerifyWorkerInitialization(); AudioResourceTests.Run(); AudioRuntimeTests.Run(); AudioBusTests.Run(); AudioLifetimeTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPLIT") == "1") { SplitContainerTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOOLTIP") == "1")
@@ -306,6 +312,7 @@ BoxContainerTests.Run();
 GridContainerTests.Run();
 FlowContainerTests.Run();
 SplitContainerTests.Run();
+AudioResourceTests.Run();
 TextureRectTests.Run();
 StyleBoxTests.Run();
 StyleBoxFlatTests.Run();
@@ -7444,7 +7451,8 @@ static void VerifyEngine()
             ReferenceEquals(engine.GetSingleton<ProjectSettings>(nameof(ProjectSettings)), ProjectSettings.Instance) &&
             ReferenceEquals(engine.GetSingleton<Input>(nameof(Input)), Input.Instance) &&
             ReferenceEquals(engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Instance) &&
-            engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap)]),
+            ReferenceEquals(engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Instance) &&
+            engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
         "All built-in process services must be present in the global singleton registry.");
     Expect<InvalidOperationException>(() => engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
@@ -7496,7 +7504,7 @@ static void VerifyEngine()
         Require(engine.HasSingleton("tests.primary") &&
                 ReferenceEquals(engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(engine.GetSingleton<TestObject>("tests.primary"), registered) &&
-                engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), "tests.primary"]),
+                engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -7519,7 +7527,7 @@ static void VerifyEngine()
         "Engine singleton registration must reject disposed objects.");
 
     Parallel.For(0, 32, index => engine.RegisterSingleton($"tests.concurrent.{index}", new TestObject()));
-    Require(engine.GetSingletonList().Count == 36, "Concurrent singleton registration must not lose entries.");
+    Require(engine.GetSingletonList().Count == 37, "Concurrent singleton registration must not lose entries.");
     Parallel.For(0, 32, index =>
     {
         var name = $"tests.concurrent.{index}";
@@ -7527,7 +7535,7 @@ static void VerifyEngine()
         engine.UnregisterSingleton(name);
         instance.Dispose();
     });
-    Require(engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap)]),
+    Require(engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(ProjectSettings), nameof(Input), nameof(InputMap), nameof(AudioServer)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     engine.PhysicsTicksPerSecond = 10;

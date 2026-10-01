@@ -63,4 +63,5 @@
     <Error Text="Electron2D has no native package mapping for RuntimeIdentifier '$(RuntimeIdentifier)'." />
   </Target>
   <Import Project="tools/text-native.targets" />
+  <Import Project="tools/audio-native.targets" />
 </Project>

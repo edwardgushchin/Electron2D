@@ -98,6 +98,8 @@ public sealed partial class Engine
             Volatile.Write(ref _runtimeState, RuntimeStopping);
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
             catch (Exception error) { failures.Add(error); }
+            try { AudioServer.CloseForEngine(); }
+            catch (Exception error) { failures.Add(error); }
             try { window.CloseNative(); }
             catch (Exception error) { failures.Add(error); }
             Volatile.Write(ref _mainLoop, null);

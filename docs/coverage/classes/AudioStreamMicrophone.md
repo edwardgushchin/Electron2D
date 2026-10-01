@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioStreamMicrophone`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioStreamMicrophone.xml) | — | Blocked | Audio: trigger is the first audio mixing and playback slice. |
+| [`class AudioStreamMicrophone`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioStreamMicrophone.xml) | — | Blocked | Trigger: SDL3 capture device ownership, bounded input ring and resampling, then microphone/recording integration; output-only FAudio does not supply input frames (ADR 0047). |

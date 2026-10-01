@@ -1,0 +1,1338 @@
+{
+  "mappings": [
+    {
+      "godot": "AudioServer::enum:PlaybackType",
+      "electron2d": "T:Electron2D.AudioServer.PlaybackType",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum:SpeakerMode",
+      "electron2d": "T:Electron2D.AudioServer.SpeakerMode",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_DEFAULT",
+      "electron2d": "enumValue:Electron2D.AudioServer.PlaybackType.Default()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.AudioServer.PlaybackType.Max()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_SAMPLE",
+      "electron2d": "enumValue:Electron2D.AudioServer.PlaybackType.Sample()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_STREAM",
+      "electron2d": "enumValue:Electron2D.AudioServer.PlaybackType.Stream()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:SpeakerMode.SPEAKER_MODE_STEREO",
+      "electron2d": "enumValue:Electron2D.AudioServer.SpeakerMode.Stereo()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_31",
+      "electron2d": "enumValue:Electron2D.AudioServer.SpeakerMode.Surround31()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_51",
+      "electron2d": "enumValue:Electron2D.AudioServer.SpeakerMode.Surround51()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_71",
+      "electron2d": "enumValue:Electron2D.AudioServer.SpeakerMode.Surround71()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:add_bus(int:)",
+      "electron2d": "method:Electron2D.AudioServer.AddBus(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_channels(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusChannels(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_index(StringName:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusIndex(System.String)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_name(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusName(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_peak_volume_left_db(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusPeakVolumeLeftDB(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_peak_volume_right_db(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusPeakVolumeRightDB(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_send(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusSend(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_volume_db(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusVolumeDB(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_volume_linear(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusVolumeLinear(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_driver_name()",
+      "electron2d": "method:Electron2D.AudioServer.GetDriverName()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_mix_rate()",
+      "electron2d": "method:Electron2D.AudioServer.GetMixRate()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_output_device_list()",
+      "electron2d": "method:Electron2D.AudioServer.GetOutputDeviceList()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_speaker_mode()",
+      "electron2d": "method:Electron2D.AudioServer.GetSpeakerMode()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_time_since_last_mix()",
+      "electron2d": "method:Electron2D.AudioServer.GetTimeSinceLastMix()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_time_to_next_mix()",
+      "electron2d": "method:Electron2D.AudioServer.GetTimeToNextMix()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:is_bus_mute(int:)",
+      "electron2d": "method:Electron2D.AudioServer.IsBusMute(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:is_bus_solo(int:)",
+      "electron2d": "method:Electron2D.AudioServer.IsBusSolo(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:lock()",
+      "electron2d": "method:Electron2D.AudioServer.Lock()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:move_bus(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.MoveBus(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:remove_bus(int:)",
+      "electron2d": "method:Electron2D.AudioServer.RemoveBus(System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_mute(int:,bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusMute(System.Int32,System.Boolean)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_name(int:,String:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusName(System.Int32,System.String)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_send(int:,StringName:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusSend(System.Int32,System.String)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_solo(int:,bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusSolo(System.Int32,System.Boolean)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_volume_db(int:,float:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusVolumeDB(System.Int32,System.Single)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_volume_linear(int:,float:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusVolumeLinear(System.Int32,System.Single)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:unlock()",
+      "electron2d": "method:Electron2D.AudioServer.Unlock()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::property:bus_count",
+      "electron2d": "property:Electron2D.AudioServer.BusCount()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::property:playback_speed_scale",
+      "electron2d": "property:Electron2D.AudioServer.PlaybackSpeedScale()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::signal:bus_layout_changed()",
+      "electron2d": "event:Electron2D.AudioServer.BusLayoutChanged()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioServer::signal:bus_renamed(int:,StringName:,StringName:)",
+      "electron2d": "event:Electron2D.AudioServer.BusRenamed()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_bar_beats()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetBarBeats()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_beat_count()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetBeatCount()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_bpm()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetBPM()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_length()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetLength()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_parameter_list()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetParameterList()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_stream_name()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetStreamName()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_tags()",
+      "electron2d": "method:Electron2D.AudioStream.OnGetTags()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_has_loop()",
+      "electron2d": "method:Electron2D.AudioStream.OnHasLoop()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_instantiate_playback()",
+      "electron2d": "method:Electron2D.AudioStream.OnInstantiatePlayback()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_is_monophonic()",
+      "electron2d": "method:Electron2D.AudioStream.OnIsMonophonic()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:get_length()",
+      "electron2d": "method:Electron2D.AudioStream.GetLength()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:instantiate_playback()",
+      "electron2d": "method:Electron2D.AudioStream.InstantiatePlayback()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:is_meta_stream()",
+      "electron2d": "method:Electron2D.AudioStream.IsMetaStream()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:is_monophonic()",
+      "electron2d": "method:Electron2D.AudioStream.IsMonophonic()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::signal:parameter_list_changed()",
+      "electron2d": "event:Electron2D.AudioStream.ParameterListChanged()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_get_loop_count()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnGetLoopCount()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_get_playback_position()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnGetPlaybackPosition()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_is_playing()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnIsPlaying()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_mix(AudioFrame*:,float:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_seek(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnSeek(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_start(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnStart(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:_stop()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.OnStop()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:get_loop_count()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.GetLoopCount()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:get_playback_position()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.GetPlaybackPosition()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:is_playing()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.IsPlaying()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:mix_audio(float:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.MixAudio(System.Single,System.Int32)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:seek(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.Seek(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:start(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.Start(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:stop()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.Stop()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlaybackResampled::method:_get_stream_sampling_rate()",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackResampled.OnGetStreamSamplingRate()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlaybackResampled::method:_mix_resampled(AudioFrame*:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackResampled.OnMixResampled(System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlaybackResampled::method:begin_resample()",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackResampled.BeginResample()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum:Format",
+      "electron2d": "T:Electron2D.AudioStreamWAV.Format",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum:LoopMode",
+      "electron2d": "T:Electron2D.AudioStreamWAV.LoopMode",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:Format.FORMAT_16_BITS",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.Format.PCM16()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:Format.FORMAT_8_BITS",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.Format.PCM8()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:Format.FORMAT_IMA_ADPCM",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.Format.IMAADPCM()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:Format.FORMAT_QOA",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.Format.QOA()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_BACKWARD",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Backward()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_DISABLED",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Disabled()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_FORWARD",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Forward()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_PINGPONG",
+      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.PingPong()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::method:load_from_buffer(PackedByteArray:,Dictionary:)",
+      "electron2d": "method:Electron2D.AudioStreamWAV.LoadFromBuffer(System.ReadOnlySpan<System.Byte>,Electron2D.AudioWAVImportOptions)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::method:load_from_file(String:,Dictionary:)",
+      "electron2d": "method:Electron2D.AudioStreamWAV.LoadFromFile(System.String,Electron2D.AudioWAVImportOptions)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::method:save_to_wav(String:)",
+      "electron2d": "method:Electron2D.AudioStreamWAV.SaveToWAV(System.String)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:data",
+      "electron2d": "property:Electron2D.AudioStreamWAV.Data()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:format",
+      "electron2d": "property:Electron2D.AudioStreamWAV.SampleFormat()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:loop_begin",
+      "electron2d": "property:Electron2D.AudioStreamWAV.LoopBegin()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:loop_end",
+      "electron2d": "property:Electron2D.AudioStreamWAV.LoopEnd()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:loop_mode",
+      "electron2d": "property:Electron2D.AudioStreamWAV.Loop()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:mix_rate",
+      "electron2d": "property:Electron2D.AudioStreamWAV.MixRate()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:stereo",
+      "electron2d": "property:Electron2D.AudioStreamWAV.Stereo()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamWAV::property:tags",
+      "electron2d": "property:Electron2D.AudioStreamWAV.Tags()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::enum:MixTarget",
+      "electron2d": "T:Electron2D.AudioStreamPlayer.MixTarget",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_CENTER",
+      "electron2d": "enumValue:Electron2D.AudioStreamPlayer.MixTarget.Center()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_STEREO",
+      "electron2d": "enumValue:Electron2D.AudioStreamPlayer.MixTarget.Stereo()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_SURROUND",
+      "electron2d": "enumValue:Electron2D.AudioStreamPlayer.MixTarget.Surround()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:get_playback_position()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.GetPlaybackPosition()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:get_stream_playback()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.GetStreamPlayback()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:has_stream_playback()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.HasStreamPlayback()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:play(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.Play(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:seek(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.Seek(System.Double)",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::method:stop()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer.Stop()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:autoplay",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.Autoplay()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:bus",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.Bus()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:max_polyphony",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.MaxPolyphony()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:mix_target",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.MixTargetMode()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:pitch_scale",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.PitchScale()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:playback_type",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.PlaybackType()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:playing",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.Playing()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:stream",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.Stream()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:stream_paused",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.StreamPaused()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:volume_db",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.VolumeDB()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::property:volume_linear",
+      "electron2d": "property:Electron2D.AudioStreamPlayer.VolumeLinear()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer::signal:finished()",
+      "electron2d": "event:Electron2D.AudioStreamPlayer.Finished()",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:_get_parameter_list()",
+      "electron2d": "method:Electron2D.AudioStream.GetParameterList()",
+      "reason": "ADR 0001/0047: typed PropertyDescriptor[] replaces the untyped dictionary list; the custom list callback executes, while player parameter propagation needs the typed playback-parameter slice."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.AudioWAVImportOptions",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStream..ctor()",
+      "reason": "Typed construction projects the audio resource/playback/player lifecycle; abstract constructors are extension points and concrete constructors establish documented defaults (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamPlayback..ctor()",
+      "reason": "Typed construction projects the audio resource/playback/player lifecycle; abstract constructors are extension points and concrete constructors establish documented defaults (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamPlaybackResampled..ctor()",
+      "reason": "Typed construction projects the audio resource/playback/player lifecycle; abstract constructors are extension points and concrete constructors establish documented defaults (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamPlayer..ctor()",
+      "reason": "Typed construction projects the audio resource/playback/player lifecycle; abstract constructors are extension points and concrete constructors establish documented defaults (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamWAV..ctor()",
+      "reason": "Typed construction projects the audio resource/playback/player lifecycle; abstract constructors are extension points and concrete constructors establish documented defaults (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioWAVImportOptions..ctor()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioServer.ValidateDisposal()",
+      "reason": "Borrowed process-wide service identity and disposal guard project the engine singleton lifecycle (ADRs 0005/0047); native output closes during engine teardown."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStream.Dispose(System.Boolean)",
+      "reason": "Protected parameter-change notification and Resource disposal project the inherited event/resource lifecycle (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStream.NotifyParameterListChanged()",
+      "reason": "Protected parameter-change notification and Resource disposal project the inherited event/resource lifecycle (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackResampled.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "Protected prepared-span mix override projects inherited AudioStreamPlayback mixing through cubic resampling (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.CreateSceneInstanceFactory()",
+      "reason": "Protected typed node notification, storage/factory and disposal hooks implement attached audio lifetime and packed-scene configuration (ADRs 0008/0023/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.Dispose(System.Boolean)",
+      "reason": "Protected typed node notification, storage/factory and disposal hooks implement attached audio lifetime and packed-scene configuration (ADRs 0008/0023/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.GetPropertyDescriptors()",
+      "reason": "Protected typed node notification, storage/factory and disposal hooks implement attached audio lifetime and packed-scene configuration (ADRs 0008/0023/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.IsPlaying()",
+      "reason": "Protected typed node notification, storage/factory and disposal hooks implement attached audio lifetime and packed-scene configuration (ADRs 0008/0023/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.OnNotification(System.Int32)",
+      "reason": "Protected typed node notification, storage/factory and disposal hooks implement attached audio lifetime and packed-scene configuration (ADRs 0008/0023/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.CreateDuplicateInstance()",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.Dispose(System.Boolean)",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.OnGetLength()",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.OnGetTags()",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.OnInstantiatePlayback()",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.OnIsMonophonic()",
+      "reason": "Concrete overrides project inherited Resource copying/disposal and AudioStream metadata/playback callbacks; copied encoded data is independently prepared and decoded (ADRs 0013/0047)."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioServer.Instance()",
+      "reason": "Borrowed process-wide service identity and disposal guard project the engine singleton lifecycle (ADRs 0005/0047); native output closes during engine teardown."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.Compression()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.Force8Bit()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.ForceMono()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.LimitRate()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.Loop()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.LoopBegin()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.LoopEnd()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.MaxRate()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.Normalize()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioWAVImportOptions.Trim()",
+      "reason": "ADR 0001/0047: typed fields replace the accepted WAV load options dictionary; defaults preserve raw source-width PCM and detected loops, and each edit feeds actual import behavior."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.ValidateMutation()",
+      "reason": "Typed Node mutation/disposal validation preserves registered audio ownership after tree exit and rejects foreign operations before state changes (ADRs 0005/0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer.ValidateDisposal()",
+      "reason": "Typed Node mutation/disposal validation preserves registered audio ownership after tree exit and rejects foreign operations before state changes (ADRs 0005/0047)."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native 2/4/6/8-channel PCM checks cover current behavior. Other platforms and physical listening remain unverified.",
+      "godot": [
+        "AudioServer::enum:PlaybackType",
+        "AudioServer::enum:SpeakerMode",
+        "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_DEFAULT",
+        "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_MAX",
+        "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_SAMPLE",
+        "AudioServer::enum_value:PlaybackType.PLAYBACK_TYPE_STREAM",
+        "AudioServer::enum_value:SpeakerMode.SPEAKER_MODE_STEREO",
+        "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_31",
+        "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_51",
+        "AudioServer::enum_value:SpeakerMode.SPEAKER_SURROUND_71",
+        "AudioServer::method:add_bus(int:)",
+        "AudioServer::method:get_bus_channels(int:)",
+        "AudioServer::method:get_bus_index(StringName:)",
+        "AudioServer::method:get_bus_name(int:)",
+        "AudioServer::method:get_bus_peak_volume_left_db(int:,int:)",
+        "AudioServer::method:get_bus_peak_volume_right_db(int:,int:)",
+        "AudioServer::method:get_bus_send(int:)",
+        "AudioServer::method:get_bus_volume_db(int:)",
+        "AudioServer::method:get_bus_volume_linear(int:)",
+        "AudioServer::method:get_driver_name()",
+        "AudioServer::method:get_mix_rate()",
+        "AudioServer::method:get_output_device_list()",
+        "AudioServer::method:get_speaker_mode()",
+        "AudioServer::method:get_time_since_last_mix()",
+        "AudioServer::method:get_time_to_next_mix()",
+        "AudioServer::method:is_bus_mute(int:)",
+        "AudioServer::method:is_bus_solo(int:)",
+        "AudioServer::method:lock()",
+        "AudioServer::method:move_bus(int:,int:)",
+        "AudioServer::method:remove_bus(int:)",
+        "AudioServer::method:set_bus_mute(int:,bool:)",
+        "AudioServer::method:set_bus_name(int:,String:)",
+        "AudioServer::method:set_bus_send(int:,StringName:)",
+        "AudioServer::method:set_bus_solo(int:,bool:)",
+        "AudioServer::method:set_bus_volume_db(int:,float:)",
+        "AudioServer::method:set_bus_volume_linear(int:,float:)",
+        "AudioServer::method:unlock()",
+        "AudioServer::property:bus_count",
+        "AudioServer::property:playback_speed_scale",
+        "AudioServer::signal:bus_layout_changed()",
+        "AudioServer::signal:bus_renamed(int:,StringName:,StringName:)",
+        "AudioStream::method:_get_bar_beats()",
+        "AudioStream::method:_get_beat_count()",
+        "AudioStream::method:_get_bpm()",
+        "AudioStream::method:_get_length()",
+        "AudioStream::method:_get_stream_name()",
+        "AudioStream::method:_get_tags()",
+        "AudioStream::method:_has_loop()",
+        "AudioStream::method:_instantiate_playback()",
+        "AudioStream::method:_is_monophonic()",
+        "AudioStream::method:get_length()",
+        "AudioStream::method:instantiate_playback()",
+        "AudioStream::method:is_meta_stream()",
+        "AudioStream::method:is_monophonic()",
+        "AudioStream::signal:parameter_list_changed()",
+        "AudioStreamPlayback::method:_get_loop_count()",
+        "AudioStreamPlayback::method:_get_playback_position()",
+        "AudioStreamPlayback::method:_is_playing()",
+        "AudioStreamPlayback::method:_mix(AudioFrame*:,float:,int:)",
+        "AudioStreamPlayback::method:_seek(float:)",
+        "AudioStreamPlayback::method:_start(float:)",
+        "AudioStreamPlayback::method:_stop()",
+        "AudioStreamPlayback::method:get_loop_count()",
+        "AudioStreamPlayback::method:get_playback_position()",
+        "AudioStreamPlayback::method:is_playing()",
+        "AudioStreamPlayback::method:mix_audio(float:,int:)",
+        "AudioStreamPlayback::method:seek(float:)",
+        "AudioStreamPlayback::method:start(float:)",
+        "AudioStreamPlayback::method:stop()",
+        "AudioStreamPlaybackResampled::method:_get_stream_sampling_rate()",
+        "AudioStreamPlaybackResampled::method:_mix_resampled(AudioFrame*:,int:)",
+        "AudioStreamPlaybackResampled::method:begin_resample()",
+        "AudioStreamPlayer::enum:MixTarget",
+        "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_CENTER",
+        "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_STEREO",
+        "AudioStreamPlayer::enum_value:MixTarget.MIX_TARGET_SURROUND",
+        "AudioStreamPlayer::method:get_playback_position()",
+        "AudioStreamPlayer::method:get_stream_playback()",
+        "AudioStreamPlayer::method:has_stream_playback()",
+        "AudioStreamPlayer::property:bus",
+        "AudioStreamPlayer::property:max_polyphony",
+        "AudioStreamPlayer::property:mix_target",
+        "AudioStreamPlayer::property:pitch_scale",
+        "AudioStreamPlayer::property:playing",
+        "AudioStreamPlayer::property:stream",
+        "AudioStreamPlayer::signal:finished()",
+        "AudioStreamWAV::enum:Format",
+        "AudioStreamWAV::enum:LoopMode",
+        "AudioStreamWAV::enum_value:Format.FORMAT_16_BITS",
+        "AudioStreamWAV::enum_value:Format.FORMAT_8_BITS",
+        "AudioStreamWAV::enum_value:Format.FORMAT_IMA_ADPCM",
+        "AudioStreamWAV::enum_value:Format.FORMAT_QOA",
+        "AudioStreamWAV::enum_value:LoopMode.LOOP_BACKWARD",
+        "AudioStreamWAV::enum_value:LoopMode.LOOP_DISABLED",
+        "AudioStreamWAV::enum_value:LoopMode.LOOP_FORWARD",
+        "AudioStreamWAV::enum_value:LoopMode.LOOP_PINGPONG",
+        "AudioStreamWAV::method:load_from_buffer(PackedByteArray:,Dictionary:)",
+        "AudioStreamWAV::method:load_from_file(String:,Dictionary:)",
+        "AudioStreamWAV::method:save_to_wav(String:)",
+        "AudioStreamWAV::property:data",
+        "AudioStreamWAV::property:format",
+        "AudioStreamWAV::property:loop_begin",
+        "AudioStreamWAV::property:loop_end",
+        "AudioStreamWAV::property:loop_mode",
+        "AudioStreamWAV::property:mix_rate",
+        "AudioStreamWAV::property:stereo",
+        "AudioStreamWAV::property:tags",
+        "class:AudioStreamPlaybackResampled",
+        "class:AudioStreamWAV"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Trigger: typed per-playback parameter descriptors/defaults and player propagation for custom/composite streams under ADR 0001; no Variant or arbitrary string dispatch is admitted.",
+      "godot": [
+        "AudioStream::method:_get_parameter_list()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Current native stream operation executes; reference start/stop/pause/gain transition ramps still require prepared ramp state and discontinuity tests. Cursor, ownership and seek/polyphony semantics are checked (ADR 0047).",
+      "godot": [
+        "AudioStreamPlayer::method:play(float:)",
+        "AudioStreamPlayer::method:seek(float:)",
+        "AudioStreamPlayer::method:stop()",
+        "AudioStreamPlayer::property:stream_paused",
+        "AudioStreamPlayer::property:volume_db",
+        "AudioStreamPlayer::property:volume_linear"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Runtime EnterTree autoplay executes; editor-hint suppression requires the missing Engine editor-hint lifecycle and first editor host (ADRs 0027/0047).",
+      "godot": [
+        "AudioStreamPlayer::property:autoplay"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047).",
+      "godot": [
+        "AudioStreamPlayer::property:playback_type"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed AudioEffect/AudioEffectInstance resources and ordered FAPO chain ownership, bypass/enable/reorder with real processed PCM; current private meter is observation, not a public effect (ADR 0047).",
+      "godot": [
+        "AudioEffect::method:_instantiate()",
+        "AudioEffectAmplify::property:volume_db",
+        "AudioEffectAmplify::property:volume_linear",
+        "AudioEffectCapture::method:can_get_buffer(int:)",
+        "AudioEffectCapture::method:clear_buffer()",
+        "AudioEffectCapture::method:get_buffer(int:)",
+        "AudioEffectCapture::method:get_buffer_length_frames()",
+        "AudioEffectCapture::method:get_discarded_frames()",
+        "AudioEffectCapture::method:get_frames_available()",
+        "AudioEffectCapture::method:get_pushed_frames()",
+        "AudioEffectCapture::property:buffer_length",
+        "AudioEffectChorus::method:get_voice_cutoff_hz(int:)",
+        "AudioEffectChorus::method:get_voice_delay_ms(int:)",
+        "AudioEffectChorus::method:get_voice_depth_ms(int:)",
+        "AudioEffectChorus::method:get_voice_level_db(int:)",
+        "AudioEffectChorus::method:get_voice_pan(int:)",
+        "AudioEffectChorus::method:get_voice_rate_hz(int:)",
+        "AudioEffectChorus::method:set_voice_cutoff_hz(int:,float:)",
+        "AudioEffectChorus::method:set_voice_delay_ms(int:,float:)",
+        "AudioEffectChorus::method:set_voice_depth_ms(int:,float:)",
+        "AudioEffectChorus::method:set_voice_level_db(int:,float:)",
+        "AudioEffectChorus::method:set_voice_pan(int:,float:)",
+        "AudioEffectChorus::method:set_voice_rate_hz(int:,float:)",
+        "AudioEffectChorus::property:dry",
+        "AudioEffectChorus::property:voice/1/cutoff_hz",
+        "AudioEffectChorus::property:voice/1/delay_ms",
+        "AudioEffectChorus::property:voice/1/depth_ms",
+        "AudioEffectChorus::property:voice/1/level_db",
+        "AudioEffectChorus::property:voice/1/pan",
+        "AudioEffectChorus::property:voice/1/rate_hz",
+        "AudioEffectChorus::property:voice/2/cutoff_hz",
+        "AudioEffectChorus::property:voice/2/delay_ms",
+        "AudioEffectChorus::property:voice/2/depth_ms",
+        "AudioEffectChorus::property:voice/2/level_db",
+        "AudioEffectChorus::property:voice/2/pan",
+        "AudioEffectChorus::property:voice/2/rate_hz",
+        "AudioEffectChorus::property:voice/3/cutoff_hz",
+        "AudioEffectChorus::property:voice/3/delay_ms",
+        "AudioEffectChorus::property:voice/3/depth_ms",
+        "AudioEffectChorus::property:voice/3/level_db",
+        "AudioEffectChorus::property:voice/3/pan",
+        "AudioEffectChorus::property:voice/3/rate_hz",
+        "AudioEffectChorus::property:voice/4/cutoff_hz",
+        "AudioEffectChorus::property:voice/4/delay_ms",
+        "AudioEffectChorus::property:voice/4/depth_ms",
+        "AudioEffectChorus::property:voice/4/level_db",
+        "AudioEffectChorus::property:voice/4/pan",
+        "AudioEffectChorus::property:voice/4/rate_hz",
+        "AudioEffectChorus::property:voice_count",
+        "AudioEffectChorus::property:wet",
+        "AudioEffectCompressor::property:attack_us",
+        "AudioEffectCompressor::property:gain",
+        "AudioEffectCompressor::property:mix",
+        "AudioEffectCompressor::property:ratio",
+        "AudioEffectCompressor::property:release_ms",
+        "AudioEffectCompressor::property:sidechain",
+        "AudioEffectCompressor::property:threshold",
+        "AudioEffectDelay::property:dry",
+        "AudioEffectDelay::property:feedback_active",
+        "AudioEffectDelay::property:feedback_delay_ms",
+        "AudioEffectDelay::property:feedback_level_db",
+        "AudioEffectDelay::property:feedback_lowpass",
+        "AudioEffectDelay::property:tap1_active",
+        "AudioEffectDelay::property:tap1_delay_ms",
+        "AudioEffectDelay::property:tap1_level_db",
+        "AudioEffectDelay::property:tap1_pan",
+        "AudioEffectDelay::property:tap2_active",
+        "AudioEffectDelay::property:tap2_delay_ms",
+        "AudioEffectDelay::property:tap2_level_db",
+        "AudioEffectDelay::property:tap2_pan",
+        "AudioEffectDistortion::enum:Mode",
+        "AudioEffectDistortion::enum_value:Mode.MODE_ATAN",
+        "AudioEffectDistortion::enum_value:Mode.MODE_CLIP",
+        "AudioEffectDistortion::enum_value:Mode.MODE_LOFI",
+        "AudioEffectDistortion::enum_value:Mode.MODE_OVERDRIVE",
+        "AudioEffectDistortion::enum_value:Mode.MODE_WAVESHAPE",
+        "AudioEffectDistortion::property:drive",
+        "AudioEffectDistortion::property:keep_hf_hz",
+        "AudioEffectDistortion::property:mode",
+        "AudioEffectDistortion::property:post_gain",
+        "AudioEffectDistortion::property:pre_gain",
+        "AudioEffectEQ::method:get_band_count()",
+        "AudioEffectEQ::method:get_band_gain_db(int:)",
+        "AudioEffectEQ::method:set_band_gain_db(int:,float:)",
+        "AudioEffectFilter::enum:FilterDB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
+        "AudioEffectFilter::property:cutoff_hz",
+        "AudioEffectFilter::property:db",
+        "AudioEffectFilter::property:gain",
+        "AudioEffectFilter::property:resonance",
+        "AudioEffectHardLimiter::property:ceiling_db",
+        "AudioEffectHardLimiter::property:pre_gain_db",
+        "AudioEffectHardLimiter::property:release",
+        "AudioEffectInstance::method:_process(const void*:,AudioFrame*:,int:)",
+        "AudioEffectInstance::method:_process_silence()",
+        "AudioEffectLimiter::property:ceiling_db",
+        "AudioEffectLimiter::property:soft_clip_db",
+        "AudioEffectLimiter::property:soft_clip_ratio",
+        "AudioEffectLimiter::property:threshold_db",
+        "AudioEffectPanner::property:pan",
+        "AudioEffectPhaser::property:depth",
+        "AudioEffectPhaser::property:feedback",
+        "AudioEffectPhaser::property:range_max_hz",
+        "AudioEffectPhaser::property:range_min_hz",
+        "AudioEffectPhaser::property:rate_hz",
+        "AudioEffectPitchShift::enum:FFTSize",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
+        "AudioEffectPitchShift::property:fft_size",
+        "AudioEffectPitchShift::property:oversampling",
+        "AudioEffectPitchShift::property:pitch_scale",
+        "AudioEffectRecord::method:get_recording()",
+        "AudioEffectRecord::method:is_recording_active()",
+        "AudioEffectRecord::method:set_recording_active(bool:)",
+        "AudioEffectRecord::property:format",
+        "AudioEffectReverb::property:damping",
+        "AudioEffectReverb::property:dry",
+        "AudioEffectReverb::property:hipass",
+        "AudioEffectReverb::property:predelay_feedback",
+        "AudioEffectReverb::property:predelay_msec",
+        "AudioEffectReverb::property:room_size",
+        "AudioEffectReverb::property:spread",
+        "AudioEffectReverb::property:wet",
+        "AudioEffectSpectrumAnalyzer::enum:FFTSize",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_1024",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_2048",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_256",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_4096",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_512",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_MAX",
+        "AudioEffectSpectrumAnalyzer::property:buffer_length",
+        "AudioEffectSpectrumAnalyzer::property:fft_size",
+        "AudioEffectSpectrumAnalyzerInstance::enum:MagnitudeMode",
+        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_AVERAGE",
+        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_MAX",
+        "AudioEffectSpectrumAnalyzerInstance::method:get_magnitude_for_frequency_range(float:,float:,int:AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
+        "AudioEffectStereoEnhance::property:pan_pullout",
+        "AudioEffectStereoEnhance::property:surround",
+        "AudioEffectStereoEnhance::property:time_pullout_ms",
+        "AudioServer::method:add_bus_effect(int:,AudioEffect:,int:)",
+        "AudioServer::method:get_bus_effect(int:,int:)",
+        "AudioServer::method:get_bus_effect_count(int:)",
+        "AudioServer::method:get_bus_effect_instance(int:,int:,int:)",
+        "AudioServer::method:is_bus_bypassing_effects(int:)",
+        "AudioServer::method:is_bus_effect_enabled(int:,int:)",
+        "AudioServer::method:remove_bus_effect(int:,int:)",
+        "AudioServer::method:set_bus_bypass_effects(int:,bool:)",
+        "AudioServer::method:set_bus_effect_enabled(int:,int:,bool:)",
+        "AudioServer::method:swap_bus_effects(int:,int:,int:)",
+        "class:AudioEffect",
+        "class:AudioEffectAmplify",
+        "class:AudioEffectBandLimitFilter",
+        "class:AudioEffectBandPassFilter",
+        "class:AudioEffectCapture",
+        "class:AudioEffectChorus",
+        "class:AudioEffectCompressor",
+        "class:AudioEffectDelay",
+        "class:AudioEffectDistortion",
+        "class:AudioEffectEQ",
+        "class:AudioEffectEQ10",
+        "class:AudioEffectEQ21",
+        "class:AudioEffectEQ6",
+        "class:AudioEffectFilter",
+        "class:AudioEffectHardLimiter",
+        "class:AudioEffectHighPassFilter",
+        "class:AudioEffectHighShelfFilter",
+        "class:AudioEffectInstance",
+        "class:AudioEffectLimiter",
+        "class:AudioEffectLowPassFilter",
+        "class:AudioEffectLowShelfFilter",
+        "class:AudioEffectNotchFilter",
+        "class:AudioEffectPanner",
+        "class:AudioEffectPhaser",
+        "class:AudioEffectPitchShift",
+        "class:AudioEffectRecord",
+        "class:AudioEffectReverb",
+        "class:AudioEffectSpectrumAnalyzer",
+        "class:AudioEffectSpectrumAnalyzerInstance",
+        "class:AudioEffectStereoEnhance"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090).",
+      "godot": [
+        "AudioServer::method:generate_bus_layout()",
+        "AudioServer::method:set_bus_layout(AudioBusLayout:)",
+        "class:AudioBusLayout"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: SDL3 capture device ownership, bounded input ring and resampling, then microphone/recording integration; output-only FAudio does not supply input frames (ADR 0047).",
+      "godot": [
+        "AudioServer::method:get_input_buffer_length_frames()",
+        "AudioServer::method:get_input_device_list()",
+        "AudioServer::method:get_input_frames(int:)",
+        "AudioServer::method:get_input_frames_available()",
+        "AudioServer::method:get_input_mix_rate()",
+        "AudioServer::method:set_input_device_active(bool:)",
+        "AudioServer::property:input_device",
+        "class:AudioStreamMicrophone"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: live selected output-device rebuild and measured device latency; enumerating names and querying mix clocks does not implement selection/latency (ADR 0047).",
+      "godot": [
+        "AudioServer::method:get_output_latency()",
+        "AudioServer::property:output_device"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047).",
+      "godot": [
+        "AudioServer::method:is_stream_registered_as_sample(AudioStream:)",
+        "AudioServer::method:register_stream_as_sample(AudioStream:)",
+        "AudioStream::method:can_be_sampled()",
+        "AudioStream::method:generate_sample()",
+        "AudioStreamPlayback::method:get_sample_playback()",
+        "AudioStreamPlayback::method:set_sample_playback(AudioSamplePlayback:)",
+        "class:AudioSample",
+        "class:AudioSamplePlayback"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: stream usage/offset tracking and editor consumers; raw callback metadata alone does not tag active resources (ADR 0047).",
+      "godot": [
+        "AudioServer::method:set_enable_tagging_used_audio_streams(bool:)",
+        "AudioStreamPlayback::method:_tag_used_streams()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. Remaining rows retain concrete sample, parameter, effects, input, device, editor or transition-ramp dependencies.",
+      "godot": [
+        "class:AudioServer",
+        "class:AudioStream",
+        "class:AudioStreamPlayback",
+        "class:AudioStreamPlayer"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed per-playback parameter descriptors/defaults and player propagation for custom/composite streams under ADR 0001; no Variant or arbitrary string dispatch is admitted.",
+      "godot": [
+        "AudioStreamPlayback::method:_get_parameter(StringName:)",
+        "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047).",
+      "godot": [
+        "AudioListener2D::method:clear_current()",
+        "AudioListener2D::method:is_current()",
+        "AudioListener2D::method:make_current()",
+        "AudioStreamPlayer2D::method:get_playback_position()",
+        "AudioStreamPlayer2D::method:get_stream_playback()",
+        "AudioStreamPlayer2D::method:has_stream_playback()",
+        "AudioStreamPlayer2D::method:play(float:)",
+        "AudioStreamPlayer2D::method:seek(float:)",
+        "AudioStreamPlayer2D::method:stop()",
+        "AudioStreamPlayer2D::property:area_mask",
+        "AudioStreamPlayer2D::property:attenuation",
+        "AudioStreamPlayer2D::property:autoplay",
+        "AudioStreamPlayer2D::property:bus",
+        "AudioStreamPlayer2D::property:max_distance",
+        "AudioStreamPlayer2D::property:max_polyphony",
+        "AudioStreamPlayer2D::property:panning_strength",
+        "AudioStreamPlayer2D::property:pitch_scale",
+        "AudioStreamPlayer2D::property:playback_type",
+        "AudioStreamPlayer2D::property:playing",
+        "AudioStreamPlayer2D::property:stream",
+        "AudioStreamPlayer2D::property:stream_paused",
+        "AudioStreamPlayer2D::property:volume_db",
+        "AudioStreamPlayer2D::property:volume_linear",
+        "AudioStreamPlayer2D::signal:finished()",
+        "class:AudioListener2D",
+        "class:AudioStreamPlayer2D"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: bounded producer/consumer PCM ring, underrun/skip accounting and typed generator playback over the now executable stream path (ADR 0047).",
+      "godot": [
+        "AudioStreamGenerator::enum:AudioStreamGeneratorMixRate",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_CUSTOM",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_MAX",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_OUTPUT",
+        "AudioStreamGenerator::property:buffer_length",
+        "AudioStreamGenerator::property:mix_rate",
+        "AudioStreamGenerator::property:mix_rate_mode",
+        "AudioStreamGeneratorPlayback::method:can_push_buffer(int:)",
+        "AudioStreamGeneratorPlayback::method:clear_buffer()",
+        "AudioStreamGeneratorPlayback::method:get_frames_available()",
+        "AudioStreamGeneratorPlayback::method:get_skips()",
+        "AudioStreamGeneratorPlayback::method:push_buffer(PackedVector2Array:)",
+        "AudioStreamGeneratorPlayback::method:push_frame(Vector2:)",
+        "class:AudioStreamGenerator",
+        "class:AudioStreamGeneratorPlayback"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047).",
+      "godot": [
+        "AudioStreamInteractive::constant:CLIP_ANY",
+        "AudioStreamInteractive::enum:AutoAdvanceMode",
+        "AudioStreamInteractive::enum:FadeMode",
+        "AudioStreamInteractive::enum:TransitionFromTime",
+        "AudioStreamInteractive::enum:TransitionToTime",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_DISABLED",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_ENABLED",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_RETURN_TO_HOLD",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_AUTOMATIC",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_CROSS",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_DISABLED",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_IN",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_OUT",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_END",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_IMMEDIATE",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BAR",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BEAT",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_PREVIOUS_POSITION",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_SAME_POSITION",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_START",
+        "AudioStreamInteractive::method:add_transition(int:,int:,int:AudioStreamInteractive.TransitionFromTime,int:AudioStreamInteractive.TransitionToTime,int:AudioStreamInteractive.FadeMode,float:,bool:,int:,bool:)",
+        "AudioStreamInteractive::method:erase_transition(int:,int:)",
+        "AudioStreamInteractive::method:get_clip_auto_advance(int:)",
+        "AudioStreamInteractive::method:get_clip_auto_advance_next_clip(int:)",
+        "AudioStreamInteractive::method:get_clip_name(int:)",
+        "AudioStreamInteractive::method:get_clip_stream(int:)",
+        "AudioStreamInteractive::method:get_transition_fade_beats(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_fade_mode(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_filler_clip(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_from_time(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_list()",
+        "AudioStreamInteractive::method:get_transition_to_time(int:,int:)",
+        "AudioStreamInteractive::method:has_transition(int:,int:)",
+        "AudioStreamInteractive::method:is_transition_holding_previous(int:,int:)",
+        "AudioStreamInteractive::method:is_transition_using_filler_clip(int:,int:)",
+        "AudioStreamInteractive::method:set_clip_auto_advance(int:,int:AudioStreamInteractive.AutoAdvanceMode)",
+        "AudioStreamInteractive::method:set_clip_auto_advance_next_clip(int:,int:)",
+        "AudioStreamInteractive::method:set_clip_name(int:,StringName:)",
+        "AudioStreamInteractive::method:set_clip_stream(int:,AudioStream:)",
+        "AudioStreamInteractive::property:clip_count",
+        "AudioStreamInteractive::property:initial_clip",
+        "AudioStreamPlaybackInteractive::method:get_current_clip_index()",
+        "AudioStreamPlaybackInteractive::method:switch_to_clip(int:)",
+        "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)",
+        "AudioStreamPlaybackPolyphonic::constant:INVALID_ID",
+        "AudioStreamPlaybackPolyphonic::method:is_stream_playing(int:)",
+        "AudioStreamPlaybackPolyphonic::method:play_stream(AudioStream:,float:,float:,float:,int:AudioServer.PlaybackType,StringName:)",
+        "AudioStreamPlaybackPolyphonic::method:set_stream_pitch_scale(int:,float:)",
+        "AudioStreamPlaybackPolyphonic::method:set_stream_volume(int:,float:)",
+        "AudioStreamPlaybackPolyphonic::method:stop_stream(int:)",
+        "AudioStreamPlaylist::constant:MAX_STREAMS",
+        "AudioStreamPlaylist::method:get_bpm()",
+        "AudioStreamPlaylist::method:get_list_stream(int:)",
+        "AudioStreamPlaylist::method:set_list_stream(int:,AudioStream:)",
+        "AudioStreamPlaylist::property:fade_time",
+        "AudioStreamPlaylist::property:loop",
+        "AudioStreamPlaylist::property:shuffle",
+        "AudioStreamPlaylist::property:stream_count",
+        "AudioStreamPolyphonic::property:polyphony",
+        "AudioStreamRandomizer::enum:PlaybackMode",
+        "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM",
+        "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_RANDOM_NO_REPEATS",
+        "AudioStreamRandomizer::enum_value:PlaybackMode.PLAYBACK_SEQUENTIAL",
+        "AudioStreamRandomizer::method:add_stream(int:,AudioStream:,float:)",
+        "AudioStreamRandomizer::method:get_stream(int:)",
+        "AudioStreamRandomizer::method:get_stream_probability_weight(int:)",
+        "AudioStreamRandomizer::method:move_stream(int:,int:)",
+        "AudioStreamRandomizer::method:remove_stream(int:)",
+        "AudioStreamRandomizer::method:set_stream(int:,AudioStream:)",
+        "AudioStreamRandomizer::method:set_stream_probability_weight(int:,float:)",
+        "AudioStreamRandomizer::property:playback_mode",
+        "AudioStreamRandomizer::property:random_pitch",
+        "AudioStreamRandomizer::property:random_pitch_semitones",
+        "AudioStreamRandomizer::property:random_volume_offset_db",
+        "AudioStreamRandomizer::property:stream_{index}/stream",
+        "AudioStreamRandomizer::property:stream_{index}/weight",
+        "AudioStreamRandomizer::property:streams_count",
+        "AudioStreamSynchronized::constant:MAX_STREAMS",
+        "AudioStreamSynchronized::method:get_sync_stream(int:)",
+        "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
+        "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
+        "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
+        "AudioStreamSynchronized::property:stream_count",
+        "class:AudioStreamInteractive",
+        "class:AudioStreamPlaybackInteractive",
+        "class:AudioStreamPlaybackPlaylist",
+        "class:AudioStreamPlaybackPolyphonic",
+        "class:AudioStreamPlaybackSynchronized",
+        "class:AudioStreamPlaylist",
+        "class:AudioStreamPolyphonic",
+        "class:AudioStreamRandomizer",
+        "class:AudioStreamSynchronized"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: pinned internal NLayer decoding, frame seeking/loop/metadata and corruption checks feeding the existing FAudio stream path (ADR 0047).",
+      "godot": [
+        "AudioStreamMP3::method:load_from_buffer(PackedByteArray:)",
+        "AudioStreamMP3::method:load_from_file(String:)",
+        "AudioStreamMP3::property:bar_beats",
+        "AudioStreamMP3::property:beat_count",
+        "AudioStreamMP3::property:bpm",
+        "AudioStreamMP3::property:data",
+        "AudioStreamMP3::property:loop",
+        "AudioStreamMP3::property:loop_offset",
+        "class:AudioStreamMP3"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: pinned internal NVorbis decoding plus Ogg packet/seek/loop/metadata resources feeding the existing FAudio stream path (ADR 0047).",
+      "godot": [
+        "AudioStreamOggVorbis::method:load_from_buffer(PackedByteArray:)",
+        "AudioStreamOggVorbis::method:load_from_file(String:)",
+        "AudioStreamOggVorbis::property:bar_beats",
+        "AudioStreamOggVorbis::property:beat_count",
+        "AudioStreamOggVorbis::property:bpm",
+        "AudioStreamOggVorbis::property:loop",
+        "AudioStreamOggVorbis::property:loop_offset",
+        "AudioStreamOggVorbis::property:packet_sequence",
+        "AudioStreamOggVorbis::property:tags",
+        "OggPacketSequence::method:get_length()",
+        "OggPacketSequence::property:granule_positions",
+        "OggPacketSequence::property:packet_data",
+        "OggPacketSequence::property:sampling_rate",
+        "class:AudioStreamOggVorbis",
+        "class:AudioStreamPlaybackOggVorbis",
+        "class:OggPacketSequence",
+        "class:OggPacketSequencePlayback"
+      ]
+    }
+  ]
+}
