@@ -62,9 +62,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectBandPassFilter](classes/AudioEffectBandPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectCapture](classes/AudioEffectCapture.md) | AudioEffect | Implemented | 8 |
 | [AudioEffectChorus](classes/AudioEffectChorus.md) | AudioEffect | Implemented | 39 |
-| [AudioEffectCompressor](classes/AudioEffectCompressor.md) | AudioEffect | Unimplemented | 7 |
+| [AudioEffectCompressor](classes/AudioEffectCompressor.md) | AudioEffect | Blocked | 7 |
 | [AudioEffectDelay](classes/AudioEffectDelay.md) | AudioEffect | Implemented | 13 |
-| [AudioEffectDistortion](classes/AudioEffectDistortion.md) | AudioEffect | Unimplemented | 11 |
+| [AudioEffectDistortion](classes/AudioEffectDistortion.md) | AudioEffect | Implemented | 11 |
 | [AudioEffectEQ](classes/AudioEffectEQ.md) | AudioEffect | Implemented | 3 |
 | [AudioEffectEQ10](classes/AudioEffectEQ10.md) | AudioEffectEQ | Implemented | 0 |
 | [AudioEffectEQ21](classes/AudioEffectEQ21.md) | AudioEffectEQ | Implemented | 0 |

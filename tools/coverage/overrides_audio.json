@@ -1659,6 +1659,66 @@
       "godot": "AudioEffectChorus::property:voice/4/rate_hz",
       "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
       "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum:Mode",
+      "electron2d": "T:Electron2D.AudioEffectDistortion.Mode",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum_value:Mode.MODE_ATAN",
+      "electron2d": "enumValue:Electron2D.AudioEffectDistortion.Mode.ATan()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum_value:Mode.MODE_CLIP",
+      "electron2d": "enumValue:Electron2D.AudioEffectDistortion.Mode.Clip()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum_value:Mode.MODE_LOFI",
+      "electron2d": "enumValue:Electron2D.AudioEffectDistortion.Mode.LoFi()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum_value:Mode.MODE_OVERDRIVE",
+      "electron2d": "enumValue:Electron2D.AudioEffectDistortion.Mode.Overdrive()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::enum_value:Mode.MODE_WAVESHAPE",
+      "electron2d": "enumValue:Electron2D.AudioEffectDistortion.Mode.WaveShape()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::property:drive",
+      "electron2d": "property:Electron2D.AudioEffectDistortion.Drive()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::property:keep_hf_hz",
+      "electron2d": "property:Electron2D.AudioEffectDistortion.KeepHFHZ()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::property:mode",
+      "electron2d": "property:Electron2D.AudioEffectDistortion.DistortionMode()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::property:post_gain",
+      "electron2d": "property:Electron2D.AudioEffectDistortion.PostGain()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectDistortion::property:pre_gain",
+      "electron2d": "property:Electron2D.AudioEffectDistortion.PreGain()",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "class:AudioEffectDistortion",
+      "electron2d": "T:Electron2D.AudioEffectDistortion",
+      "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
     }
   ],
   "extras": [
@@ -2417,6 +2477,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectChorus.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectDistortion..ctor()",
+      "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDistortion.OnInstantiate()",
+      "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDistortion.GetPropertyDescriptors()",
+      "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDistortion.CreateDuplicateInstance()",
+      "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDistortion.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -2887,8 +2967,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed threshold/ratio/attack/release/mix and named sidechain PCM routing into prepared detector/envelope state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Blocked",
+      "reason": "ADR 0047: the compressor sidechain contract reads the named bus pre-effect PCM for the same stereo pair and quantum. The current FAudio submix effect hook exposes only its own bus input; a prepared per-bus pre-effect PCM tap plus deterministic producer-before-detector quantum ordering is required before the complete resource/kernel can execute. Build and verify that backend read path with the compressor slice; the generic bus/FAPO chain itself already runs.",
       "godot": [
         "AudioEffectCompressor::property:attack_us",
         "AudioEffectCompressor::property:gain",
@@ -2921,8 +3001,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed mode/drive/filter configuration and finite mode-specific waveshaping. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: all five nonlinear stereo curves execute with prepared independent filters in the FAudio bus chain. Typed configuration, Resource/scene copies, 2560 pinned C++ PCM channel samples per output rate, native and public Wayland output, silent tails and warmed allocation checks pass; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectDistortion::enum:Mode",
         "AudioEffectDistortion::enum_value:Mode.MODE_ATAN",

@@ -16,6 +16,7 @@
     <EmbeddedResource Include="Fixtures/Audio/Filters/reference.json" LogicalName="TestAudio.FilterReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/EQ/reference.json" LogicalName="TestAudio.EQReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/Reverb/reference.json" LogicalName="TestAudio.ReverbReference.json" />
+    <EmbeddedResource Include="Fixtures/Audio/Distortion/reference.json" LogicalName="TestAudio.DistortionReference.json" />
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>
