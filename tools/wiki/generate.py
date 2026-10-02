@@ -34,8 +34,8 @@ def plain(element):
             parts.append(node.text)
         for child in node:
             if child.tag == "see":
-                parts.append(child.attrib.get("cref", "").split(":", 1)[-1])
-            elif child.tag == "paramref":
+                parts.append(child.attrib.get("langword") or child.attrib.get("cref", "").split(":", 1)[-1])
+            elif child.tag in ("paramref", "typeparamref"):
                 parts.append(child.attrib.get("name", ""))
             elif child.tag == "c":
                 parts.append("`" + "".join(child.itertext()).strip() + "`")
@@ -66,6 +66,13 @@ def xml_id(record):
 
 def anchor(record):
     return "member-" + hashlib.sha1(record["id"].encode()).hexdigest()[:12]
+
+
+def member_heading(record):
+    name = record["declaringType"].rsplit(".", 1)[-1] if record["kind"] == "constructor" else record["name"]
+    if record["kind"] in ("constructor", "method", "operator", "indexer"):
+        return f"{name}({', '.join(parameter['type'] for parameter in record['parameters'] or [])})"
+    return name
 
 
 def escape(value):
@@ -151,7 +158,7 @@ def main():
             lines += ["", "## Member Details", ""]
             for member in own:
                 doc = xml.get(xml_id(member))
-                lines += [f"<a id=\"{anchor(member)}\"></a>", f"### {member['name']}", "",
+                lines += [f"<a id=\"{anchor(member)}\"></a>", f"### `{member_heading(member)}`", "",
                           f"Kind: `{member['kind']}`", "", "```csharp", member["signature"], "```", ""]
                 if doc is not None:
                     for tag, title in (("summary", "Summary"), ("remarks", "Remarks"), ("value", "Value"), ("returns", "Returns")):
