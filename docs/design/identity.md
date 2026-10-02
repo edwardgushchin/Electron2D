@@ -4,7 +4,7 @@ Last updated: 2026-10-02
 
 Status: **Sprite is the approved Electron2D identity**, selected by the owner on 2026-10-02 from concept 02.8. The Code direction has been removed from active designs, source assets and the delivery package.
 
-The identity represents a typed C# 2D engine under [ADR 0001 and ADR 0004](../decisions/product.md) and the product direction in [ADR 0090](../decisions/agent-native.md#adr-0090). The existing descriptor `Agent-native cross-platform 2D game engine` expresses that direction; it does not establish completed platform delivery or implemented editor or agent tooling. These assets do not change the runtime architecture.
+The identity presents Electron2D as an **agent-native, cross-platform 2D game engine**, following [ADR 0090](../decisions/agent-native.md#adr-0090) and the product scope in [ADR 0004](../decisions/product.md#adr-0004). This is the primary positioning expressed by the descriptor `Agent-native cross-platform 2D game engine`. C# and typed APIs are implementation details under [ADR 0001](../decisions/product.md#adr-0001). The descriptor does not establish completed platform delivery or implemented editor or agent tooling. These assets do not change the runtime architecture.
 
 ## Editable designs
 

@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <img alt=".NET 10 · Typed C# · MIT · In development" src="docs/design/assets/sprite/readme-badges.svg" width="345">
+  <img alt="Agent-native · Cross-platform · 2D · In development" src="docs/design/assets/sprite/readme-badges.svg" width="405">
 </p>
 
 <p align="center">
@@ -38,11 +38,11 @@
 
 ## 🧭 About
 
-Electron2D is a typed C# engine for 2D games on .NET 10. Build scenes from nodes and resources, write game logic as regular C# classes, and use the engine's rendering, input, physics, audio and GUI APIs.
+Electron2D is an **agent-native, cross-platform 2D game engine**.
 
-The runtime is built as **`Electron2D.dll`**. Games and the future editor consume the same public API; platform dependencies flow from the engine project into application publishes.
+Designed for developers and coding agents to work on the same games through documented programmatic operations: create and edit projects, build, run and verify results. Changes and verification should remain reviewable by the developer. The [agent-native architecture](docs/decisions/agent-native.md#adr-0090) defines shared CLI/editor authoring, headless simulation and rendered batch verification.
 
-Electron2D is designed to be **agent-native**: human developers and coding agents should be able to create, inspect, modify, build, run and verify projects through documented programmatic operations. The [agent-native architecture](docs/decisions/agent-native.md#adr-0090) defines shared CLI/editor authoring, headless simulation and rendered batch verification.
+One public runtime API targets desktop, mobile, TV and browser games. Build scenes from nodes and resources, with rendering, input, physics, audio and GUI in the same engine.
 
 **Development status:** the runtime, examples, tests and API documentation are actively developed. The visual editor, unified project CLI, scene-file persistence and public capture workflow are not implemented yet. Cross-platform targets and verified execution are listed separately below.
 
@@ -50,15 +50,15 @@ Electron2D is designed to be **agent-native**: human developers and coding agent
 
 ## ✨ Features
 
-- **Typed C#** — Concrete types, properties, generics and C# events, with ordinary IDE completion and refactoring.
+- **Agent-native workflow** — Designed for coding agents to inspect and edit scenes, resources and project settings, then build, run and verify games through documented programmatic operations. The missing tooling is tracked in the [implementation roadmap](docs/coverage/index.md).
+- **Cross-platform runtime** — One engine API for desktop, mobile, TV and browser games. See the [platform targets and current verification](#platforms).
 - **Node-based scenes** — `Node`, `CanvasItem` and `Entity` hierarchies, scene scheduling, timers, tweens and reusable in-memory `PackedScene` instances.
 - **2D rendering** — Sprites, animation, cameras, textures, text, canvas drawing and typed HLSL/GLSL shader materials. See [rendering capabilities and limits](docs/domains/rendering.md).
 - **GUI building blocks** — Controls, containers, labels, buttons, text input, focus navigation and typed themes. See the [scene domain](docs/domains/scene.md).
 - **2D physics** — Bodies, areas, collision shapes, queries and joints, driven by fixed-step simulation. See the [physics domain](docs/domains/physics.md).
 - **Audio** — WAV, MP3 and Ogg Vorbis playback, procedural streams, output buses and recording APIs. See [audio behavior and verification limits](docs/domains/audio.md).
 - **Resources and I/O** — Images, fonts, resource loading, typed configuration, file access and localization. See the [resource domain](docs/domains/resources.md) and [core domain](docs/domains/core.md).
-- **Agent-native architecture** — Programmatic authoring and observable verification are product requirements, with the missing tooling tracked in the [implementation roadmap](docs/coverage/index.md).
-- **Cross-platform runtime targets** — Windows, Linux, macOS, Android, iOS, Android TV, tvOS and Web, with one public runtime API.
+- **C# game logic** — Write ordinary C# classes with properties, resources and events, using familiar .NET tools.
 
 These are implemented capability areas and the stated product direction; each linked reference records the remaining API and backend gaps.
 
@@ -93,7 +93,7 @@ cd Electron2D
 dotnet build Electron2D.csproj -c Release
 ```
 
-Reference `Electron2D.csproj` from your application project. The project supplies the engine's platform dependencies during restore and publish. A self-contained application publish contains the game executable, `Electron2D.dll`, the .NET runtime and the applicable native libraries.
+The runtime is built as **`Electron2D.dll`**. Reference `Electron2D.csproj` from your application project. The project supplies the engine's platform dependencies during restore and publish. A self-contained application publish contains the game executable, `Electron2D.dll`, the .NET runtime and the applicable native libraries.
 
 <a id="quick-start"></a>
 
