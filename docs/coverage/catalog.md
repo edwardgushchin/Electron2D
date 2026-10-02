@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -81,7 +81,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectPanner](classes/AudioEffectPanner.md) | AudioEffect | Implemented | 1 |
 | [AudioEffectPhaser](classes/AudioEffectPhaser.md) | AudioEffect | Unimplemented | 5 |
 | [AudioEffectPitchShift](classes/AudioEffectPitchShift.md) | AudioEffect | Unimplemented | 10 |
-| [AudioEffectRecord](classes/AudioEffectRecord.md) | AudioEffect | Unimplemented | 4 |
+| [AudioEffectRecord](classes/AudioEffectRecord.md) | AudioEffect | Implemented | 4 |
 | [AudioEffectReverb](classes/AudioEffectReverb.md) | AudioEffect | Implemented | 8 |
 | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | AudioEffect | Implemented | 9 |
 | [AudioEffectSpectrumAnalyzerInstance](classes/AudioEffectSpectrumAnalyzerInstance.md) | AudioEffectInstance | Implemented | 4 |

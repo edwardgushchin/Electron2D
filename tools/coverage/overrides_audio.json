@@ -1,6 +1,31 @@
 {
   "mappings": [
     {
+      "godot": "class:AudioEffectRecord",
+      "electron2d": "T:Electron2D.AudioEffectRecord",
+      "reason": "ADR 0047: typed bus PCM recording resource using the current FAudio chain."
+    },
+    {
+      "godot": "AudioEffectRecord::method:get_recording()",
+      "electron2d": "method:Electron2D.AudioEffectRecord.GetRecording()",
+      "reason": "ADR 0047: a caller-owned WAV snapshot encodes front-pair PCM in the selected format outside native mixing."
+    },
+    {
+      "godot": "AudioEffectRecord::method:is_recording_active()",
+      "electron2d": "method:Electron2D.AudioEffectRecord.IsRecordingActive()",
+      "reason": "ADR 0047: active recorder status follows capture, stop and output teardown."
+    },
+    {
+      "godot": "AudioEffectRecord::method:set_recording_active(bool:)",
+      "electron2d": "method:Electron2D.AudioEffectRecord.SetRecordingActive(System.Boolean)",
+      "reason": "ADR 0047: start replaces the previous sample and stop drains pending PCM."
+    },
+    {
+      "godot": "AudioEffectRecord::property:format",
+      "electron2d": "property:Electron2D.AudioEffectRecord.Format()",
+      "reason": "ADR 0047 and ADR 0051: the existing shared AudioStreamWAV.Format encodes PCM8, PCM16, IMA ADPCM and QOA."
+    },
+    {
       "godot": "AudioServer::enum:PlaybackType",
       "electron2d": "T:Electron2D.AudioServer.PlaybackType",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
@@ -2609,6 +2634,30 @@
       "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
     },
     {
+      "electron2d": "constructor:Electron2D.AudioEffectRecord..ctor()",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectRecord.OnInstantiate()",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectRecord.GetPropertyDescriptors()",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectRecord.CreateDuplicateInstance()",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectRecord.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectRecord.Dispose(System.Boolean)",
+      "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
+    },
+    {
       "electron2d": "constructor:Electron2D.AudioEffectSpectrumAnalyzer..ctor()",
       "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
     },
@@ -3194,8 +3243,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed record state, bounded captured PCM lifetime and output WAV resource/format encoding. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: AudioEffectRecord passes the front stereo pair through, copies PCM into a prepared bounded ring, drains outside the callback and returns an independent AudioStreamWAV in all four existing formats. AudioRecordTests verifies restart, copies, failed graph rollback, native 2/4/6/8 logical profiles and warmed callback allocation. Physical listening, actual multichannel hardware and other platforms remain unverified.",
       "godot": [
         "AudioEffectRecord::method:get_recording()",
         "AudioEffectRecord::method:is_recording_active()",

@@ -77,7 +77,12 @@ public abstract class AudioEffectInstance : ElectronObject
     /// <summary>Selects processing while the bus input is silent.</summary>
     /// <returns>False by default; true for capture and effects with silent-input output.</returns>
     protected virtual bool OnProcessSilence() => false;
-    internal void Attach() { lock (_gate) { ThrowIfDisposed(); if (_attached || _processing) throw new InvalidOperationException("An effect instance is already in use."); _attached = true; } }
+    internal void Attach(int pair)
+    {
+        lock (_gate) { ThrowIfDisposed(); if (_attached || _processing) throw new InvalidOperationException("An effect instance is already in use."); _attached = true; }
+        OnAttached(pair);
+    }
+    internal virtual void OnAttached(int pair) { }
     internal void Detach() { lock (_gate) _attached = false; }
     /// <inheritdoc />
     /// <exception cref="InvalidOperationException">The instance is bus-owned or processing.</exception>

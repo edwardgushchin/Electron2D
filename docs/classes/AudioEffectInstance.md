@@ -1,6 +1,6 @@
 # AudioEffectInstance
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public abstract class Electron2D.AudioEffectInstance` · **Source:** [AudioEffect.cs](../../src/Scene/Resources/AudioEffect.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-02
 
 ## Description
 
-Independent stereo DSP state. A standalone instance belongs to its caller; a bus instance returned by AudioServer is borrowed. Structural effect edits and output closure dispose those borrowed handles. Source resources remain borrowed. Per-instance processing serializes through a separate gate and rejects recursive processing/disposal. Bus callbacks also reject server configuration and Lock/Unlock. User hooks must use prepared storage, synchronize custom fields and produce finite PCM; amplitudes beyond unity are preserved until downstream output processing.
+Independent stereo DSP state. A standalone instance belongs to its caller; a bus instance returned by AudioServer is borrowed. Native attachment identifies the stereo pair internally; [AudioEffectRecord](AudioEffectRecord.md) uses this to make only the front pair current. Structural effect edits and output closure dispose those borrowed handles. Source resources remain borrowed. Per-instance processing serializes through a separate gate and rejects recursive processing/disposal. Bus callbacks also reject server configuration and Lock/Unlock. User hooks must use prepared storage, synchronize custom fields and produce finite PCM; amplitudes beyond unity are preserved until downstream output processing.
 
 ## Example
 

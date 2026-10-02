@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Scope and types
 
@@ -105,6 +105,13 @@ AudioEffectTests exercises raw FIFO/copy/wrap/full-block overflow, fixed capacit
 
 `ELECTRON2D_TEST_AUDIO_EFFECTS=1 SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` runs the focused native checks. `ELECTRON2D_TEST_AUDIO_EFFECTS_HOST=1 ELECTRON2D_AUDIO_RENDERER=BACKEND SDL_VIDEODRIVER=wayland SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` exercises public Window/Autoplay/capture/Engine.Run twice normally and once with a failed process callback for each current GPU/compatibility renderer. Machine-readable output records captured frames and cleanup. This establishes public host/native execution, not audio file export, physical listening, actual multichannel speakers, editor tooling or foreign-platform acceptance. Remaining concrete effects need their own typed configuration/DSP slices; the generic chain is now executable.
 
+
+<a id="bus-recording"></a>
+## Bus recording
+
+[AudioEffectRecord](../classes/AudioEffectRecord.md) records the front stereo pair in the existing ordered FAudio effect chain and passes PCM through unchanged. A prepared 1.5-second ring keeps native callback work bounded; a worker drains it into interleaved float PCM. `SetRecordingActive(true)` starts a fresh sample, false joins/drains, and `GetRecording()` creates an independent nonlooping [AudioStreamWAV](../classes/AudioStreamWAV.md) in the selected PCM8, PCM16, IMA ADPCM or QOA format. Active queries snapshot without stopping. The current resource follows the committed front pair; a failed chain build restores the old live recording. Overflow ends recording and makes queries fail explicitly. The accumulated PCM grows with recording length, and no audio file is written automatically.
+
+[AudioRecordTests](../../tests/Electron2D.Tests/AudioRecordTests.cs) checks all four codec roundtrips, defaults, restarts, copies, aliases, rollback, front-pair native PCM and 2/4/6/8 logical profiles. Sixty-four warmed active and silent FAudio passes allocate zero measured managed bytes in the callback and make zero custom FAudio allocator calls; worker, codec, caller-result and SDL/OS allocations are outside that measure. Public Window hosts on current Linux Wayland GPU/compatibility backends exercise player-to-bus-to-WAV flow. Physical listening, actual multichannel devices, other platforms and file export remain unverified.
 
 <a id="bus-gain-pan"></a>
 ## Bus gain and pan

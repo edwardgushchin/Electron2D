@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
@@ -395,6 +395,8 @@ This assembly row records the current build, not complete platform delivery. The
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | [AudioEffectSpectrumAnalyzer.cs](../src/Scene/Resources/AudioEffectSpectrumAnalyzer.cs) | Current | Typed pass-through spectrum configuration and copying |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectSpectrumAnalyzerInstance](classes/AudioEffectSpectrumAnalyzerInstance.md) | [AudioEffectSpectrumAnalyzer.cs](../src/Scene/Resources/AudioEffectSpectrumAnalyzer.cs) | Current | Borrowed stereo FFT magnitude queries |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectSpectrumAnalyzerInstance.MagnitudeMode](classes/AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.md) | [AudioEffectSpectrumAnalyzer.cs](../src/Scene/Resources/AudioEffectSpectrumAnalyzer.cs) | Current | Average and maximum frequency-range modes |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectRecord](classes/AudioEffectRecord.md) | [AudioEffectRecord.cs](../src/Scene/Resources/AudioEffectRecord.cs) | Current | Front-pair bus PCM recording into caller-owned WAV snapshots |
+| [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectRecordInstance](classes/AudioEffectRecordInstance.md) | [AudioEffectRecord.cs](../src/Scene/Resources/AudioEffectRecord.cs) | Current | Internal pass-through PCM recorder and worker state |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectEQ](classes/AudioEffectEQ.md) | [AudioEffectEQ.cs](../src/Scene/Resources/AudioEffectEQ.cs) | Current | Indexed fixed-band gain and Resource copying |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectEQ6](classes/AudioEffectEQ6.md) | [AudioEffectEQ.cs](../src/Scene/Resources/AudioEffectEQ.cs) | Current | Six-band graphic EQ preset |
 | [Audio](domains/audio.md) | [Audio playback](components/audio-playback.md) | [AudioEffectEQ10](classes/AudioEffectEQ10.md) | [AudioEffectEQ.cs](../src/Scene/Resources/AudioEffectEQ.cs) | Current | Ten-band graphic EQ preset |

@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 Owns audio resource decoding, independent playback state, non-spatial and spatial 2D scene playback, listener selection and output bus routing. The [audio playback component](../components/audio-playback.md) implements the first output path under [ADR 0047](../decisions/audio.md#adr-0047). AudioStream, AudioStreamPlayback, AudioStreamPlaybackResampled, AudioStreamWAV, AudioWAVImportOptions, AudioStreamGenerator, AudioStreamGeneratorPlayback, AudioStreamRandomizer, AudioStreamMP3, AudioStreamOggVorbis, AudioStreamPlaybackOggVorbis, OggPacketSequence, OggPacketSequencePlayback, AudioStreamPlayer, AudioStreamPlayer2D, AudioListener and AudioServer expose engine-owned types only.
 
@@ -16,6 +16,8 @@ Procedural generator streams own configuration and independent bounded copied PC
 
 
 [AudioEffect](../classes/AudioEffect.md), [AudioEffectInstance](../classes/AudioEffectInstance.md), [AudioEffectCapture](../classes/AudioEffectCapture.md) and the AudioServer chain API now execute ordered native stereo processing, raw bounded capture, bypass/enable, pre-gain effect ordering and post-gain peaks. Buses own pair instances and borrow resources. Prepared activity preserves silent tails and explicit ProcessSilence behavior. Native callback exceptions latch silence and reach the owner frame; closure/removal and failed custom cleanup release references coherently. Remaining effect resources/DSP, bus-layout serialization and file export retain separate triggers. See [verification](../components/audio-playback.md#bus-effects).
+
+[AudioEffectRecord](../classes/AudioEffectRecord.md) adds front-pair bus recording and caller-owned WAV snapshots in all four supported sample formats. Start, stop, restart, copy and failed-chain rollback execute through the existing bus graph; see [bus recording](../components/audio-playback.md#bus-recording). It does not create a disk file or provide a batch capture host.
 
 [AudioEffectAmplify](../classes/AudioEffectAmplify.md) and [AudioEffectPanner](../classes/AudioEffectPanner.md) add live scalar gain and channel crossfeed to that bus chain. Independent per-pair instances ramp gain across the next processed block and sample pan once per block. Native PCM and warmed allocation checks use the existing FAudio path; other DSP families retain their own triggers.
 

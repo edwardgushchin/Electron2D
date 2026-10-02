@@ -52,7 +52,7 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
         _state = new(channels, frames, source);
         try
         {
-            for (var i = 0; i < Instances.Length; i++) { var instance = AudioServer.Instance.CreateEffectInstance(source!); instance.Attach(); Instances[i] = instance; }
+            for (var i = 0; i < Instances.Length; i++) { var instance = AudioServer.Instance.CreateEffectInstance(source!); Instances[i] = instance; instance.Attach(i); }
             var value = (NativeEffect*)FAudioContext.AllocateStorage((nuint)sizeof(NativeEffect)); if (value is null) throw new OutOfMemoryException(); *value = default;
             SetHandle((nint)value);
             value->Properties = new F.FAPORegistrationProperties { clsid = new Guid("f478ec82-d6db-487c-80cf-b225b21a46ed"), MajorVersion = 1, Flags = 0x1F, MinInputBufferCount = 1, MaxInputBufferCount = 1, MinOutputBufferCount = 1, MaxOutputBufferCount = 1 };
