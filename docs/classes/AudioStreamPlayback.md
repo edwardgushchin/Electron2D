@@ -61,3 +61,5 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 ### LoopingOverride
 
 Assignments update policy for subsequent source mixing; they do not reset time/history. Parameterless playbacks do not consume it. Use a descriptor from Stream.GetParameterList with AudioStreamPlayer.SetParameter for owned player voices; changing a borrowed playback directly requires synchronization with its owner.
+
+The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.

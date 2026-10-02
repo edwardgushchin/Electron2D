@@ -606,7 +606,7 @@ def render():
             updated = "2026-10-01"
         if name in {"Mesh", "ArrayMesh", "MeshInstance2D", "AudioStreamRandomizer", "AudioStreamMP3", "AudioStreamOggVorbis", "AudioStreamPlaybackOggVorbis", "OggPacketSequence", "OggPacketSequencePlayback", "AudioStreamPlayback", "AudioStreamPlaybackResampled", "AudioStreamPlayer", "ResourceLoader"}:
             updated = "2026-10-02"
-        if name == "ImmediateMesh":
+        if name in {"ImmediateMesh", "AudioStreamGenerator", "AudioStreamGeneratorPlayback"}:
             updated = "2026-10-02"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

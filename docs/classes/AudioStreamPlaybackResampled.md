@@ -8,7 +8,7 @@ Last updated: 2026-10-02
 
 ## Description
 
-Abstract prepared cubic resampler with 128 source frames plus four history frames and an unsigned 16-bit fractional cursor. BeginResample clears history, prefills the source block and resets its end marker. End markers include the four history entries so short/tail blocks report source-frame counts without losing four frames. Decode position includes prefetch; ordinary concrete Seek does not implicitly reset interpolation history. Target frequency is AudioServer.GetMixRate; local rateScale and global PlaybackSpeedScale multiply source sampling rate. Zero rate retains a frozen cursor. Negative/nonfinite or overflowing ratios throw. The concrete mixed count marks the first silence; buffers/history are reused after preparation. Source callbacks use Span<Vector2> instead of pointer/count. This own class contract is implemented; broader AudioStreamPlayback sample hooks and complete composite parameter surfaces remain inherited gaps.
+Abstract prepared cubic resampler with 128 source frames plus four history frames and an unsigned 16-bit fractional cursor. BeginResample and engine OnMix serialize interpolation history through one per-playback gate; Generator producer/control methods share it. BeginResample clears history, prefills the source block and resets its end marker. End markers include the four history entries so short/tail blocks report source-frame counts without losing four frames. Decode position includes prefetch; ordinary concrete Seek does not implicitly reset interpolation history. Target frequency is AudioServer.GetMixRate; local rateScale and global PlaybackSpeedScale multiply source sampling rate. Zero rate retains a frozen cursor. Negative/nonfinite or overflowing ratios throw. The concrete mixed count marks the first silence; buffers/history are reused after preparation. Source callbacks use Span<Vector2> instead of pointer/count. This own class contract is implemented; broader AudioStreamPlayback sample hooks and complete composite parameter surfaces remain inherited gaps.
 
 ## API summary
 
@@ -27,3 +27,5 @@ Abstract prepared cubic resampler with 128 source frames plus four history frame
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioStreamPlaybackResampled.md) retains missing and Partial members separately.
+
+The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.

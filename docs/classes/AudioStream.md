@@ -43,3 +43,5 @@ Abstract Resource extension contract with independent caller-owned playback inst
 [Own reference coverage](../coverage/classes/AudioStream.md) retains missing and Partial members separately.
 
 [AudioStreamRandomizer](AudioStreamRandomizer.md) is an executable meta-stream consumer. It captures a selected child at InstantiatePlayback and queries all child monophonic policies; standard source factories are called once per actual player Play. Optional metadata and parameters not overridden by a concrete stream retain base behavior.
+
+The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.

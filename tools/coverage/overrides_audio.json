@@ -799,6 +799,76 @@
       "godot": "AudioStreamRandomizer::property:streams_count",
       "electron2d": "property:Electron2D.AudioStreamRandomizer.StreamsCount()",
       "reason": "ADR 0047: executable weighted/no-repeat/sequential borrowed streams, shared identity history, logarithmic pitch and DB variation, independent captured child playback, typed indexed descriptors and copied/local scene resources. Real player/FAudio/Engine.Run paths and warmed active/paused allocation checks execute; physical listening and broader-platform/native-allocation limits remain separate."
+    },
+    {
+      "godot": "AudioStreamGenerator::enum:AudioStreamGeneratorMixRate",
+      "electron2d": "T:Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_OUTPUT",
+      "electron2d": "enumValue:Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate.Output()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT",
+      "electron2d": "enumValue:Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate.Input()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_CUSTOM",
+      "electron2d": "enumValue:Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate.Custom()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_MAX",
+      "electron2d": "enumValue:Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate.Max()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::property:mix_rate",
+      "electron2d": "property:Electron2D.AudioStreamGenerator.MixRate()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::property:mix_rate_mode",
+      "electron2d": "property:Electron2D.AudioStreamGenerator.MixRateMode()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGenerator::property:buffer_length",
+      "electron2d": "property:Electron2D.AudioStreamGenerator.BufferLength()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:can_push_buffer(int:)",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.CanPushBuffer(System.Int32)",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:clear_buffer()",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.ClearBuffer()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:get_frames_available()",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.GetFramesAvailable()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:get_skips()",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.GetSkips()",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:push_buffer(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.PushBuffer(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioStreamGeneratorPlayback::method:push_frame(Vector2:)",
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.PushFrame(Electron2D.Vector2)",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
     }
   ],
   "extras": [
@@ -1153,6 +1223,66 @@
     {
       "electron2d": "method:Electron2D.AudioStreamRandomizer.OnIsMonophonic()",
       "reason": "Typed construction, inherited AudioStream metadata/playback and Resource copy/disposal/property-discovery overrides project the executable random audio pool and its existing ownership/schema concepts (ADRs 0001/0013/0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamGenerator..ctor()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGenerator.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGenerator.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGenerator.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGenerator.OnGetStreamName()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGenerator.OnInstantiatePlayback()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnGetPlaybackPosition()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnGetStreamSamplingRate()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnIsPlaying()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnMixResampled(System.Span<Electron2D.Vector2>)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnSeek(System.Double)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnStart(System.Double)",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnStop()",
+      "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
     }
   ],
   "statusGroups": [
@@ -1599,28 +1729,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: bounded producer/consumer PCM ring, underrun/skip accounting and typed generator playback over the now executable stream path (ADR 0047).",
-      "godot": [
-        "AudioStreamGenerator::enum:AudioStreamGeneratorMixRate",
-        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_CUSTOM",
-        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT",
-        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_MAX",
-        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_OUTPUT",
-        "AudioStreamGenerator::property:buffer_length",
-        "AudioStreamGenerator::property:mix_rate",
-        "AudioStreamGenerator::property:mix_rate_mode",
-        "AudioStreamGeneratorPlayback::method:can_push_buffer(int:)",
-        "AudioStreamGeneratorPlayback::method:clear_buffer()",
-        "AudioStreamGeneratorPlayback::method:get_frames_available()",
-        "AudioStreamGeneratorPlayback::method:get_skips()",
-        "AudioStreamGeneratorPlayback::method:push_buffer(PackedVector2Array:)",
-        "AudioStreamGeneratorPlayback::method:push_frame(Vector2:)",
-        "class:AudioStreamGenerator",
-        "class:AudioStreamGeneratorPlayback"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047).",
       "godot": [
         "AudioStreamInteractive::constant:CLIP_ANY",
@@ -1767,6 +1875,40 @@
       "godot": [
         "AudioStreamPlaybackResampled::method:begin_resample()",
         "class:AudioStreamPlaybackResampled"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits.",
+      "godot": [
+        "AudioStreamGenerator::enum:AudioStreamGeneratorMixRate",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_OUTPUT",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_CUSTOM",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_MAX",
+        "AudioStreamGenerator::property:mix_rate",
+        "AudioStreamGenerator::property:buffer_length",
+        "AudioStreamGeneratorPlayback::method:can_push_buffer(int:)",
+        "AudioStreamGeneratorPlayback::method:clear_buffer()",
+        "AudioStreamGeneratorPlayback::method:get_frames_available()",
+        "AudioStreamGeneratorPlayback::method:get_skips()",
+        "AudioStreamGeneratorPlayback::method:push_buffer(PackedVector2Array:)",
+        "AudioStreamGeneratorPlayback::method:push_frame(Vector2:)",
+        "class:AudioStreamGeneratorPlayback"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits. Input mode is unavailable until actual native input sampling-frequency ownership; selecting it rejects without state mutation.",
+      "godot": [
+        "class:AudioStreamGenerator",
+        "AudioStreamGenerator::property:mix_rate_mode"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first SDL3 capture-device ownership, source PCM ring and input-frequency/resampling integration with AudioStreamMicrophone and AudioServer.GetInputMixRate (ADR 0047). Input generator mode must enter that first capture slice; output frequency is not an input substitute.",
+      "godot": [
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT"
       ]
     }
   ]

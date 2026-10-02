@@ -92,8 +92,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioSamplePlayback](classes/AudioSamplePlayback.md) | RefCounted | Blocked | 0 |
 | [AudioServer](classes/AudioServer.md) | Object | Partial | 65 |
 | [AudioStream](classes/AudioStream.md) | Resource | Partial | 17 |
-| [AudioStreamGenerator](classes/AudioStreamGenerator.md) | AudioStream | Blocked | 8 |
-| [AudioStreamGeneratorPlayback](classes/AudioStreamGeneratorPlayback.md) | AudioStreamPlaybackResampled | Blocked | 6 |
+| [AudioStreamGenerator](classes/AudioStreamGenerator.md) | AudioStream | Partial | 8 |
+| [AudioStreamGeneratorPlayback](classes/AudioStreamGeneratorPlayback.md) | AudioStreamPlaybackResampled | Implemented | 6 |
 | [AudioStreamInteractive](classes/AudioStreamInteractive.md) | AudioStream | Blocked | 41 |
 | [AudioStreamMP3](classes/AudioStreamMP3.md) | AudioStream | Implemented | 8 |
 | [AudioStreamMicrophone](classes/AudioStreamMicrophone.md) | AudioStream | Blocked | 0 |
