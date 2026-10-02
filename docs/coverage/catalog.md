@@ -86,7 +86,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | AudioEffect | Unimplemented | 9 |
 | [AudioEffectSpectrumAnalyzerInstance](classes/AudioEffectSpectrumAnalyzerInstance.md) | AudioEffectInstance | Unimplemented | 4 |
 | [AudioEffectStereoEnhance](classes/AudioEffectStereoEnhance.md) | AudioEffect | Unimplemented | 3 |
-| [AudioListener2D](classes/AudioListener2D.md) | Node2D | Blocked | 3 |
+| [AudioListener2D](classes/AudioListener2D.md) | Node2D | Implemented | 3 |
 | [AudioListener3D](classes/AudioListener3D.md) | Node3D | Excluded | 9 |
 | [AudioSample](classes/AudioSample.md) | RefCounted | Blocked | 0 |
 | [AudioSamplePlayback](classes/AudioSamplePlayback.md) | RefCounted | Blocked | 0 |
@@ -106,7 +106,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamPlaybackResampled](classes/AudioStreamPlaybackResampled.md) | AudioStreamPlayback | Implemented | 3 |
 | [AudioStreamPlaybackSynchronized](classes/AudioStreamPlaybackSynchronized.md) | AudioStreamPlayback | Blocked | 0 |
 | [AudioStreamPlayer](classes/AudioStreamPlayer.md) | Node | Partial | 22 |
-| [AudioStreamPlayer2D](classes/AudioStreamPlayer2D.md) | Node2D | Blocked | 21 |
+| [AudioStreamPlayer2D](classes/AudioStreamPlayer2D.md) | Node2D | Partial | 21 |
 | [AudioStreamPlayer3D](classes/AudioStreamPlayer3D.md) | Node3D | Excluded | 38 |
 | [AudioStreamPlaylist](classes/AudioStreamPlaylist.md) | AudioStream | Blocked | 8 |
 | [AudioStreamPolyphonic](classes/AudioStreamPolyphonic.md) | AudioStream | Blocked | 1 |

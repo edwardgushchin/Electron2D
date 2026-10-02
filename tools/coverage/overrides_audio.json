@@ -1189,6 +1189,161 @@
       "godot": "AudioEffectEQ::method:set_band_gain_db(int:,float:)",
       "electron2d": "method:Electron2D.AudioEffectEQ.SetBandGainDB(System.Int32,System.Single)",
       "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioListener2D",
+      "electron2d": "T:Electron2D.AudioListener",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioListener2D::method:clear_current()",
+      "electron2d": "method:Electron2D.AudioListener.ClearCurrent()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioListener2D::method:is_current()",
+      "electron2d": "method:Electron2D.AudioListener.IsCurrent()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioListener2D::method:make_current()",
+      "electron2d": "method:Electron2D.AudioListener.MakeCurrent()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "class:AudioStreamPlayer2D",
+      "electron2d": "T:Electron2D.AudioStreamPlayer2D",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:get_playback_position()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.GetPlaybackPosition()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:get_stream_playback()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.GetStreamPlayback()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:has_stream_playback()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.HasStreamPlayback()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:play(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.Play(System.Double)",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:seek(float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.Seek(System.Double)",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::method:stop()",
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.Stop()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::signal:finished()",
+      "electron2d": "event:Electron2D.AudioStreamPlayer2D.Finished()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "Area2D::property:audio_bus_name",
+      "electron2d": "property:Electron2D.Area.AudioBusName()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "Area2D::property:audio_bus_override",
+      "electron2d": "property:Electron2D.Area.AudioBusOverride()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "Viewport::method:get_audio_listener_2d()",
+      "electron2d": "method:Electron2D.Viewport.GetAudioListener2D()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "Viewport::property:audio_listener_enable_2d",
+      "electron2d": "property:Electron2D.Viewport.AudioListenerEnable2D()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/general/2d_panning_strength",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioGeneral2DPanningStrength()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:area_mask",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.AreaMask()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:attenuation",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.Attenuation()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:autoplay",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.Autoplay()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:bus",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.Bus()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:max_distance",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.MaxDistance()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:max_polyphony",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.MaxPolyphony()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:panning_strength",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.PanningStrength()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:pitch_scale",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.PitchScale()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:playback_type",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.PlaybackType()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:playing",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.Playing()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:stream",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.Stream()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:stream_paused",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.StreamPaused()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:volume_db",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.VolumeDB()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayer2D::property:volume_linear",
+      "electron2d": "property:Electron2D.AudioStreamPlayer2D.VolumeLinear()",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
     }
   ],
   "extras": [
@@ -1831,6 +1986,62 @@
     {
       "electron2d": "method:Electron2D.AudioEffectEQ6.CreateDuplicateInstance()",
       "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioListener..ctor()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamPlayer2D..ctor()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioListener.CreateSceneInstanceFactory()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioListener.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioListener.OnEnterTree()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioListener.OnExitTree()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.CreateSceneInstanceFactory()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.Dispose(System.Boolean)",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.GetParameter`2(PropertyDescriptor<TPlayback, TValue>)",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.IsPlaying()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.OnNotification(System.Int32)",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayer2D.SetParameter`2(PropertyDescriptor<TPlayback, TValue>,TValue)",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioListener.Current()",
+      "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -2035,38 +2246,6 @@
       "godot": [
         "AudioStreamPlayback::method:_get_parameter(StringName:)",
         "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: 2D listener/world ownership, distance attenuation/panning and spatial playback matrices over existing non-spatial buses (ADR 0047).",
-      "godot": [
-        "AudioListener2D::method:clear_current()",
-        "AudioListener2D::method:is_current()",
-        "AudioListener2D::method:make_current()",
-        "AudioStreamPlayer2D::method:get_playback_position()",
-        "AudioStreamPlayer2D::method:get_stream_playback()",
-        "AudioStreamPlayer2D::method:has_stream_playback()",
-        "AudioStreamPlayer2D::method:play(float:)",
-        "AudioStreamPlayer2D::method:seek(float:)",
-        "AudioStreamPlayer2D::method:stop()",
-        "AudioStreamPlayer2D::property:area_mask",
-        "AudioStreamPlayer2D::property:attenuation",
-        "AudioStreamPlayer2D::property:autoplay",
-        "AudioStreamPlayer2D::property:bus",
-        "AudioStreamPlayer2D::property:max_distance",
-        "AudioStreamPlayer2D::property:max_polyphony",
-        "AudioStreamPlayer2D::property:panning_strength",
-        "AudioStreamPlayer2D::property:pitch_scale",
-        "AudioStreamPlayer2D::property:playback_type",
-        "AudioStreamPlayer2D::property:playing",
-        "AudioStreamPlayer2D::property:stream",
-        "AudioStreamPlayer2D::property:stream_paused",
-        "AudioStreamPlayer2D::property:volume_db",
-        "AudioStreamPlayer2D::property:volume_linear",
-        "AudioStreamPlayer2D::signal:finished()",
-        "class:AudioListener2D",
-        "class:AudioStreamPlayer2D"
       ]
     },
     {
@@ -2538,6 +2717,49 @@
         "AudioEffectFilter::property:db",
         "AudioEffectFilter::property:gain",
         "AudioEffectFilter::property:resonance"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified.",
+      "godot": [
+        "Area2D::property:audio_bus_name",
+        "Area2D::property:audio_bus_override",
+        "AudioListener2D::method:clear_current()",
+        "AudioListener2D::method:is_current()",
+        "AudioListener2D::method:make_current()",
+        "AudioStreamPlayer2D::method:get_playback_position()",
+        "AudioStreamPlayer2D::method:get_stream_playback()",
+        "AudioStreamPlayer2D::method:has_stream_playback()",
+        "AudioStreamPlayer2D::property:area_mask",
+        "AudioStreamPlayer2D::property:attenuation",
+        "AudioStreamPlayer2D::property:bus",
+        "AudioStreamPlayer2D::property:max_distance",
+        "AudioStreamPlayer2D::property:max_polyphony",
+        "AudioStreamPlayer2D::property:panning_strength",
+        "AudioStreamPlayer2D::property:pitch_scale",
+        "AudioStreamPlayer2D::property:playing",
+        "AudioStreamPlayer2D::property:stream",
+        "AudioStreamPlayer2D::signal:finished()",
+        "ProjectSettings::property:audio/general/2d_panning_strength",
+        "Viewport::method:get_audio_listener_2d()",
+        "Viewport::property:audio_listener_enable_2d",
+        "class:AudioListener2D"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Spatial output executes; inherited stream start/stop/pause/gain ramps require prepared transition state, sample playback needs sample registration, and editor autoplay suppression needs an editor-hint host (ADR 0047).",
+      "godot": [
+        "AudioStreamPlayer2D::method:play(float:)",
+        "AudioStreamPlayer2D::method:seek(float:)",
+        "AudioStreamPlayer2D::method:stop()",
+        "AudioStreamPlayer2D::property:autoplay",
+        "AudioStreamPlayer2D::property:playback_type",
+        "AudioStreamPlayer2D::property:stream_paused",
+        "AudioStreamPlayer2D::property:volume_db",
+        "AudioStreamPlayer2D::property:volume_linear",
+        "class:AudioStreamPlayer2D"
       ]
     }
   ]

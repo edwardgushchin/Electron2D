@@ -29,6 +29,13 @@ public sealed partial class SceneTree
 
     internal void EnsurePhysicsParticipationChange() => _physicsSpace?.EnsureQueryAccess();
 
+    internal string ResolveSpatialAudioBus(Vector2 position, uint areaMask, string requestedBus)
+    {
+        EnsureOwnerThread();
+        return areaMask == 0 || _physicsSpace is null
+            ? requestedBus : _physicsSpace.FindAudioBusOverride(position, areaMask) ?? requestedBus;
+    }
+
     internal void RegisterPhysicsBody(PhysicsBody body)
     {
         EnsureOwnerThread();

@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-09-26
+Last updated: 2026-10-02
 
 ## Scope and owned types
 
@@ -20,7 +20,7 @@ An Area owns a stable [RID](../classes/RID.md). A [direct ray or point query](ph
 
 An Area uses nonresponding sensor fixtures; a child CollisionShape's one-way body-contact setting does not filter either approach side. The child warns about the ineffective setting, while its scene properties remain packable.
 
-The current profile accepts unit global scale and zero skew while active. Shape/resource, filtering, monitoring and field edits take effect on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Tile-map virtual collision bodies, audio-bus routing and typed shape/RID events remain separate coverage work.
+The current profile accepts unit global scale and zero skew while active. Shape/resource, filtering, monitoring and field edits take effect on the next step. Borrowed resources remain caller-owned; tree exit and disposal release backend handles. The pairwise scan has quadratic candidate growth; add a spatial candidate index when measured large-scene cost requires it. Tile-map virtual collision bodies and remaining typed shape/RID event dependencies remain separate coverage work. Spatial audio point queries use scene Area shapes and collision layers independently of monitoring flags; see [audio playback](audio-playback.md#spatial-2d-playback).
 
 [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks monitoring and event timing. [PhysicsAreaFieldTests](../../tests/Electron2D.Tests/PhysicsAreaFieldTests.cs) checks field modes, point falloff, sampled defaults, damping and warmed RigidBody frames; [CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks world/Area gravity selection on a kinematic character. Native allocator counts, other platforms and owner visual acceptance remain unverified. [ADRs 0055 and 0056](../decisions/physics.md#adr-0056) record the execution boundary.
 

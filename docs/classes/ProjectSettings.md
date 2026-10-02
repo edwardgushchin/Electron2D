@@ -190,11 +190,17 @@ Initializes an isolated registry with explicit project and user-data directories
 - `ArgumentException`: A path is empty or invalid, or both paths resolve to the same directory.
 - `IO.DirectoryNotFoundException`: `projectRoot` does not exist.
 
-## Audio input setting
+## Audio settings
 
 | Full signature | Contract |
 | --- | --- |
 | `public static ProjectSetting<bool> AudioDriverEnableInput { get; }` | Built-in audio/driver/enable_input, default false. |
+| `public static ProjectSetting<float> AudioGeneral2DPanningStrength { get; }` | Built-in audio/general/2d_panning_strength, default 0.5; sampled by new spatial players. |
+
+<a id="audiogeneral2dpanningstrength"></a>
+### AudioGeneral2DPanningStrength
+
+`audio/general/2d_panning_strength` is a nonnegative finite float, 0.5 by default. Each new [AudioStreamPlayer2D](AudioStreamPlayer2D.md) samples the current effective value during construction; later setting changes do not alter an existing player's panning. Invalid values reject before storage. This typed built-in follows the same project load, feature override and persistence rules as other settings.
 
 <a id="audiodriverenableinput"></a>
 ### AudioDriverEnableInput

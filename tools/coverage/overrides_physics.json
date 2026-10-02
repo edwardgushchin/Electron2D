@@ -2833,14 +2833,6 @@
     },
     {
       "godot": [
-        "Area2D::property:audio_bus_name",
-        "Area2D::property:audio_bus_override"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: first executable audio-bus playback/listener routing slice under ADR 0047; apply area bus selection to audible streams."
-    },
-    {
-      "godot": [
         "Area2D::enum:SpaceOverride",
         "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_DISABLED",
         "Area2D::enum_value:SpaceOverride.SPACE_OVERRIDE_COMBINE",

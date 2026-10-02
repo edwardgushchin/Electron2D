@@ -16,7 +16,11 @@ public sealed partial class Area : CollisionObject
         new PropertyDescriptor<Area, bool>(nameof(Monitoring), area => area.Monitoring,
             (area, value) => area.Monitoring = value, _ => true, stored: true),
         new PropertyDescriptor<Area, bool>(nameof(Monitorable), area => area.Monitorable,
-            (area, value) => area.Monitorable = value, _ => true, stored: true)
+            (area, value) => area.Monitorable = value, _ => true, stored: true),
+        new PropertyDescriptor<Area, bool>(nameof(AudioBusOverride), area => area.AudioBusOverride,
+            (area, value) => area.AudioBusOverride = value, _ => false, stored: true),
+        new PropertyDescriptor<Area, string>(nameof(AudioBusName), area => area.AudioBusName,
+            (area, value) => area.AudioBusName = value, _ => "Master", stored: true)
     ];
 
     private readonly List<B2ShapeId> _backendShapes = [];
@@ -26,6 +30,29 @@ public sealed partial class Area : CollisionObject
     private readonly PhysicsShapePairTracker _shapePairs = new();
     private readonly List<PhysicsShapePairChange> _pairChanges = [];
     private bool _dispatchingOverlap;
+    private bool _audioBusOverride;
+    private string _audioBusName = "Master";
+
+    /// <summary>Gets or sets whether a spatial stream inside this Area routes to its audio bus.</summary>
+    /// <value>False initially; routing also requires the player's area-mask and this Area's collision layer to overlap.</value>
+    /// <exception cref="InvalidOperationException">An attached area is accessed off-owner or mutated during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The area is disposed.</exception>
+    public bool AudioBusOverride
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _audioBusOverride; }
+        set { EnsureMutable(); _audioBusOverride = value; }
+    }
+
+    /// <summary>Gets or sets the requested bus for spatial streams in this Area.</summary>
+    /// <value>Master initially; a missing bus resolves to Master at playback time.</value>
+    /// <exception cref="ArgumentNullException">The name is null.</exception>
+    /// <exception cref="InvalidOperationException">An attached area is accessed off-owner or mutated during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The area is disposed.</exception>
+    public string AudioBusName
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _audioBusName; }
+        set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _audioBusName = value; }
+    }
     private PhysicsSpace? _space;
     internal PhysicsSpace? Space => _space;
     private B2BodyId _bodyID;

@@ -305,7 +305,17 @@ def main():
     assert len(area_rows) == 36
     assert {state: sum(f" | {state} | " in row for row in area_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 26, "Partial": 8, "Unimplemented": 0, "Blocked": 2}
+                "Implemented": 28, "Partial": 8, "Unimplemented": 0, "Blocked": 0}
+    listener_rows = pages[CLASS_PAGES / "AudioListener2D.md"]
+    assert "Electron2D.AudioListener" in listener_rows
+    assert all(" | Implemented | " in row for row in listener_rows.splitlines() if row.startswith("| [`"))
+    spatial_rows = pages[CLASS_PAGES / "AudioStreamPlayer2D.md"]
+    assert " | Partial | " in next(row for row in spatial_rows.splitlines() if row.startswith("| [`class AudioStreamPlayer2D"))
+    assert all(" | Implemented | " in next(row for row in spatial_rows.splitlines() if row.startswith(f"| [`property float {name}"))
+               for name in ("attenuation", "max_distance", "panning_strength"))
+    viewport_rows = pages[CLASS_PAGES / "Viewport.md"]
+    assert " | Implemented | " in next(row for row in viewport_rows.splitlines() if row.startswith("| [`method get_audio_listener_2d"))
+    assert " | Excluded | " in next(row for row in viewport_rows.splitlines() if row.startswith("| [`property bool audio_listener_enable_3d"))
     body_rows = pages[CLASS_PAGES / "RigidBody2D.md"]
     assert "../../classes/RigidBody.DampMode.md" in body_rows
     assert all(" | Implemented | " in next(row for row in body_rows.splitlines() if row.startswith(f"| [`{prefix}"))

@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-30
 
 ## Description
 
-A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, gravity and damping fields affect overlapping RigidBody dynamics, while gravity also feeds CharacterBody's inherited `GetGravity()` query before the solver step.
+A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, gravity and damping fields affect overlapping RigidBody dynamics, while gravity also feeds CharacterBody's inherited `GetGravity()` query before the solver step. A shaped area can also reroute a spatial audio source whose `AreaMask` intersects its collision layer; monitoring flags do not gate that point query.
 
 ## Example
 
@@ -33,6 +33,8 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies thi
 | `public Area()` | — | Creates a detached monitoring, monitorable area. |
 | `public bool Monitoring { get; set; }` | true | Enables this area's detection after the next fixed step. |
 | `public bool Monitorable { get; set; }` | true | Makes this area detectable by another area. |
+| `public bool AudioBusOverride { get; set; }` | false | Enables spatial source bus selection inside this area. |
+| `public string AudioBusName { get; set; }` | Master | Requested bus for eligible spatial sources. |
 | `public enum SpaceOverride` | — | Five field combination modes; see [values](Area.SpaceOverride.md). |
 | `public SpaceOverride GravitySpaceOverride { get; set; }` | Disabled | Determines gravity combination and stopping. |
 | `public float Gravity { get; set; }` | 980 | Finite signed gravity strength in scene units/s². |
@@ -59,6 +61,13 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies thi
 | `protected override void Dispose(bool disposing)` | — | Releases backend fixtures and overlap snapshots. |
 
 ## Property descriptions
+
+<a id="audiobusoverride"></a>
+<a id="audiobusname"></a>
+### `AudioBusOverride` and `AudioBusName`
+
+Both are stored by `PackedScene`. When override is true, a shaped area containing an [AudioStreamPlayer2D](AudioStreamPlayer2D.md) source position may route that source to `AudioBusName`, provided its collision layer intersects the player's `AreaMask`. This is a live point query at initial Play and each fixed step. Unknown bus names resolve to Master. `Monitoring`, `Monitorable`, the area's collision mask and its physical field priority do not select the audio route. The name cannot be null. Attached access requires the scene owner; mutation during scene capture and access after disposal reject.
+
 
 <a id="monitoring"></a>
 ### `Monitoring` and `Monitorable`

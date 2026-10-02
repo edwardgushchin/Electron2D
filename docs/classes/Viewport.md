@@ -1,12 +1,12 @@
 # Viewport
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 **Inherits:** [Node](Node.md)
 
 **Inherited By:** [Window](Window.md)
 
-- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs)
+- **Source:** [Viewport.cs](../../src/Scene/Main/Viewport.cs), [Viewport.Drag.cs](../../src/Scene/Main/Viewport.Drag.cs), [Viewport.PhysicsInterpolation.cs](../../src/Scene/Main/Viewport.PhysicsInterpolation.cs), [Viewport.Audio.cs](../../src/Scene/Main/Viewport.Audio.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
@@ -32,6 +32,15 @@ if (inputEvent.IsActionPressed("confirm"))
 This stops later scene input stages. It does not change Input polling state. `PushInput` retains caller ownership and accepts client coordinates by default, or viewport coordinates with `inLocalCoordinates: true`. Positional conversion creates a temporary event owned by dispatch.
 
 The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` returns the current borrowed control; `ReleaseGUIFocus()` clears it. A new owner raises `GUIFocusChanged` before that control's focus notification and event. Unhandled Tab and directional actions can move focus to visible controls with `FocusMode.All` or an explicit path.
+
+## 2D audio listening
+
+| Declaration | Contract |
+| --- | --- |
+| `public bool AudioListenerEnable2D { get; set; }` | Enables source audibility from this viewport; false while detached, automatically true for a `SceneTree` root. Stored by `PackedScene`. |
+| `public AudioListener? GetAudioListener2D()` | Returns the borrowed current [AudioListener](AudioListener.md), or null for the client-center listening point. |
+
+A spatial player's canvas transform maps its position into the viewport. An explicit listener supplies its scene position and rotation; otherwise the client center supplies the origin. Disabling 2D listening silences spatial players in this viewport. Both operations enforce owner-thread and disposed checks; mutation also rejects scene capture. Only the root Window viewport is currently supported. [AudioStreamPlayer2D](AudioStreamPlayer2D.md) describes attenuation, panning and Area routing.
 
 ## Canvas transforms and pointer coordinates
 

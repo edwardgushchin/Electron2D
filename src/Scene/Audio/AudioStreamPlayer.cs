@@ -24,6 +24,8 @@ public class AudioStreamPlayer : Node
     private float _volumeDB, _pitch = 1;
     private int _maximum = 1;
     private MixTarget _mixTarget;
+    private bool _spatial;
+    private float _spatialLeft, _spatialRight;
     private AudioServer.PlaybackType _type;
     private readonly List<FAudioStreamVoice> _voices = [];
     private readonly List<long> _ages = [];
@@ -139,7 +141,7 @@ public class AudioStreamPlayer : Node
     private FAudioStreamVoice CreateVoice(AudioStreamPlayback playback)
     {
         var server = AudioServer.Instance; var voice = server.Native.CreateStream(playback, server.ResolveBus(_bus));
-        try { voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); return voice; }
+        try { voice.SetPitch(_pitch); voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), server.ResolveSourceGain(_bus, 1)); voice.SetMixTarget(_mixTarget); if (_spatial) voice.SetSpatial(_spatialLeft, _spatialRight); return voice; }
         catch { voice.Dispose(); throw; }
     }
     /// <summary>Creates one fresh playback and starts a voice at a requested stream time, replacing the oldest when capacity is full.</summary>
@@ -255,6 +257,13 @@ public class AudioStreamPlayer : Node
         if (_stream is null || !_stream.GetParameterList().Contains(parameter) || parameter.IsReadOnly) throw new InvalidOperationException("The stream does not declare this writable parameter.");
     }
     internal void RefreshVolume() { var gate = AudioServer.Instance.ResolveSourceGain(_bus, 1); foreach (var voice in _voices) voice.SetVolume((float)Mathf.DBToLinear(_volumeDB), gate); }
+    internal void ConfigureSpatial(float left, float right)
+    {
+        if (!float.IsFinite(left) || !float.IsFinite(right) || left < 0 || right < 0)
+            throw new ArgumentOutOfRangeException(nameof(left));
+        _spatial = true; _spatialLeft = left; _spatialRight = right;
+        foreach (var voice in _voices) voice.SetSpatial(left, right);
+    }
     internal void RefreshPitch() { foreach (var voice in _voices) voice.SetPitch(_pitch); }
     internal void RefreshRouting()
     {

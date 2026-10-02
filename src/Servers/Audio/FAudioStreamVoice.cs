@@ -17,6 +17,8 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     private bool _active, _paused, _ending;
     private float _pitch = 1, _volume = 1, _routingGain = 1;
     private AudioStreamPlayer.MixTarget _target;
+    private bool _spatial;
+    private float _spatialLeft, _spatialRight;
     private Exception? _error;
     private readonly float[] _matrix;
     [StructLayout(LayoutKind.Sequential)]
@@ -55,6 +57,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     internal nint ActiveSend => _active && !_paused ? _send : 0;
     internal void MarkActivity(FAudioBusEffect.Activity activity)
     {
+        if (_spatial) { activity.Use(0); return; }
         if (_context.Channels == 2 || _target != AudioStreamPlayer.MixTarget.Center) activity.Use(0);
         if (_context.Channels >= 4 && _target != AudioStreamPlayer.MixTarget.Stereo)
             for (var pair = 1; pair < _context.Channels / 2; pair++) if (pair == 1 || _target == AudioStreamPlayer.MixTarget.Surround) activity.Use(pair);
@@ -89,9 +92,23 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     {
         Check(); lock (_context.Gate)
         {
-            _target = target; var count = _context.Channels; FillOutputMatrix(_matrix, count, target, _volume, _routingGain);
+            _target = target; var count = _context.Channels;
+            if (_spatial)
+            {
+                _matrix.AsSpan().Clear();
+                _matrix[0] = _volume * _routingGain * _spatialLeft;
+                _matrix[3] = _volume * _routingGain * _spatialRight;
+            }
+            else FillOutputMatrix(_matrix, count, target, _volume, _routingGain);
             fixed (float* matrix = _matrix) FAudioContext.Check(F.FAudioVoice_SetOutputMatrix(_voice, _send, 2, (uint)count, (nint)matrix, 0), "set source mix target");
         }
+    }
+    internal void SetSpatial(float left, float right)
+    {
+        Check();
+        if (!float.IsFinite(left) || !float.IsFinite(right) || left < 0 || right < 0)
+            throw new ArgumentOutOfRangeException(nameof(left));
+        lock (_context.Gate) { _spatial = true; _spatialLeft = left; _spatialRight = right; SetMixTarget(_target); }
     }
     internal static void FillOutputMatrix(Span<float> matrix, int channels, AudioStreamPlayer.MixTarget target, float volume, float routingGain)
     {

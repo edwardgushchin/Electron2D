@@ -53,7 +53,8 @@
     "StaticBody2D": "StaticBody",
     "VisibleOnScreenNotifier2D": "VisibleOnScreenNotifier",
     "VisibleOnScreenEnabler2D": "VisibleOnScreenEnabler",
-    "MeshInstance2D": "MeshInstance"
+    "MeshInstance2D": "MeshInstance",
+    "AudioListener2D": "AudioListener"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",

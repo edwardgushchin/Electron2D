@@ -5238,15 +5238,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First positional 2D audio integration with viewport ownership after the audio backend.",
-      "godot": [
-        "Viewport::method:get_audio_listener_2d()",
-        "Viewport::property:audio_listener_enable_2d",
-        "Viewport::property:audio_listener_enable_3d"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First typed GUI, text-input and embedded-viewport integration after rendering (ADRs 0008 and 0028).",
       "godot": [
         "Viewport::method:get_embedded_subwindows()",
@@ -5918,6 +5909,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0081: row-major grid consumes Container phases and fitting, integer-truncated minima, independent uniform row/column expansion, min/max refit, first-slot remainder, sparse empty-column expansion, RTL and typed packing. Corrected capped-row advance uses final allocation rather than minimum to avoid overlap. GridContainerTests verifies managed state/bounds/sparse columns/packing/callbacks and zero warmed allocations; GridContainerRenderingTests verifies seven pixel phases and 64 warmed resize/layout/render frames with zero managed bytes on Linux Wayland GPU/compatibility. Typed Theme lookup executes under ADR 0083; Font/project-theme and inherited semantic accessibility retain their exact separate dependencies."
+    },
+    {
+      "state": "Excluded",
+      "reason": "Three-dimensional listening is outside the 2D product boundary (ADR 0004).",
+      "godot": [
+        "Viewport::property:audio_listener_enable_3d"
+      ]
     }
   ]
 }

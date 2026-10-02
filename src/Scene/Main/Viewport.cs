@@ -85,6 +85,7 @@ public abstract partial class Viewport : Node
         {
             SizeChanged = null;
             GUIFocusChanged = null;
+            _audioListener = null;
         }
         base.Dispose(disposing);
     }

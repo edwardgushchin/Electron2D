@@ -117,6 +117,7 @@ public sealed partial class SceneTree : MainLoop
         try
         {
             root.InitializeRootAutoTranslateMode(ProjectSettings.Instance.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
+            if (root is Viewport audioRoot) audioRoot.AudioListenerEnable2D = true;
             _physicsInterpolation = ProjectSettings.Instance.GetWithOverride(ProjectSettings.PhysicsInterpolation);
             if (attachToEngine)
                 Engine.Instance.AttachConstructingTree(this);

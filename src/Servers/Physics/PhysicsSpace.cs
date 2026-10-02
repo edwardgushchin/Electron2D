@@ -74,6 +74,22 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal B2WorldId WorldID => _worldID;
     internal IReadOnlyList<PhysicsBody> Bodies => _bodies;
     internal IReadOnlyList<Area> Areas => _areas;
+
+    internal string? FindAudioBusOverride(Vector2 position, uint mask)
+    {
+        PrepareForQuery();
+        var point = Shape.ToBackend(position);
+        Area? selected = null;
+        foreach (var area in _areas)
+        {
+            if (!area.AudioBusOverride || (area.CollisionLayer & mask) == 0 ||
+                selected is not null && area.PhysicsRID >= selected.PhysicsRID) continue;
+            var shapes = area.BackendShapes;
+            for (var i = 0; i < shapes.Count; i++)
+                if (b2Shape_TestPoint(shapes[i], point)) { selected = area; break; }
+        }
+        return selected?.AudioBusName;
+    }
     internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
 
     internal void EnsureQueryAccess()
