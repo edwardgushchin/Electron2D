@@ -1,6 +1,6 @@
 # Electron2D documentation
 
-Last updated: 2026-09-25
+Last updated: 2026-10-02
 
 This directory describes the engine as it exists now. Planned features are listed only as explicit limitations or next boundaries; they are never presented as implemented.
 
@@ -39,6 +39,7 @@ This directory describes the engine as it exists now. Planned features are liste
 
 - [Inventory](inventory.md)
 - [Third-party software](thirdparty.md)
+- [Identity design proposals and source assets](design/identity.md)
 - [API comparison and implementation roadmap](coverage/index.md)
 - Domain: [Core](domains/core.md)
 - Domain: [Input](domains/input.md)

@@ -1,0 +1,19 @@
+:root {
+  --e2d-bg: #F9F3EE;
+  --e2d-surface: #FFFFFF;
+  --e2d-ink: #3D2749;
+  --e2d-paper: #F9F3EE;
+  --e2d-brand: #A63B75;
+  --e2d-action: #A63B75;
+  --e2d-muted: #7C667A;
+  --e2d-mutedLight: #7C667A;
+  --e2d-line: #DAC9D5;
+  --e2d-warm: #EDA181;
+  --e2d-dark: #241B2C;
+  --e2d-brandDark: #F2A6CC;
+}
+:root {
+  --e2d-action-normal: #A63B75;
+  --e2d-action-hover: #8D3063;
+  --e2d-action-pressed: #772550;
+}
