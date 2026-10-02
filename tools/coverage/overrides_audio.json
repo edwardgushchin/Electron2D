@@ -1344,6 +1344,76 @@
       "godot": "AudioStreamPlayer2D::property:volume_linear",
       "electron2d": "property:Electron2D.AudioStreamPlayer2D.VolumeLinear()",
       "reason": "ADR 0047: spatial FAudio source matrices, viewport listener selection, distance/pan, Area point-query bus routing and typed scene state execute. AudioSpatialTests checks Linux Wayland GPU/compatibility native PCM and warmed allocation; other platforms and physical listening remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectDelay",
+      "electron2d": "T:Electron2D.AudioEffectDelay",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:dry",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Dry()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:feedback_active",
+      "electron2d": "property:Electron2D.AudioEffectDelay.FeedbackActive()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:feedback_delay_ms",
+      "electron2d": "property:Electron2D.AudioEffectDelay.FeedbackDelayMS()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:feedback_level_db",
+      "electron2d": "property:Electron2D.AudioEffectDelay.FeedbackLevelDB()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:feedback_lowpass",
+      "electron2d": "property:Electron2D.AudioEffectDelay.FeedbackLowpass()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap1_active",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap1Active()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap1_delay_ms",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap1DelayMS()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap1_level_db",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap1LevelDB()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap1_pan",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap1Pan()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap2_active",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap2Active()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap2_delay_ms",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap2DelayMS()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap2_level_db",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap2LevelDB()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectDelay::property:tap2_pan",
+      "electron2d": "property:Electron2D.AudioEffectDelay.Tap2Pan()",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -2042,6 +2112,26 @@
     {
       "electron2d": "property:Electron2D.AudioListener.Current()",
       "reason": "Typed C# construction, scene lifecycle/serialization, disposal or stream-parameter projection for the implemented 2D spatial audio node (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectDelay..ctor()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDelay.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDelay.CreateDuplicateInstance()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDelay.GetPropertyDescriptors()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectDelay.OnInstantiate()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -2526,8 +2616,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed tap/feedback/filter timing and bounded stereo delay storage. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectDelay::property:dry",
         "AudioEffectDelay::property:feedback_active",
