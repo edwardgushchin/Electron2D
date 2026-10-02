@@ -125,3 +125,5 @@ The [audio component](../components/audio-playback.md) adds reusable AudioStream
 Audio import/playback ownership and codec verification are documented in the [audio component](../components/audio-playback.md). AudioCompressedTests verifies generic cache identity, ignored resources, validated replacement, retained old playback and malformed rollback; multichannel Vorbis retains its pinned decoder dependency.
 
 [AudioStreamRandomizer](../classes/AudioStreamRandomizer.md) uses Resource graph copying and scene-local ownership for borrowed child pools. Its typed indexed descriptors provide authoring; the audio component owns selection, child playback lifetime and native execution.
+
+[Typed 2D mesh surfaces](../components/meshes.md) now execute Mesh/ArrayMesh/MeshInstance, CanvasItem.DrawMesh and logical server-owned mesh production on the shared canvas path. The owning [ADR 0092](../decisions/mesh.md#adr-0092) records copied typed channels, packed region updates, material/lifetime rules and exact deferred deformation/channel consumers. Native pixel and warmed frame evidence is separate from other-platform or owner acceptance.

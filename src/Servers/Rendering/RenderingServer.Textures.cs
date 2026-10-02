@@ -193,15 +193,17 @@ public sealed partial class RenderingServer
         return target is ServerTexture owned ? owned.Path : target.ResourcePath;
     }
 
-    /// <summary>Releases a caller-owned rendering texture identity.</summary>
-    /// <param name="rid">A live texture RID owned by this renderer.</param>
-    /// <remarks>Resource-owned texture RIDs must be released by their resource. Retained commands stop drawing the freed texture.</remarks>
-    /// <exception cref="ArgumentException">The RID is stale or not a texture.</exception>
+    /// <summary>Releases a caller-owned rendering texture or mesh identity.</summary>
+    /// <param name="rid">A live texture or mesh RID owned by this renderer.</param>
+    /// <remarks>Resource-owned identities must be released by their resource. Retained commands stop drawing freed
+    /// server textures; drawing a disposed mesh reports the borrowed-resource lifetime error.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or not a supported rendering resource.</exception>
     /// <exception cref="InvalidOperationException">The owner is different or the renderer is off-owner/submitting.</exception>
     /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
     public void FreeRID(RID rid)
     {
-        EnsureTextureChange(); var texture = RenderingTextureRegistry.Owned(rid, this);
+        EnsureTextureChange(); if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
+        var texture = RenderingTextureRegistry.Owned(rid, this);
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid); texture.Released = true; texture.Dispose();
     }
 

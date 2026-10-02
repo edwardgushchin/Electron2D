@@ -1,0 +1,649 @@
+{
+  "mappings": [
+    {
+      "godot": "Mesh::enum:ArrayFormat",
+      "electron2d": "T:Electron2D.Mesh.ArrayFormat",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum:PrimitiveType",
+      "electron2d": "T:Electron2D.Mesh.PrimitiveType",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_2D_VERTICES",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Use2DVertices()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.UseDynamicUpdate()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_COLOR",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Color()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_INDEX",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Index()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_VERTEX",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Vertex()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:PrimitiveType.PRIMITIVE_LINES",
+      "electron2d": "enumValue:Electron2D.Mesh.PrimitiveType.Lines()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:PrimitiveType.PRIMITIVE_LINE_STRIP",
+      "electron2d": "enumValue:Electron2D.Mesh.PrimitiveType.LineStrip()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:PrimitiveType.PRIMITIVE_POINTS",
+      "electron2d": "enumValue:Electron2D.Mesh.PrimitiveType.Points()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:PrimitiveType.PRIMITIVE_TRIANGLES",
+      "electron2d": "enumValue:Electron2D.Mesh.PrimitiveType.Triangles()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::enum_value:PrimitiveType.PRIMITIVE_TRIANGLE_STRIP",
+      "electron2d": "enumValue:Electron2D.Mesh.PrimitiveType.TriangleStrip()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::method:_get_surface_count()",
+      "electron2d": "method:Electron2D.Mesh.OnGetSurfaceCount()",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_array_index_len(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_array_len(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetArrayLen(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_arrays(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetArrays(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_format(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetFormat(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_material(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetMaterial(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_get_primitive_type(int:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceGetPrimitiveType(System.Int32)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:_surface_set_material(int:,Material:)",
+      "electron2d": "method:Electron2D.Mesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "reason": "Typed protected callback supplies the custom Mesh extension contract under ADRs 0001/0092; public wrappers expose the same executable reads."
+    },
+    {
+      "godot": "Mesh::method:get_surface_count()",
+      "electron2d": "method:Electron2D.Mesh.GetSurfaceCount()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::method:surface_get_arrays(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetArrays(System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::method:surface_get_material(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetMaterial(System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "Mesh::method:surface_set_material(int:,Material:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)",
+      "electron2d": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Morph/LOD inputs explicitly reject until their typed producer/consumer integration."
+    },
+    {
+      "godot": "ArrayMesh::method:clear_surfaces()",
+      "electron2d": "method:Electron2D.ArrayMesh.ClearSurfaces()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_find_by_name(String:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceFindByName(System.String)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_get_name(int:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceGetName(System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_remove(int:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceRemove(System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_set_name(int:,String:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceSetName(System.Int32,System.String)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_update_attribute_region(int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceUpdateAttributeRegion(System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_update_vertex_region(int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.ArrayMesh.SurfaceUpdateVertexRegion(System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "MeshInstance2D::property:mesh",
+      "electron2d": "property:Electron2D.MeshInstance.Mesh()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "MeshInstance2D::property:texture",
+      "electron2d": "property:Electron2D.MeshInstance.Texture()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "MeshInstance2D::signal:texture_changed()",
+      "electron2d": "event:Electron2D.MeshInstance.TextureChanged()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.Mesh,Electron2D.Texture,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.RID,Electron2D.RID,System.Nullable<Electron2D.Transform>,System.Nullable<Electron2D.Color>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_clear(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshClear(Electron2D.RID)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_create()",
+      "electron2d": "method:Electron2D.RenderingServer.MeshCreate()",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface_count(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshGetSurfaceCount(Electron2D.RID)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_arrays(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetArrays(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_attribute_stride(int:RenderingServer.ArrayFormat,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_format_vertex_stride(int:RenderingServer.ArrayFormat,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_get_material(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetMaterial(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_remove(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceRemove(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_set_material(RID:,int:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceSetMaterial(Electron2D.RID,System.Int32,Electron2D.Material)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_update_attribute_region(RID:,int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceUpdateAttributeRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_surface_update_vertex_region(RID:,int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceUpdateVertexRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetArrayIndexLen(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0001/0092: typed channel/topology/count access projects fields of the reference mesh surface result without a Variant dictionary; raw unsupported channel storage remains separately dependency-gated."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetArrayLen(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0001/0092: typed channel/topology/count access projects fields of the reference mesh surface result without a Variant dictionary; raw unsupported channel storage remains separately dependency-gated."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetFormat(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0001/0092: typed channel/topology/count access projects fields of the reference mesh surface result without a Variant dictionary; raw unsupported channel storage remains separately dependency-gated."
+    },
+    {
+      "godot": "RenderingServer::method:mesh_get_surface(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetPrimitiveType(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0001/0092: typed channel/topology/count access projects fields of the reference mesh surface result without a Variant dictionary; raw unsupported channel storage remains separately dependency-gated."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_get_array_index_len(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetArrayIndexLen(System.Int32)",
+      "reason": "Inherited Mesh query supplies the concrete ArrayMesh surface contract under ADR 0092."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_get_array_len(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetArrayLen(System.Int32)",
+      "reason": "Inherited Mesh query supplies the concrete ArrayMesh surface contract under ADR 0092."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_get_format(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetFormat(System.Int32)",
+      "reason": "Inherited Mesh query supplies the concrete ArrayMesh surface contract under ADR 0092."
+    },
+    {
+      "godot": "ArrayMesh::method:surface_get_primitive_type(int:)",
+      "electron2d": "method:Electron2D.Mesh.SurfaceGetPrimitiveType(System.Int32)",
+      "reason": "Inherited Mesh query supplies the concrete ArrayMesh surface contract under ADR 0092."
+    },
+    {
+      "godot": "Mesh::method:get_faces()",
+      "electron2d": "method:Electron2D.Mesh.GetFaces()",
+      "reason": "ADR 0092: copied Vector2 triangle vertices for indexed/sequential triangles and alternating-winding strips, excluding point/line surfaces; 2D channel projection of the existing mesh-face capability."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.MeshSurfaceData",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ArrayMesh..ctor()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Mesh..ctor()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MeshInstance..ctor()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MeshSurfaceData..ctor()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.None()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.CreateDuplicateInstance()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnGetSurfaceCount()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetArrayLen(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetArrays(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetFormat(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetMaterial(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ArrayMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.Mesh.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.Mesh.GetRID()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.CreateSceneInstanceFactory()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.GetPropertyDescriptors()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.OnDraw()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Colors()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Indices()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.UVs()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.Vertices()",
+      "reason": "ADR 0001/0092: typed surface payloads and inherited resource/node/drawing lifecycle project existing mesh array channels, callbacks, copying and scene ownership; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MeshInstance.GetConfigurationWarnings()",
+      "reason": "Inherited Node warning callback reports the concrete missing-mesh configuration prerequisite under ADR 0092."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Further channel/deformation/storage/geometry operations retain exact dependencies.",
+      "godot": [
+        "class:ArrayMesh",
+        "class:Mesh"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: concrete typed normal/tangent/secondary-UV/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
+      "godot": [
+        "ArrayMesh::method:regen_normal_maps()",
+        "Mesh::enum:ArrayCustomFormat",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_MAX",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_SNORM",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA8_UNORM",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGBA_HALF",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RGB_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_FLOAT",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_RG_HALF",
+        "Mesh::enum_value:ArrayCustomFormat.ARRAY_CUSTOM_R_FLOAT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_COMPRESS_FLAGS_BASE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM0_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM1_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM2_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM3_SHIFT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BASE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
+        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits.",
+      "godot": [
+        "ArrayMesh::method:clear_surfaces()",
+        "ArrayMesh::method:surface_find_by_name(String:)",
+        "ArrayMesh::method:surface_get_name(int:)",
+        "ArrayMesh::method:surface_remove(int:)",
+        "ArrayMesh::method:surface_set_name(int:,String:)",
+        "ArrayMesh::method:surface_update_attribute_region(int:,int:,PackedByteArray:)",
+        "ArrayMesh::method:surface_update_vertex_region(int:,int:,PackedByteArray:)",
+        "CanvasItem::method:draw_mesh(Mesh:,Texture2D:,Transform2D:,Color:)",
+        "Mesh::enum:ArrayFormat",
+        "Mesh::enum:PrimitiveType",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_2D_VERTICES",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_DYNAMIC_UPDATE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_COLOR",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_INDEX",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_VERTEX",
+        "Mesh::enum_value:PrimitiveType.PRIMITIVE_LINES",
+        "Mesh::enum_value:PrimitiveType.PRIMITIVE_LINE_STRIP",
+        "Mesh::enum_value:PrimitiveType.PRIMITIVE_POINTS",
+        "Mesh::enum_value:PrimitiveType.PRIMITIVE_TRIANGLES",
+        "Mesh::enum_value:PrimitiveType.PRIMITIVE_TRIANGLE_STRIP",
+        "Mesh::method:_get_surface_count()",
+        "Mesh::method:_surface_get_array_index_len(int:)",
+        "Mesh::method:_surface_get_array_len(int:)",
+        "Mesh::method:_surface_get_arrays(int:)",
+        "Mesh::method:_surface_get_format(int:)",
+        "Mesh::method:_surface_get_material(int:)",
+        "Mesh::method:_surface_get_primitive_type(int:)",
+        "Mesh::method:_surface_set_material(int:,Material:)",
+        "Mesh::method:get_surface_count()",
+        "Mesh::method:surface_get_arrays(int:)",
+        "Mesh::method:surface_get_material(int:)",
+        "Mesh::method:surface_set_material(int:,Material:)",
+        "MeshInstance2D::property:mesh",
+        "MeshInstance2D::property:texture",
+        "MeshInstance2D::signal:texture_changed()",
+        "RenderingServer::method:mesh_clear(RID:)",
+        "RenderingServer::method:mesh_create()",
+        "RenderingServer::method:mesh_get_surface_count(RID:)",
+        "RenderingServer::method:mesh_surface_get_arrays(RID:,int:)",
+        "RenderingServer::method:mesh_surface_get_format_attribute_stride(int:RenderingServer.ArrayFormat,int:)",
+        "RenderingServer::method:mesh_surface_get_format_vertex_stride(int:RenderingServer.ArrayFormat,int:)",
+        "RenderingServer::method:mesh_surface_get_material(RID:,int:)",
+        "RenderingServer::method:mesh_surface_remove(RID:,int:)",
+        "RenderingServer::method:mesh_surface_set_material(RID:,int:,RID:)",
+        "RenderingServer::method:mesh_surface_update_attribute_region(RID:,int:,int:,PackedByteArray:)",
+        "RenderingServer::method:mesh_surface_update_vertex_region(RID:,int:,int:,PackedByteArray:)",
+        "class:MeshInstance2D"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first 2D skeleton/bone-weight mesh renderer with verified skin storage and deformations (ADR 0092).",
+      "godot": [
+        "ArrayMesh::method:surface_update_skin_region(int:,int:,PackedByteArray:)",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BONES",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_WEIGHTS"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first typed 2D deformation/morph weight and scale-selected LOD producer/consumer slice over the now executable mesh surfaces (ADR 0092).",
+      "godot": [
+        "ArrayMesh::method:add_blend_shape(StringName:)",
+        "ArrayMesh::method:clear_blend_shapes()",
+        "ArrayMesh::method:get_blend_shape_count()",
+        "ArrayMesh::method:get_blend_shape_name(int:)",
+        "ArrayMesh::method:set_blend_shape_name(int:,StringName:)",
+        "ArrayMesh::property:blend_shape_mode",
+        "Mesh::method:_get_blend_shape_count()",
+        "Mesh::method:_get_blend_shape_name(int:)",
+        "Mesh::method:_set_blend_shape_name(int:,StringName:)",
+        "Mesh::method:_surface_get_blend_shape_arrays(int:)",
+        "Mesh::method:_surface_get_lods(int:)",
+        "Mesh::method:surface_get_blend_shape_arrays(int:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed mesh normal channels and topology adjacency for verified offset outline generation, preserving face winding and resource ownership (ADR 0092).",
+      "godot": [
+        "Mesh::method:create_outline(float:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed missing-asset placeholder mesh and loader consumer (ADR 0092).",
+      "godot": [
+        "Mesh::method:create_placeholder()"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Morph/LOD inputs explicitly reject until their typed producer/consumer integration.",
+      "godot": [
+        "ArrayMesh::method:add_surface_from_arrays(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,int:Mesh.ArrayFormat)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: first 2D light/shadow mesh consumer with actual visible effect (ADR 0092).",
+      "godot": [
+        "ArrayMesh::property:shadow_mesh"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits.",
+      "godot": [
+        "RenderingServer::method:mesh_add_surface_from_arrays(RID:,int:RenderingServer.PrimitiveType,Array:,Array:,Dictionary:,int:RenderingServer.ArrayFormat)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "Typed surface format/topology/vertex/index counts execute through the mesh data fields. Full packed surface result including deformation/LOD/extra channels awaits their actual integrations (ADR 0092).",
+      "godot": [
+        "RenderingServer::method:mesh_get_surface(RID:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: executable copied typed 2D surfaces and inherited metadata queries, with managed and native rendering checks; advanced channels and deformation retain their own exact dependencies.",
+      "godot": [
+        "ArrayMesh::method:surface_get_array_index_len(int:)",
+        "ArrayMesh::method:surface_get_array_len(int:)",
+        "ArrayMesh::method:surface_get_format(int:)",
+        "ArrayMesh::method:surface_get_primitive_type(int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Copied local 2D triangle faces execute through the authored surfaces; indexed/strip ordering and independent result ownership are tested (ADR 0092).",
+      "godot": [
+        "Mesh::method:get_faces()"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0001/0092 replaces numeric heterogeneous-array selectors with named typed MeshSurfaceData channels. This excludes only the selector representation; missing channel capabilities retain their format/storage/shader or skeleton triggers.",
+      "godot": [
+        "Mesh::enum:ArrayType",
+        "Mesh::enum_value:ArrayType.ARRAY_BONES",
+        "Mesh::enum_value:ArrayType.ARRAY_COLOR",
+        "Mesh::enum_value:ArrayType.ARRAY_CUSTOM0",
+        "Mesh::enum_value:ArrayType.ARRAY_CUSTOM1",
+        "Mesh::enum_value:ArrayType.ARRAY_CUSTOM2",
+        "Mesh::enum_value:ArrayType.ARRAY_CUSTOM3",
+        "Mesh::enum_value:ArrayType.ARRAY_INDEX",
+        "Mesh::enum_value:ArrayType.ARRAY_MAX",
+        "Mesh::enum_value:ArrayType.ARRAY_NORMAL",
+        "Mesh::enum_value:ArrayType.ARRAY_TANGENT",
+        "Mesh::enum_value:ArrayType.ARRAY_TEX_UV",
+        "Mesh::enum_value:ArrayType.ARRAY_TEX_UV2",
+        "Mesh::enum_value:ArrayType.ARRAY_VERTEX",
+        "Mesh::enum_value:ArrayType.ARRAY_WEIGHTS"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed 2D morph target storage, relative/normalized weight semantics and visible deformation producer/consumer integration (ADR 0092).",
+      "godot": [
+        "Mesh::enum:BlendShapeMode",
+        "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_RELATIVE",
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_BLEND_SHAPE_MASK"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: actual procedural shader-generated mesh vertices and non-position channel storage with visible draw verification; current canvas geometry requires explicit positions (ADR 0092).",
+      "godot": [
+        "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: the returned TriangleMesh owns 3D ray/segment intersection geometry. No 3D geometry resource enters the strictly 2D runtime; applicable local 2D face extraction executes through GetFaces.",
+      "godot": [
+        "Mesh::method:generate_triangle_mesh()"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: this hint is consumed by the 3D lightmap unwrap/bake path, which is excluded. It has no 2D canvas light consumer.",
+      "godot": [
+        "Mesh::property:lightmap_size_hint"
+      ]
+    }
+  ]
+}

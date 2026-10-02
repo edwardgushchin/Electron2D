@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Inherits:** [Node](Node.md)
 
@@ -1119,3 +1119,59 @@ Resolves a live server-owned or resource-owned texture RID, then uses the corres
 These overloads borrow the resolved texture; they neither own nor free it. Empty/stale/wrong-kind identities throw ArgumentException. AtlasTexture.GetRID resolves the underlying source identity, so RID drawing uses that full texture; object-based atlas drawing retains its view. Empty ordinary resource drawing remains a no-op. Owned texture update/replacement changes pixels in retained commands without QueueRedraw. Freed/consumed server textures are skipped on subsequent replay; existing resource-disposal failure behavior is unchanged. Recorded geometry remains fixed after size changes. See [RenderingServer texture lifecycle](RenderingServer.md#texture-rid-verification) and [native/managed checks](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs).
 
 RID texture proxies are resolved to their current live root at replay, so retargeting and source replacement update retained drawings without OnDraw. Disconnected proxies draw nothing and can reconnect; aliases share source backend storage. See [proxy integration](../components/canvas-rendering.md#texture-proxies).
+
+## Retained mesh drawing
+
+`DrawMesh(Mesh mesh, Texture? texture = null, Transform? transform = null, Color? modulate = null)` and `DrawMesh(RID mesh, RID texture = default, Transform? transform = null, Color? modulate = null)` record borrowed 2D surfaces during this item's drawing scope. Null transform/modulation mean identity/white. Resource RID resolution precedes the same typed path. Atlas views use the backing texture, matching primitive/full-image sampling. Live ArrayMesh updates remain visible without recording again; custom Mesh snapshots refresh on its Changed revision. Per-surface material overrides the item material; clip/order/sampling/transforms remain inherited. Mesh/resource disposal and unsupported backend shaders fail explicitly. See [mesh component](../components/meshes.md) for complete data/ownership/backend verification.
+
+## Mesh methods
+
+All methods require a live object; RenderingServer operations require the renderer owner thread. Server mutations additionally reject during submission or shutdown. Unknown/stale identities and surface indices reject before mutation; resource identities are borrowed and cannot be freed or mutated through the server.
+
+| Complete signature | Contract |
+| --- | --- |
+| `public System.Void DrawMesh(Electron2D.Mesh mesh, Electron2D.Texture texture = null, System.Nullable<Electron2D.Transform> transform = null, System.Nullable<Electron2D.Color> modulate = null)` | Records a borrowed mesh with live surface geometry during canvas recording. |
+| `public System.Void DrawMesh(Electron2D.RID mesh, Electron2D.RID texture = default, System.Nullable<Electron2D.Transform> transform = null, System.Nullable<Electron2D.Color> modulate = null)` | Records a borrowed mesh identity through the same typed canvas path. |
+
+## Mesh method descriptions
+
+### DrawMesh
+
+`public System.Void DrawMesh(Electron2D.Mesh mesh, Electron2D.Texture texture = null, System.Nullable<Electron2D.Transform> transform = null, System.Nullable<Electron2D.Color> modulate = null)`
+
+Summary: Records a borrowed mesh with live surface geometry during canvas recording.
+
+mesh: Borrowed live two-dimensional mesh.
+
+texture: Optional borrowed texture; atlas views use their full backing texture.
+
+transform: Local mesh transform, identity when null.
+
+modulate: Mesh color multiplier, white when null.
+
+Remarks: Retained draws observe surface edits without rerecording. Per-surface materials override this item's material; transforms, clip, order, sampling and modulation remain inherited canvas policies.
+
+System.ArgumentNullException: The mesh is null.
+
+System.ArgumentException: Transform or color is nonfinite.
+
+System.ObjectDisposedException: A borrowed resource is disposed.
+
+System.InvalidOperationException: Called outside this item's recording scope.
+
+
+### DrawMesh
+
+`public System.Void DrawMesh(Electron2D.RID mesh, Electron2D.RID texture = default, System.Nullable<Electron2D.Transform> transform = null, System.Nullable<Electron2D.Color> modulate = null)`
+
+Summary: Records a borrowed mesh identity through the same typed canvas path.
+
+mesh: Logical live mesh RID.
+
+texture: Optional live texture RID, empty for no texture.
+
+transform: Local transform or identity.
+
+modulate: Color multiplier or white.
+
+System.ArgumentException: A supplied identity is absent or disposed.

@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class PlaceholderMesh`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PlaceholderMesh.xml) | — | Blocked | Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028). |
+| [`class PlaceholderMesh`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PlaceholderMesh.xml) | — | Blocked | Trigger: typed missing-asset mesh placeholder producer/loader and its 2D drawing/bounds policy over the implemented Mesh resource (ADR 0092). |
 | [`property AABB aabb = AABB(0, 0, 0, 0, 0, 0)`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PlaceholderMesh.xml) | — | Excluded | 3D-only signature is outside ADR 0004; no implementation trigger. |

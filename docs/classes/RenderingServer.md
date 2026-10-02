@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -229,3 +229,243 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 ## Proxy verification and storage
 
 [RenderingTextureProxyTests](../../tests/Electron2D.Tests/RenderingTextureProxyTests.cs) checks 256-level iterative chains and warm lookup, source edits/disposal, failed source callback rollback, owner/type/stale/proxy operand guards, nested aliases, source replacement redirection, disconnected images/draws, retarget recovery, empty-resource checkerboard and independent copied outputs. Native pixels run on Linux Wayland GPU/compatibility and dummy/software. After 20 warmup frames, 64 active source retarget/replay/submission frames and 64 unchanged retained frames allocate no managed bytes between FramePreDraw and FramePostDraw on the owner thread. Native source handles remain stable; cache checks show no per-alias texture storage. Owned source textures retain prepared cache allocations until free/shutdown, so alternating already prepared owned sources does not allocate another native texture. First use of a new source and changed pixel configuration may allocate. Backend-internal/native allocator totals, other platforms and owner acceptance remain unverified. Layered/external/device/drawable alias sampling enters those storage families’ first integration slices.
+
+## Owned mesh identities
+
+MeshCreate returns an owned empty ArrayMesh identity. MeshAddSurfaceFromArrays, MeshClear, MeshSurfaceRemove, MeshSurfaceUpdateVertexRegion/AttributeRegion and MeshSurfaceSetMaterial require this renderer's ownership before mutation. Resource-owned Mesh.GetRID is borrowed: getters and drawing resolve it, mutations/free reject it. MeshGetSurfaceCount, MeshSurfaceGetArrays, MeshSurfaceGetFormat/PrimitiveType/ArrayLen/ArrayIndexLen and MeshSurfaceGetMaterial expose typed current fields; queries return caller-owned arrays or borrowed materials. Packed stride helpers report eight-byte positions and present four-byte color/eight-byte UV attributes. Owned identities expire at FreeRID/shutdown; mesh cleanup and texture/backend cleanup are attempted separately. Further raw surface/deformation/LOD/extra-channel data remains Partial with exact dependencies. [Mesh component](../components/meshes.md) records runtime and current limits.
+
+## Mesh methods
+
+All methods require a live object; RenderingServer operations require the renderer owner thread. Server mutations additionally reject during submission or shutdown. Unknown/stale identities and surface indices reject before mutation; resource identities are borrowed and cannot be freed or mutated through the server.
+
+| Complete signature | Contract |
+| --- | --- |
+| `public System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)` | Adds copied typed surface channels to an owned mesh. |
+| `public System.Void MeshClear(Electron2D.RID mesh)` | Removes every surface from an owned mesh. |
+| `public Electron2D.RID MeshCreate()` | Creates an owned empty two-dimensional mesh. |
+| `public System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)` | Gets a live mesh's surface count. |
+| `public System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the explicit surface index count. |
+| `public System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the surface vertex count. |
+| `public Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)` | Gets copied typed channels from one mesh surface. |
+| `public Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)` | Gets a live surface's channel and policy mask. |
+| `public System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/UV stride for a supported format. |
+| `public System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the primary two-dimensional vertex stride for a supported surface format. |
+| `public Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)` | Gets a borrowed material from a live surface. |
+| `public Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
+| `public System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)` | Removes one surface from an owned mesh. |
+| `public System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)` | Assigns a borrowed surface material on an owned mesh. |
+| `public System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed attribute bytes, including partial records, in an owned mesh. |
+| `public System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates packed position bytes, including partial records, in an owned mesh. |
+
+## Mesh method descriptions
+
+### MeshAddSurfaceFromArrays
+
+`public System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)`
+
+Summary: Adds copied typed surface channels to an owned mesh.
+
+mesh: Owned mesh identity.
+
+primitive: Primitive topology.
+
+arrays: Borrowed arrays copied before mutation.
+
+flags: Supported two-dimensional update policies.
+
+System.ArgumentException: The identity or geometry is invalid.
+
+System.InvalidOperationException: The mesh is borrowed or owned by another renderer.
+
+
+### MeshClear
+
+`public System.Void MeshClear(Electron2D.RID mesh)`
+
+Summary: Removes every surface from an owned mesh.
+
+mesh: Owned mesh identity.
+
+
+### MeshCreate
+
+`public Electron2D.RID MeshCreate()`
+
+Summary: Creates an owned empty two-dimensional mesh.
+
+Returns: A logical mesh identity owned until FreeRID or renderer shutdown.
+
+System.InvalidOperationException: The renderer is off-owner or submitting.
+
+
+### MeshGetSurfaceCount
+
+`public System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)`
+
+Summary: Gets a live mesh's surface count.
+
+mesh: Borrowed or owned mesh identity.
+
+Returns: The current surface count.
+
+
+### MeshSurfaceGetArrayIndexLen
+
+`public System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets the explicit surface index count.
+
+mesh: Live borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: Zero for sequential vertices.
+
+
+### MeshSurfaceGetArrayLen
+
+`public System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets the surface vertex count.
+
+mesh: Live borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: The vertex count.
+
+
+### MeshSurfaceGetArrays
+
+`public Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets copied typed channels from one mesh surface.
+
+mesh: Borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: Independent caller-owned channels.
+
+
+### MeshSurfaceGetFormat
+
+`public Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets a live surface's channel and policy mask.
+
+mesh: Live borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: The supported surface format.
+
+
+### MeshSurfaceGetFormatAttributeStride
+
+`public System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
+
+Summary: Gets the packed color/UV stride for a supported format.
+
+format: Surface format mask.
+
+vertexCount: Nonnegative surface vertex count.
+
+Returns: Four bytes for color plus eight bytes for primary UV when present.
+
+System.NotSupportedException: The format requires unsupported channels or non-2D vertices.
+
+
+### MeshSurfaceGetFormatVertexStride
+
+`public System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
+
+Summary: Gets the primary two-dimensional vertex stride for a supported surface format.
+
+format: Surface format mask.
+
+vertexCount: Nonnegative surface vertex count.
+
+Returns: Eight bytes for positions, zero when no vertex channel exists.
+
+System.NotSupportedException: The format requires unsupported channels or non-2D vertices.
+
+
+### MeshSurfaceGetMaterial
+
+`public Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets a borrowed material from a live surface.
+
+mesh: Live borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: The borrowed material or null.
+
+
+### MeshSurfaceGetPrimitiveType
+
+`public Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Gets one surface's primitive topology.
+
+mesh: Live borrowed or owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+Returns: The topology.
+
+
+### MeshSurfaceRemove
+
+`public System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)`
+
+Summary: Removes one surface from an owned mesh.
+
+mesh: Owned mesh identity.
+
+surface: Existing zero-based index.
+
+
+### MeshSurfaceSetMaterial
+
+`public System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)`
+
+Summary: Assigns a borrowed surface material on an owned mesh.
+
+mesh: Owned mesh identity.
+
+surface: Existing zero-based surface index.
+
+material: Borrowed live material or null.
+
+
+### MeshSurfaceUpdateAttributeRegion
+
+`public System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+Summary: Updates packed attribute bytes, including partial records, in an owned mesh.
+
+mesh: Owned mesh identity.
+
+surface: Existing zero-based index.
+
+offset: Byte offset into color/UV records.
+
+data: Present RGBA8 UNORM bytes followed by present little-endian UV floats.
+
+
+### MeshSurfaceUpdateVertexRegion
+
+`public System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
+
+Summary: Updates packed position bytes, including partial records, in an owned mesh.
+
+mesh: Owned mesh identity.
+
+surface: Existing zero-based index.
+
+offset: Byte offset into two-float positions.
+
+data: Little-endian X/Y records.

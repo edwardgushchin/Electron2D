@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## Scope and owned types
 
@@ -352,3 +352,5 @@ Slot/line snapshots are reused after preparation. Geometry preflight runs before
 [SplitContainer](../classes/SplitContainer.md), [HSplitContainer](../classes/HSplitContainer.md) and [VSplitContainer](../classes/VSplitContainer.md) add multiple resizable panels, relative offset arrays, capped weighted defaults, active-priority overlap clamping, structural desired-size preservation, RTL, collapse and real internal drag controls. Touch images reuse TextureRect; orthogonal nested intersections bubble one gesture through both split axes. Theme defaults, borrowed resource polling/residency and typed int-array PackedScene configuration execute. Editor highlighting and inherited native semantic accessibility retain exact dependencies.
 
 Shared Container fitting now attempts required transform resets after a resize observer throws, before reporting errors; departed children are skipped. Managed split checks verify that recovery and other layout/input/lifetime boundaries. Fifteen native pixel/input phases plus six joint-intersection phases pass on Linux Wayland GPU/compatibility; dummy/software verifies six programmatic layout/touch-image phases because it has no native system cursors. Twenty warmup frames precede 64 active offset/resize and 64 idle frame intervals with zero managed bytes. Native allocations, other platforms, physical touch devices, deep-panel performance and owner acceptance remain unverified.
+
+[Mesh surfaces](meshes.md) feed the existing retained vertex/material/texture/clip/sampling/order submission. Points/lines are expanded in framebuffer space; filled indexed and strip geometry shares native GPU and compatibility drawing. Live ArrayMesh region edits are read without recreating commands.

@@ -51,7 +51,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Area3D](classes/Area3D.md) | CollisionObject3D | Excluded | 42 |
 | [AreaLight3D](classes/AreaLight3D.md) | Light3D | Excluded | 7 |
 | [Array](classes/Array.md) | — | Excluded | 72 |
-| [ArrayMesh](classes/ArrayMesh.md) | Mesh | Blocked | 23 |
+| [ArrayMesh](classes/ArrayMesh.md) | Mesh | Partial | 23 |
 | [ArrayOccluder3D](classes/ArrayOccluder3D.md) | Occluder3D | Excluded | 3 |
 | [AspectRatioContainer](classes/AspectRatioContainer.md) | Container | Implemented | 13 |
 | [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
@@ -444,10 +444,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Material](classes/Material.md) | Resource | Partial | 10 |
 | [MenuBar](classes/MenuBar.md) | Control | Blocked | 40 |
 | [MenuButton](classes/MenuButton.md) | Button | Blocked | 17 |
-| [Mesh](classes/Mesh.md) | Resource | Blocked | 89 |
+| [Mesh](classes/Mesh.md) | Resource | Partial | 89 |
 | [MeshConvexDecompositionSettings](classes/MeshConvexDecompositionSettings.md) | RefCounted | Excluded | 16 |
 | [MeshDataTool](classes/MeshDataTool.md) | RefCounted | Blocked | 38 |
-| [MeshInstance2D](classes/MeshInstance2D.md) | Node2D | Blocked | 3 |
+| [MeshInstance2D](classes/MeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MeshInstance3D](classes/MeshInstance3D.md) | GeometryInstance3D | Excluded | 18 |
 | [MeshLibrary](classes/MeshLibrary.md) | Resource | Excluded | 25 |
 | [MeshTexture](classes/MeshTexture.md) | Texture2D | Blocked | 4 |

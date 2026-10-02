@@ -180,6 +180,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ArrayMesh",
+    "kind": "type",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "ArrayMesh",
+    "signature": "public sealed class Electron2D.ArrayMesh",
+    "visibility": "public",
+    "baseType": "Electron2D.Mesh",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AspectRatioContainer",
     "kind": "type",
     "declaringType": "Electron2D.AspectRatioContainer",
@@ -3161,6 +3176,85 @@
     "declaringType": "Electron2D.Mathf",
     "name": "Mathf",
     "signature": "public static class Electron2D.Mathf",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Mesh",
+    "kind": "type",
+    "declaringType": "Electron2D.Mesh",
+    "name": "Mesh",
+    "signature": "public abstract class Electron2D.Mesh",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Mesh.ArrayFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "ArrayFormat",
+    "signature": "public enum Electron2D.Mesh.ArrayFormat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Mesh.PrimitiveType",
+    "kind": "type",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "PrimitiveType",
+    "signature": "public enum Electron2D.Mesh.PrimitiveType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MeshInstance",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "MeshInstance",
+    "signature": "public class Electron2D.MeshInstance",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MeshSurfaceData",
+    "kind": "type",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "MeshSurfaceData",
+    "signature": "public sealed class Electron2D.MeshSurfaceData",
     "visibility": "public",
     "baseType": "System.Object",
     "interfaces": [],
@@ -7181,6 +7275,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ArrayMesh..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": ".ctor",
+    "signature": "public ArrayMesh()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AspectRatioContainer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AspectRatioContainer",
@@ -8600,6 +8707,45 @@
     "declaringType": "Electron2D.MarginContainer",
     "name": ".ctor",
     "signature": "public MarginContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.Mesh..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Mesh",
+    "name": ".ctor",
+    "signature": "protected Mesh()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MeshInstance..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": ".ctor",
+    "signature": "public MeshInstance()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MeshSurfaceData..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": ".ctor",
+    "signature": "public MeshSurfaceData()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -19365,6 +19511,162 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Color",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Color = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Index()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Index",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Index = 4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "4096"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "None",
+    "signature": "public const Electron2D.Mesh.ArrayFormat None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "TexUV",
+    "signature": "public const Electron2D.Mesh.ArrayFormat TexUV = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Use2DVertices()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Use2DVertices",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Use2DVertices = 33554432",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "33554432"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.UseDynamicUpdate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "UseDynamicUpdate",
+    "signature": "public const Electron2D.Mesh.ArrayFormat UseDynamicUpdate = 67108864",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "67108864"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.Vertex()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "Vertex",
+    "signature": "public const Electron2D.Mesh.ArrayFormat Vertex = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.PrimitiveType.LineStrip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "LineStrip",
+    "signature": "public const Electron2D.Mesh.PrimitiveType LineStrip = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Lines()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "Lines",
+    "signature": "public const Electron2D.Mesh.PrimitiveType Lines = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Points()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "Points",
+    "signature": "public const Electron2D.Mesh.PrimitiveType Points = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.PrimitiveType.TriangleStrip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "TriangleStrip",
+    "signature": "public const Electron2D.Mesh.PrimitiveType TriangleStrip = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.Mesh.PrimitiveType.Triangles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.PrimitiveType",
+    "name": "Triangles",
+    "signature": "public const Electron2D.Mesh.PrimitiveType Triangles = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": "3"
+  },
+  {
     "id": "enumValue:Electron2D.MouseBehaviorRecursive.Disabled()",
     "kind": "enumValue",
     "declaringType": "Electron2D.MouseBehaviorRecursive",
@@ -24227,6 +24529,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.MeshInstance.TextureChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "TextureChanged",
+    "signature": "public event System.Action TextureChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.NinePatchRect.TextureChanged()",
     "kind": "event",
     "declaringType": "Electron2D.NinePatchRect",
@@ -27225,6 +27540,419 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Mesh.ArrayFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "AddSurfaceFromArrays",
+    "signature": "public System.Void AddSurfaceFromArrays(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Mesh.ArrayFormat flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "primitive",
+        "type": "Electron2D.Mesh.PrimitiveType",
+        "default": null
+      },
+      {
+        "name": "arrays",
+        "type": "Electron2D.MeshSurfaceData",
+        "default": null
+      },
+      {
+        "name": "blendShapes",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E",
+        "default": "null"
+      },
+      {
+        "name": "lods",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
+        "default": "null"
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.ClearSurfaces()",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "ClearSurfaces",
+    "signature": "public System.Void ClearSurfaces()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnGetSurfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnGetSurfaceCount",
+    "signature": "protected override System.Int32 OnGetSurfaceCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetArrayIndexLen",
+    "signature": "protected override System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetArrayLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetArrayLen",
+    "signature": "protected override System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetArrays(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetArrays",
+    "signature": "protected override Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetFormat",
+    "signature": "protected override Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetMaterial",
+    "signature": "protected override Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceGetPrimitiveType",
+    "signature": "protected override Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "OnSurfaceSetMaterial",
+    "signature": "protected override System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceFindByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceFindByName",
+    "signature": "public System.Int32 SurfaceFindByName(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceGetName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceGetName",
+    "signature": "public System.String SurfaceGetName(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceRemove(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceRemove",
+    "signature": "public System.Void SurfaceRemove(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceSetName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceSetName",
+    "signature": "public System.Void SurfaceSetName(System.Int32 surfaceIndex, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceUpdateAttributeRegion(System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceUpdateAttributeRegion",
+    "signature": "public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ArrayMesh.SurfaceUpdateVertexRegion(System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ArrayMesh",
+    "name": "SurfaceUpdateVertexRegion",
+    "signature": "public System.Void SurfaceUpdateVertexRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -31525,6 +32253,74 @@
         "name": "antialiased",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.Mesh,Electron2D.Texture,System.Nullable\u003CElectron2D.Transform\u003E,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMesh",
+    "signature": "public System.Void DrawMesh(Electron2D.Mesh mesh, Electron2D.Texture texture = null, System.Nullable\u003CElectron2D.Transform\u003E transform = null, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.Mesh",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      },
+      {
+        "name": "transform",
+        "type": "System.Nullable\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMesh(Electron2D.RID,Electron2D.RID,System.Nullable\u003CElectron2D.Transform\u003E,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMesh",
+    "signature": "public System.Void DrawMesh(Electron2D.RID mesh, Electron2D.RID texture = default, System.Nullable\u003CElectron2D.Transform\u003E transform = null, System.Nullable\u003CElectron2D.Color\u003E modulate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": "default"
+      },
+      {
+        "name": "transform",
+        "type": "System.Nullable\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      },
+      {
+        "name": "modulate",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
       }
     ],
     "returnType": "System.Void",
@@ -55637,6 +56433,424 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Mesh.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.GetFaces()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "GetFaces",
+    "signature": "public Electron2D.Vector2[] GetFaces()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "GetRID",
+    "signature": "public override Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.GetSurfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "GetSurfaceCount",
+    "signature": "public System.Int32 GetSurfaceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnGetSurfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnGetSurfaceCount",
+    "signature": "protected abstract System.Int32 OnGetSurfaceCount()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetArrayIndexLen",
+    "signature": "protected abstract System.Int32 OnSurfaceGetArrayIndexLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetArrayLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetArrayLen",
+    "signature": "protected abstract System.Int32 OnSurfaceGetArrayLen(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetArrays(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetArrays",
+    "signature": "protected abstract Electron2D.MeshSurfaceData OnSurfaceGetArrays(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetFormat",
+    "signature": "protected abstract Electron2D.Mesh.ArrayFormat OnSurfaceGetFormat(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetMaterial",
+    "signature": "protected abstract Electron2D.Material OnSurfaceGetMaterial(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceGetPrimitiveType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceGetPrimitiveType",
+    "signature": "protected abstract Electron2D.Mesh.PrimitiveType OnSurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnSurfaceSetMaterial",
+    "signature": "protected abstract System.Void OnSurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetArrayIndexLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetArrayIndexLen",
+    "signature": "public System.Int32 SurfaceGetArrayIndexLen(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetArrayLen(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetArrayLen",
+    "signature": "public System.Int32 SurfaceGetArrayLen(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetArrays(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetArrays",
+    "signature": "public Electron2D.MeshSurfaceData SurfaceGetArrays(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetFormat",
+    "signature": "public Electron2D.Mesh.ArrayFormat SurfaceGetFormat(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetMaterial",
+    "signature": "public Electron2D.Material SurfaceGetMaterial(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceGetPrimitiveType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceGetPrimitiveType",
+    "signature": "public Electron2D.Mesh.PrimitiveType SurfaceGetPrimitiveType(System.Int32 surfaceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.SurfaceSetMaterial(System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "SurfaceSetMaterial",
+    "signature": "public System.Void SurfaceSetMaterial(System.Int32 surfaceIndex, Electron2D.Material material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surfaceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshInstance.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshInstance.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshInstance.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshInstance.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MeshInstance.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MethodTweener\u003CTValue\u003E.SetDelay(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.MethodTweener\u003CTValue\u003E",
@@ -65324,6 +66538,404 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshAddSurfaceFromArrays(Electron2D.RID,Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,Electron2D.Mesh.ArrayFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshAddSurfaceFromArrays",
+    "signature": "public System.Void MeshAddSurfaceFromArrays(Electron2D.RID mesh, Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, Electron2D.Mesh.ArrayFormat flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "primitive",
+        "type": "Electron2D.Mesh.PrimitiveType",
+        "default": null
+      },
+      {
+        "name": "arrays",
+        "type": "Electron2D.MeshSurfaceData",
+        "default": null
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshClear(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshClear",
+    "signature": "public System.Void MeshClear(Electron2D.RID mesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshCreate",
+    "signature": "public Electron2D.RID MeshCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshGetSurfaceCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshGetSurfaceCount",
+    "signature": "public System.Int32 MeshGetSurfaceCount(Electron2D.RID mesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetArrayIndexLen(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetArrayIndexLen",
+    "signature": "public System.Int32 MeshSurfaceGetArrayIndexLen(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetArrayLen(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetArrayLen",
+    "signature": "public System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetArrays(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetArrays",
+    "signature": "public Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormat(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetFormat",
+    "signature": "public Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetFormatAttributeStride",
+    "signature": "public System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": null
+      },
+      {
+        "name": "vertexCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetFormatVertexStride",
+    "signature": "public System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": null
+      },
+      {
+        "name": "vertexCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetMaterial(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetMaterial",
+    "signature": "public Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceGetPrimitiveType(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceGetPrimitiveType",
+    "signature": "public Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceRemove(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceRemove",
+    "signature": "public System.Void MeshSurfaceRemove(Electron2D.RID mesh, System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceSetMaterial(Electron2D.RID,System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceSetMaterial",
+    "signature": "public System.Void MeshSurfaceSetMaterial(Electron2D.RID mesh, System.Int32 surface, Electron2D.Material material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceUpdateAttributeRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceUpdateAttributeRegion",
+    "signature": "public System.Void MeshSurfaceUpdateAttributeRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MeshSurfaceUpdateVertexRegion(Electron2D.RID,System.Int32,System.Int32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MeshSurfaceUpdateVertexRegion",
+    "signature": "public System.Void MeshSurfaceUpdateVertexRegion(Electron2D.RID mesh, System.Int32 surface, System.Int32 offset, System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -93893,6 +95505,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Curve",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshInstance.Mesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "Mesh",
+    "signature": "public Electron2D.Mesh Mesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshInstance.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshInstance",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Colors()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Colors",
+    "signature": "public Electron2D.Color[] Colors { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Indices()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Indices",
+    "signature": "public System.Int32[] Indices { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.UVs()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "UVs",
+    "signature": "public Electron2D.Vector2[] UVs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.Vertices()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "Vertices",
+    "signature": "public Electron2D.Vector2[] Vertices { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {

@@ -284,7 +284,7 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
-        _polygonCount = 0; _strokeCount = 0;
+        _polygonCount = 0; _strokeCount = 0; _meshCount = 0;
         _drawing = true;
         var previousDrawingItem = _currentDrawingItem; _currentDrawingItem = this;
         try
@@ -300,7 +300,7 @@ public abstract partial class CanvasItem
             InvalidateCanvas();
             throw;
         }
-        finally { _drawing = false; _currentDrawingItem = previousDrawingItem; }
+        finally { _drawing = false; _currentDrawingItem = previousDrawingItem; if (_meshes is not null) for (var i = _meshCount; i < _meshes.Count; i++) _meshes[i].Clear(); }
     }
 
     internal virtual Rect2? CanvasClipRect => null;
@@ -336,6 +336,12 @@ public abstract partial class CanvasItem
                 if (source is null) continue;
                 if (source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
+            }
+            if (replay.Mesh is { } mesh)
+            {
+                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true);
+                continue;
             }
             var first = vertices.Count;
             CanvasGeometry.Append(vertices, replay, transform * drawingTransform, color, viewport?.SnapVerticesToPixel == true);

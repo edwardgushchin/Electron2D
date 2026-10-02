@@ -1,0 +1,24 @@
+# Typed two-dimensional mesh data
+
+Last updated: 2026-10-02
+
+<a id="adr-0092"></a>
+## ADR 0092: Typed 2D mesh surfaces on the retained canvas
+
+### Status
+
+Accepted. Refines the typed resource projection in [ADR 0001](product.md#adr-0001) and the backend contract in [ADR 0028](rendering.md#adr-0028).
+
+### Decision
+
+Mesh : Resource supplies the applicable surface-query/material callbacks. ArrayMesh stores copied two-dimensional vertices, vertex colors, primary UVs and optional indices through MeshSurfaceData; named fields replace the heterogeneous array-of-arrays without Variant/object dispatch. MeshInstance : Entity projects the MeshInstance2D scene role, preserving borrowed Mesh/Texture, texture_changed and inherited canvas behavior. CanvasItem.DrawMesh and logical RID drawing feed the same retained canvas submission; all five primitive topologies execute through native GPU and compatibility triangles. Points and lines keep one-framebuffer-pixel width after transforms, with no antialias fringe. Per-surface materials override the drawing item's material; unsupported shaders fail through the existing fallback gate.
+
+The native/backend-neutral surface arrays preserve the exercised pinned channel packing: positions are little-endian float X/Y pairs; colors clamp/truncate to RGBA8 UNORM on import; primary UV remains two little-endian float components. Vertex stride is eight bytes. Attribute stride is four bytes for color plus eight bytes for UV when present. Region updates use byte offsets, including partial records, validate affected finite values before publishing and preserve untouched bytes. UseDynamicUpdate remains a policy hint and does not make other surfaces inert. Resource queries return independent channel copies; successful repeated updates and replay reuse prepared storage. This is not a public SDL buffer or GPU-device pointer.
+
+Resource Mesh.GetRID is a stable weak borrowed logical identity until disposal, independent of an active renderer. RenderingServer owns caller-created mesh identities until FreeRID/shutdown; owned and resource-owned identities are distinguished before mutation/free. Retained draws observe current ArrayMesh buffers without requiring a fresh command. Custom Mesh callbacks publish Changed after edits and provide copied typed channels; their prepared replay snapshots are refreshed on that revision. Custom callbacks must keep the resource revision stable while preparing a snapshot; changing it rejects the mixed result and permits retry. Repeated replay uses the captured surface count without calling user callbacks. Custom callback allocation is separate from the runtime preparation measurement. MeshInstance uses the ordinary scene owner/capture mutation guards and local Resource graph duplication.
+
+This profile does not redefine unsupported source capabilities as irrelevant. Morph targets/weights and LOD storage/selection require the first typed 2D deformation or scale-selection producer/consumer slice. Normal/tangent/UV2/custom channels require their typed storage, byte-format and actual shader-attribute consumer integration; skin/bones/weights require the first 2D skeleton renderer. Attribute compression requires its encoder/decoder and visible precision verification. Those inputs and flags reject or remain absent, with exact member-specific coverage triggers; no inert setter or nominal data-only support is reported as complete. GetFaces extracts copied local Vector2 triangle faces, expanding indexed and sequential triangles and alternating-winding strips; point and line surfaces contribute nothing. The returned TriangleMesh resource and lightmap-size hint remain excluded as 3D intersection/lightmap capabilities. Shadow mesh requires the first 2D light/shadow geometry consumer; placeholder meshes require the missing-asset placeholder producer. 3D-only AABB/triangle-mesh/collision/lightmap operations retain their accepted product exclusions, not an invented 3D runtime type.
+
+### Ownership, errors and verification
+
+Meshes own channel storage and borrow materials; nodes and drawing commands borrow meshes/textures. Owned server meshes close with the renderer. Invalid geometry, nonfinite inputs, out-of-range indices and regions fail before mutation. Resource Changed runs after committed edits; callback failure does not roll back valid geometry. Warmed successful paths are checked under [ADR 0014](resources.md#adr-0014). Exact managed/native pixel and platform limits are recorded in the [mesh component](../components/meshes.md); builds do not establish rendered or human acceptance.

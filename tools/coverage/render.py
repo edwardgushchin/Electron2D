@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "layout_containers", "gui_drag", "text_delivery", "audio")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "layout_containers", "gui_drag", "text_delivery", "audio", "mesh")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -283,8 +283,18 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: first independent offscreen viewport lifecycle and texture-output slice (ADRs 0008 and 0028)."
     if name in {"VisibleOnScreenEnabler2D", "VisibleOnScreenNotifier2D"}:
         return "Blocked", "Trigger: first retained-canvas visibility tracking and notification slice (ADR 0028)."
-    if name in {"ArrayMesh", "ImmediateMesh", "MeshInstance2D", "MultiMeshInstance2D", "PrimitiveMesh", "PlaceholderMesh"}:
-        return "Blocked", "Trigger: first typed 2D mesh-data and MeshInstance2D renderer slice (ADR 0028)."
+    if name in {"MultiMesh", "MultiMeshInstance2D"}:
+        return "Blocked", "Trigger: typed 2D instance-buffer ownership, visible-count/color policies, physics-interpolated poses and repeated/instanced canvas submission over the now executable mesh surfaces; MultiMeshInstance enters that same first consumer slice (ADR 0092)."
+    if name == "ImmediateMesh":
+        return "Blocked", "Trigger: typed incremental surface begin/attribute/vertex/end builder with commit/rollback and real ArrayMesh-backed drawing; static surface rendering already executes (ADR 0092)."
+    if name == "PrimitiveMesh":
+        return "Blocked", "Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092)."
+    if name == "PlaceholderMesh":
+        return "Blocked", "Trigger: typed missing-asset mesh placeholder producer/loader and its 2D drawing/bounds policy over the implemented Mesh resource (ADR 0092)."
+    if name in {"MeshDataTool", "SurfaceTool"}:
+        return "Blocked", "Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092)."
+    if name in {"ImporterMesh", "MeshLibrary"}:
+        return "Blocked", "Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately."
     blocked_slices = (
         ({"ResourceFormatSaver", "ResourceImporter", "ResourcePreloader", "ResourceUID", "MissingResource", "MissingNode", "InstancePlaceholder", "PCKPacker", "ZIPReader", "ZIPPacker"},
          "first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023)"),
@@ -594,7 +604,7 @@ def render():
             updated = "2026-09-30"
         if name in {"RenderingServer", "CanvasItem", "Resource", "Texture", "Texture2D", "PhysicsServer2D", "FlowContainer", "HFlowContainer", "VFlowContainer", "Script", "CSharpScript", "AudioServer", "AudioStream", "AudioStreamWAV", "AudioStreamPlayer", "AudioStreamPlayback", "AudioStreamPlaybackResampled"}:
             updated = "2026-10-01"
-        if name in {"AudioStreamRandomizer", "AudioStreamMP3", "AudioStreamOggVorbis", "AudioStreamPlaybackOggVorbis", "OggPacketSequence", "OggPacketSequencePlayback", "AudioStreamPlayback", "AudioStreamPlaybackResampled", "AudioStreamPlayer", "ResourceLoader"}:
+        if name in {"Mesh", "ArrayMesh", "MeshInstance2D", "AudioStreamRandomizer", "AudioStreamMP3", "AudioStreamOggVorbis", "AudioStreamPlaybackOggVorbis", "OggPacketSequence", "OggPacketSequencePlayback", "AudioStreamPlayback", "AudioStreamPlaybackResampled", "AudioStreamPlayer", "ResourceLoader"}:
             updated = "2026-10-02"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

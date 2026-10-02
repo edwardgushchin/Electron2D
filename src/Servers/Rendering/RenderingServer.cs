@@ -359,6 +359,7 @@ public sealed partial class RenderingServer : ElectronObject
             List<Exception>? errors = null;
             try
             {
+                try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
             }
