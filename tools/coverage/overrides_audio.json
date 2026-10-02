@@ -1,6 +1,26 @@
 {
   "mappings": [
     {
+      "godot": "class:AudioEffectHardLimiter",
+      "electron2d": "T:Electron2D.AudioEffectHardLimiter",
+      "reason": "ADR 0047: executable lookahead peak limiting on the existing stereo FAudio effect chain."
+    },
+    {
+      "godot": "AudioEffectHardLimiter::property:ceiling_db",
+      "electron2d": "property:Electron2D.AudioEffectHardLimiter.CeilingDB()",
+      "reason": "ADR 0045/0047: typed decibel ceiling with a strict output sample cap."
+    },
+    {
+      "godot": "AudioEffectHardLimiter::property:pre_gain_db",
+      "electron2d": "property:Electron2D.AudioEffectHardLimiter.PreGainDB()",
+      "reason": "ADR 0045/0047: typed gain applied before linked stereo peak detection."
+    },
+    {
+      "godot": "AudioEffectHardLimiter::property:release",
+      "electron2d": "property:Electron2D.AudioEffectHardLimiter.Release()",
+      "reason": "ADR 0047: positive release seconds update the detector on the next processing block."
+    },
+    {
       "godot": "class:AudioEffectRecord",
       "electron2d": "T:Electron2D.AudioEffectRecord",
       "reason": "ADR 0047: typed bus PCM recording resource using the current FAudio chain."
@@ -2634,6 +2654,26 @@
       "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
     },
     {
+      "electron2d": "constructor:Electron2D.AudioEffectHardLimiter..ctor()",
+      "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHardLimiter.OnInstantiate()",
+      "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHardLimiter.GetPropertyDescriptors()",
+      "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHardLimiter.CreateDuplicateInstance()",
+      "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHardLimiter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
+    },
+    {
       "electron2d": "constructor:Electron2D.AudioEffectRecord..ctor()",
       "reason": "Typed construction, stored format descriptor, independent instance factory, transient recorder teardown and exact Resource/scene copying project the bus recording lifecycle under ADR 0047."
     },
@@ -3206,17 +3246,23 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed level/release/lookahead policy, bounded detector/delay state and verified limiter response. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: independent two-millisecond lookahead, linked stereo peak reduction, live typed settings and a strict sample ceiling run through the FAudio chain. AudioHardLimiterTests compares pinned C++ PCM, validates corrected peak/release edges, native 2/4/6/8 logical profiles and warmed callback allocation. Physical listening, actual multichannel hardware and other platforms remain unverified.",
       "godot": [
         "AudioEffectHardLimiter::property:ceiling_db",
         "AudioEffectHardLimiter::property:pre_gain_db",
         "AudioEffectHardLimiter::property:release",
+        "class:AudioEffectHardLimiter"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The deprecated soft-clip Limiter remains a separate executable transfer curve with typed ThresholdDB, CeilingDB, SoftClipDB and retained inert SoftClipRatio; the generic FAudio effect chain is available (ADR 0047). Implement and verify that complete legacy processor before claiming these rows.",
+      "godot": [
         "AudioEffectLimiter::property:ceiling_db",
         "AudioEffectLimiter::property:soft_clip_db",
         "AudioEffectLimiter::property:soft_clip_ratio",
         "AudioEffectLimiter::property:threshold_db",
-        "class:AudioEffectHardLimiter",
         "class:AudioEffectLimiter"
       ]
     },

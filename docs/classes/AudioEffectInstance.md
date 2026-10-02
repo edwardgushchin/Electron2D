@@ -4,7 +4,7 @@ Last updated: 2026-10-03
 
 **Declaration:** `public abstract class Electron2D.AudioEffectInstance` · **Source:** [AudioEffect.cs](../../src/Scene/Resources/AudioEffect.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
-**Inherits:** [ElectronObject](ElectronObject.md). Internal concrete state includes [AudioEffectAmplifyInstance](AudioEffectAmplifyInstance.md), [AudioEffectPannerInstance](AudioEffectPannerInstance.md), [AudioEffectEQInstance](AudioEffectEQInstance.md), [AudioEffectCaptureInstance](AudioEffectCaptureInstance.md) and [AudioEffectFilterInstance](AudioEffectFilterInstance.md).
+**Inherits:** [ElectronObject](ElectronObject.md). Internal concrete state includes [AudioEffectAmplifyInstance](AudioEffectAmplifyInstance.md), [AudioEffectPannerInstance](AudioEffectPannerInstance.md), [AudioEffectEQInstance](AudioEffectEQInstance.md), [AudioEffectCaptureInstance](AudioEffectCaptureInstance.md), [AudioEffectFilterInstance](AudioEffectFilterInstance.md) and [AudioEffectHardLimiterInstance](AudioEffectHardLimiterInstance.md).
 
 ## Description
 

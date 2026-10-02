@@ -1,10 +1,10 @@
 # AudioEffect
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public abstract class Electron2D.AudioEffect` · **Source:** [AudioEffect.cs](../../src/Scene/Resources/AudioEffect.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
-**Inherits:** [Resource](Resource.md). **Inherited By:** [AudioEffectAmplify](AudioEffectAmplify.md), [AudioEffectPanner](AudioEffectPanner.md), [AudioEffectEQ](AudioEffectEQ.md), [AudioEffectCapture](AudioEffectCapture.md), [AudioEffectFilter](AudioEffectFilter.md).
+**Inherits:** [Resource](Resource.md). **Inherited By:** [AudioEffectAmplify](AudioEffectAmplify.md), [AudioEffectPanner](AudioEffectPanner.md), [AudioEffectEQ](AudioEffectEQ.md), [AudioEffectCapture](AudioEffectCapture.md), [AudioEffectFilter](AudioEffectFilter.md), [AudioEffectDelay](AudioEffectDelay.md), [AudioEffectReverb](AudioEffectReverb.md), [AudioEffectChorus](AudioEffectChorus.md), [AudioEffectDistortion](AudioEffectDistortion.md), [AudioEffectSpectrumAnalyzer](AudioEffectSpectrumAnalyzer.md), [AudioEffectRecord](AudioEffectRecord.md), [AudioEffectHardLimiter](AudioEffectHardLimiter.md).
 
 ## Description
 

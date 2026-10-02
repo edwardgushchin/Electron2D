@@ -492,6 +492,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectHardLimiter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "AudioEffectHardLimiter",
+    "signature": "public sealed class Electron2D.AudioEffectHardLimiter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioEffectHighPassFilter",
     "kind": "type",
     "declaringType": "Electron2D.AudioEffectHighPassFilter",
@@ -7745,6 +7760,19 @@
     "declaringType": "Electron2D.AudioEffectFilter",
     "name": ".ctor",
     "signature": "public AudioEffectFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectHardLimiter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": ".ctor",
+    "signature": "public AudioEffectHardLimiter()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -29130,6 +29158,84 @@
     "id": "method:Electron2D.AudioEffectFilter.OnInstantiate()",
     "kind": "method",
     "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHardLimiter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHardLimiter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHardLimiter.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHardLimiter.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
     "name": "OnInstantiate",
     "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
     "visibility": "protected",
@@ -89880,6 +89986,45 @@
     "declaringType": "Electron2D.AudioEffectFilter",
     "name": "Resonance",
     "signature": "public System.Single Resonance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectHardLimiter.CeilingDB()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "CeilingDB",
+    "signature": "public System.Single CeilingDB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectHardLimiter.PreGainDB()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "PreGainDB",
+    "signature": "public System.Single PreGainDB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectHardLimiter.Release()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectHardLimiter",
+    "name": "Release",
+    "signature": "public System.Single Release { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

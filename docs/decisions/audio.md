@@ -1,6 +1,6 @@
 # Electron2D audio decisions
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 This bounded log owns the architectural decisions for audio. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -66,6 +66,10 @@ AudioEffectFilter and seven concrete low/high/band-pass, notch, band-limit and s
 The executable slice corrects two proven source defects rather than carrying them into a native callback: cutoff is effectively bounded below Nyquist (0.4999 × output rate), avoiding negative damping/unstable poles produced by the source's Nyquist-plus-512 bound; BandLimit uses its complementary band-rejection numerator, correcting an opposite band-pass response while retaining its bandwidth denominator. Nonpositive/reversed band edges and extreme quality/shelf damping receive effective positive/stable floors. Finite raw controls remain stored and ordinary settings retain their source PCM. Float overflow clears contaminated instance histories and reports an arithmetic error; native containment/recreation remains the existing effect-chain policy. These explicit numerical/response corrections are recorded in coverage and reproduced by analytical edge/response tests.
 
 Copying uses the Resource graph/session contract; Gain authoring metadata is hidden only on concrete low/high/band-pass types, matching their unused control, while the inherited typed property remains. No editor, bus-layout loader, file export, native dependency or vendored source patch is introduced. The existing MIT runtime adaptation notice accompanies the equations. Current class/component documentation records Linux x64 PCM, actual native output-rate filtering, public Wayland host and warmed allocation checks; physical listening, multichannel hardware and other platforms retain separate gates.
+
+### Peak limiting
+
+AudioEffectHardLimiter executes through the current FAudio stereo-pair chain with a prepared two-millisecond lookahead line, one linked detector and a short minimum-gain sustain history per pair. Typed CeilingDB, PreGainDB and Release controls are live at the next block; silent blocks flush delayed PCM. Resource copies retain controls and never processing state. The pinned source processor can exceed its sample ceiling slightly and can retain attenuation when a positive release is shorter than one sample. The executable slice corrects both behaviors: a final finite sample cap enforces CeilingDB after all detector math, and exhausted release restores detector gain to unity while the prepared bucket history completes its sustain window. Tests compare ordinary PCM to a byte-pinned C++ processor and separately verify these safety/recovery edges, native output and allocation. This is a sample-domain guarantee; actual inter-sample peaks, physical devices and other platforms retain separate verification gates.
 
 ### Consequences
 

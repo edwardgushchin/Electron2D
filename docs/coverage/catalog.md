@@ -70,7 +70,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectEQ21](classes/AudioEffectEQ21.md) | AudioEffectEQ | Implemented | 0 |
 | [AudioEffectEQ6](classes/AudioEffectEQ6.md) | AudioEffectEQ | Implemented | 0 |
 | [AudioEffectFilter](classes/AudioEffectFilter.md) | AudioEffect | Implemented | 9 |
-| [AudioEffectHardLimiter](classes/AudioEffectHardLimiter.md) | AudioEffect | Unimplemented | 3 |
+| [AudioEffectHardLimiter](classes/AudioEffectHardLimiter.md) | AudioEffect | Implemented | 3 |
 | [AudioEffectHighPassFilter](classes/AudioEffectHighPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectHighShelfFilter](classes/AudioEffectHighShelfFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectInstance](classes/AudioEffectInstance.md) | RefCounted | Implemented | 2 |
