@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioEffectLowPassFilter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectLowPassFilter.xml) | — | Blocked | Trigger: typed AudioEffect/AudioEffectInstance resources and ordered FAPO chain ownership, bypass/enable/reorder with real processed PCM; current private meter is observation, not a public effect (ADR 0047). |
+| [`class AudioEffectLowPassFilter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectLowPassFilter.xml) | — | Unimplemented | The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed filter coefficients/slope/resonance/gain state and verified stable stereo IIR kernels/defaults. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend. |

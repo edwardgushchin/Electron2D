@@ -819,7 +819,14 @@ public sealed partial class SceneTree : MainLoop
     /// <remarks>Runs the process-frame pipeline and returns whether quit was requested.</remarks>
     protected override bool OnProcess(double delta)
     {
-        RunFrame(delta, CurrentUnscaledFrameDelta, physics: false);
+        List<Exception>? errors = null;
+        try { AudioServer.ReportEffectErrors(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is null) RunFrame(delta, CurrentUnscaledFrameDelta, physics: false);
+        else
+        {
+            try { RunFrame(delta, CurrentUnscaledFrameDelta, physics: false); } catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Scene frame callbacks failed.", errors);
+        }
         return QuitRequested;
     }
 

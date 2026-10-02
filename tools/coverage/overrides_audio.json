@@ -914,6 +914,136 @@
       "godot": "ProjectSettings::property:audio/driver/enable_input",
       "electron2d": "property:Electron2D.ProjectSettings.AudioDriverEnableInput()",
       "reason": "Built-in typed boolean, false default; feature overrides and persistence metadata execute. AudioServer/manual and microphone starts consume it before native recording activation; paused input frequency preparation never records (ADR 0047)."
+    },
+    {
+      "godot": "class:AudioEffect",
+      "electron2d": "T:Electron2D.AudioEffect",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectInstance",
+      "electron2d": "T:Electron2D.AudioEffectInstance",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectCapture",
+      "electron2d": "T:Electron2D.AudioEffectCapture",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffect::method:_instantiate()",
+      "electron2d": "method:Electron2D.AudioEffect.Instantiate()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectInstance::method:_process(const void*:,AudioFrame*:,int:)",
+      "electron2d": "method:Electron2D.AudioEffectInstance.Process(System.ReadOnlySpan<Electron2D.Vector2>,System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectInstance::method:_process_silence()",
+      "electron2d": "method:Electron2D.AudioEffectInstance.ProcessSilence()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::property:buffer_length",
+      "electron2d": "property:Electron2D.AudioEffectCapture.BufferLength()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/buses/channel_disable_threshold_db",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioBusesChannelDisableThresholdDB()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/buses/channel_disable_time",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioBusesChannelDisableTime()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:can_get_buffer(int:)",
+      "electron2d": "method:Electron2D.AudioEffectCapture.CanGetBuffer(System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:clear_buffer()",
+      "electron2d": "method:Electron2D.AudioEffectCapture.ClearBuffer()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:get_buffer(int:)",
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetBuffer(System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:get_buffer_length_frames()",
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetBufferLengthFrames()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:get_discarded_frames()",
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetDiscardedFrames()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:get_frames_available()",
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetFramesAvailable()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCapture::method:get_pushed_frames()",
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetPushedFrames()",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:add_bus_effect(int:,AudioEffect:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.AddBusEffect(System.Int32,Electron2D.AudioEffect,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_effect(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusEffect(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_effect_count(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusEffectCount(System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:get_bus_effect_instance(int:,int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetBusEffectInstance(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:is_bus_bypassing_effects(int:)",
+      "electron2d": "method:Electron2D.AudioServer.IsBusBypassingEffects(System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:is_bus_effect_enabled(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.IsBusEffectEnabled(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:remove_bus_effect(int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.RemoveBusEffect(System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_bypass_effects(int:,bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusBypassEffects(System.Int32,System.Boolean)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:set_bus_effect_enabled(int:,int:,bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetBusEffectEnabled(System.Int32,System.Int32,System.Boolean)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:swap_bus_effects(int:,int:,int:)",
+      "electron2d": "method:Electron2D.AudioServer.SwapBusEffects(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -1348,6 +1478,54 @@
     {
       "electron2d": "method:Electron2D.AudioStreamMicrophone.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffect..ctor()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectCapture..ctor()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectInstance..ctor()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffect.OnInstantiate()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCapture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCapture.CreateDuplicateInstance()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCapture.Dispose(System.Boolean)",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCapture.GetPropertyDescriptors()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCapture.OnInstantiate()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectInstance.OnProcess(System.ReadOnlySpan<Electron2D.Vector2>,System.Span<Electron2D.Vector2>)",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectInstance.OnProcessSilence()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectInstance.ValidateDisposal()",
+      "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
     }
   ],
   "statusGroups": [
@@ -1495,198 +1673,6 @@
       "reason": "Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047).",
       "godot": [
         "AudioStreamPlayer::property:playback_type"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: typed AudioEffect/AudioEffectInstance resources and ordered FAPO chain ownership, bypass/enable/reorder with real processed PCM; current private meter is observation, not a public effect (ADR 0047).",
-      "godot": [
-        "AudioEffect::method:_instantiate()",
-        "AudioEffectAmplify::property:volume_db",
-        "AudioEffectAmplify::property:volume_linear",
-        "AudioEffectCapture::method:can_get_buffer(int:)",
-        "AudioEffectCapture::method:clear_buffer()",
-        "AudioEffectCapture::method:get_buffer(int:)",
-        "AudioEffectCapture::method:get_buffer_length_frames()",
-        "AudioEffectCapture::method:get_discarded_frames()",
-        "AudioEffectCapture::method:get_frames_available()",
-        "AudioEffectCapture::method:get_pushed_frames()",
-        "AudioEffectCapture::property:buffer_length",
-        "AudioEffectChorus::method:get_voice_cutoff_hz(int:)",
-        "AudioEffectChorus::method:get_voice_delay_ms(int:)",
-        "AudioEffectChorus::method:get_voice_depth_ms(int:)",
-        "AudioEffectChorus::method:get_voice_level_db(int:)",
-        "AudioEffectChorus::method:get_voice_pan(int:)",
-        "AudioEffectChorus::method:get_voice_rate_hz(int:)",
-        "AudioEffectChorus::method:set_voice_cutoff_hz(int:,float:)",
-        "AudioEffectChorus::method:set_voice_delay_ms(int:,float:)",
-        "AudioEffectChorus::method:set_voice_depth_ms(int:,float:)",
-        "AudioEffectChorus::method:set_voice_level_db(int:,float:)",
-        "AudioEffectChorus::method:set_voice_pan(int:,float:)",
-        "AudioEffectChorus::method:set_voice_rate_hz(int:,float:)",
-        "AudioEffectChorus::property:dry",
-        "AudioEffectChorus::property:voice/1/cutoff_hz",
-        "AudioEffectChorus::property:voice/1/delay_ms",
-        "AudioEffectChorus::property:voice/1/depth_ms",
-        "AudioEffectChorus::property:voice/1/level_db",
-        "AudioEffectChorus::property:voice/1/pan",
-        "AudioEffectChorus::property:voice/1/rate_hz",
-        "AudioEffectChorus::property:voice/2/cutoff_hz",
-        "AudioEffectChorus::property:voice/2/delay_ms",
-        "AudioEffectChorus::property:voice/2/depth_ms",
-        "AudioEffectChorus::property:voice/2/level_db",
-        "AudioEffectChorus::property:voice/2/pan",
-        "AudioEffectChorus::property:voice/2/rate_hz",
-        "AudioEffectChorus::property:voice/3/cutoff_hz",
-        "AudioEffectChorus::property:voice/3/delay_ms",
-        "AudioEffectChorus::property:voice/3/depth_ms",
-        "AudioEffectChorus::property:voice/3/level_db",
-        "AudioEffectChorus::property:voice/3/pan",
-        "AudioEffectChorus::property:voice/3/rate_hz",
-        "AudioEffectChorus::property:voice/4/cutoff_hz",
-        "AudioEffectChorus::property:voice/4/delay_ms",
-        "AudioEffectChorus::property:voice/4/depth_ms",
-        "AudioEffectChorus::property:voice/4/level_db",
-        "AudioEffectChorus::property:voice/4/pan",
-        "AudioEffectChorus::property:voice/4/rate_hz",
-        "AudioEffectChorus::property:voice_count",
-        "AudioEffectChorus::property:wet",
-        "AudioEffectCompressor::property:attack_us",
-        "AudioEffectCompressor::property:gain",
-        "AudioEffectCompressor::property:mix",
-        "AudioEffectCompressor::property:ratio",
-        "AudioEffectCompressor::property:release_ms",
-        "AudioEffectCompressor::property:sidechain",
-        "AudioEffectCompressor::property:threshold",
-        "AudioEffectDelay::property:dry",
-        "AudioEffectDelay::property:feedback_active",
-        "AudioEffectDelay::property:feedback_delay_ms",
-        "AudioEffectDelay::property:feedback_level_db",
-        "AudioEffectDelay::property:feedback_lowpass",
-        "AudioEffectDelay::property:tap1_active",
-        "AudioEffectDelay::property:tap1_delay_ms",
-        "AudioEffectDelay::property:tap1_level_db",
-        "AudioEffectDelay::property:tap1_pan",
-        "AudioEffectDelay::property:tap2_active",
-        "AudioEffectDelay::property:tap2_delay_ms",
-        "AudioEffectDelay::property:tap2_level_db",
-        "AudioEffectDelay::property:tap2_pan",
-        "AudioEffectDistortion::enum:Mode",
-        "AudioEffectDistortion::enum_value:Mode.MODE_ATAN",
-        "AudioEffectDistortion::enum_value:Mode.MODE_CLIP",
-        "AudioEffectDistortion::enum_value:Mode.MODE_LOFI",
-        "AudioEffectDistortion::enum_value:Mode.MODE_OVERDRIVE",
-        "AudioEffectDistortion::enum_value:Mode.MODE_WAVESHAPE",
-        "AudioEffectDistortion::property:drive",
-        "AudioEffectDistortion::property:keep_hf_hz",
-        "AudioEffectDistortion::property:mode",
-        "AudioEffectDistortion::property:post_gain",
-        "AudioEffectDistortion::property:pre_gain",
-        "AudioEffectEQ::method:get_band_count()",
-        "AudioEffectEQ::method:get_band_gain_db(int:)",
-        "AudioEffectEQ::method:set_band_gain_db(int:,float:)",
-        "AudioEffectFilter::enum:FilterDB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
-        "AudioEffectFilter::property:cutoff_hz",
-        "AudioEffectFilter::property:db",
-        "AudioEffectFilter::property:gain",
-        "AudioEffectFilter::property:resonance",
-        "AudioEffectHardLimiter::property:ceiling_db",
-        "AudioEffectHardLimiter::property:pre_gain_db",
-        "AudioEffectHardLimiter::property:release",
-        "AudioEffectInstance::method:_process(const void*:,AudioFrame*:,int:)",
-        "AudioEffectInstance::method:_process_silence()",
-        "AudioEffectLimiter::property:ceiling_db",
-        "AudioEffectLimiter::property:soft_clip_db",
-        "AudioEffectLimiter::property:soft_clip_ratio",
-        "AudioEffectLimiter::property:threshold_db",
-        "AudioEffectPanner::property:pan",
-        "AudioEffectPhaser::property:depth",
-        "AudioEffectPhaser::property:feedback",
-        "AudioEffectPhaser::property:range_max_hz",
-        "AudioEffectPhaser::property:range_min_hz",
-        "AudioEffectPhaser::property:rate_hz",
-        "AudioEffectPitchShift::enum:FFTSize",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
-        "AudioEffectPitchShift::property:fft_size",
-        "AudioEffectPitchShift::property:oversampling",
-        "AudioEffectPitchShift::property:pitch_scale",
-        "AudioEffectRecord::method:get_recording()",
-        "AudioEffectRecord::method:is_recording_active()",
-        "AudioEffectRecord::method:set_recording_active(bool:)",
-        "AudioEffectRecord::property:format",
-        "AudioEffectReverb::property:damping",
-        "AudioEffectReverb::property:dry",
-        "AudioEffectReverb::property:hipass",
-        "AudioEffectReverb::property:predelay_feedback",
-        "AudioEffectReverb::property:predelay_msec",
-        "AudioEffectReverb::property:room_size",
-        "AudioEffectReverb::property:spread",
-        "AudioEffectReverb::property:wet",
-        "AudioEffectSpectrumAnalyzer::enum:FFTSize",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_1024",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_2048",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_256",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_4096",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_512",
-        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_MAX",
-        "AudioEffectSpectrumAnalyzer::property:buffer_length",
-        "AudioEffectSpectrumAnalyzer::property:fft_size",
-        "AudioEffectSpectrumAnalyzerInstance::enum:MagnitudeMode",
-        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_AVERAGE",
-        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_MAX",
-        "AudioEffectSpectrumAnalyzerInstance::method:get_magnitude_for_frequency_range(float:,float:,int:AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
-        "AudioEffectStereoEnhance::property:pan_pullout",
-        "AudioEffectStereoEnhance::property:surround",
-        "AudioEffectStereoEnhance::property:time_pullout_ms",
-        "AudioServer::method:add_bus_effect(int:,AudioEffect:,int:)",
-        "AudioServer::method:get_bus_effect(int:,int:)",
-        "AudioServer::method:get_bus_effect_count(int:)",
-        "AudioServer::method:get_bus_effect_instance(int:,int:,int:)",
-        "AudioServer::method:is_bus_bypassing_effects(int:)",
-        "AudioServer::method:is_bus_effect_enabled(int:,int:)",
-        "AudioServer::method:remove_bus_effect(int:,int:)",
-        "AudioServer::method:set_bus_bypass_effects(int:,bool:)",
-        "AudioServer::method:set_bus_effect_enabled(int:,int:,bool:)",
-        "AudioServer::method:swap_bus_effects(int:,int:,int:)",
-        "class:AudioEffect",
-        "class:AudioEffectAmplify",
-        "class:AudioEffectBandLimitFilter",
-        "class:AudioEffectBandPassFilter",
-        "class:AudioEffectCapture",
-        "class:AudioEffectChorus",
-        "class:AudioEffectCompressor",
-        "class:AudioEffectDelay",
-        "class:AudioEffectDistortion",
-        "class:AudioEffectEQ",
-        "class:AudioEffectEQ10",
-        "class:AudioEffectEQ21",
-        "class:AudioEffectEQ6",
-        "class:AudioEffectFilter",
-        "class:AudioEffectHardLimiter",
-        "class:AudioEffectHighPassFilter",
-        "class:AudioEffectHighShelfFilter",
-        "class:AudioEffectInstance",
-        "class:AudioEffectLimiter",
-        "class:AudioEffectLowPassFilter",
-        "class:AudioEffectLowShelfFilter",
-        "class:AudioEffectNotchFilter",
-        "class:AudioEffectPanner",
-        "class:AudioEffectPhaser",
-        "class:AudioEffectPitchShift",
-        "class:AudioEffectRecord",
-        "class:AudioEffectReverb",
-        "class:AudioEffectSpectrumAnalyzer",
-        "class:AudioEffectSpectrumAnalyzerInstance",
-        "class:AudioEffectStereoEnhance"
       ]
     },
     {
@@ -1963,6 +1949,290 @@
         "class:AudioStreamGenerator",
         "AudioStreamGenerator::property:mix_rate_mode",
         "ProjectSettings::property:audio/driver/enable_input"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: finite scalar gain settings and a prepared native stereo gain instance. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectAmplify::property:volume_db",
+        "AudioEffectAmplify::property:volume_linear",
+        "class:AudioEffectAmplify"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed pan configuration and stereo channel-gain mapping. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectPanner::property:pan",
+        "class:AudioEffectPanner"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed filter coefficients/slope/resonance/gain state and verified stable stereo IIR kernels/defaults. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectFilter::enum:FilterDB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
+        "AudioEffectFilter::property:cutoff_hz",
+        "AudioEffectFilter::property:db",
+        "AudioEffectFilter::property:gain",
+        "AudioEffectFilter::property:resonance",
+        "class:AudioEffectBandLimitFilter",
+        "class:AudioEffectBandPassFilter",
+        "class:AudioEffectFilter",
+        "class:AudioEffectHighPassFilter",
+        "class:AudioEffectHighShelfFilter",
+        "class:AudioEffectLowPassFilter",
+        "class:AudioEffectLowShelfFilter",
+        "class:AudioEffectNotchFilter"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: fixed band layouts, indexed DB gains and prepared per-band stereo filter state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectEQ::method:get_band_count()",
+        "AudioEffectEQ::method:get_band_gain_db(int:)",
+        "AudioEffectEQ::method:set_band_gain_db(int:,float:)",
+        "class:AudioEffectEQ",
+        "class:AudioEffectEQ10",
+        "class:AudioEffectEQ21",
+        "class:AudioEffectEQ6"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: indexed voice modulation/delay/filter controls and bounded stereo delay kernels. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectChorus::method:get_voice_cutoff_hz(int:)",
+        "AudioEffectChorus::method:get_voice_delay_ms(int:)",
+        "AudioEffectChorus::method:get_voice_depth_ms(int:)",
+        "AudioEffectChorus::method:get_voice_level_db(int:)",
+        "AudioEffectChorus::method:get_voice_pan(int:)",
+        "AudioEffectChorus::method:get_voice_rate_hz(int:)",
+        "AudioEffectChorus::method:set_voice_cutoff_hz(int:,float:)",
+        "AudioEffectChorus::method:set_voice_delay_ms(int:,float:)",
+        "AudioEffectChorus::method:set_voice_depth_ms(int:,float:)",
+        "AudioEffectChorus::method:set_voice_level_db(int:,float:)",
+        "AudioEffectChorus::method:set_voice_pan(int:,float:)",
+        "AudioEffectChorus::method:set_voice_rate_hz(int:,float:)",
+        "AudioEffectChorus::property:dry",
+        "AudioEffectChorus::property:voice/1/cutoff_hz",
+        "AudioEffectChorus::property:voice/1/delay_ms",
+        "AudioEffectChorus::property:voice/1/depth_ms",
+        "AudioEffectChorus::property:voice/1/level_db",
+        "AudioEffectChorus::property:voice/1/pan",
+        "AudioEffectChorus::property:voice/1/rate_hz",
+        "AudioEffectChorus::property:voice/2/cutoff_hz",
+        "AudioEffectChorus::property:voice/2/delay_ms",
+        "AudioEffectChorus::property:voice/2/depth_ms",
+        "AudioEffectChorus::property:voice/2/level_db",
+        "AudioEffectChorus::property:voice/2/pan",
+        "AudioEffectChorus::property:voice/2/rate_hz",
+        "AudioEffectChorus::property:voice/3/cutoff_hz",
+        "AudioEffectChorus::property:voice/3/delay_ms",
+        "AudioEffectChorus::property:voice/3/depth_ms",
+        "AudioEffectChorus::property:voice/3/level_db",
+        "AudioEffectChorus::property:voice/3/pan",
+        "AudioEffectChorus::property:voice/3/rate_hz",
+        "AudioEffectChorus::property:voice/4/cutoff_hz",
+        "AudioEffectChorus::property:voice/4/delay_ms",
+        "AudioEffectChorus::property:voice/4/depth_ms",
+        "AudioEffectChorus::property:voice/4/level_db",
+        "AudioEffectChorus::property:voice/4/pan",
+        "AudioEffectChorus::property:voice/4/rate_hz",
+        "AudioEffectChorus::property:voice_count",
+        "AudioEffectChorus::property:wet",
+        "class:AudioEffectChorus"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed threshold/ratio/attack/release/mix and named sidechain PCM routing into prepared detector/envelope state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectCompressor::property:attack_us",
+        "AudioEffectCompressor::property:gain",
+        "AudioEffectCompressor::property:mix",
+        "AudioEffectCompressor::property:ratio",
+        "AudioEffectCompressor::property:release_ms",
+        "AudioEffectCompressor::property:sidechain",
+        "AudioEffectCompressor::property:threshold",
+        "class:AudioEffectCompressor"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed tap/feedback/filter timing and bounded stereo delay storage. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectDelay::property:dry",
+        "AudioEffectDelay::property:feedback_active",
+        "AudioEffectDelay::property:feedback_delay_ms",
+        "AudioEffectDelay::property:feedback_level_db",
+        "AudioEffectDelay::property:feedback_lowpass",
+        "AudioEffectDelay::property:tap1_active",
+        "AudioEffectDelay::property:tap1_delay_ms",
+        "AudioEffectDelay::property:tap1_level_db",
+        "AudioEffectDelay::property:tap1_pan",
+        "AudioEffectDelay::property:tap2_active",
+        "AudioEffectDelay::property:tap2_delay_ms",
+        "AudioEffectDelay::property:tap2_level_db",
+        "AudioEffectDelay::property:tap2_pan",
+        "class:AudioEffectDelay"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed mode/drive/filter configuration and finite mode-specific waveshaping. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectDistortion::enum:Mode",
+        "AudioEffectDistortion::enum_value:Mode.MODE_ATAN",
+        "AudioEffectDistortion::enum_value:Mode.MODE_CLIP",
+        "AudioEffectDistortion::enum_value:Mode.MODE_LOFI",
+        "AudioEffectDistortion::enum_value:Mode.MODE_OVERDRIVE",
+        "AudioEffectDistortion::enum_value:Mode.MODE_WAVESHAPE",
+        "AudioEffectDistortion::property:drive",
+        "AudioEffectDistortion::property:keep_hf_hz",
+        "AudioEffectDistortion::property:mode",
+        "AudioEffectDistortion::property:post_gain",
+        "AudioEffectDistortion::property:pre_gain",
+        "class:AudioEffectDistortion"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed level/release/lookahead policy, bounded detector/delay state and verified limiter response. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectHardLimiter::property:ceiling_db",
+        "AudioEffectHardLimiter::property:pre_gain_db",
+        "AudioEffectHardLimiter::property:release",
+        "AudioEffectLimiter::property:ceiling_db",
+        "AudioEffectLimiter::property:soft_clip_db",
+        "AudioEffectLimiter::property:soft_clip_ratio",
+        "AudioEffectLimiter::property:threshold_db",
+        "class:AudioEffectHardLimiter",
+        "class:AudioEffectLimiter"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed modulation/feedback controls and prepared all-pass stereo state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectPhaser::property:depth",
+        "AudioEffectPhaser::property:feedback",
+        "AudioEffectPhaser::property:range_max_hz",
+        "AudioEffectPhaser::property:range_min_hz",
+        "AudioEffectPhaser::property:rate_hz",
+        "class:AudioEffectPhaser"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed FFT/oversampling/pitch controls and verified bounded spectral pitch processing. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectPitchShift::enum:FFTSize",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
+        "AudioEffectPitchShift::property:fft_size",
+        "AudioEffectPitchShift::property:oversampling",
+        "AudioEffectPitchShift::property:pitch_scale",
+        "class:AudioEffectPitchShift"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed record state, bounded captured PCM lifetime and output WAV resource/format encoding. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectRecord::method:get_recording()",
+        "AudioEffectRecord::method:is_recording_active()",
+        "AudioEffectRecord::method:set_recording_active(bool:)",
+        "AudioEffectRecord::property:format",
+        "class:AudioEffectRecord"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed room/damping/predelay/filter/wet-dry controls and bounded stereo reverb state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectReverb::property:damping",
+        "AudioEffectReverb::property:dry",
+        "AudioEffectReverb::property:hipass",
+        "AudioEffectReverb::property:predelay_feedback",
+        "AudioEffectReverb::property:predelay_msec",
+        "AudioEffectReverb::property:room_size",
+        "AudioEffectReverb::property:spread",
+        "AudioEffectReverb::property:wet",
+        "class:AudioEffectReverb"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed FFT/window/history settings, prepared spectral transforms and time-window magnitude queries. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectSpectrumAnalyzer::enum:FFTSize",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_1024",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_2048",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_256",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_4096",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_512",
+        "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_MAX",
+        "AudioEffectSpectrumAnalyzer::property:buffer_length",
+        "AudioEffectSpectrumAnalyzer::property:fft_size",
+        "AudioEffectSpectrumAnalyzerInstance::enum:MagnitudeMode",
+        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_AVERAGE",
+        "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_MAX",
+        "AudioEffectSpectrumAnalyzerInstance::method:get_magnitude_for_frequency_range(float:,float:,int:AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
+        "class:AudioEffectSpectrumAnalyzer",
+        "class:AudioEffectSpectrumAnalyzerInstance"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed stereo width/delay/surround controls and bounded interchannel processing. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "godot": [
+        "AudioEffectStereoEnhance::property:pan_pullout",
+        "AudioEffectStereoEnhance::property:surround",
+        "AudioEffectStereoEnhance::property:time_pullout_ms",
+        "class:AudioEffectStereoEnhance"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified. Typed finite positive duration has a 2^27-frame/1 GiB preparation bound; counter returns use Int64, matching their native lifetime counts. Registry activity settings validate finite values and nonnegative timeout.",
+      "godot": [
+        "class:AudioEffect",
+        "class:AudioEffectInstance",
+        "class:AudioEffectCapture",
+        "AudioEffect::method:_instantiate()",
+        "AudioEffectInstance::method:_process(const void*:,AudioFrame*:,int:)",
+        "AudioEffectInstance::method:_process_silence()",
+        "AudioEffectCapture::property:buffer_length",
+        "ProjectSettings::property:audio/buses/channel_disable_threshold_db",
+        "ProjectSettings::property:audio/buses/channel_disable_time",
+        "AudioEffectCapture::method:can_get_buffer(int:)",
+        "AudioEffectCapture::method:clear_buffer()",
+        "AudioEffectCapture::method:get_buffer(int:)",
+        "AudioEffectCapture::method:get_buffer_length_frames()",
+        "AudioEffectCapture::method:get_discarded_frames()",
+        "AudioEffectCapture::method:get_frames_available()",
+        "AudioEffectCapture::method:get_pushed_frames()",
+        "AudioServer::method:add_bus_effect(int:,AudioEffect:,int:)",
+        "AudioServer::method:get_bus_effect(int:,int:)",
+        "AudioServer::method:get_bus_effect_count(int:)",
+        "AudioServer::method:get_bus_effect_instance(int:,int:,int:)",
+        "AudioServer::method:is_bus_bypassing_effects(int:)",
+        "AudioServer::method:is_bus_effect_enabled(int:,int:)",
+        "AudioServer::method:remove_bus_effect(int:,int:)",
+        "AudioServer::method:set_bus_bypass_effects(int:,bool:)",
+        "AudioServer::method:set_bus_effect_enabled(int:,int:,bool:)",
+        "AudioServer::method:swap_bus_effects(int:,int:,int:)"
       ]
     }
   ]

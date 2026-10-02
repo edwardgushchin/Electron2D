@@ -40,6 +40,10 @@ public sealed partial class AudioServer : ElectronObject
         internal string Name = name, Send = "Master";
         internal float VolumeDB;
         internal bool Mute, Solo;
+        internal bool Bypass;
+        internal List<BusEffect> Effects = [];
+        internal FAudioBusEffect[]? RuntimeEffects;
+        internal FAudioBusEffect.Activity? Activity;
         internal nint Voice;
     }
     private readonly List<Bus> _buses = [new("Master")];
@@ -50,7 +54,7 @@ public sealed partial class AudioServer : ElectronObject
     public static AudioServer Instance => Singleton.Value;
     internal void Check()
     {
-        ThrowIfDisposed(); var thread = Environment.CurrentManagedThreadId; Interlocked.CompareExchange(ref _owner, thread, 0); if (thread != Volatile.Read(ref _owner)) throw new InvalidOperationException("Audio configuration requires its owner thread.");
+        ThrowIfDisposed(); CheckEffectReentrancy(); var thread = Environment.CurrentManagedThreadId; Interlocked.CompareExchange(ref _owner, thread, 0); if (thread != Volatile.Read(ref _owner)) throw new InvalidOperationException("Audio configuration requires its owner thread.");
     }
     private Bus GetBus(int index) { Check(); if ((uint)index >= (uint)_buses.Count) throw new ArgumentOutOfRangeException(nameof(index)); return _buses[index]; }
     /// <summary>Gets or sets the number of bus records, including the required Master.</summary>
@@ -88,7 +92,14 @@ public sealed partial class AudioServer : ElectronObject
     /// <summary>Removes a non-Master bus, redirecting unresolved sends to Master.</summary>
     /// <param name="index">Live nonzero bus index.</param>
     /// <exception cref="ArgumentOutOfRangeException">The index is invalid or identifies Master.</exception>
-    public void RemoveBus(int index) { _ = GetBus(index); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); _buses.RemoveAt(index); RebuildGraph(); BusLayoutChanged?.Invoke(); }
+    public void RemoveBus(int index)
+    {
+        var bus = GetBus(index); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); _buses.RemoveAt(index); List<Exception>? errors = null;
+        try { RebuildGraph(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { ReleaseEffects(bus.RuntimeEffects); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { BusLayoutChanged?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        Node.ThrowCollected("Audio bus removal failed.", errors);
+    }
     /// <summary>Moves a non-Master bus; minus one moves it to the end.</summary>
     /// <param name="index">Live non-Master source index.</param>
     /// <param name="toIndex">Destination insertion index; minus one appends.</param>
@@ -192,10 +203,10 @@ public sealed partial class AudioServer : ElectronObject
     public double GetTimeToNextMix() { Check(); return _native is null ? 0 : Math.Max(0, _native.QuantumFrames / (double)_native.MixRate - _native.SinceMix); }
     /// <summary>Locks configuration for an explicit caller-owned critical section.</summary>
     /// <remarks>Pair with Unlock in finally; this protects the owned bus/playback state, not arbitrary game code.</remarks>
-    public void Lock() { ThrowIfDisposed(); Monitor.Enter(_gate); }
+    public void Lock() { ThrowIfDisposed(); CheckEffectReentrancy(); Monitor.Enter(_gate); }
     /// <summary>Releases one matching configuration lock.</summary>
     /// <exception cref="SynchronizationLockException">The calling thread owns no matching lock.</exception>
-    public void Unlock() => Monitor.Exit(_gate);
+    public void Unlock() { CheckEffectReentrancy(); Monitor.Exit(_gate); }
     internal void EnsureNative()
     {
         Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate);
@@ -222,7 +233,11 @@ public sealed partial class AudioServer : ElectronObject
             var old = _native.BusVoices(); var replacement = new nint[_buses.Count];
             try
             {
-                for (var i = 0; i < replacement.Length; i++) replacement[i] = _native.CreateBus((uint)(65535 - i), _native.Master);
+                for (var i = 0; i < replacement.Length; i++)
+                {
+                    var bus = _buses[i]; bus.RuntimeEffects ??= PrepareEffects(bus.Effects);
+                    bus.Activity ??= _native.CreateBusActivity(); replacement[i] = _native.CreateBus((uint)(65535 - i), _native.Master, bus.RuntimeEffects, bus.Effects.Select(e => e.Enabled && !bus.Bypass).ToArray(), bus.Activity);
+                }
                 for (var i = 1; i < replacement.Length; i++) { var target = GetBusIndex(_buses[i].Send); if (target < 0 || target >= i) target = 0; _native.SetSend(replacement[i], replacement[target]); }
             }
             catch { for (var i = replacement.Length - 1; i >= 0; i--) if (replacement[i] != 0) _native.DestroyBus(replacement[i]); throw; }
@@ -257,7 +272,7 @@ public sealed partial class AudioServer : ElectronObject
                     {
                         var current = j; for (var steps = 0; steps < _buses.Count; steps++) { var next = GetBusIndex(_buses[current].Send); if (next < 0 || next >= current) next = 0; if (next == i) { audible = true; break; } if (next == 0) break; current = next; }
                     }
-            var gain = _buses[i].Mute || !audible ? 0 : (float)Mathf.DBToLinear(_buses[i].VolumeDB); _native.SetVolume(_buses[i].Voice, gain);
+            var gain = _buses[i].Mute || !audible ? 0 : (float)Mathf.DBToLinear(_buses[i].VolumeDB); _native.SetBusVolume(_buses[i].Voice, gain);
         }
         foreach (var player in _players) player.RefreshVolume();
     }
@@ -268,6 +283,7 @@ public sealed partial class AudioServer : ElectronObject
         foreach (var player in _players.ToArray()) try { player.ReleaseVoices(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { _native?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         _native = null; foreach (var bus in _buses) bus.Voice = 0;
+        foreach (var bus in _buses) { var effects = bus.RuntimeEffects; bus.RuntimeEffects = null; bus.Activity = null; try { ReleaseEffects(effects); } catch (Exception error) { Node.CollectException(ref errors, error); } }
         if (closeInput) try { CloseInput(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Audio native teardown failed.", errors);
     }

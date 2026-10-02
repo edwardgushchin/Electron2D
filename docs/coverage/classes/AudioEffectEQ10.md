@@ -10,4 +10,4 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioEffectEQ10`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectEQ10.xml) | — | Blocked | Trigger: typed AudioEffect/AudioEffectInstance resources and ordered FAPO chain ownership, bypass/enable/reorder with real processed PCM; current private meter is observation, not a public effect (ADR 0047). |
+| [`class AudioEffectEQ10`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectEQ10.xml) | — | Unimplemented | The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: fixed band layouts, indexed DB gains and prepared per-band stereo filter state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend. |

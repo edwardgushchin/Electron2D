@@ -138,6 +138,12 @@ public sealed class ProjectSettings : ElectronObject
     /// <summary>Allows recording-device activation by AudioServer and microphone playbacks.</summary>
     /// <value>The typed audio/driver/enable_input setting, false initially; checked before each new capture request.</value>
     public static ProjectSetting<bool> AudioDriverEnableInput { get; } = new("audio/driver/enable_input", false);
+    /// <summary>Gets the threshold below which unused bus stereo pairs become inactive after their timeout.</summary>
+    /// <value>audio/buses/channel_disable_threshold_db; minus 60 dB initially. Read at output preparation.</value>
+    public static ProjectSetting<float> AudioBusesChannelDisableThresholdDB { get; } = new("audio/buses/channel_disable_threshold_db", -60f, float.IsFinite);
+    /// <summary>Gets the silent unused-bus activity timeout in seconds.</summary>
+    /// <value>audio/buses/channel_disable_time; two seconds initially. Read at output preparation.</value>
+    public static ProjectSetting<float> AudioBusesChannelDisableTime { get; } = new("audio/buses/channel_disable_time", 2f, value => float.IsFinite(value) && value >= 0);
 
     /// <summary>Defines the fixed-step callback frequency used by <see cref="Engine"/>.</summary>
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
@@ -456,6 +462,8 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(AudioDriverEnableInput, isBasic: true);
+        RegisterInternal(AudioBusesChannelDisableThresholdDB, isBasic: false);
+        RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DDefaultGravity, isBasic: true);
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
@@ -1838,6 +1846,8 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
+        ReferenceEquals(setting, AudioBusesChannelDisableThresholdDB) ||
+        ReferenceEquals(setting, AudioBusesChannelDisableTime) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
         ReferenceEquals(setting, Physics2DDefaultGravity) ||
         ReferenceEquals(setting, Physics2DDefaultGravityVector) ||

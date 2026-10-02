@@ -1290,3 +1290,22 @@ Permanent typed `input/ui_home` and `input/ui_end` definitions use one default b
 | `public static ProjectSetting<int> DefaultGUIDragThreshold { get; }` | gui/common/drag_threshold: 10 logical pixels, signed values retained; sampled by each new Viewport. |
 
 These definitions are permanently registered alongside other built-in typed settings. InputUIAccept participates in initial InputMap construction and explicit project-action reload. A button samples its feedback duration on first shortcut activation; the tooltip host samples delay when scheduling and offset when placing content, using active feature overrides. Durations are unscaled frame seconds, and offset is in root viewport pixels. Invalid values fail before replacing the stored setting.
+
+
+<a id="audiobusactivity"></a>
+## Audio bus activity settings
+
+| Signature | Key and default |
+| --- | --- |
+| `public static ProjectSetting<float> AudioBusesChannelDisableThresholdDB { get; }` | audio/buses/channel_disable_threshold_db; -60 dB. |
+| `public static ProjectSetting<float> AudioBusesChannelDisableTime { get; }` | audio/buses/channel_disable_time; 2 seconds. |
+
+<a id="audiobuseschanneldisablethresholddb"></a>
+### AudioBusesChannelDisableThresholdDB
+
+Typed built-in threshold for unused stereo bus activity. Registry validation accepts finite decibels. The actual native output preparation converts it to a linear peak threshold; unused pairs below it stop normal effects after the timeout. Active sources and upstream sends retain usage. Capture and other ProcessSilence hooks continue to execute on inactive buses.
+
+<a id="audiobuseschanneldisabletime"></a>
+### AudioBusesChannelDisableTime
+
+Typed built-in nonnegative finite timeout in seconds, read during output preparation and counted using actual mix frames. Zero permits expiry on the next unused silent quantum. Values that cannot produce a representable native frame duration reject at preparation. Edits apply after native output closes/reopens; existing prepared state retains its settings. AudioEffectTests checks defaults, invalid registry values, native silent-source usage, tail expiry and configuration restoration.

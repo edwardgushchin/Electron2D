@@ -52,6 +52,13 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     private void Check() { _context.EnsureOwner(); ObjectDisposedException.ThrowIf(_voice == 0, this); }
     internal bool Finished { get { Check(); lock (_context.Gate) { if (_error is { } error) { _error = null; throw new InvalidOperationException("Audio stream mixing failed.", error); } return _active && !_paused && _ending; } } }
     internal bool Playing { get { Check(); lock (_context.Gate) return _active; } }
+    internal nint ActiveSend => _active && !_paused ? _send : 0;
+    internal void MarkActivity(FAudioBusEffect.Activity activity)
+    {
+        if (_context.Channels == 2 || _target != AudioStreamPlayer.MixTarget.Center) activity.Use(0);
+        if (_context.Channels >= 4 && _target != AudioStreamPlayer.MixTarget.Stereo)
+            for (var pair = 1; pair < _context.Channels / 2; pair++) if (pair == 1 || _target == AudioStreamPlayer.MixTarget.Surround) activity.Use(pair);
+    }
     internal bool Paused { get { Check(); lock (_context.Gate) return _active && _paused; } }
     internal double Position { get { Check(); lock (_context.Gate) { return _active ? _playback.GetPlaybackPosition() : 0; } } }
     internal void Play(double position)

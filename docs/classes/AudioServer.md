@@ -1,14 +1,14 @@
 # AudioServer
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
-**Declaration:** `public sealed class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
+**Declaration:** `public sealed partial class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
 ## Description
 
-Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Public effects, bus-layout resources, output selection/latency and native sample registration are still absent.
+Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public effects now execute before bus gain and final peak metering. Bus-layout resources, output selection/latency and native sample registration remain separate dependencies.
 
 ## API summary
 
@@ -153,3 +153,62 @@ If the final automatic native pause fails, its microphone request is still relea
 [Audio verification](../components/audio-playback.md#verification) distinguishes CPU behavior, actual native mixed PCM, public host lifecycle, packaging and physical listening. [ADR 0047](../decisions/audio.md#adr-0047) owns the backend/decoder boundary. Inherited members are documented on their declaring class.
 
 [Own reference coverage](../coverage/classes/AudioServer.md) retains missing and Partial members separately.
+
+
+<a id="effects"></a>
+## Bus effects
+
+[AudioEffect](AudioEffect.md) resources are borrowed; buses own one [AudioEffectInstance](AudioEffectInstance.md) for each output stereo pair. Add prepares native output and the entire edited chain. Factory failure preserves configured entries and old instance identity. Native graph failure retains committed configuration and closes output for retry. Structural edits dispose old instances after voices detach; custom cleanup exceptions are collected after all cleanup attempts. Graph routing changes preserve effect identities, capture history and tail activity. Configuration and Lock/Unlock from effect factories, processing and disposal reject reentrancy.
+
+| Signature | Contract |
+| --- | --- |
+| `public void AddBusEffect(int busIndex, AudioEffect effect, int atPosition = -1)` | Inserts an enabled borrowed resource. |
+| `public int GetBusEffectCount(int busIndex)` | Includes disabled entries; does not prepare output. |
+| `public AudioEffect GetBusEffect(int busIndex, int effectIndex)` | Exact borrowed configured resource. |
+| `public AudioEffectInstance GetBusEffectInstance(int busIndex, int effectIndex, int channel = 0)` | Borrowed live stereo-pair state; prepares output when needed. |
+| `public void RemoveBusEffect(int busIndex, int effectIndex)` | Removes resource reference and recreates edited chain. |
+| `public void SwapBusEffects(int busIndex, int effectIndex, int byEffectIndex)` | Swaps order and recreates edited chain. |
+| `public bool IsBusEffectEnabled(int busIndex, int effectIndex)` | Requested flag independent of bypass. |
+| `public void SetBusEffectEnabled(int busIndex, int effectIndex, bool enabled)` | Toggles native processing without resetting state. |
+| `public bool IsBusBypassingEffects(int busIndex)` | Requested bypass flag. |
+| `public void SetBusBypassEffects(int busIndex, bool enable)` | Suppresses all public effects; retains gain/metering. |
+
+<a id="addbuseffect"></a>
+### AddBusEffect
+
+Live bus index includes Master. Null/disposed resources reject before mutation. Negative or at/after-end positions append; other indices insert. Every newly configured entry defaults enabled. A successful edit creates fresh state for every entry on that bus and invalidates previous borrowed instances. Capture's resource-owned ring remains fixed in size and clears through its factories.
+
+<a id="getbuseffectcount"></a>
+<a id="getbuseffect"></a>
+### GetBusEffectCount and GetBusEffect
+
+Read owner-bound configuration. Count includes disabled effects. GetBusEffect returns the exact supplied resource, retained even across engine closure; caller disposal is observable on later processing rather than silently changing ownership. Invalid bus/effect indices throw ArgumentOutOfRangeException.
+
+<a id="getbuseffectinstance"></a>
+### GetBusEffectInstance
+
+Returns bus-owned state for channel zero by default, where channel indexes stereo pairs, not individual native channels. Invalid pair indices throw ArgumentOutOfRangeException. It prepares native output and instances after closure; structural effect edits, bus removal and output closure dispose older handles. Calling Process or Dispose on an attached handle rejects. Pair identity remains stable through enable, bypass and ordinary routing edits.
+
+<a id="removebuseffect"></a>
+<a id="swapbuseffects"></a>
+### RemoveBusEffect and SwapBusEffects
+
+Validate all indices before editing. Equal swap indices do nothing. Otherwise recreate every entry on the edited bus and dispose its old state after native detachment. Removed resources are never disposed by the bus. Cleanup-hook failures do not undo committed removal/order or leave native references attached.
+
+<a id="isbuseffectenabled"></a>
+<a id="setbuseffectenabled"></a>
+### IsBusEffectEnabled and SetBusEffectEnabled
+
+Requested flag defaults true and is independent of bypass. Disabled effects pass PCM through; hooks and capture do not run, counters/history are retained. Repeated flags do nothing. Toggle operations serialize with actual mixing and keep instance identity.
+
+<a id="isbusbypassingeffects"></a>
+<a id="setbusbypasseffects"></a>
+### IsBusBypassingEffects and SetBusBypassEffects
+
+Bypass defaults false. It passes PCM around all public effects without changing enabled flags, ownership or processing state. Final gain, mute/solo, sends and peak metering remain active. Restoring bypass resumes enabled effects. Hooks requesting silence run before bus mute/gain when enabled.
+
+## Effect runtime and verification
+
+Public processing precedes final bus gain because the native submix's ordinary volume occurs before its native effects. An engine-owned final gain FAPO preserves the required order, finite-output validation and post-volume meter. Active stereo pairs retain silent blocks for tails; prepared AudioBusesChannelDisableThresholdDB/Time control expiry by actual mixed frames. Capture opts into inactive silence. An exception in processing/silence hooks or borrowed-resource disposal clears that failed effect block and latches silence until structural recreation. SceneTree reports collected errors once on its owner while still dispatching ordinary frame callbacks. Gain failures similarly silence output; changing gain clears that failure state.
+
+AudioEffectTests checks native ordered PCM, raw capture versus final output, mute/bypass/enable, direct pair projection, activity/tails, factory/reentrancy/disposal failures, graph identity, closure/reopen and warmed managed/custom allocator limits. Public Window hosts and cross-platform/physical limits are described in the [component](../components/audio-playback.md#bus-effects).
