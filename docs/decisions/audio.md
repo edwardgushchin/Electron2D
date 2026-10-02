@@ -77,6 +77,10 @@ AudioEffectPitchShift uses the shared AudioFFTSize enum under ADR 0051 with a pr
 
 The adaptation preserves the pinned phase-vocoder equations and float FFT operation order: a generic spectrum FFT produced a 0.0127-channel deviation on a short-window case, while the dedicated transform matches a byte-pinned C++ oracle within 3.3e-5 at the verified 44,100 Hz profile. The Wide Open License notice accompanies the adapted source. Native FAudio and public Linux Wayland hosts verify shifted stereo tones and warmed allocation boundaries; quality by listening, 48,000 Hz engine execution, actual multichannel devices and other platforms remain separate gates.
 
+### Stereo width and interchannel delay
+
+AudioEffectStereoEnhance executes on each FAudio stereo pair with one prepared float ring at the output rate. PanPullout scales the side component about the shared center; TimePulloutMS delays either the right channel or, when Surround is positive, a center contribution added to left and subtracted from right. The three authoring controls are finite and bounded to the pinned 0–4, 0–50 ms and 0–1 ranges. One coherent snapshot applies per block; live edits preserve the shared ring, matching the pinned mode history. Silent processing flushes delayed PCM after a source ends. Widened intermediate arithmetic prevents a legal finite center from overflowing, while out-of-range output clears history and reports an error. Resource and scene copies retain settings only. Analytic PCM, native tails, public hosts and warmed allocation verify the current Linux x64 slice; physical listening, actual multichannel hardware and other platforms retain separate gates.
+
 ### Consequences
 
 - SDL3 remains the platform foundation and FAudio supplies the mix graph. Public audio types and lifecycle remain Electron2D-owned; audio decoding adds no further native deployment library.

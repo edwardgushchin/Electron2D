@@ -705,6 +705,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectStereoEnhance",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "AudioEffectStereoEnhance",
+    "signature": "public sealed class Electron2D.AudioEffectStereoEnhance",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioFFTSize",
     "kind": "type",
     "declaringType": "Electron2D.AudioFFTSize",
@@ -7931,6 +7946,19 @@
     "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
     "name": ".ctor",
     "signature": "public AudioEffectSpectrumAnalyzer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectStereoEnhance..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": ".ctor",
+    "signature": "public AudioEffectStereoEnhance()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -29943,6 +29971,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectStereoEnhance.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectStereoEnhance.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectStereoEnhance.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectStereoEnhance.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
     "value": null
   },
   {
@@ -90331,6 +90437,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AudioFFTSize",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectStereoEnhance.PanPullout()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "PanPullout",
+    "signature": "public System.Single PanPullout { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectStereoEnhance.Surround()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "Surround",
+    "signature": "public System.Single Surround { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectStereoEnhance.TimePulloutMS()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectStereoEnhance",
+    "name": "TimePulloutMS",
+    "signature": "public System.Single TimePulloutMS { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

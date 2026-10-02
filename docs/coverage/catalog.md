@@ -85,7 +85,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectReverb](classes/AudioEffectReverb.md) | AudioEffect | Implemented | 8 |
 | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | AudioEffect | Implemented | 9 |
 | [AudioEffectSpectrumAnalyzerInstance](classes/AudioEffectSpectrumAnalyzerInstance.md) | AudioEffectInstance | Implemented | 4 |
-| [AudioEffectStereoEnhance](classes/AudioEffectStereoEnhance.md) | AudioEffect | Unimplemented | 3 |
+| [AudioEffectStereoEnhance](classes/AudioEffectStereoEnhance.md) | AudioEffect | Implemented | 3 |
 | [AudioListener2D](classes/AudioListener2D.md) | Node2D | Implemented | 3 |
 | [AudioListener3D](classes/AudioListener3D.md) | Node3D | Excluded | 9 |
 | [AudioSample](classes/AudioSample.md) | RefCounted | Blocked | 0 |

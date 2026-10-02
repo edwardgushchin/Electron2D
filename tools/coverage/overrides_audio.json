@@ -1894,6 +1894,26 @@
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Max()",
       "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
+    },
+    {
+      "godot": "class:AudioEffectStereoEnhance",
+      "electron2d": "T:Electron2D.AudioEffectStereoEnhance",
+      "reason": "ADR 0047: typed stereo width, bounded channel delay and surround center injection execute through the current FAudio stereo-pair chain; analytical PCM, native tails and public hosts verify the slice."
+    },
+    {
+      "godot": "AudioEffectStereoEnhance::property:pan_pullout",
+      "electron2d": "property:Electron2D.AudioEffectStereoEnhance.PanPullout()",
+      "reason": "ADR 0047: typed stereo width, bounded channel delay and surround center injection execute through the current FAudio stereo-pair chain; analytical PCM, native tails and public hosts verify the slice."
+    },
+    {
+      "godot": "AudioEffectStereoEnhance::property:time_pullout_ms",
+      "electron2d": "property:Electron2D.AudioEffectStereoEnhance.TimePulloutMS()",
+      "reason": "ADR 0047: typed stereo width, bounded channel delay and surround center injection execute through the current FAudio stereo-pair chain; analytical PCM, native tails and public hosts verify the slice."
+    },
+    {
+      "godot": "AudioEffectStereoEnhance::property:surround",
+      "electron2d": "property:Electron2D.AudioEffectStereoEnhance.Surround()",
+      "reason": "ADR 0047: typed stereo width, bounded channel delay and surround center injection execute through the current FAudio stereo-pair chain; analytical PCM, native tails and public hosts verify the slice."
     }
   ],
   "extras": [
@@ -2764,6 +2784,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.OnProcessSilence()",
       "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectStereoEnhance..ctor()",
+      "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectStereoEnhance.OnInstantiate()",
+      "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectStereoEnhance.GetPropertyDescriptors()",
+      "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectStereoEnhance.CreateDuplicateInstance()",
+      "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectStereoEnhance.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
     }
   ],
   "statusGroups": [
@@ -3376,16 +3416,6 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed stereo width/delay/surround controls and bounded interchannel processing. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
-      "godot": [
-        "AudioEffectStereoEnhance::property:pan_pullout",
-        "AudioEffectStereoEnhance::property:surround",
-        "AudioEffectStereoEnhance::property:time_pullout_ms",
-        "class:AudioEffectStereoEnhance"
-      ]
-    },
-    {
       "state": "Implemented",
       "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified. Typed finite positive duration has a 2^27-frame/1 GiB preparation bound; counter returns use Int64, matching their native lifetime counts. Registry activity settings validate finite values and nonnegative timeout.",
       "godot": [
@@ -3494,6 +3524,16 @@
         "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
         "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
         "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: typed stereo width, bounded channel delay and surround injection execute through a prepared FAudio stereo-pair ring. AudioStereoEnhanceTests verifies analytical PCM, live state and copies, native tails and bypass on 2/4/6/8 logical output profiles, both public Wayland hosts and warmed zero-allocation processing. Physical listening, actual multichannel hardware, SDL/OS allocations and other platforms remain unverified.",
+      "godot": [
+        "AudioEffectStereoEnhance::property:pan_pullout",
+        "AudioEffectStereoEnhance::property:surround",
+        "AudioEffectStereoEnhance::property:time_pullout_ms",
+        "class:AudioEffectStereoEnhance"
       ]
     }
   ]
