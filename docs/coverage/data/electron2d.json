@@ -276,6 +276,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectBandLimitFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectBandLimitFilter",
+    "name": "AudioEffectBandLimitFilter",
+    "signature": "public sealed class Electron2D.AudioEffectBandLimitFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectBandPassFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectBandPassFilter",
+    "name": "AudioEffectBandPassFilter",
+    "signature": "public sealed class Electron2D.AudioEffectBandPassFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioEffectCapture",
     "kind": "type",
     "declaringType": "Electron2D.AudioEffectCapture",
@@ -291,6 +321,69 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "AudioEffectFilter",
+    "signature": "public class Electron2D.AudioEffectFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectFilter.FilterDB",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectFilter.FilterDB",
+    "name": "FilterDB",
+    "signature": "public enum Electron2D.AudioEffectFilter.FilterDB",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectHighPassFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectHighPassFilter",
+    "name": "AudioEffectHighPassFilter",
+    "signature": "public sealed class Electron2D.AudioEffectHighPassFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectHighShelfFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectHighShelfFilter",
+    "name": "AudioEffectHighShelfFilter",
+    "signature": "public sealed class Electron2D.AudioEffectHighShelfFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioEffectInstance",
     "kind": "type",
     "declaringType": "Electron2D.AudioEffectInstance",
@@ -298,6 +391,51 @@
     "signature": "public abstract class Electron2D.AudioEffectInstance",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectLowPassFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectLowPassFilter",
+    "name": "AudioEffectLowPassFilter",
+    "signature": "public sealed class Electron2D.AudioEffectLowPassFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectLowShelfFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectLowShelfFilter",
+    "name": "AudioEffectLowShelfFilter",
+    "signature": "public sealed class Electron2D.AudioEffectLowShelfFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectNotchFilter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectNotchFilter",
+    "name": "AudioEffectNotchFilter",
+    "signature": "public sealed class Electron2D.AudioEffectNotchFilter",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectFilter",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -7450,11 +7588,76 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AudioEffectBandLimitFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectBandLimitFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectBandLimitFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectBandPassFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectBandPassFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectBandPassFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AudioEffectCapture..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AudioEffectCapture",
     "name": ".ctor",
     "signature": "public AudioEffectCapture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectHighPassFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectHighPassFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectHighPassFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectHighShelfFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectHighShelfFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectHighShelfFilter()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -7469,6 +7672,45 @@
     "name": ".ctor",
     "signature": "protected AudioEffectInstance()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectLowPassFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectLowPassFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectLowPassFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectLowShelfFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectLowShelfFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectLowShelfFilter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectNotchFilter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectNotchFilter",
+    "name": ".ctor",
+    "signature": "public AudioEffectNotchFilter()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -11155,6 +11397,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AspectRatioContainer.StretchMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter12DB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectFilter.FilterDB",
+    "name": "Filter12DB",
+    "signature": "public const Electron2D.AudioEffectFilter.FilterDB Filter12DB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectFilter.FilterDB",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter18DB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectFilter.FilterDB",
+    "name": "Filter18DB",
+    "signature": "public const Electron2D.AudioEffectFilter.FilterDB Filter18DB = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectFilter.FilterDB",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter24DB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectFilter.FilterDB",
+    "name": "Filter24DB",
+    "signature": "public const Electron2D.AudioEffectFilter.FilterDB Filter24DB = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectFilter.FilterDB",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter6DB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectFilter.FilterDB",
+    "name": "Filter6DB",
+    "signature": "public const Electron2D.AudioEffectFilter.FilterDB Filter6DB = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectFilter.FilterDB",
     "value": "0"
   },
   {
@@ -28609,6 +28903,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioEffectBandLimitFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectBandLimitFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectBandPassFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectBandPassFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioEffectCapture.CanGetBuffer(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.AudioEffectCapture",
@@ -28809,6 +29129,110 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioEffectFilter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectFilter.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectFilter.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHighPassFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHighPassFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectHighShelfFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectHighShelfFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioEffectInstance.OnProcess(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Span\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.AudioEffectInstance",
@@ -28893,6 +29317,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectLowPassFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectLowPassFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectLowShelfFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectLowShelfFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectNotchFilter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectNotchFilter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {
@@ -88351,6 +88814,58 @@
     "declaringType": "Electron2D.AudioEffectCapture",
     "name": "BufferLength",
     "signature": "public System.Single BufferLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectFilter.CutoffHZ()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "CutoffHZ",
+    "signature": "public System.Single CutoffHZ { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectFilter.DB()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "DB",
+    "signature": "public Electron2D.AudioEffectFilter.FilterDB DB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectFilter.FilterDB",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectFilter.Gain()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "Gain",
+    "signature": "public System.Single Gain { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectFilter.Resonance()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectFilter",
+    "name": "Resonance",
+    "signature": "public System.Single Resonance { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

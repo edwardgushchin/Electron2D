@@ -4,7 +4,7 @@ Last updated: 2026-10-02
 
 **Declaration:** `public abstract class Electron2D.AudioEffectInstance` · **Source:** [AudioEffect.cs](../../src/Scene/Resources/AudioEffect.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
-**Inherits:** [ElectronObject](ElectronObject.md). Internal concrete capture state is [AudioEffectCaptureInstance](AudioEffectCaptureInstance.md).
+**Inherits:** [ElectronObject](ElectronObject.md). Internal concrete state includes [AudioEffectCaptureInstance](AudioEffectCaptureInstance.md) and [AudioEffectFilterInstance](AudioEffectFilterInstance.md).
 
 ## Description
 

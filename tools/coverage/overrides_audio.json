@@ -1044,6 +1044,91 @@
       "godot": "AudioServer::method:swap_bus_effects(int:,int:,int:)",
       "electron2d": "method:Electron2D.AudioServer.SwapBusEffects(System.Int32,System.Int32,System.Int32)",
       "reason": "ADR 0047: executable ordered FAPO bus processing, independent stereo-pair instances, bounded resource-shared capture, pre-gain effects/post-gain peaks, enable/bypass/reorder, tail activity, native callback error containment and coherent owner teardown; AudioEffectTests checks actual Linux x64 PCM and public Wayland hosts. Physical listening, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectHighShelfFilter",
+      "electron2d": "T:Electron2D.AudioEffectHighShelfFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectFilter",
+      "electron2d": "T:Electron2D.AudioEffectFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectBandLimitFilter",
+      "electron2d": "T:Electron2D.AudioEffectBandLimitFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectNotchFilter",
+      "electron2d": "T:Electron2D.AudioEffectNotchFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectLowShelfFilter",
+      "electron2d": "T:Electron2D.AudioEffectLowShelfFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectLowPassFilter",
+      "electron2d": "T:Electron2D.AudioEffectLowPassFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectHighPassFilter",
+      "electron2d": "T:Electron2D.AudioEffectHighPassFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectBandPassFilter",
+      "electron2d": "T:Electron2D.AudioEffectBandPassFilter",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::enum:FilterDB",
+      "electron2d": "T:Electron2D.AudioEffectFilter.FilterDB",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
+      "electron2d": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter6DB()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
+      "electron2d": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter12DB()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
+      "electron2d": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter18DB()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
+      "electron2d": "enumValue:Electron2D.AudioEffectFilter.FilterDB.Filter24DB()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::property:cutoff_hz",
+      "electron2d": "property:Electron2D.AudioEffectFilter.CutoffHZ()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::property:db",
+      "electron2d": "property:Electron2D.AudioEffectFilter.DB()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::property:gain",
+      "electron2d": "property:Electron2D.AudioEffectFilter.Gain()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectFilter::property:resonance",
+      "electron2d": "property:Electron2D.AudioEffectFilter.Resonance()",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -1526,6 +1611,82 @@
     {
       "electron2d": "method:Electron2D.AudioEffectInstance.ValidateDisposal()",
       "reason": "Typed construction, protected factories/finite span processing/silence hooks, borrowed-instance disposal guards, stored capture configuration and Resource copying project existing effect/capture lifecycle under ADRs 0001/0014/0047; no native ABI or additional capability is exported."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectBandLimitFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectBandPassFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectHighPassFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectHighShelfFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectLowPassFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectLowShelfFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectNotchFilter..ctor()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectBandLimitFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectBandPassFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectFilter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectFilter.GetPropertyDescriptors()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectFilter.OnInstantiate()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHighPassFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectHighShelfFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLowPassFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLowShelfFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectNotchFilter.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
     }
   ],
   "statusGroups": [
@@ -1970,29 +2131,6 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed filter coefficients/slope/resonance/gain state and verified stable stereo IIR kernels/defaults. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
-      "godot": [
-        "AudioEffectFilter::enum:FilterDB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
-        "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
-        "AudioEffectFilter::property:cutoff_hz",
-        "AudioEffectFilter::property:db",
-        "AudioEffectFilter::property:gain",
-        "AudioEffectFilter::property:resonance",
-        "class:AudioEffectBandLimitFilter",
-        "class:AudioEffectBandPassFilter",
-        "class:AudioEffectFilter",
-        "class:AudioEffectHighPassFilter",
-        "class:AudioEffectHighShelfFilter",
-        "class:AudioEffectLowPassFilter",
-        "class:AudioEffectLowShelfFilter",
-        "class:AudioEffectNotchFilter"
-      ]
-    },
-    {
-      "state": "Unimplemented",
       "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: fixed band layouts, indexed DB gains and prepared per-band stereo filter state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
       "godot": [
         "AudioEffectEQ::method:get_band_count()",
@@ -2233,6 +2371,29 @@
         "AudioServer::method:set_bus_bypass_effects(int:,bool:)",
         "AudioServer::method:set_bus_effect_enabled(int:,int:,bool:)",
         "AudioServer::method:swap_bus_effects(int:,int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified. Numerical corrections retain literal finite controls while limiting effective cutoff below Nyquist and damping away from unit-circle poles; BandLimit uses complementary band rejection instead of the opposite source pass-band numerator. Numeric DB presets retain one-through-four biquad behavior. These proven source defects/adaptations are explicit in ADR 0047 and filter class pages.",
+      "godot": [
+        "class:AudioEffectHighShelfFilter",
+        "class:AudioEffectFilter",
+        "class:AudioEffectBandLimitFilter",
+        "class:AudioEffectNotchFilter",
+        "class:AudioEffectLowShelfFilter",
+        "class:AudioEffectLowPassFilter",
+        "class:AudioEffectHighPassFilter",
+        "class:AudioEffectBandPassFilter",
+        "AudioEffectFilter::enum:FilterDB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_6DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_12DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_18DB",
+        "AudioEffectFilter::enum_value:FilterDB.FILTER_24DB",
+        "AudioEffectFilter::property:cutoff_hz",
+        "AudioEffectFilter::property:db",
+        "AudioEffectFilter::property:gain",
+        "AudioEffectFilter::property:resonance"
       ]
     }
   ]

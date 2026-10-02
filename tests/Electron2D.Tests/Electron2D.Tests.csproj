@@ -13,6 +13,7 @@
     <EmbeddedResource Include="Fixtures/StyleBoxFlatGeometry.json" LogicalName="TestFixtures.StyleBoxFlatGeometry.json" />
     <EmbeddedResource Include="Fixtures/UnicodeTextConformance.json" LogicalName="TestFixtures.UnicodeTextConformance.json" />
     <EmbeddedResource Include="Fixtures/Audio/*.mp3;Fixtures/Audio/*.ogg;Fixtures/Audio/*.f32" LogicalName="TestAudio.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Fixtures/Audio/Filters/reference.json" LogicalName="TestAudio.FilterReference.json" />
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

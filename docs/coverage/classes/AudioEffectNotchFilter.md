@@ -1,13 +1,13 @@
 # AudioEffectNotchFilter API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-10-02
 
 Godot source: [doc/classes/AudioEffectNotchFilter.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectNotchFilter.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
-Godot base: [AudioEffectFilter](AudioEffectFilter.md). Electron2D type: —.
+Godot base: [AudioEffectFilter](AudioEffectFilter.md). Electron2D type: [`public sealed class Electron2D.AudioEffectNotchFilter`](../../classes/AudioEffectNotchFilter.md).
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AudioEffectNotchFilter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectNotchFilter.xml) | — | Unimplemented | The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed filter coefficients/slope/resonance/gain state and verified stable stereo IIR kernels/defaults. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend. |
+| [`class AudioEffectNotchFilter`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AudioEffectNotchFilter.xml) | [`public sealed class Electron2D.AudioEffectNotchFilter`](../../classes/AudioEffectNotchFilter.md) | Implemented | ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified. Numerical corrections retain literal finite controls while limiting effective cutoff below Nyquist and damping away from unit-circle poles; BandLimit uses complementary band rejection instead of the opposite source pass-band numerator. Numeric DB presets retain one-through-four biquad behavior. These proven source defects/adaptations are explicit in ADR 0047 and filter class pages. |
