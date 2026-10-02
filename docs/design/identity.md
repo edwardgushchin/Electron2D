@@ -20,7 +20,7 @@ Use the spelling **Electron2D**. The primary lockup has a mark, wordmark and des
 
 Let H be the visible height of the mark. The combined visible height of wordmark and descriptor equals H. The horizontal gap is **0.43H**, and clear space on all sides is **H/4**. Preserve the supplied geometry instead of setting the text again. The vector wordmark is outlined, so it does not depend on installed fonts.
 
-All versions use one master silhouette and the same facial geometry: two eyes, two cheeks and one mouth. Monochrome converts all five details to transparent cutouts; it does not remove or reshape them. Primary and compact lockups share the same outlined wordmark and gap. The primary light, dark and monochrome specimens on the logo-system board use the same H; compact specimens also share a size. Scale a complete supplied asset instead of rebuilding its parts.
+All versions use one master silhouette and the same facial geometry: two eyes, two cheeks and one mouth. Version 1.2 uses a broad head with a flat base and short corner steps. Cheeks are separate internal pixels; every facial detail is surrounded by the silhouette, including in monochrome. Monochrome converts all five details to transparent cutouts; it does not remove or reshape them. Primary and compact lockups share the same outlined wordmark and gap. The primary light, dark and monochrome specimens on the logo-system board use the same H; compact specimens also share a size. Scale a complete supplied asset instead of rebuilding its parts.
 
 | Asset | Minimum screen size | Use |
 | --- | --- | --- |
@@ -32,7 +32,7 @@ Check the final rendered size; these are design minima rather than a substitute 
 
 ## Sprite identity
 
-Sprite uses a berry pixel character, warm light backgrounds and dark plum text. Headings use IBM Plex Sans SemiBold. The wordmark and code samples retain JetBrains Mono. The main logo has a fixed expression; an illustrated wink is an additional communication element.
+Sprite uses a berry pixel character, warm light backgrounds and dark plum text. Headings and the wordmark use IBM Plex Sans SemiBold. Code samples use JetBrains Mono. The main logo has a fixed expression; an illustrated wink is an additional communication element.
 
 | Role | HEX | Application |
 | --- | --- | --- |
@@ -61,6 +61,7 @@ The master mark uses an 8-unit smallest module. Raster output places each module
 | Body | IBM Plex Sans Regular | 16 / 24 px |
 | Caption | IBM Plex Sans Regular | 12 / 16 px |
 | Code | JetBrains Mono Regular | At least 14 px |
+| Wordmark | IBM Plex Sans SemiBold | Fixed outlined asset |
 | Logo descriptor | IBM Plex Sans Medium | Fixed outlined asset |
 
 Text and essential control boundaries must retain readable contrast. Use at least 4.5:1 for normal text and 3:1 for large text or essential non-text controls, following [WCAG 2.2](https://www.w3.org/TR/WCAG22/). Decorative Line colors do not establish compliant control boundaries.
