@@ -470,7 +470,7 @@ The decision, routing index and maintenance instructions establish the rule. Bui
 <a id="adr-0051"></a>
 ## ADR 0051: One public enum per semantic value contract
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ### Status
 
@@ -484,7 +484,7 @@ Reference enum names are often scoped by their owner. In typed C#, repeating the
 
 One semantic value contract has one public enum type. Reuse that type across every public property, method, override and event with the same member meanings and valid-value set. A type used by several owners lives at the top level of the flat `Electron2D` namespace and has a neutral domain name. A contract specific to one owner may remain nested. Matching names or numeric values alone do not justify unification: different meanings or different valid-value sets retain distinct types. `Max` and similar nonselectable sentinels do not create a separate contract; callers reject them where selection is required. Foreign backend enums remain private to their adapters.
 
-The current shared identities are `CursorShape`, `MouseMode`, `WindowMode`, `WindowFlag`, `AlignmentMode`, `AxisStretchMode`, `TextureStretchMode`, `ProcessPhase`, `RecursiveBehavior`, `Vector2Axis`, `Vector3Axis` and `Vector4Axis`. Vector axes share types between floating-point and integer vectors of the same dimension; dimensions retain distinct valid-value sets. `Image.Format` and `AudioStreamWAV.Format`, for example, have different meanings and remain distinct despite their short name.
+The current shared identities are `CursorShape`, `MouseMode`, `WindowMode`, `WindowFlag`, `AlignmentMode`, `AxisStretchMode`, `TextureStretchMode`, `ProcessPhase`, `RecursiveBehavior`, `Vector2Axis`, `Vector3Axis`, `Vector4Axis` and `AudioFFTSize`. Vector axes share types between floating-point and integer vectors of the same dimension; dimensions retain distinct valid-value sets. `AudioFFTSize` is the common 256/512/1024/2048/4096 transform-size preset with a nonselectable Max bound: `AudioEffectSpectrumAnalyzer` uses it now, and the future `AudioEffectPitchShift` property must reuse it. `Image.Format` and `AudioStreamWAV.Format`, for example, have different meanings and remain distinct despite their short name.
 
 The following other selected names remain exact public type identities. Listed targets are top-level except where the target explicitly includes an owner:
 

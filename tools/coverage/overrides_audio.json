@@ -1719,6 +1719,116 @@
       "godot": "class:AudioEffectDistortion",
       "electron2d": "T:Electron2D.AudioEffectDistortion",
       "reason": "ADR 0047: typed five-mode stereo distortion and independent prepared filter histories execute through the FAudio effect chain; the pinned C++ PCM oracle and native output verify the mapping."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum:FFTSize",
+      "electron2d": "T:Electron2D.AudioFFTSize",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_1024",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size1024()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_2048",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size2048()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_256",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size256()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_4096",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size4096()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_512",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size512()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_MAX",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Max()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::property:buffer_length",
+      "electron2d": "property:Electron2D.AudioEffectSpectrumAnalyzer.BufferLength()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzer::property:fft_size",
+      "electron2d": "property:Electron2D.AudioEffectSpectrumAnalyzer.FFTSize()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzerInstance::enum:MagnitudeMode",
+      "electron2d": "T:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_AVERAGE",
+      "electron2d": "enumValue:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.Average()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzerInstance::enum_value:MagnitudeMode.MAGNITUDE_MAX",
+      "electron2d": "enumValue:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.Max()",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectSpectrumAnalyzerInstance::method:get_magnitude_for_frequency_range(float:,float:,int:AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.GetMagnitudeForFrequencyRange(System.Single,System.Single,Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "class:AudioEffectSpectrumAnalyzer",
+      "electron2d": "T:Electron2D.AudioEffectSpectrumAnalyzer",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "class:AudioEffectSpectrumAnalyzerInstance",
+      "electron2d": "T:Electron2D.AudioEffectSpectrumAnalyzerInstance",
+      "reason": "ADR 0047 and ADR 0051: prepared stereo Hann/FFT magnitude analysis executes in the current FAudio bus chain; shared AudioFFTSize and borrowed query instance are verified with CPU/native/public-host PCM."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum:FFTSize",
+      "electron2d": "T:Electron2D.AudioFFTSize",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size1024()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size2048()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size256()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size4096()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Size512()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+    },
+    {
+      "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
+      "electron2d": "enumValue:Electron2D.AudioFFTSize.Max()",
+      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
     }
   ],
   "extras": [
@@ -2497,6 +2607,34 @@
     {
       "electron2d": "method:Electron2D.AudioEffectDistortion.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectSpectrumAnalyzer..ctor()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzer.OnInstantiate()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzer.GetPropertyDescriptors()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzer.CreateDuplicateInstance()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzer.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.OnProcess(System.ReadOnlySpan<Electron2D.Vector2>,System.Span<Electron2D.Vector2>)",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.OnProcessSilence()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent pass-through query-state lifecycle project the executable spectrum analyzer (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -3047,15 +3185,8 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed FFT/oversampling/pitch controls and verified bounded spectral pitch processing. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "reason": "ADR 0047 and ADR 0051: the shared AudioFFTSize preset is already implemented, but PitchShift still needs its own typed pitch/oversampling configuration and verified bounded spectral resynthesis, latency and lifecycle on the current FAudio chain. The existing bus/FAPO path runs; add the complete processor before claiming these class/property rows.",
       "godot": [
-        "AudioEffectPitchShift::enum:FFTSize",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
-        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
         "AudioEffectPitchShift::property:fft_size",
         "AudioEffectPitchShift::property:oversampling",
         "AudioEffectPitchShift::property:pitch_scale",
@@ -3089,8 +3220,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed FFT/window/history settings, prepared spectral transforms and time-window magnitude queries. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047 and ADR 0051: executable pass-through stereo spectrum with five shared AudioFFTSize presets, prepared Hann/radix-two histories and synchronized average/max frequency queries. Resource/scene copies, all-size sine-bin CPU checks, native borrowed-instance PCM, public Wayland GPU/compatibility hosts, 2/4/6/8 logical output profiles and warmed zero-allocation passes succeed; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectSpectrumAnalyzer::enum:FFTSize",
         "AudioEffectSpectrumAnalyzer::enum_value:FFTSize.FFT_SIZE_1024",
@@ -3215,6 +3346,19 @@
         "AudioStreamPlayer2D::property:volume_db",
         "AudioStreamPlayer2D::property:volume_linear",
         "class:AudioStreamPlayer2D"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0051: AudioFFTSize is the one public 256/512/1024/2048/4096/Max enum identity for spectrum analysis and pitch shifting; all numeric identities and the nonselectable Max boundary are verified. This does not claim PitchShift processing.",
+      "godot": [
+        "AudioEffectPitchShift::enum:FFTSize",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
+        "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX"
       ]
     }
   ]

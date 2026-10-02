@@ -612,6 +612,72 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectSpectrumAnalyzer",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "AudioEffectSpectrumAnalyzer",
+    "signature": "public sealed class Electron2D.AudioEffectSpectrumAnalyzer",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "name": "AudioEffectSpectrumAnalyzerInstance",
+    "signature": "public sealed class Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectInstance",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "name": "MagnitudeMode",
+    "signature": "public enum Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioFFTSize",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "AudioFFTSize",
+    "signature": "public enum Electron2D.AudioFFTSize",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioListener",
     "kind": "type",
     "declaringType": "Electron2D.AudioListener",
@@ -7776,6 +7842,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AudioEffectSpectrumAnalyzer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": ".ctor",
+    "signature": "public AudioEffectSpectrumAnalyzer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AudioListener..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AudioListener",
@@ -11599,6 +11678,110 @@
     "parameters": [],
     "returnType": "Electron2D.AudioEffectFilter.FilterDB",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.Average()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "name": "Average",
+    "signature": "public const Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode Average = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "name": "Max",
+    "signature": "public const Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode Max = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Max",
+    "signature": "public const Electron2D.AudioFFTSize Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Size1024()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Size1024",
+    "signature": "public const Electron2D.AudioFFTSize Size1024 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Size2048()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Size2048",
+    "signature": "public const Electron2D.AudioFFTSize Size2048 = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Size256()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Size256",
+    "signature": "public const Electron2D.AudioFFTSize Size256 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Size4096()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Size4096",
+    "signature": "public const Electron2D.AudioFFTSize Size4096 = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioFFTSize.Size512()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioFFTSize",
+    "name": "Size512",
+    "signature": "public const Electron2D.AudioFFTSize Size512 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.AudioServer.PlaybackType.Default()",
@@ -29234,6 +29417,150 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzer.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzer.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzer.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.GetMagnitudeForFrequencyRange(System.Single,System.Single,Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "name": "GetMagnitudeForFrequencyRange",
+    "signature": "public Electron2D.Vector2 GetMagnitudeForFrequencyRange(System.Single fromHZ, System.Single toHZ, Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode mode = Max)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromHZ",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "toHZ",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.AudioEffectSpectrumAnalyzerInstance.MagnitudeMode",
+        "default": "Max"
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.OnProcess(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Span\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "name": "OnProcess",
+    "signature": "protected override System.Void OnProcess(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E source, System.Span\u003CElectron2D.Vector2\u003E destination)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectSpectrumAnalyzerInstance.OnProcessSilence()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzerInstance",
+    "name": "OnProcessSilence",
+    "signature": "protected override System.Boolean OnProcessSilence()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -89505,6 +89832,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectSpectrumAnalyzer.BufferLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "BufferLength",
+    "signature": "public System.Single BufferLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectSpectrumAnalyzer.FFTSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectSpectrumAnalyzer",
+    "name": "FFTSize",
+    "signature": "public Electron2D.AudioFFTSize FFTSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioFFTSize",
     "value": null
   },
   {

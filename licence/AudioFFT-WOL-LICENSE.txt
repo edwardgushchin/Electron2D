@@ -1,0 +1,14 @@
+Stephan M. Bernsee FFT routine
+Copyright (c) 1996 Stephan M. Bernsee
+
+The Wide Open License (WOL)
+
+Permission to use, copy, modify, distribute and sell this software and its
+documentation for any purpose is hereby granted without fee, provided that
+the above copyright notice and this license appear in all source copies.
+THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WARRANTY OF
+ANY KIND.
+
+License information: https://dspguru.com/wide-open-license/formats/
+
+Source: https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/audio/effects/audio_effect_spectrum_analyzer.cpp
