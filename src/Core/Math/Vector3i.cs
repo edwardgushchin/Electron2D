@@ -34,20 +34,6 @@ public struct Vector3i : IEquatable<Vector3i>
     /// <summary>Gets the positive Z unit vector.</summary>
     public static Vector3i Back => new(0, 0, 1);
 
-    /// <summary>Identifies one vector component.</summary>
-    public enum Axis
-    {
-        /// <summary>Identifies the X component.</summary>
-        X = 0,
-
-        /// <summary>Identifies the Y component.</summary>
-        Y = 1,
-
-        /// <summary>Identifies the Z component.</summary>
-        Z = 2,
-
-    }
-
     /// <summary>Gets or sets the X component.</summary>
     public int X;
 
@@ -210,16 +196,16 @@ public struct Vector3i : IEquatable<Vector3i>
     public readonly Vector3i Max(int with) => new(Mathf.Max(X, with), Mathf.Max(Y, with), Mathf.Max(Z, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
-    /// <returns><see cref="Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
-    public readonly Axis MaxAxisIndex()
+    /// <returns><see cref="Vector3Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
+    public readonly Vector3Axis MaxAxisIndex()
     {
-        var index = Axis.X;
+        var index = Vector3Axis.X;
         var value = X;
         for (var current = 1; current < 3; current++)
         {
             if (this[current] > value)
             {
-                index = (Axis)current;
+                index = (Vector3Axis)current;
                 value = this[current];
             }
         }
@@ -239,16 +225,16 @@ public struct Vector3i : IEquatable<Vector3i>
     public readonly Vector3i Min(int with) => new(Mathf.Min(X, with), Mathf.Min(Y, with), Mathf.Min(Z, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
-    /// <returns><see cref="Axis.Z"/> when all components are equal; otherwise the last least axis.</returns>
-    public readonly Axis MinAxisIndex()
+    /// <returns><see cref="Vector3Axis.Z"/> when all components are equal; otherwise the last least axis.</returns>
+    public readonly Vector3Axis MinAxisIndex()
     {
-        var index = Axis.X;
+        var index = Vector3Axis.X;
         var value = X;
         for (var current = 1; current < 3; current++)
         {
             if (this[current] <= value)
             {
-                index = (Axis)current;
+                index = (Vector3Axis)current;
                 value = this[current];
             }
         }

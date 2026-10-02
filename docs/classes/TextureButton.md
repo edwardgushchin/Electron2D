@@ -1,6 +1,6 @@
 # TextureButton
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 **Inherits:** [BaseButton](BaseButton.md) · **Source:** [TextureButton.cs](../../src/Scene/GUI/TextureButton.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -22,7 +22,7 @@ The minimum uses the first assigned resource in this order: normal, pressed, hov
 | `Texture? TextureFocused` | Full-image overlay while focus is held, including hidden focus. It uses the selected image's destination. If no state texture is selected, the focused image determines that rectangle and draws once. |
 | `BitMap? TextureClickMask` | Optional bitmap for hit testing; initially null. |
 | `bool IgnoreTextureSize` | Excludes texture/mask dimensions from intrinsic minimum. False initially. |
-| `TextureButtonStretchMode StretchMode` | One of the seven [placement modes](TextureButtonStretchMode.md); Keep initially. Raw undefined identities are stored and use Keep placement. |
+| `TextureStretchMode StretchMode` | One of the seven [placement modes](TextureStretchMode.md); Keep initially. Raw undefined identities are stored and use Keep placement. |
 | `bool FlipH`, `bool FlipV` | Negate the corresponding drawing dimension without moving its origin. False initially; do not reflect the mask. |
 | `OnGetMinimumSize()` | Protected override supplying the priority-based intrinsic minimum. |
 | `HasPoint(Vector2)` | Protected override performing mask or inherited rectangle hit testing. |

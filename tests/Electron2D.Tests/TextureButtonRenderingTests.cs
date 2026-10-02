@@ -17,7 +17,7 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new(180, 64) }; var buttons = new TextureButton[7];
         for (var mode = 0; mode < buttons.Length; mode++)
         {
-            var button = new TextureButton { Name = $"Stretch{mode}", Position = new(3 + mode * 24, 3), Size = new(20, 16), IgnoreTextureSize = true, TextureNormal = texture, StretchMode = (TextureButtonStretchMode)mode, TextureFilter = TextureFilter.Nearest };
+            var button = new TextureButton { Name = $"Stretch{mode}", Position = new(3 + mode * 24, 3), Size = new(20, 16), IgnoreTextureSize = true, TextureNormal = texture, StretchMode = (TextureStretchMode)mode, TextureFilter = TextureFilter.Nearest };
             window.AddChild(button); buttons[mode] = button;
         }
         var state = new NativeTextureButtonProbe
@@ -26,7 +26,7 @@ internal static partial class RenderingRuntimeTests
             Position = new(3, 28),
             Size = new(20, 16),
             IgnoreTextureSize = true,
-            StretchMode = TextureButtonStretchMode.Scale,
+            StretchMode = TextureStretchMode.Scale,
             TextureNormal = normal,
             TexturePressed = pressed,
             TextureHover = hovered,
@@ -35,8 +35,8 @@ internal static partial class RenderingRuntimeTests
             TextureFilter = TextureFilter.Nearest,
             ToggleMode = true
         };
-        var focusOnly = new TextureButton { Name = "FocusOnly", Position = new(27, 28), Size = new(20, 16), IgnoreTextureSize = true, StretchMode = TextureButtonStretchMode.Scale, TextureFocused = focused, TextureFilter = TextureFilter.Nearest };
-        var atlasButton = new TextureButton { Name = "Atlas", Position = new(51, 28), Size = new(20, 16), IgnoreTextureSize = true, StretchMode = TextureButtonStretchMode.Scale, TextureNormal = atlas, TextureFilter = TextureFilter.Nearest };
+        var focusOnly = new TextureButton { Name = "FocusOnly", Position = new(27, 28), Size = new(20, 16), IgnoreTextureSize = true, StretchMode = TextureStretchMode.Scale, TextureFocused = focused, TextureFilter = TextureFilter.Nearest };
+        var atlasButton = new TextureButton { Name = "Atlas", Position = new(51, 28), Size = new(20, 16), IgnoreTextureSize = true, StretchMode = TextureStretchMode.Scale, TextureNormal = atlas, TextureFilter = TextureFilter.Nearest };
         window.AddChild(state); window.AddChild(focusOnly); window.AddChild(atlasButton);
         var frame = 0;
         window.Ready += _ =>
@@ -100,7 +100,7 @@ internal static partial class RenderingRuntimeTests
             IgnoreTextureSize = true,
             Position = new(4, 4),
             Size = new(30, 20),
-            StretchMode = TextureButtonStretchMode.KeepAspectCovered,
+            StretchMode = TextureStretchMode.KeepAspectCovered,
             TextureFilter = TextureFilter.Nearest
         };
         window.AddChild(button); var frames = 0; long before = 0, allocated = 0;

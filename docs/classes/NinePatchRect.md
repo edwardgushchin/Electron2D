@@ -1,6 +1,6 @@
 # NinePatchRect
 
-Last updated: 2026-09-26
+Last updated: 2026-10-02
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject
 
@@ -23,7 +23,7 @@ var panel = new NinePatchRect
     Size = new Vector2(200, 80),
     PatchMarginLeft = 8, PatchMarginRight = 8,
     PatchMarginTop = 8, PatchMarginBottom = 8,
-    AxisStretchHorizontal = NinePatchRect.AxisStretchMode.TileFit
+    AxisStretchHorizontal = AxisStretchMode.TileFit
 };
 ```
 
@@ -58,7 +58,7 @@ var panel = new NinePatchRect
 
 <a id="axisstretchhorizontal"></a>
 <a id="axisstretchvertical"></a>
-**AxisStretchHorizontal / AxisStretchVertical:** select [AxisStretchMode](NinePatchRect.AxisStretchMode.md) independently. Undefined values reject before assignment. Tile may end with a clipped fragment; TileFit rounds repeat count and uses complete resized tiles.
+**AxisStretchHorizontal / AxisStretchVertical:** select [AxisStretchMode](AxisStretchMode.md) independently. Undefined values reject before assignment. Tile may end with a clipped fragment; TileFit rounds repeat count and uses complete resized tiles.
 
 <a id="patchmarginleft"></a>
 <a id="patchmargintop"></a>

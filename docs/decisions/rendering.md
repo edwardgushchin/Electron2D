@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -159,7 +159,7 @@ Primary pinned sources: [node behavior](https://github.com/godotengine/godot/blo
 <a id="adr-0079"></a>
 ## ADR 0079: Retained nine-patch controls
 
-Last updated: 2026-09-26
+Last updated: 2026-10-02
 
 - Status: Accepted
 - Scope: NinePatchRect control, borrowed texture regions and all axis modes on both current canvas backends
@@ -167,7 +167,7 @@ Last updated: 2026-09-26
 
 ### Decision
 
-- Implement NinePatchRect : Control with Texture=null, RegionRect=zero, DrawCenter=true, four signed integer margins=zero and horizontal/vertical Stretch=0. Reuse nested AxisStretchMode Stretch=0, Tile=1, TileFit=2 and Side Left/Top/Right/Bottom. Constructor and typed inherited descriptor default MouseFilter to Ignore=2. Intrinsic minimum is the floating-point sum of opposing margins, including signed values; Control combines it with custom minimum and zero.
+- Implement NinePatchRect : Control with Texture=null, RegionRect=zero, DrawCenter=true, four signed integer margins=zero and horizontal/vertical Stretch=0. Reuse the shared AxisStretchMode Stretch=0, Tile=1, TileFit=2 and Side Left/Top/Right/Bottom. Constructor and typed inherited descriptor default MouseFilter to Ignore=2. Intrinsic minimum is the floating-point sum of opposing margins, including signed values; Control combines it with custom minimum and zero.
 - Record one typed nine-patch canvas command, then expand independent axis pieces using the pinned pixel mapping. Corners retain native source size; center axes stretch once, tile at source-center pixel period, or round the repeat count with floor(destination/source+0.5) and scale whole tiles to fit. Both-center pieces are omitted only when DrawCenter=false. A collapsed source center in Stretch uses constant UV. Oversized borders keep begin-side priority; signed margin policy remains stored rather than editor-hint clamping.
 - Use the existing texture/material/transform/sampling/blend/clip pipeline on both GPU and compatibility. Live dimensions and atlas geometry resolve at every submission, so a missed earlier Changed subscriber cannot strand old geometry. Source regions with negative extent use the accepted texture-region flip convention. All-zero size selects the whole base texture. Atlas region/margin clipping maps destination and source before splitting; nested views resolve through each layer to common root storage. Reuse the same atlas region resolver for ordinary DrawRectRegion.
 - CPU tessellation is proportional to repeat count; reject more than 1,048,574 axis tiles or 1,048,576 piece pairs before submission. This is the current finite geometry budget, not a blanket performance claim. A common nine-patch fragment path on a shader-capable fallback is the upgrade when dense panels make this ceiling or cost relevant. Successful warmed frames within prepared capacity allocate no managed bytes; first capacity growth and errors are outside the measured interval.

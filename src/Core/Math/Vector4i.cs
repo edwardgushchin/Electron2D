@@ -22,22 +22,6 @@ public struct Vector4i : IEquatable<Vector4i>
     private static readonly Vector4i ZeroValue = new(0, 0, 0, 0);
     private static readonly Vector4i OneValue = new(1, 1, 1, 1);
 
-    /// <summary>Identifies one vector component.</summary>
-    public enum Axis
-    {
-        /// <summary>Identifies the X component.</summary>
-        X = 0,
-
-        /// <summary>Identifies the Y component.</summary>
-        Y = 1,
-
-        /// <summary>Identifies the Z component.</summary>
-        Z = 2,
-
-        /// <summary>Identifies the W component.</summary>
-        W = 3,
-    }
-
     /// <summary>Gets or sets the X component.</summary>
     public int X;
 
@@ -216,16 +200,16 @@ public struct Vector4i : IEquatable<Vector4i>
     public readonly Vector4i Max(int with) => new(Mathf.Max(X, with), Mathf.Max(Y, with), Mathf.Max(Z, with), Mathf.Max(W, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
-    /// <returns><see cref="Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
-    public readonly Axis MaxAxisIndex()
+    /// <returns><see cref="Vector4Axis.X"/> when all components are equal; otherwise the first greatest axis.</returns>
+    public readonly Vector4Axis MaxAxisIndex()
     {
-        var index = Axis.X;
+        var index = Vector4Axis.X;
         var value = X;
         for (var current = 1; current < 4; current++)
         {
             if (this[current] > value)
             {
-                index = (Axis)current;
+                index = (Vector4Axis)current;
                 value = this[current];
             }
         }
@@ -245,16 +229,16 @@ public struct Vector4i : IEquatable<Vector4i>
     public readonly Vector4i Min(int with) => new(Mathf.Min(X, with), Mathf.Min(Y, with), Mathf.Min(Z, with), Mathf.Min(W, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
-    /// <returns><see cref="Axis.W"/> when all components are equal; otherwise the last least axis.</returns>
-    public readonly Axis MinAxisIndex()
+    /// <returns><see cref="Vector4Axis.W"/> when all components are equal; otherwise the last least axis.</returns>
+    public readonly Vector4Axis MinAxisIndex()
     {
-        var index = Axis.X;
+        var index = Vector4Axis.X;
         var value = X;
         for (var current = 1; current < 4; current++)
         {
             if (this[current] <= value)
             {
-                index = (Axis)current;
+                index = (Vector4Axis)current;
                 value = this[current];
             }
         }

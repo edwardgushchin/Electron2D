@@ -44,20 +44,20 @@ internal static class ControlHoverTests
         parent.Visible = false;
         Check(signals.SequenceEqual(["left-", "parent-"]), "Hiding an ancestor releases its hover chain.");
 
-        Check((int)Control.CursorShape.Help == (int)Input.CursorShape.Help &&
-              left.GetCursorShape(new(2, 3)) == Control.CursorShape.Arrow,
+        Check((int)CursorShape.Help == (int)CursorShape.Help &&
+              left.GetCursorShape(new(2, 3)) == CursorShape.Arrow,
             "Control cursor values share the native shape identities.");
-        left.MouseDefaultCursorShape = Control.CursorShape.IBeam;
-        Check(left.GetCursorShape(new(2, 3)) == Control.CursorShape.IBeam &&
-              left.GetCursorShape(new(12, 3)) == Control.CursorShape.PointingHand,
+        left.MouseDefaultCursorShape = CursorShape.IBeam;
+        Check(left.GetCursorShape(new(2, 3)) == CursorShape.IBeam &&
+              left.GetCursorShape(new(12, 3)) == CursorShape.PointingHand,
             "A local-position override falls back to the stored cursor shape.");
         Reject<ArgumentException>(() => left.GetCursorShape(new(float.NaN, 0)));
-        Reject<ArgumentOutOfRangeException>(() => left.MouseDefaultCursorShape = (Control.CursorShape)17);
+        Reject<ArgumentOutOfRangeException>(() => left.MouseDefaultCursorShape = (CursorShape)17);
 
-        using var template = new Control { MouseDefaultCursorShape = Control.CursorShape.Help };
+        using var template = new Control { MouseDefaultCursorShape = CursorShape.Help };
         using var packed = new PackedScene(); packed.Pack(template);
         using var copy = (Control)packed.Instantiate();
-        Check(copy.MouseDefaultCursorShape == Control.CursorShape.Help,
+        Check(copy.MouseDefaultCursorShape == CursorShape.Help,
             "Packed controls retain the cursor policy.");
 
         var failureRoot = new TestViewport();

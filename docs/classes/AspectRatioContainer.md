@@ -20,7 +20,7 @@ frame.AddChild(new Panel { Name = "Content" });
 | Signature | Contract |
 | --- | --- |
 | `public AspectRatioContainer()` | Creates a centered, fitting ratio-one container. |
-| `public enum AlignmentMode` | Begin=0, Center=1, End=2. |
+| [AlignmentMode](AlignmentMode.md) | Begin=0, Center=1, End=2. |
 | `public enum StretchMode` | WidthControlsHeight=0, HeightControlsWidth=1, Fit=2, Cover=3. |
 | `public float Ratio { get; set; }` | Positive finite width divided by height; one initially. |
 | `public StretchMode Stretch { get; set; }` | Fit initially. |

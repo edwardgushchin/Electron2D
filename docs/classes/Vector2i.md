@@ -1,6 +1,6 @@
 # Vector2i
 
-Last updated: 2026-09-23
+Last updated: 2026-10-02
 
 **Inherits:** —
 
@@ -68,10 +68,10 @@ var neighbor = cell + Vector2i.Right;
 | [`public long LengthSquared()`](#m-electron2d-vector2i-lengthsquared) | Returns the squared Euclidean length. |
 | [`public Vector2i Max(Vector2i with)`](#m-electron2d-vector2i-max-electron2d-vector2i) | Returns the componentwise maximum with another vector. |
 | [`public Vector2i Max(int with)`](#m-electron2d-vector2i-max-system-int32) | Returns the componentwise maximum with a scalar. |
-| [`public Vector2i.Axis MaxAxisIndex()`](#m-electron2d-vector2i-maxaxisindex) | Returns the axis containing the greatest component. |
+| [`public Vector2Axis MaxAxisIndex()`](#m-electron2d-vector2i-maxaxisindex) | Returns the axis containing the greatest component. |
 | [`public Vector2i Min(Vector2i with)`](#m-electron2d-vector2i-min-electron2d-vector2i) | Returns the componentwise minimum with another vector. |
 | [`public Vector2i Min(int with)`](#m-electron2d-vector2i-min-system-int32) | Returns the componentwise minimum with a scalar. |
-| [`public Vector2i.Axis MinAxisIndex()`](#m-electron2d-vector2i-minaxisindex) | Returns the axis containing the least component. |
+| [`public Vector2Axis MinAxisIndex()`](#m-electron2d-vector2i-minaxisindex) | Returns the axis containing the least component. |
 | [`public Vector2i Sign()`](#m-electron2d-vector2i-sign) | Returns the sign of each component. |
 | [`public Vector2i Snapped(Vector2i step)`](#m-electron2d-vector2i-snapped-electron2d-vector2i) | Snaps each component to the nearest multiple of the corresponding step. |
 | [`public Vector2i Snapped(int step)`](#m-electron2d-vector2i-snapped-system-int32) | Snaps both components to the nearest multiple of a scalar step. |
@@ -81,18 +81,11 @@ var neighbor = cell + Vector2i.Right;
 | [`public override string ToString()`](#m-electron2d-vector2i-tostring) | Formats both components using invariant culture. |
 | [`public string ToString(string format)`](#m-electron2d-vector2i-tostring-system-string) | Formats both components with a numeric format and invariant culture. |
 
-## Enumerations
+## Shared axis enum
 
 | Member | Description |
 | --- | --- |
-| [`public enum Vector2i.Axis`](#t-electron2d-vector2i-axis) | Identifies one vector component. |
-
-## Constants
-
-| Member | Description |
-| --- | --- |
-| [`Vector2i.Axis.X = 0`](#f-electron2d-vector2i-axis-x) | Identifies the horizontal X component. |
-| [`Vector2i.Axis.Y = 1`](#f-electron2d-vector2i-axis-y) | Identifies the vertical Y component. |
+| [Vector2Axis](Vector2Axis.md) | Identifies one vector component. |
 
 ## Fields
 
@@ -355,11 +348,11 @@ Returns the componentwise maximum with a scalar.
 **Returns:** The componentwise maximum.
 
 <a id="m-electron2d-vector2i-maxaxisindex"></a>
-### `public Vector2i.Axis MaxAxisIndex()`
+### `public Vector2Axis MaxAxisIndex()`
 
 Returns the axis containing the greatest component.
 
-**Returns:** [`Vector2i.Axis.X`](Vector2i.md#f-electron2d-vector2i-axis-x) when components are equal; otherwise the greatest component's axis.
+**Returns:** [`Vector2Axis.X`](Vector2Axis.md) when components are equal; otherwise the greatest component's axis.
 
 <a id="m-electron2d-vector2i-min-electron2d-vector2i"></a>
 ### `public Vector2i Min(Vector2i with)`
@@ -384,11 +377,11 @@ Returns the componentwise minimum with a scalar.
 **Returns:** The componentwise minimum.
 
 <a id="m-electron2d-vector2i-minaxisindex"></a>
-### `public Vector2i.Axis MinAxisIndex()`
+### `public Vector2Axis MinAxisIndex()`
 
 Returns the axis containing the least component.
 
-**Returns:** [`Vector2i.Axis.Y`](Vector2i.md#f-electron2d-vector2i-axis-y) when components are equal; otherwise the least component's axis.
+**Returns:** [`Vector2Axis.Y`](Vector2Axis.md) when components are equal; otherwise the least component's axis.
 
 <a id="m-electron2d-vector2i-sign"></a>
 ### `public Vector2i Sign()`
@@ -482,24 +475,9 @@ Formats both components with a numeric format and invariant culture.
 
 - `FormatException`: `format` is invalid.
 
-## Enumeration Descriptions
+## Shared axis type
 
-<a id="t-electron2d-vector2i-axis"></a>
-### `public enum Vector2i.Axis`
-
-Identifies one vector component.
-
-## Constant Descriptions
-
-<a id="f-electron2d-vector2i-axis-x"></a>
-### `Vector2i.Axis.X = 0`
-
-Identifies the horizontal X component.
-
-<a id="f-electron2d-vector2i-axis-y"></a>
-### `Vector2i.Axis.Y = 1`
-
-Identifies the vertical Y component.
+See [Vector2Axis](Vector2Axis.md) for the returned axis values.
 
 ## Field Descriptions
 

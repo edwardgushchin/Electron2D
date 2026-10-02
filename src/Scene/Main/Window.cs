@@ -255,15 +255,15 @@ public partial class Window : Viewport
             _display.WindowSetMaxSize(_maxSize);
             _display.WindowSetSize(_size);
         }
-        foreach (var flag in new[] { Flags.ResizeDisabled, Flags.Borderless, Flags.AlwaysOnTop, Flags.NoFocus })
+        foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
             if (GetFlag(flag))
-                _display.WindowSetFlag((DisplayServer.WindowFlag)flag, true);
+                _display.WindowSetFlag(flag, true);
         if (_currentScreen is { } screen)
             _display.WindowSetCurrentScreen(screen);
         if (_screenPosition is { } position)
             _display.WindowSetPosition(position);
         if (_mode != WindowMode.Windowed)
-            _display.WindowSetMode((DisplayServer.WindowMode)_mode);
+            _display.WindowSetMode(_mode);
         _size = _display.WindowGetSize();
         _display.CloseRequested += HandleClose;
         _display.QuitRequested += HandleClose;

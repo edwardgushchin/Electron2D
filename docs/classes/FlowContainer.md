@@ -1,6 +1,6 @@
 # FlowContainer
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 - Declaration: `public class FlowContainer : Container`
 - Source: [FlowContainer.cs](../../src/Scene/GUI/FlowContainer.cs)
@@ -48,7 +48,7 @@ flow.AddChild(new Button { Text = "Exit" });
 
 ## Enumerations
 
-[AlignmentMode](FlowContainer.AlignmentMode.md): Begin=0, Center=1, End=2.
+[AlignmentMode](AlignmentMode.md): Begin=0, Center=1, End=2.
 [LastWrapAlignmentMode](FlowContainer.LastWrapAlignmentMode.md): Inherit=0, Begin=1, Center=2, End=3.
 
 ## Property descriptions

@@ -1,24 +1,5 @@
 namespace Electron2D;
 
-/// <summary>Controls how a texture button places its selected image.</summary>
-public enum TextureButtonStretchMode
-{
-    /// <summary>Stretches the image to the control rectangle.</summary>
-    Scale = 0,
-    /// <summary>Repeats the image at its natural pixel size.</summary>
-    Tile = 1,
-    /// <summary>Keeps the natural size at the top-left corner.</summary>
-    Keep = 2,
-    /// <summary>Centers the image at its natural size.</summary>
-    KeepCentered = 3,
-    /// <summary>Fits the image while preserving its aspect ratio.</summary>
-    KeepAspect = 4,
-    /// <summary>Centers an aspect-preserving fitted image.</summary>
-    KeepAspectCentered = 5,
-    /// <summary>Covers the rectangle with a centered crop preserving the aspect ratio.</summary>
-    KeepAspectCovered = 6
-}
-
 /// <summary>Draws button states from borrowed textures and optionally tests input through a bitmap mask.</summary>
 /// <remarks>The normal, pressed, hover and mask resources determine the minimum in that order. Focus is an
 /// overlay. Visual flips do not flip the mask. Resource mutations invalidate drawing and layout even when
@@ -33,7 +14,7 @@ public class TextureButton : BaseButton
     private readonly record struct ResourceState(Resource Resource, long Revision, bool Disposed);
     private readonly Action<Resource> _resourceChanged;
     private readonly Action<ElectronObject> _resourceDisposed;
-    private TextureButtonStretchMode _stretchMode = TextureButtonStretchMode.Keep;
+    private TextureStretchMode _stretchMode = TextureStretchMode.Keep;
     private bool _ignoreTextureSize, _flipH, _flipV;
     private Rect2 _positionRect, _textureRegion;
     private bool _tile;
@@ -48,7 +29,7 @@ public class TextureButton : BaseButton
         new PropertyDescriptor<TextureButton, Texture?>(nameof(TextureDisabled), node => node.TextureDisabled, (node, value) => node.TextureDisabled = value, _ => null, stored: true),
         new PropertyDescriptor<TextureButton, Texture?>(nameof(TextureFocused), node => node.TextureFocused, (node, value) => node.TextureFocused = value, _ => null, stored: true),
         new PropertyDescriptor<TextureButton, BitMap?>(nameof(TextureClickMask), node => node.TextureClickMask, (node, value) => node.TextureClickMask = value, _ => null, stored: true),
-        new PropertyDescriptor<TextureButton, TextureButtonStretchMode>(nameof(StretchMode), node => node.StretchMode, (node, value) => node.StretchMode = value, _ => TextureButtonStretchMode.Keep, stored: true),
+        new PropertyDescriptor<TextureButton, TextureStretchMode>(nameof(StretchMode), node => node.StretchMode, (node, value) => node.StretchMode = value, _ => TextureStretchMode.Keep, stored: true),
         new PropertyDescriptor<TextureButton, bool>(nameof(IgnoreTextureSize), node => node.IgnoreTextureSize, (node, value) => node.IgnoreTextureSize = value, _ => false, stored: true),
         new PropertyDescriptor<TextureButton, bool>(nameof(FlipH), node => node.FlipH, (node, value) => node.FlipH = value, _ => false, stored: true),
         new PropertyDescriptor<TextureButton, bool>(nameof(FlipV), node => node.FlipV, (node, value) => node.FlipV = value, _ => false, stored: true),
@@ -116,7 +97,7 @@ public class TextureButton : BaseButton
     /// <value>Keep initially. Undefined values are retained and use natural top-left placement.</value>
     /// <exception cref="ObjectDisposedException">The button is disposed.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner or mutation occurs during scene capture.</exception>
-    public TextureButtonStretchMode StretchMode
+    public TextureStretchMode StretchMode
     {
         get { CheckTextureButton(); return _stretchMode; }
         set { EnsureMutable(); if (_stretchMode == value) return; _stretchMode = value; InvalidateState(false); }
@@ -285,7 +266,7 @@ public class TextureButton : BaseButton
             else
             {
                 var offset = _positionRect.Position; var scale = maskSize / _positionRect.Size;
-                if (_stretchMode == TextureButtonStretchMode.KeepAspectCovered)
+                if (_stretchMode == TextureStretchMode.KeepAspectCovered)
                 {
                     var minimum = MathF.Min(scale.X, scale.Y); scale = new(minimum, minimum);
                     offset -= _textureRegion.Position / minimum;
@@ -324,18 +305,18 @@ public class TextureButton : BaseButton
                 size = natural; region = new(Vector2.Zero, natural);
                 switch (_stretchMode)
                 {
-                    case TextureButtonStretchMode.Scale: size = Size; break;
-                    case TextureButtonStretchMode.Tile: size = Size; tile = true; break;
-                    case TextureButtonStretchMode.KeepCentered: offset = (Size - natural) / 2; break;
-                    case TextureButtonStretchMode.KeepAspect:
-                    case TextureButtonStretchMode.KeepAspectCentered:
+                    case TextureStretchMode.Scale: size = Size; break;
+                    case TextureStretchMode.Tile: size = Size; tile = true; break;
+                    case TextureStretchMode.KeepCentered: offset = (Size - natural) / 2; break;
+                    case TextureStretchMode.KeepAspect:
+                    case TextureStretchMode.KeepAspectCentered:
                         if (natural.X == 0 || natural.Y == 0) { size = Vector2.Zero; break; }
                         var width = natural.X * Size.Y / natural.Y; var height = Size.Y;
                         if (width > Size.X) { width = Size.X; height = natural.Y * width / natural.X; }
                         size = new(width, height);
-                        if (_stretchMode == TextureButtonStretchMode.KeepAspectCentered) offset = (Size - size) / 2;
+                        if (_stretchMode == TextureStretchMode.KeepAspectCentered) offset = (Size - size) / 2;
                         break;
-                    case TextureButtonStretchMode.KeepAspectCovered:
+                    case TextureStretchMode.KeepAspectCovered:
                         size = Size;
                         if (natural.X == 0 || natural.Y == 0 || size.X == 0 || size.Y == 0) { size = Vector2.Zero; region = default; break; }
                         var ratios = size / natural; var scale = MathF.Max(ratios.X, ratios.Y);

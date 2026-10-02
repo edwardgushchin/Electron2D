@@ -5,17 +5,6 @@ namespace Electron2D;
 /// Geometry is retained; atlas mapping and live texture dimensions resolve at submission. Textures remain caller-owned.</remarks>
 public class NinePatchRect : Control
 {
-    /// <summary>Controls the source mapping within one center axis.</summary>
-    public enum AxisStretchMode
-    {
-        /// <summary>Stretches one source center across the destination center.</summary>
-        Stretch = 0,
-        /// <summary>Repeats at natural pixel size, clipping the last partial tile.</summary>
-        Tile = 1,
-        /// <summary>Rounds the repeat count and scales complete tiles to fit.</summary>
-        TileFit = 2
-    }
-
     private Texture? _texture;
     private Rect2 _regionRect;
     private bool _drawCenter = true;

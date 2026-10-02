@@ -97,38 +97,38 @@ internal static class DisplayServerWindowNativeSemanticsTests
             var originalMode = display.WindowGetMode();
             try
             {
-                display.WindowSetMode(DisplayServer.WindowMode.Maximized);
+                display.WindowSetMode(WindowMode.Maximized);
                 Check(SDL.SyncWindow(window), "The compositor applied maximization.");
                 display.ProcessEvents();
-                Check(display.WindowGetMode() == DisplayServer.WindowMode.Maximized &&
+                Check(display.WindowGetMode() == WindowMode.Maximized &&
                       (SDL.GetWindowFlags(window) & SDL.WindowFlags.Maximized) != 0,
                     "The maximized mode reflects the accepted compositor state.");
 
-                display.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                display.WindowSetMode(WindowMode.Windowed);
                 Check(SDL.SyncWindow(window), "The compositor restored the floating window.");
                 display.ProcessEvents();
-                Check(display.WindowGetMode() == DisplayServer.WindowMode.Windowed,
+                Check(display.WindowGetMode() == WindowMode.Windowed,
                     "The windowed mode reflects restoration from maximized state.");
 
-                display.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+                display.WindowSetMode(WindowMode.Fullscreen);
                 Check(SDL.SyncWindow(window), "The compositor applied ordinary fullscreen.");
                 display.ProcessEvents();
-                Check(display.WindowGetMode() == DisplayServer.WindowMode.Fullscreen &&
+                Check(display.WindowGetMode() == WindowMode.Fullscreen &&
                       SDL.GetWindowFullscreenMode(window) is null,
                     "Wayland fullscreen covers the output without choosing a video mode.");
                 Check(display.WindowIsMaximizeAllowed(),
                     "A resizable fullscreen window can leave fullscreen before requesting maximization.");
 
-                display.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                display.WindowSetMode(WindowMode.Windowed);
                 Check(SDL.SyncWindow(window), "The compositor restored the window after fullscreen.");
                 display.ProcessEvents();
-                Check(display.WindowGetMode() == DisplayServer.WindowMode.Windowed,
+                Check(display.WindowGetMode() == WindowMode.Windowed,
                     "The windowed mode reflects restoration from fullscreen state.");
 
-                display.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
+                display.WindowSetMode(WindowMode.ExclusiveFullscreen);
                 Check(SDL.SyncWindow(window), "The compositor applied the exclusive-fullscreen request.");
                 display.ProcessEvents();
-                Check(display.WindowGetMode() == DisplayServer.WindowMode.Fullscreen &&
+                Check(display.WindowGetMode() == WindowMode.Fullscreen &&
                       SDL.GetWindowFullscreenMode(window) is null,
                     "Wayland exclusive fullscreen is ordinary compositor fullscreen.");
             }
@@ -161,10 +161,10 @@ internal static class DisplayServerWindowNativeSemanticsTests
                   SDL.RenderClear(renderer) && SDL.RenderPresent(renderer),
                 $"Present the Wayland test surface: {SDL.GetError()}");
             Check(SDL.SyncWindow(window), "The Wayland window reached its visible state before minimization.");
-            display.WindowSetMode(DisplayServer.WindowMode.Minimized);
+            display.WindowSetMode(WindowMode.Minimized);
             Check(SDL.SyncWindow(window), "The compositor handled the minimization request.");
             display.ProcessEvents();
-            Check(display.WindowGetMode() == DisplayServer.WindowMode.Minimized &&
+            Check(display.WindowGetMode() == WindowMode.Minimized &&
                   (SDL.GetWindowFlags(window) & SDL.WindowFlags.Minimized) != 0,
                 "Wayland retains the requested minimized state until focus is restored.");
         }
@@ -176,7 +176,7 @@ internal static class DisplayServerWindowNativeSemanticsTests
 
     private static void CheckWindowFlags(DisplayServer display, nint window)
     {
-        foreach (var flag in new[] { DisplayServer.WindowFlag.Borderless, DisplayServer.WindowFlag.ResizeDisabled })
+        foreach (var flag in new[] { WindowFlag.Borderless, WindowFlag.ResizeDisabled })
         {
             var original = display.WindowGetFlag(flag);
             try
@@ -186,7 +186,7 @@ internal static class DisplayServerWindowNativeSemanticsTests
                 display.ProcessEvents();
                 Check(display.WindowGetFlag(flag) == !original,
                     $"The {flag} getter reflects the accepted SDL policy.");
-                if (flag == DisplayServer.WindowFlag.ResizeDisabled)
+                if (flag == WindowFlag.ResizeDisabled)
                     Check(display.WindowIsMaximizeAllowed() == original,
                         "The maximize approximation follows the native resizable policy.");
             }
@@ -200,7 +200,7 @@ internal static class DisplayServerWindowNativeSemanticsTests
 
         var unsupportedMask = SDL.WindowFlags.AlwaysOnTop | SDL.WindowFlags.NotFocusable;
         var originalUnsupported = SDL.GetWindowFlags(window) & unsupportedMask;
-        foreach (var flag in new[] { DisplayServer.WindowFlag.AlwaysOnTop, DisplayServer.WindowFlag.NoFocus })
+        foreach (var flag in new[] { WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
         {
             ExpectNotSupported(() => display.WindowGetFlag(flag));
             ExpectNotSupported(() => display.WindowSetFlag(flag, true));

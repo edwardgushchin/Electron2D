@@ -1,6 +1,6 @@
 # Tween
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -57,7 +57,7 @@ tween.TweenProperty(node, target => target.Position, (target, value) => target.P
 | [`public Tween SetLoops(int loops = 0)`](#m-electron2d-tween-setloops-system-int32) | Sets how many times the complete sequence runs. |
 | [`public Tween SetParallel(bool parallel = true)`](#m-electron2d-tween-setparallel-system-boolean) | Sets whether subsequently appended tweeners are parallel by default. |
 | [`public Tween SetPauseMode(Tween.TweenPauseMode mode)`](#m-electron2d-tween-setpausemode-electron2d-tween-tweenpausemode) | Sets the behavior while the owning tree is paused. |
-| [`public Tween SetProcessMode(Tween.TweenProcessMode mode)`](#m-electron2d-tween-setprocessmode-electron2d-tween-tweenprocessmode) | Sets the frame lane that advances this tween. |
+| [`public Tween SetProcessMode(ProcessPhase mode)`](#m-electron2d-tween-setprocessmode-electron2d-tween-tweenprocessmode) | Sets the frame lane that advances this tween. |
 | [`public Tween SetSpeedScale(double speed)`](#m-electron2d-tween-setspeedscale-system-double) | Sets a multiplier applied to time delivered to every tweener and delay. |
 | [`public Tween SetTrans(Tween.TransitionType transition)`](#m-electron2d-tween-settrans-electron2d-tween-transitiontype) | Sets the default transition for property and method tweeners appended afterward. |
 | [`public void Stop()`](#m-electron2d-tween-stop) | Stops progression and resets the sequence cursor and elapsed time. |
@@ -84,7 +84,7 @@ tween.TweenProperty(node, target => target.Position, (target, value) => target.P
 
 | Member | Description |
 | --- | --- |
-| [`public enum Tween.TweenProcessMode`](#t-electron2d-tween-tweenprocessmode) | Selects the frame lane that advances a tween. |
+| [ProcessPhase](ProcessPhase.md) | Selects the frame lane that advances a tween. |
 | [`public enum Tween.TweenPauseMode`](#t-electron2d-tween-tweenpausemode) | Selects how tree pause affects a tween. |
 | [`public enum Tween.TransitionType`](#t-electron2d-tween-transitiontype) | Selects the interpolation curve family. |
 | [`public enum Tween.EaseType`](#t-electron2d-tween-easetype) | Selects where acceleration and deceleration occur within a transition. |
@@ -361,7 +361,7 @@ Sets the behavior while the owning tree is paused.
 - `ObjectDisposedException`: The tween is disposing or disposed.
 
 <a id="m-electron2d-tween-setprocessmode-electron2d-tween-tweenprocessmode"></a>
-### `public Tween SetProcessMode(Tween.TweenProcessMode mode)`
+### `public Tween SetProcessMode(ProcessPhase mode)`
 
 Sets the frame lane that advances this tween.
 
@@ -656,11 +656,6 @@ Occurs when one sequential step or parallel step group completes.
 **Remarks:** The first argument is this tween and the second is the zero-based step index.
 
 ## Enumeration Descriptions
-
-<a id="t-electron2d-tween-tweenprocessmode"></a>
-### `public enum Tween.TweenProcessMode`
-
-Selects the frame lane that advances a tween.
 
 <a id="t-electron2d-tween-tweenpausemode"></a>
 ### `public enum Tween.TweenPauseMode`

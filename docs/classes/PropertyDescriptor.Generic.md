@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -185,7 +185,7 @@ Descriptor metadata is immutable. Delegates execute synchronously on the caller'
 
 ## Verification and limitations
 
-The executable test covers typed get/set, validation rejection, revert-value retrieval, revert availability, restoration, storage metadata, packed capture/restore including reference-free [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and [`TimerProcessCallback`](TimerProcessCallback.md) values plus Timer configuration, resource remapping, and unsupported stored-shape rejection. Property-value change events, undo/redo, attributes, node-reference remapping, arbitrary collection storage, and automatic reflection discovery are not implemented.
+The executable test covers typed get/set, validation rejection, revert-value retrieval, revert availability, restoration, storage metadata, packed capture/restore including reference-free [`Color`](Color.md), [`Vector2`](Vector2.md), [`Vector2i`](Vector2i.md), [`Vector4`](Vector4.md), [`Vector4i`](Vector4i.md), [`Rect2`](Rect2.md), [`Rect2i`](Rect2i.md), [`Transform`](Transform.md), and [`ProcessPhase`](ProcessPhase.md) values plus Timer configuration, resource remapping, and unsupported stored-shape rejection. Property-value change events, undo/redo, attributes, node-reference remapping, arbitrary collection storage, and automatic reflection discovery are not implemented.
 
 ## Text array storage
 

@@ -251,18 +251,18 @@ internal static class WindowRuntimeTests
         {
             using (var template = new Window { Borderless = true, Unresizable = true, Mode = WindowMode.Maximized })
             {
-                Check(!template.IsMaximizeAllowed() && template.GetFlag(Window.Flags.Borderless), "Detached policies are executable configuration.");
-                foreach (var flag in Enum.GetValues<Window.Flags>())
+                Check(!template.IsMaximizeAllowed() && template.GetFlag(WindowFlag.Borderless), "Detached policies are executable configuration.");
+                foreach (var flag in Enum.GetValues<WindowFlag>())
                 {
-                    if (flag == Window.Flags.Max)
+                    if (flag == WindowFlag.Max)
                         Reject<ArgumentOutOfRangeException>(() => template.SetFlag(flag, true));
-                    else if (flag is not (Window.Flags.ResizeDisabled or Window.Flags.Borderless or Window.Flags.AlwaysOnTop or Window.Flags.NoFocus))
+                    else if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
                     {
                         Reject<NotSupportedException>(() => template.GetFlag(flag));
                         Reject<NotSupportedException>(() => template.SetFlag(flag, false));
                     }
                 }
-                Reject<ArgumentOutOfRangeException>(() => template.SetFlag((Window.Flags)(-1), true));
+                Reject<ArgumentOutOfRangeException>(() => template.SetFlag((WindowFlag)(-1), true));
                 Reject<ArgumentOutOfRangeException>(() => template.Mode = (WindowMode)99);
                 Reject<ArgumentOutOfRangeException>(() => template.CurrentScreen = -1);
                 Reject<InvalidOperationException>(template.MoveToCenter);
@@ -355,7 +355,7 @@ internal static class WindowRuntimeTests
             Engine.Instance.Run(window);
             AssertReleased(window);
             Check(files is { Count: 2 } && files[1] == "/tmp/второй.txt", "Managed drop data survives native disposal.");
-            Reject<ObjectDisposedException>(() => window.GetFlag(Window.Flags.Borderless));
+            Reject<ObjectDisposedException>(() => window.GetFlag(WindowFlag.Borderless));
             Reject<ObjectDisposedException>(() => window.GetSizeWithDecorations());
 
             window = NewWindow();
@@ -381,7 +381,7 @@ internal static class WindowRuntimeTests
             Reject<ArgumentOutOfRangeException>(() => Engine.Instance.Run(window));
             AssertReleased(window);
             if (Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "wayland")
-                foreach (var flag in new[] { Window.Flags.AlwaysOnTop, Window.Flags.NoFocus })
+                foreach (var flag in new[] { WindowFlag.AlwaysOnTop, WindowFlag.NoFocus })
                 {
                     window = NewWindow();
                     window.SetFlag(flag, true);

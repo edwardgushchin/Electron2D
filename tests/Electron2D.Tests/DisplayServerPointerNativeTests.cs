@@ -14,24 +14,24 @@ internal static class DisplayServerPointerNativeTests
 
         var modes = new[]
         {
-            DisplayServer.MouseMode.Hidden,
-            DisplayServer.MouseMode.Captured,
-            DisplayServer.MouseMode.Confined,
-            DisplayServer.MouseMode.ConfinedHidden,
-            DisplayServer.MouseMode.Visible,
+            MouseMode.Hidden,
+            MouseMode.Captured,
+            MouseMode.Confined,
+            MouseMode.ConfinedHidden,
+            MouseMode.Visible,
         };
         try
         {
             foreach (var mode in modes)
             {
-                Input.Instance.MouseMode = (Input.MouseModeEnum)mode;
-                Input.Instance.MouseMode = (Input.MouseModeEnum)mode;
+                Input.Instance.MouseMode = mode;
+                Input.Instance.MouseMode = mode;
                 var flags = SDL.GetWindowFlags(window);
-                var expectedGrab = mode is DisplayServer.MouseMode.Confined or DisplayServer.MouseMode.ConfinedHidden;
-                Check(display.MouseGetMode() == mode && Input.Instance.MouseMode == (Input.MouseModeEnum)mode &&
-                      SDL.GetWindowRelativeMouseMode(window) == (mode == DisplayServer.MouseMode.Captured) &&
+                var expectedGrab = mode is MouseMode.Confined or MouseMode.ConfinedHidden;
+                Check(display.MouseGetMode() == mode && Input.Instance.MouseMode == mode &&
+                      SDL.GetWindowRelativeMouseMode(window) == (mode == MouseMode.Captured) &&
                       ((flags & SDL.WindowFlags.MouseGrabbed) != 0) == expectedGrab &&
-                      SDL.CursorVisible() == (mode is DisplayServer.MouseMode.Visible or DisplayServer.MouseMode.Confined),
+                      SDL.CursorVisible() == (mode is MouseMode.Visible or MouseMode.Confined),
                     $"Mouse mode {mode} has the corresponding native relative, grab, and cursor state.");
             }
 
@@ -68,7 +68,7 @@ internal static class DisplayServerPointerNativeTests
         }
         finally
         {
-            display.MouseSetMode(DisplayServer.MouseMode.Visible);
+            display.MouseSetMode(MouseMode.Visible);
         }
     }
 

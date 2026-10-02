@@ -80,15 +80,15 @@ internal static class DisplayServerNativeSmokeTests
             display.WindowSetIMEActive(false);
             Check(!SDL.TextInputActive(windows[0]), "Wayland stopped native text input for the main window.");
         }
-        for (var index = 0; index < (int)DisplayServer.CursorShape.Max; index++)
+        for (var index = 0; index < (int)CursorShape.Max; index++)
         {
-            var shape = (DisplayServer.CursorShape)index;
-            Input.Instance.SetDefaultCursorShape((Input.CursorShape)index);
-            Check(display.CursorGetShape() == shape && Input.Instance.GetCurrentCursorShape() == (Input.CursorShape)index &&
+            var shape = (CursorShape)index;
+            Input.Instance.SetDefaultCursorShape((CursorShape)index);
+            Check(display.CursorGetShape() == shape && Input.Instance.GetCurrentCursorShape() == (CursorShape)index &&
                   SDL.GetCursor() != 0,
                 $"Cursor shape {shape} is retained and installed natively.");
         }
-        display.CursorSetShape(DisplayServer.CursorShape.Arrow);
+        display.CursorSetShape(CursorShape.Arrow);
         var systemCursor = SDL.GetCursor();
         using (var maximum = Electron2D.Image.CreateEmpty(256, 1, false, Electron2D.Image.Format.Rgba8))
             display.CursorSetCustomImage(maximum, hotspot: new Vector2(255, 0));
@@ -125,10 +125,10 @@ internal static class DisplayServerNativeSmokeTests
         Check(SDL.GetCursor() == validCursor, "Invalid custom cursor requests preserve the active native image.");
         var customCursor = SDL.GetCursor();
         Check(customCursor != 0 && customCursor != systemCursor &&
-              display.CursorGetShape() == DisplayServer.CursorShape.Arrow,
+              display.CursorGetShape() == CursorShape.Arrow,
             "The active custom cursor owns a native copy after its source image is disposed.");
-        display.CursorSetShape(DisplayServer.CursorShape.IBeam);
-        display.CursorSetShape(DisplayServer.CursorShape.Arrow);
+        display.CursorSetShape(CursorShape.IBeam);
+        display.CursorSetShape(CursorShape.Arrow);
         Check(SDL.GetCursor() == customCursor, "The custom cursor remains bound to its shape slot.");
         display.CursorSetCustomImage(null);
         Check(SDL.GetCursor() != 0 && SDL.GetCursor() != customCursor,

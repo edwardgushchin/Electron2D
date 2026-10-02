@@ -13,16 +13,6 @@ namespace Electron2D;
 /// </remarks>
 public sealed class Tween : ElectronObject
 {
-    /// <summary>Selects the frame lane that advances a tween.</summary>
-    public enum TweenProcessMode
-    {
-        /// <summary>Advances after physics-frame node callbacks and timers.</summary>
-        Physics = 0,
-
-        /// <summary>Advances after process-frame node callbacks and timers.</summary>
-        Idle = 1,
-    }
-
     /// <summary>Selects how tree pause affects a tween.</summary>
     public enum TweenPauseMode
     {
@@ -112,7 +102,7 @@ public sealed class Tween : ElectronObject
     private bool _inStep;
     private TransitionType _defaultTransition = TransitionType.Linear;
     private EaseType _defaultEase = EaseType.InOut;
-    private TweenProcessMode _processMode = TweenProcessMode.Idle;
+    private ProcessPhase _processMode = ProcessPhase.Idle;
     private TweenPauseMode _pauseMode = TweenPauseMode.Bound;
 
     internal Tween(SceneTree tree)
@@ -402,7 +392,7 @@ public sealed class Tween : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="mode"/> is undefined.</exception>
     /// <exception cref="InvalidOperationException">The call is off the owner thread or the tween is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The tween is disposing or disposed.</exception>
-    public Tween SetProcessMode(TweenProcessMode mode)
+    public Tween SetProcessMode(ProcessPhase mode)
     {
         EnsureValidMutation();
         if (!Enum.IsDefined(mode))
@@ -712,7 +702,7 @@ public sealed class Tween : ElectronObject
 
     private Tween? _parentTween;
 
-    internal TweenProcessMode ProcessMode => _processMode;
+    internal ProcessPhase ProcessMode => _processMode;
 
     internal bool IgnoreTimeScale => _ignoreTimeScale;
 

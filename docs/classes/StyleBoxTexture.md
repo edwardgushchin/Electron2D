@@ -1,6 +1,6 @@
 # StyleBoxTexture
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 **Inherits:** [StyleBox](StyleBox.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -53,7 +53,7 @@ The example has left content margin eight, other content margins falling back to
 | `protected override Resource CreateDuplicateInstance()` | Preserves exact StyleBoxTexture identity. |
 | `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies style state and applies subresource policy to Texture. |
 | `protected override void Dispose(bool disposing)` | Releases the borrowed reference without disposing its texture. |
-| `public enum AxisStretchMode` | [Stretch=0, Tile=1, TileFit=2](StyleBoxTexture.AxisStretchMode.md). |
+| [AxisStretchMode](AxisStretchMode.md) | [Stretch=0, Tile=1, TileFit=2](AxisStretchMode.md). |
 
 ## Property descriptions
 
@@ -64,7 +64,7 @@ The example has left content margin eight, other content margins falling back to
 **RegionRect and ModulateColor:** equal values are silent; actual changes commit before Changed. Empty region selects the current source extent. Nonempty regions use texture-pixel coordinates and the existing atlas mapping. ModulateColor multiplies texture pixels before inherited canvas modulation. Nonfinite input throws ArgumentException.
 
 <a id="drawcenter"></a><a id="axisstretchhorizontal"></a><a id="axisstretchvertical"></a>
-**Center and axis policies:** DrawCenter omits only the center when false. Horizontal and vertical policies independently stretch or tile the middle source portions. Every valid assignment publishes Changed, including equal values. Undefined enum values throw ArgumentOutOfRangeException before mutation. See [AxisStretchMode](StyleBoxTexture.AxisStretchMode.md).
+**Center and axis policies:** DrawCenter omits only the center when false. Horizontal and vertical policies independently stretch or tile the middle source portions. Every valid assignment publishes Changed, including equal values. Undefined enum values throw ArgumentOutOfRangeException before mutation. See [AxisStretchMode](AxisStretchMode.md).
 
 <a id="texturemarginleft"></a><a id="texturemargintop"></a><a id="texturemarginright"></a><a id="texturemarginbottom"></a>
 **Texture margins:** signed fractional source-border widths determine the 3×3 split and supply fallback content margins when inherited content overrides are negative. They do not apply outward expansion. Negative and fractional values are stored without clamping; concrete geometry follows the shared nine-patch contract.

@@ -6,16 +6,6 @@ namespace Electron2D;
 /// Sorting reuses prepared buffers; child callback errors do not prevent later placements.</remarks>
 public class FlowContainer : Container
 {
-    /// <summary>Specifies primary-axis alignment of unused space.</summary>
-    public enum AlignmentMode
-    {
-        /// <summary>Uses the leading edge.</summary>
-        Begin = 0,
-        /// <summary>Centers the occupied group.</summary>
-        Center = 1,
-        /// <summary>Uses the trailing edge.</summary>
-        End = 2
-    }
     /// <summary>Specifies alignment of a final unfilled wrap relative to the preceding group.</summary>
     public enum LastWrapAlignmentMode
     {

@@ -21,8 +21,8 @@ internal static class DisplayServerPointerFocusNativeTests
                 PumpAndDraw(display, renderer);
             Check(SDL.GetMouseFocus() == window, "The visible Wayland window never received pointer focus.");
 
-            display.MouseSetMode(DisplayServer.MouseMode.Confined);
-            Check(display.MouseGetMode() == DisplayServer.MouseMode.Confined, "The public mode did not enter Confined.");
+            display.MouseSetMode(MouseMode.Confined);
+            Check(display.MouseGetMode() == MouseMode.Confined, "The public mode did not enter Confined.");
             Console.WriteLine("Confined active for 25 seconds. Push the pointer beyond EACH of the four blue-window edges; do not click another window.");
             var size = display.WindowGetSize();
             var minX = int.MaxValue;
@@ -52,7 +52,7 @@ internal static class DisplayServerPointerFocusNativeTests
         }
         finally
         {
-            display.MouseSetMode(DisplayServer.MouseMode.Visible);
+            display.MouseSetMode(MouseMode.Visible);
             SDL.DestroyRenderer(renderer);
         }
     }
@@ -118,7 +118,7 @@ internal static class DisplayServerPointerFocusNativeTests
                 "Unavailable focused Wayland warp must reject without changing synthetic pointer state or focus.");
 
             Console.WriteLine("Pointer capture active. Keep moving the mouse inside the blue window for a moment.");
-            display.MouseSetMode(DisplayServer.MouseMode.Captured);
+            display.MouseSetMode(MouseMode.Captured);
             SDL.GetRelativeMouseState(out _, out _);
             var relativeMotion = false;
             deadline = DateTime.UtcNow.AddSeconds(10);
@@ -132,11 +132,11 @@ internal static class DisplayServerPointerFocusNativeTests
 
             foreach (var mode in new[]
                      {
-                         DisplayServer.MouseMode.Hidden,
-                         DisplayServer.MouseMode.Confined,
-                         DisplayServer.MouseMode.ConfinedHidden,
-                         DisplayServer.MouseMode.Captured,
-                         DisplayServer.MouseMode.Visible,
+                         MouseMode.Hidden,
+                         MouseMode.Confined,
+                         MouseMode.ConfinedHidden,
+                         MouseMode.Captured,
+                         MouseMode.Visible,
                      })
             {
                 display.MouseSetMode(mode);
@@ -144,17 +144,17 @@ internal static class DisplayServerPointerFocusNativeTests
                     PumpAndDraw(display, renderer);
                 var flags = SDL.GetWindowFlags(window);
                 Check(display.MouseGetMode() == mode &&
-                      SDL.GetWindowRelativeMouseMode(window) == (mode == DisplayServer.MouseMode.Captured) &&
+                      SDL.GetWindowRelativeMouseMode(window) == (mode == MouseMode.Captured) &&
                       ((flags & SDL.WindowFlags.MouseGrabbed) != 0) ==
-                      (mode is DisplayServer.MouseMode.Confined or DisplayServer.MouseMode.ConfinedHidden) &&
-                      SDL.CursorVisible() == (mode is DisplayServer.MouseMode.Visible or DisplayServer.MouseMode.Confined),
+                      (mode is MouseMode.Confined or MouseMode.ConfinedHidden) &&
+                      SDL.CursorVisible() == (mode is MouseMode.Visible or MouseMode.Confined),
                     $"Focused mouse mode {mode} disagrees with SDL's native state.");
             }
             Console.WriteLine("Wayland focused pointer motion, button state, relative capture, mouse modes, and warp rejection passed.");
         }
         finally
         {
-            display.MouseSetMode(DisplayServer.MouseMode.Visible);
+            display.MouseSetMode(MouseMode.Visible);
             SDL.DestroyRenderer(renderer);
         }
     }

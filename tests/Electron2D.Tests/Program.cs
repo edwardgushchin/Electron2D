@@ -699,48 +699,48 @@ static void VerifyDisplayServer()
             display.QuitRequested -= themeOrderedQuit;
         }
 
-        Require(!display.WindowGetFlag(DisplayServer.WindowFlag.ResizeDisabled) &&
-                (int)DisplayServer.WindowFlag.ResizeDisabled == 0 &&
-                (int)DisplayServer.WindowFlag.Borderless == 1 &&
-                (int)DisplayServer.WindowFlag.Transparent == 3 &&
-                (int)DisplayServer.WindowFlag.NoFocus == 4 &&
-                (int)DisplayServer.WindowFlag.Max == 13 &&
-                (int)DisplayServer.WindowMode.ExclusiveFullscreen == 4,
+        Require(!display.WindowGetFlag(WindowFlag.ResizeDisabled) &&
+                (int)WindowFlag.ResizeDisabled == 0 &&
+                (int)WindowFlag.Borderless == 1 &&
+                (int)WindowFlag.Transparent == 3 &&
+                (int)WindowFlag.NoFocus == 4 &&
+                (int)WindowFlag.Max == 13 &&
+                (int)WindowMode.ExclusiveFullscreen == 4,
             "The native main window starts resizable and flag IDs match the public contract.");
-        display.WindowSetFlag(DisplayServer.WindowFlag.ResizeDisabled, true);
+        display.WindowSetFlag(WindowFlag.ResizeDisabled, true);
         display.ProcessEvents();
         var observedResizable = (SDL3.SDL.GetWindowFlags(SDL3.SDL.GetWindows(out _)![0]) &
             SDL3.SDL.WindowFlags.Resizable) != 0;
-        Require(display.WindowGetFlag(DisplayServer.WindowFlag.ResizeDisabled) == !observedResizable,
+        Require(display.WindowGetFlag(WindowFlag.ResizeDisabled) == !observedResizable,
             "The resize-disabled flag is the inverse of the observed native resizable flag.");
-        display.WindowSetFlag(DisplayServer.WindowFlag.ResizeDisabled, false);
-        Expect<NotSupportedException>(() => display.WindowSetFlag(DisplayServer.WindowFlag.Transparent, true),
+        display.WindowSetFlag(WindowFlag.ResizeDisabled, false);
+        Expect<NotSupportedException>(() => display.WindowSetFlag(WindowFlag.Transparent, true),
             "A defined flag requiring the absent renderer rejects mutation explicitly.");
-        Expect<NotSupportedException>(() => display.WindowGetFlag(DisplayServer.WindowFlag.Transparent),
+        Expect<NotSupportedException>(() => display.WindowGetFlag(WindowFlag.Transparent),
             "A defined but unavailable flag is not reported as native state.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetMode((DisplayServer.WindowMode)99),
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetMode((WindowMode)99),
             "Unknown window modes are rejected before native mutation.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag(DisplayServer.WindowFlag.Max, true),
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag(WindowFlag.Max, true),
             "The terminal enum marker is not a policy.");
-        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag((DisplayServer.WindowFlag)100, true),
+        Expect<ArgumentOutOfRangeException>(() => display.WindowSetFlag((WindowFlag)100, true),
             "An unknown window flag is rejected before native mutation.");
-        Require((int)DisplayServer.CursorShape.Drag == 6 &&
-                (int)DisplayServer.CursorShape.CanDrop == 7 &&
-                (int)DisplayServer.CursorShape.Forbidden == 8 &&
-                (int)DisplayServer.CursorShape.VSize == 9 &&
-                (int)DisplayServer.CursorShape.HSize == 10 &&
-                (int)DisplayServer.CursorShape.BDiagSize == 11 &&
-                (int)DisplayServer.CursorShape.FDiagSize == 12 &&
-                (int)DisplayServer.CursorShape.Move == 13 &&
-                (int)DisplayServer.CursorShape.Help == 16 &&
-                (int)DisplayServer.CursorShape.Max == 17 &&
-                (int)DisplayServer.MouseMode.Max == 5,
+        Require((int)CursorShape.Drag == 6 &&
+                (int)CursorShape.CanDrop == 7 &&
+                (int)CursorShape.Forbidden == 8 &&
+                (int)CursorShape.VSize == 9 &&
+                (int)CursorShape.HSize == 10 &&
+                (int)CursorShape.BDiagSize == 11 &&
+                (int)CursorShape.FDiagSize == 12 &&
+                (int)CursorShape.Move == 13 &&
+                (int)CursorShape.Help == 16 &&
+                (int)CursorShape.Max == 17 &&
+                (int)MouseMode.Max == 5,
             "Pointer enum values retain their complete public identities.");
-        Expect<ArgumentOutOfRangeException>(() => display.CursorSetShape(DisplayServer.CursorShape.Max),
+        Expect<ArgumentOutOfRangeException>(() => display.CursorSetShape(CursorShape.Max),
             "The cursor shape terminal marker cannot be selected.");
-        Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(null, DisplayServer.CursorShape.Max),
+        Expect<ArgumentOutOfRangeException>(() => display.CursorSetCustomImage(null, CursorShape.Max),
             "The cursor shape terminal marker is not a custom slot.");
-        Expect<ArgumentOutOfRangeException>(() => display.MouseSetMode(DisplayServer.MouseMode.Max),
+        Expect<ArgumentOutOfRangeException>(() => display.MouseSetMode(MouseMode.Max),
             "The mouse-mode terminal marker cannot be applied.");
         Require(!display.HasFeature(DisplayServer.Feature.MouseWarp),
             "The dummy backend does not advertise pointer warping.");
@@ -2196,7 +2196,7 @@ static void VerifyVector2Values()
     indexed[1] = 4f;
     var (x, y) = indexed;
     Require(indexed == new Vector2(3f, 4f) && x == 3f && y == 4f &&
-            (int)Vector2.Axis.X == 0 && (int)Vector2.Axis.Y == 1,
+            (int)Vector2Axis.X == 0 && (int)Vector2Axis.Y == 1,
         "Vector2 indexing, axes, and deconstruction must preserve component order.");
     Expect<ArgumentOutOfRangeException>(() => _ = indexed[-1], "Vector2 must reject negative indices.");
     Expect<ArgumentOutOfRangeException>(() => indexed[2] = 0f, "Vector2 must reject indices after Y.");
@@ -2246,7 +2246,7 @@ static void VerifyVector2Values()
             new Vector2(1f, 5f).Max(4f) == new Vector2(4f, 5f) &&
             new Vector2(1f, 5f).Min(new Vector2(3f, 2f)) == new Vector2(1f, 2f) &&
             new Vector2(1f, 5f).Min(2f) == new Vector2(1f, 2f) &&
-            Vector2.One.MaxAxisIndex() == Vector2.Axis.X && Vector2.One.MinAxisIndex() == Vector2.Axis.Y,
+            Vector2.One.MaxAxisIndex() == Vector2Axis.X && Vector2.One.MinAxisIndex() == Vector2Axis.Y,
         "Vector2 min/max methods and tie-breaking axis rules must be stable.");
     Require(new Vector2(-1f, 7f).PosMod(4f) == new Vector2(3f, 3f) &&
             new Vector2(-1f, 7f).PosMod(new Vector2(4f, 3f)) == new Vector2(3f, 1f) &&
@@ -2362,7 +2362,7 @@ static void VerifyVector2iValues()
             new Vector2i(1, 5).Max(4) == new Vector2i(4, 5) &&
             new Vector2i(1, 5).Min(new Vector2i(3, 2)) == new Vector2i(1, 2) &&
             new Vector2i(1, 5).Min(2) == new Vector2i(1, 2) &&
-            Vector2i.One.MaxAxisIndex() == Vector2i.Axis.X && Vector2i.One.MinAxisIndex() == Vector2i.Axis.Y &&
+            Vector2i.One.MaxAxisIndex() == Vector2Axis.X && Vector2i.One.MinAxisIndex() == Vector2Axis.Y &&
             new Vector2i(5, -5).Snapped(2) == new Vector2i(6, -4) &&
             new Vector2i(5, -5).Snapped(new Vector2i(2, 5)) == new Vector2i(6, -5),
         "Vector2i min, max, axis tie-breaking, and snapping must be stable.");
@@ -2450,7 +2450,7 @@ static void VerifyVector3Values()
     var zeroPacked = Vector3.Zero.OctahedronEncode();
     Require(float.IsNaN(zeroPacked.X) && float.IsNaN(zeroPacked.Y),
         "Octahedral encoding of the zero vector retains the source's undefined numeric result.");
-    Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z && Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
+    Require(Vector3.One.MinAxisIndex() == Vector3Axis.Z && Vector3.One.MaxAxisIndex() == Vector3Axis.X &&
             new Vector3i(1, 2, 3) * new Vector3i(2, 3, 4) == new Vector3i(2, 6, 12) &&
             -new Vector3i(1, 2, 3) == new Vector3i(-1, -2, -3) &&
             new Vector3i(3, 4, 12).LengthSquared() == 169 &&
@@ -2485,7 +2485,7 @@ static void VerifyVector3iValues()
             Vector3i.Right == new Vector3i(1, 0, 0) && Vector3i.Left == new Vector3i(-1, 0, 0) &&
             Vector3i.Up == new Vector3i(0, 1, 0) && Vector3i.Down == new Vector3i(0, -1, 0) &&
             Vector3i.Forward == new Vector3i(0, 0, -1) && Vector3i.Back == new Vector3i(0, 0, 1) &&
-            (int)Vector3i.Axis.X == 0 && (int)Vector3i.Axis.Y == 1 && (int)Vector3i.Axis.Z == 2,
+            (int)Vector3Axis.X == 0 && (int)Vector3Axis.Y == 1 && (int)Vector3Axis.Z == 2,
         "Vector3i layout, constants and axis identities retain the three-component contract.");
     var value = new Vector3i(3, 4, 12);
     var copy = value;
@@ -2541,10 +2541,10 @@ static void VerifyVector3iValues()
     Expect<ArgumentException>(() => _ = value.Clamp(2, 1), "Reversed scalar clamp bounds fail explicitly.");
     Expect<ArgumentException>(() => _ = value.Clamp(new Vector3i(0, 5, 0), new Vector3i(9, 4, 20)),
         "Reversed bounds on one vector axis fail explicitly.");
-    Require(Vector3i.One.MinAxisIndex() == Vector3i.Axis.Z &&
-            Vector3i.One.MaxAxisIndex() == Vector3i.Axis.X &&
-            new Vector3i(1, 2, 2).MaxAxisIndex() == Vector3i.Axis.Y &&
-            new Vector3i(2, 1, 1).MinAxisIndex() == Vector3i.Axis.Z,
+    Require(Vector3i.One.MinAxisIndex() == Vector3Axis.Z &&
+            Vector3i.One.MaxAxisIndex() == Vector3Axis.X &&
+            new Vector3i(1, 2, 2).MaxAxisIndex() == Vector3Axis.Y &&
+            new Vector3i(2, 1, 1).MinAxisIndex() == Vector3Axis.Z,
         "Vector3i axis ties match the pinned first-maximum and last-minimum rules.");
 
     Require(new Vector3i(5, -5, 7).Snapped(2) == new Vector3i(6, -4, 8) &&
@@ -2611,7 +2611,7 @@ static void VerifyVector3CoreValues()
             Vector3.Forward == new Vector3(0f, 0f, -1f) && Vector3.Back == new Vector3(0f, 0f, 1f) &&
             float.IsPositiveInfinity(Vector3.Inf.X) && float.IsPositiveInfinity(Vector3.Inf.Y) &&
             float.IsPositiveInfinity(Vector3.Inf.Z) &&
-            (int)Vector3.Axis.X == 0 && (int)Vector3.Axis.Y == 1 && (int)Vector3.Axis.Z == 2,
+            (int)Vector3Axis.X == 0 && (int)Vector3Axis.Y == 1 && (int)Vector3Axis.Z == 2,
         "Vector3 constants and axis identities retain the pinned component values.");
 
     var value = new Vector3(1.5f, -2f, 0f);
@@ -2693,14 +2693,14 @@ static void VerifyVector3ComponentMethods()
     Expect<ArgumentException>(() => value.Clamp(new Vector3(0f, 2f, 0f), Vector3.One),
         "A reversed bound on any vector component fails explicitly.");
 
-    Require(Vector3.One.MinAxisIndex() == Vector3.Axis.Z &&
-            Vector3.One.MaxAxisIndex() == Vector3.Axis.X &&
-            new Vector3(0f, 2f, 2f).MaxAxisIndex() == Vector3.Axis.Y &&
-            new Vector3(float.NaN, 1f, 2f).MinAxisIndex() == Vector3.Axis.Y &&
-            new Vector3(1f, float.NaN, 2f).MinAxisIndex() == Vector3.Axis.Z &&
-            new Vector3(1f, 2f, float.NaN).MinAxisIndex() == Vector3.Axis.Z &&
-            new Vector3(float.NaN, 1f, 2f).MaxAxisIndex() == Vector3.Axis.X &&
-            new Vector3(1f, float.NaN, 2f).MaxAxisIndex() == Vector3.Axis.Z,
+    Require(Vector3.One.MinAxisIndex() == Vector3Axis.Z &&
+            Vector3.One.MaxAxisIndex() == Vector3Axis.X &&
+            new Vector3(0f, 2f, 2f).MaxAxisIndex() == Vector3Axis.Y &&
+            new Vector3(float.NaN, 1f, 2f).MinAxisIndex() == Vector3Axis.Y &&
+            new Vector3(1f, float.NaN, 2f).MinAxisIndex() == Vector3Axis.Z &&
+            new Vector3(1f, 2f, float.NaN).MinAxisIndex() == Vector3Axis.Z &&
+            new Vector3(float.NaN, 1f, 2f).MaxAxisIndex() == Vector3Axis.X &&
+            new Vector3(1f, float.NaN, 2f).MaxAxisIndex() == Vector3Axis.Z,
         "Axis ties and unordered NaN comparisons follow the pinned X/Y/Z branch order.");
 
     var reciprocal = new Vector3(2f, -4f, -0f).Inverse();
@@ -2817,7 +2817,7 @@ static void VerifyVector4Values()
     var value = new Vector4(1f, 2f, 3f, 4f);
     var (x, y, z, w) = value;
     Require(value[0] == 1f && value[3] == 4f && (x, y, z, w) == (1f, 2f, 3f, 4f) &&
-            (int)Vector4.Axis.W == 3,
+            (int)Vector4Axis.W == 3,
         "Vector4 indexing, axes, and deconstruction must preserve component order.");
     Expect<ArgumentOutOfRangeException>(() => _ = value[4], "Vector4 must reject indices after W.");
     Require(value.LengthSquared() == 30f && NearlyEqual(value.Length(), System.MathF.Sqrt(30f)) && value.Normalized().IsNormalized() &&
@@ -2845,7 +2845,7 @@ static void VerifyVector4Values()
             value.Max(new Vector4(0f, 3f, 2f, 5f)) == new Vector4(1f, 3f, 3f, 5f) &&
             value.Min(2.5f) == new Vector4(1f, 2f, 2.5f, 2.5f) &&
             value.Min(new Vector4(0f, 3f, 2f, 5f)) == new Vector4(0f, 2f, 2f, 4f) &&
-            Vector4.One.MaxAxisIndex() == Vector4.Axis.X && Vector4.One.MinAxisIndex() == Vector4.Axis.W,
+            Vector4.One.MaxAxisIndex() == Vector4Axis.X && Vector4.One.MinAxisIndex() == Vector4Axis.W,
         "Vector4 interpolation, extrema, and axis tie-breaking must be stable.");
     Require(new Vector4(-1f, 7f, -5f, 9f).PosMod(4f) == new Vector4(3f, 3f, 3f, 1f) &&
             new Vector4(-1f, 7f, -5f, 9f).PosMod(new Vector4(4f, 3f, 2f, 5f)) == new Vector4(3f, 1f, 1f, 4f) &&
@@ -2899,8 +2899,8 @@ static void VerifyVector4RemainingValues()
     Require(Vector4.Zero == default && Vector4.One == new Vector4(1f, 1f, 1f, 1f) &&
             float.IsPositiveInfinity(Vector4.Inf.X) && float.IsPositiveInfinity(Vector4.Inf.Y) &&
             float.IsPositiveInfinity(Vector4.Inf.Z) && float.IsPositiveInfinity(Vector4.Inf.W) &&
-            (int)Vector4.Axis.X == 0 && (int)Vector4.Axis.Y == 1 &&
-            (int)Vector4.Axis.Z == 2 && (int)Vector4.Axis.W == 3,
+            (int)Vector4Axis.X == 0 && (int)Vector4Axis.Y == 1 &&
+            (int)Vector4Axis.Z == 2 && (int)Vector4Axis.W == 3,
         "Vector4 constants and axis identities retain every pinned component.");
     var value = new Vector4(1.5f, -2f, 0f, 4f);
     var copy = value;
@@ -2973,11 +2973,11 @@ static void VerifyVector4RemainingValues()
         "Vector4 clamp and scalar/vector extrema retain all components and accepted NaN policy.");
     Expect<ArgumentException>(() => bounds.Clamp(new Vector4(0f, 0f, 0f, 5f), Vector4.One),
         "A reversed bound on W fails before returning a value.");
-    Require(Vector4.One.MaxAxisIndex() == Vector4.Axis.X &&
-            Vector4.One.MinAxisIndex() == Vector4.Axis.W &&
-            new Vector4(1f, 2f, 2f, 1f).MaxAxisIndex() == Vector4.Axis.Y &&
-            new Vector4(float.NaN, 1f, 2f, 3f).MinAxisIndex() == Vector4.Axis.X &&
-            new Vector4(1f, 2f, 3f, float.NaN).MaxAxisIndex() == Vector4.Axis.Z,
+    Require(Vector4.One.MaxAxisIndex() == Vector4Axis.X &&
+            Vector4.One.MinAxisIndex() == Vector4Axis.W &&
+            new Vector4(1f, 2f, 2f, 1f).MaxAxisIndex() == Vector4Axis.Y &&
+            new Vector4(float.NaN, 1f, 2f, 3f).MinAxisIndex() == Vector4Axis.X &&
+            new Vector4(1f, 2f, 3f, float.NaN).MaxAxisIndex() == Vector4Axis.Z,
         "Vector4 axis selection follows its pinned loop for ties and NaN, unlike the Vector3 branch.");
 
     var reciprocal = new Vector4(2f, -4f, 0f, -0f).Inverse();
@@ -3033,8 +3033,8 @@ static void VerifyVector4iValues()
             Vector4i.Zero == default && Vector4i.One == new Vector4i(1, 1, 1, 1) &&
             Vector4i.MinValue == new Vector4i(int.MinValue, int.MinValue, int.MinValue, int.MinValue) &&
             Vector4i.MaxValue == new Vector4i(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue) &&
-            (int)Vector4i.Axis.X == 0 && (int)Vector4i.Axis.Y == 1 &&
-            (int)Vector4i.Axis.Z == 2 && (int)Vector4i.Axis.W == 3,
+            (int)Vector4Axis.X == 0 && (int)Vector4Axis.Y == 1 &&
+            (int)Vector4Axis.Z == 2 && (int)Vector4Axis.W == 3,
         "Vector4i layout and constants must be stable.");
     var value = new Vector4i(1, 2, 3, 4);
     var (x, y, z, w) = value;
@@ -3088,9 +3088,9 @@ static void VerifyVector4iValues()
         "Vector4i must reject reversed component clamp bounds.");
     Require(value.Max(2) == new Vector4i(2, 2, 3, 4) && value.Max(new Vector4i(0, 3, 2, 5)) == new Vector4i(1, 3, 3, 5) &&
             value.Min(2) == new Vector4i(1, 2, 2, 2) && value.Min(new Vector4i(0, 3, 2, 5)) == new Vector4i(0, 2, 2, 4) &&
-            Vector4i.One.MaxAxisIndex() == Vector4i.Axis.X && Vector4i.One.MinAxisIndex() == Vector4i.Axis.W &&
-            new Vector4i(1, 2, 2, 2).MaxAxisIndex() == Vector4i.Axis.Y &&
-            new Vector4i(2, 1, 1, 1).MinAxisIndex() == Vector4i.Axis.W &&
+            Vector4i.One.MaxAxisIndex() == Vector4Axis.X && Vector4i.One.MinAxisIndex() == Vector4Axis.W &&
+            new Vector4i(1, 2, 2, 2).MaxAxisIndex() == Vector4Axis.Y &&
+            new Vector4i(2, 1, 1, 1).MinAxisIndex() == Vector4Axis.W &&
             new Vector4i(5, -5, 3, -3).Snapped(2) == new Vector4i(6, -4, 4, -2) &&
             new Vector4i(5, -5, 3, -3).Snapped(new Vector4i(2, 5, 2, 3)) == new Vector4i(6, -5, 4, -3),
         "Vector4i min, max, axis tie-breaking, and snapping must be stable.");
@@ -6143,7 +6143,7 @@ static void VerifyInput()
     {
         Require(ReferenceEquals(input, Input.Instance) && ReferenceEquals(map, InputMap.Instance),
             "Input and InputMap must be process-wide singletons.");
-        Require((int)Input.MouseModeEnum.ConfinedHidden == 4 && (int)Input.CursorShape.Help == 16,
+        Require((int)MouseMode.ConfinedHidden == 4 && (int)CursorShape.Help == 16,
             "Input pointer enums retain the reference numeric identities.");
         Expect<InvalidOperationException>(() => _ = input.MouseMode,
             "Native pointer mode cannot be queried without a display.");
@@ -9196,13 +9196,13 @@ static void VerifySceneTreeGroupsEventsAndTimers()
 
 static void VerifyTimers()
 {
-    Require((int)TimerProcessCallback.Physics == 0 && (int)TimerProcessCallback.Idle == 1 &&
+    Require((int)ProcessPhase.Physics == 0 && (int)ProcessPhase.Idle == 1 &&
             Entity.NotificationInternalProcess == 25 && Entity.NotificationInternalPhysicsProcess == 26,
         "Timer process lanes and internal Entity notifications must retain their stable identities.");
 
     using (var detached = new EngineTimer())
     {
-        Require(detached.ProcessCallback == TimerProcessCallback.Idle && DoubleNearlyEqual(detached.WaitTime, 1d) &&
+        Require(detached.ProcessCallback == ProcessPhase.Idle && DoubleNearlyEqual(detached.WaitTime, 1d) &&
                 !detached.OneShot && !detached.Autostart && !detached.Paused && !detached.IgnoreTimeScale &&
                 detached.TimeLeft == 0d && detached.IsStopped(),
             "A Timer must begin stopped with the documented defaults.");
@@ -9232,9 +9232,9 @@ static void VerifyTimers()
         }
 
         Expect<ArgumentOutOfRangeException>(
-            () => detached.ProcessCallback = (TimerProcessCallback)99,
+            () => detached.ProcessCallback = (ProcessPhase)99,
             "Timer must reject undefined callback lanes.");
-        Require(DoubleNearlyEqual(detached.WaitTime, 1d) && detached.ProcessCallback == TimerProcessCallback.Idle,
+        Require(DoubleNearlyEqual(detached.WaitTime, 1d) && detached.ProcessCallback == ProcessPhase.Idle,
             "Rejected Timer configuration must preserve prior state.");
     }
 
@@ -9294,10 +9294,10 @@ static void VerifyTimers()
             "Unpausing a running Timer must resume its preserved countdown.");
 
         timer.OneShot = true;
-        timer.ProcessCallback = TimerProcessCallback.Idle;
+        timer.ProcessCallback = ProcessPhase.Idle;
         timer.Start(0.2d);
         tree.ProcessFrame(0.05d);
-        timer.ProcessCallback = TimerProcessCallback.Physics;
+        timer.ProcessCallback = ProcessPhase.Physics;
         tree.ProcessFrame(1d);
         Require(!timer.IsStopped() && DoubleNearlyEqual(timer.TimeLeft, 0.15d),
             "Moving a running Timer to the physics lane must preserve its countdown and ignore process frames.");
@@ -9305,7 +9305,7 @@ static void VerifyTimers()
         Require(timer.IsStopped() && timeoutCount == 4,
             "A physics Timer must expire only in its selected lane.");
 
-        timer.ProcessCallback = TimerProcessCallback.Idle;
+        timer.ProcessCallback = ProcessPhase.Idle;
         timer.OneShot = false;
         timer.Start(0.1d);
         tree.ProcessFrame(0.35d);
@@ -9437,7 +9437,7 @@ static void VerifyTimers()
         var source = new EngineTimer
         {
             Name = "packed-timer",
-            ProcessCallback = TimerProcessCallback.Physics,
+            ProcessCallback = ProcessPhase.Physics,
             WaitTime = 2.5d,
             OneShot = true,
             Autostart = true,
@@ -9447,7 +9447,7 @@ static void VerifyTimers()
         packed.Pack(source);
         source.Dispose();
         using var instance = (EngineTimer)packed.Instantiate();
-        Require(instance.Name == "packed-timer" && instance.ProcessCallback == TimerProcessCallback.Physics &&
+        Require(instance.Name == "packed-timer" && instance.ProcessCallback == ProcessPhase.Physics &&
                 DoubleNearlyEqual(instance.WaitTime, 2.5d) && instance.OneShot && instance.Autostart &&
                 instance.IgnoreTimeScale && !instance.Paused && instance.IsStopped(),
             "PackedScene must preserve Timer configuration without persisting runtime pause or countdown state.");
@@ -9472,7 +9472,7 @@ static void VerifyTimers()
         OneShot = true,
         WaitTime = 0.5d,
         IgnoreTimeScale = true,
-        ProcessCallback = TimerProcessCallback.Physics,
+        ProcessCallback = ProcessPhase.Physics,
     };
     scaledRoot.AddChild(scaledTimer);
     scaledRoot.AddChild(unscaledTimer);
@@ -9537,12 +9537,12 @@ static void VerifyTimers()
 
 static void VerifyTweens()
 {
-    Require((int)Tween.TweenProcessMode.Physics == 0 && (int)Tween.TweenProcessMode.Idle == 1 &&
+    Require((int)ProcessPhase.Physics == 0 && (int)ProcessPhase.Idle == 1 &&
             (int)Tween.TweenPauseMode.Bound == 0 && (int)Tween.TweenPauseMode.Stop == 1 &&
             (int)Tween.TweenPauseMode.Process == 2 && (int)Tween.TransitionType.Spring == 11 &&
             (int)Tween.EaseType.OutIn == 3,
         "Tween process, pause, transition, and easing identities must remain stable.");
-    Require(Enum.GetValues<Tween.TweenProcessMode>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 2)) &&
+    Require(Enum.GetValues<ProcessPhase>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 2)) &&
             Enum.GetValues<Tween.TweenPauseMode>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 3)) &&
             Enum.GetValues<Tween.TransitionType>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 12)) &&
             Enum.GetValues<Tween.EaseType>().Select(value => (int)value).SequenceEqual(Enumerable.Range(0, 4)),
@@ -9905,7 +9905,7 @@ static void VerifyTweens()
     reverseSpeed.Kill();
 
     var physicsValue = 0d;
-    var physics = tree.CreateTween().SetProcessMode(Tween.TweenProcessMode.Physics);
+    var physics = tree.CreateTween().SetProcessMode(ProcessPhase.Physics);
     physics.TweenMethod(value => physicsValue = value, 0d, 1d, 1d);
     tree.ProcessFrame(0.5d);
     Require(physicsValue == 0d, "A physics tween must ignore process frames.");
@@ -9913,7 +9913,7 @@ static void VerifyTweens()
     Require(DoubleNearlyEqual(physicsValue, 0.5d), "A physics tween must advance after physics callbacks.");
     physics.Kill();
 
-    var killedPhysics = tree.CreateTween().SetProcessMode(Tween.TweenProcessMode.Physics);
+    var killedPhysics = tree.CreateTween().SetProcessMode(ProcessPhase.Physics);
     killedPhysics.TweenInterval(1d);
     killedPhysics.Kill();
     Require(!killedPhysics.IsValid() && tree.GetProcessedTweens().Contains(killedPhysics),
@@ -10089,7 +10089,7 @@ static void VerifyTweens()
     var laneController = tree.CreateTween();
     var migratedLane = tree.CreateTween();
     migratedLane.TweenMethod(value => migratedLaneValue = value, 0d, 1d, 1d);
-    laneController.TweenCallback(() => migratedLane.SetProcessMode(Tween.TweenProcessMode.Physics));
+    laneController.TweenCallback(() => migratedLane.SetProcessMode(ProcessPhase.Physics));
     tree.ProcessFrame(0.1d);
     Require(migratedLaneValue == 0d,
         "A captured tween moved to another lane before its turn must not run in the stale lane.");
@@ -10161,7 +10161,7 @@ static void VerifyTweens()
     var validation = tree.CreateTween();
     Expect<ArgumentOutOfRangeException>(() => validation.SetSpeedScale(double.PositiveInfinity),
         "Tween speed must reject non-finite values.");
-    Expect<ArgumentOutOfRangeException>(() => validation.SetProcessMode((Tween.TweenProcessMode)99),
+    Expect<ArgumentOutOfRangeException>(() => validation.SetProcessMode((ProcessPhase)99),
         "Tween process mode must reject undefined values.");
     Expect<ArgumentOutOfRangeException>(() => validation.SetPauseMode((Tween.TweenPauseMode)99),
         "Tween pause mode must reject undefined values.");
@@ -11259,7 +11259,7 @@ static void VerifyTweenSubtweens()
 
     var policyValue = 0d;
     var policyChild = tree.CreateTween()
-        .SetProcessMode(Tween.TweenProcessMode.Physics)
+        .SetProcessMode(ProcessPhase.Physics)
         .SetPauseMode(Tween.TweenPauseMode.Stop)
         .SetSpeedScale(2d);
     policyChild.TweenMethod(value => policyValue = value, 0d, 1d, 1d);

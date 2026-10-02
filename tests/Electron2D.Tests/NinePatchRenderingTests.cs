@@ -20,8 +20,8 @@ internal static partial class RenderingRuntimeTests
                     PatchMarginRight = 1,
                     PatchMarginTop = 1,
                     PatchMarginBottom = 1,
-                    AxisStretchHorizontal = (NinePatchRect.AxisStretchMode)h,
-                    AxisStretchVertical = (NinePatchRect.AxisStretchMode)v,
+                    AxisStretchHorizontal = (AxisStretchMode)h,
+                    AxisStretchVertical = (AxisStretchMode)v,
                     TextureFilter = TextureFilter.Nearest
                 };
                 window.AddChild(panel); panels.Add(panel);
@@ -91,8 +91,8 @@ internal static partial class RenderingRuntimeTests
             PatchMarginTop = 1,
             PatchMarginRight = 1,
             PatchMarginBottom = 1,
-            AxisStretchHorizontal = NinePatchRect.AxisStretchMode.Tile,
-            AxisStretchVertical = NinePatchRect.AxisStretchMode.TileFit
+            AxisStretchHorizontal = AxisStretchMode.Tile,
+            AxisStretchVertical = AxisStretchMode.TileFit
         };
         window.AddChild(panel); var frames = 0; long before = 0, allocated = 0;
         window.Ready += _ =>

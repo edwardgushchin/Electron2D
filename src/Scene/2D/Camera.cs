@@ -16,21 +16,12 @@ public enum AnchorMode
 /// Editor overlays, physics interpolation and independent offscreen viewports are not implemented.</remarks>
 public partial class Camera : Entity
 {
-    /// <summary>Selects the internal frame lane that updates the camera.</summary>
-    public enum CameraProcessCallback
-    {
-        /// <summary>Updates on physics frames.</summary>
-        Physics = 0,
-        /// <summary>Updates on process frames.</summary>
-        Idle = 1,
-    }
-
     private Vector2 _offset = Vector2.Zero;
     private Vector2 _zoom = Vector2.One;
     private AnchorMode _anchorMode = AnchorMode.DragCenter;
     private bool _ignoreRotation = true;
     private bool _enabled = true;
-    private CameraProcessCallback _processCallback = CameraProcessCallback.Idle;
+    private ProcessPhase _processCallback = ProcessPhase.Idle;
     private bool _limitEnabled = true;
     private bool _limitSmoothed = false;
     private bool _positionSmoothingEnabled = false;
@@ -111,15 +102,15 @@ public partial class Camera : Entity
     }
 
     /// <summary>Gets or sets the internal frame lane for tracking.</summary>
-    /// <value>CameraProcessCallback.Idle initially.</value>
+    /// <value>ProcessPhase.Idle initially.</value>
     /// <remarks>Selects the internal process lane, independently of the public processing flags.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside the documented contract.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner, during capture, or tracking arithmetic overflows.</exception>
     /// <exception cref="ObjectDisposedException">The camera is disposed.</exception>
-    public CameraProcessCallback ProcessCallback
+    public ProcessPhase ProcessCallback
     {
         get { CheckQuery(); return _processCallback; }
-        set { EnsureMutable(); if (value is not (CameraProcessCallback.Physics or CameraProcessCallback.Idle)) throw new ArgumentOutOfRangeException(nameof(value)); if (_processCallback == value) return; _processCallback = value; UpdateProcessing(); }
+        set { EnsureMutable(); if (value is not (ProcessPhase.Physics or ProcessPhase.Idle)) throw new ArgumentOutOfRangeException(nameof(value)); if (_processCallback == value) return; _processCallback = value; UpdateProcessing(); }
     }
 
     /// <summary>Gets or sets whether scroll limits apply.</summary>
@@ -436,7 +427,7 @@ public partial class Camera : Entity
         new PropertyDescriptor<Camera, AnchorMode>(nameof(AnchorMode), c => c.AnchorMode, (c, v) => c.AnchorMode = v, _ => AnchorMode.DragCenter, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(IgnoreRotation), c => c.IgnoreRotation, (c, v) => c.IgnoreRotation = v, _ => true, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(Enabled), c => c.Enabled, (c, v) => c.Enabled = v, _ => true, stored: true),
-        new PropertyDescriptor<Camera, CameraProcessCallback>(nameof(ProcessCallback), c => c.ProcessCallback, (c, v) => c.ProcessCallback = v, _ => CameraProcessCallback.Idle, stored: true),
+        new PropertyDescriptor<Camera, ProcessPhase>(nameof(ProcessCallback), c => c.ProcessCallback, (c, v) => c.ProcessCallback = v, _ => ProcessPhase.Idle, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(LimitEnabled), c => c.LimitEnabled, (c, v) => c.LimitEnabled = v, _ => true, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(LimitSmoothed), c => c.LimitSmoothed, (c, v) => c.LimitSmoothed = v, _ => false, stored: true),
         new PropertyDescriptor<Camera, bool>(nameof(PositionSmoothingEnabled), c => c.PositionSmoothingEnabled, (c, v) => c.PositionSmoothingEnabled = v, _ => false, stored: true),

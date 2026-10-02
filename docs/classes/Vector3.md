@@ -1,6 +1,6 @@
 # Vector3
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 - **Source:** [`src/Core/Math/Vector3.cs`](../../src/Core/Math/Vector3.cs)
 - **Declaration:** `public struct Vector3`
@@ -73,10 +73,10 @@ var doubled = value * 2;
 | [`public Electron2D.Vector3 LimitLength(System.Single length = 1f)`](#member-44) | Restricts the vector length to a maximum. |
 | [`public Electron2D.Vector3 Max(Electron2D.Vector3 with)`](#member-45) | Returns the componentwise maximum with another vector. |
 | [`public Electron2D.Vector3 Max(System.Single with)`](#member-46) | Returns the componentwise maximum with a scalar. |
-| [`public Electron2D.Vector3.Axis MaxAxisIndex()`](#member-47) | Returns the axis containing the greatest component. |
+| [`public Electron2D.Vector3Axis MaxAxisIndex()`](#member-47) | Returns the axis containing the greatest component. |
 | [`public Electron2D.Vector3 Min(Electron2D.Vector3 with)`](#member-48) | Returns the componentwise minimum with another vector. |
 | [`public Electron2D.Vector3 Min(System.Single with)`](#member-49) | Returns the componentwise minimum with a scalar. |
-| [`public Electron2D.Vector3.Axis MinAxisIndex()`](#member-50) | Returns the axis containing the least component. |
+| [`public Electron2D.Vector3Axis MinAxisIndex()`](#member-50) | Returns the axis containing the least component. |
 | [`public Electron2D.Vector3 MoveToward(Electron2D.Vector3 to, System.Single delta)`](#member-51) | Moves toward another vector by a signed distance without passing it. |
 | [`public Electron2D.Vector3 Normalized()`](#member-52) | Returns this vector scaled to unit length. |
 | [`public static Electron2D.Vector3 OctahedronDecode(Electron2D.Vector2 uv)`](#member-53) | Decodes an octahedrally packed unit vector from a two-component value. |
@@ -112,10 +112,10 @@ var doubled = value * 2;
 | [`public static Electron2D.Vector3 op_Subtraction(Electron2D.Vector3 left, Electron2D.Vector3 right)`](#member-83) | Subtracts two vectors componentwise. |
 | [`public static Electron2D.Vector3 op_UnaryNegation(Electron2D.Vector3 value)`](#member-84) | Negates every component. |
 | [`public static Electron2D.Vector3 op_UnaryPlus(Electron2D.Vector3 value)`](#member-85) | Returns a vector unchanged. |
-| [`public enum Electron2D.Vector3.Axis`](#member-86) | Identifies one vector component. |
-| [`public const Electron2D.Vector3.Axis X = 0`](#member-87) | Identifies the X component. |
-| [`public const Electron2D.Vector3.Axis Y = 1`](#member-88) | Identifies the Y component. |
-| [`public const Electron2D.Vector3.Axis Z = 2`](#member-89) | Identifies the Z component. |
+| [`public enum Electron2D.Vector3Axis`](#member-86) | Identifies one vector component. |
+| [`public const Electron2D.Vector3Axis X = 0`](#member-87) | Identifies the X component. |
+| [`public const Electron2D.Vector3Axis Y = 1`](#member-88) | Identifies the Y component. |
+| [`public const Electron2D.Vector3Axis Z = 2`](#member-89) | Identifies the Z component. |
 
 ## Member contracts
 
@@ -481,11 +481,11 @@ Returns the componentwise maximum with a scalar.
 - Returns: The componentwise maximum.
 
 <a id="member-47"></a>
-### `public Electron2D.Vector3.Axis MaxAxisIndex()`
+### `public Electron2D.Vector3Axis MaxAxisIndex()`
 
 Returns the axis containing the greatest component.
 
-- Returns: F:Electron2D.Vector3.Axis.X when all components are equal; otherwise the first greatest axis.
+- Returns: F:Electron2D.Vector3Axis.X when all components are equal; otherwise the first greatest axis.
 
 <a id="member-48"></a>
 ### `public Electron2D.Vector3 Min(Electron2D.Vector3 with)`
@@ -504,11 +504,11 @@ Returns the componentwise minimum with a scalar.
 - Returns: The componentwise minimum.
 
 <a id="member-50"></a>
-### `public Electron2D.Vector3.Axis MinAxisIndex()`
+### `public Electron2D.Vector3Axis MinAxisIndex()`
 
 Returns the axis containing the least component.
 
-- Returns: F:Electron2D.Vector3.Axis.Z when all components are equal; otherwise the last least axis.
+- Returns: F:Electron2D.Vector3Axis.Z when all components are equal; otherwise the last least axis.
 - NaN components follow the pinned X/Y/Z branches and may select an unordered axis.
 
 <a id="member-51"></a>
@@ -813,25 +813,25 @@ Returns a vector unchanged.
 - Returns: value.
 
 <a id="member-86"></a>
-### `public enum Electron2D.Vector3.Axis`
+### `public enum Electron2D.Vector3Axis`
 
 Identifies one vector component.
 
 
 <a id="member-87"></a>
-### `public const Electron2D.Vector3.Axis X = 0`
+### `public const Electron2D.Vector3Axis X = 0`
 
 Identifies the X component.
 
 
 <a id="member-88"></a>
-### `public const Electron2D.Vector3.Axis Y = 1`
+### `public const Electron2D.Vector3Axis Y = 1`
 
 Identifies the Y component.
 
 
 <a id="member-89"></a>
-### `public const Electron2D.Vector3.Axis Z = 2`
+### `public const Electron2D.Vector3Axis Z = 2`
 
 Identifies the Z component.
 

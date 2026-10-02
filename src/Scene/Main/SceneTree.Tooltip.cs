@@ -126,8 +126,8 @@ public sealed partial class SceneTree
                 Name = "TooltipPanel",
                 ThemeTypeVariation = "TooltipPanel",
                 MouseFilter = MouseFilter.Ignore,
-                MouseBehaviorRecursive = MouseBehaviorRecursive.Disabled,
-                FocusBehaviorRecursive = FocusBehaviorRecursive.Disabled
+                MouseBehaviorRecursive = RecursiveBehavior.Disabled,
+                FocusBehaviorRecursive = RecursiveBehavior.Disabled
             };
             layer.AddChild(panel); panel.AddChild(content);
             _tooltipLayer = layer; _tooltipPanel = panel; _tooltipOwner = owner; _shownTooltipText = text;

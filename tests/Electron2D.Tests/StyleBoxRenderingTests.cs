@@ -10,7 +10,7 @@ internal static partial class RenderingRuntimeTests
         var styles = new StyleBoxTexture[9];
         for (var v = 0; v < 3; v++) for (var h = 0; h < 3; h++)
             {
-                var style = new StyleBoxTexture { Texture = texture, AxisStretchHorizontal = (StyleBoxTexture.AxisStretchMode)h, AxisStretchVertical = (StyleBoxTexture.AxisStretchMode)v };
+                var style = new StyleBoxTexture { Texture = texture, AxisStretchHorizontal = (AxisStretchMode)h, AxisStretchVertical = (AxisStretchMode)v };
                 style.SetTextureMarginAll(1.25f); styles[v * 3 + h] = style;
             }
         using var expanded = new StyleBoxTexture { Texture = texture, ExpandMarginLeft = 1.25f, ExpandMarginTop = .75f, ExpandMarginRight = .75f, ExpandMarginBottom = 1.25f, ModulateColor = new(1, .5f, 1, 1) };
@@ -89,7 +89,7 @@ internal static partial class RenderingRuntimeTests
 
     private static void VerifyStyleBoxWarm(string backend, Texture texture)
     {
-        using var style = new StyleBoxTexture { Texture = texture, AxisStretchHorizontal = StyleBoxTexture.AxisStretchMode.Tile, AxisStretchVertical = StyleBoxTexture.AxisStretchMode.TileFit };
+        using var style = new StyleBoxTexture { Texture = texture, AxisStretchHorizontal = AxisStretchMode.Tile, AxisStretchVertical = AxisStretchMode.TileFit };
         style.SetTextureMarginAll(1.25f);
         using var line = new StyleBoxLine { Color = Colors.Red, Thickness = 2 };
         using var empty = new StyleBoxEmpty();

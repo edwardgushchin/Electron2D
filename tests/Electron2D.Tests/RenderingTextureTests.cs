@@ -36,13 +36,13 @@ internal static partial class RenderingRuntimeTests
         Reject<ObjectDisposedException>(() => display.CursorSetCustomImage(texture));
         Check(SDL3.SDL.GetCursor() == installed, "Failures and disposal preserve the copied native cursor.");
         using var customSuccess = new CursorTexture(() => temporary = Image.CreateEmpty(2, 2, false, Image.Format.Rgba8));
-        display.CursorSetCustomImage(customSuccess, DisplayServer.CursorShape.IBeam);
+        display.CursorSetCustomImage(customSuccess, CursorShape.IBeam);
         Check(temporary is { IsDisposed: true } && !customSuccess.IsDisposed && SDL3.SDL.GetCursor() == installed,
             "Successful conversion releases only its temporary image and preserves other shape slots.");
         customSuccess.Dispose();
-        display.CursorSetShape(DisplayServer.CursorShape.IBeam);
+        display.CursorSetShape(CursorShape.IBeam);
         Check(SDL3.SDL.GetCursor() != 0 && SDL3.SDL.GetCursor() != installed, "A custom texture cursor survives source disposal.");
-        display.CursorSetShape(DisplayServer.CursorShape.Arrow);
+        display.CursorSetShape(CursorShape.Arrow);
         Check(SDL3.SDL.GetCursor() == installed, "Returning to the arrow restores its own texture cursor.");
         display.CursorSetCustomImage(null);
         Check(SDL3.SDL.GetCursor() != 0 && SDL3.SDL.GetCursor() != installed, "Null restores the system cursor without overload ambiguity.");

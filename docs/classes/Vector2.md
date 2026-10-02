@@ -1,6 +1,6 @@
 # Vector2
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 **Inherits:** —
 
@@ -87,10 +87,10 @@ var nextPosition = position + velocity * delta;
 | [`public Vector2 LimitLength(float length = 1f)`](#m-electron2d-vector2-limitlength-system-single) | Limits the vector to a maximum length. |
 | [`public Vector2 Max(Vector2 with)`](#m-electron2d-vector2-max-electron2d-vector2) | Returns the componentwise maximum with another vector. |
 | [`public Vector2 Max(float with)`](#m-electron2d-vector2-max-system-single) | Returns the componentwise maximum with a scalar. |
-| [`public Vector2.Axis MaxAxisIndex()`](#m-electron2d-vector2-maxaxisindex) | Returns the axis containing the greatest component. |
+| [`public Vector2Axis MaxAxisIndex()`](#m-electron2d-vector2-maxaxisindex) | Returns the axis containing the greatest component. |
 | [`public Vector2 Min(Vector2 with)`](#m-electron2d-vector2-min-electron2d-vector2) | Returns the componentwise minimum with another vector. |
 | [`public Vector2 Min(float with)`](#m-electron2d-vector2-min-system-single) | Returns the componentwise minimum with a scalar. |
-| [`public Vector2.Axis MinAxisIndex()`](#m-electron2d-vector2-minaxisindex) | Returns the axis containing the least component. |
+| [`public Vector2Axis MinAxisIndex()`](#m-electron2d-vector2-minaxisindex) | Returns the axis containing the least component. |
 | [`public Vector2 MoveToward(Vector2 to, float delta)`](#m-electron2d-vector2-movetoward-electron2d-vector2-system-single) | Moves toward another vector by a fixed distance without passing it. |
 | [`public Vector2 Normalized()`](#m-electron2d-vector2-normalized) | Returns this vector scaled to unit length. |
 | [`public Vector2 Orthogonal()`](#m-electron2d-vector2-orthogonal) | Returns a perpendicular vector rotated 90 degrees counter-clockwise in screen space. |
@@ -111,18 +111,11 @@ var nextPosition = position + velocity * delta;
 | [`public override string ToString()`](#m-electron2d-vector2-tostring) | Formats both components using invariant culture. |
 | [`public string ToString(string format)`](#m-electron2d-vector2-tostring-system-string) | Formats both components with a numeric format and invariant culture. |
 
-## Enumerations
+## Shared axis enum
 
 | Member | Description |
 | --- | --- |
-| [`public enum Vector2.Axis`](#t-electron2d-vector2-axis) | Identifies one vector component. |
-
-## Constants
-
-| Member | Description |
-| --- | --- |
-| [`Vector2.Axis.X = 0`](#f-electron2d-vector2-axis-x) | Identifies the horizontal X component. |
-| [`Vector2.Axis.Y = 1`](#f-electron2d-vector2-axis-y) | Identifies the vertical Y component. |
+| [Vector2Axis](Vector2Axis.md) | Identifies one vector component. |
 
 ## Fields
 
@@ -582,11 +575,11 @@ Returns the componentwise maximum with a scalar.
 **Returns:** The componentwise maximum.
 
 <a id="m-electron2d-vector2-maxaxisindex"></a>
-### `public Vector2.Axis MaxAxisIndex()`
+### `public Vector2Axis MaxAxisIndex()`
 
 Returns the axis containing the greatest component.
 
-**Returns:** [`Vector2.Axis.X`](Vector2.md#f-electron2d-vector2-axis-x) when components are equal; otherwise the greatest component's axis.
+**Returns:** [`Vector2Axis.X`](Vector2Axis.md) when components are equal; otherwise the greatest component's axis.
 
 <a id="m-electron2d-vector2-min-electron2d-vector2"></a>
 ### `public Vector2 Min(Vector2 with)`
@@ -611,11 +604,11 @@ Returns the componentwise minimum with a scalar.
 **Returns:** The componentwise minimum.
 
 <a id="m-electron2d-vector2-minaxisindex"></a>
-### `public Vector2.Axis MinAxisIndex()`
+### `public Vector2Axis MinAxisIndex()`
 
 Returns the axis containing the least component.
 
-**Returns:** [`Vector2.Axis.Y`](Vector2.md#f-electron2d-vector2-axis-y) when components are equal; otherwise the least component's axis.
+**Returns:** [`Vector2Axis.Y`](Vector2Axis.md) when components are equal; otherwise the least component's axis.
 
 <a id="m-electron2d-vector2-movetoward-electron2d-vector2-system-single"></a>
 ### `public Vector2 MoveToward(Vector2 to, float delta)`
@@ -824,24 +817,9 @@ Formats both components with a numeric format and invariant culture.
 
 - `FormatException`: `format` is invalid.
 
-## Enumeration Descriptions
+## Shared axis type
 
-<a id="t-electron2d-vector2-axis"></a>
-### `public enum Vector2.Axis`
-
-Identifies one vector component.
-
-## Constant Descriptions
-
-<a id="f-electron2d-vector2-axis-x"></a>
-### `Vector2.Axis.X = 0`
-
-Identifies the horizontal X component.
-
-<a id="f-electron2d-vector2-axis-y"></a>
-### `Vector2.Axis.Y = 1`
-
-Identifies the vertical Y component.
+See [Vector2Axis](Vector2Axis.md) for the returned axis values.
 
 ## Field Descriptions
 

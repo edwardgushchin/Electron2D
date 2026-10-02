@@ -72,7 +72,7 @@ internal static class SplitContainerTests
         left.AddChild(new Node { Name = "Unrelated" });
         var nested = new SplitContainer { Name = "Nested", Theme = skin.Theme, Vertical = true, DragNestedIntersections = true }; nested.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect); nested.AddChild(Child("Top")); nested.AddChild(Child("Bottom")); left.AddChild(nested); outer.AddChild(left); outer.AddChild(Child("Right")); using var tree = new SceneTree(outer); Advance(tree, 8);
         var parent = outer.GetDragAreaControl(); var intersection = parent.GetChildren(true).FirstOrDefault(n => n.Name.StartsWith("_split_intersection_")) as Control;
-        Check(intersection is not null && intersection.GetCursorShape() == Control.CursorShape.Drag, "An unrelated sibling does not suppress a valid orthogonal nested intersection.");
+        Check(intersection is not null && intersection.GetCursorShape() == CursorShape.Drag, "An unrelated sibling does not suppress a valid orthogonal nested intersection.");
         using var down = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = new(1, 1) }; using var move = new InputEventMouseMotion { Position = new(1, 11) }; using var up = new InputEventMouseButton { ButtonIndex = MouseButton.Left, Position = new(1, 11) };
         intersection!.DispatchGUIInput(down); intersection.DispatchGUIInput(move); intersection.DispatchGUIInput(up); Check(nested.SplitOffset == 10, "Intersection drag moves the descendant split along its orthogonal axis.");
         nested.DragNestedIntersections = false; Advance(tree); Check(intersection.IsDisposed, "Disabling nested intersections removes borrowed joint targets.");

@@ -8,14 +8,15 @@ internal static class InputPointerNativeTests
         using (var display = DisplayServer.Open("Input pointer contract", new Vector2i(320, 240)))
         {
             DisplayServerPointerNativeTests.Run(display);
-            foreach (var shape in Enum.GetValues<Input.CursorShape>())
+            foreach (var shape in Enum.GetValues<CursorShape>())
             {
+                if (shape == CursorShape.Max) continue;
                 Input.Instance.SetDefaultCursorShape(shape);
                 Check(Input.Instance.GetCurrentCursorShape() == shape && SDL.GetCursor() != 0,
                     "Every Input cursor shape reaches the native cursor.");
             }
-            display.CursorSetShape(DisplayServer.CursorShape.IBeam);
-            Check(Input.Instance.GetCurrentCursorShape() == Input.CursorShape.IBeam,
+            display.CursorSetShape(CursorShape.IBeam);
+            Check(Input.Instance.GetCurrentCursorShape() == CursorShape.IBeam,
                 "Input reads a cursor shape selected directly through the display server.");
             Input.Instance.SetDefaultCursorShape();
             var system = SDL.GetCursor();
@@ -24,13 +25,13 @@ internal static class InputPointerNativeTests
             {
                 Input.Instance.SetCustomMouseCursor(image, hotspot: new Vector2(1, 1));
                 Check(SDL.GetCursor() != 0 && SDL.GetCursor() != system &&
-                    Input.Instance.GetCurrentCursorShape() == Input.CursorShape.Arrow,
+                    Input.Instance.GetCurrentCursorShape() == CursorShape.Arrow,
                     "Custom Input cursor uses a native copy of the caller-owned image.");
             }
             Input.Instance.SetCustomMouseCursor(null);
             Check(SDL.GetCursor() != 0, "Clearing a custom Input cursor restores the system shape.");
-            Reject<ArgumentOutOfRangeException>(() => Input.Instance.MouseMode = Input.MouseModeEnum.Max);
-            Reject<ArgumentOutOfRangeException>(() => Input.Instance.SetDefaultCursorShape((Input.CursorShape)17));
+            Reject<ArgumentOutOfRangeException>(() => Input.Instance.MouseMode = MouseMode.Max);
+            Reject<ArgumentOutOfRangeException>(() => Input.Instance.SetDefaultCursorShape((CursorShape)17));
             Reject<ArgumentException>(() => Input.Instance.WarpMouse(new Vector2(float.PositiveInfinity, 0)));
         }
         Reject<InvalidOperationException>(() => _ = Input.Instance.MouseMode);

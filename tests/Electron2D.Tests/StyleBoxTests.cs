@@ -49,8 +49,8 @@ internal static class StyleBoxTests
     {
         using var style = new StyleBoxTexture(); var changed = 0; style.Changed += _ => changed++;
         Check(style.Texture is null && style.RegionRect == default && style.ModulateColor == Colors.White && style.DrawCenter &&
-            style.AxisStretchHorizontal == StyleBoxTexture.AxisStretchMode.Stretch && style.AxisStretchVertical == StyleBoxTexture.AxisStretchMode.Stretch &&
-            (int)StyleBoxTexture.AxisStretchMode.Tile == 1 && (int)StyleBoxTexture.AxisStretchMode.TileFit == 2, "Texture style defaults and stretch mode identities.");
+            style.AxisStretchHorizontal == AxisStretchMode.Stretch && style.AxisStretchVertical == AxisStretchMode.Stretch &&
+            (int)AxisStretchMode.Tile == 1 && (int)AxisStretchMode.TileFit == 2, "Texture style defaults and stretch mode identities.");
         style.Texture = null; style.RegionRect = default; style.ModulateColor = Colors.White;
         Check(changed == 0, "Equal texture, region and tint assignments are silent.");
         for (var side = 0; side < 4; side++)
@@ -59,7 +59,7 @@ internal static class StyleBoxTests
             style.SetTextureMargin((Side)side, 0); style.SetExpandMargin((Side)side, 0);
         }
         style.SetTextureMarginAll(0); style.SetExpandMarginAll(0); style.DrawCenter = true;
-        style.AxisStretchHorizontal = StyleBoxTexture.AxisStretchMode.Stretch; style.AxisStretchVertical = StyleBoxTexture.AxisStretchMode.Stretch;
+        style.AxisStretchHorizontal = AxisStretchMode.Stretch; style.AxisStretchVertical = AxisStretchMode.Stretch;
         Check(changed == 13, "Margin groups, individual margins, center and axis policies emit once even when equal.");
         style.SetTextureMarginAll(3.5f); style.ContentMarginLeft = -2; style.ContentMarginRight = 4;
         Check(style.GetMargin(Side.Left) == 3.5f && style.GetMinimumSize() == new Vector2(7.5f, 7), "Automatic content margins inherit fractional texture margins.");
@@ -68,8 +68,8 @@ internal static class StyleBoxTests
         style.ExpandMarginLeft = -2; style.ExpandMarginTop = 3; style.ExpandMarginRight = 4; style.ExpandMarginBottom = -5;
         Check(style.GetDrawRect(new(10, 20, 30, 40)) == new Rect2(12, 17, 32, 38), "Signed drawing expansion applies even without a texture.");
         var before = changed;
-        Reject<ArgumentOutOfRangeException>(() => style.AxisStretchHorizontal = (StyleBoxTexture.AxisStretchMode)3);
-        Reject<ArgumentOutOfRangeException>(() => style.AxisStretchVertical = (StyleBoxTexture.AxisStretchMode)(-1));
+        Reject<ArgumentOutOfRangeException>(() => style.AxisStretchHorizontal = (AxisStretchMode)3);
+        Reject<ArgumentOutOfRangeException>(() => style.AxisStretchVertical = (AxisStretchMode)(-1));
         Reject<ArgumentOutOfRangeException>(() => style.GetTextureMargin((Side)4));
         Reject<ArgumentOutOfRangeException>(() => style.SetExpandMargin((Side)4, 0));
         Reject<ArgumentException>(() => style.SetTextureMarginAll(float.PositiveInfinity));
@@ -160,11 +160,11 @@ internal static class StyleBoxTests
             RegionRect = new(0, 0, 2, 2),
             ModulateColor = Colors.Blue,
             DrawCenter = false,
-            AxisStretchHorizontal = StyleBoxTexture.AxisStretchMode.Tile
+            AxisStretchHorizontal = AxisStretchMode.Tile
         };
         using var shallow = (StyleBoxTexture)style.Duplicate();
         Check(ReferenceEquals(shallow.Texture, texture) && shallow.ContentMarginLeft == 5 && shallow.TextureMarginTop == 2 && shallow.ExpandMarginRight == -3 &&
-            shallow.RegionRect == style.RegionRect && shallow.ModulateColor == Colors.Blue && !shallow.DrawCenter && shallow.AxisStretchHorizontal == StyleBoxTexture.AxisStretchMode.Tile,
+            shallow.RegionRect == style.RegionRect && shallow.ModulateColor == Colors.Blue && !shallow.DrawCenter && shallow.AxisStretchHorizontal == AxisStretchMode.Tile,
             "Shallow duplication preserves exact texture style state and borrows its texture.");
         using var deep = (StyleBoxTexture)style.Duplicate(true); using var copiedTexture = deep.Texture!;
         Check(!ReferenceEquals(copiedTexture, texture) && copiedTexture.GetSize() == texture.GetSize(), "Deep duplication traverses the texture resource edge.");

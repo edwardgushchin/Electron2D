@@ -45,7 +45,7 @@ internal static partial class RenderingRuntimeTests
                 if (++frames == 1)
                 {
                     Check(pixel.R > .8f && pixel.B < .2f && window.IsGUIDragging() &&
-                          DisplayServer.Instance!.CursorGetShape() == DisplayServer.CursorShape.CanDrop,
+                          DisplayServer.Instance!.CursorGetShape() == CursorShape.CanDrop,
                         $"The {backend} drag preview overlays the accepting target and exposes the drop cursor; pixel={pixel}.");
                     var release = new SDL.Event
                     {

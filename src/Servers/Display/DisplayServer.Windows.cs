@@ -23,57 +23,6 @@ public sealed partial class DisplayServer
         GLXFBConfig = 7,
     }
 
-    /// <summary>Selects a main-window policy by its stable display-server ID.</summary>
-    public enum WindowFlag
-    {
-        /// <summary>Whether dragging the window border is prevented from resizing it.</summary>
-        ResizeDisabled = 0,
-        /// <summary>Whether the window has no native border and title bar.</summary>
-        Borderless = 1,
-        /// <summary>Whether the window stays above ordinary windows.</summary>
-        /// <remarks>The ordinary Wayland top-level window cannot apply this policy.</remarks>
-        AlwaysOnTop = 2,
-        /// <summary>Whether the window background can be transparent; requires transparent window creation and a renderer.</summary>
-        Transparent = 3,
-        /// <summary>Whether the window is prevented from receiving keyboard focus.</summary>
-        /// <remarks>SDL supports changing this policy only for Wayland popup-menu windows, which the main window is not.</remarks>
-        NoFocus = 4,
-        /// <summary>Whether the window is a transient menu popup; requires multiple-window ownership.</summary>
-        Popup = 5,
-        /// <summary>Whether content extends under the native title bar; requires platform title-bar integration.</summary>
-        ExtendToTitle = 6,
-        /// <summary>Whether mouse input passes to an underlying application window; requires native hit-test integration.</summary>
-        MousePassthrough = 7,
-        /// <summary>Whether native rounded window corners are suppressed; requires platform window-style integration.</summary>
-        SharpCorners = 8,
-        /// <summary>Whether ordinary screen capture excludes the window; requires platform capture-policy integration.</summary>
-        ExcludeFromCapture = 9,
-        /// <summary>Whether the window manager treats the window as a popup; requires multiple-window ownership.</summary>
-        PopupWmHint = 10,
-        /// <summary>Whether native minimization controls are disabled; requires platform window-style integration.</summary>
-        MinimizeDisabled = 11,
-        /// <summary>Whether native maximization controls are disabled; requires platform window-style integration.</summary>
-        MaximizeDisabled = 12,
-        /// <summary>The number of defined policy identifiers; not a window policy.</summary>
-        Max = 13,
-    }
-
-    /// <summary>Identifies the current presentation state of a native window.</summary>
-    public enum WindowMode
-    {
-        /// <summary>A decorated or undecorated floating window.</summary>
-        Windowed = 0,
-        /// <summary>A window hidden by the window manager and represented in its task list.</summary>
-        Minimized = 1,
-        /// <summary>A window expanded to the work area with its border retained.</summary>
-        Maximized = 2,
-        /// <summary>A borderless window covering its current display without a video-mode change.</summary>
-        Fullscreen = 3,
-        /// <summary>An exclusive fullscreen mode selected from the current display's available video modes where supported.</summary>
-        /// <remarks>Wayland uses ordinary compositor fullscreen for this request and reports <see cref="Fullscreen"/>.</remarks>
-        ExclusiveFullscreen = 4,
-    }
-
     /// <summary>Identifies a native taskbar progress indication.</summary>
     public enum ProgressState
     {

@@ -50,9 +50,9 @@ internal static partial class RenderingRuntimeTests
                 var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
                 pixels.SavePNG($"/tmp/e2d-texture-rect-{profile}-{frames}.png");
                 frames++;
-                if (frames <= 6) node.StretchMode = (TextureRectStretchMode)frames;
+                if (frames <= 6) node.StretchMode = (TextureStretchMode)frames;
                 else if (frames == 7) { node.FlipH = true; node.FlipV = true; }
-                else if (frames == 8) { node.Texture = nested; node.StretchMode = TextureRectStretchMode.Tile; node.FlipH = false; node.FlipV = false; }
+                else if (frames == 8) { node.Texture = nested; node.StretchMode = TextureStretchMode.Tile; node.FlipH = false; node.FlipV = false; }
                 else if (frames == 9) { node.FlipH = true; node.FlipV = true; }
                 else if (frames == 10) node.FlipV = false;
                 else if (frames == 11) { node.FlipH = false; node.FlipV = true; }
@@ -66,7 +66,7 @@ internal static partial class RenderingRuntimeTests
     private static void VerifyTextureRectWarm(string backend, Texture texture)
     {
         var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
-        var node = new TextureRect { Texture = texture, ExpandMode = TextureRectExpandMode.IgnoreSize, StretchMode = TextureRectStretchMode.KeepAspectCentered, Size = new(16, 16) }; window.AddChild(node);
+        var node = new TextureRect { Texture = texture, ExpandMode = TextureRectExpandMode.IgnoreSize, StretchMode = TextureStretchMode.KeepAspectCentered, Size = new(16, 16) }; window.AddChild(node);
         var frames = 0; long before = 0, active = 0, idle = 0;
         window.Ready += _ =>
         {

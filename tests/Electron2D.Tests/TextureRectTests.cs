@@ -5,7 +5,7 @@ internal static class TextureRectTests
     internal static void Run()
     {
         using var defaults = new TextureRect();
-        Check(defaults.Texture is null && defaults.ExpandMode == TextureRectExpandMode.KeepSize && defaults.StretchMode == TextureRectStretchMode.Scale && !defaults.FlipH && !defaults.FlipV && defaults.MouseFilter == MouseFilter.Pass && defaults.GetMinimumSize() == Vector2.Zero, "Texture rectangle defaults match the public contract.");
+        Check(defaults.Texture is null && defaults.ExpandMode == TextureRectExpandMode.KeepSize && defaults.StretchMode == TextureStretchMode.Scale && !defaults.FlipH && !defaults.FlipV && defaults.MouseFilter == MouseFilter.Pass && defaults.GetMinimumSize() == Vector2.Zero, "Texture rectangle defaults match the public contract.");
         VerifyMinimums(); VerifyResourceLifetime(); VerifyPackingAndFlow(); VerifyGeometryAndAllocation(); VerifyFailedObserversAndQueries(); VerifyFlowModes();
         Console.WriteLine("Texture rectangle modes/minima, lifecycle, guards, packing, flow stabilization, geometry and zero-allocation checks passed.");
     }
@@ -18,8 +18,8 @@ internal static class TextureRectTests
         using var empty = new ImageTexture(); node.Texture = empty;
         node.ExpandMode = TextureRectExpandMode.FitWidthProportional; Check(node.GetMinimumSize() == Vector2.Zero, "Empty proportional width avoids division by zero.");
         node.ExpandMode = TextureRectExpandMode.FitHeightProportional; Check(node.GetMinimumSize() == Vector2.Zero, "Empty proportional height avoids division by zero.");
-        Reject<ArgumentOutOfRangeException>(() => node.ExpandMode = (TextureRectExpandMode)6); Reject<ArgumentOutOfRangeException>(() => node.StretchMode = (TextureRectStretchMode)7);
-        Check(node.ExpandMode == TextureRectExpandMode.FitHeightProportional && node.StretchMode == TextureRectStretchMode.Scale, "Invalid modes preserve prior state.");
+        Reject<ArgumentOutOfRangeException>(() => node.ExpandMode = (TextureRectExpandMode)6); Reject<ArgumentOutOfRangeException>(() => node.StretchMode = (TextureStretchMode)7);
+        Check(node.ExpandMode == TextureRectExpandMode.FitHeightProportional && node.StretchMode == TextureStretchMode.Scale, "Invalid modes preserve prior state.");
     }
     private static void VerifyResourceLifetime()
     {
@@ -29,7 +29,7 @@ internal static class TextureRectTests
         Task.Run(() => texture.SetImage(replacement)).GetAwaiter().GetResult(); tree.ProcessFrame(0); tree.ProcessFrame(0);
         Check(node.GetMinimumSize() == new Vector2(6, 3), "Off-thread resource edits invalidate minimums on the scene owner.");
         using var atlas = new AtlasTexture { Atlas = texture, Region = new(0, 0, 2, 2), Margin = new(1, 1, 1, 1) }; node.Texture = atlas;
-        node.StretchMode = TextureRectStretchMode.Tile; Check(node.GetConfigurationWarnings().Length == 1, "Tiled atlas margins produce the concrete warning.");
+        node.StretchMode = TextureStretchMode.Tile; Check(node.GetConfigurationWarnings().Length == 1, "Tiled atlas margins produce the concrete warning.");
         atlas.Margin = default; Check(node.GetConfigurationWarnings().Length == 0, "Cleared atlas margins clear the warning.");
         Check(Task.Run(() => Capture(() => node.FlipH = true)).Result is InvalidOperationException && Task.Run(() => Capture(() => _ = node.Texture)).Result is InvalidOperationException, "Node access remains owner-affine.");
         Task.Run(atlas.Dispose).GetAwaiter().GetResult(); tree.ProcessFrame(0); Check(node.Texture is null, "Off-thread disposal clears the borrowed binding without ownership transfer.");
@@ -38,7 +38,7 @@ internal static class TextureRectTests
     private static void VerifyPackingAndFlow()
     {
         using var image = Image.CreateEmpty(4, 2, false, Image.Format.Rgba8); using var texture = ImageTexture.CreateFromImage(image);
-        using var node = new TextureRect { Name = "Image", Texture = texture, ExpandMode = TextureRectExpandMode.IgnoreSize, StretchMode = TextureRectStretchMode.KeepAspectCovered, FlipH = true, FlipV = true };
+        using var node = new TextureRect { Name = "Image", Texture = texture, ExpandMode = TextureRectExpandMode.IgnoreSize, StretchMode = TextureStretchMode.KeepAspectCovered, FlipH = true, FlipV = true };
         using var packed = new PackedScene(); packed.Pack(node); using var copied = packed.Instantiate();
         Check(copied is TextureRect copy && ReferenceEquals(copy.Texture, texture) && copy.ExpandMode == node.ExpandMode && copy.StretchMode == node.StretchMode && copy.FlipH && copy.FlipV && copy.MouseFilter == MouseFilter.Pass, "Packing preserves exact image-control identity, enums, flips and borrowed texture.");
         var flow = new HFlowContainer { Size = new(20, 80), HSeparation = 0 };
@@ -57,7 +57,7 @@ internal static class TextureRectTests
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var mode = 0; mode < 7; mode++)
         {
-            node.StretchMode = (TextureRectStretchMode)mode; node.PrepareCanvas(); vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, Transform.Identity);
+            node.StretchMode = (TextureStretchMode)mode; node.PrepareCanvas(); vertices.Clear(); batches.Clear(); node.AppendCanvas(vertices, batches, Transform.Identity);
             Check(vertices.Count > 0 && vertices.All(v => v.Position.IsFinite() && v.UV.IsFinite()), $"Stretch mode {mode} records actual finite textured geometry.");
             var min = vertices.Select(v => v.Position).Aggregate((a, b) => a.Min(b)); var max = vertices.Select(v => v.Position).Aggregate((a, b) => a.Max(b));
             if (mode == 4) Check(max - min == new Vector2(9, 4), "Aspect fit truncates integer width/height.");

@@ -1,58 +1,7 @@
 namespace Electron2D;
 
-/// <summary>Identifies a native window's presentation mode.</summary>
-public enum WindowMode
-{
-    /// <summary>A floating window with its configured decorations.</summary>
-    Windowed = 0,
-    /// <summary>A window minimized by the window manager.</summary>
-    Minimized = 1,
-    /// <summary>A window expanded to its screen's work area.</summary>
-    Maximized = 2,
-    /// <summary>A borderless window covering its screen.</summary>
-    Fullscreen = 3,
-    /// <summary>A fullscreen window requesting a dedicated video mode where supported.</summary>
-    /// <remarks>Wayland uses ordinary fullscreen and reports <see cref="Fullscreen"/>.</remarks>
-    ExclusiveFullscreen = 4,
-}
-
 public partial class Window
 {
-    /// <summary>Identifies individual window policies; values are indices, not a bit mask.</summary>
-    /// <remarks>Only ResizeDisabled, Borderless, AlwaysOnTop and NoFocus have executable integration.
-    /// Other defined policies throw NotSupportedException from GetFlag and SetFlag.</remarks>
-    public enum Flags
-    {
-        /// <summary>Prevents resizing by dragging native borders.</summary>
-        ResizeDisabled = 0,
-        /// <summary>Removes native borders and the title bar.</summary>
-        Borderless = 1,
-        /// <summary>Requests placement above ordinary windows; unavailable for a Wayland top-level.</summary>
-        AlwaysOnTop = 2,
-        /// <summary>Requires transparent native creation and rendering.</summary>
-        Transparent = 3,
-        /// <summary>Prevents keyboard focus; unavailable for a Wayland top-level.</summary>
-        NoFocus = 4,
-        /// <summary>Requires transient popup ownership.</summary>
-        Popup = 5,
-        /// <summary>Requires drawing under an integrated native title bar.</summary>
-        ExtendToTitle = 6,
-        /// <summary>Requires native pointer hit-test integration.</summary>
-        MousePassthrough = 7,
-        /// <summary>Requires native corner-style integration.</summary>
-        SharpCorners = 8,
-        /// <summary>Requires native capture-policy integration.</summary>
-        ExcludeFromCapture = 9,
-        /// <summary>Requires native popup window-manager hints.</summary>
-        PopupWmHint = 10,
-        /// <summary>Requires native minimization-control integration.</summary>
-        MinimizeDisabled = 11,
-        /// <summary>Requires native maximization-control integration.</summary>
-        MaximizeDisabled = 12,
-        /// <summary>The number of defined policy identifiers; not a selectable flag.</summary>
-        Max = 13,
-    }
-
     private WindowMode _mode;
     private uint _flags;
     private int? _currentScreen;
@@ -66,13 +15,13 @@ public partial class Window
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
     public WindowMode Mode
     {
-        get { ThrowIfDisposed(); return _display is null ? _mode : (WindowMode)_display.WindowGetMode(); }
+        get { ThrowIfDisposed(); return _display is null ? _mode : _display.WindowGetMode(); }
         set
         {
             EnsureMutable();
             if (!Enum.IsDefined(value))
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown window mode.");
-            _display?.WindowSetMode((DisplayServer.WindowMode)value);
+            _display?.WindowSetMode(value);
             _mode = value;
         }
     }
@@ -101,24 +50,24 @@ public partial class Window
     /// <summary>Gets or sets the policy preventing user border resizing.</summary>
     /// <value>False by default. Programmatic Size requests remain allowed.</value>
     /// <remarks>Uses GetFlag and SetFlag, including their lifecycle and failure contract.</remarks>
-    public bool Unresizable { get => GetFlag(Flags.ResizeDisabled); set => SetFlag(Flags.ResizeDisabled, value); }
+    public bool Unresizable { get => GetFlag(WindowFlag.ResizeDisabled); set => SetFlag(WindowFlag.ResizeDisabled, value); }
 
     /// <summary>Gets or sets the policy removing native window borders and title bar.</summary>
     /// <value>False by default.</value>
     /// <remarks>Uses GetFlag and SetFlag, including their lifecycle and failure contract.</remarks>
-    public bool Borderless { get => GetFlag(Flags.Borderless); set => SetFlag(Flags.Borderless, value); }
+    public bool Borderless { get => GetFlag(WindowFlag.Borderless); set => SetFlag(WindowFlag.Borderless, value); }
 
     /// <summary>Gets or sets the policy requesting placement above ordinary windows.</summary>
     /// <value>False by default.</value>
     /// <remarks>Uses GetFlag and SetFlag. Enabling it fails for an active Wayland top-level window or at startup
     /// when preconfigured; a rejected request leaves the policy unchanged.</remarks>
-    public bool AlwaysOnTop { get => GetFlag(Flags.AlwaysOnTop); set => SetFlag(Flags.AlwaysOnTop, value); }
+    public bool AlwaysOnTop { get => GetFlag(WindowFlag.AlwaysOnTop); set => SetFlag(WindowFlag.AlwaysOnTop, value); }
 
     /// <summary>Gets or sets the policy preventing keyboard focus.</summary>
     /// <value>False by default.</value>
     /// <remarks>Uses GetFlag and SetFlag. Enabling it fails for an active Wayland top-level window or at startup
     /// when preconfigured; a rejected request leaves the policy unchanged.</remarks>
-    public bool Unfocusable { get => GetFlag(Flags.NoFocus); set => SetFlag(Flags.NoFocus, value); }
+    public bool Unfocusable { get => GetFlag(WindowFlag.NoFocus); set => SetFlag(WindowFlag.NoFocus, value); }
 
     /// <summary>Gets a configured window policy.</summary>
     /// <param name="flag">One individual policy identifier.</param>
@@ -126,7 +75,7 @@ public partial class Window
     /// <exception cref="ArgumentOutOfRangeException">The identifier is undefined or Max.</exception>
     /// <exception cref="NotSupportedException">The defined policy has no executable integration.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public bool GetFlag(Flags flag)
+    public bool GetFlag(WindowFlag flag)
     {
         ThrowIfDisposed();
         ValidateFlag(flag);
@@ -142,12 +91,12 @@ public partial class Window
     /// <exception cref="NotSupportedException">The policy has no executable integration or the native platform rejects it.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
-    public void SetFlag(Flags flag, bool enabled)
+    public void SetFlag(WindowFlag flag, bool enabled)
     {
         EnsureMutable();
         if (GetFlag(flag) == enabled)
             return;
-        _display?.WindowSetFlag((DisplayServer.WindowFlag)flag, enabled);
+        _display?.WindowSetFlag(flag, enabled);
         var bit = 1u << (int)flag;
         _flags = enabled ? _flags | bit : _flags & ~bit;
     }
@@ -241,11 +190,11 @@ public partial class Window
     /// callback failures and releases its resources after the queue drains.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped;
 
-    private static void ValidateFlag(Flags flag)
+    private static void ValidateFlag(WindowFlag flag)
     {
-        if (flag < Flags.ResizeDisabled || flag >= Flags.Max)
+        if (flag < WindowFlag.ResizeDisabled || flag >= WindowFlag.Max)
             throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag.");
-        if (flag is not (Flags.ResizeDisabled or Flags.Borderless or Flags.AlwaysOnTop or Flags.NoFocus))
+        if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
             throw new NotSupportedException($"Window flag {flag} requires a native capability that is not integrated.");
     }
 }

@@ -1313,7 +1313,7 @@ public sealed partial class SceneTree : MainLoop
     private void ProcessTweens(double delta, double unscaledDelta, bool physics, ref List<Exception>? errors)
     {
         _tweenSnapshot.Clear();
-        var expectedMode = physics ? Tween.TweenProcessMode.Physics : Tween.TweenProcessMode.Idle;
+        var expectedMode = physics ? ProcessPhase.Physics : ProcessPhase.Idle;
 
         foreach (var tween in _tweens)
         {

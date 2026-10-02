@@ -1,6 +1,6 @@
 # Timer
 
-Last updated: 2026-09-23
+Last updated: 2026-10-02
 
 **Inherits:** [Node](Node.md)
 
@@ -44,7 +44,7 @@ timer.Start();
 
 | Member | Description |
 | --- | --- |
-| [`public TimerProcessCallback ProcessCallback { get; set; }`](#p-electron2d-timer-processcallback) | Gets or sets the frame lane that advances this timer. |
+| [`public ProcessPhase ProcessCallback { get; set; }`](#p-electron2d-timer-processcallback) | Gets or sets the frame lane that advances this timer. |
 | [`public double WaitTime { get; set; }`](#p-electron2d-timer-waittime) | Gets or sets the countdown duration in seconds. |
 | [`public bool OneShot { get; set; }`](#p-electron2d-timer-oneshot) | Gets or sets whether the timer stops after its next timeout. |
 | [`public bool Autostart { get; set; }`](#p-electron2d-timer-autostart) | Gets or sets whether ready delivery starts the timer automatically. |
@@ -82,11 +82,11 @@ Initializes a stopped timer with a one-second wait in the process-frame lane.
 ## Property Descriptions
 
 <a id="p-electron2d-timer-processcallback"></a>
-### `public TimerProcessCallback ProcessCallback { get; set; }`
+### `public ProcessPhase ProcessCallback { get; set; }`
 
 Gets or sets the frame lane that advances this timer.
 
-**Value:** [`TimerProcessCallback.Idle`](TimerProcessCallback.md#f-electron2d-timerprocesscallback-idle) by default.
+**Value:** [`ProcessPhase.Idle`](ProcessPhase.md) by default.
 
 **Exceptions**
 

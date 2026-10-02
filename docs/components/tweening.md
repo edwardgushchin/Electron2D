@@ -1,6 +1,6 @@
 # Tweening component
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 ## Scope
 
@@ -11,7 +11,7 @@ This Scene component owns frame-driven, typed interpolation sequences. It provid
 | Type | Role |
 | --- | --- |
 | [`Tween`](../classes/Tween.md) | SceneTree-registered sequence, processing policy, lifecycle, events, and typed append API |
-| [`Tween.TweenProcessMode`](../classes/Tween.TweenProcessMode.md) | Process versus physics frame lane |
+| [`ProcessPhase`](../classes/ProcessPhase.md) | Process versus physics frame lane |
 | [`Tween.TweenPauseMode`](../classes/Tween.TweenPauseMode.md) | Bound-node, tree-stop, or always-process pause behavior |
 | [`Tween.TransitionType`](../classes/Tween.TransitionType.md) | Twelve interpolation curve families |
 | [`Tween.EaseType`](../classes/Tween.EaseType.md) | In, out, in-out, and out-in curve direction |

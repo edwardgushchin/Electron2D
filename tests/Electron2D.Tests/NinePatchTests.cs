@@ -6,13 +6,13 @@ internal static class NinePatchTests
     {
         using var patch = new NinePatchRect();
         Check(patch.Texture is null && patch.DrawCenter && patch.RegionRect == default && patch.MouseFilter == MouseFilter.Ignore &&
-            patch.AxisStretchHorizontal == NinePatchRect.AxisStretchMode.Stretch && patch.AxisStretchVertical == NinePatchRect.AxisStretchMode.Stretch && patch.GetMinimumSize() == Vector2.Zero,
+            patch.AxisStretchHorizontal == AxisStretchMode.Stretch && patch.AxisStretchVertical == AxisStretchMode.Stretch && patch.GetMinimumSize() == Vector2.Zero,
             "Nine-patch defaults and pointer-ignore policy.");
         for (var side = 0; side < 4; side++) { patch.SetPatchMargin((Side)side, side + 1); Check(patch.GetPatchMargin((Side)side) == side + 1, "Side projection."); }
         Check(patch.GetMinimumSize() == new Vector2(4, 6), "Intrinsic minimum is the margin sums.");
         patch.PatchMarginLeft = -4; Check(patch.GetPatchMargin(Side.Left) == -4 && patch.GetMinimumSize().X == -1, "Signed margin storage is preserved.");
         Reject<ArgumentOutOfRangeException>(() => patch.SetPatchMargin((Side)4, 2));
-        Reject<ArgumentOutOfRangeException>(() => patch.AxisStretchHorizontal = (NinePatchRect.AxisStretchMode)3);
+        Reject<ArgumentOutOfRangeException>(() => patch.AxisStretchHorizontal = (AxisStretchMode)3);
         Reject<ArgumentException>(() => patch.RegionRect = new(float.NaN, 0, 1, 1));
         using var image = Image.CreateEmpty(5, 5, false, Image.Format.Rgba8); using var texture = ImageTexture.CreateFromImage(image);
         var changes = 0; patch.TextureChanged += () => changes++; patch.Texture = texture; patch.Texture = texture;
@@ -38,7 +38,7 @@ internal static class NinePatchTests
             {
                 vertices.Clear();
                 var command = new CanvasCommand(false, Vector2.Zero, new(11, 9), Colors.White, 0, false, Transform.Identity, texture, new(0, 0, 5, 5),
-                    NinePatch: new(new(1, 1), new(1, 1), (NinePatchRect.AxisStretchMode)h, (NinePatchRect.AxisStretchMode)v, true));
+                    NinePatch: new(new(1, 1), new(1, 1), (AxisStretchMode)h, (AxisStretchMode)v, true));
                 CanvasGeometry.Append(vertices, command, Transform.Identity, Colors.White);
                 for (var y = 0; y < 9; y++) for (var x = 0; x < 11; x++)
                     {

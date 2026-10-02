@@ -1,6 +1,6 @@
 # Packed scenes component
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## Scope
 
@@ -41,7 +41,7 @@ The component has no SDL3-CS, renderer, input, audio, physics, native handle, lo
 - Factories must be static and source-independent and must create a fresh default node of the exact captured type. Their execution context cannot construct a new `SceneTree` or enter an existing one; source and previously issued identities are rejected.
 - Only root-owned descendant branches are present. Parent order, sibling order, owner paths, persistent groups, and typed stored values are deterministic.
 - Stored `Node.UniqueNameInOwner` flags are restored before owner assignment; owner-scoped `%Name` lookup is available after instantiation, including for a nested packed scene's own root.
-- Reference-free values such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), [`Transform`](../classes/Transform.md), and [`TimerProcessCallback`](../classes/TimerProcessCallback.md) are captured and restored directly, including HDR, negative, integer, affine, or enum components, without conversion to strings or a universal container.
+- Reference-free values such as [`Color`](../classes/Color.md), [`Vector2`](../classes/Vector2.md), [`Vector2i`](../classes/Vector2i.md), [`Vector3`](../classes/Vector3.md), [`Vector3i`](../classes/Vector3i.md), [`Vector4`](../classes/Vector4.md), [`Vector4i`](../classes/Vector4i.md), [`Rect2`](../classes/Rect2.md), [`Rect2i`](../classes/Rect2i.md), [`Transform`](../classes/Transform.md), and [`ProcessPhase`](../classes/ProcessPhase.md) are captured and restored directly, including HDR, negative, integer, affine, or enum components, without conversion to strings or a universal container.
 - Stored `string[]`, `int[]`, `float[]`, `Vector2[]`, `Color[]`, and `int[][]` contour arrays are copied at capture and on each state read or instance restore; nested index arrays are copied individually. Resource-valued properties continue to follow scene-local duplication policy.
 - Capture blocks node mutation/disposal/deletion for the complete source hierarchy. Derived stored-property setters must call `Node.EnsureMutable()`.
 - Instance reconstruction starts and ends detached. An unfinished node cannot be disposed or enter a `SceneTree`, either as its root or as a child of an active node. Linear-time topology validation detects attachment to an unrelated detached hierarchy, and rollback removes the escaped node.

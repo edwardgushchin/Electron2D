@@ -128,7 +128,7 @@ internal static class PhysicsInterpolationTests
         camera.ResetPhysicsInterpolation();
         Check(viewport.GetInterpolatedCanvasTransform(.5f).Origin.X == -20,
             "Camera reset also resets its viewport presentation history.");
-        Check(camera.ProcessCallback == Camera.CameraProcessCallback.Idle,
+        Check(camera.ProcessCallback == ProcessPhase.Idle,
             "An inherited interpolated camera keeps its configured idle mode while physics drives presentation snapshots.");
         camera.PhysicsInterpolationMode = PhysicsInterpolationMode.Off;
         Check(viewport.GetInterpolatedCanvasTransform(.5f) == viewport.CanvasTransform,

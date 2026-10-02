@@ -1919,6 +1919,126 @@
       "electron2d": "operator:Electron2D.Vector4.op_Division(Electron2D.Vector4,System.Single)",
       "godot": "Vector4::operator:operator /(int:)",
       "reason": "C# implicitly converts int to float for the existing scalar operator; no redundant overload (ADR 0033)."
+    },
+    {
+      "godot": "Vector2::enum:Axis",
+      "electron2d": "T:Electron2D.Vector2Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector2::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector2Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector2::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector2Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector2i::enum:Axis",
+      "electron2d": "T:Electron2D.Vector2Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector2i::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector2Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector2i::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector2Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3::enum:Axis",
+      "electron2d": "T:Electron2D.Vector3Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3::enum_value:Axis.AXIS_Z",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.Z()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3i::enum:Axis",
+      "electron2d": "T:Electron2D.Vector3Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3i::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3i::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector3i::enum_value:Axis.AXIS_Z",
+      "electron2d": "enumValue:Electron2D.Vector3Axis.Z()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4::enum:Axis",
+      "electron2d": "T:Electron2D.Vector4Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4::enum_value:Axis.AXIS_W",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.W()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4::enum_value:Axis.AXIS_Z",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.Z()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4i::enum:Axis",
+      "electron2d": "T:Electron2D.Vector4Axis",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4i::enum_value:Axis.AXIS_W",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.W()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4i::enum_value:Axis.AXIS_X",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.X()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4i::enum_value:Axis.AXIS_Y",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.Y()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Vector4i::enum_value:Axis.AXIS_Z",
+      "electron2d": "enumValue:Electron2D.Vector4Axis.Z()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
     }
   ],
   "extras": [

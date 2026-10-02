@@ -18,7 +18,7 @@ internal static class TextureButtonTests
     private static void VerifyDefaultsAndMinimum()
     {
         using var button = new TextureButton();
-        Check(button.StretchMode == TextureButtonStretchMode.Keep && !button.IgnoreTextureSize && !button.FlipH && !button.FlipV &&
+        Check(button.StretchMode == TextureStretchMode.Keep && !button.IgnoreTextureSize && !button.FlipH && !button.FlipV &&
             button.TextureNormal is null && button.TexturePressed is null && button.TextureHover is null && button.TextureDisabled is null && button.TextureFocused is null && button.TextureClickMask is null &&
             button.FocusMode == FocusMode.All && button.GetMinimumSize() == Vector2.Zero, "Texture button defaults retain base focus and zero empty minimum.");
         using var normal = new ProbeTexture(4, 2); using var pressed = new ProbeTexture(8, 6); using var hover = new ProbeTexture(10, 9);
@@ -30,7 +30,7 @@ internal static class TextureButtonTests
         button.TextureNormal = normal; Check(button.GetMinimumSize() == new Vector2(4, 2), "Normal wins independently of button draw mode.");
         button.IgnoreTextureSize = true; button.CustomMinimumSize = new(1, 2); Check(button.GetMinimumSize() == Vector2.Zero && button.GetCombinedMinimumSize() == new Vector2(1, 2), "Ignore affects intrinsic size only.");
         button.IgnoreTextureSize = false; using var signed = new ProbeTexture(-3, -4); button.TextureNormal = signed; Check(button.GetMinimumSize() == new Vector2(3, 4), "Minimum applies absolute values even for custom signed texture dimensions.");
-        button.StretchMode = (TextureButtonStretchMode)99; Check((int)button.StretchMode == 99, "Unknown stretch identities are stored.");
+        button.StretchMode = (TextureStretchMode)99; Check((int)button.StretchMode == 99, "Unknown stretch identities are stored.");
     }
 
     private static void VerifyStretchAndMasks()
@@ -39,7 +39,7 @@ internal static class TextureButtonTests
         var expected = new Rect2[] { new(0, 0, 10, 8), new(0, 0, 10, 8), new(0, 0, 4, 2), new(3, 3, 4, 2), new(0, 0, 10, 5), new(0, 1.5f, 10, 5), new(0, 0, 10, 8) };
         for (var mode = 0; mode < 7; mode++)
         {
-            button.StretchMode = (TextureButtonStretchMode)mode; Record(button);
+            button.StretchMode = (TextureStretchMode)mode; Record(button);
             Check(texture.LastRect == expected[mode], $"Stretch mode {mode} exact destination.");
             Check(texture.LastTile == (mode == 1) && texture.LastWasRegion == (mode != 1), "Tiling alone uses complete rectangle draw; others use a region.");
             Check(texture.LastRegion == (mode == 6 ? new Rect2(.75f, 0, 2.5f, 2) : new Rect2(0, 0, 4, 2)) || mode == 1, "Centered cover uses the expected source crop.");
@@ -47,25 +47,25 @@ internal static class TextureButtonTests
             Check(texture.LastRect.Position == expected[mode].Position && texture.LastRect.Size == -expected[mode].Size, "Flips negate drawing size without moving the origin.");
             button.FlipH = false; button.FlipV = false;
         }
-        button.StretchMode = (TextureButtonStretchMode)99; Record(button); Check(texture.LastRect == expected[2], "Unknown stretch mode draws at natural top-left.");
+        button.StretchMode = (TextureStretchMode)99; Record(button); Check(texture.LastRect == expected[2], "Unknown stretch mode draws at natural top-left.");
         using var mask = new BitMap(); mask.Create(new(4, 2)); mask.SetBit(0, 0, true); mask.SetBit(3, 1, true);
-        using var hit = new Probe { IgnoreTextureSize = true, Size = new(10, 8), TextureNormal = texture, TextureClickMask = mask, StretchMode = TextureButtonStretchMode.KeepCentered };
+        using var hit = new Probe { IgnoreTextureSize = true, Size = new(10, 8), TextureNormal = texture, TextureClickMask = mask, StretchMode = TextureStretchMode.KeepCentered };
         Check(hit.Point(new(.5f, .5f)) && !hit.Point(new(3.5f, .5f)), "Before first recording, mask uses natural coordinates.");
         Record(hit); Check(hit.Point(new(3.5f, 3.5f)) && hit.Point(new(6.5f, 4.5f)) && !hit.Point(new(4.5f, 3.5f)) && !hit.Point(new(.5f, .5f)), "Centered mask uses the recorded image offset.");
         hit.FlipH = true; hit.FlipV = true; Record(hit); Check(hit.Point(new(3.5f, 3.5f)) && !hit.Point(new(4.5f, 3.5f)), "Visual flips do not mirror the mask.");
-        hit.StretchMode = TextureButtonStretchMode.Scale; Record(hit);
+        hit.StretchMode = TextureStretchMode.Scale; Record(hit);
         Check(hit.Point(new(.5f, .5f)) && hit.Point(new(9.5f, 7.5f)) && !hit.Point(new(3.5f, .5f)), "Scaled hit mapping uses mask dimensions.");
-        hit.StretchMode = TextureButtonStretchMode.Tile; Record(hit);
+        hit.StretchMode = TextureStretchMode.Tile; Record(hit);
         Check(hit.Point(new(4.5f, 2.5f)) && hit.Point(new(7.5f, 3.5f)) && !hit.Point(new(-1, 0)) && !hit.Point(new(12, 0)), "Tiled mask repeats within recorded bounds.");
-        hit.StretchMode = TextureButtonStretchMode.KeepAspectCovered; Record(hit);
+        hit.StretchMode = TextureStretchMode.KeepAspectCovered; Record(hit);
         Check(hit.Point(new(.5f, .5f)) && hit.Point(new(9.5f, 7.5f)) && !hit.Point(new(2.5f, .5f)), "Cover mask accounts for its source crop.");
         using var small = new BitMap(); small.Create(new(2, 2)); small.SetBitRect(new(0, 0, 2, 2), true); hit.TextureClickMask = small; Record(hit);
         Check(!hit.Point(new(9.5f, 7.5f)), "A crop exceeding mismatched bitmap dimensions rejects the point instead of indexing outside the mask.");
         using var empty = new BitMap(); hit.TextureClickMask = empty; Record(hit); Check(!hit.Point(Vector2.Zero), "Empty bitmaps cannot divide or index by zero.");
-        hit.TextureNormal = null; hit.TextureClickMask = mask; hit.StretchMode = TextureButtonStretchMode.Scale; Record(hit); Check(hit.Point(new(9.5f, 7.5f)), "Mask-only buttons compute the same stretch mapping.");
+        hit.TextureNormal = null; hit.TextureClickMask = mask; hit.StretchMode = TextureStretchMode.Scale; Record(hit); Check(hit.Point(new(9.5f, 7.5f)), "Mask-only buttons compute the same stretch mapping.");
         hit.TextureClickMask = null; Check(hit.Point(new(9, 7)) && !hit.Point(new(10, 7)), "No mask delegates to the control rectangle.");
         using var emptyTexture = new ImageTexture(); hit.TextureNormal = emptyTexture;
-        foreach (var mode in new[] { TextureButtonStretchMode.KeepAspect, TextureButtonStretchMode.KeepAspectCentered, TextureButtonStretchMode.KeepAspectCovered }) { hit.StretchMode = mode; Record(hit); }
+        foreach (var mode in new[] { TextureStretchMode.KeepAspect, TextureStretchMode.KeepAspectCentered, TextureStretchMode.KeepAspectCovered }) { hit.StretchMode = mode; Record(hit); }
     }
 
     private static void VerifyStatesAndFocus()
@@ -95,7 +95,7 @@ internal static class TextureButtonTests
     private static void VerifyMaskRouting()
     {
         using var mask = new BitMap(); mask.Create(new(2, 2)); mask.SetBit(0, 0, true);
-        var viewport = new TestViewport(); var button = new TextureButton { Position = new(10, 10), Size = new(20, 20), IgnoreTextureSize = true, TextureClickMask = mask, StretchMode = TextureButtonStretchMode.Scale };
+        var viewport = new TestViewport(); var button = new TextureButton { Position = new(10, 10), Size = new(20, 20), IgnoreTextureSize = true, TextureClickMask = mask, StretchMode = TextureStretchMode.Scale };
         viewport.AddChild(button); using var tree = new SceneTree(viewport); Record(button); var activations = 0; button.Pressed += () => activations++;
         void Click(Vector2 position)
         {
@@ -152,11 +152,11 @@ internal static class TextureButtonTests
         button.PrepareCanvas(); Check(replacement.Draws == drawsBefore + 1, "Base-button state changes during virtual drawing schedule the corrected next recording.");
         using var image = Image.CreateEmpty(4, 2, false, Image.Format.Rgba8); using var texture = ImageTexture.CreateFromImage(image); texture.ResourceLocalToScene = true;
         using var mask = new BitMap(); mask.Create(new(4, 2)); mask.SetBit(1, 0, true); mask.ResourceLocalToScene = true;
-        using var root = new Node(); var stored = new TextureButton { Name = "TextureButton", TextureNormal = texture, TexturePressed = texture, TextureClickMask = mask, FlipH = true, FlipV = true, IgnoreTextureSize = true, StretchMode = (TextureButtonStretchMode)99 };
+        using var root = new Node(); var stored = new TextureButton { Name = "TextureButton", TextureNormal = texture, TexturePressed = texture, TextureClickMask = mask, FlipH = true, FlipV = true, IgnoreTextureSize = true, StretchMode = (TextureStretchMode)99 };
         root.AddChild(stored); stored.Owner = root; using var packed = new PackedScene(); packed.Pack(root); using var copy = packed.Instantiate(); var instance = copy.GetNode<TextureButton>("TextureButton");
         Check(instance.GetType() == typeof(TextureButton) && instance.FlipH && instance.FlipV && instance.IgnoreTextureSize && (int)instance.StretchMode == 99 &&
             ReferenceEquals(instance.TextureNormal, instance.TexturePressed) && !ReferenceEquals(instance.TextureNormal, texture) && instance.TextureClickMask!.GetBit(1, 0), "Exact typed scene state, local resources and aliases survive packing.");
-        using var capture = new CaptureProbe(); capture.DuringCapture = () => stored.StretchMode = TextureButtonStretchMode.Scale; root.AddChild(capture); capture.Owner = root;
+        using var capture = new CaptureProbe(); capture.DuringCapture = () => stored.StretchMode = TextureStretchMode.Scale; root.AddChild(capture); capture.Owner = root;
         Check(Capture(() => packed.Pack(root)) is not null && (int)stored.StretchMode == 99, "Capture rejects changing texture-button stored state.");
     }
 
@@ -196,7 +196,7 @@ internal static class TextureButtonTests
     private static void VerifyWarmReuse()
     {
         using var image = Image.CreateEmpty(4, 2, false, Image.Format.Rgba8); using var texture = ImageTexture.CreateFromImage(image);
-        var root = new Node(); var button = new TextureButton { TextureNormal = texture, IgnoreTextureSize = true, Size = new(10, 8), StretchMode = TextureButtonStretchMode.KeepAspectCovered }; root.AddChild(button); using var tree = new SceneTree(root);
+        var root = new Node(); var button = new TextureButton { TextureNormal = texture, IgnoreTextureSize = true, Size = new(10, 8), StretchMode = TextureStretchMode.KeepAspectCovered }; root.AddChild(button); using var tree = new SceneTree(root);
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         void Cycle(int index) { button.FlipH = (index & 1) == 0; tree.ProcessFrame(0); button.PrepareCanvas(); vertices.Clear(); batches.Clear(); button.AppendCanvas(vertices, batches, Transform.Identity); }
         for (var index = 0; index < 64; index++) Cycle(index);

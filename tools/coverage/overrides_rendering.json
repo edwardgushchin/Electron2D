@@ -818,7 +818,7 @@
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
     },
     {
-      "electron2d": "T:Electron2D.Camera.CameraProcessCallback",
+      "electron2d": "T:Electron2D.ProcessPhase",
       "godot": "Camera2D::enum:Camera2DProcessCallback",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
@@ -836,13 +836,13 @@
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
     },
     {
-      "electron2d": "enumValue:Electron2D.Camera.CameraProcessCallback.Idle()",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Idle()",
       "godot": "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_IDLE",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
     },
     {
-      "electron2d": "enumValue:Electron2D.Camera.CameraProcessCallback.Physics()",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Physics()",
       "godot": "Camera2D::enum_value:Camera2DProcessCallback.CAMERA2D_PROCESS_PHYSICS",
       "state": "Implemented",
       "reason": "CameraTests and native CameraRenderingTests audit the pinned camera_2d.cpp/viewport.cpp contracts: configuration/defaults, signed zoom/rotation/anchors, target and screen queries, drag and limits, smoothing update/reset order, pause/lanes, selection and failure-safe membership. Wayland GPU/compatibility and dummy pixels/input pass; shared inherited gaps remain separate (ADRs 0004, 0008, 0028)."
@@ -2674,7 +2674,7 @@
     },
     {
       "godot": "TextureRect::enum:StretchMode",
-      "electron2d": "T:Electron2D.TextureRectStretchMode",
+      "electron2d": "T:Electron2D.TextureStretchMode",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
@@ -2709,37 +2709,37 @@
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_KEEP",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.Keep()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.Keep()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_KEEP_ASPECT",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.KeepAspect()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.KeepAspect()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_KEEP_ASPECT_CENTERED",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.KeepAspectCentered()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.KeepAspectCentered()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_KEEP_ASPECT_COVERED",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.KeepAspectCovered()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.KeepAspectCovered()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_KEEP_CENTERED",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.KeepCentered()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.KeepCentered()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_SCALE",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.Scale()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.Scale()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
       "godot": "TextureRect::enum_value:StretchMode.STRETCH_TILE",
-      "electron2d": "enumValue:Electron2D.TextureRectStretchMode.Tile()",
+      "electron2d": "enumValue:Electron2D.TextureStretchMode.Tile()",
       "reason": "ADRs 0028/0081 with 0008/0023: borrowed Texture drawing, six minimum policies, seven placements, flips, nested-atlas Tile, warning/lifetime/revision recovery, owner guards, bounded virtual size-query reentry and typed packing execute. TextureRectTests covers all modes and 32 flow-fit orientation/RTL/reverse profiles; TextureRectRenderingTests checks 13 native pixel states and 64 active plus 64 idle warmed frames with zero managed bytes on Linux Wayland GPU/compatibility and dummy/software. Nonzero atlas margins retain the pinned unsupported tiling limit; software crop UVs retain the documented integer-texel precision boundary; empty proportional geometry avoids division by zero under the finite geometry contract. Inherited accessibility/viewport/editor gaps, native allocations, other platforms and owner acceptance remain separate."
     },
     {
@@ -2956,6 +2956,106 @@
       "godot": "class:VSplitContainer",
       "electron2d": "T:Electron2D.VSplitContainer",
       "reason": "ADRs 0081/0083 with 0008/0023: real multi-panel layouts, relative copied offset arrays, weighted/capped defaults, bounds/active-priority overlap clamping, structural desired-size preservation, RTL/collapse, internal drag areas/custom children, touch images and nested orthogonal intersections execute. SplitContainerTests covers geometry, storage/int-array revert, lifecycle/guards, failed observers, overflow preflight and reentry/transform recovery. Native checks pass 15 pixel/input plus six simultaneous two-axis intersection phases on Linux Wayland GPU/compatibility; software checks six programmatic layout/touch-image phases because dummy has no system cursors. After 20 warmup frames, 64 active offset/resize and 64 idle intervals allocate zero managed bytes. Editor highlighting/native semantics, native allocations, other platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "AspectRatioContainer::enum:AlignmentMode",
+      "electron2d": "T:Electron2D.AlignmentMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "AspectRatioContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "BoxContainer::enum:AlignmentMode",
+      "electron2d": "T:Electron2D.AlignmentMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "BoxContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "FlowContainer::enum:AlignmentMode",
+      "electron2d": "T:Electron2D.AlignmentMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_BEGIN",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Begin()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_CENTER",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.Center()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "FlowContainer::enum_value:AlignmentMode.ALIGNMENT_END",
+      "electron2d": "enumValue:Electron2D.AlignmentMode.End()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "NinePatchRect::enum:AxisStretchMode",
+      "electron2d": "T:Electron2D.AxisStretchMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_STRETCH",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Stretch()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Tile()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "NinePatchRect::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE_FIT",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.TileFit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "StyleBoxTexture::enum:AxisStretchMode",
+      "electron2d": "T:Electron2D.AxisStretchMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_STRETCH",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Stretch()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.Tile()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "StyleBoxTexture::enum_value:AxisStretchMode.AXIS_STRETCH_MODE_TILE_FIT",
+      "electron2d": "enumValue:Electron2D.AxisStretchMode.TileFit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
     }
   ],
   "statusGroups": [

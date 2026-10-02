@@ -5,64 +5,6 @@ namespace Electron2D;
 
 public sealed partial class DisplayServer
 {
-    /// <summary>Defines cursor visibility and window confinement.</summary>
-    public enum MouseMode
-    {
-        /// <summary>The pointer is visible and free to leave the window.</summary>
-        Visible = 0,
-        /// <summary>The pointer is hidden and free to leave the window.</summary>
-        Hidden = 1,
-        /// <summary>The pointer is hidden, captured, and reports relative motion.</summary>
-        Captured = 2,
-        /// <summary>The visible pointer is confined to the main window.</summary>
-        Confined = 3,
-        /// <summary>The hidden pointer is confined to the main window.</summary>
-        ConfinedHidden = 4,
-        /// <summary>The number of pointer modes; not a selectable mode.</summary>
-        Max = 5,
-    }
-
-    /// <summary>Identifies standard pointer shapes supported by the native cursor theme.</summary>
-    public enum CursorShape
-    {
-        /// <summary>The default pointer arrow.</summary>
-        Arrow = 0,
-        /// <summary>The text-selection I-beam.</summary>
-        IBeam = 1,
-        /// <summary>The pointing hand for links.</summary>
-        PointingHand = 2,
-        /// <summary>The crosshair for precise positioning.</summary>
-        Cross = 3,
-        /// <summary>The nonblocking wait indicator, usually paired with an arrow.</summary>
-        Wait = 4,
-        /// <summary>The blocking wait indicator, usually replacing the arrow.</summary>
-        Busy = 5,
-        /// <summary>The dragging hand pointer.</summary>
-        Drag = 6,
-        /// <summary>The pointer indicating that a dragged item can be dropped.</summary>
-        CanDrop = 7,
-        /// <summary>The pointer indicating that a dragged item cannot be dropped.</summary>
-        Forbidden = 8,
-        /// <summary>The vertical-resize pointer.</summary>
-        VSize = 9,
-        /// <summary>The horizontal-resize pointer.</summary>
-        HSize = 10,
-        /// <summary>The northeast-southwest diagonal-resize pointer.</summary>
-        BDiagSize = 11,
-        /// <summary>The northwest-southeast diagonal-resize pointer.</summary>
-        FDiagSize = 12,
-        /// <summary>The four-direction move pointer.</summary>
-        Move = 13,
-        /// <summary>The vertical split-resize pointer.</summary>
-        VSplit = 14,
-        /// <summary>The horizontal split-resize pointer.</summary>
-        HSplit = 15,
-        /// <summary>The help pointer.</summary>
-        Help = 16,
-        /// <summary>The number of pointer shapes; not a selectable shape.</summary>
-        Max = 17,
-    }
-
     private MouseMode _mouseMode;
     private CursorShape _cursorShape;
     private SdlCursorHandle? _cursor;

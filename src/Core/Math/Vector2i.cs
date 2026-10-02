@@ -23,16 +23,6 @@ public struct Vector2i : IEquatable<Vector2i>
     private static readonly Vector2i RightValue = new(1, 0);
     private static readonly Vector2i LeftValue = new(-1, 0);
 
-    /// <summary>Identifies one vector component.</summary>
-    public enum Axis
-    {
-        /// <summary>Identifies the horizontal X component.</summary>
-        X = 0,
-
-        /// <summary>Identifies the vertical Y component.</summary>
-        Y = 1,
-    }
-
     /// <summary>Gets or sets the horizontal component.</summary>
     public int X;
 
@@ -197,8 +187,8 @@ public struct Vector2i : IEquatable<Vector2i>
     public readonly Vector2i Max(int with) => new(Mathf.Max(X, with), Mathf.Max(Y, with));
 
     /// <summary>Returns the axis containing the greatest component.</summary>
-    /// <returns><see cref="Axis.X"/> when components are equal; otherwise the greatest component's axis.</returns>
-    public readonly Axis MaxAxisIndex() => X < Y ? Axis.Y : Axis.X;
+    /// <returns><see cref="Vector2Axis.X"/> when components are equal; otherwise the greatest component's axis.</returns>
+    public readonly Vector2Axis MaxAxisIndex() => X < Y ? Vector2Axis.Y : Vector2Axis.X;
 
     /// <summary>Returns the componentwise minimum with another vector.</summary>
     /// <param name="with">The other vector.</param>
@@ -211,8 +201,8 @@ public struct Vector2i : IEquatable<Vector2i>
     public readonly Vector2i Min(int with) => new(Mathf.Min(X, with), Mathf.Min(Y, with));
 
     /// <summary>Returns the axis containing the least component.</summary>
-    /// <returns><see cref="Axis.Y"/> when components are equal; otherwise the least component's axis.</returns>
-    public readonly Axis MinAxisIndex() => X < Y ? Axis.X : Axis.Y;
+    /// <returns><see cref="Vector2Axis.Y"/> when components are equal; otherwise the least component's axis.</returns>
+    public readonly Vector2Axis MinAxisIndex() => X < Y ? Vector2Axis.X : Vector2Axis.Y;
 
     /// <summary>Returns the sign of each component.</summary>
     /// <returns>Components containing negative one, zero, or positive one.</returns>

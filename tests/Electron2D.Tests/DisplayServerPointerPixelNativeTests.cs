@@ -157,7 +157,7 @@ internal static class DisplayServerPointerPixelNativeTests
             var previousMode = display.MouseGetMode();
             try
             {
-                display.MouseSetMode(DisplayServer.MouseMode.Captured);
+                display.MouseSetMode(MouseMode.Captured);
                 display.ProcessEvents();
                 probe.Clear();
                 var capturedMotion = motion;

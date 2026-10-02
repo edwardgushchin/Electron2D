@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -327,7 +327,7 @@ The implemented `PackedScene` contract is typed, runtime-only, and in-memory. It
 <a id="adr-0036"></a>
 ## ADR 0036: Reusable Node timer and dual-delta frame delivery
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 - Status: Accepted
 - Scope: Reusable countdown nodes, internal Node processing, and scaled/original frame timing
@@ -343,7 +343,7 @@ The engine is typed C#, uses direct frame traversal for hot paths, and forbids i
 
 ### Decision
 
-- Add `Timer : Node` and `TimerProcessCallback` to the Scene tree component.
+- Add `Timer : Node` and the shared `ProcessPhase` enum to the Scene tree component.
 - Timer configuration consists of process lane, finite positive wait time, one-shot, autostart, and ignore-time-scale state. Runtime-only state consists of local pause and remaining time.
 - `Start()` uses the configured wait; `Start(double)` validates and stores an explicit duration. These overloads replace a negative sentinel default. Start requires active tree membership, resets a running timer, and never clears local pause. `Stop()` is valid while detached, emits nothing, and clears autostart.
 - Ready-time autostart starts after inherited ready handling and clears the flag. A timeout occurs only when internal remaining time becomes strictly negative; at exact zero the public `TimeLeft` is zero and `IsStopped()` reports true, but the timer's internal lane remains enabled until a later negative step.

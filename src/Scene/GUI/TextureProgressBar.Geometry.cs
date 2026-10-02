@@ -55,7 +55,7 @@ public partial class TextureProgressBar
         }
         if (ReferenceEquals(texture, _textures[1])) destination.Position += _textureProgressOffset;
         if (!source.IsFinite() || !destination.IsFinite()) throw new InvalidOperationException("Progress geometry exceeds the finite canvas range.");
-        RecordNinePatch(texture, destination, source, new(begin, end, NinePatchRect.AxisStretchMode.Stretch, NinePatchRect.AxisStretchMode.Stretch, true), color);
+        RecordNinePatch(texture, destination, source, new(begin, end, AxisStretchMode.Stretch, AxisStretchMode.Stretch, true), color);
     }
 
     private Vector2 RelativeCenter(Vector2 textureSize) => (new Vector2(.5f, .5f) + _radialCenterOffset / textureSize).Clamp(Vector2.Zero, Vector2.One);

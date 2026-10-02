@@ -12,24 +12,24 @@ internal static class CameraTests
     private static void DefaultsAndPacking()
     {
         using var camera = new Camera();
-        Check(camera.Enabled && camera.IgnoreRotation && camera.NotifyTransformChanges && camera.AnchorMode == AnchorMode.DragCenter && camera.ProcessCallback == Camera.CameraProcessCallback.Idle, "Default camera policies.");
+        Check(camera.Enabled && camera.IgnoreRotation && camera.NotifyTransformChanges && camera.AnchorMode == AnchorMode.DragCenter && camera.ProcessCallback == ProcessPhase.Idle, "Default camera policies.");
         Check(camera.Zoom == Vector2.One && camera.Offset == Vector2.Zero && camera.LimitEnabled && !camera.LimitSmoothed && !camera.PositionSmoothingEnabled && !camera.RotationSmoothingEnabled && camera.PositionSmoothingSpeed == 5 && camera.RotationSmoothingSpeed == 5, "Default tracking and smoothing.");
         foreach (var side in Enum.GetValues<Side>()) Check(camera.GetDragMargin(side) == .2f && camera.GetLimit(side) == (side <= Side.Top ? -10_000_000 : 10_000_000), "Default indexed properties.");
         Check(camera.GetTargetPosition() == Vector2.Zero && camera.GetScreenCenterPosition() == Vector2.Zero && camera.GetScreenRotation() == 0 && !camera.IsCurrent(), "Detached queries.");
         camera.ForceUpdateScroll(); camera.ResetSmoothing(); Reject<InvalidOperationException>(camera.Align); Reject<InvalidOperationException>(camera.MakeCurrent);
         Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(0, 1)); Reject<ArgumentOutOfRangeException>(() => camera.Zoom = new(Mathf.Epsilon / 2, 1));
         Reject<ArgumentOutOfRangeException>(() => camera.Offset = new(float.NaN, 0)); Reject<ArgumentOutOfRangeException>(() => camera.PositionSmoothingSpeed = float.PositiveInfinity);
-        Reject<ArgumentOutOfRangeException>(() => camera.AnchorMode = (AnchorMode)4); Reject<ArgumentOutOfRangeException>(() => camera.ProcessCallback = (Camera.CameraProcessCallback)4);
+        Reject<ArgumentOutOfRangeException>(() => camera.AnchorMode = (AnchorMode)4); Reject<ArgumentOutOfRangeException>(() => camera.ProcessCallback = (ProcessPhase)4);
         Reject<ArgumentOutOfRangeException>(() => camera.SetLimit((Side)4, 0)); Reject<ArgumentOutOfRangeException>(() => camera.GetDragMargin((Side)(-1)));
         Reject<ArgumentOutOfRangeException>(() => camera.SetDragMargin(Side.Top, float.NaN));
         camera.PositionSmoothingSpeed = -2; camera.RotationSmoothingSpeed = -3; Check(camera.PositionSmoothingSpeed == 0 && camera.RotationSmoothingSpeed == 0, "Negative finite smoothing speeds clamp to zero.");
-        camera.Zoom = new(-2, 3); camera.Offset = new(4, 5); camera.DragLeftMargin = 2; camera.DragVerticalOffset = -3; camera.LimitLeft = 9; camera.ProcessCallback = Camera.CameraProcessCallback.Physics;
+        camera.Zoom = new(-2, 3); camera.Offset = new(4, 5); camera.DragLeftMargin = 2; camera.DragVerticalOffset = -3; camera.LimitLeft = 9; camera.ProcessCallback = ProcessPhase.Physics;
         using var viewport = new TestViewport(); camera.CustomViewport = viewport;
         var ownNames = new[] { "Zoom", "Offset", "Enabled", "AnchorMode", "LimitLeft", "ProcessCallback", "DragLeftMargin", "CustomViewport" };
         var descriptors = camera.GetPropertyList().Where(p => ownNames.Contains(p.Name)).ToArray();
         Check(descriptors.Length == ownNames.Length && descriptors.Single(p => p.Name == "CustomViewport").IsStored == false, "Typed camera configuration and runtime viewport metadata.");
         using var packed = new PackedScene(); packed.Pack(camera); using var copy = (Camera)packed.Instantiate();
-        Check(copy.Zoom == camera.Zoom && copy.Offset == camera.Offset && copy.DragLeftMargin == 2 && copy.DragVerticalOffset == -3 && copy.LimitLeft == 9 && copy.ProcessCallback == Camera.CameraProcessCallback.Physics && copy.CustomViewport is null && !copy.IsCurrent(), "PackedScene copies camera configuration, never runtime ownership.");
+        Check(copy.Zoom == camera.Zoom && copy.Offset == camera.Offset && copy.DragLeftMargin == 2 && copy.DragVerticalOffset == -3 && copy.LimitLeft == 9 && copy.ProcessCallback == ProcessPhase.Physics && copy.CustomViewport is null && !copy.IsCurrent(), "PackedScene copies camera configuration, never runtime ownership.");
     }
 
     private static void CoordinatesAndLimits()
@@ -88,7 +88,7 @@ internal static class CameraTests
         camera.DragHorizontalEnabled = camera.DragVerticalEnabled = false; camera.DragHorizontalOffset = 0; camera.Zoom = Vector2.One; camera.Position = Vector2.Zero; camera.ForceUpdateTransform();
         camera.PositionSmoothingEnabled = true; camera.Position = new(100, 0); Near(camera.GetScreenCenterPosition(), Vector2.Zero);
         tree.Process(.1); Near(camera.GetScreenCenterPosition(), new(50, 0)); camera.ForceUpdateScroll(); Near(camera.GetScreenCenterPosition(), new(75, 0));
-        camera.ProcessCallback = Camera.CameraProcessCallback.Physics; tree.Process(.1); Near(camera.GetScreenCenterPosition(), new(75, 0)); tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(87.5f, 0));
+        camera.ProcessCallback = ProcessPhase.Physics; tree.Process(.1); Near(camera.GetScreenCenterPosition(), new(75, 0)); tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(87.5f, 0));
         camera.ResetSmoothing(); Near(camera.GetScreenCenterPosition(), new(93.75f, 0)); camera.ForceUpdateScroll(); Near(camera.GetScreenCenterPosition(), new(100, 0));
         tree.Paused = true; camera.Position = new(200, 0); tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(100, 0)); tree.Paused = false; tree.PhysicsProcess(.1); Near(camera.GetScreenCenterPosition(), new(150, 0));
         camera.IgnoreRotation = false; camera.RotationSmoothingEnabled = true; camera.Rotation = Mathf.Pi / 2; camera.ForceUpdateTransform(); tree.PhysicsProcess(.1); Near(camera.GetScreenRotation(), Mathf.Pi / 4);

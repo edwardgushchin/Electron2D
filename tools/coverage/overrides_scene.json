@@ -1325,7 +1325,7 @@
       "reason": "Native desktop client origin under the neutral Window/Viewport hierarchy (ADR 0008), independent of Entity and viewport canvas transforms. Wayland rejects queries/requests explicitly, including preconfigured startup requests and CanvasItem.GetScreenTransform."
     },
     {
-      "electron2d": "T:Electron2D.Window.Flags",
+      "electron2d": "T:Electron2D.WindowFlag",
       "godot": "Window::enum:Flags",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
@@ -1337,85 +1337,85 @@
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.AlwaysOnTop()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.AlwaysOnTop()",
       "godot": "Window::enum_value:Flags.FLAG_ALWAYS_ON_TOP",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.Borderless()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Borderless()",
       "godot": "Window::enum_value:Flags.FLAG_BORDERLESS",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.ExcludeFromCapture()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ExcludeFromCapture()",
       "godot": "Window::enum_value:Flags.FLAG_EXCLUDE_FROM_CAPTURE",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.ExtendToTitle()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ExtendToTitle()",
       "godot": "Window::enum_value:Flags.FLAG_EXTEND_TO_TITLE",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.Max()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Max()",
       "godot": "Window::enum_value:Flags.FLAG_MAX",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.MaximizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MaximizeDisabled()",
       "godot": "Window::enum_value:Flags.FLAG_MAXIMIZE_DISABLED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.MinimizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MinimizeDisabled()",
       "godot": "Window::enum_value:Flags.FLAG_MINIMIZE_DISABLED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.MousePassthrough()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MousePassthrough()",
       "godot": "Window::enum_value:Flags.FLAG_MOUSE_PASSTHROUGH",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.NoFocus()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.NoFocus()",
       "godot": "Window::enum_value:Flags.FLAG_NO_FOCUS",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.Popup()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Popup()",
       "godot": "Window::enum_value:Flags.FLAG_POPUP",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.PopupWmHint()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.PopupWmHint()",
       "godot": "Window::enum_value:Flags.FLAG_POPUP_WM_HINT",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.ResizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ResizeDisabled()",
       "godot": "Window::enum_value:Flags.FLAG_RESIZE_DISABLED",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.SharpCorners()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.SharpCorners()",
       "godot": "Window::enum_value:Flags.FLAG_SHARP_CORNERS",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
     },
     {
-      "electron2d": "enumValue:Electron2D.Window.Flags.Transparent()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Transparent()",
       "godot": "Window::enum_value:Flags.FLAG_TRANSPARENT",
       "state": "Implemented",
       "reason": "Typed Window mode/policy identifiers and numeric values match the pinned reference. IDs alone do not claim native capability; Window.GetFlag/SetFlag explicitly reject policies whose integration is absent. ADR 0008 and ADR 0040."
@@ -1475,7 +1475,7 @@
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
     },
     {
-      "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.Window.Flags)",
+      "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.WindowFlag)",
       "godot": "Window::method:get_flag(int:Window.Flags)",
       "state": "Partial",
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
@@ -1505,7 +1505,7 @@
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040. Mode reads observed state; flag queries return accepted configuration; screen selection is an optional unstored startup request. Wayland denies cross-screen moves, global positioning and taskbar progress, and returns client size for decoration bounds."
     },
     {
-      "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.Window.Flags,System.Boolean)",
+      "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.WindowFlag,System.Boolean)",
       "godot": "Window::method:set_flag(int:Window.Flags,bool:)",
       "state": "Partial",
       "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
@@ -2140,6 +2140,166 @@
       "godot": "GridContainer::theme_item:v_separation",
       "electron2d": "property:Electron2D.GridContainer.VSeparation()",
       "reason": "ADR 0081/0083: typed separation alias resolves inherited theme constants and edits local overrides; built-in default is four. Non-stored legacy descriptors plus nullable typed override storage preserve inheritance through scene packing."
+    },
+    {
+      "godot": "Control::enum:CursorShape",
+      "electron2d": "T:Electron2D.CursorShape",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum:FocusBehaviorRecursive",
+      "electron2d": "T:Electron2D.RecursiveBehavior",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum:MouseBehaviorRecursive",
+      "electron2d": "T:Electron2D.RecursiveBehavior",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_ARROW",
+      "electron2d": "enumValue:Electron2D.CursorShape.Arrow()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_BDIAGSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.BDiagSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_BUSY",
+      "electron2d": "enumValue:Electron2D.CursorShape.Busy()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_CAN_DROP",
+      "electron2d": "enumValue:Electron2D.CursorShape.CanDrop()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_CROSS",
+      "electron2d": "enumValue:Electron2D.CursorShape.Cross()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_DRAG",
+      "electron2d": "enumValue:Electron2D.CursorShape.Drag()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_FDIAGSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.FDiagSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_FORBIDDEN",
+      "electron2d": "enumValue:Electron2D.CursorShape.Forbidden()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_HELP",
+      "electron2d": "enumValue:Electron2D.CursorShape.Help()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_HSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.HSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_HSPLIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.HSplit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_IBEAM",
+      "electron2d": "enumValue:Electron2D.CursorShape.IBeam()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_MOVE",
+      "electron2d": "enumValue:Electron2D.CursorShape.Move()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_POINTING_HAND",
+      "electron2d": "enumValue:Electron2D.CursorShape.PointingHand()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_VSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.VSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_VSPLIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.VSplit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:CursorShape.CURSOR_WAIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.Wait()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_DISABLED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Disabled()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_ENABLED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Enabled()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:FocusBehaviorRecursive.FOCUS_BEHAVIOR_INHERITED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Inherited()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_DISABLED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Disabled()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_ENABLED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Enabled()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Control::enum_value:MouseBehaviorRecursive.MOUSE_BEHAVIOR_INHERITED",
+      "electron2d": "enumValue:Electron2D.RecursiveBehavior.Inherited()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Timer::enum:TimerProcessCallback",
+      "electron2d": "T:Electron2D.ProcessPhase",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Timer::enum_value:TimerProcessCallback.TIMER_PROCESS_IDLE",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Idle()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Timer::enum_value:TimerProcessCallback.TIMER_PROCESS_PHYSICS",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Physics()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Tween::enum:TweenProcessMode",
+      "electron2d": "T:Electron2D.ProcessPhase",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Tween::enum_value:TweenProcessMode.TWEEN_PROCESS_IDLE",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Idle()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "Tween::enum_value:TweenProcessMode.TWEEN_PROCESS_PHYSICS",
+      "electron2d": "enumValue:Electron2D.ProcessPhase.Physics()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
     }
   ],
   "extras": [

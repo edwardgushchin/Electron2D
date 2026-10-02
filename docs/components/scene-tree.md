@@ -1,6 +1,6 @@
 # Scene tree component
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 ## Scope
 
@@ -12,7 +12,7 @@ This Scene component provides the concrete [Main loop](main-loop.md), owns one a
 | --- | --- |
 | [`SceneTree`](../classes/SceneTree.md) | Concrete `MainLoop`, hierarchy owner, frame/system-notification dispatcher, group service, timer owner, deferred scheduler, and deletion queue |
 | [`Timer`](../classes/Timer.md) | Reusable Node countdown with process/physics, pause, repeat, autostart, time-scale, event, and packed-configuration behavior |
-| [`TimerProcessCallback`](../classes/TimerProcessCallback.md) | Stable choice between physics and process countdown lanes |
+| [`ProcessPhase`](../classes/ProcessPhase.md) | Stable choice between physics and process countdown lanes |
 | [`SceneTreeTimer`](../classes/SceneTreeTimer.md) | Auto-disposed one-shot timer advanced by a selected tree frame lane |
 | [`GroupCallFlags`](../classes/GroupCallFlags.md) | Order, deferral, and uniqueness policy for typed group operations |
 

@@ -12,7 +12,7 @@ internal static class BoxContainerTests
         Check(box.GetMinimumSize() == new Vector2(34, 12) && box.PropagateMaximumSize && box.MouseFilter == MouseFilter.Pass, "Container defaults and minimum sums.");
         a.CustomMaximumSize = new(15, -1); tree.ProcessFrame(0); tree.ProcessFrame(0);
         Check(a.Size.X == 15 && b.Size.X == 81, "Capped child redistributes surplus.");
-        a.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter; b.SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd; box.Alignment = BoxContainer.AlignmentMode.Center;
+        a.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter; b.SizeFlagsHorizontal = Control.SizeFlags.ShrinkEnd; box.Alignment = AlignmentMode.Center;
         tree.ProcessFrame(0); Check(a.Position.X == 33 && b.Position.X == 47, "Group center alignment with fixed minima.");
         box.LayoutDirection = LayoutDirection.RTL; tree.ProcessFrame(0); tree.ProcessFrame(0);
         Check(b.Position.X == 33 && a.Position.X == 57, "RTL reverses horizontal child ordering.");
@@ -23,7 +23,7 @@ internal static class BoxContainerTests
         b.Hide(); tree.ProcessFrame(0); Check(box.GetMinimumSize() == a.GetBoundMinimumSize().Ceil(), "Hidden children stop minimum participation."); b.Show();
         using var outsider = new Control(); Reject<ArgumentException>(() => box.FitChildInRect(outsider, new(0, 0, 10, 10)));
         Reject<InvalidOperationException>(() => box.Vertical = false);
-        Reject<ArgumentOutOfRangeException>(() => box.Alignment = (BoxContainer.AlignmentMode)3);
+        Reject<ArgumentOutOfRangeException>(() => box.Alignment = (AlignmentMode)3);
         a.SizeFlagsHorizontal = (Control.SizeFlags)32; Check((int)a.SizeFlagsHorizontal == 32, "Unrecognized source flag bits retain value.");
         Reject<ArgumentOutOfRangeException>(() => a.SizeFlagsStretchRatio = float.NaN);
         Check(Task.Run(() => Capture(() => a.SizeFlagsHorizontal = Control.SizeFlags.Fill)).Result is InvalidOperationException, "Flag owner guard.");
@@ -56,7 +56,7 @@ internal static class BoxContainerTests
         root.RemoveChild(box); box.QueueSort(); root.AddChild(box); tree.ProcessFrame(0); Check(sort == 4, "Detach/reentry resumes membership sorting.");
         a.Owner = root; b.Owner = root; box.Owner = root; using var packed = new PackedScene(); packed.Pack(root); using var copy = packed.Instantiate();
         Check(copy.GetNodeOrNull("Box") is VBoxContainer clone && clone.Vertical && clone.GetChild(0) is Control child && child.SizeFlagsVertical == Control.SizeFlags.ExpandFill, "Exact fixed orientation and flags pack.");
-        var reentered = false; Action reentrant = () => { if (reentered) return; reentered = true; box.Alignment = BoxContainer.AlignmentMode.End; };
+        var reentered = false; Action reentrant = () => { if (reentered) return; reentered = true; box.Alignment = AlignmentMode.End; };
         a.Resized += reentrant; box.Size = new(42, 102); tree.ProcessFrame(0); a.Resized -= reentrant;
         Check(reentered, "Child resize can synchronously request another alignment pass without corrupting scratch slots.");
         for (var pass = 0; pass < 64; pass++) { box.Size = pass % 2 == 0 ? new(40, 100) : new(42, 102); tree.ProcessFrame(0); }

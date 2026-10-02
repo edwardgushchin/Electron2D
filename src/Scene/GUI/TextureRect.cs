@@ -17,25 +17,6 @@ public enum TextureRectExpandMode
     FitHeightProportional = 5
 }
 
-/// <summary>Controls texture placement inside an image control.</summary>
-public enum TextureRectStretchMode
-{
-    /// <summary>Stretches to the full control rectangle.</summary>
-    Scale = 0,
-    /// <summary>Repeats at natural logical pixel size.</summary>
-    Tile = 1,
-    /// <summary>Keeps natural size at the leading top-left position.</summary>
-    Keep = 2,
-    /// <summary>Centers natural size.</summary>
-    KeepCentered = 3,
-    /// <summary>Fits aspect with integer-truncated dimensions.</summary>
-    KeepAspect = 4,
-    /// <summary>Centers an aspect-preserving integer fit.</summary>
-    KeepAspectCentered = 5,
-    /// <summary>Covers the rectangle using a centered source crop.</summary>
-    KeepAspectCovered = 6
-}
-
 /// <summary>Draws a borrowed texture with configurable stretching, tiling, aspect and reflection.</summary>
 /// <remarks>Mouse input passes through by default. Texture assignment is stored; resources remain caller-owned.
 /// Resource revisions are polled so failed or off-thread observers cannot lose redraw/minimum invalidation.
@@ -44,7 +25,7 @@ public class TextureRect : Control
 {
     private Texture? _texture;
     private TextureRectExpandMode _expandMode;
-    private TextureRectStretchMode _stretchMode;
+    private TextureStretchMode _stretchMode;
     private bool _flipH, _flipV;
     private int _generation, _pending;
     private SceneTree? _resourceTree;
@@ -56,7 +37,7 @@ public class TextureRect : Control
     [
         new PropertyDescriptor<TextureRect, Texture?>(nameof(Texture), node => node.Texture, (node, value) => node.Texture = value, _ => null, stored: true),
         new PropertyDescriptor<TextureRect, TextureRectExpandMode>(nameof(ExpandMode), node => node.ExpandMode, (node, value) => node.ExpandMode = value, _ => TextureRectExpandMode.KeepSize, stored: true),
-        new PropertyDescriptor<TextureRect, TextureRectStretchMode>(nameof(StretchMode), node => node.StretchMode, (node, value) => node.StretchMode = value, _ => TextureRectStretchMode.Scale, stored: true),
+        new PropertyDescriptor<TextureRect, TextureStretchMode>(nameof(StretchMode), node => node.StretchMode, (node, value) => node.StretchMode = value, _ => TextureStretchMode.Scale, stored: true),
         new PropertyDescriptor<TextureRect, bool>(nameof(FlipH), node => node.FlipH, (node, value) => node.FlipH = value, _ => false, stored: true),
         new PropertyDescriptor<TextureRect, bool>(nameof(FlipV), node => node.FlipV, (node, value) => node.FlipV = value, _ => false, stored: true),
         new PropertyDescriptor<TextureRect, MouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => MouseFilter.Pass, stored: true)
@@ -97,10 +78,10 @@ public class TextureRect : Control
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
     /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
-    public TextureRectStretchMode StretchMode
+    public TextureStretchMode StretchMode
     {
         get { Check(); return _stretchMode; }
-        set { EnsureMutable(); if (value is < TextureRectStretchMode.Scale or > TextureRectStretchMode.KeepAspectCovered) throw new ArgumentOutOfRangeException(nameof(value)); if (_stretchMode == value) return; _stretchMode = value; Interlocked.Increment(ref _generation); QueueRedraw(); UpdateConfigurationWarnings(); }
+        set { EnsureMutable(); if (value is < TextureStretchMode.Scale or > TextureStretchMode.KeepAspectCovered) throw new ArgumentOutOfRangeException(nameof(value)); if (_stretchMode == value) return; _stretchMode = value; Interlocked.Increment(ref _generation); QueueRedraw(); UpdateConfigurationWarnings(); }
     }
     /// <summary>Gets or sets horizontal visual reflection without moving the occupied rectangle.</summary>
     /// <value>False initially.</value>
@@ -197,15 +178,15 @@ public class TextureRect : Control
             var size = controlSize; var offset = Vector2.Zero; var region = default(Rect2);
             switch (mode)
             {
-                case TextureRectStretchMode.Keep: size = natural; break;
-                case TextureRectStretchMode.KeepCentered: size = natural; offset = (controlSize - size) / 2; break;
-                case TextureRectStretchMode.KeepAspect:
-                case TextureRectStretchMode.KeepAspectCentered:
+                case TextureStretchMode.Keep: size = natural; break;
+                case TextureStretchMode.KeepCentered: size = natural; offset = (controlSize - size) / 2; break;
+                case TextureStretchMode.KeepAspect:
+                case TextureStretchMode.KeepAspectCentered:
                     var width = Pixel(natural.X * controlSize.Y / natural.Y); var height = Pixel(controlSize.Y);
                     if (width > controlSize.X) { width = Pixel(controlSize.X); height = Pixel(natural.Y * width / natural.X); }
-                    size = new(width, height); if (mode == TextureRectStretchMode.KeepAspectCentered) offset = (controlSize - size) / 2;
+                    size = new(width, height); if (mode == TextureStretchMode.KeepAspectCentered) offset = (controlSize - size) / 2;
                     break;
-                case TextureRectStretchMode.KeepAspectCovered:
+                case TextureStretchMode.KeepAspectCovered:
                     if (size.X == 0 || size.Y == 0) return;
                     var scale = MathF.Max(size.X / natural.X, size.Y / natural.Y);
                     region = new(((natural * scale - size) / scale).Abs() / 2, size / scale); break;
@@ -213,8 +194,8 @@ public class TextureRect : Control
             if (_flipH) size.X = -size.X; if (_flipV) size.Y = -size.Y;
             if (!size.IsFinite() || !offset.IsFinite() || !region.IsFinite()) throw new InvalidOperationException("Texture rectangle geometry overflowed.");
             if (region.HasArea()) DrawTextureRectRegion(texture, new(offset, size), region);
-            else if (mode == TextureRectStretchMode.Tile && texture is AtlasTexture) RecordNinePatch(texture, new(offset, size), new(Vector2.Zero, natural), new(Vector2.Zero, Vector2.Zero, NinePatchRect.AxisStretchMode.Tile, NinePatchRect.AxisStretchMode.Tile, true));
-            else DrawTextureRect(texture, new(offset, size), mode == TextureRectStretchMode.Tile);
+            else if (mode == TextureStretchMode.Tile && texture is AtlasTexture) RecordNinePatch(texture, new(offset, size), new(Vector2.Zero, natural), new(Vector2.Zero, Vector2.Zero, AxisStretchMode.Tile, AxisStretchMode.Tile, true));
+            else DrawTextureRect(texture, new(offset, size), mode == TextureStretchMode.Tile);
             return;
         }
         throw new InvalidOperationException("Texture rectangle size callbacks did not settle.");
@@ -230,7 +211,7 @@ public class TextureRect : Control
     public override string[] GetConfigurationWarnings()
     {
         var warnings = base.GetConfigurationWarnings();
-        if (_stretchMode != TextureRectStretchMode.Tile) return warnings;
+        if (_stretchMode != TextureStretchMode.Tile) return warnings;
         var visited = new HashSet<AtlasTexture>();
         for (var source = _texture as AtlasTexture; source is not null && visited.Add(source); source = source.Atlas as AtlasTexture)
             if (source.Margin != default) return warnings.Append("Tiled atlas textures with non-zero margins are unsupported.").ToArray();

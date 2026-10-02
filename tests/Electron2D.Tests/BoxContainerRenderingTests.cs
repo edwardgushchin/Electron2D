@@ -51,7 +51,7 @@ internal static partial class RenderingRuntimeTests
         window.Ready += _ =>
         {
             var server = RenderingServer.Instance!;
-            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); box.Size = frames % 2 == 0 ? new(40, 30) : new(42, 32); box.Alignment = frames % 2 == 0 ? BoxContainer.AlignmentMode.Begin : BoxContainer.AlignmentMode.Center; };
+            server.FramePreDraw += () => { before = GC.GetAllocatedBytesForCurrentThread(); box.Size = frames % 2 == 0 ? new(40, 30) : new(42, 32); box.Alignment = frames % 2 == 0 ? AlignmentMode.Begin : AlignmentMode.Center; };
             server.FramePostDraw += () =>
             {
                 if (++frames > 64) allocated += GC.GetAllocatedBytesForCurrentThread() - before;

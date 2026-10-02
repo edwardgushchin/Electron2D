@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -13,6 +13,8 @@ The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored 
 For a desktop self-contained HostExample publish, run `python3 -B tools/check_native_publish.py RID /path/to/publish` after publishing without platform-selection overrides. The check requires an executable host, the matching .NET runtime pack, and the three SDL packages plus pinned native FreeType/HarfBuzz packages and the corresponding native libraries for that RID. For Linux, it also checks the private ICU library’s ELF architecture, unique SONAME, exact nine engine C exports and absence of a global ICU dependency; GNU `nm` and `readelf` are required for this inspection. The native audio check also verifies FAudio ELF architecture, SONAME, shared SDL3 dependency and an internal managed binding. Foreign publishes must exclude both Linux private libraries. Native text is currently integrated for Linux x64/ARM64 profiles, with Linux x64 execution verified; a foreign package check does not establish text execution. The check does not verify execution on the target OS or replace its license audit.
 
 ## Public API and coverage
+
+Public enum identity follows [ADR 0051](decisions/product.md#adr-0051): one semantic value contract has one type, shared across owners when meanings and valid values agree. Review new enum declarations against existing public types; matching numeric values with different semantics remain distinct. Update all consumers, XML, class pages and coverage when a type moves.
 
 Function, method and property names follow [ADR 0045](decisions/product.md#adr-0045): every acronym stays fully uppercase, including `PNG`, `JPG`, `GL`, `HLSL`, `GLSL`, `GPU`, `API`, `ID`, `UTF8`, and `FPS` (for example, `GetFPS` and `MaxFPS`). Ordinary words retain PascalCase. Existing mixed-case acronym spellings require migration with their callers, XML, class pages and coverage; this rule does not claim that all existing declarations have already been renamed.
 

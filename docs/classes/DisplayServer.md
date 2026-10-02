@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -182,10 +182,10 @@ display.FileDialogShow("Open image", "", "", false,
 | [`public enum Feature`](#enum-feature) | Identifies a display-server capability for `HasFeature`. |
 | [`public enum HandleType`](#enum-handletype) | Selects a borrowed native display or window identity; see the [enum reference](DisplayServer.HandleType.md). |
 | [`public enum FileDialogMode`](#enum-filedialogmode) | Selects a native file chooser mode; see the [enum reference](DisplayServer.FileDialogMode.md). |
-| [`public enum MouseMode`](#enum-mousemode) | Defines cursor visibility and window confinement. |
-| [`public enum CursorShape`](#enum-cursorshape) | Identifies standard pointer shapes supported by the native cursor theme. |
-| [`public enum WindowFlag`](#enum-windowflag) | Selects a main-window policy by its stable display-server ID. |
-| [`public enum WindowMode`](#enum-windowmode) | Identifies the current presentation state of a native window. |
+| [MouseMode](MouseMode.md) | Defines cursor visibility and window confinement. |
+| [CursorShape](CursorShape.md) | Identifies standard pointer shapes supported by the native cursor theme. |
+| [WindowFlag](WindowFlag.md) | Selects a main-window policy by its stable display-server ID. |
+| [WindowMode](WindowMode.md) | Identifies the current presentation state of a native window. |
 | [`public enum ProgressState`](#enum-progressstate) | Identifies a native taskbar progress indication. |
 
 ### Protected extension points
@@ -1210,88 +1210,11 @@ Identifies a display-server capability for `HasFeature`.
 
 **Source:** `src/Servers/Display/DisplayServer.Capabilities.cs`.
 
-<a id="enum-mousemode"></a>
-#### `public enum MouseMode`
+#### Shared [MouseMode](MouseMode.md)
 
-Defines cursor visibility and window confinement.
+#### Shared [CursorShape](CursorShape.md)
 
-| Value | Meaning |
-| --- | --- |
-| `Visible = 0` | The pointer is visible and free to leave the window. |
-| `Hidden = 1` | The pointer is hidden and free to leave the window. |
-| `Captured = 2` | The pointer is hidden, captured, and reports relative motion. |
-| `Confined = 3` | The visible pointer is confined to the main window. |
-| `ConfinedHidden = 4` | The hidden pointer is confined to the main window. |
-| `Max = 5` | The number of pointer modes; not a selectable mode. |
-
-**Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
-
-<a id="enum-cursorshape"></a>
-#### `public enum CursorShape`
-
-Identifies standard pointer shapes supported by the native cursor theme.
-
-| Value | Meaning |
-| --- | --- |
-| `Arrow = 0` | The default pointer arrow. |
-| `IBeam = 1` | The text-selection I-beam. |
-| `PointingHand = 2` | The pointing hand for links. |
-| `Cross = 3` | The crosshair for precise positioning. |
-| `Wait = 4` | The nonblocking wait indicator, usually paired with an arrow. |
-| `Busy = 5` | The blocking wait indicator, usually replacing the arrow. |
-| `Drag = 6` | The dragging hand pointer. |
-| `CanDrop = 7` | The pointer indicating that a dragged item can be dropped. |
-| `Forbidden = 8` | The pointer indicating that a dragged item cannot be dropped. |
-| `VSize = 9` | The vertical-resize pointer. |
-| `HSize = 10` | The horizontal-resize pointer. |
-| `BDiagSize = 11` | The northeast-southwest diagonal-resize pointer. |
-| `FDiagSize = 12` | The northwest-southeast diagonal-resize pointer. |
-| `Move = 13` | The four-direction move pointer. |
-| `VSplit = 14` | The vertical split-resize pointer. |
-| `HSplit = 15` | The horizontal split-resize pointer. |
-| `Help = 16` | The help pointer. |
-| `Max = 17` | The number of pointer shapes; not a selectable shape. |
-
-**Source:** `src/Servers/Display/DisplayServer.Pointer.cs`.
-
-<a id="enum-windowflag"></a>
-#### `public enum WindowFlag`
-
-Selects a main-window policy by its stable display-server ID.
-
-| Value | Meaning |
-| --- | --- |
-| `ResizeDisabled = 0` | Whether dragging the window border is prevented from resizing it. |
-| `Borderless = 1` | Whether the window has no native border and title bar. |
-| `AlwaysOnTop = 2` | Whether the window stays above ordinary windows. |
-| `Transparent = 3` | Whether the window background can be transparent; requires transparent window creation and a renderer. |
-| `NoFocus = 4` | Whether the window is prevented from receiving keyboard focus. |
-| `Popup = 5` | Whether the window is a transient menu popup; requires multiple-window ownership. |
-| `ExtendToTitle = 6` | Whether content extends under the native title bar; requires platform title-bar integration. |
-| `MousePassthrough = 7` | Whether mouse input passes to an underlying application window; requires native hit-test integration. |
-| `SharpCorners = 8` | Whether native rounded window corners are suppressed; requires platform window-style integration. |
-| `ExcludeFromCapture = 9` | Whether ordinary screen capture excludes the window; requires platform capture-policy integration. |
-| `PopupWmHint = 10` | Whether the window manager treats the window as a popup; requires multiple-window ownership. |
-| `MinimizeDisabled = 11` | Whether native minimization controls are disabled; requires platform window-style integration. |
-| `MaximizeDisabled = 12` | Whether native maximization controls are disabled; requires platform window-style integration. |
-| `Max = 13` | The number of defined policy identifiers; not a window policy. |
-
-**Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
-
-<a id="enum-windowmode"></a>
-#### `public enum WindowMode`
-
-Identifies the current presentation state of a native window.
-
-| Value | Meaning |
-| --- | --- |
-| `Windowed = 0` | A decorated or undecorated floating window. |
-| `Minimized = 1` | A window hidden by the window manager and represented in its task list. |
-| `Maximized = 2` | A window expanded to the work area with its border retained. |
-| `Fullscreen = 3` | A borderless window covering its current display without a video-mode change. |
-| `ExclusiveFullscreen = 4` | A selected native video mode where supported; ordinary compositor fullscreen on Wayland. |
-
-**Source:** `src/Servers/Display/DisplayServer.Windows.cs`.
+#### Shared [WindowFlag](WindowFlag.md)
 
 <a id="enum-progressstate"></a>
 #### `public enum ProgressState`

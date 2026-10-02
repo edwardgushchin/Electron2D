@@ -99,7 +99,7 @@ internal static partial class RenderingRuntimeTests
     private sealed class NativeTooltipOwner : Control
     {
         internal bool UseCustom;
-        protected override Control? OnMakeCustomTooltip(string forText) => UseCustom ? new TooltipSolid { CustomMinimumSize = new(32, 18), Tint = Colors.Blue, FocusMode = FocusMode.All, MouseBehaviorRecursive = MouseBehaviorRecursive.Enabled } : null;
+        protected override Control? OnMakeCustomTooltip(string forText) => UseCustom ? new TooltipSolid { CustomMinimumSize = new(32, 18), Tint = Colors.Blue, FocusMode = FocusMode.All, MouseBehaviorRecursive = RecursiveBehavior.Enabled } : null;
     }
     private sealed class TooltipSolid : Control
     {

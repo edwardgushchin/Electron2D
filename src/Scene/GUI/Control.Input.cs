@@ -25,69 +25,8 @@ public enum FocusMode
     Accessibility = 3
 }
 
-/// <summary>Controls whether focus eligibility is inherited, disabled, or restored in a control subtree.</summary>
-public enum FocusBehaviorRecursive
-{
-    /// <summary>Follow the direct parent control, or allow focus when there is none.</summary>
-    Inherited = 0,
-    /// <summary>Disable focus unless a descendant explicitly enables it.</summary>
-    Disabled = 1,
-    /// <summary>Allow focus regardless of the parent control's policy.</summary>
-    Enabled = 2
-}
-
-/// <summary>Controls whether pointer input is inherited, disabled, or restored in a control subtree.</summary>
-public enum MouseBehaviorRecursive
-{
-    /// <summary>Follow the direct parent control, or allow pointer input when there is none.</summary>
-    Inherited = 0,
-    /// <summary>Ignore pointer input unless a descendant explicitly enables it.</summary>
-    Disabled = 1,
-    /// <summary>Allow pointer input regardless of the parent control's policy.</summary>
-    Enabled = 2
-}
-
 public partial class Control
 {
-    /// <summary>Identifies the system cursor shown over a control.</summary>
-    public enum CursorShape
-    {
-        /// <summary>Arrow pointer.</summary>
-        Arrow = 0,
-        /// <summary>Text selection.</summary>
-        IBeam = 1,
-        /// <summary>Clickable link.</summary>
-        PointingHand = 2,
-        /// <summary>Crosshair.</summary>
-        Cross = 3,
-        /// <summary>Nonblocking wait.</summary>
-        Wait = 4,
-        /// <summary>Blocking wait.</summary>
-        Busy = 5,
-        /// <summary>Drag.</summary>
-        Drag = 6,
-        /// <summary>Drop allowed.</summary>
-        CanDrop = 7,
-        /// <summary>Drop forbidden.</summary>
-        Forbidden = 8,
-        /// <summary>Vertical resize.</summary>
-        VSize = 9,
-        /// <summary>Horizontal resize.</summary>
-        HSize = 10,
-        /// <summary>Northeast-southwest diagonal resize.</summary>
-        BDiagSize = 11,
-        /// <summary>Northwest-southeast diagonal resize.</summary>
-        FDiagSize = 12,
-        /// <summary>Move in any direction.</summary>
-        Move = 13,
-        /// <summary>Vertical split resize.</summary>
-        VSplit = 14,
-        /// <summary>Horizontal split resize.</summary>
-        HSplit = 15,
-        /// <summary>Help.</summary>
-        Help = 16,
-    }
-
     /// <summary>Pointer entered this control or a reachable child control.</summary>
     public const int NotificationMouseEnter = 41;
     /// <summary>Pointer exited this control and all reachable child controls.</summary>
@@ -107,8 +46,8 @@ public partial class Control
 
     private MouseFilter _mouseFilter;
     private FocusMode _focusMode;
-    private MouseBehaviorRecursive _mouseBehaviorRecursive;
-    private FocusBehaviorRecursive _focusBehaviorRecursive;
+    private RecursiveBehavior _mouseBehaviorRecursive;
+    private RecursiveBehavior _focusBehaviorRecursive;
     private bool _mouseForcePassScrollEvents = true;
     private CursorShape _mouseDefaultCursorShape;
 
@@ -147,8 +86,8 @@ public partial class Control
     }
 
     /// <summary>Gets or sets the inherited pointer input policy for this control and its descendants.</summary>
-    /// <value><see cref="MouseBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
-    public MouseBehaviorRecursive MouseBehaviorRecursive
+    /// <value><see cref="RecursiveBehavior.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public RecursiveBehavior MouseBehaviorRecursive
     {
         get { ThrowIfDisposed(); return _mouseBehaviorRecursive; }
         set
@@ -201,8 +140,8 @@ public partial class Control
     }
 
     /// <summary>Gets or sets the inherited keyboard focus policy for this control and its descendants.</summary>
-    /// <value><see cref="FocusBehaviorRecursive.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
-    public FocusBehaviorRecursive FocusBehaviorRecursive
+    /// <value><see cref="RecursiveBehavior.Inherited"/> by default. An enabled descendant overrides a disabled ancestor.</value>
+    public RecursiveBehavior FocusBehaviorRecursive
     {
         get { ThrowIfDisposed(); return _focusBehaviorRecursive; }
         set
@@ -233,15 +172,15 @@ public partial class Control
 
     private bool IsMouseBehaviorEnabled() => _mouseBehaviorRecursive switch
     {
-        MouseBehaviorRecursive.Enabled => true,
-        MouseBehaviorRecursive.Disabled => false,
+        RecursiveBehavior.Enabled => true,
+        RecursiveBehavior.Disabled => false,
         _ => Parent is not Control parent || parent.IsMouseBehaviorEnabled()
     };
 
     private bool IsFocusBehaviorEnabled() => _focusBehaviorRecursive switch
     {
-        FocusBehaviorRecursive.Enabled => true,
-        FocusBehaviorRecursive.Disabled => false,
+        RecursiveBehavior.Enabled => true,
+        RecursiveBehavior.Disabled => false,
         _ => Parent is not Control parent || parent.IsFocusBehaviorEnabled()
     };
 

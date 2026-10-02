@@ -20,7 +20,7 @@ internal static class FlowContainerTests
     private static void VerifyWrapping()
     {
         using var defaults = new FlowContainer();
-        Check(!defaults.Vertical && !defaults.ReverseFill && defaults.Alignment == FlowContainer.AlignmentMode.Begin && defaults.LastWrapAlignment == FlowContainer.LastWrapAlignmentMode.Inherit && defaults.HSeparation == 4 && defaults.VSeparation == 4 && defaults.GetLineCount() == 0, "Flow defaults match the reference surface.");
+        Check(!defaults.Vertical && !defaults.ReverseFill && defaults.Alignment == AlignmentMode.Begin && defaults.LastWrapAlignment == FlowContainer.LastWrapAlignmentMode.Inherit && defaults.HSeparation == 4 && defaults.VSeparation == 4 && defaults.GetLineCount() == 0, "Flow defaults match the reference surface.");
         var (flow, a, b, c) = Fixture(); using var tree = new SceneTree(flow); tree.ProcessFrame(0); tree.ProcessFrame(0);
         Check(flow.GetLineCount() == 2 && a.Position == Vector2.Zero && b.Position == new Vector2(14, 0) && c.Position == new Vector2(0, 15), "Horizontal flow wraps before the third child and preserves separation.");
         Check(a.Size == new Vector2(10, 12) && b.Size == new Vector2(20, 12) && flow.GetMinimumSize() == new Vector2(20, 23), "Cross fill and cached minimum extent follow line heights.");
@@ -42,10 +42,10 @@ internal static class FlowContainerTests
         for (var alignment = 0; alignment < 3; alignment++)
             for (var last = 0; last < 4; last++)
             {
-                flow.Alignment = (FlowContainer.AlignmentMode)alignment; flow.LastWrapAlignment = (FlowContainer.LastWrapAlignmentMode)last;
+                flow.Alignment = (AlignmentMode)alignment; flow.LastWrapAlignment = (FlowContainer.LastWrapAlignmentMode)last;
                 Check(a.Position.X == alignment * 3 && c.Position.X == expected[alignment, last], $"Relative last-line alignment profile {alignment}/{last}.");
             }
-        flow.LastWrapAlignment = FlowContainer.LastWrapAlignmentMode.End; flow.Alignment = FlowContainer.AlignmentMode.Begin;
+        flow.LastWrapAlignment = FlowContainer.LastWrapAlignmentMode.End; flow.Alignment = AlignmentMode.Begin;
         c.CustomMinimumSize = new(25, 8); tree.ProcessFrame(0); tree.ProcessFrame(0);
         Check(c.Position.X == 0, "A final line classed filled does not use relative alignment.");
     }
@@ -62,7 +62,7 @@ internal static class FlowContainerTests
         Check(a.Size.X == 10 && b.Size.X == 50, "A signed nonpositive weight keeps the minimum without overallocating another child.");
         a.SizeFlagsStretchRatio = b.SizeFlagsStretchRatio = 1; a.CustomMaximumSize = new(-1, -1); flow.Size = new(31, 20); tree.ProcessFrame(0);
         Check(a.Size.X == 15 && b.Size.X == 15 && b.Position.X == 15, "Per-child truncation leaves one residual pixel rather than distributing it.");
-        flow.Alignment = FlowContainer.AlignmentMode.End; Check(a.Position.X == 1 && b.Position.X == 16, "Residual truncated pixels obey alignment.");
+        flow.Alignment = AlignmentMode.End; Check(a.Position.X == 1 && b.Position.X == 16, "Residual truncated pixels obey alignment.");
     }
     private static void VerifyDirections()
     {
@@ -89,7 +89,7 @@ internal static class FlowContainerTests
         {
             using (control) { control.ReverseFill = true; packed.Pack(control); using var fixedCopy = packed.Instantiate(); Check(fixedCopy.GetType() == control.GetType() && ((FlowContainer)fixedCopy).ReverseFill, "Packing preserves fixed subclass identity."); }
         }
-        Reject<ArgumentOutOfRangeException>(() => flow.Alignment = (FlowContainer.AlignmentMode)3);
+        Reject<ArgumentOutOfRangeException>(() => flow.Alignment = (AlignmentMode)3);
         Reject<ArgumentOutOfRangeException>(() => flow.LastWrapAlignment = (FlowContainer.LastWrapAlignmentMode)4);
         Check(Task.Run(() => Capture(() => _ = flow.Alignment)).Result is InvalidOperationException && Task.Run(() => Capture(() => flow.ReverseFill = true)).Result is InvalidOperationException, "Attached configuration is owner-thread affine.");
         a.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill; tree.ProcessFrame(0);
@@ -97,7 +97,7 @@ internal static class FlowContainerTests
         a.Resized += fail; flow.Size = new(80, 50); Reject<AggregateException>(() => tree.ProcessFrame(0)); a.Resized -= fail;
         Check(c.Position.X == 65 && flow.GetLineCount() == 1, "Failed child resize does not prevent later placements or cache publication.");
         var changed = false; Action mutate = () => { if (changed) return; changed = true; flow.ReverseFill = true; };
-        a.Resized += mutate; flow.Size = new(90, 52); flow.Alignment = FlowContainer.AlignmentMode.End; a.Resized -= mutate;
+        a.Resized += mutate; flow.Size = new(90, 52); flow.Alignment = AlignmentMode.End; a.Resized -= mutate;
         Check(changed && a.Position.Y == 40, "Immediate layout requests from callbacks settle without recursion.");
         using var disposed = new FlowContainer(); disposed.Dispose(); Reject<ObjectDisposedException>(() => disposed.GetLineCount()); Reject<ObjectDisposedException>(() => disposed.HSeparation = 0);
     }

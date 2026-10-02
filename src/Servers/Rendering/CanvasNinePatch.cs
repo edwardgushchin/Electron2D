@@ -1,7 +1,7 @@
 namespace Electron2D;
 
-internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, NinePatchRect.AxisStretchMode Horizontal,
-    NinePatchRect.AxisStretchMode Vertical, bool DrawCenter)
+internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, AxisStretchMode Horizontal,
+    AxisStretchMode Vertical, bool DrawCenter)
 {
     internal void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snap)
     {
@@ -54,29 +54,29 @@ internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, Nine
     private readonly struct Axis
     {
         private readonly float _draw, _texture, _begin, _end, _start, _stop, _sourceCenter, _period;
-        private readonly NinePatchRect.AxisStretchMode _mode;
+        private readonly AxisStretchMode _mode;
         private readonly int _tiles;
         internal int Count => _tiles + 2;
-        internal Axis(float draw, float texture, float begin, float end, NinePatchRect.AxisStretchMode mode)
+        internal Axis(float draw, float texture, float begin, float end, AxisStretchMode mode)
         {
             _draw = draw; _texture = texture; _begin = begin; _end = end; _mode = mode;
             _start = Math.Clamp(begin, 0, draw); _stop = Math.Clamp(draw - end, _start, draw);
             _sourceCenter = texture - begin - end;
-            if (_stop <= _start || _sourceCenter == 0 && mode != NinePatchRect.AxisStretchMode.Stretch) { _tiles = 0; _period = 0; return; }
-            if (mode == NinePatchRect.AxisStretchMode.Stretch) { _tiles = 1; _period = _stop - _start; return; }
+            if (_stop <= _start || _sourceCenter == 0 && mode != AxisStretchMode.Stretch) { _tiles = 0; _period = 0; return; }
+            if (mode == AxisStretchMode.Stretch) { _tiles = 1; _period = _stop - _start; return; }
             var centerDraw = draw - begin - end;
-            var count = mode == NinePatchRect.AxisStretchMode.TileFit
+            var count = mode == AxisStretchMode.TileFit
                 ? MathF.Max(1, MathF.Floor(centerDraw / MathF.Max(_sourceCenter, 0.0000001f) + 0.5f))
                 : MathF.Ceiling((_stop - _start + (_start - begin) % MathF.Abs(_sourceCenter)) / MathF.Abs(_sourceCenter));
             if (!float.IsFinite(count) || count > 1_048_574) throw new InvalidOperationException("Nine-patch axis exceeds the finite canvas tile range.");
             _tiles = (int)count;
-            _period = mode == NinePatchRect.AxisStretchMode.TileFit ? centerDraw / count : MathF.Abs(_sourceCenter);
+            _period = mode == AxisStretchMode.TileFit ? centerDraw / count : MathF.Abs(_sourceCenter);
         }
         internal Segment Piece(int index)
         {
             if (index == 0) return new(0, _start, 0, _start, false);
             if (index == Count - 1) return new(_stop, _draw, _texture - (_draw - _stop), _texture, false);
-            if (_mode == NinePatchRect.AxisStretchMode.Stretch)
+            if (_mode == AxisStretchMode.Stretch)
             {
                 var scale = _sourceCenter / (_draw - _begin - _end);
                 return new(_start, _stop, _begin + (_start - _begin) * scale, _begin + (_stop - _begin) * scale, true);

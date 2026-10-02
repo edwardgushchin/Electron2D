@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -100,7 +100,7 @@ Window owns `Show()` and `Hide()`; both assign Visible and preserve native failu
 | Type | Contract |
 | --- | --- |
 | [WindowMode](WindowMode.md) | Five native presentation requests, with observed-mode queries. |
-| [Flags](Window.Flags.md) | Individual policy indices, not a bit mask; four executable policies. |
+| [WindowFlag](WindowFlag.md) | Individual policy indices, not a bit mask; four executable policies. |
 
 ## Constructor Descriptions
 

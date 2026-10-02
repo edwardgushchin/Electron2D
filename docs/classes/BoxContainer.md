@@ -1,6 +1,6 @@
 # BoxContainer
 
-Last updated: 2026-09-27
+Last updated: 2026-10-02
 
 **Inherits:** [Container](Container.md), Control, CanvasItem, Node, ElectronObject · **Inherited By:** [HBoxContainer](HBoxContainer.md), [VBoxContainer](VBoxContainer.md)
 
@@ -35,7 +35,7 @@ tree.ProcessFrame(0);
 | `protected override SizeFlags[] GetAllowedSizeFlagsVertical()` | Omits cross-axis Expand when horizontal. |
 | `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Stores generic orientation/alignment; separation edits the inherited typed constant override. |
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Exact generic box identity. |
-| `public enum AlignmentMode` | [Begin=0, Center=1, End=2](BoxContainer.AlignmentMode.md). |
+| [AlignmentMode](AlignmentMode.md) | [Begin=0, Center=1, End=2](AlignmentMode.md). |
 
 ## Property descriptions
 

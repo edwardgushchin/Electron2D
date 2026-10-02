@@ -1,6 +1,6 @@
 # Input
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -50,7 +50,7 @@ if (input.IsActionPressed("jump"))
 | [`public MouseButtonMask MouseButtonMask { get; }`](#p-electron2d-input-mousebuttonmask) | Gets the non-wheel mouse buttons currently held. |
 | [`public Vector2 LastMouseVelocity { get; }`](#p-electron2d-input-lastmousevelocity) | Gets the most recently submitted local mouse velocity. |
 | [`public Vector2 LastMouseScreenVelocity { get; }`](#p-electron2d-input-lastmousescreenvelocity) | Gets the most recently submitted screen-space mouse velocity. |
-| [`public MouseModeEnum MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
+| [`public MouseMode MouseMode { get; set; }`](#p-electron2d-input-mousemode) | Gets or applies native pointer visibility, capture and confinement. |
 | [`public bool IgnoreJoypadOnUnfocusedApplication { get; set; }`](#p-electron2d-input-ignorejoypadonunfocusedapplication) | Suppresses controller input and effects while unfocused; defaults to false. |
 
 ## Methods
@@ -107,17 +107,17 @@ if (input.IsActionPressed("jump"))
 | Member | Description |
 | --- | --- |
 
-## Nested enums
+## Shared enums
 
 | Enum | Values |
 | --- | --- |
-| [MouseModeEnum](Input.MouseModeEnum.md) | `Visible = 0`, `Hidden = 1`, `Captured = 2`, `Confined = 3`, `ConfinedHidden = 4`, `Max = 5` (sentinel). The `Enum` suffix avoids collision with the `MouseMode` property. |
-| [CursorShape](Input.CursorShape.md) | `Arrow = 0`, `IBeam = 1`, `PointingHand = 2`, `Cross = 3`, `Wait = 4`, `Busy = 5`, `Drag = 6`, `CanDrop = 7`, `Forbidden = 8`, `VSize = 9`, `HSize = 10`, `BDiagSize = 11`, `FDiagSize = 12`, `Move = 13`, `VSplit = 14`, `HSplit = 15`, `Help = 16`. |
+| [MouseMode](MouseMode.md) | `Visible = 0`, `Hidden = 1`, `Captured = 2`, `Confined = 3`, `ConfinedHidden = 4`, `Max = 5` (sentinel). The shared type lives at namespace scope. |
+| [CursorShape](CursorShape.md) | Seventeen selectable shapes from `Arrow = 0` through `Help = 16`; `Max = 17` is a nonselectable count marker. |
 
 ## Property Descriptions
 
 <a id="p-electron2d-input-mousemode"></a>
-### `public MouseModeEnum MouseMode { get; set; }`
+### `public MouseMode MouseMode { get; set; }`
 
 Reads or applies the active display's pointer mode. The five selectable modes control native cursor visibility, relative capture and window confinement. `Max` is invalid. Native failures preserve the previous mode on a best-effort basis. Reading or writing without a display throws `InvalidOperationException`; the display owner thread is required.
 

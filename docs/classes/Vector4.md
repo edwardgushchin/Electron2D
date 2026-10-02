@@ -1,6 +1,6 @@
 # Vector4
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 **Inherits:** —
 
@@ -72,10 +72,10 @@ var normalized = weights.Normalized();
 | [`public Vector4 Lerp(Vector4 to, float weight)`](#m-electron2d-vector4-lerp-electron2d-vector4-system-single) | Linearly interpolates or extrapolates toward another vector. |
 | [`public Vector4 Max(Vector4 with)`](#m-electron2d-vector4-max-electron2d-vector4) | Returns the componentwise maximum with another vector. |
 | [`public Vector4 Max(float with)`](#m-electron2d-vector4-max-system-single) | Returns the componentwise maximum with a scalar. |
-| [`public Vector4.Axis MaxAxisIndex()`](#m-electron2d-vector4-maxaxisindex) | Returns the axis containing the greatest component. |
+| [`public Vector4Axis MaxAxisIndex()`](#m-electron2d-vector4-maxaxisindex) | Returns the axis containing the greatest component. |
 | [`public Vector4 Min(Vector4 with)`](#m-electron2d-vector4-min-electron2d-vector4) | Returns the componentwise minimum with another vector. |
 | [`public Vector4 Min(float with)`](#m-electron2d-vector4-min-system-single) | Returns the componentwise minimum with a scalar. |
-| [`public Vector4.Axis MinAxisIndex()`](#m-electron2d-vector4-minaxisindex) | Returns the axis containing the least component. |
+| [`public Vector4Axis MinAxisIndex()`](#m-electron2d-vector4-minaxisindex) | Returns the axis containing the least component. |
 | [`public Vector4 Normalized()`](#m-electron2d-vector4-normalized) | Returns this vector scaled to unit length. |
 | [`public Vector4 PosMod(float mod)`](#m-electron2d-vector4-posmod-system-single) | Applies positive modulus to every component. |
 | [`public Vector4 PosMod(Vector4 mod)`](#m-electron2d-vector4-posmod-electron2d-vector4) | Applies componentwise positive modulus. |
@@ -91,20 +91,11 @@ var normalized = weights.Normalized();
 | [`public override string ToString()`](#m-electron2d-vector4-tostring) | Formats every component using invariant culture. |
 | [`public string ToString(string format)`](#m-electron2d-vector4-tostring-system-string) | Formats every component with a numeric format and invariant culture. |
 
-## Enumerations
+## Shared axis enum
 
 | Member | Description |
 | --- | --- |
-| [`public enum Vector4.Axis`](#t-electron2d-vector4-axis) | Identifies one vector component. |
-
-## Constants
-
-| Member | Description |
-| --- | --- |
-| [`Vector4.Axis.X = 0`](#f-electron2d-vector4-axis-x) | Identifies the X component. |
-| [`Vector4.Axis.Y = 1`](#f-electron2d-vector4-axis-y) | Identifies the Y component. |
-| [`Vector4.Axis.Z = 2`](#f-electron2d-vector4-axis-z) | Identifies the Z component. |
-| [`Vector4.Axis.W = 3`](#f-electron2d-vector4-axis-w) | Identifies the W component. |
+| [Vector4Axis](Vector4Axis.md) | Identifies one vector component. |
 
 ## Fields
 
@@ -412,11 +403,11 @@ Returns the componentwise maximum with a scalar.
 **Returns:** The componentwise maximum.
 
 <a id="m-electron2d-vector4-maxaxisindex"></a>
-### `public Vector4.Axis MaxAxisIndex()`
+### `public Vector4Axis MaxAxisIndex()`
 
 Returns the axis containing the greatest component.
 
-**Returns:** [`Vector4.Axis.X`](Vector4.md#f-electron2d-vector4-axis-x) when all components are equal; otherwise the first greatest axis.
+**Returns:** [`Vector4Axis.X`](Vector4Axis.md) when all components are equal; otherwise the first greatest axis.
 
 <a id="m-electron2d-vector4-min-electron2d-vector4"></a>
 ### `public Vector4 Min(Vector4 with)`
@@ -441,11 +432,11 @@ Returns the componentwise minimum with a scalar.
 **Returns:** The componentwise minimum.
 
 <a id="m-electron2d-vector4-minaxisindex"></a>
-### `public Vector4.Axis MinAxisIndex()`
+### `public Vector4Axis MinAxisIndex()`
 
 Returns the axis containing the least component.
 
-**Returns:** [`Vector4.Axis.W`](Vector4.md#f-electron2d-vector4-axis-w) when all components are equal; otherwise the last least axis.
+**Returns:** [`Vector4Axis.W`](Vector4Axis.md) when all components are equal; otherwise the last least axis.
 
 <a id="m-electron2d-vector4-normalized"></a>
 ### `public Vector4 Normalized()`
@@ -585,34 +576,9 @@ Formats every component with a numeric format and invariant culture.
 
 - `FormatException`: `format` is invalid.
 
-## Enumeration Descriptions
+## Shared axis type
 
-<a id="t-electron2d-vector4-axis"></a>
-### `public enum Vector4.Axis`
-
-Identifies one vector component.
-
-## Constant Descriptions
-
-<a id="f-electron2d-vector4-axis-x"></a>
-### `Vector4.Axis.X = 0`
-
-Identifies the X component.
-
-<a id="f-electron2d-vector4-axis-y"></a>
-### `Vector4.Axis.Y = 1`
-
-Identifies the Y component.
-
-<a id="f-electron2d-vector4-axis-z"></a>
-### `Vector4.Axis.Z = 2`
-
-Identifies the Z component.
-
-<a id="f-electron2d-vector4-axis-w"></a>
-### `Vector4.Axis.W = 3`
-
-Identifies the W component.
+See [Vector4Axis](Vector4Axis.md) for the returned axis values.
 
 ## Field Descriptions
 

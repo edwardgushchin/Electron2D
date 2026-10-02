@@ -6,16 +6,6 @@ namespace Electron2D;
 /// changes are not forwarded as style changes. The style never owns or disposes its texture.</remarks>
 public class StyleBoxTexture : StyleBox
 {
-    /// <summary>Specifies how an inner texture region fills one drawing axis.</summary>
-    public enum AxisStretchMode
-    {
-        /// <summary>Stretches the inner region.</summary>
-        Stretch = 0,
-        /// <summary>Repeats the region at its source pixel size.</summary>
-        Tile = 1,
-        /// <summary>Fits an integer number of repeated regions to the destination.</summary>
-        TileFit = 2
-    }
     private Texture? _texture;
     private Rect2 _regionRect;
     private Color _modulateColor = Colors.White;
@@ -203,7 +193,7 @@ public class StyleBoxTexture : StyleBox
         {
             ThrowIfDisposed(); texture = _texture; source = _regionRect; color = _modulateColor;
             patch = new(new(_textureMargins[0], _textureMargins[1]), new(_textureMargins[2], _textureMargins[3]),
-                (NinePatchRect.AxisStretchMode)_horizontal, (NinePatchRect.AxisStretchMode)_vertical, _drawCenter);
+                _horizontal, _vertical, _drawCenter);
             expand = new(_expandMargins[0], _expandMargins[1], _expandMargins[2], _expandMargins[3]);
         }
         if (texture is null) return;

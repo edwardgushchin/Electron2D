@@ -1,6 +1,6 @@
 # Camera
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 - Declaration: `public partial class Camera : Entity`
 - Sources: [Camera.cs](../../src/Scene/2D/Camera.cs), [Camera.Tracking.cs](../../src/Scene/2D/Camera.Tracking.cs)
@@ -41,7 +41,7 @@ window.AddChild(camera);
 ## Enums
 
 - [AnchorMode](AnchorMode.md): FixedTopLeft = 0, DragCenter = 1.
-- [CameraProcessCallback](Camera.CameraProcessCallback.md): Physics = 0, Idle = 1.
+- [ProcessPhase](ProcessPhase.md): Physics = 0, Idle = 1.
 
 ## Constructors
 
@@ -58,7 +58,7 @@ window.AddChild(camera);
 | [`public AnchorMode AnchorMode { get; set; }`](#anchormode) | Gets or sets the camera anchor mode. |
 | [`public bool IgnoreRotation { get; set; }`](#ignorerotation) | Gets or sets whether view rotation ignores the node rotation. |
 | [`public bool Enabled { get; set; }`](#enabled) | Gets or sets whether this camera can become current. |
-| [`public CameraProcessCallback ProcessCallback { get; set; }`](#processcallback) | Gets or sets the internal frame lane for tracking. |
+| [`public ProcessPhase ProcessCallback { get; set; }`](#processcallback) | Gets or sets the internal frame lane for tracking. |
 | [`public bool LimitEnabled { get; set; }`](#limitenabled) | Gets or sets whether scroll limits apply. |
 | [`public bool LimitSmoothed { get; set; }`](#limitsmoothed) | Gets or sets whether limits constrain the target before smoothing. |
 | [`public bool PositionSmoothingEnabled { get; set; }`](#positionsmoothingenabled) | Gets or sets whether position updates interpolate toward the target. |
@@ -194,11 +194,11 @@ Gets or sets whether this camera can become current.
 
 ### ProcessCallback
 
-`public CameraProcessCallback ProcessCallback { get; set; }`
+`public ProcessPhase ProcessCallback { get; set; }`
 
 Gets or sets the internal frame lane for tracking.
 
-**Value:** CameraProcessCallback.Idle initially.
+**Value:** ProcessPhase.Idle initially.
 
 **Remarks:** Selects the internal process lane, independently of the public processing flags. An interpolated camera samples scroll on physics ticks even when this stored choice is Idle; the renderer uses the tick history for presentation.
 

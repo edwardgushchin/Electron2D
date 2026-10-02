@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -468,9 +468,9 @@ The migration can change public source and binary compatibility and must be reco
 The decision, routing index and maintenance instructions establish the rule. Build, call-site and coverage checks accompany each code migration; a documentation-only adoption does not prove that all existing identifiers comply.
 
 <a id="adr-0051"></a>
-## ADR 0051: Project selected enum families to explicit public type names
+## ADR 0051: One public enum per semantic value contract
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 ### Status
 
@@ -478,20 +478,24 @@ Accepted.
 
 ### Context
 
-Reference enum names are scoped by their owner, while C# properties can have the same short name. Earlier Electron2D slices mixed nested `Enum` suffixes, owner-prefixed namespace types, and unchanged nested types. A single implicit collision rule cannot express the selected public names. ADR 0004 still requires each applicable enum value and behavior; placement is a C# API naming choice.
+Reference enum names are often scoped by their owner. In typed C#, repeating the same value contract under several owners creates incompatible public types and numeric casts. Conversely, equal numbers can belong to different contracts. ADR 0004 still requires each applicable value and behavior; placement and type identity are explicit C# API choices.
 
 ### Decision
 
-The following names are exact public type identities. All listed targets are top-level in the flat `Electron2D` namespace except `Camera.CameraProcessCallback`, which remains nested:
+One semantic value contract has one public enum type. Reuse that type across every public property, method, override and event with the same member meanings and valid-value set. A type used by several owners lives at the top level of the flat `Electron2D` namespace and has a neutral domain name. A contract specific to one owner may remain nested. Matching names or numeric values alone do not justify unification: different meanings or different valid-value sets retain distinct types. `Max` and similar nonselectable sentinels do not create a separate contract; callers reject them where selection is required. Foreign backend enums remain private to their adapters.
+
+The current shared identities are `CursorShape`, `MouseMode`, `WindowMode`, `WindowFlag`, `AlignmentMode`, `AxisStretchMode`, `TextureStretchMode`, `ProcessPhase`, `RecursiveBehavior`, `Vector2Axis`, `Vector3Axis` and `Vector4Axis`. Vector axes share types between floating-point and integer vectors of the same dimension; dimensions retain distinct valid-value sets. `Image.Format` and `AudioStreamWAV.Format`, for example, have different meanings and remain distinct despite their short name.
+
+The following other selected names remain exact public type identities. Listed targets are top-level except where the target explicitly includes an owner:
 
 - `CanvasItemMaterial.BlendMode` → `BlendMode`; `CanvasItem.TextureFilter` → `TextureFilter`; `CanvasItem.TextureRepeat` → `TextureRepeat`; `Window.Mode` → `WindowMode`.
 - `Control.FocusMode` → `FocusMode`; `Control.LayoutPreset` → `LayoutPreset`; `Control.GrowDirection` → `GrowDirection`; `Control.LayoutDirection` → `LayoutDirection`; `Control.LayoutPresetMode` → `LayoutPresetMode`; `Control.MouseFilter` → `MouseFilter`.
-- `FileAccess.CompressionMode` → `FileCompressionMode`; `FileAccess.ModeFlags` → `FileAccessModeFlags`; `FileAccess.UnixPermissionFlags` → `UnixPermissionFlags`; `Node.ProcessMode` → `ProcessMode`; `PackedScene.GenEditState` → `PackedSceneEditState`; `Resource.DeepDuplicateMode` → `DeepDuplicateMode`; `SceneTree.GroupCallFlags` → `GroupCallFlags`; `Timer.TimerProcessCallback` → `TimerProcessCallback`.
-- `Gradient.InterpolationMode` → `InterpolationMode`; `GradientTexture2D.Fill` → `FillEnum`; `GradientTexture2D.Repeat` → `Repeat`; `Camera2D.AnchorMode` → `AnchorMode`; `Camera2D.Camera2DProcessCallback` → `Camera.CameraProcessCallback`; `Line2D.LineCapMode` → `LineCapMode`; `Line2D.LineJointMode` → `LineJointMode`; `Line2D.LineTextureMode` → `LineTextureMode`.
+- `FileAccess.CompressionMode` → `FileCompressionMode`; `FileAccess.ModeFlags` → `FileAccessModeFlags`; `FileAccess.UnixPermissionFlags` → `UnixPermissionFlags`; `Node.ProcessMode` → `ProcessMode`; `PackedScene.GenEditState` → `PackedSceneEditState`; `Resource.DeepDuplicateMode` → `DeepDuplicateMode`; `SceneTree.GroupCallFlags` → `GroupCallFlags`.
+- `Gradient.InterpolationMode` → `InterpolationMode`; `GradientTexture2D.Fill` → `FillEnum`; `GradientTexture2D.Repeat` → `Repeat`; `Camera2D.AnchorMode` → `AnchorMode`; `Line2D.LineCapMode` → `LineCapMode`; `Line2D.LineJointMode` → `LineJointMode`; `Line2D.LineTextureMode` → `LineTextureMode`.
 - `FastNoiseLite.NoiseType` → `NoiseType`; `FastNoiseLite.FractalType` → `FractalType`; `FastNoiseLite.CellularDistanceFunction` → `CellularDistanceFunction`; `FastNoiseLite.CellularReturnType` → `CellularReturnType`; `FastNoiseLite.DomainWarpType` → `DomainWarpType`; `FastNoiseLite.DomainWarpFractalType` → `DomainWarpFractalType`.
 
-The owning class keeps its applicable property names. The enum's numeric values and observable behavior do not change with its location. Unlisted enum families retain their current placement; a future public name collision requires an explicit decision update. Do not ship former type spellings, compatibility aliases, or duplicate public enum types. Keep the bidirectional coverage mappings, source XML, consumers, and class pages synchronized with these identities.
+The owning class keeps its applicable property names. Enum numeric values and observable behavior do not change with location. Do not ship former type spellings, compatibility aliases or duplicate public mirrors. Keep the bidirectional coverage mappings, source XML, consumers and class pages synchronized with these identities. When a new enum is proposed, compare its meaning and valid values with existing public enums before declaring a new type.
 
 ### Consequences
 
-The migration breaks source and binary compatibility for the moved or renamed enum types. The selected spellings are explicit exceptions, not a new automatic naming rule for every future enum. ADR 0045 continues to govern acronyms in function, method, and property names, not enum type names.
+Moving or unifying public enum types breaks source and binary compatibility. The value-contract rule governs new enum identities; it does not move unrelated owner-specific types. ADR 0045 continues to govern acronyms in function, method and property names, not enum type names.

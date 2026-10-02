@@ -1,6 +1,6 @@
 # Vector3i
 
-Last updated: 2026-09-24
+Last updated: 2026-10-02
 
 - **Source:** [`src/Core/Math/Vector3i.cs`](../../src/Core/Math/Vector3i.cs)
 - **Declaration:** `public struct Vector3i`
@@ -54,10 +54,10 @@ var doubled = value * 2;
 | [`public System.Int64 LengthSquared()`](#member-27) | Returns the squared Euclidean length. |
 | [`public Electron2D.Vector3i Max(Electron2D.Vector3i with)`](#member-28) | Returns the componentwise maximum with another vector. |
 | [`public Electron2D.Vector3i Max(System.Int32 with)`](#member-29) | Returns the componentwise maximum with a scalar. |
-| [`public Electron2D.Vector3i.Axis MaxAxisIndex()`](#member-30) | Returns the axis containing the greatest component. |
+| [`public Electron2D.Vector3Axis MaxAxisIndex()`](#member-30) | Returns the axis containing the greatest component. |
 | [`public Electron2D.Vector3i Min(Electron2D.Vector3i with)`](#member-31) | Returns the componentwise minimum with another vector. |
 | [`public Electron2D.Vector3i Min(System.Int32 with)`](#member-32) | Returns the componentwise minimum with a scalar. |
-| [`public Electron2D.Vector3i.Axis MinAxisIndex()`](#member-33) | Returns the axis containing the least component. |
+| [`public Electron2D.Vector3Axis MinAxisIndex()`](#member-33) | Returns the axis containing the least component. |
 | [`public Electron2D.Vector3i Sign()`](#member-34) | Returns the sign of every component. |
 | [`public Electron2D.Vector3i Snapped(Electron2D.Vector3i step)`](#member-35) | Snaps each component to the nearest multiple of the corresponding step. |
 | [`public Electron2D.Vector3i Snapped(System.Int32 step)`](#member-36) | Snaps every component to the nearest multiple of a scalar step. |
@@ -85,10 +85,10 @@ var doubled = value * 2;
 | [`public static Electron2D.Vector3i op_Subtraction(Electron2D.Vector3i left, Electron2D.Vector3i right)`](#member-58) | Subtracts two vectors componentwise. |
 | [`public static Electron2D.Vector3i op_UnaryNegation(Electron2D.Vector3i value)`](#member-59) | Negates every component. |
 | [`public static Electron2D.Vector3i op_UnaryPlus(Electron2D.Vector3i value)`](#member-60) | Returns a vector unchanged. |
-| [`public enum Electron2D.Vector3i.Axis`](#member-61) | Identifies one vector component. |
-| [`public const Electron2D.Vector3i.Axis X = 0`](#member-62) | Identifies the X component. |
-| [`public const Electron2D.Vector3i.Axis Y = 1`](#member-63) | Identifies the Y component. |
-| [`public const Electron2D.Vector3i.Axis Z = 2`](#member-64) | Identifies the Z component. |
+| [`public enum Electron2D.Vector3Axis`](#member-61) | Identifies one vector component. |
+| [`public const Electron2D.Vector3Axis X = 0`](#member-62) | Identifies the X component. |
+| [`public const Electron2D.Vector3Axis Y = 1`](#member-63) | Identifies the Y component. |
+| [`public const Electron2D.Vector3Axis Z = 2`](#member-64) | Identifies the Z component. |
 
 ## Member contracts
 
@@ -312,11 +312,11 @@ Returns the componentwise maximum with a scalar.
 - Returns: The componentwise maximum.
 
 <a id="member-30"></a>
-### `public Electron2D.Vector3i.Axis MaxAxisIndex()`
+### `public Electron2D.Vector3Axis MaxAxisIndex()`
 
 Returns the axis containing the greatest component.
 
-- Returns: F:Electron2D.Vector3i.Axis.X when all components are equal; otherwise the first greatest axis.
+- Returns: F:Electron2D.Vector3Axis.X when all components are equal; otherwise the first greatest axis.
 
 <a id="member-31"></a>
 ### `public Electron2D.Vector3i Min(Electron2D.Vector3i with)`
@@ -335,11 +335,11 @@ Returns the componentwise minimum with a scalar.
 - Returns: The componentwise minimum.
 
 <a id="member-33"></a>
-### `public Electron2D.Vector3i.Axis MinAxisIndex()`
+### `public Electron2D.Vector3Axis MinAxisIndex()`
 
 Returns the axis containing the least component.
 
-- Returns: F:Electron2D.Vector3i.Axis.Z when all components are equal; otherwise the last least axis.
+- Returns: F:Electron2D.Vector3Axis.Z when all components are equal; otherwise the last least axis.
 
 <a id="member-34"></a>
 ### `public Electron2D.Vector3i Sign()`
@@ -579,25 +579,25 @@ Returns a vector unchanged.
 - Returns: value.
 
 <a id="member-61"></a>
-### `public enum Electron2D.Vector3i.Axis`
+### `public enum Electron2D.Vector3Axis`
 
 Identifies one vector component.
 
 
 <a id="member-62"></a>
-### `public const Electron2D.Vector3i.Axis X = 0`
+### `public const Electron2D.Vector3Axis X = 0`
 
 Identifies the X component.
 
 
 <a id="member-63"></a>
-### `public const Electron2D.Vector3i.Axis Y = 1`
+### `public const Electron2D.Vector3Axis Y = 1`
 
 Identifies the Y component.
 
 
 <a id="member-64"></a>
-### `public const Electron2D.Vector3i.Axis Z = 2`
+### `public const Electron2D.Vector3Axis Z = 2`
 
 Identifies the Z component.
 

@@ -1,77 +1,77 @@
 {
   "mappings": [
     {
-      "electron2d": "T:Electron2D.DisplayServer.WindowFlag",
+      "electron2d": "T:Electron2D.WindowFlag",
       "godot": "DisplayServer::enum:WindowFlags",
       "reason": "C# uses singular WindowFlag; IDs are retained, while individual window policies retain explicit capability gaps (ADR 0040)."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.AlwaysOnTop()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.AlwaysOnTop()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_ALWAYS_ON_TOP",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Borderless()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Borderless()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_BORDERLESS",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ExcludeFromCapture()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ExcludeFromCapture()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_EXCLUDE_FROM_CAPTURE",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ExtendToTitle()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ExtendToTitle()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_EXTEND_TO_TITLE",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Max()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Max()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MAX",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MaximizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MaximizeDisabled()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MAXIMIZE_DISABLED",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MinimizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MinimizeDisabled()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MINIMIZE_DISABLED",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.MousePassthrough()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.MousePassthrough()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_MOUSE_PASSTHROUGH",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.NoFocus()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.NoFocus()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_NO_FOCUS",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Popup()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Popup()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_POPUP",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.PopupWmHint()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.PopupWmHint()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_POPUP_WM_HINT",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.ResizeDisabled()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.ResizeDisabled()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_RESIZE_DISABLED",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.SharpCorners()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.SharpCorners()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_SHARP_CORNERS",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
     {
-      "electron2d": "enumValue:Electron2D.DisplayServer.WindowFlag.Transparent()",
+      "electron2d": "enumValue:Electron2D.WindowFlag.Transparent()",
       "godot": "DisplayServer::enum_value:WindowFlags.WINDOW_FLAG_TRANSPARENT",
       "reason": "WindowFlag is the singular C# enum name; compiled numeric identity matches."
     },
@@ -106,7 +106,7 @@
       "reason": "C# query method maps the same display operation; native result and fallback semantics require platform verification (ADR 0040)."
     },
     {
-      "electron2d": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Resource,Electron2D.DisplayServer.CursorShape,Electron2D.Vector2)",
+      "electron2d": "method:Electron2D.DisplayServer.CursorSetCustomImage(Electron2D.Resource,Electron2D.CursorShape,Electron2D.Vector2)",
       "godot": "DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)",
       "reason": "The typed Resource entry point accepts Image and readable Texture, copies original image pixels into an owned native cursor, truncates fractional hotspots and preserves the 256x256 limit. Texture.GetImage temporaries are released on success/failure; logical size overrides do not resize the cursor (ADR 0040)."
     },
@@ -224,6 +224,166 @@
       "electron2d": "method:Electron2D.DisplayServer.FileDialogShow(System.String,System.String,System.String,System.Boolean,Electron2D.DisplayServer.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32>,System.Int32)",
       "godot": "DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)",
       "reason": "The SDL path implements basic asynchronous file/folder selection with a typed callback, and adapts the Error return to exceptions. Linux ignores showHidden as the reference does. The pinned Wayland FileChooser uses MIME terms, while SDL filters are extension-only; MIME-only filters and OpenAny reject explicitly. The remaining contract is blocked by a native Linux portal chooser bridge with MIME filters in its first vertical slice, plus a separately approved file-or-directory chooser capability for OpenAny. Native selection, cancellation, and selected-filter behavior still need executable Wayland checks (ADR 0040)."
+    },
+    {
+      "godot": "DisplayServer::enum:CursorShape",
+      "electron2d": "T:Electron2D.CursorShape",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum:MouseMode",
+      "electron2d": "T:Electron2D.MouseMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum:WindowMode",
+      "electron2d": "T:Electron2D.WindowMode",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_ARROW",
+      "electron2d": "enumValue:Electron2D.CursorShape.Arrow()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_BDIAGSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.BDiagSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_BUSY",
+      "electron2d": "enumValue:Electron2D.CursorShape.Busy()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_CAN_DROP",
+      "electron2d": "enumValue:Electron2D.CursorShape.CanDrop()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_CROSS",
+      "electron2d": "enumValue:Electron2D.CursorShape.Cross()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_DRAG",
+      "electron2d": "enumValue:Electron2D.CursorShape.Drag()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_FDIAGSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.FDiagSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_FORBIDDEN",
+      "electron2d": "enumValue:Electron2D.CursorShape.Forbidden()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_HELP",
+      "electron2d": "enumValue:Electron2D.CursorShape.Help()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_HSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.HSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_HSPLIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.HSplit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_IBEAM",
+      "electron2d": "enumValue:Electron2D.CursorShape.IBeam()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_MAX",
+      "electron2d": "enumValue:Electron2D.CursorShape.Max()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_MOVE",
+      "electron2d": "enumValue:Electron2D.CursorShape.Move()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_POINTING_HAND",
+      "electron2d": "enumValue:Electron2D.CursorShape.PointingHand()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_VSIZE",
+      "electron2d": "enumValue:Electron2D.CursorShape.VSize()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_VSPLIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.VSplit()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:CursorShape.CURSOR_WAIT",
+      "electron2d": "enumValue:Electron2D.CursorShape.Wait()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_CAPTURED",
+      "electron2d": "enumValue:Electron2D.MouseMode.Captured()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_CONFINED",
+      "electron2d": "enumValue:Electron2D.MouseMode.Confined()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_CONFINED_HIDDEN",
+      "electron2d": "enumValue:Electron2D.MouseMode.ConfinedHidden()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_HIDDEN",
+      "electron2d": "enumValue:Electron2D.MouseMode.Hidden()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_MAX",
+      "electron2d": "enumValue:Electron2D.MouseMode.Max()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:MouseMode.MOUSE_MODE_VISIBLE",
+      "electron2d": "enumValue:Electron2D.MouseMode.Visible()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_EXCLUSIVE_FULLSCREEN",
+      "electron2d": "enumValue:Electron2D.WindowMode.ExclusiveFullscreen()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_FULLSCREEN",
+      "electron2d": "enumValue:Electron2D.WindowMode.Fullscreen()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_MAXIMIZED",
+      "electron2d": "enumValue:Electron2D.WindowMode.Maximized()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_MINIMIZED",
+      "electron2d": "enumValue:Electron2D.WindowMode.Minimized()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_WINDOWED",
+      "electron2d": "enumValue:Electron2D.WindowMode.Windowed()",
+      "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
     }
   ],
   "extras": [

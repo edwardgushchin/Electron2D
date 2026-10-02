@@ -9,11 +9,11 @@ public class Timer : Node
 {
     private static readonly IReadOnlyList<PropertyDescriptor> TimerProperties = Array.AsReadOnly<PropertyDescriptor>(
     [
-        new PropertyDescriptor<Timer, TimerProcessCallback>(
+        new PropertyDescriptor<Timer, ProcessPhase>(
             nameof(ProcessCallback),
             timer => timer.ProcessCallback,
             (timer, value) => timer.ProcessCallback = value,
-            _ => TimerProcessCallback.Idle,
+            _ => ProcessPhase.Idle,
             (_, value) => Enum.IsDefined(value),
             stored: true),
         new PropertyDescriptor<Timer, double>(
@@ -49,7 +49,7 @@ public class Timer : Node
         new PropertyDescriptor<Timer, double>(nameof(TimeLeft), timer => timer.TimeLeft)
     ]);
 
-    private TimerProcessCallback _processCallback = TimerProcessCallback.Idle;
+    private ProcessPhase _processCallback = ProcessPhase.Idle;
     private double _waitTime = 1d;
     private double _timeLeft;
     private bool _oneShot;
@@ -64,12 +64,12 @@ public class Timer : Node
     }
 
     /// <summary>Gets or sets the frame lane that advances this timer.</summary>
-    /// <value><see cref="TimerProcessCallback.Idle"/> by default.</value>
+    /// <value><see cref="ProcessPhase.Idle"/> by default.</value>
     /// <remarks>Changing the lane while running moves internal processing without resetting <see cref="TimeLeft"/>.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is undefined.</exception>
     /// <exception cref="InvalidOperationException">An attached timer is mutated off its tree's owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The timer is disposing on another thread or has finished disposing.</exception>
-    public TimerProcessCallback ProcessCallback
+    public ProcessPhase ProcessCallback
     {
         get
         {
@@ -359,17 +359,17 @@ public class Timer : Node
         _processing = true;
     }
 
-    private void ApplyProcessingState(bool processing, bool paused, TimerProcessCallback callback)
+    private void ApplyProcessingState(bool processing, bool paused, ProcessPhase callback)
     {
         var enabled = processing && !paused;
         SetInternalProcessing(
-            processEnabled: enabled && callback == TimerProcessCallback.Idle,
-            physicsProcessEnabled: enabled && callback == TimerProcessCallback.Physics);
+            processEnabled: enabled && callback == ProcessPhase.Idle,
+            physicsProcessEnabled: enabled && callback == ProcessPhase.Physics);
     }
 
     private void AdvanceTimer(bool physics)
     {
-        if (!_processing || _paused || (_processCallback == TimerProcessCallback.Physics) != physics)
+        if (!_processing || _paused || (_processCallback == ProcessPhase.Physics) != physics)
             return;
 
         var delta = _ignoreTimeScale

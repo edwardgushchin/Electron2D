@@ -1,6 +1,6 @@
 # TextureRect
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 **Declaration:** `public class TextureRect : Control` · **Source:** [TextureRect.cs](../../src/Scene/GUI/TextureRect.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md#texture-rectangles)
 
@@ -27,7 +27,7 @@ var picture = new TextureRect
 {
     Texture = texture,
     ExpandMode = TextureRectExpandMode.IgnoreSize,
-    StretchMode = TextureRectStretchMode.KeepAspectCentered,
+    StretchMode = TextureStretchMode.KeepAspectCentered,
     Size = new Vector2(160, 100)
 };
 ```
@@ -39,7 +39,7 @@ var picture = new TextureRect
 | `public TextureRect()` | Null texture, KeepSize, Scale, false flips, MouseFilter.Pass. |
 | [`public Texture? Texture { get; set; }`](#texture) | Borrowed image, initially null. |
 | [`public TextureRectExpandMode ExpandMode { get; set; }`](#expandmode) | KeepSize initially. |
-| [`public TextureRectStretchMode StretchMode { get; set; }`](#stretchmode) | Scale initially. |
+| [`public TextureStretchMode StretchMode { get; set; }`](#stretchmode) | Scale initially. |
 | [`public bool FlipH { get; set; }`](#fliph) | False initially. |
 | [`public bool FlipV { get; set; }`](#flipv) | False initially. |
 | [`public override string[] GetConfigurationWarnings()`](#getconfigurationwarnings) | Adds one warning for Tile with a nonzero margin in any atlas ancestor. |
@@ -65,9 +65,9 @@ See [TextureRectExpandMode](TextureRectExpandMode.md). KeepSize uses natural log
 
 ### StretchMode
 
-`public TextureRectStretchMode StretchMode { get; set; }`
+`public TextureStretchMode StretchMode { get; set; }`
 
-See [TextureRectStretchMode](TextureRectStretchMode.md). Scale fills the rectangle. Tile repeats natural logical pixels; nested AtlasTexture tiling reuses retained zero-border nine-patch geometry. Atlas margins are unsupported for Tile and generate a warning; drawing follows the existing atlas clipping path. Keep modes use natural size, potentially extending beyond the control unless inherited clipping applies. Aspect fit truncates width/height to integer pixels before optional centering; offsets may remain fractional. Covered mode uses a centered logical source crop. Undefined values reject before mutation; changes redraw and refresh warnings.
+See [TextureStretchMode](TextureStretchMode.md). Scale fills the rectangle. Tile repeats natural logical pixels; nested AtlasTexture tiling reuses retained zero-border nine-patch geometry. Atlas margins are unsupported for Tile and generate a warning; drawing follows the existing atlas clipping path. Keep modes use natural size, potentially extending beyond the control unless inherited clipping applies. Aspect fit truncates width/height to integer pixels before optional centering; offsets may remain fractional. Covered mode uses a centered logical source crop. Undefined values reject before mutation; changes redraw and refresh warnings.
 
 ### FlipH
 

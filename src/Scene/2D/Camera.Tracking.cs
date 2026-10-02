@@ -41,8 +41,8 @@ public partial class Camera
         }
         if (IsDisposed || _viewport is null) return;
         var interpolating = IsPhysicsInterpolatedAndEnabled();
-        if (what == NotificationInternalProcess && _processCallback == CameraProcessCallback.Idle && !interpolating ||
-            what == NotificationInternalPhysicsProcess && (_processCallback == CameraProcessCallback.Physics || interpolating) ||
+        if (what == NotificationInternalProcess && _processCallback == ProcessPhase.Idle && !interpolating ||
+            what == NotificationInternalPhysicsProcess && (_processCallback == ProcessPhase.Physics || interpolating) ||
             what == NotificationTransformChanged && !_positionSmoothingEnabled)
             UpdateScroll();
     }
@@ -50,8 +50,8 @@ public partial class Camera
     private void UpdateProcessing()
     {
         var interpolating = IsPhysicsInterpolatedAndEnabled();
-        SetInternalProcessing(_processCallback == CameraProcessCallback.Idle && !interpolating,
-            _processCallback == CameraProcessCallback.Physics || interpolating);
+        SetInternalProcessing(_processCallback == ProcessPhase.Idle && !interpolating,
+            _processCallback == ProcessPhase.Physics || interpolating);
         _viewport?.ResetCanvasInterpolationSnapshot();
     }
 
@@ -73,7 +73,7 @@ public partial class Camera
         if (viewport is null || !ReferenceEquals(viewport.GetCamera(), this)) return;
         var size = viewport.GetVisibleRect().Size; var halfSize = size * 0.5f; var scale = Vector2.One / _zoom;
         var position = GlobalPosition; var target = _targetPosition; var smoothed = _smoothedPosition;
-        var angle = _screenRotation; var delta = (float)(_processCallback == CameraProcessCallback.Physics || Tree?.IsInPhysicsFrame == true ? PhysicsProcessDeltaTime : ProcessDeltaTime);
+        var angle = _screenRotation; var delta = (float)(_processCallback == ProcessPhase.Physics || Tree?.IsInPhysicsFrame == true ? PhysicsProcessDeltaTime : ProcessDeltaTime);
         var horizontalChanged = _horizontalOffsetChanged; var verticalChanged = _verticalOffsetChanged;
         if (_first) target = smoothed = position;
         else

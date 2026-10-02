@@ -172,10 +172,10 @@ public sealed partial class SceneTree
         if (_guiHoverViewport is not Window || DisplayServer.Instance is not { } display) return;
         var shape = Input.Instance.DefaultCursorShape;
         if (_guiDragPayload is not null)
-            shape = _guiDragPossible ? Input.CursorShape.CanDrop : Input.CursorShape.Forbidden;
+            shape = _guiDragPossible ? CursorShape.CanDrop : CursorShape.Forbidden;
         else if (_guiHoverKnown && _guiHoverChain.Count != 0)
         {
-            shape = Input.CursorShape.Arrow;
+            shape = CursorShape.Arrow;
             for (var index = _guiHoverChain.Count - 1; index >= 0; index--)
             {
                 var control = _guiHoverChain[index];
@@ -183,16 +183,16 @@ public sealed partial class SceneTree
                 try
                 {
                     var local = control.MakeCanvasPositionLocal(_guiHoverPosition);
-                    shape = (Input.CursorShape)control.GetCursorShape(local);
-                    if (shape != Input.CursorShape.Arrow || control.EffectiveMouseFilter == MouseFilter.Stop) break;
+                    shape = control.GetCursorShape(local);
+                    if (shape != CursorShape.Arrow || control.EffectiveMouseFilter == MouseFilter.Stop) break;
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
         }
         try
         {
-            if (display.CursorGetShape() != (DisplayServer.CursorShape)shape)
-                display.CursorSetShape((DisplayServer.CursorShape)shape);
+            if (display.CursorGetShape() != shape)
+                display.CursorSetShape(shape);
         }
         catch (Exception error) { CollectException(ref errors, error); }
     }
