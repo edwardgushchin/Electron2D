@@ -1,6 +1,6 @@
 # Window and input
 
-This is the first runnable Electron2D example. It opens a window, adds a scene node, moves that node while the arrow keys are held, and exits on Escape or window close. Until scene rendering is implemented, it writes movement to the terminal.
+This is the first runnable Electron2D example. It opens a window, adds a scene node, moves that node while the arrow keys are held, and exits on Escape or window close. It demonstrates window/input behavior and writes movement to the terminal without drawing the scene.
 
 Run from the repository root on Linux Wayland:
 
