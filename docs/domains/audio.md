@@ -19,5 +19,7 @@ Procedural generator streams own configuration and independent bounded copied PC
 
 [AudioEffectAmplify](../classes/AudioEffectAmplify.md) and [AudioEffectPanner](../classes/AudioEffectPanner.md) add live scalar gain and channel crossfeed to that bus chain. Independent per-pair instances ramp gain across the next processed block and sample pan once per block. Native PCM and warmed allocation checks use the existing FAudio path; other DSP families retain their own triggers.
 
+[AudioEffectEQ](../classes/AudioEffectEQ.md) and its six, ten and twenty-one band presets add typed indexed gain and prepared per-pair frequency filtering. Resource/scene-local values, native band response and current Wayland host paths execute; see the [graphic-EQ component](../components/audio-playback.md#graphic-eq). Other effects and bus-layout serialization remain separate work.
+
 
 The [frequency-filter family](../classes/AudioEffectFilter.md) now adds executable low/high/band-pass, notch, broad band-rejection and low/high-shelf processing. Typed finite scalar snapshots feed independent prepared stereo histories at actual output rate. Source PCM is preserved in ordinary regimes; documented Nyquist/pole and opposite BandLimit response defects are corrected. Resource and scene-local copies retain concrete configuration, while native instances use the established borrowed-resource lifecycle. Filter foundations can support later EQ and other DSP slices; no absent family is described as implemented. See [verification and limits](../components/audio-playback.md#frequency-filters).

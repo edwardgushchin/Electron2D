@@ -1154,6 +1154,41 @@
       "godot": "AudioEffectPanner::property:pan",
       "electron2d": "property:Electron2D.AudioEffectPanner.Pan()",
       "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectEQ",
+      "electron2d": "T:Electron2D.AudioEffectEQ",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectEQ6",
+      "electron2d": "T:Electron2D.AudioEffectEQ6",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectEQ10",
+      "electron2d": "T:Electron2D.AudioEffectEQ10",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectEQ21",
+      "electron2d": "T:Electron2D.AudioEffectEQ21",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectEQ::method:get_band_count()",
+      "electron2d": "method:Electron2D.AudioEffectEQ.GetBandCount()",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectEQ::method:get_band_gain_db(int:)",
+      "electron2d": "method:Electron2D.AudioEffectEQ.GetBandGainDB(System.Int32)",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectEQ::method:set_band_gain_db(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectEQ.SetBandGainDB(System.Int32,System.Single)",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -1752,6 +1787,50 @@
     {
       "electron2d": "method:Electron2D.AudioEffectPanner.OnInstantiate()",
       "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectEQ..ctor()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectEQ10..ctor()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectEQ21..ctor()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectEQ6..ctor()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ.CreateDuplicateInstance()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ.GetPropertyDescriptors()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ.OnInstantiate()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ10.CreateDuplicateInstance()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ21.CreateDuplicateInstance()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectEQ6.CreateDuplicateInstance()",
+      "reason": "Typed construction, exact concrete Resource copying, indexed authoring fields and independent DSP factories project the fixed-band EQ lifecycle under ADRs 0001/0014/0047."
     }
   ],
   "statusGroups": [
@@ -2195,8 +2274,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: fixed band layouts, indexed DB gains and prepared per-band stereo filter state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: fixed 6/10/21-band equalizers execute through independent prepared stereo filter histories in the FAudio bus chain. Indexed finite DB gains, typed Resource/scene-local copies, live edits, 1,536 byte-pinned C++ PCM samples plus frequency-selective CPU/native output, public Wayland hosts and warmed zero-allocation checks pass; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectEQ::method:get_band_count()",
         "AudioEffectEQ::method:get_band_gain_db(int:)",

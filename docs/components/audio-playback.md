@@ -113,6 +113,13 @@ AudioEffectTests exercises raw FIFO/copy/wrap/full-block overflow, fixed capacit
 
 AudioEffectLevelTests checks defaults, invalid/zero gain, independent ramps, full left/right and out-of-range pan, aliases, resource/scene-local copies, observer failures, active native FAudio output, disable and teardown. Twenty warmup passes precede 64 active and 64 paused native passes with zero measured managed bytes and zero custom FAudio allocator calls. CPU live-edit processing also checks 64 warmed blocks with zero managed bytes. `ELECTRON2D_TEST_AUDIO_LEVEL_HOST=1` runs the public Window/Autoplay/effect/capture/cleanup path on Linux Wayland GPU and compatibility renderers with dummy audio; both observed 13,230 processed frames. Physical listening, native allocation outside the custom allocator, other platforms and actual multichannel hardware remain unverified.
 
+<a id="graphic-eq"></a>
+## Graphic equalizers
+
+[AudioEffectEQ](../classes/AudioEffectEQ.md), [EQ6](../classes/AudioEffectEQ6.md), [EQ10](../classes/AudioEffectEQ10.md) and [EQ21](../classes/AudioEffectEQ21.md) add fixed 6/10/21-band equalization to existing FAudio bus effects. The base uses six bands. Indexed DB values and dynamic typed band descriptors are stored in Resource/scene-local copies. Each bus stereo pair owns independent prepared band histories at the actual output rate; every block snapshots live gains and sums the filtered original input for every band. An output-rate change refreshes coefficients without new processing storage. Source equations and fixed frequencies follow the pinned reference's `eq_filter` and effect resource; the existing MIT runtime adaptation notice covers them. Extreme float output raises ArithmeticException, clears histories and follows the native effect-chain error policy. Inactive buses skip normal processing; active silent input advances tails.
+
+AudioEQTests verifies preset counts and indexed fields, invalid/muted gains, copies, observer errors, split/aliased and frequency-selective PCM, overflow recovery, native bypass and 64 warmed active/paused native passes with zero measured managed bytes/custom FAudio allocator calls. Three [byte-pinned C++ cases](../../tests/Electron2D.Tests/Fixtures/Audio/EQ/PROVENANCE.md) cover 1,536 ordinary channel samples across all presets with maximum absolute PCM error `1.758337E-06`. Public Window/Autoplay/EQ/capture hosts each observed 15,435 processed frames on Linux Wayland GPU and compatibility renderers with dummy audio. Physical listening, native allocations outside the custom allocator, real multichannel hardware and other platforms remain unverified.
+
 <a id="frequency-filters"></a>
 ## Frequency filters
 

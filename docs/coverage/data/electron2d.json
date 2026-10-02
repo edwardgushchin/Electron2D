@@ -336,6 +336,66 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectEQ",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "AudioEffectEQ",
+    "signature": "public class Electron2D.AudioEffectEQ",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectEQ10",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectEQ10",
+    "name": "AudioEffectEQ10",
+    "signature": "public sealed class Electron2D.AudioEffectEQ10",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectEQ",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectEQ21",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectEQ21",
+    "name": "AudioEffectEQ21",
+    "signature": "public sealed class Electron2D.AudioEffectEQ21",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectEQ",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioEffectEQ6",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectEQ6",
+    "name": "AudioEffectEQ6",
+    "signature": "public sealed class Electron2D.AudioEffectEQ6",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffectEQ",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioEffectFilter",
     "kind": "type",
     "declaringType": "Electron2D.AudioEffectFilter",
@@ -7392,6 +7452,58 @@
     "declaringType": "Electron2D.AudioEffectCapture",
     "name": ".ctor",
     "signature": "public AudioEffectCapture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectEQ..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": ".ctor",
+    "signature": "public AudioEffectEQ()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectEQ10..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectEQ10",
+    "name": ".ctor",
+    "signature": "public AudioEffectEQ10()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectEQ21..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectEQ21",
+    "name": ".ctor",
+    "signature": "public AudioEffectEQ21()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectEQ6..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectEQ6",
+    "name": ".ctor",
+    "signature": "public AudioEffectEQ6()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -27807,6 +27919,179 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.GetBandCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "GetBandCount",
+    "signature": "public System.Int32 GetBandCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.GetBandGainDB(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "GetBandGainDB",
+    "signature": "public System.Single GetBandGainDB(System.Int32 bandIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bandIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ.SetBandGainDB(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ",
+    "name": "SetBandGainDB",
+    "signature": "public System.Void SetBandGainDB(System.Int32 bandIndex, System.Single volumeDB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bandIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "volumeDB",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ10.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ10",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ21.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ21",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectEQ6.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectEQ6",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {

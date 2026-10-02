@@ -4,7 +4,7 @@ Last updated: 2026-10-02
 
 **Declaration:** `public abstract class Electron2D.AudioEffect` · **Source:** [AudioEffect.cs](../../src/Scene/Resources/AudioEffect.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
-**Inherits:** [Resource](Resource.md). **Inherited By:** [AudioEffectAmplify](AudioEffectAmplify.md), [AudioEffectPanner](AudioEffectPanner.md), [AudioEffectCapture](AudioEffectCapture.md), [AudioEffectFilter](AudioEffectFilter.md).
+**Inherits:** [Resource](Resource.md). **Inherited By:** [AudioEffectAmplify](AudioEffectAmplify.md), [AudioEffectPanner](AudioEffectPanner.md), [AudioEffectEQ](AudioEffectEQ.md), [AudioEffectCapture](AudioEffectCapture.md), [AudioEffectFilter](AudioEffectFilter.md).
 
 ## Description
 
