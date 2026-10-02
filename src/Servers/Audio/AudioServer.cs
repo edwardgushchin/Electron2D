@@ -1,9 +1,10 @@
 namespace Electron2D;
 
-/// <summary>Owns process-wide audio bus configuration and the current native output graph.</summary>
-/// <remarks>Configuration requires its owner thread. Native resources are opened by actual playback and released
-/// by engine teardown; copied array queries and graph edits are explicit preparation operations.</remarks>
-public sealed class AudioServer : ElectronObject
+/// <summary>Owns process-wide audio bus configuration, the native output graph and recording input.</summary>
+/// <remarks>Configuration requires its owner thread. Native resources open for playback or explicit device
+/// preparation and close at engine teardown. Input activation is separately gated by AudioDriverEnableInput;
+/// copied array queries and graph/device edits are explicit preparation operations.</remarks>
+public sealed partial class AudioServer : ElectronObject
 {
     /// <summary>Selects the output playback implementation.</summary>
     public enum PlaybackType
@@ -203,7 +204,7 @@ public sealed class AudioServer : ElectronObject
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
     internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndex(name); return _buses[index < 0 ? 0 : index].Voice; }
     internal void Attach(AudioStreamPlayer player) { Check(); if (!_players.Contains(player)) _players.Add(player); }
-    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0) CloseNative(); }
+    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0) CloseNative(closeInput: false); }
     private void RebuildGraph()
     {
         try { RebuildGraphCore(); }
@@ -261,12 +262,13 @@ public sealed class AudioServer : ElectronObject
         foreach (var player in _players) player.RefreshVolume();
     }
     internal static void CloseForEngine() { if (Singleton.IsValueCreated && !Singleton.Value.IsDisposed) Singleton.Value.CloseNative(); }
-    internal void CloseNative()
+    internal void CloseNative(bool closeInput = true)
     {
         Check(); List<Exception>? errors = null;
         foreach (var player in _players.ToArray()) try { player.ReleaseVoices(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { _native?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         _native = null; foreach (var bus in _buses) bus.Voice = 0;
+        if (closeInput) try { CloseInput(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Audio native teardown failed.", errors);
     }
     /// <inheritdoc />

@@ -63,7 +63,7 @@ public sealed class AudioStreamGeneratorPlayback : AudioStreamPlaybackResampled
     {
         lock (ResampleGate)
         {
-            Check(); _rate = _source.TargetRate;
+            Check(); _rate = _source.PrepareRate();
             if (_mixed == 0) { _active = false; BeginResample(); }
             _skips = 0; _active = true; _mixed = 0;
         }

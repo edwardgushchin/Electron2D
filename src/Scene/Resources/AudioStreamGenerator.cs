@@ -4,8 +4,8 @@ namespace Electron2D;
 
 /// <summary>Creates independent bounded stereo PCM queues for procedural sound producers.</summary>
 /// <remarks>Playback borrows this resource. BufferLength determines queue capacity only at playback creation;
-/// rate changes affect the next mix. Custom/Output execute; Input requires the capture backend and rejects
-/// before configuration changes. Producer methods copy finite samples into prepared storage.</remarks>
+/// rate changes affect the next mix. Input uses the prepared recording frequency and opens a paused input
+/// device at mode selection and playback creation when necessary. Producer methods copy finite samples into prepared storage.</remarks>
 public sealed class AudioStreamGenerator : AudioStream
 {
     /// <summary>Selects the source frame sampling frequency.</summary>
@@ -13,7 +13,7 @@ public sealed class AudioStreamGenerator : AudioStream
     {
         /// <summary>Uses the current output mix frequency.</summary>
         Output = 0,
-        /// <summary>Requires a prepared native input frequency; unavailable until capture integration.</summary>
+        /// <summary>Uses the prepared recording-device frequency.</summary>
         Input = 1,
         /// <summary>Uses this resource's MixRate.</summary>
         Custom = 2,
@@ -48,7 +48,7 @@ public sealed class AudioStreamGenerator : AudioStream
     /// <summary>Gets or sets the source sampling-rate selection.</summary>
     /// <value>Custom initially.</value>
     /// <exception cref="ArgumentOutOfRangeException">The selector is outside Output/Input/Custom.</exception>
-    /// <exception cref="NotSupportedException">Input requires the native capture sampling-rate integration.</exception>
+    /// <exception cref="InvalidOperationException">Input frequency preparation is off-owner or the recording device is unavailable.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
     public AudioStreamGeneratorMixRate MixRateMode
     {
@@ -59,20 +59,24 @@ public sealed class AudioStreamGenerator : AudioStream
             {
                 ThrowIfDisposed();
                 if (value is < AudioStreamGeneratorMixRate.Output or >= AudioStreamGeneratorMixRate.Max) throw new ArgumentOutOfRangeException(nameof(value));
-                if (value == AudioStreamGeneratorMixRate.Input) throw new NotSupportedException("Input mode requires the native capture frequency integration.");
+                if (value == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate();
                 _mode = value;
             }
             EmitChanged();
         }
     }
     private static void Positive(float value) { if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); }
-    internal float TargetRate { get { lock (_gate) { ThrowIfDisposed(); return _mode == AudioStreamGeneratorMixRate.Output ? AudioServer.Instance.GetMixRate() : _mixRate; } } }
+    internal float TargetRate
+    {
+        get { lock (_gate) { ThrowIfDisposed(); return _mode switch { AudioStreamGeneratorMixRate.Output => AudioServer.Instance.GetMixRate(), AudioStreamGeneratorMixRate.Input => AudioServer.Instance.PreparedInputMixRate, _ => _mixRate }; } }
+    }
+    internal float PrepareRate() { lock (_gate) { ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate(); return TargetRate; } }
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
         lock (_gate)
         {
-            ThrowIfDisposed(); var requested = TargetRate * _bufferLength;
+            ThrowIfDisposed(); if (_mode == AudioStreamGeneratorMixRate.Input) _ = AudioServer.Instance.GetInputMixRate(); var requested = TargetRate * _bufferLength;
             if (!float.IsFinite(requested) || requested >= 1 << 24) throw new ArgumentOutOfRangeException(nameof(BufferLength), "The requested generator queue exceeds 2^24 storage frames.");
             var count = (uint)requested;
             return new AudioStreamGeneratorPlayback(this, count == 0 ? 1 : 1 << (BitOperations.Log2(count) + 1));

@@ -390,6 +390,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioStreamMicrophone",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": "AudioStreamMicrophone",
+    "signature": "public sealed class Electron2D.AudioStreamMicrophone",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioStreamOggVorbis",
     "kind": "type",
     "declaringType": "Electron2D.AudioStreamOggVorbis",
@@ -7408,6 +7423,19 @@
     "declaringType": "Electron2D.AudioStreamMP3",
     "name": ".ctor",
     "signature": "public AudioStreamMP3()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioStreamMicrophone..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": ".ctor",
+    "signature": "public AudioStreamMicrophone()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -28665,6 +28693,77 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioServer.GetInputBufferLengthFrames()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GetInputBufferLengthFrames",
+    "signature": "public System.Int32 GetInputBufferLengthFrames()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.GetInputDeviceList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GetInputDeviceList",
+    "signature": "public System.String[] GetInputDeviceList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.GetInputFrames(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GetInputFrames",
+    "signature": "public Electron2D.Vector2[] GetInputFrames(System.Int32 frames)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "frames",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.GetInputFramesAvailable()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GetInputFramesAvailable",
+    "signature": "public System.Int32 GetInputFramesAvailable()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.GetInputMixRate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "GetInputMixRate",
+    "signature": "public System.Single GetInputMixRate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioServer.GetMixRate()",
     "kind": "method",
     "declaringType": "Electron2D.AudioServer",
@@ -28961,6 +29060,25 @@
       {
         "name": "volumeLinear",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioServer.SetInputDeviceActive(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "SetInputDeviceActive",
+    "signature": "public System.Void SetInputDeviceActive(System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "active",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -29770,6 +29888,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMicrophone.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMicrophone.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMicrophone.OnGetStreamName()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": "OnGetStreamName",
+    "signature": "protected override System.String OnGetStreamName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamMicrophone.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamMicrophone",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.AudioStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
     "value": null
   },
   {
@@ -87516,6 +87712,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AudioServer.InputDevice()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioServer",
+    "name": "InputDevice",
+    "signature": "public System.String InputDevice { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AudioServer.Instance()",
     "kind": "property",
     "declaringType": "Electron2D.AudioServer",
@@ -98628,6 +98837,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AudioDriverEnableInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AudioDriverEnableInput",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AudioDriverEnableInput { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
     "value": null
   },
   {

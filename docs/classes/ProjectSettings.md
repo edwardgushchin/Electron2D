@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-09-30
+Last updated: 2026-10-02
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -189,6 +189,17 @@ Initializes an isolated registry with explicit project and user-data directories
 - `ArgumentNullException`: `projectRoot` or `userDataRoot` is `null`.
 - `ArgumentException`: A path is empty or invalid, or both paths resolve to the same directory.
 - `IO.DirectoryNotFoundException`: `projectRoot` does not exist.
+
+## Audio input setting
+
+| Full signature | Contract |
+| --- | --- |
+| `public static ProjectSetting<bool> AudioDriverEnableInput { get; }` | Built-in audio/driver/enable_input, default false. |
+
+<a id="audiodriverenableinput"></a>
+### AudioDriverEnableInput
+
+Allows AudioServer or AudioStreamMicrophone to activate the recording device. Set it in ProjectSettings.Instance before Start/Play/manual activation; feature overrides resolve through GetWithOverride. False rejects a new request before activation, while existing capture continues until explicit stop, last automatic release or engine closure. Merely querying/preparing input frequency or selecting generator Input mode opens a paused device and does not record. OS permission/device failure is separate from this typed setting. Isolated registries register independent values and built-in metadata; normal persistence/default suppression applies. Native recording acceptance is documented in the [audio component](../components/audio-playback.md#recording-input).
 
 ## Property Descriptions
 

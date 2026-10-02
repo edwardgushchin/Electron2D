@@ -135,6 +135,10 @@ public sealed class ProjectSettings : ElectronObject
     public static ProjectSetting<string> ApplicationVersion { get; } =
         new("application/config/version", string.Empty);
 
+    /// <summary>Allows recording-device activation by AudioServer and microphone playbacks.</summary>
+    /// <value>The typed audio/driver/enable_input setting, false initially; checked before each new capture request.</value>
+    public static ProjectSetting<bool> AudioDriverEnableInput { get; } = new("audio/driver/enable_input", false);
+
     /// <summary>Defines the fixed-step callback frequency used by <see cref="Engine"/>.</summary>
     public static ProjectSetting<int> PhysicsTicksPerSecond { get; } =
         new("physics/common/physics_ticks_per_second", 60, value => value > 0);
@@ -451,6 +455,7 @@ public sealed class ProjectSettings : ElectronObject
         AddBuiltInFeatures(_builtInFeatures);
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
+        RegisterInternal(AudioDriverEnableInput, isBasic: true);
         RegisterInternal(PhysicsTicksPerSecond, isBasic: true);
         RegisterInternal(Physics2DDefaultGravity, isBasic: true);
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
@@ -1832,6 +1837,7 @@ public sealed class ProjectSettings : ElectronObject
         where T : notnull =>
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
+        ReferenceEquals(setting, AudioDriverEnableInput) ||
         ReferenceEquals(setting, PhysicsTicksPerSecond) ||
         ReferenceEquals(setting, Physics2DDefaultGravity) ||
         ReferenceEquals(setting, Physics2DDefaultGravityVector) ||

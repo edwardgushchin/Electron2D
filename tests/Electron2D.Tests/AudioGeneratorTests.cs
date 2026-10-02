@@ -20,7 +20,7 @@ internal static class AudioGeneratorTests
             using var p = Playback(stream); Check(p.GetFramesAvailable() == (count == 0 ? 0 : count == 1 ? 1 : count == 127 ? 127 : 255), "Exact power-of-two sizing boundary.");
         }
         foreach (var value in new[] { 0f, -1, float.NaN, float.PositiveInfinity }) { Reject<ArgumentOutOfRangeException>(() => stream.MixRate = value); Reject<ArgumentOutOfRangeException>(() => stream.BufferLength = value); }
-        Reject<NotSupportedException>(() => stream.MixRateMode = RateMode.Input); Reject<ArgumentOutOfRangeException>(() => stream.MixRateMode = RateMode.Max); Check(stream.MixRateMode == RateMode.Custom, "Unavailable mode rejects before commit.");
+        Reject<ArgumentOutOfRangeException>(() => stream.MixRateMode = RateMode.Max); Check(stream.MixRateMode == RateMode.Custom, "Invalid mode rejects before commit.");
         stream.MixRate = float.MaxValue; Reject<ArgumentOutOfRangeException>(() => stream.InstantiatePlayback()); stream.MixRate = 1 << 24; stream.BufferLength = 1; Reject<ArgumentOutOfRangeException>(() => stream.InstantiatePlayback());
         stream.MixRate = 22050; stream.BufferLength = .1f; stream.ResourceLocalToScene = true;
         using var copy = (AudioStreamGenerator)stream.Duplicate(true); Check(copy.MixRate == 22050 && copy.BufferLength == .1f, "Exact generator configuration copying.");

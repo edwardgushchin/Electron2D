@@ -7,7 +7,7 @@ Last updated: 2026-10-02
 | Value | Numeric identity | Contract |
 | --- | ---: | --- |
 | [Output](#output) | 0 | Live AudioServer output frequency. |
-| [Input](#input) | 1 | Requires capture sampling-frequency integration; currently rejects. |
+| [Input](#input) | 1 | Prepared recording-device rate. |
 | [Custom](#custom) | 2 | Resource MixRate; default. |
 | [Max](#max) | 3 | Exclusive bound, rejected as a mode. |
 
@@ -19,7 +19,7 @@ Uses AudioServer.GetMixRate, including its documented pre-native 44100 Hz profil
 
 ### Input
 
-MixRateMode assignment throws NotSupportedException before state changes. Its [coverage](../coverage/classes/AudioStreamGenerator.md) names the actual SDL3 capture frequency/AudioServer.GetInputMixRate dependency; static identity does not imply input PCM or a successful setter.
+MixRateMode selection and playback creation/start prepare AudioServer.GetInputMixRate from a paused native recording device. Actual input frequency determines new queue capacity; live switching changes the source resampling rate without resizing existing queues. Mode configuration never activates recording; AudioDriverEnableInput gates capture requests separately. Device/permission or off-owner preparation failures preserve the old selection. Mixing reads only prepared frequency. [Coverage](../coverage/classes/AudioStreamGenerator.md) records this executable input integration.
 
 ### Custom
 

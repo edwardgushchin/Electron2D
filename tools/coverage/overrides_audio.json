@@ -869,6 +869,51 @@
       "godot": "AudioStreamGeneratorPlayback::method:push_frame(Vector2:)",
       "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.PushFrame(Electron2D.Vector2)",
       "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits."
+    },
+    {
+      "godot": "AudioServer::method:get_input_buffer_length_frames()",
+      "electron2d": "method:Electron2D.AudioServer.GetInputBufferLengthFrames()",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::method:get_input_device_list()",
+      "electron2d": "method:Electron2D.AudioServer.GetInputDeviceList()",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::method:get_input_frames(int:)",
+      "electron2d": "method:Electron2D.AudioServer.GetInputFrames(System.Int32)",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::method:get_input_frames_available()",
+      "electron2d": "method:Electron2D.AudioServer.GetInputFramesAvailable()",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::method:get_input_mix_rate()",
+      "electron2d": "method:Electron2D.AudioServer.GetInputMixRate()",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::method:set_input_device_active(bool:)",
+      "electron2d": "method:Electron2D.AudioServer.SetInputDeviceActive(System.Boolean)",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "AudioServer::property:input_device",
+      "electron2d": "property:Electron2D.AudioServer.InputDevice()",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "class:AudioStreamMicrophone",
+      "electron2d": "T:Electron2D.AudioStreamMicrophone",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/driver/enable_input",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioDriverEnableInput()",
+      "reason": "Built-in typed boolean, false default; feature overrides and persistence metadata execute. AudioServer/manual and microphone starts consume it before native recording activation; paused input frequency preparation never records (ADR 0047)."
     }
   ],
   "extras": [
@@ -1283,6 +1328,26 @@
     {
       "electron2d": "method:Electron2D.AudioStreamGeneratorPlayback.OnStop()",
       "reason": "ADRs 0001/0013/0047: concrete inherited audio factory, metadata, control/mixing, typed stored configuration, copying and lifetime projection; no new semantic capability beyond the producer stream."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamMicrophone..ctor()",
+      "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMicrophone.OnInstantiatePlayback()",
+      "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMicrophone.OnGetStreamName()",
+      "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMicrophone.CreateDuplicateInstance()",
+      "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMicrophone.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, diagnostic/factory and Resource graph-copy projections of the parameterless microphone stream. Devices and cursor/history are server/playback-owned; copying retains inherited metadata only (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -1635,20 +1700,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: SDL3 capture device ownership, bounded input ring and resampling, then microphone/recording integration; output-only FAudio does not supply input frames (ADR 0047).",
-      "godot": [
-        "AudioServer::method:get_input_buffer_length_frames()",
-        "AudioServer::method:get_input_device_list()",
-        "AudioServer::method:get_input_frames(int:)",
-        "AudioServer::method:get_input_frames_available()",
-        "AudioServer::method:get_input_mix_rate()",
-        "AudioServer::method:set_input_device_active(bool:)",
-        "AudioServer::property:input_device",
-        "class:AudioStreamMicrophone"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: live selected output-device rebuild and measured device latency; enumerating names and querying mix clocks does not implement selection/latency (ADR 0047).",
       "godot": [
         "AudioServer::method:get_output_latency()",
@@ -1679,7 +1730,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. Remaining rows retain concrete sample, parameter, effects, input, device, editor or transition-ramp dependencies.",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. SDL3 input/microphone and Input generator frequency now execute. Remaining rows retain concrete sample, parameter, effects, output-device, editor or transition-ramp dependencies.",
       "godot": [
         "class:AudioServer",
         "class:AudioStream",
@@ -1897,18 +1948,21 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0047: prepared bounded copied stereo producer queue, Custom/Output rate, strict power-of-two capacity, finite/overflow validation, source-block underrun silence/skips, stopped clear, monophonic player integration, resource/local copies and serialized cubic history. Managed/native PCM, warmed active/paused callbacks and public host lifecycles distinguish physical/platform limits. Input mode is unavailable until actual native input sampling-frequency ownership; selecting it rejects without state mutation.",
+      "state": "Implemented",
+      "reason": "ADR 0047: actual paused SDL3 input frequency, gated live recording, bounded four-quantum finite stereo ring, full/overflow-safe independent server/microphone cursors, 50 ms priming, continuous underrun silence, global explicit pause, multi-playback automatic request ownership, transactional device switching, copied resource graphs and engine cleanup. Input generator mode prepares/uses real input frequency without recording. Linux dummy input callbacks, native converted PCM/FAudio output, concurrent/warm active/stopped work and public Wayland GPU/compatibility hosts are verified; physical microphones, permissions, external native allocation totals and other platforms remain unverified. Typed errors replace return codes; invalid device names reject. Monotonic cursors correct modulo-full ambiguity/stale replay and automatic Stop retains other microphone requests, while explicit server false still pauses global input.",
       "godot": [
+        "AudioServer::method:get_input_buffer_length_frames()",
+        "AudioServer::method:get_input_device_list()",
+        "AudioServer::method:get_input_frames(int:)",
+        "AudioServer::method:get_input_frames_available()",
+        "AudioServer::method:get_input_mix_rate()",
+        "AudioServer::method:set_input_device_active(bool:)",
+        "AudioServer::property:input_device",
+        "class:AudioStreamMicrophone",
+        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT",
         "class:AudioStreamGenerator",
-        "AudioStreamGenerator::property:mix_rate_mode"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: first SDL3 capture-device ownership, source PCM ring and input-frequency/resampling integration with AudioStreamMicrophone and AudioServer.GetInputMixRate (ADR 0047). Input generator mode must enter that first capture slice; output frequency is not an input substitute.",
-      "godot": [
-        "AudioStreamGenerator::enum_value:AudioStreamGeneratorMixRate.MIX_RATE_INPUT"
+        "AudioStreamGenerator::property:mix_rate_mode",
+        "ProjectSettings::property:audio/driver/enable_input"
       ]
     }
   ]
