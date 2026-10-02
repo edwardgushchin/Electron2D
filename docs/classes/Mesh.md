@@ -6,6 +6,8 @@ Last updated: 2026-10-02
 
 **Inherits:** [Resource](Resource.md).
 
+**Inherited By:** [ArrayMesh](ArrayMesh.md), [ImmediateMesh](ImmediateMesh.md).
+
 ## Description
 
 Abstract typed two-dimensional surface contract. Count/array/format/topology/material callbacks project applicable mesh reads. SurfaceGetArrays returns independent typed channel copies; vertex/index counts and policies preserve the current resource state. Mesh.GetRID lazily creates a weak stable resource-owned identity, independent of Engine.Run, until disposal; it is borrowed and cannot be mutated/freed through RenderingServer ownership. Implementations publish Changed after geometry/material edits. Runtime arrays and node/canvas geometry are strictly 2D. GetFaces exposes copied local 2D triangle faces; strips expand with alternating winding, and point/line surfaces contribute nothing. Further source channels/deformation/LOD/geometry are exact coverage dependencies, not nominal callbacks.

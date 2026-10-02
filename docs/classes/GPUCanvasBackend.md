@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-09-23
+Last updated: 2026-10-02
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-09-23
 
 ## Description
 
-The SDL GPU implementation of CanvasBackend. Construction retains the display window, creates a device, claims the window, and builds the default pipeline. Construction failure unwinds the completed steps. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread.
+The SDL GPU implementation of CanvasBackend. Construction retains the display window, creates a device, claims the window, and builds the default pipeline. Construction failure unwinds the completed steps. The five built-in fragment/blend pipelines are retained after first use until backend disposal, so temporarily absent blend modes do not recreate pipelines on their next warmed frame. Unused custom shader pipelines retain the existing eviction policy. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread.
 
 GPU sampler cache keys include texel filter, repeat, effective anisotropy and mip interpolation. Non-mipmap canvas modes clamp LOD to zero; mip/anisotropic modes use all uploaded levels. Mirror uses native mirrored repeat. Named material samplers use linear filtering, clamp-to-edge coordinates and LOD zero, independently of canvas policies. Cached sampler handles release on backend disposal.
 

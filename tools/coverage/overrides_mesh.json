@@ -294,6 +294,36 @@
       "godot": "Mesh::method:get_faces()",
       "electron2d": "method:Electron2D.Mesh.GetFaces()",
       "reason": "ADR 0092: copied Vector2 triangle vertices for indexed/sequential triangles and alternating-winding strips, excluding point/line surfaces; 2D channel projection of the existing mesh-face capability."
+    },
+    {
+      "godot": "ImmediateMesh::method:clear_surfaces()",
+      "electron2d": "method:Electron2D.ImmediateMesh.ClearSurfaces()",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_add_vertex_2d(Vector2:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceAddVertex2D(Electron2D.Vector2)",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_begin(int:Mesh.PrimitiveType,Material:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceBegin(Electron2D.Mesh.PrimitiveType,Electron2D.Material)",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_end()",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceEnd()",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_set_color(Color:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetColor(Electron2D.Color)",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_set_uv(Vector2:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetUV(Electron2D.Vector2)",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
     }
   ],
   "extras": [
@@ -408,6 +438,54 @@
     {
       "electron2d": "method:Electron2D.MeshInstance.GetConfigurationWarnings()",
       "reason": "Inherited Node warning callback reports the concrete missing-mesh configuration prerequisite under ADR 0092."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ImmediateMesh..ctor()",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnGetSurfaceCount()",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetArrays(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetArrayLen(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetFormat(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceGetMaterial(System.Int32)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
     }
   ],
   "statusGroups": [
@@ -643,6 +721,32 @@
       "reason": "ADR 0004: this hint is consumed by the 3D lightmap unwrap/bake path, which is excluded. It has no 2D canvas light consumer.",
       "godot": [
         "Mesh::property:lightmap_size_hint"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits.",
+      "godot": [
+        "ImmediateMesh::method:clear_surfaces()",
+        "ImmediateMesh::method:surface_add_vertex_2d(Vector2:)",
+        "ImmediateMesh::method:surface_begin(int:Mesh.PrimitiveType,Material:)",
+        "ImmediateMesh::method:surface_end()",
+        "ImmediateMesh::method:surface_set_color(Color:)",
+        "ImmediateMesh::method:surface_set_uv(Vector2:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits. Secondary UV requires typed byte storage and an actual shader-attribute consumer; SurfaceSetUV2 is absent until that slice.",
+      "godot": [
+        "class:ImmediateMesh"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: typed secondary-UV mesh storage, packed byte format and actual canvas shader-attribute consumer over the executable 2D surface path (ADR 0092). SurfaceSetUV2 must enter that first attribute slice together with MeshSurfaceData and ArrayMesh updates.",
+      "godot": [
+        "ImmediateMesh::method:surface_set_uv2(Vector2:)"
       ]
     }
   ]

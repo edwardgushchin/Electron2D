@@ -155,7 +155,8 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             if (UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
         }
         foreach (var pair in _pipelines)
-            if (!_usedPrograms.Contains(pair.Key)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
+            // Keep the five built-in blend pipelines across idle frames so warmed mode changes do not recreate native resources.
+            if (!_usedPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures)
             if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
         foreach (var pair in _textureBindings)

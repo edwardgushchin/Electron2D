@@ -14,7 +14,8 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
     {
         ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
         transform *= local; color *= modulate;
-        if (mesh is ArrayMesh arrays)
+        var arrays = mesh as ArrayMesh ?? (mesh as ImmediateMesh)?.Surfaces;
+        if (arrays is not null)
         {
             lock (arrays.Gate)
             {

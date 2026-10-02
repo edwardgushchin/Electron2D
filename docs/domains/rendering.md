@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 ## Responsibility
 
@@ -17,6 +17,7 @@ Rendering turns retained scene commands and typed resources into frames for the 
 | [Scrolling](../components/scrolling.md) | [ScrollBar](../classes/ScrollBar.md), [HScrollBar](../classes/HScrollBar.md), [VScrollBar](../classes/VScrollBar.md), [ScrollContainer](../classes/ScrollContainer.md), [ItemList](../classes/ItemList.md) | Clipped content and selectable text/icon rows, themed bars/hints, focus and pointer/action input on both current backends |
 | [Text](../components/text.md) | [Font](../classes/Font.md), [FontFile](../classes/FontFile.md), [LabelSettings](../classes/LabelSettings.md), canvas text and [Label](../classes/Label.md) | FreeType/HarfBuzz fractional shaping, private ICU dictionary boundaries, Unicode layout, fallbacks and glyph textures on both current Linux backends |
 | [Shader materials](../components/shader-materials.md) | Shader, ShaderMaterial, CanvasItemMaterial, Material, Texture, ImageTexture and AtlasTexture, owned by Resources | Executable HLSL/GLSL import, typed uniforms and sampled textures; five fixed blend modes on Wayland GPU/compatibility hardware; broader language profile incomplete |
+| [2D mesh surfaces](../components/meshes.md) | [Mesh](../classes/Mesh.md), [ArrayMesh](../classes/ArrayMesh.md), [ImmediateMesh](../classes/ImmediateMesh.md), [MeshInstance](../classes/MeshInstance.md), typed channels and canvas/server RIDs | Copied static surfaces and incremental drafts draw through both current backends; advanced attributes/deformations retain exact dependencies |
 
 Games use Sprite for texture, sheet-frame and region drawing, AnimatedSprite with SpriteFrames for timed playback, or record custom commands from CanvasItem.OnDraw through CanvasItem and Texture. RenderingServer provides the active method/driver, frame events and clear/submission controls. Engine.Run starts and closes the renderer. CanvasItem and Viewport supply filtering/repeat policies and GPU mip/anisotropy settings, with explicit fallback limits. CanvasItem.ItemRectChanged reports local geometry changes synchronously; Sprite integrates the event with its setters while resource worker notifications remain atomic redraw requests.
 
