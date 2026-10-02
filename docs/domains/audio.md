@@ -42,4 +42,6 @@ Spatial sources use viewport-center or explicit listener position, scene distanc
 
 [AudioEffectStereoEnhance](../classes/AudioEffectStereoEnhance.md) now provides typed side gain, right-channel delay and delayed-center surround through the same bus chain. Independent prepared rings, Resource/scene copies, native PCM tails and public Wayland hosts execute; see [stereo enhancement](../components/audio-playback.md#stereo-enhancement).
 
+[AudioEffectPhaser](../classes/AudioEffectPhaser.md) now provides six swept all-pass stages with typed frequency, feedback and depth controls. Pinned C++ PCM, native feedback tails, copies and public Wayland hosts execute; see [six-stage phasing](../components/audio-playback.md#six-stage-phasing).
+
 [AudioEffectSpectrumAnalyzer](../classes/AudioEffectSpectrumAnalyzer.md) now publishes real-time stereo frequency magnitudes through borrowed [bus instances](../classes/AudioEffectSpectrumAnalyzerInstance.md) while passing PCM through. Five shared [AudioFFTSize](../classes/AudioFFTSize.md) presets, typed copies, native queries and public Wayland hosts execute; see [stereo spectrum analysis](../components/audio-playback.md#stereo-spectrum-analysis). PitchShift reuses the same FFT-size value type with its own frame-size and latency interpretation.

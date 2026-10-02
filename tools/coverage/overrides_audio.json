@@ -1914,6 +1914,36 @@
       "godot": "AudioEffectStereoEnhance::property:surround",
       "electron2d": "property:Electron2D.AudioEffectStereoEnhance.Surround()",
       "reason": "ADR 0047: typed stereo width, bounded channel delay and surround center injection execute through the current FAudio stereo-pair chain; analytical PCM, native tails and public hosts verify the slice."
+    },
+    {
+      "godot": "class:AudioEffectPhaser",
+      "electron2d": "T:Electron2D.AudioEffectPhaser",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "AudioEffectPhaser::property:range_min_hz",
+      "electron2d": "property:Electron2D.AudioEffectPhaser.RangeMinHZ()",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "AudioEffectPhaser::property:range_max_hz",
+      "electron2d": "property:Electron2D.AudioEffectPhaser.RangeMaxHZ()",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "AudioEffectPhaser::property:rate_hz",
+      "electron2d": "property:Electron2D.AudioEffectPhaser.RateHZ()",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "AudioEffectPhaser::property:feedback",
+      "electron2d": "property:Electron2D.AudioEffectPhaser.Feedback()",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "AudioEffectPhaser::property:depth",
+      "electron2d": "property:Electron2D.AudioEffectPhaser.Depth()",
+      "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
     }
   ],
   "extras": [
@@ -2804,6 +2834,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectStereoEnhance.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed construction, stored authoring controls, independent prepared stereo state and exact Resource/scene copying project the executable stereo-enhancement lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectPhaser..ctor()",
+      "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPhaser.OnInstantiate()",
+      "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPhaser.GetPropertyDescriptors()",
+      "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPhaser.CreateDuplicateInstance()",
+      "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPhaser.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
     }
   ],
   "statusGroups": [
@@ -3347,18 +3397,6 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed modulation/feedback controls and prepared all-pass stereo state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
-      "godot": [
-        "AudioEffectPhaser::property:depth",
-        "AudioEffectPhaser::property:feedback",
-        "AudioEffectPhaser::property:range_max_hz",
-        "AudioEffectPhaser::property:range_min_hz",
-        "AudioEffectPhaser::property:rate_hz",
-        "class:AudioEffectPhaser"
-      ]
-    },
-    {
       "state": "Implemented",
       "reason": "ADR 0047/0051: typed stereo phase-vocoder pitch shifting executes through FAudio with all five shared FFT presets, live pitch/overlap controls, bypass/reset/tail lifecycle and bounded prepared arrays. AudioPitchShiftTests compares pinned C++ PCM within 3.3e-5 at 44100 Hz, verifies shifted stereo tones, public Wayland hosts, 2/4/6/8 logical profiles and warmed allocation. Listening quality, 48000 Hz engine execution and other platforms remain unverified.",
       "godot": [
@@ -3534,6 +3572,18 @@
         "AudioEffectStereoEnhance::property:surround",
         "AudioEffectStereoEnhance::property:time_pullout_ms",
         "class:AudioEffectStereoEnhance"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: six-stage stereo all-pass processing executes in the existing FAudio chain. AudioPhaserTests compares 16384 channel samples at the available 44100 Hz rate against a byte-pinned C++ processor with zero observed difference, and verifies typed live settings, copies, native feedback tails and bypass, 2/4/6/8 logical profiles, both public Wayland hosts and warmed allocation. Physical listening, actual multichannel hardware, 48000 Hz engine execution and other platforms remain unverified.",
+      "godot": [
+        "AudioEffectPhaser::property:depth",
+        "AudioEffectPhaser::property:feedback",
+        "AudioEffectPhaser::property:range_max_hz",
+        "AudioEffectPhaser::property:range_min_hz",
+        "AudioEffectPhaser::property:rate_hz",
+        "class:AudioEffectPhaser"
       ]
     }
   ]
