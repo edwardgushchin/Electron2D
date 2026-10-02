@@ -1,5 +1,5 @@
-Stephan M. Bernsee FFT routine
-Copyright (c) 1996 Stephan M. Bernsee
+Stephan M. Bernsee FFT and pitch-shift routines
+Copyright (c) 1996, 1999-2015 Stephan M. Bernsee
 
 The Wide Open License (WOL)
 
@@ -12,3 +12,4 @@ ANY KIND.
 License information: https://dspguru.com/wide-open-license/formats/
 
 Source: https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/audio/effects/audio_effect_spectrum_analyzer.cpp
+Source: https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/audio/effects/audio_effect_pitch_shift.cpp

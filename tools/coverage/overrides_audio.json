@@ -1,6 +1,26 @@
 {
   "mappings": [
     {
+      "godot": "class:AudioEffectPitchShift",
+      "electron2d": "T:Electron2D.AudioEffectPitchShift",
+      "reason": "ADR 0047/0051: executable stereo phase-vocoder resource on the existing FAudio effect chain."
+    },
+    {
+      "godot": "AudioEffectPitchShift::property:pitch_scale",
+      "electron2d": "property:Electron2D.AudioEffectPitchShift.PitchScale()",
+      "reason": "ADR 0047: typed live positive pitch ratio; one bypasses PCM exactly."
+    },
+    {
+      "godot": "AudioEffectPitchShift::property:oversampling",
+      "electron2d": "property:Electron2D.AudioEffectPitchShift.Oversampling()",
+      "reason": "ADR 0047: typed live four-through-thirty-two overlap factor with state reset on edits."
+    },
+    {
+      "godot": "AudioEffectPitchShift::property:fft_size",
+      "electron2d": "property:Electron2D.AudioEffectPitchShift.FFTSize()",
+      "reason": "ADR 0051: the shared FFT-size identity selects a prepared pitch window for new instances."
+    },
+    {
       "godot": "class:AudioEffectHardLimiter",
       "electron2d": "T:Electron2D.AudioEffectHardLimiter",
       "reason": "ADR 0047: executable lookahead peak limiting on the existing stereo FAudio effect chain."
@@ -1843,37 +1863,37 @@
     {
       "godot": "AudioEffectPitchShift::enum:FFTSize",
       "electron2d": "T:Electron2D.AudioFFTSize",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Size1024()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_2048",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Size2048()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_256",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Size256()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_4096",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Size4096()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_512",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Size512()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     },
     {
       "godot": "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_MAX",
       "electron2d": "enumValue:Electron2D.AudioFFTSize.Max()",
-      "reason": "ADR 0051: the exact shared FFT-size value contract is already implemented by AudioFFTSize; the PitchShift resource and processor remain a separate unimplemented slice."
+      "reason": "ADR 0051: one AudioFFTSize identity selects all five executable analyzer and pitch-shift presets; the owners retain their different frame-window interpretations."
     }
   ],
   "extras": [
@@ -2654,6 +2674,26 @@
       "reason": "C# construction, typed scene descriptors and independent effect-instance lifecycle project the executable five-mode distortion resource (ADR 0047)."
     },
     {
+      "electron2d": "constructor:Electron2D.AudioEffectPitchShift..ctor()",
+      "reason": "Typed construction, stored authoring controls, independent spectral state and exact Resource/scene copying project the executable pitch-shift lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPitchShift.OnInstantiate()",
+      "reason": "Typed construction, stored authoring controls, independent spectral state and exact Resource/scene copying project the executable pitch-shift lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPitchShift.GetPropertyDescriptors()",
+      "reason": "Typed construction, stored authoring controls, independent spectral state and exact Resource/scene copying project the executable pitch-shift lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPitchShift.CreateDuplicateInstance()",
+      "reason": "Typed construction, stored authoring controls, independent spectral state and exact Resource/scene copying project the executable pitch-shift lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPitchShift.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, stored authoring controls, independent spectral state and exact Resource/scene copying project the executable pitch-shift lifecycle under ADR 0047."
+    },
+    {
       "electron2d": "constructor:Electron2D.AudioEffectHardLimiter..ctor()",
       "reason": "Typed construction, stored authoring controls, independent lookahead state and exact Resource/scene copying project the executable hard-limiter lifecycle under ADR 0047."
     },
@@ -3279,8 +3319,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADR 0047 and ADR 0051: the shared AudioFFTSize preset is already implemented, but PitchShift still needs its own typed pitch/oversampling configuration and verified bounded spectral resynthesis, latency and lifecycle on the current FAudio chain. The existing bus/FAPO path runs; add the complete processor before claiming these class/property rows.",
+      "state": "Implemented",
+      "reason": "ADR 0047/0051: typed stereo phase-vocoder pitch shifting executes through FAudio with all five shared FFT presets, live pitch/overlap controls, bypass/reset/tail lifecycle and bounded prepared arrays. AudioPitchShiftTests compares pinned C++ PCM within 3.3e-5 at 44100 Hz, verifies shifted stereo tones, public Wayland hosts, 2/4/6/8 logical profiles and warmed allocation. Listening quality, 48000 Hz engine execution and other platforms remain unverified.",
       "godot": [
         "AudioEffectPitchShift::property:fft_size",
         "AudioEffectPitchShift::property:oversampling",
@@ -3445,7 +3485,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0051: AudioFFTSize is the one public 256/512/1024/2048/4096/Max enum identity for spectrum analysis and pitch shifting; all numeric identities and the nonselectable Max boundary are verified. This does not claim PitchShift processing.",
+      "reason": "ADR 0051: AudioFFTSize is the one public 256/512/1024/2048/4096/Max enum identity for executable spectrum analysis and pitch shifting; both owners use their documented frame-window interpretations.",
       "godot": [
         "AudioEffectPitchShift::enum:FFTSize",
         "AudioEffectPitchShift::enum_value:FFTSize.FFT_SIZE_1024",

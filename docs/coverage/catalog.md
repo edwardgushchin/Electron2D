@@ -80,7 +80,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectNotchFilter](classes/AudioEffectNotchFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectPanner](classes/AudioEffectPanner.md) | AudioEffect | Implemented | 1 |
 | [AudioEffectPhaser](classes/AudioEffectPhaser.md) | AudioEffect | Unimplemented | 5 |
-| [AudioEffectPitchShift](classes/AudioEffectPitchShift.md) | AudioEffect | Unimplemented | 10 |
+| [AudioEffectPitchShift](classes/AudioEffectPitchShift.md) | AudioEffect | Implemented | 10 |
 | [AudioEffectRecord](classes/AudioEffectRecord.md) | AudioEffect | Implemented | 4 |
 | [AudioEffectReverb](classes/AudioEffectReverb.md) | AudioEffect | Implemented | 8 |
 | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | AudioEffect | Implemented | 9 |

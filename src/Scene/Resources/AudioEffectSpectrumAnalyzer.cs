@@ -1,17 +1,17 @@
 namespace Electron2D;
 
-/// <summary>Selects a power-of-two audio transform preset shared by spectrum analysis and pitch shifting.</summary>
+/// <summary>Selects a power-of-two transform-size preset shared by spectrum analysis and pitch shifting.</summary>
 public enum AudioFFTSize
 {
-    /// <summary>256 frequency bins from a 512-frame window.</summary>
+    /// <summary>256-frame pitch transform or 256 bins from a 512-frame analyzer window.</summary>
     Size256 = 0,
-    /// <summary>512 frequency bins from a 1024-frame window.</summary>
+    /// <summary>512-frame pitch transform or 512 bins from a 1024-frame analyzer window.</summary>
     Size512 = 1,
-    /// <summary>1024 frequency bins from a 2048-frame window.</summary>
+    /// <summary>1024-frame pitch transform or 1024 bins from a 2048-frame analyzer window.</summary>
     Size1024 = 2,
-    /// <summary>2048 frequency bins from a 4096-frame window.</summary>
+    /// <summary>2048-frame pitch transform or 2048 bins from a 4096-frame analyzer window.</summary>
     Size2048 = 3,
-    /// <summary>4096 frequency bins from an 8192-frame window.</summary>
+    /// <summary>4096-frame pitch transform or 4096 bins from an 8192-frame analyzer window.</summary>
     Size4096 = 4,
     /// <summary>Nonselectable upper enum bound.</summary>
     Max = 5
