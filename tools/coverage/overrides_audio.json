@@ -1459,6 +1459,206 @@
       "godot": "AudioEffectReverb::property:wet",
       "electron2d": "property:Electron2D.AudioEffectReverb.Wet()",
       "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_cutoff_hz(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_delay_ms(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_depth_ms(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_level_db(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_pan(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:get_voice_rate_hz(int:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_cutoff_hz(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoiceCutoffHZ(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_delay_ms(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoiceDelayMS(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_depth_ms(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoiceDepthMS(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_level_db(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoiceLevelDB(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_pan(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoicePan(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::method:set_voice_rate_hz(int:,float:)",
+      "electron2d": "method:Electron2D.AudioEffectChorus.SetVoiceRateHZ(System.Int32,System.Single)",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::property:dry",
+      "electron2d": "property:Electron2D.AudioEffectChorus.Dry()",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice_count",
+      "electron2d": "property:Electron2D.AudioEffectChorus.VoiceCount()",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::property:wet",
+      "electron2d": "property:Electron2D.AudioEffectChorus.Wet()",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "class:AudioEffectChorus",
+      "electron2d": "T:Electron2D.AudioEffectChorus",
+      "reason": "ADR 0047: typed chorus controls execute through the prepared stereo voice kernel; indexed voice property descriptors project the six public getter/setter pairs."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/cutoff_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/delay_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/depth_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/level_db",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/pan",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/1/rate_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/cutoff_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/delay_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/depth_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/level_db",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/pan",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/2/rate_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/cutoff_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/delay_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/depth_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/level_db",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/pan",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/3/rate_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/cutoff_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/delay_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/depth_ms",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/level_db",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/pan",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
+    },
+    {
+      "godot": "AudioEffectChorus::property:voice/4/rate_hz",
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+      "reason": "The stored typed indexed voice descriptor reads through this public getter and writes through its matching setter; inactive voice settings remain addressable in the typed C# descriptor system (ADR 0047)."
     }
   ],
   "extras": [
@@ -2197,6 +2397,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectReverb.OnInstantiate()",
       "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectChorus..ctor()",
+      "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectChorus.OnInstantiate()",
+      "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectChorus.GetPropertyDescriptors()",
+      "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectChorus.CreateDuplicateInstance()",
+      "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectChorus.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# construction, typed scene descriptors and independent instance lifecycle project the executable chorus resource (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -2621,8 +2841,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: indexed voice modulation/delay/filter controls and bounded stereo delay kernels. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: executable four-voice stereo chorus in the existing FAudio chain; indexed typed voice controls, prepared modulation/filter histories, Resource/scene copies, CPU/native PCM tails and warmed allocation checks. Physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectChorus::method:get_voice_cutoff_hz(int:)",
         "AudioEffectChorus::method:get_voice_delay_ms(int:)",

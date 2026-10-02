@@ -61,7 +61,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectBandLimitFilter](classes/AudioEffectBandLimitFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectBandPassFilter](classes/AudioEffectBandPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectCapture](classes/AudioEffectCapture.md) | AudioEffect | Implemented | 8 |
-| [AudioEffectChorus](classes/AudioEffectChorus.md) | AudioEffect | Unimplemented | 39 |
+| [AudioEffectChorus](classes/AudioEffectChorus.md) | AudioEffect | Implemented | 39 |
 | [AudioEffectCompressor](classes/AudioEffectCompressor.md) | AudioEffect | Unimplemented | 7 |
 | [AudioEffectDelay](classes/AudioEffectDelay.md) | AudioEffect | Implemented | 13 |
 | [AudioEffectDistortion](classes/AudioEffectDistortion.md) | AudioEffect | Unimplemented | 11 |

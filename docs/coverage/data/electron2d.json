@@ -336,6 +336,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioEffectChorus",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "AudioEffectChorus",
+    "signature": "public sealed class Electron2D.AudioEffectChorus",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioEffect",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioEffectDelay",
     "kind": "type",
     "declaringType": "Electron2D.AudioEffectDelay",
@@ -7512,6 +7527,19 @@
     "declaringType": "Electron2D.AudioEffectCapture",
     "name": ".ctor",
     "signature": "public AudioEffectCapture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioEffectChorus..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": ".ctor",
+    "signature": "public AudioEffectChorus()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -28044,6 +28072,342 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoiceCutoffHZ(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoiceCutoffHZ",
+    "signature": "public System.Single GetVoiceCutoffHZ(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoiceDelayMS(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoiceDelayMS",
+    "signature": "public System.Single GetVoiceDelayMS(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoiceDepthMS(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoiceDepthMS",
+    "signature": "public System.Single GetVoiceDepthMS(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoiceLevelDB(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoiceLevelDB",
+    "signature": "public System.Single GetVoiceLevelDB(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoicePan(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoicePan",
+    "signature": "public System.Single GetVoicePan(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.GetVoiceRateHZ(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "GetVoiceRateHZ",
+    "signature": "public System.Single GetVoiceRateHZ(System.Int32 voiceIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.OnInstantiate()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "OnInstantiate",
+    "signature": "protected override Electron2D.AudioEffectInstance OnInstantiate()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioEffectInstance",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoiceCutoffHZ(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoiceCutoffHZ",
+    "signature": "public System.Void SetVoiceCutoffHZ(System.Int32 voiceIndex, System.Single cutoffHZ)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "cutoffHZ",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoiceDelayMS(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoiceDelayMS",
+    "signature": "public System.Void SetVoiceDelayMS(System.Int32 voiceIndex, System.Single delayMS)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "delayMS",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoiceDepthMS(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoiceDepthMS",
+    "signature": "public System.Void SetVoiceDepthMS(System.Int32 voiceIndex, System.Single depthMS)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "depthMS",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoiceLevelDB(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoiceLevelDB",
+    "signature": "public System.Void SetVoiceLevelDB(System.Int32 voiceIndex, System.Single levelDB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "levelDB",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoicePan(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoicePan",
+    "signature": "public System.Void SetVoicePan(System.Int32 voiceIndex, System.Single pan)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "pan",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioEffectChorus.SetVoiceRateHZ(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "SetVoiceRateHZ",
+    "signature": "public System.Void SetVoiceRateHZ(System.Int32 voiceIndex, System.Single rateHZ)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "voiceIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "rateHZ",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -88505,6 +88869,45 @@
     "declaringType": "Electron2D.AudioEffectCapture",
     "name": "BufferLength",
     "signature": "public System.Single BufferLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectChorus.Dry()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "Dry",
+    "signature": "public System.Single Dry { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectChorus.VoiceCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "VoiceCount",
+    "signature": "public System.Int32 VoiceCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioEffectChorus.Wet()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioEffectChorus",
+    "name": "Wet",
+    "signature": "public System.Single Wet { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
