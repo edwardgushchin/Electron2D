@@ -12,6 +12,8 @@ using EngineTimer = Electron2D.Timer;
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_FILTERS") == "1") { AudioFilterTests.Run(native: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_LEVEL") == "1") { AudioEffectLevelTests.Run(native: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_LEVEL_HOST") == "1") { AudioEffectLevelTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_REVERB") == "1") { AudioReverbTests.Run(native: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_REVERB_HOST") == "1") { AudioReverbTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_DELAY") == "1") { AudioDelayTests.Run(native: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_DELAY_HOST") == "1") { AudioDelayTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_EQ") == "1") { AudioEQTests.Run(native: true); return; }
@@ -354,7 +356,7 @@ AudioGeneratorTests.Run();
 AudioInputTests.Run();
 AudioEffectTests.Run();
 AudioEffectLevelTests.Run();
-AudioEQTests.Run(); AudioDelayTests.Run();
+AudioEQTests.Run(); AudioDelayTests.Run(); AudioReverbTests.Run();
 AudioSpatialTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run();

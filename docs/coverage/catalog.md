@@ -82,7 +82,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectPhaser](classes/AudioEffectPhaser.md) | AudioEffect | Unimplemented | 5 |
 | [AudioEffectPitchShift](classes/AudioEffectPitchShift.md) | AudioEffect | Unimplemented | 10 |
 | [AudioEffectRecord](classes/AudioEffectRecord.md) | AudioEffect | Unimplemented | 4 |
-| [AudioEffectReverb](classes/AudioEffectReverb.md) | AudioEffect | Unimplemented | 8 |
+| [AudioEffectReverb](classes/AudioEffectReverb.md) | AudioEffect | Implemented | 8 |
 | [AudioEffectSpectrumAnalyzer](classes/AudioEffectSpectrumAnalyzer.md) | AudioEffect | Unimplemented | 9 |
 | [AudioEffectSpectrumAnalyzerInstance](classes/AudioEffectSpectrumAnalyzerInstance.md) | AudioEffectInstance | Unimplemented | 4 |
 | [AudioEffectStereoEnhance](classes/AudioEffectStereoEnhance.md) | AudioEffect | Unimplemented | 3 |

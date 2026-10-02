@@ -1414,6 +1414,51 @@
       "godot": "AudioEffectDelay::property:tap2_pan",
       "electron2d": "property:Electron2D.AudioEffectDelay.Tap2Pan()",
       "reason": "ADR 0047: two prepared stereo taps and filtered feedback execute in the FAudio bus chain. AudioDelayTests verifies typed Resource/scene state, impulse/low-pass PCM, finite-source native tails, live edits, bypass, public Wayland GPU/compatibility hosts and warmed zero-allocation checks. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectReverb",
+      "electron2d": "T:Electron2D.AudioEffectReverb",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:damping",
+      "electron2d": "property:Electron2D.AudioEffectReverb.Damping()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:dry",
+      "electron2d": "property:Electron2D.AudioEffectReverb.Dry()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:hipass",
+      "electron2d": "property:Electron2D.AudioEffectReverb.Hipass()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:predelay_feedback",
+      "electron2d": "property:Electron2D.AudioEffectReverb.PredelayFeedback()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:predelay_msec",
+      "electron2d": "property:Electron2D.AudioEffectReverb.PredelayMSEC()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:room_size",
+      "electron2d": "property:Electron2D.AudioEffectReverb.RoomSize()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:spread",
+      "electron2d": "property:Electron2D.AudioEffectReverb.Spread()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectReverb::property:wet",
+      "electron2d": "property:Electron2D.AudioEffectReverb.Wet()",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -2132,6 +2177,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectDelay.OnInstantiate()",
       "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo delay resource (ADR 0047)."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectReverb..ctor()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectReverb.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectReverb.CreateDuplicateInstance()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectReverb.GetPropertyDescriptors()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectReverb.OnInstantiate()",
+      "reason": "C# construction, typed Resource/scene descriptors and independent effect-instance lifecycle project the executable stereo room resource (ADR 0047)."
     }
   ],
   "statusGroups": [
@@ -2709,8 +2774,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed room/damping/predelay/filter/wet-dry controls and bounded stereo reverb state. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: independent prepared stereo room DSP executes through the FAudio effect graph. AudioReverbTests compares 24576 byte-pinned C++ channel samples, typed Resource/scene copies, live controls, finite-source tails, public Wayland GPU/compatibility hosts and warmed zero-allocation passes. Physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectReverb::property:damping",
         "AudioEffectReverb::property:dry",
