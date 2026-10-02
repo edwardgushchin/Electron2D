@@ -106,6 +106,13 @@ AudioEffectTests exercises raw FIFO/copy/wrap/full-block overflow, fixed capacit
 `ELECTRON2D_TEST_AUDIO_EFFECTS=1 SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` runs the focused native checks. `ELECTRON2D_TEST_AUDIO_EFFECTS_HOST=1 ELECTRON2D_AUDIO_RENDERER=BACKEND SDL_VIDEODRIVER=wayland SDL_AUDIODRIVER=dummy dotnet run --project tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release` exercises public Window/Autoplay/capture/Engine.Run twice normally and once with a failed process callback for each current GPU/compatibility renderer. Machine-readable output records captured frames and cleanup. This establishes public host/native execution, not audio file export, physical listening, actual multichannel speakers, editor tooling or foreign-platform acceptance. Remaining concrete effects need their own typed configuration/DSP slices; the generic chain is now executable.
 
 
+<a id="bus-gain-pan"></a>
+## Bus gain and pan
+
+[AudioEffectAmplify](../classes/AudioEffectAmplify.md) and [AudioEffectPanner](../classes/AudioEffectPanner.md) are concrete, caller-owned resources in the same borrowed-resource FAPO bus chain. Amplify stores DB, exposes a derived linear alias including zero/silence, and ramps each instance's gain across a changed block. Panner folds the current stereo pair with clamped left/right coefficients and stores finite raw Pan. Both read live settings once per block, support aliased standalone spans, copy exact scalar configuration and reuse the existing structural lifetime and error-containment policy.
+
+AudioEffectLevelTests checks defaults, invalid/zero gain, independent ramps, full left/right and out-of-range pan, aliases, resource/scene-local copies, observer failures, active native FAudio output, disable and teardown. Twenty warmup passes precede 64 active and 64 paused native passes with zero measured managed bytes and zero custom FAudio allocator calls. CPU live-edit processing also checks 64 warmed blocks with zero managed bytes. `ELECTRON2D_TEST_AUDIO_LEVEL_HOST=1` runs the public Window/Autoplay/effect/capture/cleanup path on Linux Wayland GPU and compatibility renderers with dummy audio; both observed 13,230 processed frames. Physical listening, native allocation outside the custom allocator, other platforms and actual multichannel hardware remain unverified.
+
 <a id="frequency-filters"></a>
 ## Frequency filters
 

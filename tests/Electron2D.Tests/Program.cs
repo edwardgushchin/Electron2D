@@ -10,6 +10,8 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_FILTERS") == "1") { AudioFilterTests.Run(native: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_LEVEL") == "1") { AudioEffectLevelTests.Run(native: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_LEVEL_HOST") == "1") { AudioEffectLevelTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_FILTERS_HOST") == "1") { AudioFilterTests.RunHost(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_EFFECTS") == "1") { AudioEffectTests.Run(native: true); return; }
@@ -346,6 +348,7 @@ AudioRandomizerTests.Run();
 AudioGeneratorTests.Run();
 AudioInputTests.Run();
 AudioEffectTests.Run();
+AudioEffectLevelTests.Run();
 AudioFilterTests.Run();
 MeshTests.Run();
 ImmediateMeshTests.Run();

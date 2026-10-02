@@ -153,12 +153,12 @@ internal static class AudioEffectTests
             if (_elapsed < .3) return; Check(player.IsPlaying() && Completed && Frames > 0, "Public raw capture receives playing source PCM."); if (fail) throw new ApplicationException("Effect host failure fixture."); Tree!.Quit();
         }
     }
-    private static void CheckOutput(FAudioContext native, Vector2 expected)
+    internal static void CheckOutput(FAudioContext native, Vector2 expected)
     {
         Wait(native, 4); native.PrepareCapture(native.QuantumFrames * native.Channels * 8); Wait(native, 10); var pcm = native.CapturedPCM(); Check(pcm.Length > 0, "Actual native output captured.");
         for (var i = 0; i < pcm.Length; i += native.Channels) Check(new Vector2(pcm[i], pcm[i + 1]).DistanceTo(expected) < .0001f, $"Native output expected {expected}; got {pcm[i]}, {pcm[i + 1]}.");
     }
-    private static AudioStreamWAV Constant()
+    internal static AudioStreamWAV Constant()
     {
         var frames = new Vector2[44100]; frames.AsSpan().Fill(new(.2f, -.3f));
         return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = 44100, Data = PCM16(frames), Loop = AudioStreamWAV.LoopMode.Forward, LoopEnd = frames.Length - 1 };
@@ -168,7 +168,7 @@ internal static class AudioEffectTests
         var values = new short[frames.Length * 2]; for (var i = 0; i < frames.Length; i++) { values[i * 2] = (short)(frames[i].X * 32768); values[i * 2 + 1] = (short)(frames[i].Y * 32768); }
         return MemoryMarshal.AsBytes(values.AsSpan()).ToArray();
     }
-    private static void Wait(FAudioContext native, int passes)
+    internal static void Wait(FAudioContext native, int passes)
     {
         var target = native.MixPasses + passes; var start = System.Diagnostics.Stopwatch.GetTimestamp(); while (native.MixPasses < target) { if (System.Diagnostics.Stopwatch.GetElapsedTime(start).TotalSeconds > 5) throw new InvalidOperationException("Effect native mix deadline."); Thread.Sleep(1); }
     }

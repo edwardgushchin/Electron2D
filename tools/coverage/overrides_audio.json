@@ -1129,6 +1129,31 @@
       "godot": "AudioEffectFilter::property:resonance",
       "electron2d": "property:Electron2D.AudioEffectFilter.Resonance()",
       "reason": "ADR 0047: executable typed filter family through existing FAPO bus chains, finite coherent settings, independent prepared four-stage stereo histories, actual output-rate coefficients, live/preset history retention and concrete Resource/scene-local copying. 72 byte-pinned C++ cases/36864 channel samples verify ordinary PCM; analytical/native tests cover every response, stable edges and zero measured warmed allocation. Physical listening, multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectAmplify",
+      "electron2d": "T:Electron2D.AudioEffectAmplify",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectAmplify::property:volume_db",
+      "electron2d": "property:Electron2D.AudioEffectAmplify.VolumeDB()",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectAmplify::property:volume_linear",
+      "electron2d": "property:Electron2D.AudioEffectAmplify.VolumeLinear()",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioEffectPanner",
+      "electron2d": "T:Electron2D.AudioEffectPanner",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectPanner::property:pan",
+      "electron2d": "property:Electron2D.AudioEffectPanner.Pan()",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -1687,6 +1712,46 @@
     {
       "electron2d": "method:Electron2D.AudioEffectNotchFilter.CreateDuplicateInstance()",
       "reason": "Typed construction, inherited AudioEffect factory dispatch, authoring descriptors and exact concrete Resource copying project the existing frequency-filter configuration/lifecycle under ADRs 0001/0014/0047; transient DSP/native state is not serialized."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectAmplify..ctor()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectPanner..ctor()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectAmplify.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectAmplify.CreateDuplicateInstance()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectAmplify.GetPropertyDescriptors()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectAmplify.OnInstantiate()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPanner.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPanner.CreateDuplicateInstance()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPanner.GetPropertyDescriptors()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectPanner.OnInstantiate()",
+      "reason": "Typed construction, independent DSP factory, stored authoring fields and exact Resource copying project the scalar bus-effect lifecycle under ADRs 0001/0014/0047."
     }
   ],
   "statusGroups": [
@@ -2113,8 +2178,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: finite scalar gain settings and a prepared native stereo gain instance. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectAmplify::property:volume_db",
         "AudioEffectAmplify::property:volume_linear",
@@ -2122,8 +2187,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The generic AudioEffect/AudioEffectInstance/FAPO chain now executes (ADR 0047). Remaining executable slice: typed pan configuration and stereo channel-gain mapping. No absent generic mixer/chain prerequisite remains; implement the concrete resource/kernel and verify it on the existing backend.",
+      "state": "Implemented",
+      "reason": "ADR 0047: executable scalar gain and stereo pan resources in the existing FAudio bus chain; live block-ramped gain, channel fold, typed copies and native PCM/zero-allocation checks. Finite gain bounds and processing clamp retain safe typed PCM; physical listening and other platforms remain unverified.",
       "godot": [
         "AudioEffectPanner::property:pan",
         "class:AudioEffectPanner"

@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -57,7 +57,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AtlasTexture](classes/AtlasTexture.md) | Texture2D | Implemented | 5 |
 | [AudioBusLayout](classes/AudioBusLayout.md) | Resource | Blocked | 0 |
 | [AudioEffect](classes/AudioEffect.md) | Resource | Implemented | 1 |
-| [AudioEffectAmplify](classes/AudioEffectAmplify.md) | AudioEffect | Unimplemented | 2 |
+| [AudioEffectAmplify](classes/AudioEffectAmplify.md) | AudioEffect | Implemented | 2 |
 | [AudioEffectBandLimitFilter](classes/AudioEffectBandLimitFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectBandPassFilter](classes/AudioEffectBandPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectCapture](classes/AudioEffectCapture.md) | AudioEffect | Implemented | 8 |
@@ -78,7 +78,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectLowPassFilter](classes/AudioEffectLowPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectLowShelfFilter](classes/AudioEffectLowShelfFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectNotchFilter](classes/AudioEffectNotchFilter.md) | AudioEffectFilter | Implemented | 0 |
-| [AudioEffectPanner](classes/AudioEffectPanner.md) | AudioEffect | Unimplemented | 1 |
+| [AudioEffectPanner](classes/AudioEffectPanner.md) | AudioEffect | Implemented | 1 |
 | [AudioEffectPhaser](classes/AudioEffectPhaser.md) | AudioEffect | Unimplemented | 5 |
 | [AudioEffectPitchShift](classes/AudioEffectPitchShift.md) | AudioEffect | Unimplemented | 10 |
 | [AudioEffectRecord](classes/AudioEffectRecord.md) | AudioEffect | Unimplemented | 4 |
