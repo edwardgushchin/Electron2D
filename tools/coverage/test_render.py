@@ -310,6 +310,10 @@ def main():
     assert "Electron2D.AudioListener" in listener_rows
     assert all(" | Implemented | " in row for row in listener_rows.splitlines() if row.startswith("| [`"))
     spatial_rows = pages[CLASS_PAGES / "AudioStreamPlayer2D.md"]
+    assert json.loads(ALIASES.read_text())["classes"]["AudioStreamPlayer2D"] == "AudioStreamEmitter"
+    assert "Electron2D.AudioStreamEmitter" in spatial_rows
+    assert "../../classes/AudioStreamEmitter.md" in spatial_rows
+    assert "Electron2D.AudioStreamPlayer2D" not in spatial_rows
     assert " | Partial | " in next(row for row in spatial_rows.splitlines() if row.startswith("| [`class AudioStreamPlayer2D"))
     assert all(" | Implemented | " in next(row for row in spatial_rows.splitlines() if row.startswith(f"| [`property float {name}"))
                for name in ("attenuation", "max_distance", "panning_strength"))

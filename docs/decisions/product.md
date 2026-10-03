@@ -83,7 +83,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-10-01
+Last updated: 2026-10-03
 
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -101,6 +101,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope.
 - Three-component numeric values are allowed for ordinary data and shader uniforms under ADR 0033; their component count does not add a three-dimensional scene domain.
 - The public image-texture resource is `Texture`; `ImageTexture` derives directly from it. All image textures are two-dimensional by product definition, so there is no `Texture2D` suffix or empty dimension-neutral parent. The reference `Texture` and `Texture2D` contracts share one `Texture.md` coverage page. Coverage names for `Texture2DArray`, `Texture2DArrayRD`, and `Texture2DRD` are `TextureArray`, `TextureArrayRD`, and `TextureRD`. Source identities and declarations remain intact inside the comparison; these names do not authorize new runtime types or change implementation states. Shader-language intrinsic names and internal backend identifiers retain their native spelling.
+- The reference `AudioStreamPlayer` remains `AudioStreamPlayer : Node` for playback independent of scene position, including music and UI sounds. `AudioStreamPlayer2D` maps to `AudioStreamEmitter : Entity` for a positioned scene source with distance attenuation, stereo panning and listener/Area routing. Keep both applicable APIs and their distinct inheritance/roles; the dimensional suffix is replaced by the emitter role, with no legacy public type alias. Internal comparison identities remain pinned; [ADR 0047](audio.md#adr-0047) owns playback behavior.
 - The reference `Geometry2D` maps to Electron2D `Geometry`, because the product has no 3D geometry counterpart. Keep `Geometry2D` only as the pinned source identity in internal coverage; the public class page and source use `Geometry`. This naming change preserves the applicable geometry API obligation and does not mark absent methods implemented.
 - The reference `AStar2D` and `AStarGrid2D` map to Electron2D `AStar` and `AStarGrid`. Both algorithms operate only in two dimensions, and their graph/grid roles remain distinct without dimensional suffixes. Keep the pinned names in internal coverage; ADRs 0052 and 0053 own their separate behavior contracts.
 - The reference `GodotInstance` maps to Electron2D `ElectronInstance`. Keep the pinned reference name only in internal design and coverage; implementation and public signatures use `ElectronInstance`. This is an accepted name mapping for the engine-instance role, not an implemented type or a second runtime alias. Its applicable lifecycle API remains an obligation tracked in coverage.

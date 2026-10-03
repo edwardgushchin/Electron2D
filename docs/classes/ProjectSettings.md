@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -200,7 +200,7 @@ Initializes an isolated registry with explicit project and user-data directories
 <a id="audiogeneral2dpanningstrength"></a>
 ### AudioGeneral2DPanningStrength
 
-`audio/general/2d_panning_strength` is a nonnegative finite float, 0.5 by default. Each new [AudioStreamPlayer2D](AudioStreamPlayer2D.md) samples the current effective value during construction; later setting changes do not alter an existing player's panning. Invalid values reject before storage. This typed built-in follows the same project load, feature override and persistence rules as other settings.
+`audio/general/2d_panning_strength` is a nonnegative finite float, 0.5 by default. Each new [AudioStreamEmitter](AudioStreamEmitter.md) samples the current effective value during construction; later setting changes do not alter an existing player's panning. Invalid values reject before storage. This typed built-in follows the same project load, feature override and persistence rules as other settings.
 
 <a id="audiodriverenableinput"></a>
 ### AudioDriverEnableInput

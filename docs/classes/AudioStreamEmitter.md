@@ -1,12 +1,12 @@
-# AudioStreamPlayer2D
+# AudioStreamEmitter
 
 Last updated: 2026-10-03
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
-**Source:** [AudioStreamPlayer2D.cs](../../src/Scene/Audio/AudioStreamPlayer2D.cs)
+**Source:** [AudioStreamEmitter.cs](../../src/Scene/Audio/AudioStreamEmitter.cs)
 
-**Declaration:** `public sealed class AudioStreamPlayer2D : Entity`
+**Declaration:** `public sealed class AudioStreamEmitter : Entity`
 
 **Component:** [Audio playback](../components/audio-playback.md)
 
@@ -18,7 +18,7 @@ Plays borrowed [AudioStream](AudioStream.md) resources through the existing FAud
 
 ```csharp
 using var stream = AudioStreamWAV.LoadFromFile("res://audio/step.wav");
-var player = new AudioStreamPlayer2D { Stream = stream, Position = new Vector2(100, 50), Autoplay = true };
+var player = new AudioStreamEmitter { Stream = stream, Position = new Vector2(100, 50), Autoplay = true };
 window.AddChild(player);
 Engine.Instance.Run(window);
 ```
@@ -29,7 +29,7 @@ The window owns the node; dispose the borrowed stream after the scene finishes.
 
 | Member | Default | Contract |
 | --- | --- | --- |
-| `public AudioStreamPlayer2D()` | — | Creates one private playback child and samples the global panning setting. |
+| `public AudioStreamEmitter()` | — | Creates one private playback child and samples the global panning setting. |
 | `public AudioStream? Stream { get; set; }` | null | Borrows a stream; replacement stops prepared voices. |
 | `public bool Autoplay { get; set; }` | false | Starts on the first fixed scene step after entry. |
 | `public bool StreamPaused { get; set; }` | false | Pauses or resumes existing voices. |

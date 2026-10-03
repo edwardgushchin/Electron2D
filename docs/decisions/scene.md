@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -49,7 +49,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Preserve scene inheritance with Node and Entity names
 
-Last updated: 2026-09-24
+Last updated: 2026-10-03
 
 - Status: Accepted by the user on 2026-09-23.
 - Scope: Scene inheritance, type naming, and preservation of the corresponding API and responsibilities.
@@ -68,6 +68,8 @@ Last updated: 2026-09-24
 | `Path2D : Node2D` | `Path : Entity` | Borrowed spatial curve and updates to attached direct followers. |
 | `PathFollow2D : Node2D` | `PathFollow : Entity` | Distance/ratio sampling, offsets and tangent rotation for descendant nodes. |
 | `Camera2D : Node2D` | `Camera : Entity` | Viewport camera selection and spatial tracking, including zoom, limits, drag margins and smoothing. |
+| `AudioStreamPlayer : Node` | `AudioStreamPlayer : Node` | Stream playback independent of scene position, including music and UI sounds. |
+| `AudioStreamPlayer2D : Node2D` | `AudioStreamEmitter : Entity` | Positioned scene source with distance attenuation, stereo panning and viewport listener/Area routing under [ADR 0047](audio.md#adr-0047). |
 | `CollisionShape2D : Node2D` | `CollisionShape : Entity` | Borrowed collision-shape placement as a direct physics-body child; first executable profile under ADR 0054. |
 | `CollisionPolygon2D : Node2D` | `CollisionPolygon : Entity` | Owned solid or hollow polygon placement as a direct physics-body or Area child under ADR 0066. |
 | `RayCast2D : Node2D` | `RayCast : Entity` | Spatial ray node with cached fixed-physics query state over the shared World2D under ADR 0063. |

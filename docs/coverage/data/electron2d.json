@@ -834,6 +834,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioStreamEmitter",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "AudioStreamEmitter",
+    "signature": "public sealed class Electron2D.AudioStreamEmitter",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioStreamGenerator",
     "kind": "type",
     "declaringType": "Electron2D.AudioStreamGenerator",
@@ -999,21 +1014,6 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.AudioStreamPlayer2D",
-    "kind": "type",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "AudioStreamPlayer2D",
-    "signature": "public sealed class Electron2D.AudioStreamPlayer2D",
-    "visibility": "public",
-    "baseType": "Electron2D.Entity",
-    "interfaces": [
-      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -8021,6 +8021,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.AudioStreamEmitter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": ".ctor",
+    "signature": "public AudioStreamEmitter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.AudioStreamGenerator..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.AudioStreamGenerator",
@@ -8104,19 +8117,6 @@
     "declaringType": "Electron2D.AudioStreamPlayer",
     "name": ".ctor",
     "signature": "public AudioStreamPlayer()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "constructor:Electron2D.AudioStreamPlayer2D..ctor()",
-    "kind": "constructor",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": ".ctor",
-    "signature": "public AudioStreamPlayer2D()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -23702,9 +23702,9 @@
     "value": null
   },
   {
-    "id": "event:Electron2D.AudioStreamPlayer.Finished()",
+    "id": "event:Electron2D.AudioStreamEmitter.Finished()",
     "kind": "event",
-    "declaringType": "Electron2D.AudioStreamPlayer",
+    "declaringType": "Electron2D.AudioStreamEmitter",
     "name": "Finished",
     "signature": "public event System.Action Finished",
     "visibility": "public",
@@ -23715,9 +23715,9 @@
     "value": null
   },
   {
-    "id": "event:Electron2D.AudioStreamPlayer2D.Finished()",
+    "id": "event:Electron2D.AudioStreamPlayer.Finished()",
     "kind": "event",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
+    "declaringType": "Electron2D.AudioStreamPlayer",
     "name": "Finished",
     "signature": "public event System.Action Finished",
     "visibility": "public",
@@ -31339,6 +31339,216 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamEmitter.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.GetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "GetParameter",
+    "signature": "public TValue GetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.GetPlaybackPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "GetPlaybackPosition",
+    "signature": "public System.Double GetPlaybackPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.GetStreamPlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "GetStreamPlayback",
+    "signature": "public Electron2D.AudioStreamPlayback GetStreamPlayback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.HasStreamPlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "HasStreamPlayback",
+    "signature": "public System.Boolean HasStreamPlayback()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.IsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "IsPlaying",
+    "signature": "public System.Boolean IsPlaying()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.Play(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Play",
+    "signature": "public System.Void Play(System.Double fromPosition = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromPosition",
+        "type": "System.Double",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.Seek(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Seek",
+    "signature": "public System.Void Seek(System.Double toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.SetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E,TValue)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "SetParameter",
+    "signature": "public System.Void SetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter, TValue value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parameter",
+        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamEmitter.Stop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Stop",
+    "signature": "public System.Void Stop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamGenerator.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamGenerator",
@@ -32843,216 +33053,6 @@
     "name": "ValidateMutation",
     "signature": "protected override System.Void ValidateMutation()",
     "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.CreateSceneInstanceFactory()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "CreateSceneInstanceFactory",
-    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Func\u003CElectron2D.Node\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.Dispose(System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Dispose",
-    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "disposing",
-        "type": "System.Boolean",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.GetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "GetParameter",
-    "signature": "public TValue GetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "parameter",
-        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
-        "default": null
-      }
-    ],
-    "returnType": "TValue",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.GetPlaybackPosition()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "GetPlaybackPosition",
-    "signature": "public System.Double GetPlaybackPosition()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Double",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.GetPropertyDescriptors()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "GetPropertyDescriptors",
-    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.GetStreamPlayback()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "GetStreamPlayback",
-    "signature": "public Electron2D.AudioStreamPlayback GetStreamPlayback()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AudioStreamPlayback",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.HasStreamPlayback()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "HasStreamPlayback",
-    "signature": "public System.Boolean HasStreamPlayback()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.IsPlaying()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "IsPlaying",
-    "signature": "public System.Boolean IsPlaying()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.OnNotification(System.Int32)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "OnNotification",
-    "signature": "protected override System.Void OnNotification(System.Int32 what)",
-    "visibility": "protected",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "what",
-        "type": "System.Int32",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.Play(System.Double)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Play",
-    "signature": "public System.Void Play(System.Double fromPosition = 0)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "fromPosition",
-        "type": "System.Double",
-        "default": "0"
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.Seek(System.Double)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Seek",
-    "signature": "public System.Void Seek(System.Double toPosition)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "toPosition",
-        "type": "System.Double",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.SetParameter\u00602(PropertyDescriptor\u003CTPlayback, TValue\u003E,TValue)",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "SetParameter",
-    "signature": "public System.Void SetParameter\u003CTPlayback, TValue\u003E(PropertyDescriptor\u003CTPlayback, TValue\u003E parameter, TValue value)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "parameter",
-        "type": "PropertyDescriptor\u003CTPlayback, TValue\u003E",
-        "default": null
-      },
-      {
-        "name": "value",
-        "type": "TValue",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AudioStreamPlayer2D.Stop()",
-    "kind": "method",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Stop",
-    "signature": "public System.Void Stop()",
-    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -90715,6 +90715,188 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AudioStreamEmitter.AreaMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "AreaMask",
+    "signature": "public System.UInt32 AreaMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.Attenuation()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Attenuation",
+    "signature": "public System.Single Attenuation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.Autoplay()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Autoplay",
+    "signature": "public System.Boolean Autoplay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.Bus()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Bus",
+    "signature": "public System.String Bus { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.MaxDistance()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "MaxDistance",
+    "signature": "public System.Single MaxDistance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.MaxPolyphony()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "MaxPolyphony",
+    "signature": "public System.Int32 MaxPolyphony { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.PanningStrength()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "PanningStrength",
+    "signature": "public System.Single PanningStrength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.PitchScale()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "PitchScale",
+    "signature": "public System.Single PitchScale { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.PlaybackType()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "PlaybackType",
+    "signature": "public Electron2D.AudioServer.PlaybackType PlaybackType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioServer.PlaybackType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.Playing()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Playing",
+    "signature": "public System.Boolean Playing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.Stream()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "Stream",
+    "signature": "public Electron2D.AudioStream Stream { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStream",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.StreamPaused()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "StreamPaused",
+    "signature": "public System.Boolean StreamPaused { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.VolumeDB()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "VolumeDB",
+    "signature": "public System.Single VolumeDB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamEmitter.VolumeLinear()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamEmitter",
+    "name": "VolumeLinear",
+    "signature": "public System.Single VolumeLinear { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AudioStreamGenerator.BufferLength()",
     "kind": "property",
     "declaringType": "Electron2D.AudioStreamGenerator",
@@ -91082,188 +91264,6 @@
     "id": "property:Electron2D.AudioStreamPlayer.VolumeLinear()",
     "kind": "property",
     "declaringType": "Electron2D.AudioStreamPlayer",
-    "name": "VolumeLinear",
-    "signature": "public System.Single VolumeLinear { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.AreaMask()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "AreaMask",
-    "signature": "public System.UInt32 AreaMask { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.UInt32",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.Attenuation()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Attenuation",
-    "signature": "public System.Single Attenuation { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.Autoplay()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Autoplay",
-    "signature": "public System.Boolean Autoplay { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.Bus()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Bus",
-    "signature": "public System.String Bus { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.MaxDistance()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "MaxDistance",
-    "signature": "public System.Single MaxDistance { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.MaxPolyphony()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "MaxPolyphony",
-    "signature": "public System.Int32 MaxPolyphony { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Int32",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.PanningStrength()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "PanningStrength",
-    "signature": "public System.Single PanningStrength { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.PitchScale()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "PitchScale",
-    "signature": "public System.Single PitchScale { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.PlaybackType()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "PlaybackType",
-    "signature": "public Electron2D.AudioServer.PlaybackType PlaybackType { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AudioServer.PlaybackType",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.Playing()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Playing",
-    "signature": "public System.Boolean Playing { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.Stream()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "Stream",
-    "signature": "public Electron2D.AudioStream Stream { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AudioStream",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.StreamPaused()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "StreamPaused",
-    "signature": "public System.Boolean StreamPaused { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.VolumeDB()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
-    "name": "VolumeDB",
-    "signature": "public System.Single VolumeDB { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Single",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.AudioStreamPlayer2D.VolumeLinear()",
-    "kind": "property",
-    "declaringType": "Electron2D.AudioStreamPlayer2D",
     "name": "VolumeLinear",
     "signature": "public System.Single VolumeLinear { get; set; }",
     "visibility": "public",

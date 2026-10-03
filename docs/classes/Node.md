@@ -1,10 +1,10 @@
 # Node
 
-Last updated: 2026-09-30
+Last updated: 2026-10-03
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
+**Inherited By:** [AudioStreamPlayer](AudioStreamPlayer.md), [CanvasItem](CanvasItem.md), [CanvasLayer](CanvasLayer.md), [Timer](Timer.md), [Viewport](Viewport.md)
 
 - **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`

@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Inherits:** [Node](Node.md)
 
@@ -40,7 +40,7 @@ The root viewport owns keyboard focus for its controls. `GetGUIFocusOwner()` ret
 | `public bool AudioListenerEnable2D { get; set; }` | Enables source audibility from this viewport; false while detached, automatically true for a `SceneTree` root. Stored by `PackedScene`. |
 | `public AudioListener? GetAudioListener2D()` | Returns the borrowed current [AudioListener](AudioListener.md), or null for the client-center listening point. |
 
-A spatial player's canvas transform maps its position into the viewport. An explicit listener supplies its scene position and rotation; otherwise the client center supplies the origin. Disabling 2D listening silences spatial players in this viewport. Both operations enforce owner-thread and disposed checks; mutation also rejects scene capture. Only the root Window viewport is currently supported. [AudioStreamPlayer2D](AudioStreamPlayer2D.md) describes attenuation, panning and Area routing.
+A spatial player's canvas transform maps its position into the viewport. An explicit listener supplies its scene position and rotation; otherwise the client center supplies the origin. Disabling 2D listening silences spatial players in this viewport. Both operations enforce owner-thread and disposed checks; mutation also rejects scene capture. Only the root Window viewport is currently supported. [AudioStreamEmitter](AudioStreamEmitter.md) describes attenuation, panning and Area routing.
 
 ## Canvas transforms and pointer coordinates
 

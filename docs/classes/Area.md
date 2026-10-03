@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -66,7 +66,7 @@ The inherited [CollisionObject.GetRID](CollisionObject.md#getrid) identifies thi
 <a id="audiobusname"></a>
 ### `AudioBusOverride` and `AudioBusName`
 
-Both are stored by `PackedScene`. When override is true, a shaped area containing an [AudioStreamPlayer2D](AudioStreamPlayer2D.md) source position may route that source to `AudioBusName`, provided its collision layer intersects the player's `AreaMask`. This is a live point query at initial Play and each fixed step. Unknown bus names resolve to Master. `Monitoring`, `Monitorable`, the area's collision mask and its physical field priority do not select the audio route. The name cannot be null. Attached access requires the scene owner; mutation during scene capture and access after disposal reject.
+Both are stored by `PackedScene`. When override is true, a shaped area containing an [AudioStreamEmitter](AudioStreamEmitter.md) source position may route that source to `AudioBusName`, provided its collision layer intersects the player's `AreaMask`. This is a live point query at initial Play and each fixed step. Unknown bus names resolve to Master. `Monitoring`, `Monitorable`, the area's collision mask and its physical field priority do not select the audio route. The name cannot be null. Attached access requires the scene owner; mutation during scene capture and access after disposal reject.
 
 
 <a id="monitoring"></a>

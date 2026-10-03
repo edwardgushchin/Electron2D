@@ -1,9 +1,10 @@
 namespace Electron2D;
 
 /// <summary>Plays borrowed streams with scene-position attenuation and stereo panning.</summary>
-/// <remarks>A private internal child owns playback and native voices. This spatial node borrows its stream and
+/// <remarks>A private internal <see cref="AudioStreamPlayer"/> child owns playback and native voices.
+/// This spatial node borrows its stream and
 /// uses its viewport's listener and scene areas for routing. Current root viewports listen from their client center unless an AudioListener is selected.</remarks>
-public sealed class AudioStreamPlayer2D : Entity
+public sealed class AudioStreamEmitter : Entity
 {
     private readonly AudioStreamPlayer _player = new();
     private string _bus = "Master";
@@ -13,7 +14,7 @@ public sealed class AudioStreamPlayer2D : Entity
     private readonly float _globalPanningStrength;
 
     /// <summary>Creates a detached spatial player with Master routing and one voice.</summary>
-    public AudioStreamPlayer2D()
+    public AudioStreamEmitter()
     {
         _globalPanningStrength = ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneral2DPanningStrength);
         _player.Name = "SpatialPlayback";
@@ -190,18 +191,18 @@ public sealed class AudioStreamPlayer2D : Entity
 
     private static readonly PropertyDescriptor[] SpatialProperties =
     [
-        new PropertyDescriptor<AudioStreamPlayer2D, AudioStream?>(nameof(Stream), p => p.Stream, (p, v) => p.Stream = v, _ => null, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, bool>(nameof(Autoplay), p => p.Autoplay, (p, v) => p.Autoplay = v, _ => false, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, bool>(nameof(StreamPaused), p => p.StreamPaused, (p, v) => p.StreamPaused = v, _ => false, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, string>(nameof(Bus), p => p.Bus, (p, v) => p.Bus = v, _ => "Master", stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, float>(nameof(VolumeDB), p => p.VolumeDB, (p, v) => p.VolumeDB = v, _ => 0, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, float>(nameof(PitchScale), p => p.PitchScale, (p, v) => p.PitchScale = v, _ => 1, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, int>(nameof(MaxPolyphony), p => p.MaxPolyphony, (p, v) => p.MaxPolyphony = v, _ => 1, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, AudioServer.PlaybackType>(nameof(PlaybackType), p => p.PlaybackType, (p, v) => p.PlaybackType = v, _ => AudioServer.PlaybackType.Default, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, float>(nameof(MaxDistance), p => p.MaxDistance, (p, v) => p.MaxDistance = v, _ => 2000, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, float>(nameof(Attenuation), p => p.Attenuation, (p, v) => p.Attenuation = v, _ => 1, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, float>(nameof(PanningStrength), p => p.PanningStrength, (p, v) => p.PanningStrength = v, _ => 1, stored: true),
-        new PropertyDescriptor<AudioStreamPlayer2D, uint>(nameof(AreaMask), p => p.AreaMask, (p, v) => p.AreaMask = v, _ => 0, stored: true)
+        new PropertyDescriptor<AudioStreamEmitter, AudioStream?>(nameof(Stream), p => p.Stream, (p, v) => p.Stream = v, _ => null, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, bool>(nameof(Autoplay), p => p.Autoplay, (p, v) => p.Autoplay = v, _ => false, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, bool>(nameof(StreamPaused), p => p.StreamPaused, (p, v) => p.StreamPaused = v, _ => false, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, string>(nameof(Bus), p => p.Bus, (p, v) => p.Bus = v, _ => "Master", stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, float>(nameof(VolumeDB), p => p.VolumeDB, (p, v) => p.VolumeDB = v, _ => 0, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, float>(nameof(PitchScale), p => p.PitchScale, (p, v) => p.PitchScale = v, _ => 1, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, int>(nameof(MaxPolyphony), p => p.MaxPolyphony, (p, v) => p.MaxPolyphony = v, _ => 1, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, AudioServer.PlaybackType>(nameof(PlaybackType), p => p.PlaybackType, (p, v) => p.PlaybackType = v, _ => AudioServer.PlaybackType.Default, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, float>(nameof(MaxDistance), p => p.MaxDistance, (p, v) => p.MaxDistance = v, _ => 2000, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, float>(nameof(Attenuation), p => p.Attenuation, (p, v) => p.Attenuation = v, _ => 1, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, float>(nameof(PanningStrength), p => p.PanningStrength, (p, v) => p.PanningStrength = v, _ => 1, stored: true),
+        new PropertyDescriptor<AudioStreamEmitter, uint>(nameof(AreaMask), p => p.AreaMask, (p, v) => p.AreaMask = v, _ => 0, stored: true)
     ];
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
@@ -209,10 +210,10 @@ public sealed class AudioStreamPlayer2D : Entity
         var properties = base.GetPropertyDescriptors().Concat(SpatialProperties);
         return Stream?.GetParameterList().Contains(AudioStreamPlayback.LoopingParameter) == true ? properties.Append(LoopParameterProperty) : properties;
     }
-    private static readonly PropertyDescriptor<AudioStreamPlayer2D, bool?> LoopParameterProperty = new("Parameters/LoopingOverride", p => p.GetParameter(AudioStreamPlayback.LoopingParameter), (p, v) => p.SetParameter(AudioStreamPlayback.LoopingParameter, v), _ => null, stored: true);
+    private static readonly PropertyDescriptor<AudioStreamEmitter, bool?> LoopParameterProperty = new("Parameters/LoopingOverride", p => p.GetParameter(AudioStreamPlayback.LoopingParameter), (p, v) => p.SetParameter(AudioStreamPlayback.LoopingParameter, v), _ => null, stored: true);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateSpatialPlayer;
-    private static Node CreateSpatialPlayer() => new AudioStreamPlayer2D();
+    private static Node CreateSpatialPlayer() => new AudioStreamEmitter();
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

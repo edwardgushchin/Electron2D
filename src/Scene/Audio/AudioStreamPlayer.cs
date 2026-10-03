@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Node configuration and events require the scene owner thread. Stream mixing runs on the native audio
 /// thread through bounded prepared buffers. Stop and pause prepare their final PCM block on the owner thread;
 /// custom mixing callbacks must support both serialized paths and cannot reenter audio configuration.
-/// The node owns its playbacks/voices and never disposes its stream.</remarks>
+/// The node owns its playbacks/voices and never disposes its stream. Use <see cref="AudioStreamEmitter"/>
+/// for a positioned scene source with attenuation, stereo panning and listener routing.</remarks>
 public class AudioStreamPlayer : Node
 {
     /// <summary>Selects where non-spatial stereo audio is routed.</summary>

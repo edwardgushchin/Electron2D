@@ -117,7 +117,7 @@ internal static class AudioTransitionTests
             {
                 using var stream = new ProbeStream(); using var capture = new AudioEffectCapture { BufferLength = .2f };
                 var window = new Window { Size = new(160, 96) };
-                var player = new AudioStreamPlayer2D { Stream = stream, Autoplay = true, Position = new(80, 48) };
+                var player = new AudioStreamEmitter { Stream = stream, Autoplay = true, Position = new(80, 48) };
                 var scenario = new HostScenario(player, capture); window.AddChild(player); window.AddChild(scenario);
                 var server = AudioServer.Instance; server.AddBusEffect(0, capture);
                 try
@@ -130,7 +130,7 @@ internal static class AudioTransitionTests
         }
         finally { settings.Set(ProjectSettings.RenderingMethod, method); }
     }
-    private sealed class HostScenario(AudioStreamPlayer2D player, AudioEffectCapture capture) : Node
+    private sealed class HostScenario(AudioStreamEmitter player, AudioEffectCapture capture) : Node
     {
         internal bool Completed; private int _phase; private double _elapsed; private bool _ramp;
         private double _paused;

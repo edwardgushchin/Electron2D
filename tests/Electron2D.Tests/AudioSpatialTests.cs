@@ -11,6 +11,7 @@ internal static class AudioSpatialTests
 
     private static void Resources()
     {
+        Check(typeof(AudioStreamPlayer).BaseType == typeof(Node) && typeof(AudioStreamEmitter).BaseType == typeof(Entity), "Player/emitter retain neutral and spatial inheritance roles.");
         using var listener = new AudioListener(); Check(!listener.IsCurrent(), "Detached listener default.");
         listener.MakeCurrent(); Check(listener.Current, "Detached listener request."); listener.ClearCurrent(); Check(!listener.Current, "Detached clear.");
         using var area = new Area(); Check(!area.AudioBusOverride && area.AudioBusName == "Master", "Area bus defaults.");
@@ -19,7 +20,7 @@ internal static class AudioSpatialTests
         Check(settings.Get(ProjectSettings.AudioGeneral2DPanningStrength) == .5f, "Spatial project setting default.");
         Reject<ArgumentException>(() => settings.Set(ProjectSettings.AudioGeneral2DPanningStrength, float.NaN));
         Reject<ArgumentOutOfRangeException>(() => settings.Set(ProjectSettings.AudioGeneral2DPanningStrength, -1));
-        using var player = new AudioStreamPlayer2D();
+        using var player = new AudioStreamEmitter();
         Check(player.GetChildCount() == 0 && player.GetChildCount(includeInternal: true) == 1, "Prepared playback is an internal child.");
         Check(player.MaxDistance == 2000 && player.Attenuation == 1 && player.PanningStrength == 1 && player.AreaMask == 0 && player.Bus == "Master", "Spatial defaults.");
         Reject<ArgumentOutOfRangeException>(() => player.MaxDistance = 0); Reject<ArgumentOutOfRangeException>(() => player.Attenuation = float.NaN);
@@ -30,7 +31,7 @@ internal static class AudioSpatialTests
         listener.Owner = root; area.Owner = root; player.Owner = root;
         using var scene = new PackedScene(); scene.Pack(root);
         using var copied = (Window)scene.Instantiate();
-        var cloned = copied.GetChildren().OfType<AudioStreamPlayer2D>().Single(); var clonedArea = copied.GetChildren().OfType<Area>().Single(); var clonedListener = copied.GetChildren().OfType<AudioListener>().Single();
+        var cloned = copied.GetChildren().OfType<AudioStreamEmitter>().Single(); var clonedArea = copied.GetChildren().OfType<Area>().Single(); var clonedListener = copied.GetChildren().OfType<AudioListener>().Single();
         Check(cloned.MaxDistance == 300 && cloned.Attenuation == 2 && cloned.PanningStrength == 1.5f && cloned.AreaMask == 7 && clonedArea.AudioBusOverride && clonedArea.AudioBusName == "Effects" && !clonedListener.Current, "Scene state and exact public children.");
         Check(cloned.GetChildCount() == 0 && cloned.GetChildCount(includeInternal: true) == 1, "Packed player reconstructs one internal playback child.");
     }
@@ -41,7 +42,7 @@ internal static class AudioSpatialTests
         var settings = ProjectSettings.Instance; var previous = settings.Get(ProjectSettings.RenderingMethod); var fps = Engine.Instance.MaxFPS;
         settings.Set(ProjectSettings.RenderingMethod, Environment.GetEnvironmentVariable("ELECTRON2D_AUDIO_RENDERER") == "compatibility" ? "compatibility" : "gpu"); Engine.Instance.MaxFPS = 60;
         using var stream = AudioEffectTests.Constant(); using var shape = new RectangleShape { Size = new(40, 40) }; using var capture = new AudioEffectCapture { BufferLength = .2f };
-        var window = new Window { Size = new(160, 96) }; var player = new AudioStreamPlayer2D { Stream = stream, Position = new(80, 48) }; window.AddChild(player);
+        var window = new Window { Size = new(160, 96) }; var player = new AudioStreamEmitter { Stream = stream, Position = new(80, 48) }; window.AddChild(player);
         var listener = new AudioListener { Position = new(160, 48) }; window.AddChild(listener);
         var area = new Area { Position = new(160, 48), AudioBusName = "Effects", CollisionLayer = 1 }; area.AddChild(new CollisionShape { Shape = shape }); window.AddChild(area);
         var scenario = new HostScenario(window, player, listener, area, capture); window.AddChild(scenario);
@@ -53,10 +54,10 @@ internal static class AudioSpatialTests
         finally { if (!window.IsDisposed) window.Dispose(); server.CloseNative(); server.BusCount = 1; Engine.Instance.MaxFPS = fps; settings.Set(ProjectSettings.RenderingMethod, previous); }
     }
 
-    private sealed class HostScenario(Window window, AudioStreamPlayer2D player, AudioListener listener, Area area, AudioEffectCapture capture) : Node
+    private sealed class HostScenario(Window window, AudioStreamEmitter player, AudioListener listener, Area area, AudioEffectCapture capture) : Node
     {
         internal bool Completed;
-        private AudioStreamPlayer2D? _autoplay;
+        private AudioStreamEmitter? _autoplay;
         private int _phase, _frames;
         protected override void OnReady()
         {
@@ -78,6 +79,9 @@ internal static class AudioSpatialTests
                     player.Attenuation = 0; player.Position = listener.Position;
                     break;
                 case 1:
+                    var edgeSize = window.GetVisibleRect().Size;
+                    player.Position = listener.Position = area.Position = new(edgeSize.X, edgeSize.Y * .5f);
+                    player.RefreshSpatial(queryArea: true);
                     AudioEffectTests.CheckOutput(native, new(.075f, -.1875f));
                     listener.MakeCurrent(); Check(ReferenceEquals(window.GetAudioListener2D(), listener), "Current explicit listener owns root viewport.");
                     break;
@@ -113,10 +117,12 @@ internal static class AudioSpatialTests
                     player.Stop(); listener.ClearCurrent(); Check(window.GetAudioListener2D() is null, "Explicit listener release.");
                     listener.MakeCurrent(); window.RemoveChild(listener); Check(listener.Current, "Current request survives scene exit.");
                     window.AddChild(listener); Check(ReferenceEquals(window.GetAudioListener2D(), listener), "Current request restores on reentry."); listener.ClearCurrent();
-                    _autoplay = new AudioStreamPlayer2D { Name = "AutoplaySpatial", Stream = player.Stream, Autoplay = true, Position = window.GetVisibleRect().Size * .5f }; window.AddChild(_autoplay);
+                    _autoplay = new AudioStreamEmitter { Name = "AutoplaySpatial", Stream = player.Stream, Autoplay = true, Position = window.GetVisibleRect().Size * .5f }; window.AddChild(_autoplay);
                     break;
                 case 6:
-                    Check(_autoplay!.IsPlaying(), "Spatial autoplay begins on the first fixed step.");
+                    _autoplay!.Position = window.GetVisibleRect().Size * .5f;
+                    _autoplay.RefreshSpatial(queryArea: true);
+                    Check(_autoplay.IsPlaying(), "Spatial autoplay begins on the first fixed step.");
                     AudioEffectTests.CheckOutput(native, new(.1f, -.15f));
                     window.AudioListenerEnable2D = false;
                     break;
@@ -125,6 +131,8 @@ internal static class AudioSpatialTests
                     window.AudioListenerEnable2D = true;
                     break;
                 case 8:
+                    _autoplay!.Position = window.GetVisibleRect().Size * .5f;
+                    _autoplay.RefreshSpatial(queryArea: true);
                     AudioEffectTests.CheckOutput(native, new(.1f, -.15f));
                     _autoplay!.Stop(); Completed = true; Tree!.Quit();
                     break;

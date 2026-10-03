@@ -1,6 +1,6 @@
 # Scene domain
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Responsibility
 
@@ -154,4 +154,4 @@ Root viewport canvas/final transforms are connected to retained rendering, scene
 
 [Canvas animation intervals and rectangle geometry](../components/canvas-rendering.md#animation-intervals-and-rectangles) execute in the retained command path. The render clock follows captured scaled process steps and the active wrap setting; the same clock feeds the optional GPU fragment [TIME built-in](../components/shader-materials.md#render-time).
 
-The [audio playback component](../components/audio-playback.md) supplies AudioStreamPlayer : Node with runtime autoplay, polyphony, owner-frame completion and retained cursor pause on tree exit. AudioStreamPlayer2D : Entity adds viewport listener selection, position-based gain/pan and Area bus routing. Native output belongs to the audio server and closes during engine teardown; PackedScene retains the borrowed stream and typed player configuration.
+The [audio playback component](../components/audio-playback.md) supplies AudioStreamPlayer : Node with runtime autoplay, polyphony, owner-frame completion and retained cursor pause on tree exit. AudioStreamEmitter : Entity adds viewport listener selection, position-based gain/pan and Area bus routing. Native output belongs to the audio server and closes during engine teardown; PackedScene retains the borrowed stream and typed player configuration.

@@ -113,3 +113,8 @@ Player transitions now execute with 64 stereo lookahead frames, full initial att
 `Play` preserves attack after the initial silent lookahead. `VolumeDB` and `VolumeLinear` edits reach the new gain at the following block boundary. `StreamPaused = true` can advance one source block synchronously before its cursor freezes; repeated true is idempotent. `Stop` immediately makes IsPlaying/HasStreamPlayback false and position zero, while one copied fading block may still be audible. It invokes source Stop once and never emits Finished. `Seek` leaves a paused player unchanged. Destroying the player/stream storage discards transient PCM. An unrepresentable VolumeDB gain throws ArgumentOutOfRangeException before stored mutation; final-block mixing and source-stop failures are collected while still closing logical playback.
 
 Reducing polyphony at the next Play transfers removed slots' copied outgoing fades into a retained slot before disposal. Failed disposal still removes each dead slot and reports collected cleanup errors, so a later Play can recover while the newest voice remains owned. Pause notifications likewise attempt every active voice after individual final-block failures. AudioTransitionTests checks retained tail PCM and failed-trim retry.
+
+
+## Playback role
+
+AudioStreamPlayer inherits Node and plays streams independently of scene position, including music and UI sounds. Use [AudioStreamEmitter](AudioStreamEmitter.md) for a positioned scene source with distance attenuation, stereo panning and listener/Area routing. The emitter inherits Entity and reuses this player through a private child; their public responsibilities and APIs stay distinct under [ADR 0047](../decisions/audio.md#adr-0047).
