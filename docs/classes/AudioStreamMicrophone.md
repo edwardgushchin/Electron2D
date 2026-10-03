@@ -1,6 +1,6 @@
 # AudioStreamMicrophone
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Source:** [AudioStreamMicrophone.cs](../../src/Scene/Resources/AudioStreamMicrophone.cs). **Declaration:** `public sealed class AudioStreamMicrophone : AudioStream`. **Inherits:** [AudioStream](AudioStream.md). **Inherited By:** —.
 
@@ -72,3 +72,5 @@ The base copy session handles inherited metadata; this resource has no custom st
 ## Verification and limits
 
 [AudioInputTests](../../tests/Electron2D.Tests/AudioInputTests.cs) checks resources, copies, disabled/failed activation, native SDL conversion/ring behavior, independent cursors, priming, underrun, global pause, multiple-request ownership, disposal, failed native pause recovery, switching, concurrency and native FAudio output. Dummy recording proves callback execution and injected PCM proves native conversion/mixing; neither proves physical microphone quality, OS privacy permission flows or listening. Public Window hosts execute on Linux Wayland GPU/compatibility. See [input flow and measured limits](../components/audio-playback.md#recording-input) and [ADR 0047](../decisions/audio.md#adr-0047). Inherited stream capabilities retain their own coverage dependencies.
+
+Its internal playback advertises the existing owner-thread requirement to synchronized/randomizer containers. Those factories/controls/disposal preflight that affinity so an active recording request cannot be lost through off-owner wrapper cleanup. The microphone's own owner/activation/capture behavior is unchanged.

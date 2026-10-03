@@ -1,6 +1,6 @@
 # AudioStreamRandomizer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class AudioStreamRandomizer : AudioStream` · **Source:** [AudioStreamRandomizer.cs](../../src/Scene/Resources/AudioStreamRandomizer.cs).
 
@@ -14,7 +14,7 @@ GetLength is zero before the first choice, then queries the last selected resour
 
 The pool owns its immutable entry array; children are borrowed. A factory-created wrapper owns its selected child playback and borrows the randomizer. Pool disposal clears references and invalidates consuming wrappers without disposing child resources. Wrapper disposal attempts child cleanup and base cleanup even after a throwing child callback. Stop remains available after parent disposal. Each cursor requires caller coordination; native mixing/control is synchronized by the existing audio gate.
 
-A shared authoring gate makes pool edits and cycle checks atomic. Snapshots are immutable and callbacks execute outside that gate. Direct/transitive randomizer graph cycles reject before mutation; per-thread operation guards also reject recursive custom callbacks, historical duration cycles and nesting beyond 256 operations. Authoring, playback construction, copying and property discovery allocate; warmed successful mix and metadata queries reuse prepared state. Random draws use the standard shared random source; no new seed API is introduced.
+A shared authoring gate makes pool edits and cycle checks atomic. Snapshots are immutable and callbacks execute outside that gate. Direct/transitive mixed composite graph cycles reject before mutation; per-thread operation guards also reject recursive custom callbacks, historical duration cycles and nesting beyond 256 operations. Authoring, playback construction, copying and property discovery allocate; warmed successful mix and metadata queries reuse prepared state. Random draws use the standard shared random source; no new seed API is introduced.
 
 ## Example
 
@@ -347,3 +347,5 @@ Duplicate copies pool containers/configuration and starts independent empty hist
 [AudioRandomizerHostTests](../../tests/Electron2D.Tests/AudioRandomizerHostTests.cs) uses public Engine.Run/Window/Autoplay/Stop/Play and verifies two sequential clean host runs for each Linux Wayland GPU/compatibility renderer. Native callback measurement does not cover all driver/OS allocations. Physical listening, other platforms and broad workload performance remain unverified.
 
 [ADR 0047](../decisions/audio.md#adr-0047), [Resource lifetime](../decisions/resources.md#adr-0014), [audio component](../components/audio-playback.md) and [own coverage](../coverage/classes/AudioStreamRandomizer.md) define the current boundaries.
+
+Mixed synchronized/randomizer graphs now use the same authoring/callback validation. Microphone selection preflights the audio owner needed by child cleanup before invoking that factory; the wrapper propagates that affinity and validates disposal before consuming its own state. This prevents a wrapper from losing an active owner-bound child after an off-owner Dispose refusal.

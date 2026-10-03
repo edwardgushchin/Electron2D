@@ -5,6 +5,47 @@ namespace Electron2D;
 /// thread; custom streams must keep their repeated processing allocation-free and synchronize mutable data.</remarks>
 public abstract class AudioStream : Resource
 {
+    // ponytail: one gate serializes composite authoring and cycle checks; partition only after measured contention.
+    internal static readonly object GraphGate = new();
+    [ThreadStatic] private static List<(AudioStream Stream, int Operation)>? _callStack;
+    internal void EnterCall(int operation)
+    {
+        var stack = _callStack ??= [];
+        if (stack.Count >= 256) throw new InvalidOperationException("Audio resource nesting exceeds 256 operations.");
+        foreach (var entry in stack) if (ReferenceEquals(entry.Stream, this) && entry.Operation == operation) throw new InvalidOperationException("Audio resource callbacks are recursive.");
+        stack.Add((this, operation));
+    }
+    internal static void ExitCall() { var stack = _callStack!; stack.RemoveAt(stack.Count - 1); }
+    internal virtual void AppendChildren(Stack<AudioStream> pending) { }
+    internal virtual void AppendPlaybackChildren(Stack<AudioStream> pending) => AppendChildren(pending);
+    internal void EnsurePlaybackOwner()
+    {
+        if (this is not (AudioStreamMicrophone or AudioStreamRandomizer or AudioStreamSynchronized)) return;
+        lock (GraphGate)
+        {
+            var pending = new Stack<AudioStream>(); var visited = new HashSet<AudioStream>(ReferenceEqualityComparer.Instance); pending.Push(this);
+            while (pending.TryPop(out var current))
+            {
+                if (current is AudioStreamMicrophone) { AudioServer.Instance.Check(); return; }
+                if (visited.Add(current)) current.AppendPlaybackChildren(pending);
+            }
+        }
+    }
+    internal void ValidateChild(AudioStream? stream)
+    {
+        if (stream is { IsDisposed: true }) throw new ObjectDisposedException(nameof(stream));
+        if (stream is null) return;
+        var pending = new Stack<AudioStream>(); var visited = new HashSet<AudioStream>(ReferenceEqualityComparer.Instance); pending.Push(stream);
+        while (pending.TryPop(out var current))
+        {
+            if (ReferenceEquals(current, this)) throw new InvalidOperationException("An audio stream graph cannot contain a cycle.");
+            if (visited.Add(current)) current.AppendChildren(pending);
+        }
+    }
+    internal double ReadBPM() { ThrowIfDisposed(); return OnGetBPM(); }
+    internal bool ReadLoop() { ThrowIfDisposed(); return OnHasLoop(); }
+    internal int ReadBarBeats() { ThrowIfDisposed(); return OnGetBarBeats(); }
+    internal int ReadBeatCount() { ThrowIfDisposed(); return OnGetBeatCount(); }
     /// <summary>Initializes the independent stream resource.</summary>
     protected AudioStream() { }
     /// <summary>Creates independent playback state for this stream.</summary>
@@ -72,6 +113,7 @@ public abstract class AudioStream : Resource
 /// A playback borrowed from a player remains player-owned and is not an independent control handle.</remarks>
 public abstract class AudioStreamPlayback : ElectronObject
 {
+    internal virtual bool RequiresAudioOwner => false;
     /// <summary>Initializes the independent playback extension state.</summary>
     protected AudioStreamPlayback() { }
     private int _loopingOverride = -1;

@@ -1,6 +1,6 @@
 # AudioStream
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public abstract class Electron2D.AudioStream` · **Source:** [AudioStream.cs](../../src/Scene/Resources/AudioStream.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -47,3 +47,5 @@ Abstract Resource extension contract with independent caller-owned playback inst
 The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGeneratorPlayback](AudioStreamGeneratorPlayback.md) supplies bounded producer queues and continuous underrun silence through this inherited contract; its class pages record exact rate/control/lifetime boundaries.
 
 [AudioStreamMicrophone](AudioStreamMicrophone.md) adds continuous borrowed recording input on this base contract; its independent internal playbacks share capture ownership through AudioServer.
+
+[AudioStreamSynchronized](AudioStreamSynchronized.md) consumes protected duration/BPM/beat/bar/loop hooks and combines child output. Known composites share graph-cycle and bounded callback validation. Factories of microphone-containing composites preflight the audio owner needed for child cleanup; pure prepared PCM mixing retains caller/audio-thread coordination.

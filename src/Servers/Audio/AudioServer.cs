@@ -33,6 +33,7 @@ public sealed partial class AudioServer : ElectronObject
     private static readonly Lazy<AudioServer> Singleton = new(() => new AudioServer());
     private int _owner;
     private readonly object _gate = new();
+    internal object StreamGate => _gate;
     private FAudioContext? _native;
     private float _speed = 1;
     private sealed class Bus(string name)

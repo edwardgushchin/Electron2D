@@ -48,3 +48,5 @@ Spatial sources use viewport-center or explicit listener position, scene distanc
 
 
 Scene players now preserve full attacks with 64-frame lookahead and execute prepared gain, pause/resume, stop and seek/replacement transitions. Final owner-thread preparation shares the serialized native mixer path and preserves synchronous source cleanup; copied outgoing tails outlive their playback handle until the next block. Finite controls, immediate solo/LFE gating and callback reentrancy are checked. See [stream transitions](../components/audio-playback.md#stream-transitions) for current native, host and allocation evidence and limits.
+
+[Synchronized streams](../components/audio-playback.md#synchronized-streams) now combine real child PCM, shared start/rate, live per-child gain and last-child completion through existing scene players/FAudio. Metadata aggregation, transactional structural ownership and nested microphone affinity execute. Mixed randomizer/synchronized graphs share validation and callback bounds. Further playlist/interactive/sample/usage-tag/parameter dependencies remain in coverage.

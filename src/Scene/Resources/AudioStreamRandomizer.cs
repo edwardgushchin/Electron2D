@@ -18,9 +18,6 @@ public sealed class AudioStreamRandomizer : AudioStream
     }
 
     private readonly record struct Entry(AudioStream? Stream, float Weight);
-    // ponytail: one authoring gate makes cycle validation atomic; independent graph transactions if concurrent editing throughput matters.
-    private static readonly object GraphGate = new();
-    [ThreadStatic] private static List<(AudioStreamRandomizer Stream, int Operation)>? _callStack;
     private Entry[] _entries = [];
     private AudioStream? _last;
     private PlaybackMode _mode;
@@ -154,16 +151,9 @@ public sealed class AudioStreamRandomizer : AudioStream
     private void Index(int index, bool insertion = false) { if (index < 0 || index >= _entries.Length + (insertion ? 1L : 0)) throw new ArgumentOutOfRangeException(nameof(index)); }
     private void ValidateStream(AudioStream? stream)
     {
-        if (stream is { IsDisposed: true }) throw new ObjectDisposedException(nameof(stream));
-        if (stream is not AudioStreamRandomizer randomizer) return;
-        var pending = new Stack<AudioStreamRandomizer>(); var visited = new HashSet<AudioStreamRandomizer>(); pending.Push(randomizer);
-        while (pending.TryPop(out var current))
-        {
-            if (ReferenceEquals(current, this)) throw new InvalidOperationException("A randomizer pool cannot contain a cycle.");
-            if (!visited.Add(current)) continue;
-            foreach (var entry in current._entries) if (entry.Stream is AudioStreamRandomizer child) pending.Push(child);
-        }
+        ValidateChild(stream);
     }
+    internal override void AppendChildren(Stack<AudioStream> pending) { foreach (var entry in _entries) if (entry.Stream is { } child) pending.Push(child); }
     private void NotifyPoolChange(bool structural)
     {
         Exception? first = null, second = null;
@@ -198,14 +188,6 @@ public sealed class AudioStreamRandomizer : AudioStream
     {
         double result = 0; foreach (var entry in _entries) if (entry.Stream is not null && entry.Weight > 0 && (!excludeLast || !ReferenceEquals(entry.Stream, _last))) result += entry.Weight; return result;
     }
-    private void EnterCall(int operation)
-    {
-        var stack = _callStack ??= [];
-        if (stack.Count >= 256) throw new InvalidOperationException("Audio resource nesting exceeds 256 operations.");
-        foreach (var entry in stack) if (ReferenceEquals(entry.Stream, this) && entry.Operation == operation) throw new InvalidOperationException("Audio resource callbacks are recursive.");
-        stack.Add((this, operation));
-    }
-    private static void ExitCall() { var stack = _callStack!; stack.RemoveAt(stack.Count - 1); }
     /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
@@ -214,7 +196,7 @@ public sealed class AudioStreamRandomizer : AudioStream
         {
             AudioStream? selected;
             lock (GraphGate) { ThrowIfDisposed(); selected = ChooseStream(); if (selected is not null) _last = selected; }
-            child = selected?.InstantiatePlayback(); ThrowIfDisposed(); return new Playback(this, child);
+            selected?.EnsurePlaybackOwner(); child = selected?.InstantiatePlayback(); ThrowIfDisposed(); return new Playback(this, child);
         }
         catch (Exception error)
         {
@@ -279,6 +261,7 @@ public sealed class AudioStreamRandomizer : AudioStream
 
     private sealed class Playback(AudioStreamRandomizer source, AudioStreamPlayback? child) : AudioStreamPlayback
     {
+        internal override bool RequiresAudioOwner => child?.RequiresAudioOwner == true;
         private bool _started;
         private float _pitch = 1, _gain = 1;
         private void Check() => ObjectDisposedException.ThrowIf(source.IsDisposed, source);
@@ -300,6 +283,7 @@ public sealed class AudioStreamRandomizer : AudioStream
             Check(); if (!_started || child is null) { buffer.Clear(); return buffer.Length; }
             var count = child.MixInto(buffer, rateScale * _pitch); for (var i = 0; i < count; i++) buffer[i] *= _gain; buffer[count..].Clear(); return count;
         }
+        protected override void ValidateDisposal() { if (RequiresAudioOwner) AudioServer.Instance.Check(); base.ValidateDisposal(); }
         protected override void Dispose(bool disposing) { try { if (disposing) child?.Dispose(); } finally { base.Dispose(disposing); } }
     }
 }

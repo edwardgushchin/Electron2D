@@ -68,3 +68,5 @@ The procedural [AudioStreamGenerator](AudioStreamGenerator.md)/[AudioStreamGener
 ## Player mixing threads
 
 When a scene player owns this playback, ordinary OnMix calls run on the native output thread. Pause and Stop prepare one final fading block on the scene owner before cursor freeze/source Stop; both paths share the context gate. Custom mixing callbacks must support these serialized threads and cannot reenter AudioServer configuration, Lock/Unlock or their owner player mutation/disposal. Passive rate/speed reads remain available. See [stream transitions](../components/audio-playback.md#stream-transitions). Caller-driven MixAudio retains its existing thread/ownership contract.
+
+[AudioStreamPlaybackSynchronized](AudioStreamPlaybackSynchronized.md) owns a coherent child cohort and prepared 128-frame scratch, with shared start/seek, live gain and final silent-latch timing. Input owner requirements propagate through synchronized and randomizer wrappers; off-owner disposal rejects before consuming the wrapper. Its exact callback/cleanup rules and allocation limits are recorded on the class page.

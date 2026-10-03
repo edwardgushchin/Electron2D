@@ -608,7 +608,7 @@ def render():
             updated = "2026-10-02"
         if name in {"ImmediateMesh", "AudioStreamGenerator", "AudioStreamGeneratorPlayback"}:
             updated = "2026-10-02"
-        if name in {"MultiMesh", "MultiMeshInstance2D", "Mesh", "CanvasItem", "RenderingServer"}:
+        if name in {"MultiMesh", "MultiMeshInstance2D", "Mesh", "CanvasItem", "RenderingServer", "AudioStreamSynchronized", "AudioStreamPlaybackSynchronized"}:
             updated = "2026-10-03"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

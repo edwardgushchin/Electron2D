@@ -104,14 +104,14 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStreamPlaybackPlaylist](classes/AudioStreamPlaybackPlaylist.md) | AudioStreamPlayback | Blocked | 0 |
 | [AudioStreamPlaybackPolyphonic](classes/AudioStreamPlaybackPolyphonic.md) | AudioStreamPlayback | Blocked | 6 |
 | [AudioStreamPlaybackResampled](classes/AudioStreamPlaybackResampled.md) | AudioStreamPlayback | Implemented | 3 |
-| [AudioStreamPlaybackSynchronized](classes/AudioStreamPlaybackSynchronized.md) | AudioStreamPlayback | Blocked | 0 |
+| [AudioStreamPlaybackSynchronized](classes/AudioStreamPlaybackSynchronized.md) | AudioStreamPlayback | Implemented | 0 |
 | [AudioStreamPlayer](classes/AudioStreamPlayer.md) | Node | Partial | 22 |
 | [AudioStreamPlayer2D](classes/AudioStreamPlayer2D.md) | Node2D | Partial | 21 |
 | [AudioStreamPlayer3D](classes/AudioStreamPlayer3D.md) | Node3D | Excluded | 38 |
 | [AudioStreamPlaylist](classes/AudioStreamPlaylist.md) | AudioStream | Blocked | 8 |
 | [AudioStreamPolyphonic](classes/AudioStreamPolyphonic.md) | AudioStream | Blocked | 1 |
 | [AudioStreamRandomizer](classes/AudioStreamRandomizer.md) | AudioStream | Implemented | 18 |
-| [AudioStreamSynchronized](classes/AudioStreamSynchronized.md) | AudioStream | Blocked | 6 |
+| [AudioStreamSynchronized](classes/AudioStreamSynchronized.md) | AudioStream | Implemented | 6 |
 | [AudioStreamWAV](classes/AudioStreamWAV.md) | AudioStream | Implemented | 21 |
 | [AwaitTweener](classes/AwaitTweener.md) | Tweener | Implemented | 1 |
 | [BackBufferCopy](classes/BackBufferCopy.md) | Node2D | Blocked | 6 |

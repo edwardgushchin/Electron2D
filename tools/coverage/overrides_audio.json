@@ -1944,6 +1944,46 @@
       "godot": "AudioEffectPhaser::property:depth",
       "electron2d": "property:Electron2D.AudioEffectPhaser.Depth()",
       "reason": "ADR 0047: typed six-stage stereo all-pass phasing executes through prepared FAudio effect instances with live frequency, feedback and depth controls."
+    },
+    {
+      "godot": "class:AudioStreamSynchronized",
+      "electron2d": "T:Electron2D.AudioStreamSynchronized",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "class:AudioStreamPlaybackSynchronized",
+      "electron2d": "T:Electron2D.AudioStreamPlaybackSynchronized",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::constant:MAX_STREAMS",
+      "electron2d": "constant:Electron2D.AudioStreamSynchronized.MaxStreams()",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::property:stream_count",
+      "electron2d": "property:Electron2D.AudioStreamSynchronized.StreamCount()",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::method:get_sync_stream(int:)",
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.GetSyncStream(System.Int32)",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.GetSyncStreamVolume(System.Int32)",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.SetSyncStream(System.Int32,Electron2D.AudioStream)",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.SetSyncStreamVolume(System.Int32,System.Single)",
+      "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
     }
   ],
   "extras": [
@@ -2854,6 +2894,94 @@
     {
       "electron2d": "method:Electron2D.AudioEffectPhaser.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed construction, stored controls, independent six-stage stereo histories and exact Resource/scene copying project the executable phaser lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamSynchronized..ctor()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnGetLoopCount()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnGetPlaybackPosition()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnIsPlaying()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnSeek(System.Double)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnStart(System.Double)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.OnStop()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackSynchronized.ValidateDisposal()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.IsMetaStream()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnGetBPM()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnGetBarBeats()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnGetBeatCount()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnGetLength()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnGetStreamName()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnHasLoop()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamSynchronized.OnInstantiatePlayback()",
+      "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
     }
   ],
   "statusGroups": [
@@ -3122,20 +3250,12 @@
         "AudioStreamPlaylist::property:shuffle",
         "AudioStreamPlaylist::property:stream_count",
         "AudioStreamPolyphonic::property:polyphony",
-        "AudioStreamSynchronized::constant:MAX_STREAMS",
-        "AudioStreamSynchronized::method:get_sync_stream(int:)",
-        "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
-        "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
-        "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
-        "AudioStreamSynchronized::property:stream_count",
         "class:AudioStreamInteractive",
         "class:AudioStreamPlaybackInteractive",
         "class:AudioStreamPlaybackPlaylist",
         "class:AudioStreamPlaybackPolyphonic",
-        "class:AudioStreamPlaybackSynchronized",
         "class:AudioStreamPlaylist",
-        "class:AudioStreamPolyphonic",
-        "class:AudioStreamSynchronized"
+        "class:AudioStreamPolyphonic"
       ]
     },
     {
@@ -3596,6 +3716,20 @@
       "reason": "ADR 0047: native stream/bus output, procedural/recording sources and prepared lookahead/transition PCM execute. Remaining player dependencies are sample registration and editor-hint autoplay suppression. Physical listening and other platforms remain unverified.",
       "godot": [
         "class:AudioStreamPlayer"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: full fixed-32-slot composition, finite live dB, coherent 128-frame stereo mixing/rate/cursors/last-child latch, metadata, transactional cohort replacement, callback/cleanup/cycle/owner guards and shallow/deep/local copies execute on current FAudio. Native opposite-wave/gain/input-owner tests, public finite-WAV Wayland GPU/compatibility hosts and warmed CPU/native measurements distinguish physical/driver/platform limits. Changed-count and partial-factory cohort defects are corrected; inherited usage/sample/parameter dependencies stay on their declaring pages.",
+      "godot": [
+        "class:AudioStreamSynchronized",
+        "class:AudioStreamPlaybackSynchronized",
+        "AudioStreamSynchronized::constant:MAX_STREAMS",
+        "AudioStreamSynchronized::property:stream_count",
+        "AudioStreamSynchronized::method:get_sync_stream(int:)",
+        "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
+        "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
+        "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)"
       ]
     }
   ]

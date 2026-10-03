@@ -22,6 +22,7 @@ public sealed class AudioStreamMicrophone : AudioStream
 
 internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source) : AudioStreamPlaybackResampled
 {
+    internal override bool RequiresAudioOwner => true;
     private AudioInputDevice? _device;
     private long _cursor;
     private int _generation = -1;
