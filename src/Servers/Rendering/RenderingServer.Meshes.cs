@@ -8,7 +8,7 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The renderer is off-owner or submitting.</exception>
     public RID MeshCreate()
     {
-        EnsureTextureChange(); var mesh = new ArrayMesh(); var rid = RenderingMeshRegistry.Register(mesh, this); _ownedMeshRIDs.Add(rid); return rid;
+        EnsureTextureChange(); var mesh = new ArrayMesh(); var rid = mesh.RegisterOwned(this); _ownedMeshRIDs.Add(rid); return rid;
     }
     /// <summary>Adds copied typed surface channels to an owned mesh.</summary>
     /// <param name="mesh">Owned mesh identity.</param>

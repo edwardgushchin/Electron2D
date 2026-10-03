@@ -55,7 +55,8 @@
     "VisibleOnScreenEnabler2D": "VisibleOnScreenEnabler",
     "MeshInstance2D": "MeshInstance",
     "AudioListener2D": "AudioListener",
-    "AudioStreamPlayer2D": "AudioStreamEmitter"
+    "AudioStreamPlayer2D": "AudioStreamEmitter",
+    "MultiMeshInstance2D": "MultiMeshInstance"
   },
   "enums": {
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",

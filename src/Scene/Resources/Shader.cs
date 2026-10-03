@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>HLSL and GLSL source is compiled during import or build. Runtime loading checks module structure and
 /// reflected interfaces without compiling source; it does not perform full instruction-level semantic validation.
 /// This interface accepts optional float4 color at location zero,
-/// float2 UV at location one, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
+/// float2 UV at location one, raw float4 instance data at location two, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
 /// An optional non-array float32 uniform named TIME receives render seconds, scaled by Engine.TimeScale and wrapped
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.

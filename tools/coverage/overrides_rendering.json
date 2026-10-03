@@ -3755,13 +3755,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "First typed Mesh/MultiMesh resource, upload and lifetime integration must implement these retained canvas consumers together; raw polygon commands do not establish mesh identities or instancing.",
-      "godot": [
-        "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "First glyph-distance-field/LCD sampling and blend integration must implement these texture commands together, including shader/backend capability checks and pixel output; ordinary sampled triangles are insufficient.",
       "godot": [
         "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",

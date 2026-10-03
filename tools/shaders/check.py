@@ -76,6 +76,27 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
         invoke(root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.glsl', output)
         assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()
     assert (root / 'tests/Electron2D.Tests/Shaders/CanvasHLSL.spv').read_bytes() == (root / 'src/Servers/Rendering/Shaders/Canvas.frag.spv').read_bytes()
+    invoke(root / 'tests/Electron2D.Tests/Shaders/InstanceCustom.frag.hlsl', output)
+    assert output.read_bytes() == (root / 'tests/Electron2D.Tests/Shaders/InstanceCustom.spv').read_bytes()
+    instance_glsl = directory / 'instance-data.glsl'
+    instance_glsl.write_text('#version 450\nlayout(location=2) in vec4 data;\nlayout(location=0) out vec4 result;\nvoid main() { result=data; }\n')
+    invoke(instance_glsl, output)
+    previous = output.read_bytes()
+    instance_glsl.write_text(instance_glsl.read_text().replace('in vec4 data', 'in vec3 data').replace('result=data', 'result=vec4(data,1)'))
+    assert 'varyings' in invoke(instance_glsl, output, success=False)
+    assert output.read_bytes() == previous, 'An invalid instance channel replaced the valid program'
+    missing_uv = directory / 'missing-uv.vert.glsl'
+    missing_uv.write_text('''#version 450
+layout(location=0) in vec2 position;
+layout(location=1) in vec4 color;
+layout(location=2) in vec2 uv;
+layout(set=1,binding=0,std140) uniform Frame { vec2 size; } frame;
+layout(location=0) out vec4 tint;
+layout(location=2) out vec4 data;
+void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=color; }
+''')
+    assert 'outputs require color and UV' in invoke(missing_uv, output, stage='vertex', success=False)
+    assert output.read_bytes() == previous, 'An incomplete vertex interface replaced the valid program'
     for language, stem, artifact in [('hlsl', 'Material', 'MaterialHlsl'), ('glsl', 'Material', 'MaterialGlsl'), ('glsl', 'MaterialReordered', 'MaterialReordered'),
                                      ('hlsl', 'Texture', 'TextureHlsl'), ('glsl', 'Texture', 'TextureGlsl'), ('glsl', 'TextureReordered', 'TextureReordered'),
                                      ('hlsl', 'Booleans', 'BooleansHLSL'), ('glsl', 'Booleans', 'BooleansGLSL'), ('glsl', 'BooleansReordered', 'BooleansReordered'),

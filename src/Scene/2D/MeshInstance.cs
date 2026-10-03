@@ -35,7 +35,7 @@ public class MeshInstance : Entity
     }
     /// <summary>Occurs after replacing the borrowed texture and scheduling redraw.</summary>
     public event Action? TextureChanged;
-    private void MeshChanged(Resource _) { if (!IsDisposed) QueueRedraw(); }
+    private void MeshChanged(Resource _) { if (!IsDisposed) InvalidateCanvas(); }
     /// <summary>Reports a missing mesh along with inherited scene warnings.</summary>
     /// <returns>Independent warning strings; an empty mesh still counts as an assigned resource.</returns>
     public override string[] GetConfigurationWarnings()

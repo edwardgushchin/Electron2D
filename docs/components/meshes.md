@@ -1,6 +1,6 @@
 # Two-dimensional mesh surfaces
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Scope
 
@@ -23,3 +23,11 @@ MeshTests checks custom callback/revision failure recovery, negative counts, zer
 Exact deferred inputs stay in coverage: typed deformation/morph and LOD consumers, normal/tangent/UV2/custom attributes with real shaders, compression, skeleton/skin, shadow/light meshes, placeholders and outline geometry-processing APIs. GetFaces already extracts 2D triangle faces; 3D TriangleMesh intersection and lightmap-size hints are excluded by ADR 0004. Core static surfaces execute; these are dependencies, not shipped stubs or claims of complete Mesh/ArrayMesh parity. Scene-file persistence remains separate under ADR 0090.
 
 [ImmediateMeshTests](../../tests/Electron2D.Tests/ImmediateMeshTests.cs) verifies drafts, late attributes/quantization, all topologies, retry/rollback, post-commit failure/reentry, invalid/disposed input, copied queries, shallow/deep alias and scene-local copies, borrowed RID/storage cleanup and 64 active plus 64 idle warmed replay cycles. [ImmediateMeshRenderingTests](../../tests/Electron2D.Tests/ImmediateMeshRenderingTests.cs) verifies seven draft/commit/clear/UV/material/RID pixel phases and all five native topologies, with 20 warmup then 64 active material/pose frames alternating all five built-in blends and null material and 64 idle frames. Native allocator totals, structural construction allocation, other platforms and owner acceptance remain separate limits.
+
+## Repeated instance resources
+
+[MultiMesh](../classes/MultiMesh.md) and [MultiMeshInstance](../classes/MultiMeshInstance.md) add copied packed transforms, optional color/raw shader data, visible prefix and actual retained repeated draws. Mesh.GetAABB produces Rect2 bounds; automatic instance bounds merge the visible prefix and CustomAABB provides local culling overrides. Both native renderers expand surfaces in surface-then-instance order and merge compatible geometry into reusable batches. This uses CPU expansion and shared canvas uploads; hardware instancing and writable device buffers are unfinished, precisely recorded in coverage. Custom fragment data executes on GPU location two; compatibility rejects shaders.
+
+[CanvasMultiMesh](../classes/CanvasMultiMesh.md) serializes resource replay, culls against framebuffer/scissor rectangles and detects reentrant storage edits before submission. [RenderingMultiMeshRegistry](../classes/RenderingMultiMeshRegistry.md) separates weak borrowed identities from renderer-owned resources and captures prepared physics targets without holding the registry gate during resource callbacks. Attached node replacement retains owner/capture guards, while committed Resource changes safely invalidate canvas state from a worker. Count/configuration changes are cold allocations; warmed per-instance edits, bounds, tick capture and replay reuse storage.
+
+[MultiMeshTests](../../tests/Electron2D.Tests/MultiMeshTests.cs) covers defaults, eight-float packing, legacy arrays, copying, transactional finite validation, flags/count/visible bounds, Fast/High/reset/large-value interpolation, scene-local ownership, callback mutation/reentry/disposal recovery, surface order and worker invalidation. Sixty-four warmed bounds queries and active/idle replay cycles assert zero managed bytes. [MultiMeshRenderingTests](../../tests/Electron2D.Tests/MultiMeshRenderingTests.cs) exercises eight native pose/color/visible/RID/shader/culling/texture pixel phases, canonical owned child mesh identities, owned/borrowed/thread/indirect guards and actual intermediate physics poses. A 256-instance profile measures 64 active and 64 idle frames after warmup with zero managed bytes on Linux Wayland GPU and compatibility. Readback PNGs are inspected separately. Native/driver allocations, structural edits, dense-scene performance, other platforms and owner acceptance are unmeasured.

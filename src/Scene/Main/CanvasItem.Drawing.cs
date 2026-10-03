@@ -284,7 +284,7 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         _canvasCommands?.Clear();
-        _polygonCount = 0; _strokeCount = 0; _meshCount = 0;
+        _polygonCount = 0; _strokeCount = 0; _meshCount = 0; _multiMeshCount = 0;
         _drawing = true;
         var previousDrawingItem = _currentDrawingItem; _currentDrawingItem = this;
         try
@@ -300,7 +300,7 @@ public abstract partial class CanvasItem
             InvalidateCanvas();
             throw;
         }
-        finally { _drawing = false; _currentDrawingItem = previousDrawingItem; if (_meshes is not null) for (var i = _meshCount; i < _meshes.Count; i++) _meshes[i].Clear(); }
+        finally { _drawing = false; _currentDrawingItem = previousDrawingItem; if (_meshes is not null) for (var i = _meshCount; i < _meshes.Count; i++) _meshes[i].Clear(); if (_multiMeshes is not null) for (var i = _multiMeshCount; i < _multiMeshes.Count; i++) _multiMeshes[i].Clear(); }
     }
 
     internal virtual Rect2? CanvasClipRect => null;
@@ -308,7 +308,7 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => _useParentMaterial ? GetParentItem()?.CanvasMaterial : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null)
     {
         if (_canvasCommands is null) return;
         var color = InheritedModulate * _selfModulate;
@@ -336,6 +336,13 @@ public abstract partial class CanvasItem
                 if (source is null) continue;
                 if (source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
+            }
+            if (replay.MultiMesh is { } instances)
+            {
+                if (!capturedMaterial) { var current = CanvasMaterial; material = current?.GetCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
+                var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.Instance.PhysicsInterpolationFraction : 1f;
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, clip, viewport?.SnapVerticesToPixel == true, fraction, outputSize);
+                continue;
             }
             if (replay.Mesh is { } mesh)
             {

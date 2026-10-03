@@ -7,7 +7,7 @@ public sealed partial class RenderingServer
     private void AppendScreenCanvas(CanvasItem node, Transform transform, Rect2i? clip, Vector2i pixels)
     {
         var first = _vertices.Count;
-        node.AppendCanvas(_vertices, _batches, transform, CanvasTime, clip);
+        node.AppendCanvas(_vertices, _batches, transform, CanvasTime, clip, pixels);
         if (node is not VisibleOnScreenNotifier notifier || notifier.ScreenCandidate || notifier.InheritedModulate.A < 0.007f) return;
         var local = new Rect2().Merge(notifier.Rect.Abs());
         var bounds = transform * local;

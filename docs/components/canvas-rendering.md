@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Scope and owned types
 
@@ -356,3 +356,7 @@ Shared Container fitting now attempts required transform resets after a resize o
 [Mesh surfaces](meshes.md) feed the existing retained vertex/material/texture/clip/sampling/order submission. Points/lines are expanded in framebuffer space; filled indexed and strip geometry shares native GPU and compatibility drawing. Live ArrayMesh region edits are read without recreating commands.
 
 ImmediateMesh native replay checks exercise all five built-in blend modes alternating with null material over 64 active frames after 20 warmup frames, then 64 idle frames. This catches repeated pipeline creation previously caused by per-frame eviction of absent built-in modes. Managed interval measurements cover ProcessFrameStarted through FramePostDraw; native/driver allocator totals remain unmeasured. See [the mesh component](meshes.md).
+
+## Repeated mesh drawing
+
+CanvasItem.DrawMultiMesh records borrowed MultiMesh or logical RID resources with an optional texture. [The mesh component](meshes.md#repeated-instance-resources) owns fixed 2D packing, visible-prefix geometry, interpolation, Rect2 culling, surface material order and exact backend limits. Replay sees committed data without rerecording. GPU custom data uses a separate raw float4 varying; compatibility retains geometry/color and rejects custom shader materials.

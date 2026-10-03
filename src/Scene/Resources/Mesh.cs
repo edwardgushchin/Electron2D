@@ -40,18 +40,37 @@ public abstract class Mesh : Resource
     }
     private readonly object _ridGate = new();
     private RID _rid;
+    private CanvasMesh? _boundsCache;
     /// <summary>Returns the stable borrowed identity of this mesh.</summary>
     /// <returns>A renderer-independent logical identity valid until resource disposal.</returns>
     /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
     public override RID GetRID() { lock (_ridGate) { ThrowIfDisposed(); return _rid.IsValid() ? _rid : _rid = RenderingMeshRegistry.Register(this); } }
+    internal RID RegisterOwned(RenderingServer owner) { lock (_ridGate) { ThrowIfDisposed(); return _rid = RenderingMeshRegistry.Register(this, owner); } }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { lock (_ridGate) { if (_rid.IsValid()) RenderingMeshRegistry.Remove(_rid); _rid = default; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { lock (_ridGate) { if (_rid.IsValid()) RenderingMeshRegistry.Remove(_rid); _rid = default; _boundsCache?.Clear(); _boundsCache = null; } base.Dispose(disposing); }
     /// <summary>Initializes the reusable mesh resource contract.</summary>
     protected Mesh() { }
     /// <summary>Gets the number of currently authored surfaces.</summary>
     /// <returns>The nonnegative surface count.</returns>
     /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
     public int GetSurfaceCount() { ThrowIfDisposed(); var count = OnGetSurfaceCount(); if (count < 0) throw new InvalidOperationException("Mesh surface count must be nonnegative."); return count; }
+    /// <summary>Returns the axis-aligned visibility bounds of this two-dimensional mesh.</summary>
+    /// <returns>A finite local rectangle, empty without vertices.</returns>
+    /// <remarks>Default bounds include stored vertices from every topology, including unreferenced vertices.
+    /// Prepared custom surface snapshots are reused; live ArrayMesh positions are read without copied queries.</remarks>
+    /// <exception cref="ArgumentException">A custom bounds callback supplies an invalid rectangle.</exception>
+    public Rect2 GetAABB()
+    {
+        ThrowIfDisposed(); var bounds = OnGetAABB(); ThrowIfDisposed();
+        if (!bounds.IsFinite() || !bounds.End.IsFinite() || bounds.Size.X < 0 || bounds.Size.Y < 0) throw new ArgumentException("Mesh bounds must be finite nonnegative rectangles.");
+        return bounds;
+    }
+    /// <summary>Supplies the local two-dimensional visibility rectangle.</summary>
+    /// <returns>Finite nonnegative local bounds; the default derives them from prepared surface positions.</returns>
+    protected virtual Rect2 OnGetAABB()
+    {
+        lock (_ridGate) { ThrowIfDisposed(); return (_boundsCache ??= new(this, Transform.Identity, Colors.White)).GetLocalBounds(); }
+    }
     /// <summary>Gets copied local vertices for every triangle face.</summary>
     /// <returns>Three vertices per face; point and line surfaces contribute no vertices.</returns>
     /// <remarks>Indexed and sequential triangles and triangle strips are expanded in surface order.

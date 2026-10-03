@@ -39,6 +39,7 @@ public abstract partial class CanvasItem
 
     private void ResetInterpolationSnapshot()
     {
+        if (_multiMeshes is not null) for (var i = 0; i < _multiMeshCount; i++) _multiMeshes[i].ResetInterpolation();
         _interpolationPrevious = _interpolationCurrent = GetVisualTransform();
         _interpolationValid = true;
         _interpolationFirstTick = false;

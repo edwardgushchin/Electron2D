@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Responsibility
 
@@ -106,3 +106,5 @@ The [texture identity slice](../components/canvas-rendering.md#texture-resource-
 [SplitContainer](../classes/SplitContainer.md) and fixed H/V variants now supply resizable multi-panel layouts, touch targets and nested two-axis dragging through the existing Container/Control/canvas/theme pipeline. Native Wayland GPU/compatibility input/pixel checks and software layout checks pass, with prepared active/idle frame allocation evidence. Editor highlights, native semantics, other platforms and native allocator totals retain exact limits.
 
 [Typed 2D mesh surfaces](../components/meshes.md) now execute Mesh/ArrayMesh/MeshInstance, CanvasItem.DrawMesh and logical server-owned mesh production on the shared canvas path. The owning [ADR 0092](../decisions/mesh.md#adr-0092) records copied typed channels, packed region updates, material/lifetime rules and exact deferred deformation/channel consumers. Native pixel and warmed frame evidence is separate from other-platform or owner acceptance.
+
+[Repeated mesh resources](../components/meshes.md#repeated-instance-resources) now connect MultiMesh/MultiMeshInstance, DrawMultiMesh and owned server identities to native pose/color/UV/material drawing, visible-prefix Rect2 culling and physics interpolation. Raw instance fragment data executes through the GPU shader interface. CPU expansion and compatible batching are verified; hardware instance buffers/indirect commands and other-platform acceptance remain dependencies.

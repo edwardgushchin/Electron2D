@@ -1,6 +1,6 @@
 # Mesh
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Namespace:** `Electron2D` · **Declaration:** `public abstract class Electron2D.Mesh` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -279,3 +279,38 @@ System.ObjectDisposedException: The mesh or material is disposed.
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
 
 Custom OnGetSurfaceCount must return a nonnegative count. Callback preparation rejects a changed revision or disposed resource, then retries on the next replay. Successful snapshots capture surface count and reuse it without callback dispatch on idle frames. The author must publish Changed after edits.
+
+## Instance integration
+
+Bounds expose local 2D Rect2, with default prepared surface queries and overridable finite custom bounds. Custom disposal/reentrant snapshot preparation rejects; callers publish Changed after edits.
+
+## Methods and protected extension points
+
+| Complete signature | Contract |
+| --- | --- |
+| `public Electron2D.Rect2 GetAABB()` | Returns the axis-aligned visibility bounds of this two-dimensional mesh. |
+| `protected virtual Electron2D.Rect2 OnGetAABB()` | Supplies the local two-dimensional visibility rectangle. |
+
+## Methods and protected extension points descriptions
+
+<a id="member-4c169510682c"></a>
+### GetAABB
+
+`public Electron2D.Rect2 GetAABB()`
+
+Returns the axis-aligned visibility bounds of this two-dimensional mesh.
+
+Returns: A finite local rectangle, empty without vertices.
+
+Remarks: Default bounds include stored vertices from every topology, including unreferenced vertices. Prepared custom surface snapshots are reused; live ArrayMesh positions are read without copied queries.
+
+System.ArgumentException: A custom bounds callback supplies an invalid rectangle.
+
+<a id="member-4471ce26133b"></a>
+### OnGetAABB
+
+`protected virtual Electron2D.Rect2 OnGetAABB()`
+
+Supplies the local two-dimensional visibility rectangle.
+
+Returns: Finite nonnegative local bounds; the default derives them from prepared surface positions.

@@ -3788,6 +3788,54 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MultiMesh",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "MultiMesh",
+    "signature": "public sealed class Electron2D.MultiMesh",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "name": "PhysicsInterpolationQuality",
+    "signature": "public enum Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.MultiMeshInstance",
+    "kind": "type",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "MultiMeshInstance",
+    "signature": "public class Electron2D.MultiMeshInstance",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NinePatchRect",
     "kind": "type",
     "declaringType": "Electron2D.NinePatchRect",
@@ -9492,6 +9540,32 @@
     "declaringType": "Electron2D.MeshSurfaceData",
     "name": ".ctor",
     "signature": "public MeshSurfaceData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MultiMesh..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": ".ctor",
+    "signature": "public MultiMesh()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MultiMeshInstance..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": ".ctor",
+    "signature": "public MultiMeshInstance()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -20062,6 +20136,32 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.Fast()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "name": "Fast",
+    "signature": "public const Electron2D.MultiMesh.PhysicsInterpolationQuality Fast = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.High()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "name": "High",
+    "signature": "public const Electron2D.MultiMesh.PhysicsInterpolationQuality High = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.Node.InternalMode.Back()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Node.InternalMode",
@@ -24381,6 +24481,19 @@
     "id": "event:Electron2D.MeshInstance.TextureChanged()",
     "kind": "event",
     "declaringType": "Electron2D.MeshInstance",
+    "name": "TextureChanged",
+    "signature": "public event System.Action TextureChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.MultiMeshInstance.TextureChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.MultiMeshInstance",
     "name": "TextureChanged",
     "signature": "public event System.Action TextureChanged",
     "visibility": "public",
@@ -35207,6 +35320,54 @@
         "name": "modulate",
         "type": "System.Nullable\u003CElectron2D.Color\u003E",
         "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.MultiMesh,Electron2D.Texture)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMultiMesh",
+    "signature": "public System.Void DrawMultiMesh(Electron2D.MultiMesh multiMesh, Electron2D.Texture texture = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.MultiMesh",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "DrawMultiMesh",
+    "signature": "public System.Void DrawMultiMesh(Electron2D.RID multiMesh, Electron2D.RID texture = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": "default"
       }
     ],
     "returnType": "System.Void",
@@ -59667,6 +59828,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Mesh.GetAABB()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "GetAABB",
+    "signature": "public Electron2D.Rect2 GetAABB()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Mesh.GetFaces()",
     "kind": "method",
     "declaringType": "Electron2D.Mesh",
@@ -59703,6 +59877,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Mesh.OnGetAABB()",
+    "kind": "method",
+    "declaringType": "Electron2D.Mesh",
+    "name": "OnGetAABB",
+    "signature": "protected virtual Electron2D.Rect2 OnGetAABB()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
     "value": null
   },
   {
@@ -60120,6 +60307,378 @@
       }
     ],
     "returnType": "Electron2D.MethodTweener\u003CTValue\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.GetAABB()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "GetAABB",
+    "signature": "public Electron2D.Rect2 GetAABB()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.GetInstanceColor(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "GetInstanceColor",
+    "signature": "public Electron2D.Color GetInstanceColor(System.Int32 instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.GetInstanceCustomData(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "GetInstanceCustomData",
+    "signature": "public Electron2D.Color GetInstanceCustomData(System.Int32 instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.GetInstanceTransform2D(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "GetInstanceTransform2D",
+    "signature": "public Electron2D.Transform GetInstanceTransform2D(System.Int32 instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.GetRID()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "GetRID",
+    "signature": "public override Electron2D.RID GetRID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.ResetInstancePhysicsInterpolation(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "ResetInstancePhysicsInterpolation",
+    "signature": "public System.Void ResetInstancePhysicsInterpolation(System.Int32 instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.ResetInstancesPhysicsInterpolation()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "ResetInstancesPhysicsInterpolation",
+    "signature": "public System.Void ResetInstancesPhysicsInterpolation()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.SetBufferInterpolated(System.ReadOnlySpan\u003CSystem.Single\u003E,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "SetBufferInterpolated",
+    "signature": "public System.Void SetBufferInterpolated(System.ReadOnlySpan\u003CSystem.Single\u003E bufferCurrent, System.ReadOnlySpan\u003CSystem.Single\u003E bufferPrevious)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bufferCurrent",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      },
+      {
+        "name": "bufferPrevious",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.SetInstanceColor(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "SetInstanceColor",
+    "signature": "public System.Void SetInstanceColor(System.Int32 instance, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.SetInstanceCustomData(System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "SetInstanceCustomData",
+    "signature": "public System.Void SetInstanceCustomData(System.Int32 instance, Electron2D.Color customData)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "customData",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMesh.SetInstanceTransform2D(System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "SetInstanceTransform2D",
+    "signature": "public System.Void SetInstanceTransform2D(System.Int32 instance, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.GetConfigurationWarnings()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "GetConfigurationWarnings",
+    "signature": "public override System.String[] GetConfigurationWarnings()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MultiMeshInstance.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -70147,6 +70706,547 @@
       {
         "name": "data",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshAllocateData(Electron2D.RID,System.Int32,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshAllocateData",
+    "signature": "public System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "instances",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "useColors",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "useCustomData",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "useIndirect",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshCreate",
+    "signature": "public Electron2D.RID MultiMeshCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetAABB(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetAABB",
+    "signature": "public Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetBuffer(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetBuffer",
+    "signature": "public System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetCustomAABB(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetCustomAABB",
+    "signature": "public Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetInstanceCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetInstanceCount",
+    "signature": "public System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetMesh(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetMesh",
+    "signature": "public Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshGetVisibleInstances(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshGetVisibleInstances",
+    "signature": "public System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceGetColor(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceGetColor",
+    "signature": "public Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceGetCustomData(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceGetCustomData",
+    "signature": "public Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceGetTransform2D(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceGetTransform2D",
+    "signature": "public Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceResetPhysicsInterpolation",
+    "signature": "public System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceSetColor(Electron2D.RID,System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceSetColor",
+    "signature": "public System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceSetCustomData(Electron2D.RID,System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceSetCustomData",
+    "signature": "public System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "customData",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstanceSetTransform2D(Electron2D.RID,System.Int32,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstanceSetTransform2D",
+    "signature": "public System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshInstancesResetPhysicsInterpolation",
+    "signature": "public System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetBuffer(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetBuffer",
+    "signature": "public System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan\u003CSystem.Single\u003E buffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetBufferInterpolated(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetBufferInterpolated",
+    "signature": "public System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan\u003CSystem.Single\u003E bufferCurrent, System.ReadOnlySpan\u003CSystem.Single\u003E bufferPrevious)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bufferCurrent",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      },
+      {
+        "name": "bufferPrevious",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetCustomAABB(Electron2D.RID,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetCustomAABB",
+    "signature": "public System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "aabb",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetMesh(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetMesh",
+    "signature": "public System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mesh",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetPhysicsInterpolated(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetPhysicsInterpolated",
+    "signature": "public System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "interpolated",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID,Electron2D.MultiMesh.PhysicsInterpolationQuality)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetPhysicsInterpolationQuality",
+    "signature": "public System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "quality",
+        "type": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.MultiMeshSetVisibleInstances(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "MultiMeshSetVisibleInstances",
+    "signature": "public System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "multiMesh",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "visible",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -99786,6 +100886,175 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.Buffer()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "Buffer",
+    "signature": "public System.Single[] Buffer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.ColorArray()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "ColorArray",
+    "signature": "public Electron2D.Color[] ColorArray { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.CustomAABB()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "CustomAABB",
+    "signature": "public Electron2D.Rect2 CustomAABB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.CustomDataArray()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "CustomDataArray",
+    "signature": "public Electron2D.Color[] CustomDataArray { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.InstanceCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "InstanceCount",
+    "signature": "public System.Int32 InstanceCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.Mesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "Mesh",
+    "signature": "public Electron2D.Mesh Mesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.PhysicsInterpolationQualityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "PhysicsInterpolationQualityMode",
+    "signature": "public Electron2D.MultiMesh.PhysicsInterpolationQuality PhysicsInterpolationQualityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiMesh.PhysicsInterpolationQuality",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.Transform2DArray()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "Transform2DArray",
+    "signature": "public Electron2D.Vector2[] Transform2DArray { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.UseColors()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "UseColors",
+    "signature": "public System.Boolean UseColors { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.UseCustomData()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "UseCustomData",
+    "signature": "public System.Boolean UseCustomData { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMesh.VisibleInstanceCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMesh",
+    "name": "VisibleInstanceCount",
+    "signature": "public System.Int32 VisibleInstanceCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMeshInstance.MultiMesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "MultiMesh",
+    "signature": "public Electron2D.MultiMesh MultiMesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.MultiMesh",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MultiMeshInstance.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.MultiMeshInstance",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
     "value": null
   },
   {

@@ -30,6 +30,8 @@ public partial class Node
                     foreach (var descendant in EnumerateDepthFirst())
                         if (descendant is Camera camera && !camera.IsDisposed)
                             camera.RefreshInterpolationProcessing();
+                        else if (descendant is MultiMeshInstance instances && !instances.IsDisposed)
+                            instances.RefreshInterpolation();
             }
         }
     }

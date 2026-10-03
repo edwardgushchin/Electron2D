@@ -37,3 +37,30 @@ public abstract partial class CanvasItem
     public void DrawMesh(RID mesh, RID texture = default, Transform? transform = null, Color? modulate = null) =>
         DrawMesh(RenderingMeshRegistry.Resolve(mesh), texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null, transform, modulate);
 }
+
+public abstract partial class CanvasItem
+{
+    private List<CanvasMultiMesh>? _multiMeshes;
+    private int _multiMeshCount;
+    /// <summary>Records a borrowed instance resource with live packed data and mesh surfaces.</summary>
+    /// <param name="multiMesh">Borrowed live instance storage.</param>
+    /// <param name="texture">Optional borrowed surface texture.</param>
+    /// <remarks>Replays the visible prefix in surface/instance order; transforms, instance colors, shader data
+    /// and eligible physics interpolation are read during replay rather than copied into drawing commands.</remarks>
+    /// <exception cref="InvalidOperationException">Called outside the drawing scope.</exception>
+    /// <exception cref="ObjectDisposedException">A supplied resource is disposed.</exception>
+    public void DrawMultiMesh(MultiMesh multiMesh, Texture? texture = null)
+    {
+        EnsureDrawing(); ArgumentNullException.ThrowIfNull(multiMesh); multiMesh.GetRID();
+        if (texture is AtlasTexture atlas) { var rid = atlas.GetRID(); texture = rid.IsValid() ? RenderingTextureRegistry.Resolve(rid) : null; }
+        EnsureDrawing(); if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+        _multiMeshes ??= [];
+        if (_multiMeshCount == _multiMeshes.Count) _multiMeshes.Add(new(multiMesh)); else _multiMeshes[_multiMeshCount].Set(multiMesh);
+        (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, texture, MultiMesh: _multiMeshes[_multiMeshCount++]));
+    }
+    /// <summary>Records live instance and texture identities through the same retained path.</summary>
+    /// <param name="multiMesh">Borrowed or owned logical instance identity.</param>
+    /// <param name="texture">Optional live texture identity.</param>
+    /// <exception cref="ArgumentException">An identity is missing or disposed.</exception>
+    public void DrawMultiMesh(RID multiMesh, RID texture = default) => DrawMultiMesh(RenderingMultiMeshRegistry.Resolve(multiMesh), texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null);
+}

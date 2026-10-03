@@ -28,6 +28,7 @@ public sealed partial class SceneTree
 
     private void CapturePhysicsInterpolation(bool start, ref List<Exception>? errors)
     {
+        try { RenderingMultiMeshRegistry.PhysicsTick(start); } catch (Exception error) { CollectException(errors ??= [], error); }
         _scheduleTraversal.Clear();
         _scheduleTraversal.Add(Root);
         while (_scheduleTraversal.Count != 0)

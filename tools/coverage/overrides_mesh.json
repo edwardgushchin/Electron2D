@@ -324,6 +324,291 @@
       "godot": "ImmediateMesh::method:surface_set_uv(Vector2:)",
       "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetUV(Electron2D.Vector2)",
       "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits."
+    },
+    {
+      "godot": "MultiMesh::method:get_aabb()",
+      "electron2d": "method:Electron2D.MultiMesh.GetAABB()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:get_instance_color(int:)",
+      "electron2d": "method:Electron2D.MultiMesh.GetInstanceColor(System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:get_instance_custom_data(int:)",
+      "electron2d": "method:Electron2D.MultiMesh.GetInstanceCustomData(System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:get_instance_transform_2d(int:)",
+      "electron2d": "method:Electron2D.MultiMesh.GetInstanceTransform2D(System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:reset_instance_physics_interpolation(int:)",
+      "electron2d": "method:Electron2D.MultiMesh.ResetInstancePhysicsInterpolation(System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:reset_instances_physics_interpolation()",
+      "electron2d": "method:Electron2D.MultiMesh.ResetInstancesPhysicsInterpolation()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:set_buffer_interpolated(PackedFloat32Array:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.MultiMesh.SetBufferInterpolated(System.ReadOnlySpan<System.Single>,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:set_instance_color(int:,Color:)",
+      "electron2d": "method:Electron2D.MultiMesh.SetInstanceColor(System.Int32,Electron2D.Color)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:set_instance_custom_data(int:,Color:)",
+      "electron2d": "method:Electron2D.MultiMesh.SetInstanceCustomData(System.Int32,Electron2D.Color)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::method:set_instance_transform_2d(int:,Transform2D:)",
+      "electron2d": "method:Electron2D.MultiMesh.SetInstanceTransform2D(System.Int32,Electron2D.Transform)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:buffer",
+      "electron2d": "property:Electron2D.MultiMesh.Buffer()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:color_array",
+      "electron2d": "property:Electron2D.MultiMesh.ColorArray()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:custom_aabb",
+      "electron2d": "property:Electron2D.MultiMesh.CustomAABB()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:custom_data_array",
+      "electron2d": "property:Electron2D.MultiMesh.CustomDataArray()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:instance_count",
+      "electron2d": "property:Electron2D.MultiMesh.InstanceCount()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:mesh",
+      "electron2d": "property:Electron2D.MultiMesh.Mesh()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:physics_interpolation_quality",
+      "electron2d": "property:Electron2D.MultiMesh.PhysicsInterpolationQualityMode()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:transform_2d_array",
+      "electron2d": "property:Electron2D.MultiMesh.Transform2DArray()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:use_colors",
+      "electron2d": "property:Electron2D.MultiMesh.UseColors()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:use_custom_data",
+      "electron2d": "property:Electron2D.MultiMesh.UseCustomData()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::property:visible_instance_count",
+      "electron2d": "property:Electron2D.MultiMesh.VisibleInstanceCount()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::enum:PhysicsInterpolationQuality",
+      "electron2d": "T:Electron2D.MultiMesh.PhysicsInterpolationQuality",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::enum:MultimeshPhysicsInterpolationQuality",
+      "electron2d": "T:Electron2D.MultiMesh.PhysicsInterpolationQuality",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::enum_value:PhysicsInterpolationQuality.INTERP_QUALITY_FAST",
+      "electron2d": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.Fast()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMesh::enum_value:PhysicsInterpolationQuality.INTERP_QUALITY_HIGH",
+      "electron2d": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.High()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:MultimeshPhysicsInterpolationQuality.MULTIMESH_INTERP_QUALITY_FAST",
+      "electron2d": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.Fast()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::enum_value:MultimeshPhysicsInterpolationQuality.MULTIMESH_INTERP_QUALITY_HIGH",
+      "electron2d": "enumValue:Electron2D.MultiMesh.PhysicsInterpolationQuality.High()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMeshInstance2D::property:multimesh",
+      "electron2d": "property:Electron2D.MultiMeshInstance.MultiMesh()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMeshInstance2D::property:texture",
+      "electron2d": "property:Electron2D.MultiMeshInstance.Texture()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "MultiMeshInstance2D::signal:texture_changed()",
+      "electron2d": "event:Electron2D.MultiMeshInstance.TextureChanged()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_allocate_data(RID:,int:,int:RenderingServer.MultimeshTransformFormat,bool:,bool:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshAllocateData(Electron2D.RID,System.Int32,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_create()",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshCreate()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_aabb(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetAABB(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_custom_aabb(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetCustomAABB(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_custom_aabb(RID:,AABB:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetCustomAABB(Electron2D.RID,Electron2D.Rect2)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_buffer(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetBuffer(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_instance_count(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetInstanceCount(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_mesh(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetMesh(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_get_visible_instances(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshGetVisibleInstances(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_get_color(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceGetColor(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_get_custom_data(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceGetCustomData(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_get_transform_2d(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceGetTransform2D(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_reset_physics_interpolation(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_set_color(RID:,int:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceSetColor(Electron2D.RID,System.Int32,Electron2D.Color)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_set_custom_data(RID:,int:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceSetCustomData(Electron2D.RID,System.Int32,Electron2D.Color)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instance_set_transform_2d(RID:,int:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstanceSetTransform2D(Electron2D.RID,System.Int32,Electron2D.Transform)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_instances_reset_physics_interpolation(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_buffer(RID:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetBuffer(Electron2D.RID,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_buffer_interpolated(RID:,PackedFloat32Array:,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetBufferInterpolated(Electron2D.RID,System.ReadOnlySpan<System.Single>,System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_mesh(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetMesh(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_physics_interpolated(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetPhysicsInterpolated(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_physics_interpolation_quality(RID:,int:RenderingServer.MultimeshPhysicsInterpolationQuality)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID,Electron2D.MultiMesh.PhysicsInterpolationQuality)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "RenderingServer::method:multimesh_set_visible_instances(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.MultiMeshSetVisibleInstances(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "Mesh::method:get_aabb()",
+      "electron2d": "method:Electron2D.Mesh.GetAABB()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "Mesh::method:_get_aabb()",
+      "electron2d": "method:Electron2D.Mesh.OnGetAABB()",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.MultiMesh,Electron2D.Texture)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
+    },
+    {
+      "godot": "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
+      "electron2d": "method:Electron2D.CanvasItem.DrawMultiMesh(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits."
     }
   ],
   "extras": [
@@ -486,6 +771,54 @@
     {
       "electron2d": "method:Electron2D.ImmediateMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
       "reason": "ADRs 0001/0013/0092: concrete Mesh query callbacks, completed-resource graph copying and deterministic owned-storage cleanup; typed projection of existing mesh/resource capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MultiMesh..ctor()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MultiMeshInstance..ctor()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMesh.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMesh.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMesh.GetRID()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.CreateSceneInstanceFactory()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.Dispose(System.Boolean)",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.GetConfigurationWarnings()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.OnDraw()",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MultiMeshInstance.OnNotification(System.Int32)",
+      "reason": "ADRs 0001/0008/0092: typed resource/node construction, copy/disposal, logical RID, configuration warnings and scene/drawing callbacks project existing MultiMesh and inherited Resource/Node capabilities; no new semantic capability."
     }
   ],
   "statusGroups": [
@@ -747,6 +1080,97 @@
       "reason": "Trigger: typed secondary-UV mesh storage, packed byte format and actual canvas shader-attribute consumer over the executable 2D surface path (ADR 0092). SurfaceSetUV2 must enter that first attribute slice together with MeshSurfaceData and ArrayMesh updates.",
       "godot": [
         "ImmediateMesh::method:surface_set_uv2(Vector2:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits. Default retained allocation executes; useIndirect=true remains unsupported until writable GPU instance/command-buffer ownership and indirect submission integrate. Fixed 2D storage removes the 3D format selector.",
+      "godot": [
+        "RenderingServer::method:multimesh_allocate_data(RID:,int:,int:RenderingServer.MultimeshTransformFormat,bool:,bool:,bool:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: copied fixed-2D instance buffers, raw color/custom-data channels, visible-prefix drawing, finite transactional edits, typed scene copying and weak/owned RID lifetimes execute through retained surface/instance batching. Actual GPU custom shader input, GPU/compatibility pixels and warmed allocation checks distinguish hardware-instancing/native-allocation/platform limits.",
+      "godot": [
+        "MultiMesh::method:get_aabb()",
+        "MultiMesh::method:get_instance_color(int:)",
+        "MultiMesh::method:get_instance_custom_data(int:)",
+        "MultiMesh::method:get_instance_transform_2d(int:)",
+        "MultiMesh::method:reset_instance_physics_interpolation(int:)",
+        "MultiMesh::method:reset_instances_physics_interpolation()",
+        "MultiMesh::method:set_buffer_interpolated(PackedFloat32Array:,PackedFloat32Array:)",
+        "MultiMesh::method:set_instance_color(int:,Color:)",
+        "MultiMesh::method:set_instance_custom_data(int:,Color:)",
+        "MultiMesh::method:set_instance_transform_2d(int:,Transform2D:)",
+        "MultiMesh::property:buffer",
+        "MultiMesh::property:color_array",
+        "MultiMesh::property:custom_aabb",
+        "MultiMesh::property:custom_data_array",
+        "MultiMesh::property:instance_count",
+        "MultiMesh::property:mesh",
+        "MultiMesh::property:physics_interpolation_quality",
+        "MultiMesh::property:transform_2d_array",
+        "MultiMesh::property:use_colors",
+        "MultiMesh::property:use_custom_data",
+        "MultiMesh::property:visible_instance_count",
+        "MultiMesh::enum:PhysicsInterpolationQuality",
+        "RenderingServer::enum:MultimeshPhysicsInterpolationQuality",
+        "MultiMesh::enum_value:PhysicsInterpolationQuality.INTERP_QUALITY_FAST",
+        "MultiMesh::enum_value:PhysicsInterpolationQuality.INTERP_QUALITY_HIGH",
+        "RenderingServer::enum_value:MultimeshPhysicsInterpolationQuality.MULTIMESH_INTERP_QUALITY_FAST",
+        "RenderingServer::enum_value:MultimeshPhysicsInterpolationQuality.MULTIMESH_INTERP_QUALITY_HIGH",
+        "MultiMeshInstance2D::property:multimesh",
+        "MultiMeshInstance2D::property:texture",
+        "MultiMeshInstance2D::signal:texture_changed()",
+        "RenderingServer::method:multimesh_create()",
+        "RenderingServer::method:multimesh_get_aabb(RID:)",
+        "RenderingServer::method:multimesh_get_custom_aabb(RID:)",
+        "RenderingServer::method:multimesh_set_custom_aabb(RID:,AABB:)",
+        "RenderingServer::method:multimesh_get_buffer(RID:)",
+        "RenderingServer::method:multimesh_get_instance_count(RID:)",
+        "RenderingServer::method:multimesh_get_mesh(RID:)",
+        "RenderingServer::method:multimesh_get_visible_instances(RID:)",
+        "RenderingServer::method:multimesh_instance_get_color(RID:,int:)",
+        "RenderingServer::method:multimesh_instance_get_custom_data(RID:,int:)",
+        "RenderingServer::method:multimesh_instance_get_transform_2d(RID:,int:)",
+        "RenderingServer::method:multimesh_instance_reset_physics_interpolation(RID:,int:)",
+        "RenderingServer::method:multimesh_instance_set_color(RID:,int:,Color:)",
+        "RenderingServer::method:multimesh_instance_set_custom_data(RID:,int:,Color:)",
+        "RenderingServer::method:multimesh_instance_set_transform_2d(RID:,int:,Transform2D:)",
+        "RenderingServer::method:multimesh_instances_reset_physics_interpolation(RID:)",
+        "RenderingServer::method:multimesh_set_buffer(RID:,PackedFloat32Array:)",
+        "RenderingServer::method:multimesh_set_buffer_interpolated(RID:,PackedFloat32Array:,PackedFloat32Array:)",
+        "RenderingServer::method:multimesh_set_mesh(RID:,RID:)",
+        "RenderingServer::method:multimesh_set_physics_interpolated(RID:,bool:)",
+        "RenderingServer::method:multimesh_set_physics_interpolation_quality(RID:,int:RenderingServer.MultimeshPhysicsInterpolationQuality)",
+        "RenderingServer::method:multimesh_set_visible_instances(RID:,int:)",
+        "Mesh::method:get_aabb()",
+        "Mesh::method:_get_aabb()",
+        "CanvasItem::method:draw_multimesh(MultiMesh:,Texture2D:)",
+        "class:MultiMesh",
+        "class:MultiMeshInstance2D"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0092: all instance storage is fixed to the eight-float 2D transform schema. The 2D-versus-3D selector/identity and packed 3D transform array have no variable 2D capability; no inert selector or 3D runtime type is introduced.",
+      "godot": [
+        "MultiMesh::enum:TransformFormat",
+        "MultiMesh::enum_value:TransformFormat.TRANSFORM_2D",
+        "MultiMesh::enum_value:TransformFormat.TRANSFORM_3D",
+        "MultiMesh::property:transform_format",
+        "MultiMesh::property:transform_array",
+        "RenderingServer::enum:MultimeshTransformFormat",
+        "RenderingServer::enum_value:MultimeshTransformFormat.MULTIMESH_TRANSFORM_2D"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: actual writable per-resource GPU instance/indirect-command storage, stable RenderingDevice buffer identities and their verified shader/draw consumer (ADR 0028/0092). Current retained vertices execute without pretending to expose a device buffer. These two identities enter that first GPU-buffer ownership slice.",
+      "godot": [
+        "RenderingServer::method:multimesh_get_buffer_rd_rid(RID:)",
+        "RenderingServer::method:multimesh_get_command_buffer_rd_rid(RID:)"
       ]
     }
   ]

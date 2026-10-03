@@ -284,7 +284,7 @@ def reason_for_type(item, lookup):
     if name in {"VisibleOnScreenEnabler2D", "VisibleOnScreenNotifier2D"}:
         return "Blocked", "Trigger: first retained-canvas visibility tracking and notification slice (ADR 0028)."
     if name in {"MultiMesh", "MultiMeshInstance2D"}:
-        return "Blocked", "Trigger: typed 2D instance-buffer ownership, visible-count/color policies, physics-interpolated poses and repeated/instanced canvas submission over the now executable mesh surfaces; MultiMeshInstance enters that same first consumer slice (ADR 0092)."
+        return "Unimplemented", "Applicable fixed-2D instance storage, visibility, interpolation and retained canvas consumers are executable; remaining members require individual audited ownership or shader-buffer dependencies (ADR 0092)."
     if name == "ImmediateMesh":
         return "Blocked", "Trigger: typed incremental surface begin/attribute/vertex/end builder with commit/rollback and real ArrayMesh-backed drawing; static surface rendering already executes (ADR 0092)."
     if name == "PrimitiveMesh":
@@ -608,6 +608,8 @@ def render():
             updated = "2026-10-02"
         if name in {"ImmediateMesh", "AudioStreamGenerator", "AudioStreamGeneratorPlayback"}:
             updated = "2026-10-02"
+        if name in {"MultiMesh", "MultiMeshInstance2D", "Mesh", "CanvasItem", "RenderingServer"}:
+            updated = "2026-10-03"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

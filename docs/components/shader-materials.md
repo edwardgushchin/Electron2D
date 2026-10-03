@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-09-25
+Last updated: 2026-10-03
 
 ## Scope and implementation state
 
@@ -23,7 +23,7 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 
 ## Current shader interface
 
-- One fragment entry point named `main`; optional inputs are float4 color at location zero and float2 UV at location one, and output is float4 at location zero. Framebuffer position is available as the stage builtin.
+- One fragment entry point named `main`; optional inputs are float4 color at location zero, float2 UV at location one and raw float4 instance data at location two, and output is float4 at location zero. Framebuffer position is available as the stage builtin.
 - SPIR-V input is little-endian, word-aligned, bounded to 16 MiB and the baseline `Shader` capability. The import command additionally runs `spirv-val`. Runtime resource loading checks the documented payload and interface contract for all origins; it is not a full SPIR-V specification verifier. Native translation/program-creation errors propagate before a successful draw is reported.
 - At most four uniform buffers, descriptor set 3, unique contiguous bindings starting at zero. Each buffer is at most 16 KiB. Std140 alignment and array strides are checked, and uploads include final 16-byte block padding.
 - Uniform member names are nonblank, ordinal/case-sensitive and unique across buffers. Compilers must retain names. Reflection rejects overlapping members and members outside their buffer.
@@ -218,3 +218,5 @@ The fourteenth texture frame uploads pixels decoded by the public `Image.LoadPNG
 The self-contained linux-x64 test publish also passed the complete canvas texture sequence on Wayland and dummy/software from `/tmp` with `LD_LIBRARY_PATH` unset. The publish includes the updated embedded vertex/fragment programs and both imported canvas fixtures. This verifies package delivery for these operations, not AOT or other platforms.
 
 AtlasTextureTests adds managed resource/graph checks and native atlas/Sprite readback on both canvas backends, HLSL/GLSL canvas shaders, and full-storage named material binding/update/failure checks.
+
+The importer also verifies the optional raw instance channel in HLSL and GLSL, rejects a float3 at location two without replacing valid output, and requires the built-in vertex stage to retain color/UV outputs when instance data is present. Native MultiMesh checks verify independent fragment values on GPU.

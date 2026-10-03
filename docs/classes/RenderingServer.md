@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -469,3 +469,312 @@ surface: Existing zero-based index.
 offset: Byte offset into two-float positions.
 
 data: Little-endian X/Y records.
+
+## Instance integration
+
+Created MultiMesh identities own instance storage until FreeRID or renderer shutdown and borrow child Mesh identities. Reads enforce renderer owner thread/lifetime and accept live owned or borrowed instance identities; mutations additionally enforce identity ownership. Resource RIDs may be drawn but cannot be mutated/freed through these owned methods. Ordinary fixed 2D allocation executes atomically; useIndirect=true rejects before mutation. Device buffer RIDs remain absent. Canonical owned MeshCreate identities survive linked MultiMeshGetMesh queries.
+
+## Methods and protected extension points
+
+| Complete signature | Contract |
+| --- | --- |
+| `public System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)` | Allocates copied packed instance records for an owned resource. |
+| `public Electron2D.RID MultiMeshCreate()` | Creates owned empty two-dimensional instance storage. |
+| `public Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)` | Gets the two-dimensional local visibility rectangle of a live instance resource. |
+| `public System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)` | Returns copied packed instance records. |
+| `public Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)` | Gets the authored manual local visibility rectangle. |
+| `public System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)` | Returns the allocated instance count. |
+| `public Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)` | Gets the borrowed mesh identity used by an instance resource. |
+| `public System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)` | Gets the stored visible-prefix policy. |
+| `public Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored instance color multiplier. |
+| `public Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)` | Gets one stored four-component shader value. |
+| `public Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)` | Gets one instance's current local transform. |
+| `public System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)` | Resets one owned instance's previous presentation record. |
+| `public System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)` | Sets one owned instance color multiplier. |
+| `public System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)` | Sets one owned instance's raw shader components. |
+| `public System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)` | Sets one owned instance's finite local transform. |
+| `public System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)` | Resets all previous presentation records in owned storage. |
+| `public System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)` | Copies whole finite packed records into owned storage. |
+| `public System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)` | Copies explicit current and previous packed presentation records. |
+| `public System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)` | Sets the manual visibility rectangle of owned instance storage. |
+| `public System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)` | Assigns a borrowed mesh to owned instance storage. |
+| `public System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)` | Enables or disables presentation interpolation of owned packed records. |
+| `public System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)` | Changes the basis interpolation quality of owned storage. |
+| `public System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)` | Changes the visible prefix of an owned resource without reallocating. |
+
+## Methods and protected extension points descriptions
+
+<a id="member-488a40ea3b4c"></a>
+### MultiMeshAllocateData
+
+`public System.Void MultiMeshAllocateData(Electron2D.RID multiMesh, System.Int32 instances, System.Boolean useColors = false, System.Boolean useCustomData = false, System.Boolean useIndirect = false)`
+
+Allocates copied packed instance records for an owned resource.
+
+multiMesh: Owned instance identity.
+
+instances: Nonnegative capacity.
+
+useColors: Include four-float color multipliers.
+
+useCustomData: Include four-float shader data.
+
+useIndirect: False for retained canvas storage; true requires a future writable GPU command-buffer backend.
+
+System.NotSupportedException: Indirect GPU instance commands are requested.
+
+Remarks: Transforms are always two-dimensional. Equal capacity and flags preserve storage.
+
+<a id="member-a3d75d5b55ec"></a>
+### MultiMeshCreate
+
+`public Electron2D.RID MultiMeshCreate()`
+
+Creates owned empty two-dimensional instance storage.
+
+Returns: A logical identity valid until FreeRID or renderer teardown.
+
+<a id="member-0182b5f42f6c"></a>
+### MultiMeshGetAABB
+
+`public Electron2D.Rect2 MultiMeshGetAABB(Electron2D.RID multiMesh)`
+
+Gets the two-dimensional local visibility rectangle of a live instance resource.
+
+multiMesh: Live owned or borrowed instance identity.
+
+Returns: The manual or computed rectangle of its visible prefix.
+
+<a id="member-764c29b14aac"></a>
+### MultiMeshGetBuffer
+
+`public System.Single[] MultiMeshGetBuffer(Electron2D.RID multiMesh)`
+
+Returns copied packed instance records.
+
+multiMesh: Live instance identity.
+
+Returns: Caller-owned eight-float transforms and optional channels.
+
+<a id="member-2a82a59532cf"></a>
+### MultiMeshGetCustomAABB
+
+`public Electron2D.Rect2 MultiMeshGetCustomAABB(Electron2D.RID multiMesh)`
+
+Gets the authored manual local visibility rectangle.
+
+multiMesh: Live instance identity.
+
+Returns: The stored rectangle; zero selects computed bounds.
+
+<a id="member-15d670887101"></a>
+### MultiMeshGetInstanceCount
+
+`public System.Int32 MultiMeshGetInstanceCount(Electron2D.RID multiMesh)`
+
+Returns the allocated instance count.
+
+multiMesh: Live owned or borrowed instance identity.
+
+Returns: The allocated capacity.
+
+<a id="member-704bbb24d3c7"></a>
+### MultiMeshGetMesh
+
+`public Electron2D.RID MultiMeshGetMesh(Electron2D.RID multiMesh)`
+
+Gets the borrowed mesh identity used by an instance resource.
+
+multiMesh: Live instance identity.
+
+Returns: The live mesh RID or an empty identity.
+
+<a id="member-065d2ac29e72"></a>
+### MultiMeshGetVisibleInstances
+
+`public System.Int32 MultiMeshGetVisibleInstances(Electron2D.RID multiMesh)`
+
+Gets the stored visible-prefix policy.
+
+multiMesh: Live instance identity.
+
+Returns: Minus one for all instances, or the visible prefix count.
+
+<a id="member-ed902624b78c"></a>
+### MultiMeshInstanceGetColor
+
+`public Electron2D.Color MultiMeshInstanceGetColor(Electron2D.RID multiMesh, System.Int32 index)`
+
+Gets one stored instance color multiplier.
+
+multiMesh: Live instance identity.
+
+index: Existing zero-based index.
+
+Returns: The raw current color.
+
+<a id="member-13c66376fd4e"></a>
+### MultiMeshInstanceGetCustomData
+
+`public Electron2D.Color MultiMeshInstanceGetCustomData(Electron2D.RID multiMesh, System.Int32 index)`
+
+Gets one stored four-component shader value.
+
+multiMesh: Live instance identity.
+
+index: Existing zero-based index.
+
+Returns: The raw current shader data.
+
+<a id="member-97a26c8d2530"></a>
+### MultiMeshInstanceGetTransform2D
+
+`public Electron2D.Transform MultiMeshInstanceGetTransform2D(Electron2D.RID multiMesh, System.Int32 index)`
+
+Gets one instance's current local transform.
+
+multiMesh: Live instance identity.
+
+index: Existing zero-based index.
+
+Returns: The logical current transform.
+
+<a id="member-9d81d734d1a4"></a>
+### MultiMeshInstanceResetPhysicsInterpolation
+
+`public System.Void MultiMeshInstanceResetPhysicsInterpolation(Electron2D.RID multiMesh, System.Int32 index)`
+
+Resets one owned instance's previous presentation record.
+
+multiMesh: Owned instance identity.
+
+index: Existing zero-based index.
+
+<a id="member-6bbb88d48f1a"></a>
+### MultiMeshInstanceSetColor
+
+`public System.Void MultiMeshInstanceSetColor(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color color)`
+
+Sets one owned instance color multiplier.
+
+multiMesh: Owned instance identity.
+
+index: Existing zero-based index.
+
+color: Finite four-component multiplier.
+
+<a id="member-ef077dbe19b6"></a>
+### MultiMeshInstanceSetCustomData
+
+`public System.Void MultiMeshInstanceSetCustomData(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Color customData)`
+
+Sets one owned instance's raw shader components.
+
+multiMesh: Owned instance identity.
+
+index: Existing zero-based index.
+
+customData: Finite four-component value.
+
+<a id="member-f26f760fe681"></a>
+### MultiMeshInstanceSetTransform2D
+
+`public System.Void MultiMeshInstanceSetTransform2D(Electron2D.RID multiMesh, System.Int32 index, Electron2D.Transform transform)`
+
+Sets one owned instance's finite local transform.
+
+multiMesh: Owned instance identity.
+
+index: Existing zero-based index.
+
+transform: Finite two-dimensional transform.
+
+<a id="member-24bfe046419d"></a>
+### MultiMeshInstancesResetPhysicsInterpolation
+
+`public System.Void MultiMeshInstancesResetPhysicsInterpolation(Electron2D.RID multiMesh)`
+
+Resets all previous presentation records in owned storage.
+
+multiMesh: Owned instance identity.
+
+<a id="member-d26ab6fef659"></a>
+### MultiMeshSetBuffer
+
+`public System.Void MultiMeshSetBuffer(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> buffer)`
+
+Copies whole finite packed records into owned storage.
+
+multiMesh: Owned instance identity.
+
+buffer: Whole packed buffer matching capacity and flags.
+
+<a id="member-664d1773c69f"></a>
+### MultiMeshSetBufferInterpolated
+
+`public System.Void MultiMeshSetBufferInterpolated(Electron2D.RID multiMesh, System.ReadOnlySpan<System.Single> bufferCurrent, System.ReadOnlySpan<System.Single> bufferPrevious)`
+
+Copies explicit current and previous packed presentation records.
+
+multiMesh: Owned instance identity.
+
+bufferCurrent: Whole current buffer.
+
+bufferPrevious: Whole previous buffer.
+
+<a id="member-7e35d1bb9fb4"></a>
+### MultiMeshSetCustomAABB
+
+`public System.Void MultiMeshSetCustomAABB(Electron2D.RID multiMesh, Electron2D.Rect2 aabb)`
+
+Sets the manual visibility rectangle of owned instance storage.
+
+multiMesh: Owned instance identity.
+
+aabb: Finite nonnegative two-dimensional local rectangle.
+
+<a id="member-2446e561e02e"></a>
+### MultiMeshSetMesh
+
+`public System.Void MultiMeshSetMesh(Electron2D.RID multiMesh, Electron2D.RID mesh)`
+
+Assigns a borrowed mesh to owned instance storage.
+
+multiMesh: Owned instance identity.
+
+mesh: Live mesh RID or an empty identity to clear it.
+
+<a id="member-c697869bba9d"></a>
+### MultiMeshSetPhysicsInterpolated
+
+`public System.Void MultiMeshSetPhysicsInterpolated(Electron2D.RID multiMesh, System.Boolean interpolated)`
+
+Enables or disables presentation interpolation of owned packed records.
+
+multiMesh: Owned instance identity.
+
+interpolated: Whether scene physics snapshots contribute to rendering.
+
+Remarks: Changing the policy resets previous records to current values without changing logical data.
+
+<a id="member-0dcf1b00d68c"></a>
+### MultiMeshSetPhysicsInterpolationQuality
+
+`public System.Void MultiMeshSetPhysicsInterpolationQuality(Electron2D.RID multiMesh, Electron2D.MultiMesh.PhysicsInterpolationQuality quality)`
+
+Changes the basis interpolation quality of owned storage.
+
+multiMesh: Owned instance identity.
+
+quality: Fast component or High angular interpolation.
+
+<a id="member-29017b0529ec"></a>
+### MultiMeshSetVisibleInstances
+
+`public System.Void MultiMeshSetVisibleInstances(Electron2D.RID multiMesh, System.Int32 visible)`
+
+Changes the visible prefix of an owned resource without reallocating.
+
+multiMesh: Owned instance identity.
+
+visible: Minus one or a count through capacity.

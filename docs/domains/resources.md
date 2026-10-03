@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Responsibility
 
@@ -127,3 +127,5 @@ Audio import/playback ownership and codec verification are documented in the [au
 [AudioStreamRandomizer](../classes/AudioStreamRandomizer.md) uses Resource graph copying and scene-local ownership for borrowed child pools. Its typed indexed descriptors provide authoring; the audio component owns selection, child playback lifetime and native execution.
 
 [Typed 2D mesh surfaces](../components/meshes.md) now execute Mesh/ArrayMesh/MeshInstance, CanvasItem.DrawMesh and logical server-owned mesh production on the shared canvas path. The owning [ADR 0092](../decisions/mesh.md#adr-0092) records copied typed channels, packed region updates, material/lifetime rules and exact deferred deformation/channel consumers. Native pixel and warmed frame evidence is separate from other-platform or owner acceptance.
+
+MultiMesh owns copied finite packed 2D instance records and transient previous/current presentation pairs while borrowing Mesh. Duplicate storage is independent and follows inherited shallow/deep/scene-local resource graph rules. Resource edits commit before Changed callbacks; mesh consumers invalidate canvas safely on worker notifications. [The mesh component](../components/meshes.md#repeated-instance-resources) records cold allocation and warmed replay limits.

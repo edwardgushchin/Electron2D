@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 This bounded log owns the complete architectural records for rendering. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -77,6 +77,8 @@ Texture identities use the existing process-wide RID allocator. Resource-owned T
 - **Wait for SDL_GPU to gain a Web backend:** rejected as the browser implementation plan because the pinned SDL build exposes no such driver while WebGPU is available in the tested browser.
 
 ### Current implementation boundary
+
+The canvas vertex interface retains float2 position at location zero, float4 tint at one and float2 UV at two, with optional float4 raw instance data at three. Built-in vertex output adds optional float4 data at location two beside color zero and UV one. Fragment programs may consume this value; ordinary geometry supplies zero. Native GPU tests verify independent per-instance data and shader mutation. Compatibility keeps geometry/color behavior and explicitly rejects custom shaders. User vertex programs remain pending.
 
 The initial canvas integration is executable. Engine.Run creates a renderer for the root Window; retained rectangles, lines and texture drawing use visibility, transforms, Z order and modulation. The GPU and compatibility paths have native Linux Wayland pixel checks. This is not complete rendering API coverage or cross-platform acceptance.
 

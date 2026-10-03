@@ -1,6 +1,6 @@
 # ArrayMesh
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ArrayMesh` · **Source:** [ArrayMesh.cs](../../src/Scene/Resources/ArrayMesh.cs).
 
@@ -270,3 +270,5 @@ System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.
 Region updates accept byte offsets including partial records. Affected complete X/Y or color/UV records are reconstructed and finite-validated in a first pass, then committed in a second pass without heap allocation. Vertex stride is eight bytes; attribute stride is four RGBA8 bytes plus eight UV bytes when present. Names/materials/data getters validate indices and disposed resource state. Nonempty blendShapes/lods and unknown flags throw NotSupportedException before mutation. Advanced channels remain exact Blocked/Partial coverage; no stubs are shipped.
 
 Inherited SurfaceGetArrayLen, SurfaceGetArrayIndexLen, SurfaceGetFormat and SurfaceGetPrimitiveType query the same concrete storage; GetFaces expands its triangle surfaces into independent local Vector2 faces. Vertex and attribute updates execute with or without UseDynamicUpdate, which is a storage-policy hint.
+
+Inherited Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.

@@ -1208,11 +1208,12 @@ public sealed partial class SceneTree : MainLoop
 
         BeginExecution();
         _inPhysicsFrame = physics;
+        var captureInterpolation = physics && _physicsInterpolation;
         List<Exception>? errors = null;
 
         try
         {
-            if (physics && _physicsInterpolation) CapturePhysicsInterpolation(start: true, ref errors);
+            if (captureInterpolation) CapturePhysicsInterpolation(start: true, ref errors);
             if (physics)
                 _physicsFrameCount++;
             else
@@ -1266,7 +1267,7 @@ public sealed partial class SceneTree : MainLoop
             if (!physics) ProcessTooltip(unscaledDelta, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
-            if (physics && _physicsInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
+            if (captureInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
         }
         finally
         {

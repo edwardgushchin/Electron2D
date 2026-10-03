@@ -457,8 +457,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MobileVRInterface](classes/MobileVRInterface.md) | XRInterface | Excluded | 11 |
 | [ModifierBoneTarget3D](classes/ModifierBoneTarget3D.md) | SkeletonModifier3D | Excluded | 2 |
 | [MovieWriter](classes/MovieWriter.md) | Object | Blocked | 8 |
-| [MultiMesh](classes/MultiMesh.md) | Resource | Blocked | 31 |
-| [MultiMeshInstance2D](classes/MultiMeshInstance2D.md) | Node2D | Blocked | 3 |
+| [MultiMesh](classes/MultiMesh.md) | Resource | Implemented | 31 |
+| [MultiMeshInstance2D](classes/MultiMeshInstance2D.md) | Node2D | Implemented | 3 |
 | [MultiMeshInstance3D](classes/MultiMeshInstance3D.md) | GeometryInstance3D | Excluded | 1 |
 | [MultiplayerAPI](classes/MultiplayerAPI.md) | RefCounted | Blocked | 22 |
 | [MultiplayerAPIExtension](classes/MultiplayerAPIExtension.md) | MultiplayerAPI | Blocked | 9 |

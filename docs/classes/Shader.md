@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-09-23
+Last updated: 2026-10-03
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -81,3 +81,7 @@ Returns the assigned default or null, without transferring ownership. Uses the s
 ## Limits and checks
 
 Logical boolean annotations are retained in copied bytecode and checked against the physical buffer layout for all input origins. Invalid annotations preserve the previous program. Runtime validation is structural and reflective; full semantic validation currently runs during import. Texture arrays and sampler configuration, matrices other than float2x2, nested structs, other shader modes, source preservation and editor code inspection remain unimplemented. Both language import paths, copied payloads, invalid replacement and live uniform reload have executable checks in [RenderingRuntimeTests.cs](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs); native execution has been checked on Linux Wayland/Vulkan only. See [ADR 0028](../decisions/rendering.md#adr-0028).
+
+## Instance data input
+
+Fragment programs may consume raw float4 at location two, alongside tint location zero and UV location one. MultiMesh supplies its optional custom-data components independently of color multiplication; ordinary canvas geometry supplies zero. HLSL input semantics must compile to these locations (the tested signature uses active TEXCOORD0, TEXCOORD1 and TEXCOORD2 inputs). GLSL can use explicit layout locations. The built-in vertex stage forwards this channel; custom vertex programs remain pending. MultiMeshRenderingTests verifies two independent colors, live data replacement and compatibility's explicit shader rejection.

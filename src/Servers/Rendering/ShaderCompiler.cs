@@ -61,24 +61,25 @@ internal static unsafe class ShaderCompiler
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
                         r.NumUniformBuffers != program.BufferSizes.Length || !fragment && r.NumUniformBuffers != 1)
                         throw new NotSupportedException("The reflected resources do not match the canvas stage interface.");
-                    if (metadata.NumInputs > (fragment ? 2 : 3) || metadata.NumOutputs != (fragment ? 1 : 2))
-                        throw new NotSupportedException("Canvas shaders use color at location zero and UV at location one, with one fragment color output.");
+                    if (metadata.NumInputs > (fragment ? 3 : 4) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 3))
+                        throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two and one fragment color output.");
                     if (fragment) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
                     if (!fragment)
                     {
-                        if (metadata.NumInputs != 3) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
+                        if (metadata.NumInputs is < 3 or > 4) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
                         var locations = 0;
-                        for (var i = 0; i < 3; i++)
+                        for (var i = 0; i < metadata.NumInputs; i++)
                         {
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(metadata.Inputs + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 2 || field.VectorSize != (field.Location == 1 ? 4 : 2) ||
+                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 3 || field.VectorSize != (field.Location is 1 or 3 ? 4 : 2) ||
                                 (locations & (1 << (int)field.Location)) != 0)
-                                throw new NotSupportedException("Canvas vertex inputs must be position at location zero, color at one and UV at two.");
+                                throw new NotSupportedException("Canvas vertex inputs must be position at location zero, color at one, UV at two and optional raw instance data at three.");
                             locations |= 1 << (int)field.Location;
                         }
+                        if ((locations & 7) != 7) throw new NotSupportedException("Canvas vertex inputs require position, color and UV.");
                     }
                     if (fragment) ValidateColor(metadata.Outputs);
-                    else ValidateVaryings(metadata.Outputs, metadata.NumOutputs);
+                    else ValidateVaryings(metadata.Outputs, metadata.NumOutputs, requireBase: true);
                 }
                 finally { SDL.Free(memory); }
             }
@@ -87,17 +88,18 @@ internal static unsafe class ShaderCompiler
         return program;
     }
 
-    private static void ValidateVaryings(nint pointer, uint count)
+    private static void ValidateVaryings(nint pointer, uint count, bool requireBase = false)
     {
         var locations = 0;
         for (var i = 0; i < count; i++)
         {
             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(pointer + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 1 || field.VectorSize != (field.Location == 0 ? 4 : 2) ||
+            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 2 || field.VectorSize != (field.Location == 1 ? 2 : 4) ||
                 (locations & (1 << (int)field.Location)) != 0)
-                throw new NotSupportedException("Canvas varyings must be float4 color at location zero and float2 UV at location one.");
+                throw new NotSupportedException("Canvas varyings require float4 color at zero, float2 UV at one and optional float4 instance data at two.");
             locations |= 1 << (int)field.Location;
         }
+        if (requireBase && (locations & 3) != 3) throw new NotSupportedException("Canvas vertex outputs require color and UV.");
     }
 
     private static void ValidateColor(nint pointer)

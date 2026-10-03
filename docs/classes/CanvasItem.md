@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Inherits:** [Node](Node.md)
 
@@ -1175,3 +1175,46 @@ transform: Local transform or identity.
 modulate: Color multiplier or white.
 
 System.ArgumentException: A supplied identity is absent or disposed.
+
+## Instance integration
+
+DrawMultiMesh records borrowed instance storage during OnDraw. Live packed edits replay through inherited canvas policies; raw custom fragment data, visible-prefix Rect2 culling and interpolation share the mesh path.
+
+## Methods and protected extension points
+
+| Complete signature | Contract |
+| --- | --- |
+| `public System.Void DrawMultiMesh(Electron2D.MultiMesh multiMesh, Electron2D.Texture texture = null)` | Records a borrowed instance resource with live packed data and mesh surfaces. |
+| `public System.Void DrawMultiMesh(Electron2D.RID multiMesh, Electron2D.RID texture = default)` | Records live instance and texture identities through the same retained path. |
+
+## Methods and protected extension points descriptions
+
+<a id="member-446522037feb"></a>
+### DrawMultiMesh
+
+`public System.Void DrawMultiMesh(Electron2D.MultiMesh multiMesh, Electron2D.Texture texture = null)`
+
+Records a borrowed instance resource with live packed data and mesh surfaces.
+
+multiMesh: Borrowed live instance storage.
+
+texture: Optional borrowed surface texture.
+
+Remarks: Replays the visible prefix in surface/instance order; transforms, instance colors, shader data and eligible physics interpolation are read during replay rather than copied into drawing commands.
+
+System.InvalidOperationException: Called outside the drawing scope.
+
+System.ObjectDisposedException: A supplied resource is disposed.
+
+<a id="member-bfdc2f1ec175"></a>
+### DrawMultiMesh
+
+`public System.Void DrawMultiMesh(Electron2D.RID multiMesh, Electron2D.RID texture = default)`
+
+Records live instance and texture identities through the same retained path.
+
+multiMesh: Borrowed or owned logical instance identity.
+
+texture: Optional live texture identity.
+
+System.ArgumentException: An identity is missing or disposed.

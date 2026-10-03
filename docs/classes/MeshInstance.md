@@ -1,6 +1,6 @@
 # MeshInstance
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.MeshInstance` · **Source:** [MeshInstance.cs](../../src/Scene/2D/MeshInstance.cs).
 
@@ -136,3 +136,5 @@ Summary: Occurs after replacing the borrowed texture and scheduling redraw.
 ## Dependencies, errors and verification
 
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
+
+The borrowed Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.

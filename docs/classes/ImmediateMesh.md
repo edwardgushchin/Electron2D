@@ -1,6 +1,6 @@
 # ImmediateMesh
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class ImmediateMesh : Mesh` · **Source:** [ImmediateMesh.cs](../../src/Scene/Resources/ImmediateMesh.cs).
 
@@ -156,3 +156,5 @@ Cancels the draft, disposes its owned private ArrayMesh and delegates outer reso
 [ImmediateMeshTests](../../tests/Electron2D.Tests/ImmediateMeshTests.cs) verifies state/finite/topology boundaries, late attributes/quantization, correction after failed End, observer failure/reentry, shallow/deep alias and local scene copies, query isolation, lifetime and already recorded command updates. Twenty warmup cycles precede 64 active material/transform/record/replay cycles and 64 idle replays; both measure zero managed bytes. [ImmediateMeshRenderingTests](../../tests/Electron2D.Tests/ImmediateMeshRenderingTests.cs) checks seven native pixel phases, resource RID drawing/server queries and all five topologies on Linux Wayland GPU/compatibility. Each backend also measures 64 active frames alternating all five built-in blends with null material and 64 idle frames after 20 warmup frames, from ProcessFrameStarted through FramePostDraw, with zero managed bytes.
 
 Draft growth/structural commit are explicit authoring allocations, not a zero-allocation frame replacement API. UV2 awaits typed storage/packing and a real shader attribute consumer. 3D vertex/normal/tangent operations remain excluded. Inherited advanced mesh members keep their individual dependencies. Native allocator totals, wider platforms, broad performance and owner acceptance remain unverified.
+
+Inherited Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.
