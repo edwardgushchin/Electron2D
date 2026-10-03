@@ -45,10 +45,12 @@ public sealed partial class AudioServer : ElectronObject
         internal List<BusEffect> Effects = [];
         internal FAudioBusEffect[]? RuntimeEffects;
         internal FAudioBusEffect.Activity? Activity;
-        internal nint Voice;
+        internal nint Voice, InputVoice;
+        internal FAudioBusBuffer? Buffer;
     }
     private readonly List<Bus> _buses = [new("Master")];
     private readonly List<AudioStreamPlayer> _players = [];
+    private readonly Dictionary<string, FAudioBusBuffer> _sidechainBuffers = new(StringComparer.Ordinal);
     private AudioServer() { }
     /// <summary>Gets the process-wide audio service.</summary>
     /// <value>The borrowed singleton; applications configure it rather than disposing it.</value>
@@ -127,7 +129,13 @@ public sealed partial class AudioServer : ElectronObject
     {
         var bus = GetBus(index); ArgumentNullException.ThrowIfNull(name); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (bus.Name == name) return;
         var proposed = name; var number = 2; while (GetBusIndex(proposed) >= 0) proposed = name + " " + number++;
-        var old = bus.Name; bus.Name = proposed; foreach (var other in _buses) if (other.Send == old) other.Send = proposed; foreach (var player in _players) player.RefreshRouting(); _native?.RefreshStandaloneSampleRouting(); ApplyGains(); BusRenamed?.Invoke(index, old, proposed);
+        var old = bus.Name;
+        lock (_gate)
+        {
+            bus.Name = proposed; if (bus.Buffer is { } buffer) { _sidechainBuffers.Remove(old); _sidechainBuffers.Add(proposed, buffer); }
+            foreach (var other in _buses) if (other.Send == old) other.Send = proposed; foreach (var player in _players) player.RefreshRouting(); _native?.RefreshStandaloneSampleRouting(); ApplyGains();
+        }
+        BusRenamed?.Invoke(index, old, proposed);
     }
     /// <summary>Gets the requested named send target.</summary>
     /// <param name="index">Live bus index.</param>
@@ -215,7 +223,12 @@ public sealed partial class AudioServer : ElectronObject
         try { RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
     }
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
-    internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndex(name); return _buses[index < 0 ? 0 : index].Voice; }
+    internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndex(name); return _buses[index < 0 ? 0 : index].InputVoice; }
+    internal ReadOnlySpan<Vector2> ReadSidechain(string name, int pair, int frames)
+    {
+        var buffer = _sidechainBuffers.TryGetValue(name, out var found) ? found : _sidechainBuffers["Master"];
+        return buffer.Read(pair, frames);
+    }
     internal void Attach(AudioStreamPlayer player) { Check(); if (!_players.Contains(player)) _players.Add(player); }
     internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0 && _native?.HasStandaloneSamples != true) CloseNative(closeInput: false); }
     private void RebuildGraph()
@@ -232,19 +245,26 @@ public sealed partial class AudioServer : ElectronObject
         if (_native is null) return;
         lock (_gate)
         {
-            var old = _native.BusVoices(); var replacement = new nint[_buses.Count];
+            var old = _native.BusVoices(); var replacement = new nint[_buses.Count]; var inputs = new nint[_buses.Count]; var buffers = new FAudioBusBuffer[_buses.Count];
             try
             {
                 for (var i = 0; i < replacement.Length; i++)
                 {
                     var bus = _buses[i]; bus.RuntimeEffects ??= PrepareEffects(bus.Effects);
-                    bus.Activity ??= _native.CreateBusActivity(); replacement[i] = _native.CreateBus((uint)(65535 - i), _native.Master, bus.RuntimeEffects, bus.Effects.Select(e => e.Enabled && !bus.Bypass).ToArray(), bus.Activity);
+                    bus.Activity ??= _native.CreateBusActivity(); buffers[i] = new(_native.Channels, _native.QuantumFrames, bus.Activity);
+                    replacement[i] = _native.CreateBus((uint)(65535 - i), _native.Master, bus.RuntimeEffects, bus.Effects.Select(e => e.Enabled && !bus.Bypass).ToArray(), bus.Activity, buffers[i]);
                 }
-                for (var i = 1; i < replacement.Length; i++) { var target = GetBusIndex(_buses[i].Send); if (target < 0 || target >= i) target = 0; _native.SetSend(replacement[i], replacement[target]); }
+                for (var i = 0; i < inputs.Length; i++) inputs[i] = _native.CreateBusInput(replacement[i], buffers[i]);
+                for (var i = 1; i < replacement.Length; i++) { var target = GetBusIndex(_buses[i].Send); if (target < 0 || target >= i) target = 0; _native.SetSend(replacement[i], replacement[target]); buffers[i].Send = buffers[target]; }
             }
-            catch { for (var i = replacement.Length - 1; i >= 0; i--) if (replacement[i] != 0) _native.DestroyBus(replacement[i]); throw; }
+            catch
+            {
+                for (var i = inputs.Length - 1; i >= 0; i--) if (inputs[i] != 0) _native.DestroyBus(inputs[i]);
+                for (var i = replacement.Length - 1; i >= 0; i--) if (replacement[i] != 0) _native.DestroyBus(replacement[i]); throw;
+            }
             List<Exception>? errors = null;
-            for (var i = 0; i < replacement.Length; i++) _buses[i].Voice = replacement[i];
+            _sidechainBuffers.Clear();
+            for (var i = 0; i < replacement.Length; i++) { _buses[i].Voice = replacement[i]; _buses[i].InputVoice = inputs[i]; _buses[i].Buffer = buffers[i]; _sidechainBuffers.Add(_buses[i].Name, buffers[i]); }
             foreach (var player in _players) try { player.RefreshRouting(); } catch (Exception error) { Node.CollectException(ref errors, error); }
             _native.RefreshStandaloneSampleRouting();
             Node.ThrowCollected("Audio bus routing update failed.", errors);
@@ -286,7 +306,7 @@ public sealed partial class AudioServer : ElectronObject
         Check(); List<Exception>? errors = null;
         foreach (var player in _players.ToArray()) try { player.ReleaseVoices(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { _native?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
-        _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0;
+        _native = null; _samples.Clear(); _sidechainBuffers.Clear(); foreach (var bus in _buses) { bus.Voice = 0; bus.InputVoice = 0; bus.Buffer = null; }
         foreach (var bus in _buses) { var effects = bus.RuntimeEffects; bus.RuntimeEffects = null; bus.Activity = null; try { ReleaseEffects(effects); } catch (Exception error) { Node.CollectException(ref errors, error); } }
         if (closeInput) try { CloseInput(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Audio native teardown failed.", errors);

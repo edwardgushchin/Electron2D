@@ -15,6 +15,7 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
         internal Activity? Send;
         internal void Begin(int frames) { Array.Clear(_used); _frame += frames; }
         internal void Use(int pair) { Active[pair] = true; _used[pair] = true; _last[pair] = _frame; }
+        internal bool WasUsed(int pair) => _used[pair];
         internal void Finish(ReadOnlySpan<float> pcm, int channels)
         {
             for (var pair = 0; pair < Active.Length; pair++)
@@ -38,11 +39,15 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
         internal Exception? Error;
         internal bool Reported;
         internal Activity? Activity;
+        internal FAudioBusBuffer? Buffer;
+        internal bool InputTap;
     }
     private readonly State _state;
     internal AudioEffectInstance[] Instances => _state.Instances;
     internal float Gain { set { _state.Gain = value; _state.Error = null; _state.Reported = false; } }
     internal Activity? BusActivity { set => _state.Activity = value; }
+    internal FAudioBusBuffer? BusBuffer { set => _state.Buffer = value; }
+    internal bool InputTap { set => _state.InputTap = value; }
     public override bool IsInvalid => handle == 0;
     [LibraryImport("FAudio", EntryPoint = "CreateFAPOBaseWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -83,17 +88,21 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
         // FAudio's silence hint examines only part of a multichannel block. Determine silence per stereo pair below.
         output->BufferFlags = F.FAPOBufferFlags.FAPO_BUFFER_VALID;
         if (enabled == 0) { src.CopyTo(dst); return; }
-        if (state.Error is not null) { dst.Clear(); return; }
+        if (state.Error is not null) { dst.Clear(); state.Buffer?.Write(dst); return; }
         try
         {
             if (state.Source is null)
             {
                 for (var i = 0; i < src.Length; i++) { var sample = src[i] * state.Gain; if (!float.IsFinite(sample)) throw new ArithmeticException("Bus gain produced nonfinite PCM."); dst[i] = sample; }
-                state.Activity?.Finish(dst, state.Channels); return;
+                state.Buffer?.Write(dst);
+                state.Activity?.Finish(dst, state.Channels);
+                if (!state.InputTap) state.Buffer?.AddSend(dst);
+                return;
             }
             ObjectDisposedException.ThrowIf(state.Source.IsDisposed, state.Source);
             if (count > state.Input.Length) throw new InvalidOperationException("The effect quantum exceeds prepared storage.");
             var stereoInput = state.Input.AsSpan(0, count); var stereoOutput = state.Output.AsSpan(0, count);
+            state.Buffer?.Write(src);
             for (var pair = 0; pair < state.Instances.Length; pair++)
             {
                 var silent = true;
@@ -102,8 +111,9 @@ internal sealed unsafe partial class FAudioBusEffect : SafeHandle
                 if (!silent || state.Activity is { } activity && activity.Active[pair] || instance.ProcessSilence()) instance.ProcessNative(stereoInput, stereoOutput); else stereoInput.CopyTo(stereoOutput);
                 for (var i = 0; i < count; i++) { dst[i * state.Channels + pair * 2] = stereoOutput[i].X; dst[i * state.Channels + pair * 2 + 1] = stereoOutput[i].Y; }
             }
+            state.Buffer?.Write(dst);
         }
-        catch (Exception error) { state.Error = error; dst.Clear(); }
+        catch (Exception error) { state.Error = error; dst.Clear(); state.Buffer?.Write(dst); }
     }
     internal Exception? TakeError() { if (_state.Reported || _state.Error is null) return null; _state.Reported = true; return _state.Error; }
     internal void ReleaseInstances()

@@ -2379,6 +2379,46 @@
       "godot": "AudioEffectLimiter::property:soft_clip_ratio",
       "electron2d": "property:Electron2D.AudioEffectLimiter.SoftClipRatio()",
       "reason": "ADR 0047: finite stored legacy authoring value, copied/notified but deliberately absent from the PCM curve as in the pinned contract."
+    },
+    {
+      "godot": "class:AudioEffectCompressor",
+      "electron2d": "T:Electron2D.AudioEffectCompressor",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:threshold",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.Threshold()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:ratio",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.Ratio()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:gain",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.Gain()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:attack_us",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.AttackUS()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:release_ms",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.ReleaseMS()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:mix",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.Mix()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectCompressor::property:sidechain",
+      "electron2d": "property:Electron2D.AudioEffectCompressor.Sidechain()",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -3725,6 +3765,26 @@
     {
       "electron2d": "method:Electron2D.AudioEffectLimiter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectCompressor..ctor()",
+      "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCompressor.OnInstantiate()",
+      "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCompressor.GetPropertyDescriptors()",
+      "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCompressor.CreateDuplicateInstance()",
+      "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectCompressor.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, seven stored controls, independent linked envelopes and exact Resource/scene copying project the executable compressor lifecycle under ADR 0047."
     }
   ],
   "statusGroups": [
@@ -4094,8 +4154,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "ADR 0047: the compressor sidechain contract reads the named bus pre-effect PCM for the same stereo pair and quantum. The current FAudio submix effect hook exposes only its own bus input; a prepared per-bus pre-effect PCM tap plus deterministic producer-before-detector quantum ordering is required before the complete resource/kernel can execute. Build and verify that backend read path with the compressor slice; the generic bus/FAPO chain itself already runs.",
+      "state": "Implemented",
+      "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified.",
       "godot": [
         "AudioEffectCompressor::property:attack_us",
         "AudioEffectCompressor::property:gain",

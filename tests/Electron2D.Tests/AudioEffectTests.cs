@@ -80,7 +80,7 @@ internal static class AudioEffectTests
         try
         {
             server.AddBusEffect(1, scale); server.AddBusEffect(1, capture, int.MaxValue); server.AddBusEffect(1, offset, 1); Check(server.GetBusEffectCount(1) == 3 && ReferenceEquals(server.GetBusEffect(1, 1), offset), "Ordered insertion and append policy.");
-            var instance = server.GetBusEffectInstance(1, 0); Reject<InvalidOperationException>(instance.Dispose); Reject<InvalidOperationException>(() => instance.Process([], [])); Reject<ArgumentOutOfRangeException>(() => server.GetBusEffectInstance(1, 0, 1));
+            var instance = server.GetBusEffectInstance(1, 0); Reject<InvalidOperationException>(instance.Dispose); Reject<InvalidOperationException>(() => instance.Process([], [])); Reject<ArgumentOutOfRangeException>(() => server.GetBusEffectInstance(1, 0, server.GetBusChannels(1)));
             Reject<ArgumentOutOfRangeException>(() => server.GetBusEffect(-1, 0)); Reject<ArgumentOutOfRangeException>(() => server.RemoveBusEffect(1, 3)); Reject<ArgumentNullException>(() => server.AddBusEffect(1, null!));
             Task.Run(() => Reject<InvalidOperationException>(() => server.SetBusEffectEnabled(1, 0, false))).GetAwaiter().GetResult();
             player.Play(); var native = server.Native; Wait(native, 20); server.SetBusVolumeLinear(1, .5f);
