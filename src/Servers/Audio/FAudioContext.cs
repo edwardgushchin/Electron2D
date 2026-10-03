@@ -38,9 +38,10 @@ internal sealed unsafe partial class FAudioContext : IDisposable
         var before = GC.GetAllocatedBytesForCurrentThread();
         lock (context.Gate)
         {
-            if (context._closing) new Span<float>(output, context.QuantumFrames * context.Channels).Clear();
+            if (context._closing || context._switchingOutput) new Span<float>(output, context.QuantumFrames * context.Channels).Clear();
             else
             {
+                var latency = OutputLatency(engine); if (double.IsFinite(latency) && latency >= 0) Volatile.Write(ref context._outputLatency, latency);
                 foreach (var bus in context._busEffects.Values) bus.Activity.Begin(context.QuantumFrames);
                 foreach (var source in context._sources) if (context._busInputs.TryGetValue(source.ActiveSend, out var bus)) source.MarkActivity(bus.Activity);
                 foreach (var sample in context._samples) { sample.CheckSource(); if (context._busInputs.TryGetValue(sample.ActiveSend, out var bus)) sample.MarkActivity(bus.Activity); }
@@ -100,6 +101,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             var settings = ProjectSettings.Instance; var time = settings.GetWithOverride(ProjectSettings.AudioBusesChannelDisableTime); var threshold = settings.GetWithOverride(ProjectSettings.AudioBusesChannelDisableThresholdDB);
             if (!float.IsFinite(time) || time < 0 || time * (double)MixRate > long.MaxValue || !float.IsFinite(threshold)) throw new ArgumentOutOfRangeException(nameof(settings), "Bus activity settings require a finite threshold and nonnegative representable timeout.");
             _disableFrames = (long)(time * MixRate); _disableThreshold = (float)Mathf.DBToLinear(threshold);
+            UpdateOutputSnapshot();
         }
         catch { Dispose(); throw; }
     }
@@ -180,13 +182,10 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal void ForgetSource(FAudioStreamVoice source) => _sources.Remove(source);
     internal string[] Devices()
     {
-        EnsureOwner(); Check(F.FAudio_GetDeviceCount(_engine, out var count), "enumerate output devices"); var result = new string[count];
-        for (uint i = 0; i < count; i++)
-        {
-            Check(F.FAudio_GetDeviceDetails(_engine, i, out var details), "query output device"); var length = 0; while (length < 256 && details.DisplayName[length] != 0) length++;
-            result[i] = new string((char*)details.DisplayName, 0, length);
-        }
-        return result;
+        EnsureOwner(); var ids = SDL3.SDL.GetAudioPlaybackDevices(out _) ?? throw new InvalidOperationException("Output enumeration failed: " + SDL3.SDL.GetError());
+        var names = new List<string> { "Default" };
+        foreach (var id in ids) { var name = SDL3.SDL.GetAudioDeviceName(id) ?? throw new InvalidOperationException("Output name query failed: " + SDL3.SDL.GetError()); if (!names.Contains(name)) names.Add(name); }
+        return names.ToArray();
     }
     internal void DestroyBus(nint voice)
     {

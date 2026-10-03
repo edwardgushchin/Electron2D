@@ -66,6 +66,9 @@ def check(rid: str, publish: Path) -> None:
         dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(audio)], text=True)
         needed = re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic)
         assert "libSDL3.so.0" in needed and not any("SDL2" in name for name in needed), f"Audio must share SDL3: {needed}"
+        audio_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(audio)], text=True)
+        audio_exports = {line.split()[-1] for line in audio_symbols.splitlines()}
+        assert {"e2d_audio_select_output", "e2d_audio_output_latency"} <= audio_exports, "Audio output bridge exports are missing"
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.glob("libicu*")), "A private text publish must not deliver global ICU libraries"

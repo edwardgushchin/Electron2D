@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_OUTPUT") == "1") { AudioOutputTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_OUTPUT_HOST") == "1") { AudioOutputTests.RunHost(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_TRANSITIONS_HOST") == "1") { AudioTransitionTests.RunHost(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_TRANSITIONS") == "1") { AudioTransitionTests.Run(); return; }

@@ -220,7 +220,7 @@ public sealed partial class AudioServer : ElectronObject
     internal void EnsureNative()
     {
         Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate);
-        try { RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
+        try { if (_outputDevice != "Default") _native.SetOutput(_outputDevice); RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
     }
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
     internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndex(name); return _buses[index < 0 ? 0 : index].InputVoice; }

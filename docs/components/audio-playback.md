@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ## Scope and types
 
@@ -287,3 +287,11 @@ The shared [AudioEffectInstance](../classes/AudioEffectInstance.md) path now pre
 [FAudioBusBuffer](../classes/FAudioBusBuffer.md) owns prepared per-pair PCM. A native input submix stage captures all direct source buses before public effects; the existing descending effect stages replace buffers as each effect runs. Final gain publishes post-gain PCM and accumulates active sends into their later targets. Streams and native samples route through those input stages. Name lookup publication, rename, graph replacement and native mixing share the existing gate; routing edits retain envelope identity while preparing new buffers. Native tap/FAPO/voice ownership is released at closure. No vendor source patch, new dependency, graph reorder or public backend type is introduced.
 
 [AudioCompressorTests](../../tests/Electron2D.Tests/AudioCompressorTests.cs) compares seven pinned C++ profiles/14,336 channel samples at the available output rate (initial ordinary profiles had zero maximum error), and checks linked gain, timing, dry/unity, raw controls, finite edges, reset/error recovery, copies and observers. Native tests cover both bus orders, effect/gain/send influence, self/empty/missing lookup, rename, bypass, removal and instance retention. Sixty-four warmed CPU active/silent and native active/paused passes allocate zero measured managed bytes/custom FAudio calls. Two public Window cycles on each current Wayland renderer and 2/4/6/8 logical native profiles execute. Physical listening, actual multichannel speakers, 48,000 Hz engine output, SDL/OS allocations and other platforms remain unverified.
+
+## Output device selection and driver buffering
+
+AudioServer.OutputDevice and GetOutputLatency execute through an engine-owned pinned native bridge, without editing vendored source. SDL's convenience streams forbid rebinding, so the bridge prepares/resumes a replacement output stream/staging buffer and keeps the existing FAudio engine, graph, mix format, playback/effect identity and histories. Switching freezes engine mixing and supplies temporary silence; callback-joining work releases explicit caller-held mix locks before driver operations, then restores them. Invalid names/preparation failures retain the prior stream and preference. Full SDL names replace truncated native display names, and Default is the first selector. Selection survives output closure.
+
+The latency snapshot combines opened SDL device chunk duration with current queued source PCM duration. It is queried at initial preparation and refreshed on output callbacks, with allocation-free public reads. It is not additional OS/transport/DAC or end-to-end audible delay. [AudioOutputTests](../../tests/Electron2D.Tests/AudioOutputTests.cs) checks active/paused streams, native samples, lock-held selection/query, format/identity/cursor retention, PCM and preference reapplication. Current logical 2/4/6/8 profiles and both Wayland hosts execute; repeated switched callbacks/public reads retain the measured zero-allocation boundary. Physical listening, other hardware/platforms and external allocations remain separate gates.
+
+Native sample output coefficients now use destination-major ordering (`destinationChannel × sourceChannelCount + sourceChannel`), matching the shared matrix contract. Output-switch checks cover stereo sample front-pair PCM across logical 2/4/6/8 layouts; this corrects the former transpose that lost the right channel beyond stereo.

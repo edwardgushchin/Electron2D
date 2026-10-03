@@ -117,7 +117,7 @@ internal sealed unsafe class FAudioSampleVoice : IDisposable
             for (var source = 0; source < _sample.NumChannels; source++)
             {
                 var coefficient = _sample.NumChannels == 1 ? _matrix[channel * 2] + _matrix[channel * 2 + 1] : _matrix[channel * 2 + source];
-                var value = coefficient * gain; if (!float.IsFinite(value)) throw new ArithmeticException("Sample gain exceeds finite matrix coefficients."); _nativeMatrix[source * _context.Channels + channel] = value;
+                var value = coefficient * gain; if (!float.IsFinite(value)) throw new ArithmeticException("Sample gain exceeds finite matrix coefficients."); _nativeMatrix[channel * _sample.NumChannels + source] = value;
             }
         }
         fixed (float* matrix = _nativeMatrix) FAudioContext.Check(F.FAudioVoice_SetOutputMatrix(_voice, _send, (uint)_sample.NumChannels, (uint)_context.Channels, (nint)matrix, 0), "set sample matrix");

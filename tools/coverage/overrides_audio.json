@@ -2419,6 +2419,16 @@
       "godot": "AudioEffectCompressor::property:sidechain",
       "electron2d": "property:Electron2D.AudioEffectCompressor.Sidechain()",
       "reason": "ADR 0047: linked attack/release compression and prepared current-quantum named-bus detection execute through FAudio. The pinned buffer is processing-point data, not an unconditional pre-effect tap: prior buses include effects/gain, later buses include sources/received sends, and missing names resolve to Master. Pinned C++ PCM, lookup/order/native and warmed allocation checks verify the current Linux slice; physical listening, actual multichannel hardware and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::property:output_device",
+      "electron2d": "property:Electron2D.AudioServer.OutputDevice()",
+      "reason": "ADR 0047: live selected SDL output stream replacement retains FAudio mix format, playback/bus/effect identity and history. Engine-owned pinned native bridge prepares before commit; invalid selection preserves output. OutputLatency reads current SDL device buffer duration plus queued PCM, cached from callbacks; it excludes additional OS/transport/DAC delay. Native active/paused/sample, logical profiles, host and warm checks verify current Linux behavior."
+    },
+    {
+      "godot": "AudioServer::method:get_output_latency()",
+      "electron2d": "method:Electron2D.AudioServer.GetOutputLatency()",
+      "reason": "ADR 0047: live selected SDL output stream replacement retains FAudio mix format, playback/bus/effect identity and history. Engine-owned pinned native bridge prepares before commit; invalid selection preserves output. OutputLatency reads current SDL device buffer duration plus queued PCM, cached from callbacks; it excludes additional OS/transport/DAC delay. Native active/paused/sample, logical profiles, host and warm checks verify current Linux behavior."
     }
   ],
   "extras": [
@@ -3937,8 +3947,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: live selected output-device rebuild and measured device latency; enumerating names and querying mix clocks does not implement selection/latency (ADR 0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047: live selected SDL output stream replacement retains FAudio mix format, playback/bus/effect identity and history. Engine-owned pinned native bridge prepares before commit; invalid selection preserves output. OutputLatency reads current SDL device buffer duration plus queued PCM, cached from callbacks; it excludes additional OS/transport/DAC delay. Native active/paused/sample, logical profiles, host and warm checks verify current Linux behavior.",
       "godot": [
         "AudioServer::method:get_output_latency()",
         "AudioServer::property:output_device"

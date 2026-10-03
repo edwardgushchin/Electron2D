@@ -1,6 +1,6 @@
 # Electron2D audio decisions
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 This bounded log owns the architectural decisions for audio. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0047](#adr-0047).
 <a id="adr-0047"></a>
 ## ADR 0047: Use FAudio over SDL3 with managed audio decoders
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ### Status
 
@@ -100,6 +100,12 @@ AudioEffectCompressor executes the pinned linked peak/envelope equation with sev
 The pinned AudioServer buffer contract is processing-point PCM. It mixes all direct sources first, executes buses in descending index order, replaces the current bus buffer after each effect, then applies gain and sends. A named detector therefore sees prior buses after effects/gain and later buses with direct sources/received sends; self detection reads this effect's input. Missing nonempty names resolve to Master, and an unused pair is activated and cleared on first read. Earlier coverage's unconditional pre-effect tap/producer-before-detector prerequisite was inaccurate and is replaced by this verified source contract.
 
 Use prepared input submix stages before all public effect stages and engine-owned per-bus/pair buffers to project that contract onto FAudio. Streams/samples route to input stages; public stages retain descending bus order and existing effect instance identity/history. Ordered effects and final gain publish PCM, and active sends accumulate into later buffers. Name lookup publication/rename/rebuild are serialized with native mixing. Native tap, buffer and voice cleanup follows the existing output lifecycle; no vendor patch or graph reorder is required. Pinned C++ PCM, native bus-order/name/effect/gain/send checks, current Wayland hosts and warmed allocation verify the Linux x64 slice. Physical listening, actual multichannel devices and other platforms retain separate gates.
+
+### Live output transport and driver buffering
+
+AudioServer.OutputDevice selects exact full SDL output names plus Default. An engine-owned native bridge compiles into the pinned FAudio target without changing vendor source or adding another deployed library. SDL convenience streams cannot be rebound; prepare a replacement stream and independent staging storage with the existing engine mix format, validate/resume before commitment, then replace/release the old platform payload. The FAudio engine/master voice, graph, effect instances, playback handles/queues, pause/cursors and native quantum remain intact. SDL performs physical format conversion. Freeze mixing while driver work joins callbacks and release/restore explicit caller-held mix locks around that work, preserving owner affinity and avoiding lock inversion. Invalid selection/preparation retains the prior output; the selector survives closure/repreparation.
+
+GetOutputLatency reports opened SDL device chunk duration plus current queued source PCM duration. Cache an initial opened-stream query and refresh on output callbacks; public reads use the finite cache without joining driver callbacks. This is reported driver buffering, not a measurement of additional OS, transport, speaker/DAC or end-to-end audible delay. FAudio's fixed two-quantum performance estimate is not used. The native bridge follows the pinned platform payload/layout, with required exports checked in Linux publishes; prebuilt library overrides must include that bridge. Current native identity/PCM/pause/sample and actual Window host checks establish the Linux x64 slice, while hardware/listening/other-platform boundaries remain explicit.
 
 ### Consequences
 

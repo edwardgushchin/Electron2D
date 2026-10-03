@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(Electron2DAudio C)
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../../src/Vendor/FAudio" faudio)
+target_sources(FAudio-shared PRIVATE output.c)
+target_include_directories(FAudio-shared PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../src/Vendor/FAudio/src")
+set_target_properties(FAudio-shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

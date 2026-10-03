@@ -1,12 +1,12 @@
 # Audio domain
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 Owns audio resource decoding, independent playback state, non-spatial and spatial 2D scene playback, listener selection and output bus routing. The [audio playback component](../components/audio-playback.md) implements the first output path under [ADR 0047](../decisions/audio.md#adr-0047). AudioStream, AudioStreamPlayback, AudioStreamPlaybackResampled, AudioStreamWAV, AudioWAVImportOptions, AudioStreamGenerator, AudioStreamGeneratorPlayback, AudioStreamRandomizer, AudioStreamMP3, AudioStreamOggVorbis, AudioStreamPlaybackOggVorbis, OggPacketSequence, OggPacketSequencePlayback, AudioStreamPlayer, AudioStreamEmitter, AudioListener and AudioServer expose engine-owned types only.
 
 Concrete sources provide immutable prepared PCM; random pools provide borrowed-child selection/configuration and own independent child playback wrappers; playback holds cursors/history; scene nodes borrow streams and own playback/voices; AudioServer owns native output and bus configuration. The runtime embeds internal FAudio#, qoa-fu, NLayer and NVorbis source in Electron2D.dll and ships the pinned native FAudio library sharing SDL3. Engine teardown closes output without disposing borrowed stream resources or the process singleton.
 
-Linux x64 output and packaging are checked locally. Other platform execution, multichannel speakers and physical listening remain unverified. Multichannel Vorbis decoding and remaining concrete effect resources/DSP, music/composite, device-switch, loader and editor dependencies are explicit in [coverage](../coverage/index.md). The completed first mixer is no longer their blanket blocker. Recording input executes; no batch audio-export public capability is claimed under [ADR 0090](../decisions/agent-native.md#adr-0090).
+Linux x64 output and packaging are checked locally. Other platform execution, multichannel speakers and physical listening remain unverified. Multichannel Vorbis decoding and remaining concrete effect resources/DSP, music/composite, loader and editor dependencies are explicit in [coverage](../coverage/index.md). The completed first mixer is no longer their blanket blocker. Recording input executes; no batch audio-export public capability is claimed under [ADR 0090](../decisions/agent-native.md#adr-0090).
 
 Randomizer resources expose weighted/no-repeat/sequential choice and pitch/volume variation on the existing stream path. Player Play constructs one fresh playback per call using bounded lazy native slots; fresh capture, ownership and callback phases are checked through actual FAudio and the public Window host. Their broader inherited dependencies stay on base-class coverage.
 
@@ -60,3 +60,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 [Playlist sequencing](../components/audio-playback.md#playlist-playback) adds timed sequential/shuffled tracks, outgoing tails, loop/seek and independent prepared child ownership. It integrates with both scene player roles and the same queued input/native output path; resource graph state and runtime timeline remain separate.
 
 [Linked compression and sidechain](../components/audio-playback.md#linked-compression-and-sidechain) now provides typed envelope/mix controls and named detection across native buses, preserving effects/gain/sends and current bus ordering. Prepared ingress and buffer publication stay internal; no new vendor dependency or public backend identity is exposed.
+
+[Output selection and buffering](../components/audio-playback.md#output-device-selection-and-driver-buffering) now switches live native transport without recreating playback/DSP state and publishes opened-device chunk/queue duration. End-to-end hardware/transport latency is outside that driver snapshot.

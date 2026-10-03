@@ -1,6 +1,6 @@
 # AudioServer
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 **Declaration:** `public sealed partial class Electron2D.AudioServer` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -40,7 +40,9 @@ Borrowed process-wide service; disposing it throws before logical disposal. The 
 | index | Live bus index. |
 | `public System.String GetDriverName()` | Gets the actual native audio driver. The SDL audio driver after output preparation. |
 | `public System.Single GetMixRate()` | Gets the active audio mix frequency. 44100 Hz before output preparation, otherwise actual native mix frequency. |
-| `public System.String[] GetOutputDeviceList()` | Lists actual output devices. A caller-owned device-name array. |
+| `public System.String[] GetOutputDeviceList()` | Copied full SDL names, starting with Default; duplicate names appear once. |
+| `public string OutputDevice { get; set; }` | Default initially; exact live playback device selection. |
+| `public double GetOutputLatency()` | Reported device chunk plus queued source PCM duration, in seconds. |
 | `public Electron2D.AudioServer.SpeakerMode GetSpeakerMode()` | Gets the native output channel arrangement. The current speaker selector. |
 | `public System.Double GetTimeSinceLastMix()` | Gets elapsed time since the last actual native mix quantum. Seconds, zero before native output exists. |
 | `public System.Double GetTimeToNextMix()` | Gets the estimated time until the next native quantum. Nonnegative seconds based on actual quantum size and mix timestamp. |
@@ -236,3 +238,27 @@ Source OnMix callbacks share the effect-processing configuration guard during bo
 Interactive parents now prepare child controls on the audio owner, including paused microphone input and request capacity, then schedule selected child Start/Stop under the shared audio gate. Public microphone controls/disposal retain owner checks; preparation alone does not record. Mixed interactive/randomizer/synchronized graphs share cycle/owner validation. See [interactive streams](../components/audio-playback.md#interactive-streams) for timing, lifecycle, native evidence and limits.
 
 Named compressor detection now uses prepared processing-point stereo-pair buffers across the native graph. Bus rename/rebuild update lookup while preserving routing-owned effect identity; missing names resolve to Master. See [linked compression](../components/audio-playback.md#linked-compression-and-sidechain).
+
+## Output device selection and buffering
+
+<a id="outputdevice"></a>
+### OutputDevice
+
+The requested exact selector, Default initially. A changed assignment prepares output if necessary and resolves the full SDL device name. Null throws ArgumentNullException; an unavailable name throws ArgumentException; native preparation failure throws InvalidOperationException before replacing the prior stream/name. Equal assignments do nothing. Configuration requires the audio owner and rejects processing callbacks. The preference survives output closure and is reapplied on next preparation.
+
+The engine prepares a new paused native stream and its staging storage before commitment, validates its format/buffering, then resumes it. FAudio's engine, mastering voice, mix format, native quantum, bus/effect instances, playback handles, decoder/generator queues, cursors and pause states remain intact. SDL converts the unchanged engine mix to the selected physical device. During the switch callbacks supply silence without advancing engine playback. Callback-joining driver work runs with caller-held mix locks temporarily released; owner configuration cannot race, and frozen mixing preserves playback state. A successful change replaces/releases the old platform stream and staging storage. Physical output may change without changing GetMixRate/GetSpeakerMode.
+
+<a id="getoutputlatency"></a>
+### GetOutputLatency
+
+Prepares native output on first query and returns a finite driver-buffering snapshot in seconds: `openedDeviceFrames / openedDeviceFrequency + queuedSourceBytes / (mixFrequency × mixChannels × sizeof(float))`. Initial preparation queries the opened stream; normal output callbacks refresh the cache. Repeated owner-thread reads, including inside Lock/Unlock, use the cache and allocate no measured bytes. This is the driver's current reported chunk/queue duration; it does not measure additional audio-server, network/Bluetooth, speaker or DAC delay. It replaces the FAudio fixed two-quantum estimate with opened SDL device/queue data.
+
+```csharp
+AudioServer audio = AudioServer.Instance;
+string[] devices = audio.GetOutputDeviceList();
+audio.OutputDevice = devices.First(name => name != "Default");
+double bufferedSeconds = audio.GetOutputLatency();
+audio.OutputDevice = "Default";
+```
+
+This partial owner-thread snippet requires an available named output. [AudioOutputTests](../../tests/Electron2D.Tests/AudioOutputTests.cs) executes active/paused stream and sample switches, borrowed playback/effect identity, format retention, PCM, invalid names, owner guards, lock-held calls, preference reapplication and warmed allocation. Current logical 2/4/6/8 profiles and two actual Window host cycles on each Wayland renderer are checked. Additional end-to-end audible latency, physical listening, other hardware/drivers/platforms and SDL/OS allocations remain separate limits.

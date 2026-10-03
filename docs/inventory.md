@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 This is the exhaustive inventory of implemented Electron2D engine domains, components, and production types. Test-only helpers are not engine types.
 
@@ -570,3 +570,5 @@ Private TextureRect.SourceState is documented on its class page and owns no reso
 Private SplitContainer Slot/Dragger/SourceState and reusable scratch records are documented on its class page. ThemeDB.Split.cs contributes four embedded icons and bar/touch theme entries without a new exported type.
 
 Private polyphonic Voice entries own bounded pending/active/retired state and prepared scratch, documented on the playback page.
+
+The existing AudioServer/FAudioContext also own live output selection and cached driver chunk/queue duration through [AudioServer.Output.cs](../src/Servers/Audio/AudioServer.Output.cs), [FAudioContext.Output.cs](../src/Servers/Audio/FAudioContext.Output.cs) and [the native bridge](../tools/audio-native/output.c). No new public backend type is introduced.
