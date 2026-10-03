@@ -18,6 +18,7 @@
     <EmbeddedResource Include="Fixtures/Audio/Reverb/reference.json" LogicalName="TestAudio.ReverbReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/Distortion/reference.json" LogicalName="TestAudio.DistortionReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/HardLimiter/reference.json" LogicalName="TestAudio.HardLimiterReference.json" />
+    <EmbeddedResource Include="Fixtures/Audio/Limiter/reference.json" LogicalName="TestAudio.LimiterReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/PitchShift/reference.json" LogicalName="TestAudio.PitchShiftReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/Phaser/reference.json" LogicalName="TestAudio.PhaserReference.json" />
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf" LogicalName="TestFonts.%(Filename)%(Extension)" />

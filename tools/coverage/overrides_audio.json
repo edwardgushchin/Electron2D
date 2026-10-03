@@ -2354,6 +2354,31 @@
       "godot": "AudioStreamPlaylist::property:stream_count",
       "electron2d": "property:Electron2D.AudioStreamPlaylist.StreamCount()",
       "reason": "ADR 0047: borrowed fixed-64 list, active-prefix Resource metadata/authoring/copies, fresh order, output-clock sequence/seek/loops, outgoing fade and prepared queued child controls execute. Cohort factories/ownership rollback and callback/cleanup containment are verified by AudioPlaylistTests with exact CPU boundaries, actual FAudio/public hosts and warmed allocation. Empty modulo, cursor reset/precision, stale block transition/padding and final cleanup defects are corrected explicitly; physical/hardware/other-platform gates remain separate."
+    },
+    {
+      "godot": "class:AudioEffectLimiter",
+      "electron2d": "T:Electron2D.AudioEffectLimiter",
+      "reason": "ADR 0047: stateless per-channel gain compensation, legacy soft-clip curve, strict sample cap and four live typed controls execute through the FAudio chain. AudioLimiterTests compares pinned C++ PCM and validates finite raw-control edges, copies, native logical profiles and warmed callback allocation. Physical listening, true peaks, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectLimiter::property:threshold_db",
+      "electron2d": "property:Electron2D.AudioEffectLimiter.ThresholdDB()",
+      "reason": "ADR 0047: stateless per-channel gain compensation, legacy soft-clip curve, strict sample cap and four live typed controls execute through the FAudio chain. AudioLimiterTests compares pinned C++ PCM and validates finite raw-control edges, copies, native logical profiles and warmed callback allocation. Physical listening, true peaks, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectLimiter::property:ceiling_db",
+      "electron2d": "property:Electron2D.AudioEffectLimiter.CeilingDB()",
+      "reason": "ADR 0047: stateless per-channel gain compensation, legacy soft-clip curve, strict sample cap and four live typed controls execute through the FAudio chain. AudioLimiterTests compares pinned C++ PCM and validates finite raw-control edges, copies, native logical profiles and warmed callback allocation. Physical listening, true peaks, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectLimiter::property:soft_clip_db",
+      "electron2d": "property:Electron2D.AudioEffectLimiter.SoftClipDB()",
+      "reason": "ADR 0047: stateless per-channel gain compensation, legacy soft-clip curve, strict sample cap and four live typed controls execute through the FAudio chain. AudioLimiterTests compares pinned C++ PCM and validates finite raw-control edges, copies, native logical profiles and warmed callback allocation. Physical listening, true peaks, actual multichannel devices and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioEffectLimiter::property:soft_clip_ratio",
+      "electron2d": "property:Electron2D.AudioEffectLimiter.SoftClipRatio()",
+      "reason": "ADR 0047: finite stored legacy authoring value, copied/notified but deliberately absent from the PCM curve as in the pinned contract."
     }
   ],
   "extras": [
@@ -3680,6 +3705,26 @@
     {
       "electron2d": "method:Electron2D.AudioStreamPlaylist.ValidateDisposal()",
       "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited playlist metadata/factory/start/stop/seek/loop/cursor/mixing/lifetime projection. Own child state and output-clock scheduling stay out of Resource snapshots; all callbacks, defaults and executable limits are documented."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioEffectLimiter..ctor()",
+      "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLimiter.OnInstantiate()",
+      "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLimiter.GetPropertyDescriptors()",
+      "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLimiter.CreateDuplicateInstance()",
+      "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioEffectLimiter.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, four stored controls, independent stateless processing and exact Resource/scene copying project the executable legacy limiter lifecycle under ADR 0047."
     }
   ],
   "statusGroups": [
@@ -4111,8 +4156,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "The deprecated soft-clip Limiter remains a separate executable transfer curve with typed ThresholdDB, CeilingDB, SoftClipDB and retained inert SoftClipRatio; the generic FAudio effect chain is available (ADR 0047). Implement and verify that complete legacy processor before claiming these rows.",
+      "state": "Implemented",
+      "reason": "ADR 0047: stateless per-channel gain compensation, legacy soft-clip curve, strict sample cap and four live typed controls execute through the FAudio chain. AudioLimiterTests compares pinned C++ PCM and validates finite raw-control edges, copies, native logical profiles and warmed callback allocation. Physical listening, true peaks, actual multichannel devices and other platforms remain unverified.",
       "godot": [
         "AudioEffectLimiter::property:ceiling_db",
         "AudioEffectLimiter::property:soft_clip_db",

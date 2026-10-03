@@ -38,7 +38,7 @@ instance.Process(source, destination);
 <a id="process"></a>
 ### Process and OnProcess
 
-Input and output have identical frame counts and may alias. Nonfinite input, mismatched lengths or nonfinite hook output throw ArgumentException. Empty blocks are valid. OnProcess must overwrite every destination frame; do not retain spans. Processing a bus-owned instance directly or recursively throws InvalidOperationException. Disposed instances throw ObjectDisposedException. Standalone hook failures propagate and release the processing gate.
+Input and output have identical frame counts and may alias. Partial overlap in either direction prepares a private source copy before invoking the hook; its first call or capacity growth may allocate, and repeated equal-or-smaller blocks reuse that storage. Exact in-place and disjoint spans need no copy. Nonfinite input, mismatched lengths or nonfinite hook output throw ArgumentException. Empty blocks are valid. OnProcess must overwrite every destination frame; do not retain spans. Processing a bus-owned instance directly or recursively throws InvalidOperationException. Disposed instances throw ObjectDisposedException. Standalone hook failures propagate and release the processing gate.
 
 The bus path deinterleaves each output stereo pair into prepared buffers, invokes the same contract and interleaves the result. It contains hook exceptions at the native boundary, clears the entire failed effect block and continues to output silence through that effect until structural recreation. The next owner SceneTree frame reports collected errors once while still running ordinary frame callbacks. Later downstream effects continue processing the silence.
 

@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 namespace Electron2D;
 
 /// <summary>Describes an audio bus effect and creates independent stereo processing state.</summary>
@@ -30,6 +33,7 @@ public abstract class AudioEffect : Resource
 public abstract class AudioEffectInstance : ElectronObject
 {
     private readonly object _gate = new();
+    private Vector2[] _overlapScratch = [];
     private bool _processing, _attached;
     internal bool IsAttached { get { lock (_gate) return _attached; } }
     /// <summary>Initializes independent processing state.</summary>
@@ -37,6 +41,8 @@ public abstract class AudioEffectInstance : ElectronObject
     /// <summary>Processes a complete standalone stereo block into caller-provided storage.</summary>
     /// <param name="source">Finite stereo input; it may alias destination.</param>
     /// <param name="destination">Output with exactly the same number of frames; overwritten by the hook.</param>
+    /// <remarks>Partial overlap prepares a reusable input copy; its first call or capacity growth may allocate.
+    /// Exact in-place and disjoint blocks need no copy.</remarks>
     /// <exception cref="ArgumentException">Lengths differ or PCM is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">The instance is bus-owned or processing is reentrant.</exception>
     /// <exception cref="ObjectDisposedException">The instance is disposed.</exception>
@@ -49,6 +55,11 @@ public abstract class AudioEffectInstance : ElectronObject
             ThrowIfDisposed(); if (_processing || _attached && !native) throw new InvalidOperationException("Effect processing is reentrant or bus-owned.");
             if (source.Length != destination.Length) throw new ArgumentException("Effect input and output lengths must match.");
             foreach (var frame in source) if (!float.IsFinite(frame.X) || !float.IsFinite(frame.Y)) throw new ArgumentException("Effect input must be finite.", nameof(source));
+            if (source.Overlaps(destination) && !Unsafe.AreSame(ref MemoryMarshal.GetReference(source), ref MemoryMarshal.GetReference(destination)))
+            {
+                if (_overlapScratch.Length < source.Length) _overlapScratch = new Vector2[source.Length];
+                source.CopyTo(_overlapScratch); source = _overlapScratch.AsSpan(0, source.Length);
+            }
             _processing = true;
             AudioServer.EnterAudioProcessing();
             try

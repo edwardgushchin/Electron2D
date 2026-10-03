@@ -74,7 +74,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectHighPassFilter](classes/AudioEffectHighPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectHighShelfFilter](classes/AudioEffectHighShelfFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectInstance](classes/AudioEffectInstance.md) | RefCounted | Implemented | 2 |
-| [AudioEffectLimiter](classes/AudioEffectLimiter.md) | AudioEffect | Unimplemented | 4 |
+| [AudioEffectLimiter](classes/AudioEffectLimiter.md) | AudioEffect | Implemented | 4 |
 | [AudioEffectLowPassFilter](classes/AudioEffectLowPassFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectLowShelfFilter](classes/AudioEffectLowShelfFilter.md) | AudioEffectFilter | Implemented | 0 |
 | [AudioEffectNotchFilter](classes/AudioEffectNotchFilter.md) | AudioEffectFilter | Implemented | 0 |
