@@ -29,7 +29,7 @@ public sealed class AudioStreamEmitter : Entity
     /// <summary>Gets or sets automatic playback at the first fixed scene step after entry.</summary>
     public bool Autoplay { get { Check(); return _autoplay; } set { EnsureMutable(); _autoplay = value; } }
     /// <summary>Gets or sets the pause state of active voices.</summary>
-    /// <remarks>Pause prepares one final fading block before freezing cursors; resume ramps from silence.</remarks>
+    /// <remarks>Stream pause prepares a final fade before freezing cursors; native sample pause stops without flushing its buffer.</remarks>
     public bool StreamPaused { get { Check(); return _player.StreamPaused; } set { EnsureMutable(); _player.StreamPaused = value; } }
     /// <summary>Gets or sets the authored bus, before an eligible Area overrides routing.</summary>
     /// <value>Master initially; missing names resolve to Master.</value>
@@ -39,10 +39,10 @@ public sealed class AudioStreamEmitter : Entity
         set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _bus = value; if (_areaMask == 0) _player.Bus = value; }
     }
     /// <summary>Gets or sets decibel source gain; negative infinity silences output.</summary>
-    /// <remarks>Gain edits interpolate over the next native block; unrepresentable linear gain rejects.</remarks>
+    /// <remarks>Stream gain edits interpolate over the next native block; native samples update their matrix; unrepresentable linear gain rejects.</remarks>
     public float VolumeDB { get { Check(); return _player.VolumeDB; } set { EnsureMutable(); _player.VolumeDB = value; } }
     /// <summary>Gets or sets nonnegative linear source gain.</summary>
-    /// <remarks>Edits interpolate over the next native block.</remarks>
+    /// <remarks>Stream edits interpolate over the next native block; native samples update their matrix.</remarks>
     public float VolumeLinear { get { Check(); return _player.VolumeLinear; } set { EnsureMutable(); _player.VolumeLinear = value; } }
     /// <summary>Gets or sets positive finite playback pitch.</summary>
     public float PitchScale { get { Check(); return _player.PitchScale; } set { EnsureMutable(); _player.PitchScale = value; } }
@@ -85,8 +85,8 @@ public sealed class AudioStreamEmitter : Entity
     public event Action? Finished;
 
     /// <summary>Starts a fresh playback at finite stream time.</summary>
-    /// <remarks>The initial 64 lookahead frames are silent; attack is retained at full configured gain.
-    /// Replaced voices retain their prepared outgoing fade.</remarks>
+    /// <remarks>The streamed path has 64 silent lookahead frames and retains full attack; samples submit a complete native buffer.
+    /// Replaced streamed voices retain their prepared outgoing fade.</remarks>
     /// <param name="fromPosition">Start position in seconds, zero by default.</param>
     /// <exception cref="ArgumentOutOfRangeException">The start time is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Playback lacks an active scene or requires an invertible canvas transform.</exception>

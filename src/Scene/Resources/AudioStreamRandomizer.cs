@@ -261,7 +261,7 @@ public sealed class AudioStreamRandomizer : AudioStream
 
     private sealed class Playback(AudioStreamRandomizer source, AudioStreamPlayback? child) : AudioStreamPlayback
     {
-        internal override bool RequiresAudioOwner => child?.RequiresAudioOwner == true;
+        internal override bool RequiresAudioOwner => base.RequiresAudioOwner || child?.RequiresAudioOwner == true;
         private bool _started;
         private float _pitch = 1, _gain = 1;
         private void Check() => ObjectDisposedException.ThrowIf(source.IsDisposed, source);

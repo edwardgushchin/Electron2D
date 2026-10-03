@@ -8,7 +8,7 @@ Last updated: 2026-10-03
 
 ## Description
 
-Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list, but player-to-playback typed descriptor propagation executes; usage tagging and complete composite parameter surfaces retain their own prerequisites. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. Sample generation/registration is not implemented.
+Abstract Resource extension contract with independent caller-owned playback instances. The player borrows the stream. Base duration is zero, monophonic policy true and meta policy false. Optional name, BPM, beat/bar, loop and textual tag hooks retain their source contracts for custom/composite streams. Typed parameter descriptors replace the untyped list, but player-to-playback typed descriptor propagation executes; usage tagging and complete composite parameter surfaces retain their own prerequisites. Callbacks used in actual playback run on the native audio thread; mutable custom data must be synchronized and warmed mixing must not allocate. CanBeSampled defaults false; GenerateSample rejects unsupported resources. WAV/MP3/Vorbis override both and return caller-owned immutable PCM snapshots for native playback.
 
 ## API summary
 
@@ -35,6 +35,23 @@ Abstract Resource extension contract with independent caller-owned playback inst
 | `protected virtual System.Boolean OnHasLoop()` | Supplies optional looping metadata for composite streams. False by default. |
 | `protected abstract Electron2D.AudioStreamPlayback OnInstantiatePlayback()` | Creates independent playback state. A new caller-owned playback. |
 | `protected virtual System.Boolean OnIsMonophonic()` | Supplies the monophonic policy. True by default. |
+
+## Native sample methods
+
+| Full signature | Contract |
+| --- | --- |
+| `public virtual bool CanBeSampled()` | False by default; finite WAV/MP3/Vorbis return true. |
+| `public virtual AudioSample GenerateSample()` | Returns an independent copied snapshot; unsupported resources throw NotSupportedException. |
+
+## Method Descriptions
+
+### CanBeSampled
+
+False by default; finite WAV/MP3/Vorbis return true. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
+
+### GenerateSample
+
+Returns an independent copied snapshot; unsupported resources throw NotSupportedException. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
 
 ## Verification and limits
 

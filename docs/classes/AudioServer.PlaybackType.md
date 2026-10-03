@@ -1,6 +1,6 @@
 # AudioServer.PlaybackType
 
-Last updated: 2026-10-01
+Last updated: 2026-10-03
 
 **Declaration:** `public enum Electron2D.AudioServer.PlaybackType` · **Source:** [AudioServer.cs](../../src/Servers/Audio/AudioServer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -8,7 +8,7 @@ Typed numeric selector.
 
 ## Description
 
-Retains all numeric selector identities. Unsupported execution prerequisites are recorded on the owning class and in coverage; an enum value alone does not prove an output path.
+Default resolves ProjectSettings.AudioGeneralDefaultPlaybackType. Stream uses the managed block mixer; Sample uses complete native finite buffers for sample-capable resources and otherwise falls back to streaming. Max remains nonselectable. The project default has its separate two-value AudioDefaultPlaybackType domain.
 
 ## API summary
 

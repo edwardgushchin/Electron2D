@@ -8,6 +8,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
 {
     private readonly FAudioContext _context;
     private AudioStreamPlayback _playback;
+    private FAudioSampleVoice? _sample;
     private readonly Vector2[] _frames;
     private readonly float[] _ring, _output, _tail, _previousMatrix;
     private readonly Vector2[] _lookahead = new Vector2[64];
@@ -27,7 +28,8 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     private struct Callback { internal F.FAudioVoiceCallback Functions; internal nint User; }
     internal FAudioStreamVoice(FAudioContext context, AudioStreamPlayback playback, nint send)
     {
-        context.EnsureOwner(); _context = context; _send = send; _playback = playback; _frames = new Vector2[context.QuantumFrames + 64]; _ring = new float[context.QuantumFrames * context.Channels * 4]; _output = new float[context.QuantumFrames * context.Channels]; _tail = new float[_output.Length]; _matrix = new float[context.Channels * 2]; _previousMatrix = new float[_matrix.Length];
+        context.EnsureOwner(); _context = context; _send = send; _playback = playback; if (playback.GetSamplePlayback() is { } request) { _frames = []; _ring = _output = _tail = _matrix = _previousMatrix = []; _sample = context.CreateSample(request, AudioServer.Instance.GetSample(request.Stream), send); _sample.Wrapped = true; return; }
+        _frames = new Vector2[context.QuantumFrames + 64]; _ring = new float[context.QuantumFrames * context.Channels * 4]; _output = new float[context.QuantumFrames * context.Channels]; _tail = new float[_output.Length]; _matrix = new float[context.Channels * 2]; _previousMatrix = new float[_matrix.Length];
         lock (context.Gate) try
             {
                 _pin = GCHandle.Alloc(_ring, GCHandleType.Pinned); _self = GCHandle.Alloc(this); _callback = (Callback*)NativeMemory.AllocZeroed((nuint)sizeof(Callback));
@@ -111,9 +113,9 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         _previousMatrix.AsSpan().Clear();
     }
     private void Check() { _context.EnsureOwner(); ObjectDisposedException.ThrowIf(_voice == 0, this); }
-    internal bool Finished { get { Check(); lock (_context.Gate) { if (_error is { } error) { _error = null; throw new InvalidOperationException("Audio stream mixing failed.", error); } return _active && !_paused && _ending; } } }
-    internal bool Playing { get { Check(); lock (_context.Gate) return _active; } }
-    internal nint ActiveSend => (_active && !_paused) || _tailPending ? _send : 0;
+    internal bool Finished { get { if (_sample is { } sample) return sample.Finished; Check(); lock (_context.Gate) { if (_error is { } error) { _error = null; throw new InvalidOperationException("Audio stream mixing failed.", error); } return _active && !_paused && _ending; } } }
+    internal bool Playing { get { if (_sample is { } sample) return sample.Playing; Check(); lock (_context.Gate) return _active; } }
+    internal nint ActiveSend => _sample is not null ? 0 : (_active && !_paused) || _tailPending ? _send : 0;
     internal void MarkActivity(FAudioBusEffect.Activity activity)
     {
         if (_spatial) { activity.Use(0); return; }
@@ -121,10 +123,11 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         if (_context.Channels >= 4 && _target != AudioStreamPlayer.MixTarget.Stereo)
             for (var pair = 1; pair < _context.Channels / 2; pair++) if (pair == 1 || _target == AudioStreamPlayer.MixTarget.Surround) activity.Use(pair);
     }
-    internal bool Paused { get { Check(); lock (_context.Gate) return _active && _paused; } }
-    internal double Position { get { Check(); lock (_context.Gate) { return _active ? _playback.GetPlaybackPosition() : 0; } } }
+    internal bool Paused { get { if (_sample is { } sample) return sample.Paused; Check(); lock (_context.Gate) return _active && _paused; } }
+    internal double Position { get { if (_sample is { } sample) return sample.Position; Check(); lock (_context.Gate) { return _active ? _playback.GetPlaybackPosition() : 0; } } }
     internal void Play(double position)
     {
+        if (_sample is { } sample) { sample.Play(position); return; }
         Check(); lock (_context.Gate)
         {
             _active = false; _paused = false; StopNative(); _playback.Start(position); _ring.AsSpan().Clear(); _lookahead.AsSpan().Clear(); _matrix.CopyTo(_previousMatrix, 0); _cursor = 0; _error = null; _ending = false; _paused = false;
@@ -134,6 +137,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     }
     internal void Stop()
     {
+        if (_sample is { } sample) { sample.Stop(); return; }
         Check(); lock (_context.Gate)
         {
             var active = _active; List<Exception>? errors = null;
@@ -149,6 +153,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     }
     internal void Pause(bool value)
     {
+        if (_sample is { } sample) { sample.Pause(value); return; }
         Check(); lock (_context.Gate)
         {
             if (_paused == value) return;
@@ -156,9 +161,10 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
             finally { _paused = value; if (value) _previousMatrix.AsSpan().Clear(); }
         }
     }
-    internal void SetPitch(float value) { Check(); lock (_context.Gate) _pitch = value; }
+    internal void SetPitch(float value) { if (_sample is { } sample) { sample.SetPitch(value); _pitch = value; return; } Check(); lock (_context.Gate) _pitch = value; }
     internal void SetVolume(float value, float routingGain)
     {
+        if (_sample is { } sample) { sample.SetVolume(value, routingGain); _volume = value; _routingGain = routingGain; return; }
         Check(); lock (_context.Gate)
         {
             var gateChanged = _routingGain != routingGain;
@@ -166,9 +172,10 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
             if (gateChanged) { _matrix.CopyTo(_previousMatrix, 0); if (routingGain == 0) { _tail.AsSpan().Clear(); _tailPending = false; } }
         }
     }
-    internal void SetSend(nint voice) { Check(); lock (_context.Gate) { _context.SetSend(_voice, voice); _send = voice; } }
+    internal void SetSend(nint voice) { if (_sample is { } sample) { sample.SetSend(voice); _send = voice; return; } Check(); lock (_context.Gate) { _context.SetSend(_voice, voice); _send = voice; } }
     internal void SetMixTarget(AudioStreamPlayer.MixTarget target)
     {
+        if (_sample is { } sample) { sample.SetTarget(target); _target = target; return; }
         Check(); lock (_context.Gate)
         {
             _target = target; var count = _context.Channels;
@@ -183,6 +190,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     }
     internal void SetSpatial(float left, float right)
     {
+        if (_sample is { } sample) { sample.SetSpatial(left, right); _spatial = true; _spatialLeft = left; _spatialRight = right; return; }
         Check();
         if (!float.IsFinite(left) || !float.IsFinite(right) || left < 0 || right < 0)
             throw new ArgumentOutOfRangeException(nameof(left));
@@ -201,6 +209,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     }
     internal void MoveTailTo(FAudioStreamVoice target)
     {
+        if (_sample is not null || target._sample is not null) { _context.EnsureOwner(); lock (_context.Gate) { _tail.AsSpan().Clear(); _tailPending = false; } return; }
         Check(); target.Check(); lock (_context.Gate)
         {
             if (!_tailPending) return;
@@ -211,6 +220,13 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     }
     internal void ReplacePlayback(AudioStreamPlayback playback)
     {
+        if (_sample is { } sample)
+        {
+            if (playback.GetSamplePlayback() is not { } request) throw new InvalidOperationException("Sample/stream mode changed without releasing its slot.");
+            var next = _context.CreateSample(request, AudioServer.Instance.GetSample(request.Stream), _send); next.Wrapped = true;
+            try { next.SetPitch(_pitch); next.SetVolume(_volume, _routingGain); next.SetTarget(_target); if (_spatial) next.SetSpatial(_spatialLeft, _spatialRight); } catch { next.Dispose(); throw; }
+            sample.Dispose(); var old = _playback; _playback = playback; _sample = next; old.Dispose(); return;
+        }
         Check(); lock (_context.Gate) { Stop(); var old = _playback; _playback = playback; old.Dispose(); }
     }
     internal AudioStreamPlayback Playback => _playback;
@@ -218,7 +234,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
     {
         lock (_context.Gate)
         {
-            _active = false; if (_voice != 0) { F.FAudioVoice_DestroyVoice(_voice); _voice = 0; }
+            _sample?.Dispose(); _sample = null; _active = false; if (_voice != 0) { F.FAudioVoice_DestroyVoice(_voice); _voice = 0; }
             if (_pin.IsAllocated) _pin.Free(); if (_self.IsAllocated) _self.Free(); if (_callback is not null) { NativeMemory.Free(_callback); _callback = null; }
             _context.ForgetSource(this);
         }

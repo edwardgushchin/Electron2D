@@ -11,7 +11,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     private readonly Vector2[] _scratch = new Vector2[128];
     private int _count;
     private bool _active, _busy, _querying;
-    internal override bool RequiresAudioOwner { get { foreach (var child in _children) if (child?.RequiresAudioOwner == true) return true; return false; } }
+    internal override bool RequiresAudioOwner { get { if (base.RequiresAudioOwner) return true; foreach (var child in _children) if (child?.RequiresAudioOwner == true) return true; return false; } }
     internal AudioStreamPlaybackSynchronized(AudioStreamSynchronized source, AudioStreamPlayback?[] children, int count) { _source = source; _children = children; _count = count; }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     internal void EnsureIdle() { if (_busy || _querying) throw new InvalidOperationException("Synchronized child callbacks cannot reenter playback mutation or mixing."); }

@@ -38,7 +38,7 @@ The window owns the node; dispose the borrowed stream after the scene finishes.
 | `public float VolumeLinear { get; set; }` | 1 | Nonnegative linear source gain. |
 | `public float PitchScale { get; set; }` | 1 | Positive playback-rate multiplier. |
 | `public int MaxPolyphony { get; set; }` | 1 | Positive native voice capacity; oldest voice is replaced when full. |
-| `public AudioServer.PlaybackType PlaybackType { get; set; }` | Default | Stream/sample selector; see inherited sample-path limit. |
+| `public AudioServer.PlaybackType PlaybackType { get; set; }` | Default | Stream/sample/default selector through the private player. |
 | `public bool Playing { get; set; }` | false | Setter starts at zero or stops all voices. |
 | `public float MaxDistance { get; set; }` | 2000 | Positive maximum audible scene distance. |
 | `public float Attenuation { get; set; }` | 1 | Nonnegative distance-rolloff exponent. |
@@ -75,7 +75,7 @@ The private player provides the same borrowed-resource, polyphony, cursor, event
 
 ## Verification and limits
 
-[AudioSpatialTests](../../tests/Electron2D.Tests/AudioSpatialTests.cs) covers typed scene storage, listener selection, centered/right/attenuated PCM, Area bus capture, route recovery, and 64 warmed spatial point-query/matrix updates without managed allocation or custom FAudio allocator calls. Linux Wayland GPU and compatibility hosts use the SDL dummy audio driver; physical listening and other platforms remain unverified. Shared stream start/stop/pause/gain transitions now execute through the internal player. Native sample registration and editor-hint autoplay suppression retain the [base player's precise dependencies](../coverage/classes/AudioStreamPlayer.md). [Own coverage](../coverage/classes/AudioStreamPlayer2D.md) keeps those dependencies Partial.
+[AudioSpatialTests](../../tests/Electron2D.Tests/AudioSpatialTests.cs) covers typed scene storage, listener selection, centered/right/attenuated PCM, Area bus capture, route recovery, and 64 warmed spatial point-query/matrix updates without managed allocation or custom FAudio allocator calls. Linux Wayland GPU and compatibility hosts use the SDL dummy audio driver; physical listening and other platforms remain unverified. Shared stream start/stop/pause/gain transitions now execute through the internal player. Editor-hint autoplay suppression retains the [base player's precise dependencies](../coverage/classes/AudioStreamPlayer.md). [Own coverage](../coverage/classes/AudioStreamPlayer2D.md) keeps those dependencies Partial.
 
 
 ## Stream transitions

@@ -37,7 +37,7 @@ Reusable copied encoded sample resource. Defaults: PCM8, 44100 Hz, mono, disable
 | `public System.Byte[] Data { get; set; }` | Gets or sets copied encoded audio bytes. Empty initially; setters/getters never share caller-owned array storage. |
 | System.ArgumentNullException | The input is null. |
 | System.ObjectDisposedException | The stream is disposed. |
-| `public Electron2D.AudioStreamWAV.LoopMode Loop { get; set; }` | Gets or sets Loop sample metadata. Disabled initially. Undefined modes reject. |
+| `public Electron2D.AudioLoopMode Loop { get; set; }` | Gets or sets Loop sample metadata. Disabled initially. Undefined modes reject. |
 | System.ArgumentOutOfRangeException | The assigned mode/rate is invalid. |
 | System.ObjectDisposedException | The resource is disposed. |
 | `public System.Int32 LoopBegin { get; set; }` | Gets or sets LoopBegin sample metadata. Zero initially; loop sample index. Validity is checked when consumed. |
@@ -58,6 +58,21 @@ Reusable copied encoded sample resource. Defaults: PCM8, 44100 Hz, mono, disable
 | `public System.Collections.Generic.Dictionary<System.String, System.String> Tags { get; set; }` | Gets or sets copied textual RIFF metadata. An empty dictionary initially. Keys and values must be nonnull. |
 | System.ArgumentNullException | The map or a key/value is null. |
 | System.ObjectDisposedException | The stream is disposed. |
+
+## Sampling overrides
+
+| Full signature | Contract |
+| --- | --- |
+| `public override bool CanBeSampled()` | True for a live resource. |
+| `public override AudioSample GenerateSample()` | Cold copied decoded mono/stereo PCM at its original rate. |
+
+### CanBeSampled
+
+Reports finite sample capability; corrupt encoded data can still fail when generated. Empty disabled-loop PCM is valid.
+
+### GenerateSample
+
+Returns caller-owned [AudioSample](AudioSample.md) from decoded PCM8/PCM16/IMA/QOA. Invalid rate/loop bounds or nonfinite PCM reject. WAV retains encoded resource metadata, including negative rates, but generation requires positive PCM rate. Native loop end is exclusive; streamed WAV retains its separate batch endpoint policy. Native sample rate/pitch limits apply during native preparation.
 
 ## Verification and limits
 

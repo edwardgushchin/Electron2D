@@ -10,6 +10,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     private readonly int _owner = Environment.CurrentManagedThreadId;
     private readonly List<nint> _voices = [];
     private readonly List<FAudioStreamVoice> _sources = [];
+    private readonly List<FAudioSampleVoice> _samples = [];
     private readonly Dictionary<nint, (FAudioBusEffect Gain, int MeterIndex, FAudioBusEffect.Activity Activity)> _busEffects = [];
     private long _disableFrames;
     private float _disableThreshold;
@@ -41,6 +42,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
             {
                 foreach (var bus in context._busEffects.Values) bus.Activity.Begin(context.QuantumFrames);
                 foreach (var source in context._sources) if (context._busEffects.TryGetValue(source.ActiveSend, out var bus)) source.MarkActivity(bus.Activity);
+                foreach (var sample in context._samples) { sample.CheckSource(); if (context._busEffects.TryGetValue(sample.ActiveSend, out var bus)) sample.MarkActivity(bus.Activity); }
                 original(engine, output);
                 if (context._capture is { } capture)
                 {
@@ -146,7 +148,13 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal void SetBusVolume(nint voice, float value) { EnsureOwner(); lock (Gate) _busEffects[voice].Gain.Gain = value; }
     internal void EnableBusEffect(nint voice, int index, bool enabled) { EnsureOwner(); lock (Gate) Check(enabled ? F.FAudioVoice_EnableEffect(voice, (uint)index, 0) : F.FAudioVoice_DisableEffect(voice, (uint)index, 0), "set bus effect state"); }
     internal void CollectBusGainErrors(ref List<Exception>? errors) { foreach (var bus in _busEffects.Values) if (bus.Gain.TakeError() is { } error) Node.CollectException(ref errors, error); }
-    internal FAudioStreamVoice CreateStream(AudioStreamPlayback playback, nint send) { var source = new FAudioStreamVoice(this, playback, send); _sources.Add(source); return source; }
+    internal FAudioStreamVoice CreateStream(AudioStreamPlayback playback, nint send) { EnsureOwner(); lock (Gate) { var source = new FAudioStreamVoice(this, playback, send); _sources.Add(source); return source; } }
+    internal FAudioSampleVoice CreateSample(AudioSamplePlayback request, AudioSample sample, nint send) { EnsureOwner(); lock (Gate) { var voice = new FAudioSampleVoice(this, request, sample, send); _samples.Add(voice); return voice; } }
+    internal void ForgetSample(FAudioSampleVoice voice) => _samples.Remove(voice);
+    internal bool HasStandaloneSamples => _samples.Any(sample => !sample.Wrapped && sample.Playing);
+    internal void RefreshStandaloneSamplePitch() { foreach (var sample in _samples) if (!sample.Wrapped) sample.RefreshPitch(); }
+    internal void RefreshStandaloneSampleGains() { foreach (var sample in _samples) sample.RefreshStandaloneGain(); }
+    internal void RefreshStandaloneSampleRouting() { foreach (var sample in _samples) if (!sample.Wrapped) sample.RefreshBus(); }
     internal nint[] BusVoices() => _voices.ToArray();
     internal void ForgetSource(FAudioStreamVoice source) => _sources.Remove(source);
     internal string[] Devices()
@@ -166,6 +174,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
         lock (Gate)
         {
             _closing = true; while (_sources.Count != 0) _sources[^1].Dispose();
+            while (_samples.Count != 0) _samples[^1].Dispose();
             for (var i = _voices.Count - 1; i >= 0; i--) { F.FAudioVoice_DestroyVoice(_voices[i]); _busEffects[_voices[i]].Gain.Dispose(); }
             _voices.Clear(); _busEffects.Clear();
         }

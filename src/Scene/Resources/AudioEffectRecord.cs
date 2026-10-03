@@ -63,7 +63,7 @@ public sealed class AudioEffectRecord : AudioEffect
         }
         if (pcm.Length == 0) return null;
         var encoded = AudioPCMCodec.Encode(pcm, format, 2, rate);
-        return new AudioStreamWAV { SampleFormat = format, Stereo = true, MixRate = rate, Loop = AudioStreamWAV.LoopMode.Disabled, Data = encoded };
+        return new AudioStreamWAV { SampleFormat = format, Stereo = true, MixRate = rate, Loop = AudioLoopMode.Disabled, Data = encoded };
     }
 
     /// <inheritdoc />

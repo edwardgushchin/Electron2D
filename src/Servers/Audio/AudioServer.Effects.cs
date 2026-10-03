@@ -7,7 +7,7 @@ public sealed partial class AudioServer
     [ThreadStatic] private static int _audioProcessing;
     internal static void EnterAudioProcessing() => _audioProcessing++;
     internal static void ExitAudioProcessing() => _audioProcessing--;
-    private void CheckAudioReentrancy() { if (_audioProcessing != 0 || Environment.CurrentManagedThreadId == _owner && _effectCallback) throw new InvalidOperationException("Audio callbacks cannot reenter audio configuration."); }
+    private void CheckAudioReentrancy() { if (_audioProcessing != 0 || Environment.CurrentManagedThreadId == _owner && (_effectCallback || _sampling)) throw new InvalidOperationException("Audio callbacks cannot reenter audio configuration."); }
     internal AudioEffectInstance CreateEffectInstance(AudioEffect effect)
     {
         _effectCallback = true; try { return effect.Instantiate(); } finally { _effectCallback = false; }

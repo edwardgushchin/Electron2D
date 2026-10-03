@@ -8,7 +8,7 @@ Last updated: 2026-10-03
 
 ## Description
 
-Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player; replacement/removal/release of its native slot disposes that old handle. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; usage tagging, native sample handles and concrete composite parameters retain their own dependencies.
+Caller-owned independent playback. Start/Seek accept finite seconds, including negative requests for the concrete stream to interpret; MixAudio accepts finite nonnegative rate and nonnegative frame count, and allocates a caller-owned result trimmed to the reported mixed count. The engine uses the same OnMix contract with a prepared span. Invalid callback counts throw; native callback failures are captured, silence output and are reported on the owner scene frame, with failed voices stopped. A player-exposed playback is borrowed and must not be disposed or mixed concurrently with its player; replacement/removal/release of its native slot disposes that old handle. Concrete cursors can include decode prefetch. Typed nullable looping control executes for compressed playback; GetSamplePlayback/SetSamplePlayback expose typed owned native association. Start/Stop/Seek/IsPlaying/position execute through the native driver when associated; MixAudio returns an empty result because native output is independent of managed mixing. Usage tagging and further composite parameters retain separate dependencies.
 
 ## API summary
 
@@ -44,6 +44,31 @@ Caller-owned independent playback. Start/Seek accept finite seconds, including n
 | System.ObjectDisposedException | The playback or its stream is disposed. |
 | `public System.Void Stop()` | Stops playback. |
 | System.ObjectDisposedException | The playback is disposed. |
+
+## Native sample API
+
+| Full signature | Contract |
+| --- | --- |
+| `public AudioSamplePlayback? GetSamplePlayback()` | Returns borrowed request or null. |
+| `public void SetSamplePlayback(AudioSamplePlayback? playbackSample)` | Transfers ownership on the audio owner; replacing scene-attached state rejects. |
+
+## Method Descriptions
+
+### GetSamplePlayback
+
+Returns borrowed request or null. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
+
+### SetSamplePlayback
+
+Transfers ownership on the audio owner; replacing scene-attached state rejects. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
+
+### ValidateDisposal
+
+`protected override void ValidateDisposal()` requires the audio owner for associated sample state and rejects direct disposal of a scene-attached borrowed native playback before logical disposal.
+
+### Dispose
+
+`protected override void Dispose(bool disposing)` releases the associated native voice and consumes its owned request when disposing=true, then follows ElectronObject cleanup. This does not dispose the borrowed source stream.
 
 ## Verification and limits
 

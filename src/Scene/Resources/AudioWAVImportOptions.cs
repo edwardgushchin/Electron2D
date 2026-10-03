@@ -25,7 +25,7 @@ public sealed class AudioWAVImportOptions
     public int MaxRate { get; init; }
     /// <summary>Gets the import loop policy: null detects RIFF metadata; Disabled discards it.</summary>
     /// <value>Null by default; detects source loop metadata.</value>
-    public AudioStreamWAV.LoopMode? Loop { get; init; }
+    public AudioLoopMode? Loop { get; init; }
     /// <summary>Gets the explicit loop-begin frame; negative values count back from the imported end.</summary>
     /// <value>Zero by default; interpreted only with an explicit enabled Loop.</value>
     public int LoopBegin { get; init; }

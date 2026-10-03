@@ -1,10 +1,10 @@
 {
   "repository": "https://github.com/FNA-XNA/FAudio",
-  "tag": "26.09",
-  "commit": "667942a9097991f5cb6d1532a7ac3142e0581102",
-  "archiveSha256": "a0e1f4e195bff068a28ecadd186c3d80b1b431a5559adf65ea505c133ecb98c4",
+  "tag": "26.10",
+  "commit": "6839b88e304a046ae1a609ff14a085371e02a4e0",
+  "archiveSha256": "c508f297ec8d065b456b2d9d74bab89ffc84ac3afbcb428bd54e40f09f8b901e",
   "managedSource": "Managed/FAudio.cs",
-  "managedUpstreamSha256": "7aecefc0e8c2c847f943745cf16b48e68a41daac147566648e24b13fe6239406",
+  "managedUpstreamSha256": "21638c943bf9fa8341ddf8f33761993da5129ebf75b303842988de66b8a5267f",
   "patches": [
     "Internal top-level binding; preserve nested upstream API inside private backend boundary.",
     "Disable nullable and missing-XML diagnostics for the preserved upstream binding."

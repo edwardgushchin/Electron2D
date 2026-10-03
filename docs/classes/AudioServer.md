@@ -8,7 +8,7 @@ Last updated: 2026-10-03
 
 ## Description
 
-Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public effects now execute before bus gain and final peak metering. Bus-layout resources, output selection/latency and native sample registration remain separate dependencies.
+Borrowed process-wide service; disposing it throws before logical disposal. The first owner-bound operation claims its configuration thread; passive singleton/rate/speed reads and worker resource mixing do not claim ownership. Later foreign configuration rejects. Native output opens lazily for playback or device queries; runtime bus records remain after native closure. Buses form sends to earlier indices, with unknown/self/later targets falling back to Master. Master stays at index zero. Graph edits prepare replacement submix nodes and redirect existing native sources under the audio mix lock, preserving playback identity, exact cursor, history, pause and polyphony. On failure the configured metadata remains committed, all native output is closed and callers may retry playback. Mute affects a bus and its downstream output; solo retains paths carrying soloed sources, filtering direct unrelated Master sources. Peak meters read actual native post-volume submix samples. Lock/Unlock pair around caller critical sections; native mixing uses that same gate. Native teardown releases every player slot, bus, master and engine even after custom playback cleanup failures. Ordered public effects now execute before bus gain and final peak metering. Sample registration is cold, transactional and weak-keyed; explicit re-registration captures edits for subsequent voices while active voices retain their snapshot. Engine closure clears registrations. Bus-layout resources and output selection/latency remain separate dependencies.
 
 ## API summary
 
@@ -147,6 +147,23 @@ audio.SetInputDeviceActive(false);
 Engine shutdown releases both input/output, stops standalone microphone playbacks and clears requests. Last output-player detachment closes output while retaining independent input. Capture callbacks use their own ring gate and never enter AudioServer.Lock; caller mix locking does not protect input history. Public copy/availability operations synchronize input internally. See [recording verification](../components/audio-playback.md#recording-input).
 
 If the final automatic native pause fails, its microphone request is still released and the failed input stream is destroyed before reporting the error. Disposed playbacks cannot retain dead capture requests; a later Start prepares a fresh device. Explicit manual pause failures retain the manual request for retry.
+
+## Native sample methods
+
+| Full signature | Contract |
+| --- | --- |
+| `public bool IsStreamRegisteredAsSample(AudioStream stream)` | Queries the borrowed live resource identity on the owner. |
+| `public void RegisterStreamAsSample(AudioStream stream)` | Transactionally generates/replaces a cold sample snapshot; unsupported resources and callback reentry reject. |
+
+## Method Descriptions
+
+### IsStreamRegisteredAsSample
+
+Queries the borrowed live resource identity on the owner. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
+
+### RegisterStreamAsSample
+
+Transactionally generates/replaces a cold sample snapshot; unsupported resources and callback reentry reject. See [native sample playback](../components/audio-playback.md#native-sample-playback) for ownership, preparation, source edits, boundaries and driver limits. Disposed inputs reject.
 
 ## Verification and limits
 

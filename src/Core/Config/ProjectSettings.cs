@@ -138,6 +138,9 @@ public sealed class ProjectSettings : ElectronObject
     /// <summary>Allows recording-device activation by AudioServer and microphone playbacks.</summary>
     /// <value>The typed audio/driver/enable_input setting, false initially; checked before each new capture request.</value>
     public static ProjectSetting<bool> AudioDriverEnableInput { get; } = new("audio/driver/enable_input", false);
+    /// <summary>Selects streaming or native sampling for scene players using Default playback type.</summary>
+    /// <value>audio/general/default_playback_type; Stream (zero) initially, Sample is one.</value>
+    public static ProjectSetting<AudioDefaultPlaybackType> AudioGeneralDefaultPlaybackType { get; } = new("audio/general/default_playback_type", AudioDefaultPlaybackType.Stream, value => value is AudioDefaultPlaybackType.Stream or AudioDefaultPlaybackType.Sample);
     /// <summary>Sets the global width of two-dimensional spatial audio panning.</summary>
     /// <value>audio/general/2d_panning_strength; 0.5 initially, read by new spatial players.</value>
     public static ProjectSetting<float> AudioGeneral2DPanningStrength { get; } = new("audio/general/2d_panning_strength", .5f, value => float.IsFinite(value) && value >= 0);
@@ -465,6 +468,7 @@ public sealed class ProjectSettings : ElectronObject
         RegisterInternal(ApplicationName, isBasic: true);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(AudioDriverEnableInput, isBasic: true);
+        RegisterInternal(AudioGeneralDefaultPlaybackType, isBasic: true);
         RegisterInternal(AudioGeneral2DPanningStrength, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableThresholdDB, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableTime, isBasic: false);
@@ -1850,6 +1854,7 @@ public sealed class ProjectSettings : ElectronObject
         ReferenceEquals(setting, ApplicationName) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
+        ReferenceEquals(setting, AudioGeneralDefaultPlaybackType) ||
         ReferenceEquals(setting, AudioGeneral2DPanningStrength) ||
         ReferenceEquals(setting, AudioBusesChannelDisableThresholdDB) ||
         ReferenceEquals(setting, AudioBusesChannelDisableTime) ||

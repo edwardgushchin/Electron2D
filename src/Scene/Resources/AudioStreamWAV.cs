@@ -20,22 +20,10 @@ public sealed partial class AudioStreamWAV : AudioStream
         /// <summary>Quite OK Audio file data.</summary>
         QOA = 3
     }
-    /// <summary>Identifies sample loop traversal.</summary>
-    public enum LoopMode
-    {
-        /// <summary>Play once.</summary>
-        Disabled = 0,
-        /// <summary>Wrap forward at the loop boundary.</summary>
-        Forward = 1,
-        /// <summary>Reflect direction at both loop boundaries.</summary>
-        PingPong = 2,
-        /// <summary>Traverse the loop backward.</summary>
-        Backward = 3
-    }
     private readonly object _gate = new();
     private byte[] _data = [];
     private Format _format;
-    private LoopMode _loop;
+    private AudioLoopMode _loop;
     private int _mixRate = 44100, _begin, _end;
     private bool _stereo;
     private long _version;
@@ -43,7 +31,7 @@ public sealed partial class AudioStreamWAV : AudioStream
     private bool _prepared;
     private Exception? _decodeError;
     private Dictionary<string, string> _tags = new(StringComparer.Ordinal);
-    internal sealed record PCM(float[] Samples, int Channels, int Rate, Format Format, LoopMode Loop, int Begin, int End, long Version);
+    internal sealed record PCM(float[] Samples, int Channels, int Rate, Format Format, AudioLoopMode Loop, int Begin, int End, long Version);
     /// <summary>Creates empty mono eight-bit data at 44100 Hz with no loop.</summary>
     public AudioStreamWAV() { }
     /// <summary>Gets or sets SampleFormat sample metadata.</summary>
@@ -59,10 +47,10 @@ public sealed partial class AudioStreamWAV : AudioStream
     /// <value>Disabled initially. Undefined modes reject.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned mode/rate is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
-    public LoopMode Loop
+    public AudioLoopMode Loop
     {
         get { lock (_gate) { ThrowIfDisposed(); return _loop; } }
-        set { lock (_gate) { ThrowIfDisposed(); if (value is < LoopMode.Disabled or > LoopMode.Backward) throw new ArgumentOutOfRangeException(nameof(value)); if (_loop == value) return; _loop = value; _version++; _pcm = null; RefreshPreparedPCM(); } }
+        set { lock (_gate) { ThrowIfDisposed(); if (value is < AudioLoopMode.Disabled or > AudioLoopMode.Backward) throw new ArgumentOutOfRangeException(nameof(value)); if (_loop == value) return; _loop = value; _version++; _pcm = null; RefreshPreparedPCM(); } }
     }
     /// <summary>Gets or sets MixRate sample metadata.</summary>
     /// <value>44100 initially. Zero rejects; other signed values retain their metadata identity.</value>
@@ -147,6 +135,10 @@ public sealed partial class AudioStreamWAV : AudioStream
         }
     }
     /// <inheritdoc />
+    public override bool CanBeSampled() { ThrowIfDisposed(); return true; }
+    /// <inheritdoc />
+    public override AudioSample GenerateSample() { var pcm = PreparePCM(); return new(this, pcm.Samples, pcm.Channels, pcm.Rate, pcm.Loop, pcm.Begin, pcm.End); }
+    /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback() => new WAVPlayback(this);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AudioStreamWAV();
@@ -179,24 +171,24 @@ public sealed partial class AudioStreamWAV : AudioStream
         {
             if (_pcm is null || _pcm.Version != stream.Version) _pcm = stream.PreparePCM();
             var data = _pcm; var length = data.Samples.Length / data.Channels;
-            var loop = data.Format == Format.IMAADPCM && data.Loop != LoopMode.Disabled ? LoopMode.Forward : data.Loop;
-            if (loop != LoopMode.Disabled && (data.Begin < 0 || data.End <= data.Begin || data.End >= length)) throw new InvalidOperationException("Audio loop bounds exceed available samples.");
-            if (loop == LoopMode.Backward) _sign = -1;
+            var loop = data.Format == Format.IMAADPCM && data.Loop != AudioLoopMode.Disabled ? AudioLoopMode.Forward : data.Loop;
+            if (loop != AudioLoopMode.Disabled && (data.Begin < 0 || data.End <= data.Begin || data.End >= length)) throw new InvalidOperationException("Audio loop bounds exceed available samples.");
+            if (loop == AudioLoopMode.Backward) _sign = -1;
             var mixed = 0;
             while (mixed < buffer.Length && _active && length > 0)
             {
-                if (_sign < 0 && loop != LoopMode.Disabled && _offset < data.Begin)
+                if (_sign < 0 && loop != AudioLoopMode.Disabled && _offset < data.Begin)
                 {
-                    if (loop == LoopMode.PingPong) { _offset = data.Begin + (data.Begin - _offset); _sign = 1; }
+                    if (loop == AudioLoopMode.PingPong) { _offset = data.Begin + (data.Begin - _offset); _sign = 1; }
                     else _offset = data.End - (data.Begin - _offset);
                 }
-                else if (_sign > 0 && loop != LoopMode.Disabled && _offset >= data.End)
+                else if (_sign > 0 && loop != AudioLoopMode.Disabled && _offset >= data.End)
                 {
-                    if (loop == LoopMode.PingPong) { _offset = data.End - (_offset - data.End); _sign = -1; }
+                    if (loop == AudioLoopMode.PingPong) { _offset = data.End - (_offset - data.End); _sign = -1; }
                     else _offset = data.Format == Format.IMAADPCM ? data.Begin : data.Begin + (_offset - data.End);
                 }
                 if (_offset < 0 || _offset >= length) { _active = false; break; }
-                var limit = _sign < 0 ? loop == LoopMode.Disabled ? 0 : data.Begin : loop == LoopMode.Disabled ? length - 1 : data.End;
+                var limit = _sign < 0 ? loop == AudioLoopMode.Disabled ? 0 : data.Begin : loop == AudioLoopMode.Disabled ? length - 1 : data.End;
                 var amount = (int)Math.Min(buffer.Length - mixed, (limit - _offset) / _sign + 1);
                 if (amount <= 0) { _active = false; break; }
                 for (var i = 0; i < amount; i++)

@@ -437,7 +437,7 @@
     },
     {
       "godot": "AudioStreamWAV::enum:LoopMode",
-      "electron2d": "T:Electron2D.AudioStreamWAV.LoopMode",
+      "electron2d": "T:Electron2D.AudioLoopMode",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
     },
     {
@@ -462,22 +462,22 @@
     },
     {
       "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_BACKWARD",
-      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Backward()",
+      "electron2d": "enumValue:Electron2D.AudioLoopMode.Backward()",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
     },
     {
       "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_DISABLED",
-      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Disabled()",
+      "electron2d": "enumValue:Electron2D.AudioLoopMode.Disabled()",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
     },
     {
       "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_FORWARD",
-      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.Forward()",
+      "electron2d": "enumValue:Electron2D.AudioLoopMode.Forward()",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
     },
     {
       "godot": "AudioStreamWAV::enum_value:LoopMode.LOOP_PINGPONG",
-      "electron2d": "enumValue:Electron2D.AudioStreamWAV.LoopMode.PingPong()",
+      "electron2d": "enumValue:Electron2D.AudioLoopMode.PingPong()",
       "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified."
     },
     {
@@ -2214,6 +2214,51 @@
       "godot": "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)",
       "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipByName(System.String)",
       "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "class:AudioSample",
+      "electron2d": "T:Electron2D.AudioSample",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioSamplePlayback",
+      "electron2d": "T:Electron2D.AudioSamplePlayback",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:is_stream_registered_as_sample(AudioStream:)",
+      "electron2d": "method:Electron2D.AudioServer.IsStreamRegisteredAsSample(Electron2D.AudioStream)",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioServer::method:register_stream_as_sample(AudioStream:)",
+      "electron2d": "method:Electron2D.AudioServer.RegisterStreamAsSample(Electron2D.AudioStream)",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:can_be_sampled()",
+      "electron2d": "method:Electron2D.AudioStream.CanBeSampled()",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioStream::method:generate_sample()",
+      "electron2d": "method:Electron2D.AudioStream.GenerateSample()",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:get_sample_playback()",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.GetSamplePlayback()",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "AudioStreamPlayback::method:set_sample_playback(AudioSamplePlayback:)",
+      "electron2d": "method:Electron2D.AudioStreamPlayback.SetSamplePlayback(Electron2D.AudioSamplePlayback)",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/general/default_playback_type",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioGeneralDefaultPlaybackType()",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
     }
   ],
   "extras": [
@@ -3284,6 +3329,114 @@
     {
       "electron2d": "property:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipParameter()",
       "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "T:Electron2D.AudioDefaultPlaybackType",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioSample..ctor(Electron2D.AudioStream,System.ReadOnlySpan<System.Single>,System.Int32,System.Int32,Electron2D.AudioLoopMode,System.Int32,System.Int32)",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioSamplePlayback..ctor(Electron2D.AudioStream)",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.AudioDefaultPlaybackType.Sample()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.AudioDefaultPlaybackType.Stream()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioSample.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioSamplePlayback.ValidateDisposal()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.CanBeSampled()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamMP3.GenerateSample()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.CanBeSampled()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamOggVorbis.GenerateSample()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayback.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlayback.ValidateDisposal()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.CanBeSampled()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamWAV.GenerateSample()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.Data()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.LoopBegin()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.LoopEnd()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.LoopMode()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.NumChannels()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.SampleRate()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSample.Stream()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSamplePlayback.Bus()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSamplePlayback.Offset()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSamplePlayback.PitchScale()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSamplePlayback.Stream()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioSamplePlayback.VolumeVector()",
+      "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
     }
   ],
   "statusGroups": [
@@ -3427,13 +3580,6 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047).",
-      "godot": [
-        "AudioStreamPlayer::property:playback_type"
-      ]
-    },
-    {
       "state": "Blocked",
       "reason": "Trigger: typed AudioBusLayout resource data and ResourceLoader/ResourceSaver format integration, then serialize/apply the live graph (ADRs 0013/0047/0090).",
       "godot": [
@@ -3452,20 +3598,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: prepared native sample storage/registration and AudioSample/AudioSamplePlayback ownership; stream output now executes, but no separate sample-driver path exists (ADR 0047).",
-      "godot": [
-        "AudioServer::method:is_stream_registered_as_sample(AudioStream:)",
-        "AudioServer::method:register_stream_as_sample(AudioStream:)",
-        "AudioStream::method:can_be_sampled()",
-        "AudioStream::method:generate_sample()",
-        "AudioStreamPlayback::method:get_sample_playback()",
-        "AudioStreamPlayback::method:set_sample_playback(AudioSamplePlayback:)",
-        "class:AudioSample",
-        "class:AudioSamplePlayback"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: stream usage/offset tracking and editor consumers; raw callback metadata alone does not tag active resources (ADR 0047).",
       "godot": [
         "AudioServer::method:set_enable_tagging_used_audio_streams(bool:)",
@@ -3474,7 +3606,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. SDL3 input/microphone, Input generator frequency and player transitions now execute. Remaining rows retain concrete sample, parameter, effects, output-device or editor dependencies.",
+      "reason": "ADR 0047: executable Linux FAudio stream/bus pipeline with prepared PCM, typed ownership and bounded mix buffers; CPU and actual native PCM checks cover current behavior. Other platforms and physical listening remain unverified. SDL3 input/microphone, Input generator frequency and player transitions now execute. Remaining rows retain parameter, effects, output-device or editor dependencies.",
       "godot": [
         "class:AudioServer",
         "class:AudioStream",
@@ -3913,10 +4045,9 @@
     },
     {
       "state": "Partial",
-      "reason": "Spatial output and shared stream transitions execute. Sample playback needs prepared sample storage/registration; editor autoplay suppression needs the Engine editor-hint lifecycle and first editor host (ADR 0047).",
+      "reason": "ADR 0047: spatial stream and native sample paths execute. Remaining trigger: Engine editor-hint lifecycle and first editor host for autoplay suppression.",
       "godot": [
         "AudioStreamPlayer2D::property:autoplay",
-        "AudioStreamPlayer2D::property:playback_type",
         "class:AudioStreamPlayer2D"
       ]
     },
@@ -4038,6 +4169,30 @@
         "AudioStreamPlaybackInteractive::method:get_current_clip_index()",
         "AudioStreamPlaybackInteractive::method:switch_to_clip(int:)",
         "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified.",
+      "godot": [
+        "AudioServer::method:is_stream_registered_as_sample(AudioStream:)",
+        "AudioServer::method:register_stream_as_sample(AudioStream:)",
+        "AudioStream::method:can_be_sampled()",
+        "AudioStream::method:generate_sample()",
+        "AudioStreamPlayback::method:get_sample_playback()",
+        "AudioStreamPlayback::method:set_sample_playback(AudioSamplePlayback:)",
+        "AudioStreamPlayer2D::property:playback_type",
+        "AudioStreamPlayer::property:playback_type",
+        "ProjectSettings::property:audio/general/default_playback_type",
+        "class:AudioSample",
+        "class:AudioSamplePlayback"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: Web runtime audio backend/deployment and platform sample-default initialization; the typed base setting and desktop native transport now execute under ADR 0047, but no Web FAudio driver is integrated.",
+      "godot": [
+        "ProjectSettings::property:audio/general/default_playback_type.web"
       ]
     }
   ]

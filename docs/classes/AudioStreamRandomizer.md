@@ -351,3 +351,5 @@ Duplicate copies pool containers/configuration and starts independent empty hist
 Mixed synchronized/randomizer graphs now use the same authoring/callback validation. Microphone selection preflights the audio owner needed by child cleanup before invoking that factory; the wrapper propagates that affinity and validates disposal before consuming its own state. This prevents a wrapper from losing an active owner-bound child after an off-owner Dispose refusal.
 
 Interactive parents now prepare child controls on the audio owner, including paused microphone input and request capacity, then schedule selected child Start/Stop under the shared audio gate. Public microphone controls/disposal retain owner checks; preparation alone does not record. Mixed interactive/randomizer/synchronized graphs share cycle/owner validation. See [interactive streams](../components/audio-playback.md#interactive-streams) for timing, lifecycle, native evidence and limits.
+
+An associated native sample on a randomizer playback contributes the inherited audio-owner requirement alongside its selected child.

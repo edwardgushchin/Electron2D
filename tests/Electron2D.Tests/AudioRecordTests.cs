@@ -25,7 +25,7 @@ internal static class AudioRecordTests
         {
             record.Format = format; record.SetRecordingActive(true);
             instance.Process(frames, output); Check(output.SequenceEqual(frames), "Record passes PCM through unchanged.");
-            using (var live = record.GetRecording()) Check(live is not null && live.Stereo && live.SampleFormat == format && live.MixRate == (int)AudioServer.Instance.GetMixRate() && live.Loop == AudioStreamWAV.LoopMode.Disabled,
+            using (var live = record.GetRecording()) Check(live is not null && live.Stereo && live.SampleFormat == format && live.MixRate == (int)AudioServer.Instance.GetMixRate() && live.Loop == AudioLoopMode.Disabled,
                 $"Active {format} snapshot owns correct metadata.");
             record.SetRecordingActive(false);
             using var result = record.GetRecording();

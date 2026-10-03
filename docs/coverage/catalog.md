@@ -88,8 +88,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioEffectStereoEnhance](classes/AudioEffectStereoEnhance.md) | AudioEffect | Implemented | 3 |
 | [AudioListener2D](classes/AudioListener2D.md) | Node2D | Implemented | 3 |
 | [AudioListener3D](classes/AudioListener3D.md) | Node3D | Excluded | 9 |
-| [AudioSample](classes/AudioSample.md) | RefCounted | Blocked | 0 |
-| [AudioSamplePlayback](classes/AudioSamplePlayback.md) | RefCounted | Blocked | 0 |
+| [AudioSample](classes/AudioSample.md) | RefCounted | Implemented | 0 |
+| [AudioSamplePlayback](classes/AudioSamplePlayback.md) | RefCounted | Implemented | 0 |
 | [AudioServer](classes/AudioServer.md) | Object | Partial | 65 |
 | [AudioStream](classes/AudioStream.md) | Resource | Partial | 17 |
 | [AudioStreamGenerator](classes/AudioStreamGenerator.md) | AudioStream | Implemented | 8 |

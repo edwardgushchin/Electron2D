@@ -161,7 +161,7 @@ internal static class AudioEffectTests
     internal static AudioStreamWAV Constant()
     {
         var frames = new Vector2[44100]; frames.AsSpan().Fill(new(.2f, -.3f));
-        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = 44100, Data = PCM16(frames), Loop = AudioStreamWAV.LoopMode.Forward, LoopEnd = frames.Length - 1 };
+        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = 44100, Data = PCM16(frames), Loop = AudioLoopMode.Forward, LoopEnd = frames.Length - 1 };
     }
     private static byte[] PCM16(Vector2[] frames)
     {

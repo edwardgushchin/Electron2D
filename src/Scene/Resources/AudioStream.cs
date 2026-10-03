@@ -62,6 +62,18 @@ public abstract class AudioStream : Resource
     /// <summary>Supplies the stream duration.</summary>
     /// <returns>Duration in seconds, zero by default.</returns>
     protected virtual double OnGetLength() => 0;
+    /// <summary>Gets whether this resource can prepare finite sample-driver PCM.</summary>
+    /// <returns>False by default; finite WAV, MPEG and Vorbis resources override this capability.</returns>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public virtual bool CanBeSampled() { ThrowIfDisposed(); return false; }
+    /// <summary>Creates caller-owned copied PCM and loop metadata for sample playback.</summary>
+    /// <returns>An independently disposable immutable snapshot.</returns>
+    /// <remarks>WAV and initialized mono/stereo compressed sources copy decoded PCM and loop metadata.
+    /// Native sample transport retains source Hz and exclusive loop end; live resource edits need explicit re-registration.</remarks>
+    /// <exception cref="NotSupportedException">This stream cannot be sampled.</exception>
+    /// <exception cref="InvalidOperationException">Concrete sample data or an enabled loop is not initialized/valid.</exception>
+    /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
+    public virtual AudioSample GenerateSample() { ThrowIfDisposed(); throw new NotSupportedException("This resource has no finite sample representation."); }
     /// <summary>Gets whether the stream permits only one active voice.</summary>
     /// <returns>True by default; ordinary WAV streams are polyphonic.</returns>
     public bool IsMonophonic() { ThrowIfDisposed(); return OnIsMonophonic(); }
@@ -111,13 +123,36 @@ public abstract class AudioStream : Resource
 
 /// <summary>Owns independent time, loop and mixing state for an audio stream.</summary>
 /// <remarks>MixAudio allocates a caller-owned result. Engine mixing reuses prepared spans through OnMix.
-/// A playback borrowed from a player remains player-owned and is not an independent control handle.</remarks>
+/// A playback borrowed from a player remains player-owned and is not an independent control handle.
+/// With an owned sample association, native output replaces managed OnMix and MixAudio returns no frames.</remarks>
 public abstract class AudioStreamPlayback : ElectronObject
 {
-    internal virtual bool RequiresAudioOwner => false;
+    private AudioSamplePlayback? _samplePlayback;
+    internal virtual bool RequiresAudioOwner => _samplePlayback is not null;
     internal virtual void PrepareQueuedControls() { }
     internal virtual void StartQueued(double time) => Start(time);
     internal virtual void StopQueued() => Stop();
+    /// <summary>Gets the borrowed native sample request associated with this playback.</summary>
+    /// <returns>Null for ordinary stream playback.</returns>
+    public AudioSamplePlayback? GetSamplePlayback() { ThrowIfDisposed(); return _samplePlayback; }
+    /// <summary>Transfers ownership of an inactive sample request, or clears this association.</summary>
+    /// <param name="playbackSample">Fresh caller-owned request or null.</param>
+    /// <remarks>An associated request becomes borrowed. Replacing attached scene sample state rejects; standalone
+    /// replacement stops/releases its native voice before disposing the old request. Requires the audio owner.</remarks>
+    /// <exception cref="InvalidOperationException">The request belongs to another playback or a scene voice is attached.</exception>
+    public void SetSamplePlayback(AudioSamplePlayback? playbackSample)
+    {
+        var server = AudioServer.Instance; server.Check(); server.Lock();
+        try
+        {
+            ThrowIfDisposed(); if (ReferenceEquals(_samplePlayback, playbackSample)) return;
+            if (_samplePlayback?.Native?.Wrapped == true || playbackSample?.Owner is not null) throw new InvalidOperationException("The sample request is already attached.");
+            playbackSample?.Check(); var previous = _samplePlayback; previous?.Native?.Dispose(); _samplePlayback = playbackSample; if (playbackSample is not null) playbackSample.Owner = this;
+            if (previous is not null) { previous.Owner = null; previous.Dispose(); }
+        }
+        finally { server.Unlock(); }
+    }
+    private void StartSample(double time) { var server = AudioServer.Instance; server.Check(); lock (server.StreamGate) { var sample = _samplePlayback!; sample.Native ??= server.PrepareSample(sample); sample.Native.Play(time); } }
     /// <summary>Initializes the independent playback extension state.</summary>
     protected AudioStreamPlayback() { }
     private int _loopingOverride = -1;
@@ -130,24 +165,24 @@ public abstract class AudioStreamPlayback : ElectronObject
     public bool? LoopingOverride
     {
         get { ThrowIfDisposed(); var value = Volatile.Read(ref _loopingOverride); return value < 0 ? null : value != 0; }
-        set { ThrowIfDisposed(); Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); }
+        set { ThrowIfDisposed(); if (_samplePlayback?.Native is { } sample) { var server = AudioServer.Instance; server.Check(); lock (server.StreamGate) { var old = _loopingOverride; Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); try { sample.RefreshLooping(); } catch { Volatile.Write(ref _loopingOverride, old); throw; } } } else Volatile.Write(ref _loopingOverride, value is null ? -1 : value.Value ? 1 : 0); }
     }
     /// <summary>Starts playback from a position in seconds.</summary>
     /// <param name="fromPosition">Requested time, zero by default.</param>
     /// <exception cref="ArgumentOutOfRangeException">The time is not finite.</exception>
     /// <exception cref="ObjectDisposedException">The playback or its stream is disposed.</exception>
-    public void Start(double fromPosition = 0) { ThrowIfDisposed(); if (!double.IsFinite(fromPosition)) throw new ArgumentOutOfRangeException(nameof(fromPosition)); OnStart(fromPosition); }
+    public void Start(double fromPosition = 0) { ThrowIfDisposed(); if (!double.IsFinite(fromPosition)) throw new ArgumentOutOfRangeException(nameof(fromPosition)); if (_samplePlayback is not null) StartSample(fromPosition); else OnStart(fromPosition); }
     /// <summary>Starts the concrete playback.</summary>
     /// <param name="fromPosition">Finite requested time in seconds.</param>
     protected abstract void OnStart(double fromPosition);
     /// <summary>Stops playback.</summary>
     /// <exception cref="ObjectDisposedException">The playback is disposed.</exception>
-    public void Stop() { ThrowIfDisposed(); OnStop(); }
+    public void Stop() { ThrowIfDisposed(); if (_samplePlayback is not null) _samplePlayback.Native?.Stop(); else OnStop(); }
     /// <summary>Stops the concrete playback.</summary>
     protected abstract void OnStop();
     /// <summary>Gets whether playback is currently active.</summary>
     /// <returns>The concrete active state.</returns>
-    public bool IsPlaying() { ThrowIfDisposed(); return OnIsPlaying(); }
+    public bool IsPlaying() { ThrowIfDisposed(); return _samplePlayback is not null ? _samplePlayback.Native?.IsPlaying == true : OnIsPlaying(); }
     /// <summary>Supplies the active state.</summary>
     /// <returns>The concrete active state.</returns>
     protected abstract bool OnIsPlaying();
@@ -159,7 +194,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     protected virtual int OnGetLoopCount() => 0;
     /// <summary>Gets the current stream position in seconds.</summary>
     /// <returns>The concrete playback cursor, which can include resampling prefetch.</returns>
-    public double GetPlaybackPosition() { ThrowIfDisposed(); return OnGetPlaybackPosition(); }
+    public double GetPlaybackPosition() { ThrowIfDisposed(); return _samplePlayback is not null ? _samplePlayback.Native?.Position ?? 0 : OnGetPlaybackPosition(); }
     /// <summary>Supplies the playback cursor.</summary>
     /// <returns>Position in seconds.</returns>
     protected abstract double OnGetPlaybackPosition();
@@ -167,7 +202,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <param name="time">Finite requested time, zero by default.</param>
     /// <exception cref="ArgumentOutOfRangeException">The time is not finite.</exception>
     /// <exception cref="ObjectDisposedException">The playback or its stream is disposed.</exception>
-    public void Seek(double time = 0) { ThrowIfDisposed(); if (!double.IsFinite(time)) throw new ArgumentOutOfRangeException(nameof(time)); OnSeek(time); }
+    public void Seek(double time = 0) { ThrowIfDisposed(); if (!double.IsFinite(time)) throw new ArgumentOutOfRangeException(nameof(time)); if (_samplePlayback is not null) StartSample(time); else OnSeek(time); }
     /// <summary>Moves the concrete cursor.</summary>
     /// <param name="time">Finite time in seconds.</param>
     protected abstract void OnSeek(double time);
@@ -185,6 +220,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     internal int MixInto(Span<Vector2> buffer, float rateScale)
     {
         ThrowIfDisposed(); if (!float.IsFinite(rateScale) || rateScale < 0) throw new ArgumentOutOfRangeException(nameof(rateScale));
+        if (_samplePlayback is not null) { buffer.Clear(); return 0; }
         var count = OnMix(buffer, rateScale); if ((uint)count > (uint)buffer.Length) throw new InvalidOperationException("Audio mixing returned an invalid frame count."); return count;
     }
     /// <summary>Fills the prepared stereo frame span and reports frames before the first silence.</summary>
@@ -195,4 +231,9 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <param name="rateScale">Finite nonnegative playback-rate multiplier.</param>
     /// <returns>Mixed frame count, between zero and buffer.Length.</returns>
     protected abstract int OnMix(Span<Vector2> buffer, float rateScale);
+    /// <inheritdoc />
+    protected override void ValidateDisposal() { if (_samplePlayback is not null) { AudioServer.Instance.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing) { try { if (disposing && _samplePlayback is { } sample) { sample.Native?.Dispose(); sample.Owner = null; _samplePlayback = null; sample.Dispose(); } } finally { base.Dispose(disposing); } }
+
 }

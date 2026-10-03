@@ -35,7 +35,7 @@ internal static class AudioRuntimeTests
         Check(rejected && !server.IsDisposed, "Borrowed singleton disposal preserves lifetime.");
         void sourceLoop()
         {
-            player.Stop(); stream.LoopBegin = 2400; stream.LoopEnd = 7200; stream.Loop = AudioStreamWAV.LoopMode.Forward; player.Play(.05); Thread.Sleep(120); Check(player.GetPlaybackPosition() is >= .05 and <= .153, "Player position follows loop cursor.");
+            player.Stop(); stream.LoopBegin = 2400; stream.LoopEnd = 7200; stream.Loop = AudioLoopMode.Forward; player.Play(.05); Thread.Sleep(120); Check(player.GetPlaybackPosition() is >= .05 and <= .153, "Player position follows loop cursor.");
         }
     }
     internal static AudioStreamWAV Tone(int rate)

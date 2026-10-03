@@ -209,7 +209,7 @@ internal static class AudioInteractiveTests
     private static AudioStreamWAV HostTone(double hz)
     {
         var data = new byte[48000 * 2]; for (var i = 0; i < 48000; i++) System.Buffers.Binary.BinaryPrimitives.WriteInt16LittleEndian(data.AsSpan(i * 2), (short)(Math.Sin(i * 2 * Math.PI * hz / 48000) * 8000));
-        return new AudioStreamWAV { Data = data, SampleFormat = AudioStreamWAV.Format.PCM16, MixRate = 48000, Loop = AudioStreamWAV.LoopMode.Forward, LoopEnd = 47999 };
+        return new AudioStreamWAV { Data = data, SampleFormat = AudioStreamWAV.Format.PCM16, MixRate = 48000, Loop = AudioLoopMode.Forward, LoopEnd = 47999 };
     }
     private sealed class HostScenario(AudioStreamPlayer player) : Node
     {

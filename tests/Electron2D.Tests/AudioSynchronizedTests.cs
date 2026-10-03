@@ -45,7 +45,7 @@ internal static class AudioSynchronizedTests
         a.Frames = b.Frames = int.MaxValue; playback.Start(); stream.SetSyncStreamVolume(1, 0); playback.MixInto(frames, 1); Near(frames[0], new(.3f, 1), "Live gain does not restart or clip PCM.");
         playback.Stop(); Check(!playback.IsPlaying() && !a.Last!.Active && !b.Last!.Active, "Stop reaches every child.");
         using var empty = new AudioStreamSynchronized(); using var ep = empty.InstantiatePlayback(); ep.Start(); Check(!ep.IsPlaying() && ep.MixInto(frames, 1) == 0, "Empty start remains inactive.");
-        using var wave = new AudioStreamWAV { Data = new byte[512], Loop = AudioStreamWAV.LoopMode.Forward, LoopBegin = 0, LoopEnd = 255 }; using var looping = new AudioStreamSynchronized { StreamCount = 1 }; looping.SetSyncStream(0, wave); using var lp = looping.InstantiatePlayback(); lp.Start();
+        using var wave = new AudioStreamWAV { Data = new byte[512], Loop = AudioLoopMode.Forward, LoopBegin = 0, LoopEnd = 255 }; using var looping = new AudioStreamSynchronized { StreamCount = 1 }; looping.SetSyncStream(0, wave); using var lp = looping.InstantiatePlayback(); lp.Start();
         Check(lp.MixAudio(1, 10000).Length == 10000 && lp.IsPlaying() && !looping.ReadLoop(), "WAV sample loops keep output indefinite while retaining their separate base music-loop metadata.");
     }
     private static void Configuration()

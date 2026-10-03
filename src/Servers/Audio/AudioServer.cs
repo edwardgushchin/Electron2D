@@ -70,10 +70,11 @@ public sealed partial class AudioServer : ElectronObject
     /// <summary>Gets or sets the positive global playback-rate multiplier.</summary>
     /// <value>One initially; actual player pitch combines this value with its local scale.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonpositive or nonfinite.</exception>
+    /// <exception cref="NotSupportedException">Prepared native sample effective pitch is unsupported; the old configuration is restored.</exception>
     public float PlaybackSpeedScale
     {
         get { ThrowIfDisposed(); return Volatile.Read(ref _speed); }
-        set { Check(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); Volatile.Write(ref _speed, value); foreach (var player in _players) player.RefreshPitch(); }
+        set { Check(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); var previous = _speed; Volatile.Write(ref _speed, value); try { foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); } catch { Volatile.Write(ref _speed, previous); foreach (var player in _players) player.RefreshPitch(); _native?.RefreshStandaloneSamplePitch(); throw; } }
     }
     /// <summary>Occurs after the bus list or routing graph changes.</summary>
     public event Action? BusLayoutChanged;
@@ -126,7 +127,7 @@ public sealed partial class AudioServer : ElectronObject
     {
         var bus = GetBus(index); ArgumentNullException.ThrowIfNull(name); if (index == 0) throw new ArgumentOutOfRangeException(nameof(index)); if (bus.Name == name) return;
         var proposed = name; var number = 2; while (GetBusIndex(proposed) >= 0) proposed = name + " " + number++;
-        var old = bus.Name; bus.Name = proposed; foreach (var other in _buses) if (other.Send == old) other.Send = proposed; foreach (var player in _players) player.RefreshRouting(); ApplyGains(); BusRenamed?.Invoke(index, old, proposed);
+        var old = bus.Name; bus.Name = proposed; foreach (var other in _buses) if (other.Send == old) other.Send = proposed; foreach (var player in _players) player.RefreshRouting(); _native?.RefreshStandaloneSampleRouting(); ApplyGains(); BusRenamed?.Invoke(index, old, proposed);
     }
     /// <summary>Gets the requested named send target.</summary>
     /// <param name="index">Live bus index.</param>
@@ -211,12 +212,12 @@ public sealed partial class AudioServer : ElectronObject
     internal void EnsureNative()
     {
         Check(); if (_native is not null) return; _native = new FAudioContext(gate: _gate);
-        try { RebuildGraph(); } catch { _native?.Dispose(); _native = null; foreach (var bus in _buses) bus.Voice = 0; throw; }
+        try { RebuildGraph(); } catch { _native?.Dispose(); _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0; throw; }
     }
     internal FAudioContext Native { get { EnsureNative(); return _native!; } }
     internal nint ResolveBus(string name) { EnsureNative(); var index = GetBusIndex(name); return _buses[index < 0 ? 0 : index].Voice; }
     internal void Attach(AudioStreamPlayer player) { Check(); if (!_players.Contains(player)) _players.Add(player); }
-    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0) CloseNative(closeInput: false); }
+    internal void Detach(AudioStreamPlayer player) { Check(); _players.Remove(player); if (_players.Count == 0 && _native?.HasStandaloneSamples != true) CloseNative(closeInput: false); }
     private void RebuildGraph()
     {
         try { RebuildGraphCore(); }
@@ -245,6 +246,7 @@ public sealed partial class AudioServer : ElectronObject
             List<Exception>? errors = null;
             for (var i = 0; i < replacement.Length; i++) _buses[i].Voice = replacement[i];
             foreach (var player in _players) try { player.RefreshRouting(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            _native.RefreshStandaloneSampleRouting();
             Node.ThrowCollected("Audio bus routing update failed.", errors);
             for (var i = old.Length - 1; i >= 0; i--) _native.DestroyBus(old[i]);
             try { ApplyGains(); } catch (Exception error) { Node.CollectException(ref errors, error); }
@@ -276,6 +278,7 @@ public sealed partial class AudioServer : ElectronObject
             var gain = _buses[i].Mute || !audible ? 0 : (float)Mathf.DBToLinear(_buses[i].VolumeDB); _native.SetBusVolume(_buses[i].Voice, gain);
         }
         foreach (var player in _players) player.RefreshVolume();
+        _native?.RefreshStandaloneSampleGains();
     }
     internal static void CloseForEngine() { if (Singleton.IsValueCreated && !Singleton.Value.IsDisposed) Singleton.Value.CloseNative(); }
     internal void CloseNative(bool closeInput = true)
@@ -283,7 +286,7 @@ public sealed partial class AudioServer : ElectronObject
         Check(); List<Exception>? errors = null;
         foreach (var player in _players.ToArray()) try { player.ReleaseVoices(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { _native?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
-        _native = null; foreach (var bus in _buses) bus.Voice = 0;
+        _native = null; _samples.Clear(); foreach (var bus in _buses) bus.Voice = 0;
         foreach (var bus in _buses) { var effects = bus.RuntimeEffects; bus.RuntimeEffects = null; bus.Activity = null; try { ReleaseEffects(effects); } catch (Exception error) { Node.CollectException(ref errors, error); } }
         if (closeInput) try { CloseInput(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Audio native teardown failed.", errors);

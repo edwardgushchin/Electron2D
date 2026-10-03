@@ -81,24 +81,25 @@ public class AudioStreamPlayer : Node
     }
     /// <summary>Gets or sets VolumeDB configuration.</summary>
     /// <value>Zero dB initially; negative infinity silences volume-scaled channels. The center/surround low-frequency route retains unity player gain.</value>
-    /// <remarks>Gain interpolates across the next native block; values whose linear gain exceeds finite float storage reject before mutation.</remarks>
+    /// <remarks>Stream gain interpolates across the next native block; sample gain updates its native matrix; values whose linear gain exceeds finite float storage reject before mutation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
     public float VolumeDB
     {
         get { Check(); return _volumeDB; }
-        set { EnsureMutable(); if (float.IsNaN(value) || float.IsPositiveInfinity(value) || !float.IsFinite((float)Mathf.DBToLinear(value))) throw new ArgumentOutOfRangeException(nameof(value)); if (_volumeDB == value) return; _volumeDB = value; RefreshVolume(); }
+        set { EnsureMutable(); if (float.IsNaN(value) || float.IsPositiveInfinity(value) || !float.IsFinite((float)Mathf.DBToLinear(value))) throw new ArgumentOutOfRangeException(nameof(value)); if (_volumeDB == value) return; var previous = _volumeDB; _volumeDB = value; try { RefreshVolume(); } catch { _volumeDB = previous; RefreshVolume(); throw; } }
     }
     /// <summary>Gets or sets PitchScale configuration.</summary>
-    /// <value>One initially; finite strictly positive values only.</value>
+    /// <value>One initially; finite strictly positive values only. Effective native sample pitch is 1/1024 through 1024.</value>
+    /// <exception cref="NotSupportedException">Prepared native sample pitch is outside its range; configuration is preserved.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
     public float PitchScale
     {
         get { Check(); return _pitch; }
-        set { EnsureMutable(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_pitch == value) return; _pitch = value; RefreshPitch(); }
+        set { EnsureMutable(); if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_pitch == value) return; var previous = _pitch; _pitch = value; try { RefreshPitch(); } catch { _pitch = previous; RefreshPitch(); throw; } }
     }
     /// <summary>Gets or sets MaxPolyphony configuration.</summary>
     /// <value>One initially; oldest voices are replaced when all slots are active.</value>
@@ -121,7 +122,7 @@ public class AudioStreamPlayer : Node
         set { EnsureMutable(); if (value is < MixTarget.Stereo or > MixTarget.Center) throw new ArgumentOutOfRangeException(nameof(value)); if (_mixTarget == value) return; _mixTarget = value; foreach (var voice in _voices) voice.SetMixTarget(value); }
     }
     /// <summary>Gets or sets PlaybackType configuration.</summary>
-    /// <value>Default initially; explicit native sample playback requires a sample-capable stream.</value>
+    /// <value>Default initially; native samples execute for sample-capable streams, with streamed fallback otherwise.</value>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
@@ -153,7 +154,7 @@ public class AudioStreamPlayer : Node
     private AudioStreamPlayback PreparePlayback()
     {
         var playback = _stream!.InstantiatePlayback();
-        try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, static resource => resource); return playback; }
+        try { foreach (var parameter in _parameters) parameter.Key.RestoreStoredValue(playback, parameter.Value, static resource => resource); if ((_type == AudioServer.PlaybackType.Sample || _type == AudioServer.PlaybackType.Default && ProjectSettings.Instance.GetWithOverride(ProjectSettings.AudioGeneralDefaultPlaybackType) == AudioDefaultPlaybackType.Sample) && _stream.CanBeSampled()) playback.SetSamplePlayback(new AudioSamplePlayback(_stream) { Bus = _bus }); return playback; }
         catch { playback.Dispose(); throw; }
     }
     private FAudioStreamVoice CreateVoice(AudioStreamPlayback playback)
@@ -172,7 +173,6 @@ public class AudioStreamPlayer : Node
     public void Play(double fromPosition = 0)
     {
         EnsureMutable(); if (!IsInsideTree) throw new InvalidOperationException("Audio playback requires an attached player."); if (!double.IsFinite(fromPosition)) throw new ArgumentOutOfRangeException(nameof(fromPosition)); if (_stream is null) return;
-        if (_type == AudioServer.PlaybackType.Sample) throw new NotSupportedException("Prepared sample-driver playback requires its separate native sample storage integration.");
         _audioOperation = true;
         try
         {
@@ -184,6 +184,7 @@ public class AudioStreamPlayer : Node
             try
             {
                 if (voice is null) { voice = CreateVoice(playback); index = _voices.Count; _voices.Add(voice); _ages.Add(0); }
+                else if ((voice.Playback.GetSamplePlayback() is not null) != (playback.GetSamplePlayback() is not null)) { var previous = voice; voice = CreateVoice(playback); _voices[index] = voice; previous.Dispose(); previous.Playback.Dispose(); }
                 else voice.ReplacePlayback(playback);
             }
             catch { if (voice is null || !ReferenceEquals(voice.Playback, playback)) playback.Dispose(); throw; }

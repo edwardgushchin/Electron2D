@@ -1,6 +1,6 @@
 # Third-party software
 
-Last updated: 2026-09-23
+Last updated: 2026-10-03
 
 This page lists Electron2D's direct third-party integrations and backends selected by accepted decisions. **Selected** does not mean **integrated**. The project files, vendor provenance records and shader toolchain lock are the sources for exact versions; native packages may have their own transitive dependencies.
 
@@ -27,7 +27,7 @@ The separate Linux x64 `ShaderImport` tool packages **glslang 16.4.0**, **SPIRV-
 | Software | Intended role | Decision and current state |
 | --- | --- | --- |
 | SDL_ttf 3 with HarfBuzz and FreeType; SDL3-CS TTF bindings | Font loading, shaping and glyph rasterization integrated with Electron2D's canvas. | [ADR 0046](decisions/rendering.md#adr-0046). Text backend, native package and managed bindings are not integrated yet. |
-| FAudio over SDL3; FAudio# managed binding | Audio voices, bus routing and effects. | [ADR 0047](decisions/audio.md#adr-0047). Audio backend, native package and managed binding are not integrated yet. |
+| FAudio over SDL3; FAudio# managed binding | Audio voices, bus routing and effects. | [ADR 0047](decisions/audio.md#adr-0047). FAudio 26.10 native output over SDL3 and internal managed binding execute on Linux x64; physical/other-platform gates remain separate. |
 | [NVorbis](https://github.com/NVorbis/NVorbis) | Managed C# Ogg Vorbis decoder, to be compiled internally into `Electron2D.dll`. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |
 | [NLayer](https://github.com/naudio/NLayer) | Managed C# MP3 decoder, to be compiled internally into `Electron2D.dll`; NAudio is not required. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |
 | [qoa-fu](https://github.com/pfusik/qoa-fu) C# translation | Managed QOA encoder/decoder for imported WAV samples, to be compiled internally into `Electron2D.dll`. | [ADR 0047](decisions/audio.md#adr-0047). Selected, not integrated. |

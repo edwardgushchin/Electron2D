@@ -1,6 +1,6 @@
 # AudioStreamMP3
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Declaration:** `public sealed class Electron2D.AudioStreamMP3` · **Namespace:** `Electron2D` · **Source:** [AudioStreamMP3.cs](../../src/Scene/Resources/AudioStreamMP3.cs).
 
@@ -245,6 +245,21 @@ Concrete implementation of [AudioStream](AudioStream.md); lifecycle, effects and
 `protected override System.Boolean OnIsMonophonic()`
 
 Concrete implementation of [AudioStream](AudioStream.md); lifecycle, effects and failures follow the description above.
+
+## Sampling overrides
+
+| Full signature | Contract |
+| --- | --- |
+| `public override bool CanBeSampled()` | True for a live finite resource; generation still validates initialization. |
+| `public override AudioSample GenerateSample()` | Cold copied decoded mono/stereo PCM at the original source Hz. |
+
+### CanBeSampled
+
+Reports native finite-sample capability. Uninitialized data can still fail when generated. Disposed resources reject.
+
+### GenerateSample
+
+Returns independently disposable AudioSample borrowing this stream. Compressed LoopOffset is seconds converted to source frames; enabled loops require a nonempty remaining interval. Uninitialized data and offsets leaving no frames throw InvalidOperationException. A changed borrowed Vorbis sequence is decoded before capturing the new snapshot. Native sampling does not apply beat truncation/fades and uses an exclusive loop end; source edits affect later voices after explicit re-registration. Native rate/pitch bounds apply when preparing the voice. [AudioSampleTests](../../tests/Electron2D.Tests/AudioSampleTests.cs) verifies compressed PCM, loop units and actual output through both codecs.
 
 ## Dependencies and verification
 

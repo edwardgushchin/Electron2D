@@ -113,7 +113,7 @@ internal static class AudioFilterTests
     private static AudioStreamWAV Tone(int rate = 44100)
     {
         var samples = new short[rate * 2]; for (var i = 0; i < rate; i++) { samples[i * 2] = (short)(Math.Sin(Math.Tau * 20 * i / rate) * 10000); samples[i * 2 + 1] = (short)(Math.Sin(Math.Tau * 8000 * i / rate) * 10000); }
-        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = rate, Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray(), Loop = AudioStreamWAV.LoopMode.Forward, LoopEnd = rate - 1 };
+        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = rate, Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray(), Loop = AudioLoopMode.Forward, LoopEnd = rate - 1 };
     }
     private static void Wait(FAudioContext native, int passes, Action? action = null)
     {

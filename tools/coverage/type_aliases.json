@@ -133,6 +133,7 @@
     "Vector3.Axis": "Vector3Axis",
     "Vector3i.Axis": "Vector3Axis",
     "Vector4.Axis": "Vector4Axis",
-    "Vector4i.Axis": "Vector4Axis"
+    "Vector4i.Axis": "Vector4Axis",
+    "AudioStreamWAV.LoopMode": "AudioLoopMode"
   }
 }

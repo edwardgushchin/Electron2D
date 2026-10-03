@@ -107,6 +107,21 @@ public sealed class AudioStreamOggVorbis : AudioStream
     /// <inheritdoc />
     protected override PropertyDescriptor[] OnGetParameterList() => [AudioStreamPlayback.LoopingParameter];
     /// <inheritdoc />
+    public override bool CanBeSampled() { ThrowIfDisposed(); return true; }
+    /// <inheritdoc />
+    public override AudioSample GenerateSample()
+    {
+        lock (_gate)
+        {
+            ThrowIfDisposed(); if (_pcm is null) throw new InvalidOperationException("Initialize compressed audio before sampling.");
+            if (_sequence!.Version != _sequenceVersion) (_pcm, _tags, _sequenceVersion) = AudioFileDecoder.DecodeVorbis(_sequence);
+            var frames = _pcm.Samples.Length / _pcm.Channels;
+            var begin = (int)Math.Clamp(_loopOffset * _pcm.Rate, 0, frames);
+            if (_loop && begin == frames) throw new InvalidOperationException("The loop offset leaves no sample frames.");
+            return new(this, _pcm.Samples, _pcm.Channels, _pcm.Rate, _loop ? AudioLoopMode.Forward : AudioLoopMode.Disabled, begin, frames);
+        }
+    }
+    /// <inheritdoc />
     protected override AudioStreamPlayback OnInstantiatePlayback()
     {
         lock (_gate) { ThrowIfDisposed(); if (_pcm is null) throw new InvalidOperationException("Vorbis data has not been initialized."); if (_sequence!.Version != _sequenceVersion) (_pcm, _tags, _sequenceVersion) = AudioFileDecoder.DecodeVorbis(_sequence); return new AudioStreamPlaybackOggVorbis(this, _pcm, _sequence, _sequenceVersion); }

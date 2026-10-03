@@ -66,6 +66,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH") == "1") { MeshTes
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_RANDOMIZER_HOST") == "1") { AudioRandomizerHostTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_SAMPLES_HOST") == "1") { AudioSampleTests.RunHost(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_SAMPLES") == "1") { AudioSampleTests.Run(native: true); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_INTERACTIVE_HOST") == "1") { AudioInteractiveTests.RunHost(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_INTERACTIVE") == "1") { AudioInteractiveTests.Run(native: true); return; }
@@ -386,6 +390,7 @@ AudioCompressedTests.Run(native: false);
 AudioRandomizerTests.Run();
 AudioSynchronizedTests.Run();
 AudioInteractiveTests.Run();
+AudioSampleTests.Run();
 AudioGeneratorTests.Run();
 AudioInputTests.Run();
 AudioEffectTests.Run();

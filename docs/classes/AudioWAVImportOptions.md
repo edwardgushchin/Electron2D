@@ -19,7 +19,7 @@ Typed replacement for the WAV import options map. All boolean flags default fals
 | `public System.Boolean Force8Bit { get; set; }` | Gets whether to force eight-bit internal PCM when compression is disabled. False by default. |
 | `public System.Boolean ForceMono { get; set; }` | Gets whether to average stereo input into one channel. False by default. |
 | `public System.Boolean LimitRate { get; set; }` | Gets whether to limit the imported sample rate. False by default. |
-| `public System.Nullable<Electron2D.AudioStreamWAV.LoopMode> Loop { get; set; }` | Gets the import loop policy: null detects RIFF metadata; Disabled discards it. Null by default; detects source loop metadata. |
+| `public System.Nullable<Electron2D.AudioLoopMode> Loop { get; set; }` | Gets the import loop policy: null detects RIFF metadata; Disabled discards it. Null by default; detects source loop metadata. |
 | `public System.Int32 LoopBegin { get; set; }` | Gets the explicit loop-begin frame; negative values count back from the imported end. Zero by default; interpreted only with an explicit enabled Loop. |
 | `public System.Int32 LoopEnd { get; set; }` | Gets the explicit loop-end frame; negative values count back from the imported end. Zero by default; interpreted only with an explicit enabled Loop. |
 | `public System.Int32 MaxRate { get; set; }` | Gets the requested maximum frequency in Hz. Zero by default; must be positive when LimitRate is true. |

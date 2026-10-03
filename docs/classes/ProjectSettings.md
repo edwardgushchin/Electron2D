@@ -1315,3 +1315,8 @@ Typed built-in threshold for unused stereo bus activity. Registry validation acc
 ### AudioBusesChannelDisableTime
 
 Typed built-in nonnegative finite timeout in seconds, read during output preparation and counted using actual mix frames. Zero permits expiry on the next unused silent quantum. Values that cannot produce a representable native frame duration reject at preparation. Edits apply after native output closes/reopens; existing prepared state retains its settings. AudioEffectTests checks defaults, invalid registry values, native silent-source usage, tail expiry and configuration restoration.
+
+
+## AudioGeneralDefaultPlaybackType
+
+`public static ProjectSetting<AudioDefaultPlaybackType> AudioGeneralDefaultPlaybackType { get; }` registers `audio/general/default_playback_type`, default Stream=0. Sample=1 selects native finite buffers for sample-capable streams and falls back to streaming otherwise. Undefined values reject; .web overrides retain the existing feature-override mechanism/platform gate. [AudioDefaultPlaybackType](AudioDefaultPlaybackType.md) has a distinct value set from the per-request server selector.

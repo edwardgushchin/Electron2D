@@ -237,7 +237,7 @@ internal static class AudioPitchShiftTests
             Stereo = true,
             MixRate = rate,
             Data = AudioPCMCodec.Encode(samples, AudioStreamWAV.Format.PCM16, 2, rate),
-            Loop = AudioStreamWAV.LoopMode.Forward,
+            Loop = AudioLoopMode.Forward,
             LoopEnd = rate - 1
         };
     }

@@ -18,7 +18,7 @@ internal static class AudioResourceTests
     }
     private static void VerifyFormats()
     {
-        using var defaults = new AudioStreamWAV(); Check(defaults.SampleFormat == AudioStreamWAV.Format.PCM8 && defaults.MixRate == 44100 && !defaults.Stereo && defaults.Loop == AudioStreamWAV.LoopMode.Disabled && defaults.GetLength() == 0, "WAV defaults.");
+        using var defaults = new AudioStreamWAV(); Check(defaults.SampleFormat == AudioStreamWAV.Format.PCM8 && defaults.MixRate == 44100 && !defaults.Stereo && defaults.Loop == AudioLoopMode.Disabled && defaults.GetLength() == 0, "WAV defaults.");
         var input = Enumerable.Range(0, 10240).Select(i => MathF.Sin(i * .05f) * .5f).ToArray();
         foreach (var format in Enum.GetValues<AudioStreamWAV.Format>())
         {
@@ -41,7 +41,7 @@ internal static class AudioResourceTests
         float[] expected = [0, -62.5f, 0, 437.5f, 1000, 1500];
         for (var i = 0; i < expected.Length; i++) Check(MathF.Abs(half[i].X - expected[i] / 32767) < .000001f, "Independent cubic history/fraction vector.");
         source.LoopBegin = 1; source.LoopEnd = 3;
-        foreach (var (mode, sequence) in new[] { (AudioStreamWAV.LoopMode.Forward, new float[] { 0, 0, 1000, 2000, 3000, 4000, 3000, 4000 }), (AudioStreamWAV.LoopMode.PingPong, new float[] { 0, 0, 1000, 2000, 3000, 4000, 3000, 2000 }), (AudioStreamWAV.LoopMode.Backward, new float[] { 0, 0, 3000, 2000, 3000, 2000, 3000, 2000 }) })
+        foreach (var (mode, sequence) in new[] { (AudioLoopMode.Forward, new float[] { 0, 0, 1000, 2000, 3000, 4000, 3000, 4000 }), (AudioLoopMode.PingPong, new float[] { 0, 0, 1000, 2000, 3000, 4000, 3000, 2000 }), (AudioLoopMode.Backward, new float[] { 0, 0, 3000, 2000, 3000, 2000, 3000, 2000 }) })
         {
             source.Loop = mode; playback.Start(); var output = playback.MixAudio(1, sequence.Length);
             for (var i = 0; i < sequence.Length; i++) Check(MathF.Abs(output[i].X - sequence[i] / 32767) < .000001f, "Independent loop boundary/history vector: " + mode);
@@ -61,11 +61,11 @@ internal static class AudioResourceTests
     }
     private static void VerifyLoopAndWarm()
     {
-        using var source = AudioRuntimeTests.Tone(44100); source.Loop = AudioStreamWAV.LoopMode.Forward; source.LoopBegin = 10; source.LoopEnd = 1000;
+        using var source = AudioRuntimeTests.Tone(44100); source.Loop = AudioLoopMode.Forward; source.LoopBegin = 10; source.LoopEnd = 1000;
         using var playback = source.InstantiatePlayback(); playback.Start(); var buffer = new Vector2[256];
         for (var i = 0; i < 64; i++) playback.MixInto(buffer, 1);
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) Check(playback.MixInto(buffer, 1) == 256, "Prepared loop continues."); Check(GC.GetAllocatedBytesForCurrentThread() == before, "Prepared cubic/loop mixing allocates zero managed bytes.");
-        source.Loop = AudioStreamWAV.LoopMode.PingPong; playback.Start(); Check(playback.MixAudio(1, 512).Length == 512, "Ping-pong traversal executes."); source.Loop = AudioStreamWAV.LoopMode.Backward; playback.Start(.02); Check(playback.MixAudio(1, 512).Length == 512, "Backward traversal executes.");
+        source.Loop = AudioLoopMode.PingPong; playback.Start(); Check(playback.MixAudio(1, 512).Length == 512, "Ping-pong traversal executes."); source.Loop = AudioLoopMode.Backward; playback.Start(.02); Check(playback.MixAudio(1, 512).Length == 512, "Backward traversal executes.");
         source.LoopBegin = -1; Reject<InvalidOperationException>(() => playback.Start());
     }
     private static void VerifyGuardsAndPacking()

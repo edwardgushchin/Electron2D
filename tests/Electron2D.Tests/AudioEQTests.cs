@@ -169,7 +169,7 @@ internal static class AudioEQTests
         var frames = Tone(44100, 100, 8000, 44100);
         var samples = new short[frames.Length * 2];
         for (var i = 0; i < frames.Length; i++) { samples[i * 2] = (short)(frames[i].X * 32768); samples[i * 2 + 1] = (short)(frames[i].Y * 32768); }
-        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = 44100, Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray(), Loop = AudioStreamWAV.LoopMode.Forward, LoopEnd = frames.Length - 1 };
+        return new AudioStreamWAV { SampleFormat = AudioStreamWAV.Format.PCM16, Stereo = true, MixRate = 44100, Data = MemoryMarshal.AsBytes(samples.AsSpan()).ToArray(), Loop = AudioLoopMode.Forward, LoopEnd = frames.Length - 1 };
     }
     private static Vector2[] Tone(int rate, int leftHZ, int rightHZ, int frames)
     {
