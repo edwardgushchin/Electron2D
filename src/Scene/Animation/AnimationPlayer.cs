@@ -2,25 +2,30 @@ namespace Electron2D;
 
 /// <summary>Plays named typed scene-property timelines forwards, backwards, in sections or in a queue.</summary>
 /// <remarks>Play selects immediately and applies keys on the next Advance; Advance(0) applies immediately.
-/// Pause retains position and assignment. Stop resets position and speed and optionally applies the start state.
-/// Loops retain overshoot; finite completion holds the endpoint and emits once. Weighted crossfades and capture
-/// are separate contracts; positive custom blend requests fail explicitly before changing playback.</remarks>
-public class AnimationPlayer : AnimationMixer
+/// Pause retains position and assignment and clears capture caches and queued names. Stop resets position and speed and optionally applies the start state.
+/// Loops retain overshoot; finite completion holds the endpoint and emits once. Named/default crossfades retain
+/// prior clips while Capture tracks blend from an independent snapshot of current target values.</remarks>
+public partial class AnimationPlayer : AnimationMixer
 {
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
+        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackDefaultBlendTime), n => n.PlaybackDefaultBlendTime, (n, v) => n.PlaybackDefaultBlendTime = v, _ => 0),
+        new PropertyDescriptor<AnimationPlayer, bool>(nameof(PlaybackAutoCapture), n => n.PlaybackAutoCapture, (n, v) => n.PlaybackAutoCapture = v, _ => true),
+        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackAutoCaptureDuration), n => n.PlaybackAutoCaptureDuration, (n, v) => n.PlaybackAutoCaptureDuration = v, _ => -1),
+        new PropertyDescriptor<AnimationPlayer, Tween.TransitionType>(nameof(PlaybackAutoCaptureTransitionType), n => n.PlaybackAutoCaptureTransitionType, (n, v) => n.PlaybackAutoCaptureTransitionType = v, _ => Tween.TransitionType.Linear),
+        new PropertyDescriptor<AnimationPlayer, Tween.EaseType>(nameof(PlaybackAutoCaptureEaseType), n => n.PlaybackAutoCaptureEaseType, (n, v) => n.PlaybackAutoCaptureEaseType = v, _ => Tween.EaseType.In),
         new PropertyDescriptor<AnimationPlayer, string>(nameof(Autoplay), n => n.Autoplay, (n, v) => n.Autoplay = v, _ => ""),
         new PropertyDescriptor<AnimationPlayer, double>(nameof(SpeedScale), n => n.SpeedScale, (n, v) => n.SpeedScale = v, _ => 1),
     ];
     private string _assigned = "", _autoplay = "";
-    private bool _playing;
+    private bool _playing, _stopping;
     private double _position, _speedScale = 1, _customSpeed = 1, _start = -1, _end = -1;
     private int _pingDirection = 1;
     private long _playRevision;
     private readonly Queue<string> _queue = new();
     private readonly Dictionary<string, string> _next = new(StringComparer.Ordinal);
     /// <summary>Gets or sets the selected animation; stopped assignment rewinds without playing, while an active assignment switches clips.</summary>
-    public string AssignedAnimation { get { ThrowIfDisposed(); return _assigned; } set { EnsureAnimationMutable(); RequireAnimation(value); if (_playing) { var speed = _customSpeed * _pingDirection; Play(value, customSpeed: speed, fromEnd: speed < 0); return; } _assigned = value; _position = 0; _start = _end = -1; _playRevision++; InvalidateBindings(); CurrentAnimationChanged?.Invoke(value); } }
+    public string AssignedAnimation { get { ThrowIfDisposed(); return _assigned; } set { EnsureAnimationMutable(); RequireAnimation(value); if (_playing) { var speed = _customSpeed * _pingDirection; Play(value, customSpeed: speed, fromEnd: speed < 0); return; } _hasPlayback = true; _assigned = value; _position = 0; _start = _end = -1; _playRevision++; InvalidateEvaluation(); CurrentAnimationChanged?.Invoke(value); } }
     /// <summary>Gets the playing animation name, or assigns a name to start it; empty or the stop sentinel defers stopping while attached.</summary>
     public string CurrentAnimation
     {
@@ -43,7 +48,7 @@ public class AnimationPlayer : AnimationMixer
     /// <summary>Gets the current timeline position in seconds.</summary>
     public double CurrentAnimationPosition { get { ThrowIfDisposed(); return _position; } }
     /// <summary>Gets or sets the finite signed playback multiplier; zero keeps playback enabled.</summary>
-    public double SpeedScale { get { ThrowIfDisposed(); return _speedScale; } set { EnsureAnimationMutable(); Animation.Finite(value); Animation.Finite(value * _customSpeed); _speedScale = value; _playRevision++; InvalidateBindings(); } }
+    public double SpeedScale { get { ThrowIfDisposed(); return _speedScale; } set { EnsureAnimationMutable(); Animation.Finite(value); Animation.Finite(value * _customSpeed); _speedScale = value; _playRevision++; InvalidateEvaluation(); } }
     /// <summary>Occurs when queued or configured-next playback changes the selected animation.</summary>
     public event Action<string, string>? AnimationChanged;
     /// <summary>Occurs when the current animation selection changes.</summary>
@@ -64,12 +69,12 @@ public class AnimationPlayer : AnimationMixer
     public bool IsPlaying() { ThrowIfDisposed(); return _playing; }
     /// <summary>Returns zero while paused, otherwise the signed effective speed.</summary>
     public double GetPlayingSpeed() { ThrowIfDisposed(); return _playing ? _speedScale * _customSpeed * _pingDirection : 0; }
-    /// <summary>Starts or resumes a selected timeline. Nonpositive customBlend selects the current zero-blend profile.</summary>
+    /// <summary>Starts or resumes a selected timeline. Negative customBlend selects configured/default crossfade timing; zero switches immediately.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
-    /// <param name="customBlend">Nonpositive for the current zero-blend profile; positive values fail before mutation.</param>
+    /// <param name="customBlend">Finite crossfade duration; negative uses configured/default timing.</param>
     /// <param name="customSpeed">A finite signed playback multiplier.</param>
     /// <param name="fromEnd">Whether a new or completed selection starts at the section end.</param>
-    public void Play(string name = "", double customBlend = -1, double customSpeed = 1, bool fromEnd = false) => PlaySection(name, -1, -1, customBlend, customSpeed, fromEnd);
+    public void Play(string name = "", double customBlend = -1, double customSpeed = 1, bool fromEnd = false) { if (_autoCapture) PlayWithCapture(name, _autoCaptureDuration, customBlend, customSpeed, fromEnd, _autoCaptureTransition, _autoCaptureEase); else PlaySection(name, -1, -1, customBlend, customSpeed, fromEnd); }
     /// <summary>Starts or resumes reverse playback from the end.</summary>
     /// <param name="name">The exact ordinal name.</param>
     /// <param name="customBlend">The typed argument for this operation, using the defaults described above.</param>
@@ -84,11 +89,12 @@ public class AnimationPlayer : AnimationMixer
     public void PlaySection(string name = "", double startTime = -1, double endTime = -1, double customBlend = -1, double customSpeed = 1, bool fromEnd = false)
     {
         EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(name); Animation.Finite(customBlend); Animation.Finite(customSpeed); Animation.Finite(_speedScale * customSpeed);
-        if (customBlend > 0) throw new NotSupportedException("Weighted animation blending is not available.");
-        if (name.Length == 0) name = _assigned; var animation = RequireAnimation(name); ValidateSection(animation, startTime, endTime);
+        if (name.Length == 0) name = _assigned; var animation = RequireAnimation(name); ObjectDisposedException.ThrowIf(animation.IsDisposed, animation); ValidateSection(animation, startTime, endTime);
+        BeginTransition(BlendDuration(name, customBlend));
+        _hasPlayback = true;
         var changed = name != _assigned; var wasPlaying = _playing; var start = BoundStart(startTime); var end = BoundEnd(animation, endTime);
         if (changed || _position < start || _position > end || (fromEnd && customSpeed < 0 && _position <= start) || (!fromEnd && customSpeed > 0 && _position >= end)) _position = fromEnd ? end : start;
-        _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateBindings();
+        _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateEvaluation();
         var revision = _playRevision; if (changed) CurrentAnimationChanged?.Invoke(name);
         if (!IsDisposed && revision == _playRevision && (changed || !wasPlaying)) Started(name);
     }
@@ -96,7 +102,7 @@ public class AnimationPlayer : AnimationMixer
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
     /// <param name="startTime">The section start in seconds, or a negative value for the resource start.</param>
     /// <param name="endTime">The section end in seconds, or a negative value for the resource end.</param>
-    /// <param name="customBlend">Nonpositive for the current zero-blend profile; positive values fail before mutation.</param>
+    /// <param name="customBlend">Finite crossfade duration; negative uses configured/default timing.</param>
     public void PlaySectionBackwards(string name = "", double startTime = -1, double endTime = -1, double customBlend = -1) => PlaySection(name, startTime, endTime, customBlend, -1, true);
     /// <summary>Plays a section using named marker times; empty or absent markers select endpoints.</summary>
     /// <param name="startMarker">The start marker, or empty/missing to use the start endpoint.</param>
@@ -113,21 +119,26 @@ public class AnimationPlayer : AnimationMixer
     /// <param name="endMarker">The typed argument for this operation, using the defaults described above.</param>
     /// <param name="customBlend">The typed argument for this operation, using the defaults described above.</param>
     public void PlaySectionWithMarkersBackwards(string name = "", string startMarker = "", string endMarker = "", double customBlend = -1) => PlaySectionWithMarkers(name, startMarker, endMarker, customBlend, -1, true);
-    /// <summary>Pauses without clearing the selected animation, position or queued names.</summary>
-    public void Pause() { EnsureAnimationMutable(); _playing = false; _playRevision++; InvalidateBindings(); }
+    /// <summary>Pauses while retaining the selected animation and position; clears the queue and capture caches.</summary>
+    public void Pause() { EnsureAnimationMutable(); _playing = false; _queue.Clear(); _playRevision++; InvalidateBindings(); }
     /// <summary>Stops, resets the position and speed, and clears queued names; keepState preserves target values.</summary>
     /// <param name="keepState">Whether to leave target property values unchanged while resetting playback.</param>
     public void Stop(bool keepState = false)
     {
-        EnsureAnimationMutable(); _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings();
-        if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false);
+        EnsureAnimationMutable(); if (_stopping) return; _stopping = true;
+        try
+        {
+            _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings();
+            if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false);
+        }
+        finally { _stopping = false; }
     }
     /// <summary>Seeks within the current section; update applies values immediately without completion events.</summary>
     /// <param name="seconds">The finite requested seek time, clamped to the current section.</param>
     /// <param name="update">Whether to apply values synchronously.</param>
     /// <param name="updateOnly">Whether to suppress non-value track effects; the current profile has only value tracks.</param>
     public void Seek(double seconds, bool update = false, bool updateOnly = false)
-    { EnsureAnimationMutable(); Animation.Finite(seconds); if (!Active || !HasAnimation(_assigned)) return; var animation = GetAnimation(_assigned); var previous = _position; _position = Math.Clamp(seconds, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateBindings(); if (update) ApplyAnimation(animation, _position, _position < previous); }
+    { EnsureAnimationMutable(); Animation.Finite(seconds); if (!Active || !HasAnimation(_assigned)) return; var animation = GetAnimation(_assigned); var previous = _position; _position = Math.Clamp(seconds, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateEvaluation(); if (update) { if (_blendClips.Count != 0 || NeedsBlending) MixPlayback(animation, _position, _position < previous, null, 0, false); else ApplyAnimation(animation, _position, _position < previous); } }
     /// <summary>Queues an existing animation; starts immediately when no animation is playing.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
     public void Queue(string name) { EnsureAnimationMutable(); RequireAnimation(name); if (!_playing) Play(name); else _queue.Enqueue(name); }
@@ -145,13 +156,13 @@ public class AnimationPlayer : AnimationMixer
     /// <summary>Sets the current playback section, clamping position into it.</summary>
     /// <param name="startTime">The section start in seconds, or a negative value for the resource start.</param>
     /// <param name="endTime">The section end in seconds, or a negative value for the resource end.</param>
-    public void SetSection(double startTime = -1, double endTime = -1) { EnsureAnimationMutable(); var animation = RequireAnimation(_assigned); ValidateSection(animation, startTime, endTime); _start = startTime; _end = endTime; _position = Math.Clamp(_position, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateBindings(); }
+    public void SetSection(double startTime = -1, double endTime = -1) { EnsureAnimationMutable(); var animation = RequireAnimation(_assigned); ValidateSection(animation, startTime, endTime); _start = startTime; _end = endTime; _position = Math.Clamp(_position, GetSectionStartTime(), GetSectionEndTime()); _playRevision++; InvalidateEvaluation(); }
     /// <summary>Sets the current section using markers.</summary>
     /// <param name="startMarker">The start marker, or empty/missing to use the start endpoint.</param>
     /// <param name="endMarker">The end marker, or empty/missing to use the end endpoint.</param>
     public void SetSectionWithMarkers(string startMarker = "", string endMarker = "") { var animation = RequireAnimation(_assigned); SetSection(animation.GetMarkerTime(startMarker), animation.GetMarkerTime(endMarker)); }
     /// <summary>Restores complete-resource playback boundaries.</summary>
-    public void ResetSection() { EnsureAnimationMutable(); _start = _end = -1; _playRevision++; InvalidateBindings(); }
+    public void ResetSection() { EnsureAnimationMutable(); _start = _end = -1; _playRevision++; InvalidateEvaluation(); }
     /// <summary>Returns whether either section boundary is explicit.</summary>
     public bool HasSection() { ThrowIfDisposed(); return _start >= 0 || _end >= 0; }
     /// <summary>Returns the effective section start.</summary>
@@ -179,7 +190,8 @@ public class AnimationPlayer : AnimationMixer
         var name = _assigned; var revision = _playRevision;
         try
         {
-            if (animation.HasDiscreteTracks() && movement != 0 && span > 0)
+            if (_blendClips.Count != 0 || NeedsBlending) { _position = position; MixPlayback(animation, position, backward, previousPosition, delta, done); }
+            else if (animation.HasDiscreteTracks() && movement != 0 && span > 0)
             {
                 var remaining = movement; var cursor = previousPosition;
                 while (remaining != 0 && !IsDisposed && revision == _playRevision && !animation.IsDisposed)
@@ -201,7 +213,12 @@ public class AnimationPlayer : AnimationMixer
             }
             else { _position = position; ApplyAnimation(animation, position, backward, previousPosition); }
         }
-        catch { if (!IsDisposed && revision == _playRevision) Pause(); throw; }
+        catch (Exception failure)
+        {
+            if (!IsDisposed && revision == _playRevision)
+            { try { Pause(); } catch (Exception cleanup) { throw new AggregateException("Animation evaluation and cleanup failed.", failure, cleanup); } }
+            throw;
+        }
         if (IsDisposed || revision != _playRevision) return;
         _position = position;
         if (!done) return;
@@ -212,6 +229,8 @@ public class AnimationPlayer : AnimationMixer
         var queuedNames = _queue.ToArray(); Play(next); foreach (var queued in queuedNames) _queue.Enqueue(queued);
         if (!IsDisposed) AnimationChanged?.Invoke(name, next);
     }
+    private sealed class BlendClip(string name, double position, double speed, int direction, double start, double end, double duration, double left)
+    { internal readonly string Name = name; internal double Position = position, Left = left; internal readonly double Speed = speed, Start = start, End = end, Duration = duration; internal int Direction = direction; }
     private Animation RequireAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); if (!HasAnimation(name)) throw new KeyNotFoundException($"Animation '{name}' was not found."); return GetAnimation(name); }
     private static double BoundStart(double start) => Math.Max(0, start);
     private static double BoundEnd(Animation animation, double end) => end < 0 ? animation.Length : Math.Min(end, animation.Length);
@@ -219,7 +238,7 @@ public class AnimationPlayer : AnimationMixer
     /// <inheritdoc />
     protected override void OnNotification(int what) { base.OnNotification(what); if (!IsDisposed && what == NotificationReady && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); AnimationChanged = null; CurrentAnimationChanged = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); _blendClips.Clear(); _mixFrames.Clear(); _blendTimes.Clear(); AnimationChanged = null; CurrentAnimationChanged = null; } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties);
 

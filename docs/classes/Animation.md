@@ -72,10 +72,13 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public Animation.UpdateMode ValueTrackGetUpdateMode(Int32 track)` | method |
 | `public TValue ValueTrackInterpolate<TValue>(Int32 track, Double time, Boolean backward = false)` | method |
 | `public Void ValueTrackSetUpdateMode(Int32 track, Animation.UpdateMode mode)` | method |
+| `public Boolean CaptureIncluded { get;  }` | property |
 | `public Double Length { get; set; }` | property |
 | `public SpriteFrames.LoopMode LoopMode { get; set; }` | property |
 | `public Double Step { get; set; }` | property |
 
 ## Verification and limits
 
-[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Capture, weighted mixing, other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+
+Typed weighted transitions, capture, RESET and postprocess behavior are detailed in [the component](../components/scene-animation.md#weighted-transitions-and-capture) and tested by [SceneAnimationBlendTests](../../tests/Electron2D.Tests/SceneAnimationBlendTests.cs).

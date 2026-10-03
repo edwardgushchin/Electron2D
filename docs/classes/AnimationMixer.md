@@ -29,6 +29,7 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public event Action CachesCleared` | event |
 | `public Void AddAnimationLibrary(String name, AnimationLibrary library)` | method |
 | `public Void Advance(Double delta)` | method |
+| `public Void Capture(String name, Double duration, Tween.TransitionType transitionType = Linear, Tween.EaseType easeType = In)` | method |
 | `public Void ClearCaches()` | method |
 | `protected override Void Dispose(Boolean disposing)` | method |
 | `public String FindAnimation(Animation animation)` | method |
@@ -41,12 +42,17 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public Boolean HasAnimation(String name)` | method |
 | `public Boolean HasAnimationLibrary(String name)` | method |
 | `protected override Void OnNotification(Int32 what)` | method |
+| `protected virtual TValue OnPostProcessKeyValue<TValue>(Animation animation, Int32 track, TValue value, UInt64 objectID, Int32 objectSubIndex = -1)` | method |
 | `public Void RemoveAnimationLibrary(String name)` | method |
 | `public Void RenameAnimationLibrary(String name, String newName)` | method |
 | `public Boolean Active { get; set; }` | property |
+| `public AnimationMixer.AnimationCallbackModeDiscrete CallbackModeDiscrete { get; set; }` | property |
 | `public AnimationMixer.AnimationCallbackModeProcess CallbackModeProcess { get; set; }` | property |
+| `public Boolean Deterministic { get; set; }` | property |
 | `public String RootNode { get; set; }` | property |
 
 ## Verification and limits
 
-[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Capture, weighted mixing, other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+
+Typed weighted transitions, capture, RESET and postprocess behavior are detailed in [the component](../components/scene-animation.md#weighted-transitions-and-capture) and tested by [SceneAnimationBlendTests](../../tests/Electron2D.Tests/SceneAnimationBlendTests.cs).

@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class AnimationNodeTimeSeek`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeTimeSeek.xml) | — | Blocked | Animation: trigger is the typed weighted multi-source mixing/capture on the implemented value-track timeline. |
-| [`property bool explicit_elapse = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeTimeSeek.xml) | — | Blocked | Animation: trigger is the typed weighted multi-source mixing/capture on the implemented value-track timeline. |
+| [`class AnimationNodeTimeSeek`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeTimeSeek.xml) | — | Blocked | Animation: trigger is the typed AnimationTree graph/controller, parameter schema and AnimationNode resource evaluation on the implemented weighted mixer/capture. |
+| [`property bool explicit_elapse = true`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/AnimationNodeTimeSeek.xml) | — | Blocked | Animation: trigger is the typed AnimationTree graph/controller, parameter schema and AnimationNode resource evaluation on the implemented weighted mixer/capture. |

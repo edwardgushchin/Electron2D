@@ -28,6 +28,7 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public Void AnimationSetNext(String animationFrom, String animationTo)` | method |
 | `public Void ClearQueue()` | method |
 | `protected override Void Dispose(Boolean disposing)` | method |
+| `public Double GetBlendTime(String animationFrom, String animationTo)` | method |
 | `public Double GetPlayingSpeed()` | method |
 | `public AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()` | method |
 | `protected override Collections.Generic.IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | method |
@@ -46,9 +47,11 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public Void PlaySectionBackwards(String name = "", Double startTime = -1, Double endTime = -1, Double customBlend = -1)` | method |
 | `public Void PlaySectionWithMarkers(String name = "", String startMarker = "", String endMarker = "", Double customBlend = -1, Double customSpeed = 1, Boolean fromEnd = false)` | method |
 | `public Void PlaySectionWithMarkersBackwards(String name = "", String startMarker = "", String endMarker = "", Double customBlend = -1)` | method |
+| `public Void PlayWithCapture(String name = "", Double duration = -1, Double customBlend = -1, Double customSpeed = 1, Boolean fromEnd = false, Tween.TransitionType transitionType = Linear, Tween.EaseType easeType = In)` | method |
 | `public Void Queue(String name)` | method |
 | `public Void ResetSection()` | method |
 | `public Void Seek(Double seconds, Boolean update = false, Boolean updateOnly = false)` | method |
+| `public Void SetBlendTime(String animationFrom, String animationTo, Double seconds)` | method |
 | `public Void SetProcessCallback(AnimationMixer.AnimationCallbackModeProcess mode)` | method |
 | `public Void SetRoot(String path)` | method |
 | `public Void SetSection(Double startTime = -1, Double endTime = -1)` | method |
@@ -59,8 +62,15 @@ The source XML describes every own declaration. Public/protected declaration acc
 | `public String CurrentAnimation { get; set; }` | property |
 | `public Double CurrentAnimationLength { get;  }` | property |
 | `public Double CurrentAnimationPosition { get;  }` | property |
+| `public Boolean PlaybackAutoCapture { get; set; }` | property |
+| `public Double PlaybackAutoCaptureDuration { get; set; }` | property |
+| `public Tween.EaseType PlaybackAutoCaptureEaseType { get; set; }` | property |
+| `public Tween.TransitionType PlaybackAutoCaptureTransitionType { get; set; }` | property |
+| `public Double PlaybackDefaultBlendTime { get; set; }` | property |
 | `public Double SpeedScale { get; set; }` | property |
 
 ## Verification and limits
 
-[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Capture, weighted mixing, other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+[SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. Other track kinds, packed/disk persistence and other-platform acceptance remain unimplemented; the type's existence does not close those family rows.
+
+Typed weighted transitions, capture, RESET and postprocess behavior are detailed in [the component](../components/scene-animation.md#weighted-transitions-and-capture) and tested by [SceneAnimationBlendTests](../../tests/Electron2D.Tests/SceneAnimationBlendTests.cs).

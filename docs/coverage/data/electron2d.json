@@ -282,6 +282,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "kind": "type",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "name": "AnimationCallbackModeDiscrete",
+    "signature": "public enum Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AnimationMixer.AnimationCallbackModeProcess",
     "kind": "type",
     "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
@@ -12447,6 +12465,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.Animation.UpdateMode.Capture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Animation.UpdateMode",
+    "name": "Capture",
+    "signature": "public const Electron2D.Animation.UpdateMode Capture = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Animation.UpdateMode",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.Animation.UpdateMode.Continuous()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Animation.UpdateMode",
@@ -12470,6 +12501,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Animation.UpdateMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeDiscrete.Dominant()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "name": "Dominant",
+    "signature": "public const Electron2D.AnimationMixer.AnimationCallbackModeDiscrete Dominant = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeDiscrete.ForceContinuous()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "name": "ForceContinuous",
+    "signature": "public const Electron2D.AnimationMixer.AnimationCallbackModeDiscrete ForceContinuous = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnimationMixer.AnimationCallbackModeDiscrete.Recessive()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "name": "Recessive",
+    "signature": "public const Electron2D.AnimationMixer.AnimationCallbackModeDiscrete Recessive = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
     "value": "1"
   },
   {
@@ -29915,6 +29985,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationMixer.Capture(System.String,System.Double,Electron2D.Tween.TransitionType,Electron2D.Tween.EaseType)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "Capture",
+    "signature": "public System.Void Capture(System.String name, System.Double duration, Electron2D.Tween.TransitionType transitionType = Linear, Electron2D.Tween.EaseType easeType = In)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Double",
+        "default": null
+      },
+      {
+        "name": "transitionType",
+        "type": "Electron2D.Tween.TransitionType",
+        "default": "Linear"
+      },
+      {
+        "name": "easeType",
+        "type": "Electron2D.Tween.EaseType",
+        "default": "In"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationMixer.ClearCaches()",
     "kind": "method",
     "declaringType": "Electron2D.AnimationMixer",
@@ -30119,6 +30223,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationMixer.OnPostProcessKeyValue\u00601(Electron2D.Animation,System.Int32,TValue,System.UInt64,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "OnPostProcessKeyValue",
+    "signature": "protected virtual TValue OnPostProcessKeyValue\u003CTValue\u003E(Electron2D.Animation animation, System.Int32 track, TValue value, System.UInt64 objectID, System.Int32 objectSubIndex = -1)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animation",
+        "type": "Electron2D.Animation",
+        "default": null
+      },
+      {
+        "name": "track",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "TValue",
+        "default": null
+      },
+      {
+        "name": "objectID",
+        "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "objectSubIndex",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "TValue",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationMixer.RemoveAnimationLibrary(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationMixer",
@@ -30234,6 +30377,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationPlayer.GetBlendTime(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "GetBlendTime",
+    "signature": "public System.Double GetBlendTime(System.String animationFrom, System.String animationTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animationFrom",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "animationTo",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
     "value": null
   },
   {
@@ -30613,6 +30780,55 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationPlayer.PlayWithCapture(System.String,System.Double,System.Double,System.Double,System.Boolean,Electron2D.Tween.TransitionType,Electron2D.Tween.EaseType)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlayWithCapture",
+    "signature": "public System.Void PlayWithCapture(System.String name = \u0022\u0022, System.Double duration = -1, System.Double customBlend = -1, System.Double customSpeed = 1, System.Boolean fromEnd = false, Electron2D.Tween.TransitionType transitionType = Linear, Electron2D.Tween.EaseType easeType = In)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "duration",
+        "type": "System.Double",
+        "default": "-1"
+      },
+      {
+        "name": "customBlend",
+        "type": "System.Double",
+        "default": "-1"
+      },
+      {
+        "name": "customSpeed",
+        "type": "System.Double",
+        "default": "1"
+      },
+      {
+        "name": "fromEnd",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "transitionType",
+        "type": "Electron2D.Tween.TransitionType",
+        "default": "Linear"
+      },
+      {
+        "name": "easeType",
+        "type": "Electron2D.Tween.EaseType",
+        "default": "In"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationPlayer.Queue(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -30668,6 +30884,35 @@
         "name": "updateOnly",
         "type": "System.Boolean",
         "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AnimationPlayer.SetBlendTime(System.String,System.String,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "SetBlendTime",
+    "signature": "public System.Void SetBlendTime(System.String animationFrom, System.String animationTo, System.Double seconds)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "animationFrom",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "animationTo",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "seconds",
+        "type": "System.Double",
+        "default": null
       }
     ],
     "returnType": "System.Void",
@@ -96496,6 +96741,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Animation.CaptureIncluded()",
+    "kind": "property",
+    "declaringType": "Electron2D.Animation",
+    "name": "CaptureIncluded",
+    "signature": "public System.Boolean CaptureIncluded { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Animation.Length()",
     "kind": "property",
     "declaringType": "Electron2D.Animation",
@@ -96548,6 +96806,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AnimationMixer.CallbackModeDiscrete()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "CallbackModeDiscrete",
+    "signature": "public Electron2D.AnimationMixer.AnimationCallbackModeDiscrete CallbackModeDiscrete { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeDiscrete",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimationMixer.CallbackModeProcess()",
     "kind": "property",
     "declaringType": "Electron2D.AnimationMixer",
@@ -96558,6 +96829,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationMixer.Deterministic()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "Deterministic",
+    "signature": "public System.Boolean Deterministic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -96631,6 +96915,71 @@
     "declaringType": "Electron2D.AnimationPlayer",
     "name": "CurrentAnimationPosition",
     "signature": "public System.Double CurrentAnimationPosition { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationPlayer.PlaybackAutoCapture()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlaybackAutoCapture",
+    "signature": "public System.Boolean PlaybackAutoCapture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationPlayer.PlaybackAutoCaptureDuration()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlaybackAutoCaptureDuration",
+    "signature": "public System.Double PlaybackAutoCaptureDuration { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationPlayer.PlaybackAutoCaptureEaseType()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlaybackAutoCaptureEaseType",
+    "signature": "public Electron2D.Tween.EaseType PlaybackAutoCaptureEaseType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tween.EaseType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationPlayer.PlaybackAutoCaptureTransitionType()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlaybackAutoCaptureTransitionType",
+    "signature": "public Electron2D.Tween.TransitionType PlaybackAutoCaptureTransitionType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Tween.TransitionType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AnimationPlayer.PlaybackDefaultBlendTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "PlaybackDefaultBlendTime",
+    "signature": "public System.Double PlaybackDefaultBlendTime { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

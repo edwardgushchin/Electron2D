@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-04
 
-The first reusable [scene animation](../components/scene-animation.md) slice executes typed property keys through Animation/AnimationLibrary/AnimationMixer/AnimationPlayer, including reverse, sections, queues, loop crossings and real Linux Wayland GPU/compatibility pixels. Library own rows are Implemented; wider track/mixing/capture/persistence families and full interpolation edge profiles retain their exact states. SceneAnimationTests measures zero allocation on 256 warmed ordinary, angular and discrete-loop passes.
+The first reusable [scene animation](../components/scene-animation.md) slice executes typed property keys through Animation/AnimationLibrary/AnimationMixer/AnimationPlayer, including reverse, sections, queues, loop crossings and real Linux Wayland GPU/compatibility pixels. Library own rows are Implemented; weighted multi-source mixing, capture, RESET and typed postprocessing now execute; other track/persistence families and full key-interpolation edge profiles retain their exact states. SceneAnimationTests measures zero allocation on 256 warmed ordinary, angular and discrete-loop passes.
 
 This is the entry point for the living, bidirectional comparison between the official stable Godot API and the Electron2D production API. The register accounts for upstream declarations even when they are outside Electron2D's 2D product, and for Electron2D declarations that have no upstream counterpart. It is a census and roadmap, not a claim that every listed member is implemented.
 

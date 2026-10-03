@@ -11,6 +11,7 @@ public sealed class Animation : Resource
 {
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
+        new PropertyDescriptor<Animation, bool>(nameof(CaptureIncluded), n => n.CaptureIncluded),
         new PropertyDescriptor<Animation, double>(nameof(Length), n => n.Length, (n, v) => n.Length = v, _ => 1),
         new PropertyDescriptor<Animation, double>(nameof(Step), n => n.Step, (n, v) => n.Step = v, _ => .033333335),
         new PropertyDescriptor<Animation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None),
@@ -42,6 +43,8 @@ public sealed class Animation : Resource
         Continuous = 0,
         /// <summary>Hold values between keys.</summary>
         Discrete = 1,
+        /// <summary>Continuously evaluate while admitting capture of the current target value.</summary>
+        Capture = 2,
     }
     /// <summary>Selects preceding, approximate or exact key lookup.</summary>
     public enum FindMode
@@ -57,7 +60,10 @@ public sealed class Animation : Resource
     private readonly Dictionary<string, (double Time, Color Color)> _markers = new(StringComparer.Ordinal);
     private double _length = 1, _step = 0.033333335;
     private SpriteFrames.LoopMode _loopMode;
+    private bool _captureIncluded;
 
+    /// <summary>Gets whether any property track admits capture.</summary>
+    public bool CaptureIncluded { get { ThrowIfDisposed(); return _captureIncluded; } }
     /// <summary>Gets or sets duration in seconds; finite values below 0.001 are clamped.</summary>
     public double Length { get { ThrowIfDisposed(); return _length; } set { ThrowIfDisposed(); Finite(value); _length = Math.Max(.001, value); EmitChanged(); } }
     /// <summary>Gets or sets the authoring time-step hint, initially approximately one thirtieth second.</summary>
@@ -86,11 +92,11 @@ public sealed class Animation : Resource
     public int GetTrackCount() { ThrowIfDisposed(); return _tracks.Count; }
     /// <summary>Removes one track and emits Changed.</summary>
     /// <param name="track">The zero-based existing track index.</param>
-    public void RemoveTrack(int track) { Get(track); _tracks.RemoveAt(track); EmitChanged(); }
+    public void RemoveTrack(int track) { Get(track); _tracks.RemoveAt(track); RefreshCaptureIncluded(); EmitChanged(); }
     /// <summary>Copies one track and all keys into another animation without sharing its key container.</summary>
     /// <param name="toAnimation">The live destination animation, whose track list receives an independent copy.</param>
     /// <param name="track">The zero-based existing track index.</param>
-    public void CopyTrack(int track, Animation toAnimation) { var copy = Get(track).Copy(); ArgumentNullException.ThrowIfNull(toAnimation); toAnimation.ThrowIfDisposed(); toAnimation._tracks.Add(copy); toAnimation.EmitChanged(); }
+    public void CopyTrack(int track, Animation toAnimation) { var copy = Get(track).Copy(); ArgumentNullException.ThrowIfNull(toAnimation); toAnimation.ThrowIfDisposed(); toAnimation._tracks.Add(copy); toAnimation.RefreshCaptureIncluded(); toAnimation.EmitChanged(); }
     /// <summary>Returns the first track with this exact relative path, or minus one.</summary>
     /// <param name="path">The relative target path.</param>
     /// <param name="type">The executable track kind.</param>
@@ -148,7 +154,7 @@ public sealed class Animation : Resource
     /// <summary>Sets continuous interpolation or discrete key holding.</summary>
     /// <param name="mode">The defined update or process mode.</param>
     /// <param name="track">The zero-based existing track index.</param>
-    public void ValueTrackSetUpdateMode(int track, UpdateMode mode) { Valid(mode); Get(track).Update = mode; EmitChanged(); }
+    public void ValueTrackSetUpdateMode(int track, UpdateMode mode) { Valid(mode); Get(track).Update = mode; RefreshCaptureIncluded(); EmitChanged(); }
     /// <summary>Returns the number of keys.</summary>
     /// <param name="track">The zero-based existing track index.</param>
     public int TrackGetKeyCount(int track) => Get(track).Times.Count;
@@ -239,7 +245,7 @@ public sealed class Animation : Resource
     /// <param name="track">The zero-based existing track index.</param>
     public void TrackSwap(int track, int withTrack) { var a = Get(track); var b = Get(withTrack); if (track == withTrack) return; _tracks[track] = b; _tracks[withTrack] = a; EmitChanged(); }
     /// <summary>Removes tracks and restores length and loop defaults, retaining markers and the step hint.</summary>
-    public void Clear() { ThrowIfDisposed(); _tracks.Clear(); _length = 1; _loopMode = SpriteFrames.LoopMode.None; EmitChanged(); }
+    public void Clear() { ThrowIfDisposed(); _tracks.Clear(); _captureIncluded = false; _length = 1; _loopMode = SpriteFrames.LoopMode.None; EmitChanged(); }
     /// <summary>Adds or moves a named marker, replacing any marker at approximately the same time and resetting its color.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
     /// <param name="time">A finite key or marker time in seconds.</param>
@@ -278,6 +284,8 @@ public sealed class Animation : Resource
         return result;
     }
     internal bool HasDiscreteTracks() { foreach (var track in _tracks) if (track.Enabled && track.Update == UpdateMode.Discrete) return true; return false; }
+    private void RefreshCaptureIncluded() { _captureIncluded = false; foreach (var track in _tracks) if (track.Update == UpdateMode.Capture) { _captureIncluded = true; break; } }
+    internal void AddCapturedTrack(AnimationTrack track) => _tracks.Add(track);
     internal AnimationTrack Get(int track) { ThrowIfDisposed(); return _tracks[track]; }
     private AnimationTypedTrack<TValue> Typed<TValue>(int track) => Get(track) as AnimationTypedTrack<TValue> ?? throw new InvalidCastException("Key type differs from the track's declared type.");
     internal static void Finite(double value) { if (!double.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value), "A finite value is required."); }
@@ -286,7 +294,7 @@ public sealed class Animation : Resource
     protected override Resource CreateDuplicateInstance() => new Animation();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
-    { var copy = (Animation)target; copy._tracks.Clear(); foreach (var track in _tracks) copy._tracks.Add(track.Copy(deep, duplicate)); copy._markers.Clear(); foreach (var marker in _markers) copy._markers.Add(marker.Key, marker.Value); copy._length = _length; copy._step = _step; copy._loopMode = _loopMode; }
+    { var copy = (Animation)target; copy._tracks.Clear(); foreach (var track in _tracks) copy._tracks.Add(track.Copy(deep, duplicate)); copy._markers.Clear(); foreach (var marker in _markers) copy._markers.Add(marker.Key, marker.Value); copy._length = _length; copy._step = _step; copy._loopMode = _loopMode; copy._captureIncluded = _captureIncluded; }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _tracks.Clear(); _markers.Clear(); } base.Dispose(disposing); }
     /// <inheritdoc />
@@ -310,7 +318,7 @@ internal abstract class AnimationTrack
 internal abstract class AnimationTypedTrack<T> : AnimationTrack
 {
     internal readonly List<T> Values = [];
-    protected readonly Func<T, T, double, T>? Interpolate;
+    internal readonly Func<T, T, double, T>? Interpolate;
     protected AnimationTypedTrack(Func<T, T, double, T>? interpolate) { Interpolate = interpolate; if (interpolate is null) Interpolation = Animation.InterpolationType.Nearest; }
     internal int Insert(double time, T value, double transition)
     { var index = Times.BinarySearch(time); if (index >= 0) { Values[index] = value; Transitions[index] = transition; return index; } index = ~index; Times.Insert(index, time); Values.Insert(index, value); Transitions.Insert(index, transition); return index; }
@@ -363,8 +371,38 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
     internal override AnimationBinding? Bind(Node root) { var target = string.IsNullOrEmpty(NodePath) ? root : root.GetNodeOrNull(NodePath); return target is TOwner owner ? new Binding(this, owner, property) : null; }
     private sealed class Binding(AnimationValueTrack<TOwner, T> track, TOwner owner, PropertyDescriptor<TOwner, T> descriptor) : AnimationBinding
     {
+        private AnimationBlendProperty<T>? _property;
+        internal override void AttachBlend(AnimationMixer mixer) { _property = mixer.BlendProperty(owner, descriptor, track.Interpolate); _property.Angle |= track.Interpolation is Animation.InterpolationType.LinearAngle or Animation.InterpolationType.CubicAngle; }
+        internal override void AddWeight(double weight, int pass) { if (track.Enabled && track.Times.Count != 0) _property?.AddWeight(weight, pass); }
+        internal override void SetRest() { if (track.Times.Count != 0) _property?.SetRest(track.Values[0]); }
+        internal override AnimationCaptureValue? Capture(Animation animation, int index)
+        { if (_property is null || owner.IsDisposed || owner.IsQueuedForDeletion) return null; var value = descriptor.GetValue(owner); if (typeof(T) == typeof(int[][])) { var source = Unsafe.As<T, int[][]>(ref value); var copy = new int[source.Length][]; for (var i = 0; i < copy.Length; i++) copy[i] = source[i] is null ? null! : (int[])source[i].Clone(); value = Unsafe.As<int[][], T>(ref copy); } else if (value is Array array) value = (T)(object)array.Clone(); var captured = (AnimationTypedTrack<T>)track.Copy(); captured.Times.Clear(); captured.Values.Clear(); captured.Transitions.Clear(); captured.Insert(0, value, 1); captured.Update = Animation.UpdateMode.Continuous; animation.AddCapturedTrack(captured); return new AnimationCaptureValue<T>(animation, index, value, _property); }
+        internal override void Mix(AnimationMixFrame frame, int index, double weight, AnimationMixer mixer, long generation)
+        {
+            var animation = frame.Animation; var time = frame.Time; var backward = frame.Backward; var previous = frame.Previous; var revision = animation.ChangeRevision;
+            if (_property is null || !track.Enabled || track.Times.Count == 0 || Math.Abs(weight) < 1e-12 || owner.IsDisposed || owner.IsQueuedForDeletion || !ReferenceEquals(owner.Tree, mixer.Tree)) return;
+            if (track.Update == Animation.UpdateMode.Discrete && mixer.CallbackModeDiscrete != AnimationMixer.AnimationCallbackModeDiscrete.ForceContinuous)
+            {
+                if (!previous.HasValue || frame.Movement == 0) { Apply(animation, index, time, backward, previous, mixer, generation); return; }
+                var cursor = previous.Value; var remaining = frame.Movement; var start = frame.Start; var end = frame.End < 0 ? animation.Length : frame.End;
+                while (remaining != 0 && mixer.EvaluationCurrent(generation) && !animation.IsDisposed && animation.ChangeRevision == revision)
+                {
+                    var reverse = remaining < 0; var endpoint = reverse ? start : end; var travel = Math.Min(Math.Abs(remaining), Math.Abs(endpoint - cursor)); var next = cursor + (reverse ? -travel : travel);
+                    Apply(animation, index, next, reverse, cursor, mixer, generation);
+                    var leftover = remaining + (reverse ? travel : -travel); if (travel > 0 && leftover == remaining) throw new InvalidOperationException("The discrete timeline delta cannot make representable progress."); remaining = leftover; cursor = next;
+                    if (!mixer.EvaluationCurrent(generation) || animation.IsDisposed || animation.ChangeRevision != revision || cursor != endpoint || animation.LoopMode == SpriteFrames.LoopMode.None) break;
+                    if (animation.LoopMode == SpriteFrames.LoopMode.PingPong) remaining = -remaining;
+                    else { cursor = reverse ? end : start; Apply(animation, index, cursor, reverse, null, mixer, generation); }
+                }
+                return;
+            }
+            var value = mixer.ProcessKey(animation, index, track.Sample(time, animation, track.Update == Animation.UpdateMode.Discrete && backward), owner.InstanceID);
+            if (mixer.EvaluationCurrent(generation) && !animation.IsDisposed && animation.ChangeRevision == revision) _property.Add(value, weight, mixer.Deterministic);
+        }
+        private void Write(Animation animation, int index, T value, AnimationMixer mixer, long generation, long revision)
+        { value = mixer.ProcessKey(animation, index, value, owner.InstanceID); if (!mixer.IsBindingCurrent(animation, generation) || animation.IsDisposed || animation.ChangeRevision != revision || owner.IsDisposed || owner.IsQueuedForDeletion) return; descriptor.SetValue(owner, value); if (track.Update == Animation.UpdateMode.Discrete) mixer.DiscreteWritten(owner.InstanceID, descriptor.Name); }
         private int _lastDiscreteKey = -1;
-        internal override void Apply(Animation animation, double time, bool backward, double? previous, AnimationMixer mixer, long generation)
+        internal override void Apply(Animation animation, int trackIndex, double time, bool backward, double? previous, AnimationMixer mixer, long generation)
         {
             if (owner.IsDisposed || owner.IsQueuedForDeletion || !ReferenceEquals(owner.Tree, mixer.Tree) || !track.Enabled || track.Times.Count == 0) return;
             var revision = animation.ChangeRevision;
@@ -375,7 +413,7 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
                     var initialIndex = track.Times.BinarySearch(previous.Value);
                     if (initialIndex < 0) initialIndex = backward ? ~initialIndex : ~initialIndex - 1;
                     _lastDiscreteKey = Math.Clamp(initialIndex, 0, track.Times.Count - 1);
-                    descriptor.SetValue(owner, track.Sample(previous.Value, animation, backward));
+                    Write(animation, trackIndex, track.Sample(previous.Value, animation, backward), mixer, generation, revision);
                     if (!mixer.IsBindingCurrent(animation, generation) || animation.IsDisposed || animation.ChangeRevision != revision || owner.IsDisposed || owner.IsQueuedForDeletion) return;
                 }
                 if (previous.HasValue)
@@ -385,7 +423,7 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
                         for (var i = track.Times.Count - 1; i >= 0; i--)
                         {
                             if (track.Times[i] >= previous.Value || track.Times[i] < time) continue;
-                            _lastDiscreteKey = i; descriptor.SetValue(owner, track.Values[i]);
+                            _lastDiscreteKey = i; Write(animation, trackIndex, track.Values[i], mixer, generation, revision);
                             if (!mixer.IsBindingCurrent(animation, generation) || animation.IsDisposed || animation.ChangeRevision != revision || owner.IsDisposed || owner.IsQueuedForDeletion) return;
                         }
                     }
@@ -394,7 +432,7 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
                         for (var i = 0; i < track.Times.Count; i++)
                         {
                             if (track.Times[i] <= previous.Value || track.Times[i] > time) continue;
-                            _lastDiscreteKey = i; descriptor.SetValue(owner, track.Values[i]);
+                            _lastDiscreteKey = i; Write(animation, trackIndex, track.Values[i], mixer, generation, revision);
                             if (!mixer.IsBindingCurrent(animation, generation) || animation.IsDisposed || animation.ChangeRevision != revision || owner.IsDisposed || owner.IsQueuedForDeletion) return;
                         }
                     }
@@ -405,9 +443,17 @@ internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, 
                 index = Math.Clamp(index, 0, track.Times.Count - 1);
                 _lastDiscreteKey = index;
             }
-            descriptor.SetValue(owner, track.Sample(time, animation, backward));
+            Write(animation, trackIndex, track.Sample(time, animation, backward), mixer, generation, revision);
         }
     }
 
 }
-internal abstract class AnimationBinding { internal abstract void Apply(Animation animation, double time, bool backward, double? previous, AnimationMixer mixer, long generation); }
+internal abstract class AnimationBinding
+{
+    internal abstract void AttachBlend(AnimationMixer mixer);
+    internal abstract void AddWeight(double weight, int pass);
+    internal abstract void SetRest();
+    internal abstract AnimationCaptureValue? Capture(Animation animation, int index);
+    internal abstract void Mix(AnimationMixFrame frame, int index, double weight, AnimationMixer mixer, long generation);
+    internal abstract void Apply(Animation animation, int trackIndex, double time, bool backward, double? previous, AnimationMixer mixer, long generation);
+}
