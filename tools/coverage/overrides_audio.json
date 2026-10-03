@@ -2259,6 +2259,51 @@
       "godot": "ProjectSettings::property:audio/general/default_playback_type",
       "electron2d": "property:Electron2D.ProjectSettings.AudioGeneralDefaultPlaybackType()",
       "reason": "ADR 0047/0051: immutable mono/stereo PCM snapshots, typed ownership and native complete-buffer voices execute for WAV/MP3/Vorbis, scene players/emitter and standalone associations. Cold registration, live offset/pitch/gains/bus/looping, defaults, cleanup and failure containment are verified; physical listening and other platforms remain unverified."
+    },
+    {
+      "godot": "class:AudioStreamPolyphonic",
+      "electron2d": "T:Electron2D.AudioStreamPolyphonic",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "class:AudioStreamPlaybackPolyphonic",
+      "electron2d": "T:Electron2D.AudioStreamPlaybackPolyphonic",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPolyphonic::property:polyphony",
+      "electron2d": "property:Electron2D.AudioStreamPolyphonic.Polyphony()",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::constant:INVALID_ID",
+      "electron2d": "constant:Electron2D.AudioStreamPlaybackPolyphonic.InvalidID()",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::method:is_stream_playing(int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.IsStreamPlaying(System.Int64)",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::method:play_stream(AudioStream:,float:,float:,float:,int:AudioServer.PlaybackType,StringName:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.PlayStream(Electron2D.AudioStream,System.Double,System.Single,System.Single,Electron2D.AudioServer.PlaybackType,System.String)",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::method:set_stream_pitch_scale(int:,float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.SetStreamPitchScale(System.Int64,System.Single)",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::method:set_stream_volume(int:,float:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.SetStreamVolume(System.Int64,System.Single)",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
+    },
+    {
+      "godot": "AudioStreamPlaybackPolyphonic::method:stop_stream(int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.StopStream(System.Int64)",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate."
     }
   ],
   "extras": [
@@ -3437,6 +3482,70 @@
     {
       "electron2d": "property:Electron2D.AudioSamplePlayback.VolumeVector()",
       "reason": "ADR 0001/0047/0051: typed projection of sample metadata/request fields in the pinned audio_stream.h and AudioStream sampling/association hooks; ownership guards and immutable snapshots preserve the library-host lifecycle. AudioDefaultPlaybackType projects the two-value project setting domain, distinct from the three selectable server transport modes."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamPolyphonic..ctor()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.Dispose(System.Boolean)",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnGetPlaybackPosition()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnIsPlaying()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnSeek(System.Double)",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnStart(System.Double)",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.OnStop()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackPolyphonic.ValidateDisposal()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.CreateDuplicateInstance()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.GetPropertyDescriptors()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.IsMetaStream()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.OnGetStreamName()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.OnInstantiatePlayback()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPolyphonic.ValidateDisposal()",
+      "reason": "ADR 0001/0047: typed Resource construction/copy/authoring and inherited meta playback factory/start/stop/mixing/ownership/lifetime hooks project the dynamic child-voice contract; transient native/stream state stays out of resources."
     }
   ],
   "statusGroups": [
@@ -3625,12 +3734,6 @@
       "state": "Blocked",
       "reason": "Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047).",
       "godot": [
-        "AudioStreamPlaybackPolyphonic::constant:INVALID_ID",
-        "AudioStreamPlaybackPolyphonic::method:is_stream_playing(int:)",
-        "AudioStreamPlaybackPolyphonic::method:play_stream(AudioStream:,float:,float:,float:,int:AudioServer.PlaybackType,StringName:)",
-        "AudioStreamPlaybackPolyphonic::method:set_stream_pitch_scale(int:,float:)",
-        "AudioStreamPlaybackPolyphonic::method:set_stream_volume(int:,float:)",
-        "AudioStreamPlaybackPolyphonic::method:stop_stream(int:)",
         "AudioStreamPlaylist::constant:MAX_STREAMS",
         "AudioStreamPlaylist::method:get_bpm()",
         "AudioStreamPlaylist::method:get_list_stream(int:)",
@@ -3639,11 +3742,8 @@
         "AudioStreamPlaylist::property:loop",
         "AudioStreamPlaylist::property:shuffle",
         "AudioStreamPlaylist::property:stream_count",
-        "AudioStreamPolyphonic::property:polyphony",
         "class:AudioStreamPlaybackPlaylist",
-        "class:AudioStreamPlaybackPolyphonic",
-        "class:AudioStreamPlaylist",
-        "class:AudioStreamPolyphonic"
+        "class:AudioStreamPlaylist"
       ]
     },
     {
@@ -4193,6 +4293,21 @@
       "reason": "Trigger: Web runtime audio backend/deployment and platform sample-default initialization; the typed base setting and desktop native transport now execute under ADR 0047, but no Web FAudio driver is integrated.",
       "godot": [
         "ProjectSettings::property:audio/general/default_playback_type.web"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: dynamic zero-through-128 creation-time voices, parent-local Int64 IDs, typed Stream/Sample/default and bus controls, prepared streamed PCM/ramp/pending/EOF semantics, native sample gain/pitch/parent lifecycle, input queues and owned cleanup execute. AudioPolyphonicTests covers boundaries/copies/failures, actual FAudio, public hosts and warmed CPU/native allocation. Immediate stop IDs, prior gain and native controls/stop/EOF defects are corrected explicitly; physical/hardware/other-platform verification remains separate.",
+      "godot": [
+        "class:AudioStreamPlaybackPolyphonic",
+        "AudioStreamPlaybackPolyphonic::constant:INVALID_ID",
+        "AudioStreamPlaybackPolyphonic::method:is_stream_playing(int:)",
+        "AudioStreamPlaybackPolyphonic::method:play_stream(AudioStream:,float:,float:,float:,int:AudioServer.PlaybackType,StringName:)",
+        "AudioStreamPlaybackPolyphonic::method:set_stream_pitch_scale(int:,float:)",
+        "AudioStreamPlaybackPolyphonic::method:set_stream_volume(int:,float:)",
+        "AudioStreamPlaybackPolyphonic::method:stop_stream(int:)",
+        "class:AudioStreamPolyphonic",
+        "AudioStreamPolyphonic::property:polyphony"
       ]
     }
   ]

@@ -165,3 +165,5 @@ Concrete inherited hook; the Description and base-class contract specify behavio
 The Description specifies state changes, errors, ownership and threading. [AudioInteractiveTests](../../tests/Electron2D.Tests/AudioInteractiveTests.cs) exercises deterministic PCM, lifetime/copies/typed parameters and warmed CPU/native controls. [ADR 0047](../decisions/audio.md#adr-0047) and [the component](../components/audio-playback.md#interactive-streams) record execution and physical/platform limits.
 
 A caller-associated native sample also contributes the inherited audio-owner requirement; nested control preparation preserves that affinity. See [AudioStreamPlayback](AudioStreamPlayback.md#setsampleplayback).
+
+[Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.

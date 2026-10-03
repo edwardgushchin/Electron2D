@@ -11,13 +11,14 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
     private readonly Vector2[] _scratch = new Vector2[128];
     private int _count;
     private bool _active, _busy, _querying;
+    private FAudioStreamVoice? _nativeOwner;
     internal override bool RequiresAudioOwner { get { if (base.RequiresAudioOwner) return true; foreach (var child in _children) if (child?.RequiresAudioOwner == true) return true; return false; } }
     internal AudioStreamPlaybackSynchronized(AudioStreamSynchronized source, AudioStreamPlayback?[] children, int count) { _source = source; _children = children; _count = count; }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_source.IsDisposed, _source); }
     internal void EnsureIdle() { if (_busy || _querying) throw new InvalidOperationException("Synchronized child callbacks cannot reenter playback mutation or mixing."); }
     internal void CheckControlOwner() { if (RequiresAudioOwner) AudioServer.Instance.Check(); }
     private void CheckControl() { Check(); EnsureIdle(); CheckControlOwner(); if (_source.Editing) throw new InvalidOperationException("Synchronized factories/cleanup cannot mutate playback."); }
-    internal AudioStreamPlayback?[] ReplaceChildren(AudioStreamPlayback?[] children, int count) { EnsureIdle(); var previous = _children; _children = children; _count = count; _active = false; return previous; }
+    internal AudioStreamPlayback?[] ReplaceChildren(AudioStreamPlayback?[] children, int count) { EnsureIdle(); var previous = _children; _children = children; _count = count; _active = false; UpdateNativeOwner(_nativeOwner); return previous; }
     internal static Exception? ReleaseChildren(AudioStreamPlayback?[] children)
     {
         Exception? error = null;
@@ -28,6 +29,7 @@ public sealed class AudioStreamPlaybackSynchronized : AudioStreamPlayback
             }
         Array.Clear(children); return error;
     }
+    internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) { _nativeOwner = owner; foreach (var child in _children) child?.UpdateNativeOwner(owner, enabled && _active); }
     internal override void PrepareQueuedControls()
     {
         var server = AudioServer.Instance; server.Lock();

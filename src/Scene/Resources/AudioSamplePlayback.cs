@@ -43,6 +43,12 @@ public sealed class AudioSamplePlayback : ElectronObject
         get { ThrowIfDisposed(); return _bus; }
         set { ArgumentNullException.ThrowIfNull(value); var server = AudioServer.Instance; server.Lock(); try { ThrowIfDisposed(); var old = _bus; _bus = value; try { Native?.RefreshBus(); } catch { _bus = old; throw; } } finally { server.Unlock(); } }
     }
+    internal void SetVoiceGain(float gain)
+    {
+        var previous = (_volume[0], _volume[1], _volume[2], _volume[3]);
+        _volume[0] = _volume[2] = _volume[3] = new(gain, gain); _volume[1] = new(gain, 1);
+        try { Native?.RefreshMatrix(); } catch { (_volume[0], _volume[1], _volume[2], _volume[3]) = previous; throw; }
+    }
     internal void SetOffset(double value) => _offset = value;
     internal Vector2 Gain(int pair) => _volume[pair];
     internal void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(_stream.IsDisposed, _stream); }

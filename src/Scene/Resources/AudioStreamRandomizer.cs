@@ -261,6 +261,7 @@ public sealed class AudioStreamRandomizer : AudioStream
 
     private sealed class Playback(AudioStreamRandomizer source, AudioStreamPlayback? child) : AudioStreamPlayback
     {
+        internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) => child?.UpdateNativeOwner(owner, enabled && _started);
         internal override bool RequiresAudioOwner => base.RequiresAudioOwner || child?.RequiresAudioOwner == true;
         private bool _started;
         private float _pitch = 1, _gain = 1;

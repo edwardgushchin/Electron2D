@@ -69,3 +69,5 @@ An associated request is borrowed, so direct Dispose throws InvalidOperationExce
 ## Verification and limits
 
 [AudioSampleTests](../../tests/Electron2D.Tests/AudioSampleTests.cs) checks ownership, live transport, cursor/pause, routing, bounds, rollback and cleanup; see [native sample playback](../components/audio-playback.md#native-sample-playback) for verification boundaries. No independent unmanaged handle or backend type is public.
+
+[Dynamic polyphonic voices](../components/audio-playback.md#dynamic-polyphony) now integrate with this audio ownership/control path; native children inherit enclosing scene mix/pause/spatial controls and retain their own requested bus. Retired sample/input ownership stays owner-affine until cleanup.

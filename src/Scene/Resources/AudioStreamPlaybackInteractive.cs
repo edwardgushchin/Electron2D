@@ -24,6 +24,7 @@ public sealed class AudioStreamPlaybackInteractive : AudioStreamPlayback
     private bool _active, _busy;
     private int _current = -1, _request = -1, _held = -1;
     internal AudioStreamPlaybackInteractive(AudioStreamInteractive source) => _source = source;
+    internal override void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) { foreach (var state in _states) if (state is not null) state.Playback.UpdateNativeOwner(owner, enabled && _active && state.Active && state.Wait <= 0); }
     internal override bool RequiresAudioOwner { get { if (base.RequiresAudioOwner) return true; foreach (var state in _states) if (state?.Playback.RequiresAudioOwner == true) return true; return false; } }
     /// <summary>Gets the typed clip-name parameter used by AudioStreamPlayer and AudioStreamEmitter.</summary>
     /// <value>An empty string cancels a pending request; names resolve to the first active matching slot.</value>

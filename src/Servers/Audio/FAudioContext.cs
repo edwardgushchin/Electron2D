@@ -148,7 +148,7 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     internal void SetBusVolume(nint voice, float value) { EnsureOwner(); lock (Gate) _busEffects[voice].Gain.Gain = value; }
     internal void EnableBusEffect(nint voice, int index, bool enabled) { EnsureOwner(); lock (Gate) Check(enabled ? F.FAudioVoice_EnableEffect(voice, (uint)index, 0) : F.FAudioVoice_DisableEffect(voice, (uint)index, 0), "set bus effect state"); }
     internal void CollectBusGainErrors(ref List<Exception>? errors) { foreach (var bus in _busEffects.Values) if (bus.Gain.TakeError() is { } error) Node.CollectException(ref errors, error); }
-    internal FAudioStreamVoice CreateStream(AudioStreamPlayback playback, nint send) { EnsureOwner(); lock (Gate) { var source = new FAudioStreamVoice(this, playback, send); _sources.Add(source); return source; } }
+    internal FAudioStreamVoice CreateStream(AudioStreamPlayback playback, nint send) { EnsureOwner(); lock (Gate) { if (playback.SceneOwner is not null) throw new InvalidOperationException("The playback already belongs to a native scene voice."); var source = new FAudioStreamVoice(this, playback, send); playback.SceneOwner = source; _sources.Add(source); return source; } }
     internal FAudioSampleVoice CreateSample(AudioSamplePlayback request, AudioSample sample, nint send) { EnsureOwner(); lock (Gate) { var voice = new FAudioSampleVoice(this, request, sample, send); _samples.Add(voice); return voice; } }
     internal void ForgetSample(FAudioSampleVoice voice) => _samples.Remove(voice);
     internal bool HasStandaloneSamples => _samples.Any(sample => !sample.Wrapped && sample.Playing);

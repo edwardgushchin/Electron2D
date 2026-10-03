@@ -41,7 +41,7 @@ internal sealed unsafe class FAudioSampleVoice : IDisposable
     private void Check() { _context.EnsureOwner(); ObjectDisposedException.ThrowIf(_voice == 0, this); }
     internal bool Wrapped;
     internal bool Playing => _active;
-    internal bool IsPlaying { get { lock (_context.Gate) { if (_error is { } error) { _error = null; throw new InvalidOperationException("Sample playback failed.", error); } return _active && (!_ending && State.BuffersQueued != 0); } } }
+    internal bool IsPlaying { get { lock (_context.Gate) { if (_error is { } error) { _error = null; throw new InvalidOperationException("Sample playback failed.", error); } if (_active && !_paused && !_ending && State.BuffersQueued == 0) _ending = true; return _active && !_ending && State.BuffersQueued != 0; } } }
     internal bool Paused => _active && _paused;
     internal nint ActiveSend => _active && !_paused && !_ending ? _send : 0;
     private F.FAudioVoiceState State { get { F.FAudioSourceVoice_GetState(_voice, out var state, 0); return state; } }
@@ -89,6 +89,9 @@ internal sealed unsafe class FAudioSampleVoice : IDisposable
         var buffer = new F.FAudioBuffer { AudioBytes = checked((uint)data.Length * 4), pAudioData = pointer, Flags = F.FAUDIO_END_OF_STREAM, PlayBegin = begin, LoopBegin = loop ? loopBegin : 0, LoopLength = loop ? loopLength : 0, LoopCount = loop ? F.FAUDIO_LOOP_INFINITE : 0 };
         FAudioContext.Check(F.FAudioSourceVoice_SubmitSourceBuffer(_voice, ref buffer, 0), "submit complete sample"); FAudioContext.Check(F.FAudioSourceVoice_Start(_voice, 0, 0), "start sample");
     }
+    internal void PauseQueued(bool paused) { lock (_context.Gate) PauseCore(paused); }
+    internal string RequestedBus => _request.Bus;
+    internal void StopQueued() { lock (_context.Gate) { _active = _paused = false; FAudioContext.Check(F.FAudioSourceVoice_Stop(_voice, 0, 0), "stop queued sample"); } }
     internal void Stop() { Check(); lock (_context.Gate) StopCore(); }
     private void StopCore() { _active = _paused = false; FAudioContext.Check(F.FAudioSourceVoice_Stop(_voice, 0, 0), "stop sample"); FAudioContext.Check(F.FAudioSourceVoice_FlushSourceBuffers(_voice), "flush sample"); }
     internal void Pause(bool value) { Check(); lock (_context.Gate) PauseCore(value); }

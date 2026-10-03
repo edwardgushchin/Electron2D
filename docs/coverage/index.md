@@ -153,6 +153,8 @@ The Electron2D public types are now [PhysicsServer](../classes/PhysicsServer.md)
 
 [Native sample playback](../components/audio-playback.md#native-sample-playback) closes eleven own sample registration/association/capability/class/player/default-setting rows. Copied mono/stereo WAV/MP3/Vorbis PCM, native complete-buffer voices, typed ownership, shared AudioLoopMode, source-rate/offset units, live controls, defaults/fallback, failure containment and cleanup execute. AudioSampleTests checks CPU metadata and actual FAudio output, warmed allocation and public host lifecycle. Native samples retain a distinct SRC/loop endpoint contract from streamed cubic/lookahead playback. The dynamic polyphonic prerequisite is now available; its public resource/playback methods still require their own complete slice. Physical listening, hardware and other platforms remain separate gates.
 
+[Dynamic polyphonic playback](../components/audio-playback.md#dynamic-polyphony) closes all nine own rows of AudioStreamPolyphonic/AudioStreamPlaybackPolyphonic, with creation-time capacity, independent Int64 IDs, Stream/Sample/default/native bus controls, corrected live ramps/sample controls and bounded ownership. Native scene/input integration, failure containment and warmed checks execute. Inherited usage tagging/general parameter/editor/platform dependencies retain their declaring rows.
+
 ## State vocabulary
 
 Each row has exactly one state. Typed-C# adaptation is a *mapping description* and may accompany any state.

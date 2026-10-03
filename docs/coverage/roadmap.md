@@ -100,7 +100,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | Trigger: first self-hosted editor and typed GUI authoring slice (ADRs 0027 and 0028). | 5 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |
-| Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047). | 4 |
 | Trigger: accepted typed cryptography utility contract and first portable crypto-service slice (ADR 0001). | 3 |
 | Trigger: first 2D particle simulation, material and renderer integration slice (ADR 0028). | 3 |
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
@@ -119,6 +118,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
+| Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047). | 2 |
 | Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | Trigger: typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice. | 2 |
 | ADR 0047: the compressor sidechain contract reads the named bus pre-effect PCM for the same stereo pair and quantum. The current FAudio submix effect hook exposes only its own bus input; a prepared per-bus pre-effect PCM tap plus deterministic producer-before-detector quantum ordering is required before the complete resource/kernel can execute. Build and verify that backend read path with the compressor slice; the generic bus/FAPO chain itself already runs. | 1 |

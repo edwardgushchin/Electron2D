@@ -14,6 +14,7 @@ internal static class AudioTransitionTests
         lock (native.Gate)
         {
             using var playback = new ProbePlayback();
+            using var replacement = new ProbePlayback { Sample = new(-.2f, .3f) };
             using var voice = native.CreateStream(playback, native.Master);
             var count = native.QuantumFrames; var channels = native.Channels;
             var output = new float[count * channels];
@@ -33,7 +34,6 @@ internal static class AudioTransitionTests
             for (var frame = 0; frame < count; frame++) Near(output[frame * channels], .125f * (1 - (float)frame / count), "Stop drains its prepared PCM after synchronous source Stop.");
             voice.MixBlock(output); Check(output.All(v => v == 0), "Stop tail is consumed exactly once.");
             voice.Play(0); voice.MixBlock(output); voice.MixBlock(output); voice.Stop();
-            using var replacement = new ProbePlayback { Sample = new(-.2f, .3f) };
             voice.ReplacePlayback(replacement); voice.Play(.5); voice.MixBlock(output);
             for (var frame = 0; frame < count; frame++) Near(output[frame * channels], .125f * (1 - (float)frame / count) + (frame < 64 ? 0 : -.1f), "Replacement retains outgoing fade independently of the disposed playback.");
             Check(playback.IsDisposed && voice.Position > .5, "Replacement cursor and old handle lifetime.");

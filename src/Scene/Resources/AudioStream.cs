@@ -128,10 +128,13 @@ public abstract class AudioStream : Resource
 public abstract class AudioStreamPlayback : ElectronObject
 {
     private AudioSamplePlayback? _samplePlayback;
+    internal FAudioStreamVoice? SceneOwner;
+    internal AudioStreamPlayback? CompositeOwner;
+    internal virtual void UpdateNativeOwner(FAudioStreamVoice? owner, bool enabled = true) { if (owner is not null && _samplePlayback?.Native is { } native) { owner.ConfigureSampleChild(native); if (!enabled) native.Pause(true); } }
     internal virtual bool RequiresAudioOwner => _samplePlayback is not null;
     internal virtual void PrepareQueuedControls() { }
     internal virtual void StartQueued(double time) => Start(time);
-    internal virtual void StopQueued() => Stop();
+    internal virtual void StopQueued() { if (_samplePlayback?.Native is { } native) native.StopQueued(); else Stop(); }
     /// <summary>Gets the borrowed native sample request associated with this playback.</summary>
     /// <returns>Null for ordinary stream playback.</returns>
     public AudioSamplePlayback? GetSamplePlayback() { ThrowIfDisposed(); return _samplePlayback; }
@@ -232,7 +235,7 @@ public abstract class AudioStreamPlayback : ElectronObject
     /// <returns>Mixed frame count, between zero and buffer.Length.</returns>
     protected abstract int OnMix(Span<Vector2> buffer, float rateScale);
     /// <inheritdoc />
-    protected override void ValidateDisposal() { if (_samplePlayback is not null) { AudioServer.Instance.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { if (SceneOwner is not null || CompositeOwner is not null) throw new InvalidOperationException("Owned audio playback is borrowed and must be released by its owner."); if (_samplePlayback is not null) { AudioServer.Instance.Check(); if (_samplePlayback.Native?.Wrapped == true) throw new InvalidOperationException("A scene-owned native sample must be released by its player."); } base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { try { if (disposing && _samplePlayback is { } sample) { sample.Native?.Dispose(); sample.Owner = null; _samplePlayback = null; sample.Dispose(); } } finally { base.Dispose(disposing); } }
 
