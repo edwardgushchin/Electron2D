@@ -208,8 +208,12 @@ public sealed class AudioStreamEmitter : Entity
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         var properties = base.GetPropertyDescriptors().Concat(SpatialProperties);
-        return Stream?.GetParameterList().Contains(AudioStreamPlayback.LoopingParameter) == true ? properties.Append(LoopParameterProperty) : properties;
+        var parameters = Stream?.GetParameterList();
+        if (parameters?.Contains(AudioStreamPlayback.LoopingParameter) == true) properties = properties.Append(LoopParameterProperty);
+        if (parameters?.Contains(AudioStreamPlaybackInteractive.SwitchToClipParameter) == true) properties = properties.Append(ClipParameterProperty);
+        return properties;
     }
+    private static readonly PropertyDescriptor<AudioStreamEmitter, string> ClipParameterProperty = new("Parameters/SwitchToClip", p => p.GetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter), (p, v) => p.SetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter, v), _ => string.Empty, stored: true);
     private static readonly PropertyDescriptor<AudioStreamEmitter, bool?> LoopParameterProperty = new("Parameters/LoopingOverride", p => p.GetParameter(AudioStreamPlayback.LoopingParameter), (p, v) => p.SetParameter(AudioStreamPlayback.LoopingParameter, v), _ => null, stored: true);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateSpatialPlayer;

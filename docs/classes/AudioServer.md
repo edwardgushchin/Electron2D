@@ -215,3 +215,5 @@ AudioEffectTests checks native ordered PCM, raw capture versus final output, mut
 
 
 Source OnMix callbacks share the effect-processing configuration guard during both native output and owner-thread final transition preparation. They cannot mutate/rebuild the graph or call Lock/Unlock. Passive output-rate/speed reads remain available; see [stream transitions](../components/audio-playback.md#stream-transitions).
+
+Interactive parents now prepare child controls on the audio owner, including paused microphone input and request capacity, then schedule selected child Start/Stop under the shared audio gate. Public microphone controls/disposal retain owner checks; preparation alone does not record. Mixed interactive/randomizer/synchronized graphs share cycle/owner validation. See [interactive streams](../components/audio-playback.md#interactive-streams) for timing, lifecycle, native evidence and limits.

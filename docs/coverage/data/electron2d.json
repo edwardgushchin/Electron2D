@@ -897,6 +897,93 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AudioStreamInteractive",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "AudioStreamInteractive",
+    "signature": "public sealed class Electron2D.AudioStreamInteractive",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStream",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "name": "AutoAdvanceMode",
+    "signature": "public enum Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamInteractive.FadeMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "FadeMode",
+    "signature": "public enum Electron2D.AudioStreamInteractive.FadeMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "name": "TransitionFromTime",
+    "signature": "public enum Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamInteractive.TransitionToTime",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "name": "TransitionToTime",
+    "signature": "public enum Electron2D.AudioStreamInteractive.TransitionToTime",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AudioStreamMP3",
     "kind": "type",
     "declaringType": "Electron2D.AudioStreamMP3",
@@ -949,6 +1036,21 @@
     "signature": "public abstract class Electron2D.AudioStreamPlayback",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AudioStreamPlaybackInteractive",
+    "kind": "type",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "AudioStreamPlaybackInteractive",
+    "signature": "public sealed class Electron2D.AudioStreamPlaybackInteractive",
+    "visibility": "public",
+    "baseType": "Electron2D.AudioStreamPlayback",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -6409,6 +6511,19 @@
     "value": "256"
   },
   {
+    "id": "constant:Electron2D.AudioStreamInteractive.ClipAny()",
+    "kind": "constant",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "ClipAny",
+    "signature": "public const System.Int32 ClipAny = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
     "id": "constant:Electron2D.AudioStreamSynchronized.MaxStreams()",
     "kind": "constant",
     "declaringType": "Electron2D.AudioStreamSynchronized",
@@ -8130,6 +8245,19 @@
     "declaringType": "Electron2D.AudioStreamGenerator",
     "name": ".ctor",
     "signature": "public AudioStreamGenerator()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.AudioStreamInteractive..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": ".ctor",
+    "signature": "public AudioStreamInteractive()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -12208,6 +12336,201 @@
     "parameters": [],
     "returnType": "Electron2D.AudioStreamGenerator.AudioStreamGeneratorMixRate",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.AudioStreamInteractive.AutoAdvanceMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "name": "Enabled",
+    "signature": "public const Electron2D.AudioStreamInteractive.AutoAdvanceMode Enabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.ReturnToHold()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "name": "ReturnToHold",
+    "signature": "public const Electron2D.AudioStreamInteractive.AutoAdvanceMode ReturnToHold = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Automatic()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "Automatic",
+    "signature": "public const Electron2D.AudioStreamInteractive.FadeMode Automatic = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Cross()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "Cross",
+    "signature": "public const Electron2D.AudioStreamInteractive.FadeMode Cross = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.AudioStreamInteractive.FadeMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.In()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "In",
+    "signature": "public const Electron2D.AudioStreamInteractive.FadeMode In = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Out()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "name": "Out",
+    "signature": "public const Electron2D.AudioStreamInteractive.FadeMode Out = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.End()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "name": "End",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionFromTime End = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.Immediate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "name": "Immediate",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionFromTime Immediate = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.NextBar()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "name": "NextBar",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionFromTime NextBar = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.NextBeat()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "name": "NextBeat",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionFromTime NextBeat = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.PreviousPosition()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "name": "PreviousPosition",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionToTime PreviousPosition = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.SamePosition()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "name": "SamePosition",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionToTime SamePosition = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.Start()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "name": "Start",
+    "signature": "public const Electron2D.AudioStreamInteractive.TransitionToTime Start = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.AudioStreamPlayer.MixTarget.Center()",
@@ -32057,6 +32380,602 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AudioStreamInteractive.AddTransition(System.Int32,System.Int32,Electron2D.AudioStreamInteractive.TransitionFromTime,Electron2D.AudioStreamInteractive.TransitionToTime,Electron2D.AudioStreamInteractive.FadeMode,System.Single,System.Boolean,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "AddTransition",
+    "signature": "public System.Void AddTransition(System.Int32 fromClip, System.Int32 toClip, Electron2D.AudioStreamInteractive.TransitionFromTime fromTime, Electron2D.AudioStreamInteractive.TransitionToTime toTime, Electron2D.AudioStreamInteractive.FadeMode fadeMode, System.Single fadeBeats, System.Boolean useFillerClip = false, System.Int32 fillerClip = -1, System.Boolean holdPrevious = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "fromTime",
+        "type": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+        "default": null
+      },
+      {
+        "name": "toTime",
+        "type": "Electron2D.AudioStreamInteractive.TransitionToTime",
+        "default": null
+      },
+      {
+        "name": "fadeMode",
+        "type": "Electron2D.AudioStreamInteractive.FadeMode",
+        "default": null
+      },
+      {
+        "name": "fadeBeats",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "useFillerClip",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "fillerClip",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "holdPrevious",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.EraseTransition(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "EraseTransition",
+    "signature": "public System.Void EraseTransition(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetClipAutoAdvance(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetClipAutoAdvance",
+    "signature": "public Electron2D.AudioStreamInteractive.AutoAdvanceMode GetClipAutoAdvance(System.Int32 clipIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetClipAutoAdvanceNextClip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetClipAutoAdvanceNextClip",
+    "signature": "public System.Int32 GetClipAutoAdvanceNextClip(System.Int32 clipIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetClipName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetClipName",
+    "signature": "public System.String GetClipName(System.Int32 clipIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetClipStream(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetClipStream",
+    "signature": "public Electron2D.AudioStream GetClipStream(System.Int32 clipIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStream",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionFadeBeats(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionFadeBeats",
+    "signature": "public System.Single GetTransitionFadeBeats(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionFadeMode(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionFadeMode",
+    "signature": "public Electron2D.AudioStreamInteractive.FadeMode GetTransitionFadeMode(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamInteractive.FadeMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionFillerClip(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionFillerClip",
+    "signature": "public System.Int32 GetTransitionFillerClip(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionFromTime(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionFromTime",
+    "signature": "public Electron2D.AudioStreamInteractive.TransitionFromTime GetTransitionFromTime(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionFromTime",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionList",
+    "signature": "public System.Int32[] GetTransitionList()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.GetTransitionToTime(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "GetTransitionToTime",
+    "signature": "public Electron2D.AudioStreamInteractive.TransitionToTime GetTransitionToTime(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.AudioStreamInteractive.TransitionToTime",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.HasTransition(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "HasTransition",
+    "signature": "public System.Boolean HasTransition(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.IsMetaStream()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "IsMetaStream",
+    "signature": "public override System.Boolean IsMetaStream()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.IsTransitionHoldingPrevious(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "IsTransitionHoldingPrevious",
+    "signature": "public System.Boolean IsTransitionHoldingPrevious(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.IsTransitionUsingFillerClip(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "IsTransitionUsingFillerClip",
+    "signature": "public System.Boolean IsTransitionUsingFillerClip(System.Int32 fromClip, System.Int32 toClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromClip",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.OnGetParameterList()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "OnGetParameterList",
+    "signature": "protected override Electron2D.PropertyDescriptor[] OnGetParameterList()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.OnGetStreamName()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "OnGetStreamName",
+    "signature": "protected override System.String OnGetStreamName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.OnInstantiatePlayback()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "OnInstantiatePlayback",
+    "signature": "protected override Electron2D.AudioStreamPlayback OnInstantiatePlayback()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AudioStreamPlayback",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.SetClipAutoAdvance(System.Int32,Electron2D.AudioStreamInteractive.AutoAdvanceMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "SetClipAutoAdvance",
+    "signature": "public System.Void SetClipAutoAdvance(System.Int32 clipIndex, Electron2D.AudioStreamInteractive.AutoAdvanceMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.SetClipAutoAdvanceNextClip(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "SetClipAutoAdvanceNextClip",
+    "signature": "public System.Void SetClipAutoAdvanceNextClip(System.Int32 clipIndex, System.Int32 autoAdvanceNextClip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "autoAdvanceNextClip",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.SetClipName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "SetClipName",
+    "signature": "public System.Void SetClipName(System.Int32 clipIndex, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamInteractive.SetClipStream(System.Int32,Electron2D.AudioStream)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "SetClipStream",
+    "signature": "public System.Void SetClipStream(System.Int32 clipIndex, Electron2D.AudioStream stream)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "stream",
+        "type": "Electron2D.AudioStream",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AudioStreamMP3.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.AudioStreamMP3",
@@ -32795,6 +33714,190 @@
     "name": "Stop",
     "signature": "public System.Void Stop()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.GetCurrentClipIndex()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "GetCurrentClipIndex",
+    "signature": "public System.Int32 GetCurrentClipIndex()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnGetPlaybackPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnGetPlaybackPosition",
+    "signature": "protected override System.Double OnGetPlaybackPosition()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnIsPlaying()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnIsPlaying",
+    "signature": "protected override System.Boolean OnIsPlaying()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnMix(System.Span\u003CElectron2D.Vector2\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnMix",
+    "signature": "protected override System.Int32 OnMix(System.Span\u003CElectron2D.Vector2\u003E buffer, System.Single rateScale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "rateScale",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnSeek(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnSeek",
+    "signature": "protected override System.Void OnSeek(System.Double time)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "time",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnStart(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnStart",
+    "signature": "protected override System.Void OnStart(System.Double fromPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromPosition",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.OnStop()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "OnStop",
+    "signature": "protected override System.Void OnStop()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.SwitchToClip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "SwitchToClip",
+    "signature": "public System.Void SwitchToClip(System.Int32 clipIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "SwitchToClipByName",
+    "signature": "public System.Void SwitchToClipByName(System.String clipName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "clipName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AudioStreamPlaybackInteractive.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -92512,6 +93615,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AudioStreamInteractive.ClipCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "ClipCount",
+    "signature": "public System.Int32 ClipCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamInteractive.InitialClip()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamInteractive",
+    "name": "InitialClip",
+    "signature": "public System.Int32 InitialClip { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AudioStreamMP3.BPM()",
     "kind": "property",
     "declaringType": "Electron2D.AudioStreamMP3",
@@ -92704,6 +93833,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PropertyDescriptor\u003CElectron2D.AudioStreamPlayback, System.Nullable\u003CSystem.Boolean\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipParameter()",
+    "kind": "property",
+    "declaringType": "Electron2D.AudioStreamPlaybackInteractive",
+    "name": "SwitchToClipParameter",
+    "signature": "public static Electron2D.PropertyDescriptor\u003CElectron2D.AudioStreamPlaybackInteractive, System.String\u003E SwitchToClipParameter { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PropertyDescriptor\u003CElectron2D.AudioStreamPlaybackInteractive, System.String\u003E",
     "value": null
   },
   {

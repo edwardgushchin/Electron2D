@@ -380,8 +380,12 @@ public class AudioStreamPlayer : Node
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         var properties = base.GetPropertyDescriptors().Concat(PlayerProperties);
-        return _stream?.GetParameterList().Contains(AudioStreamPlayback.LoopingParameter) == true ? properties.Append(LoopParameterProperty) : properties;
+        var parameters = _stream?.GetParameterList();
+        if (parameters?.Contains(AudioStreamPlayback.LoopingParameter) == true) properties = properties.Append(LoopParameterProperty);
+        if (parameters?.Contains(AudioStreamPlaybackInteractive.SwitchToClipParameter) == true) properties = properties.Append(ClipParameterProperty);
+        return properties;
     }
+    private static readonly PropertyDescriptor<AudioStreamPlayer, string> ClipParameterProperty = new("Parameters/SwitchToClip", p => p.GetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter), (p, v) => p.SetParameter(AudioStreamPlaybackInteractive.SwitchToClipParameter, v), _ => string.Empty, stored: true);
     private static readonly PropertyDescriptor<AudioStreamPlayer, bool?> LoopParameterProperty = new("Parameters/LoopingOverride", p => p.GetParameter(AudioStreamPlayback.LoopingParameter), (p, v) => p.SetParameter(AudioStreamPlayback.LoopingParameter, v), _ => null, stored: true);
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(AudioStreamPlayer) ? CreatePlayer : base.CreateSceneInstanceFactory();

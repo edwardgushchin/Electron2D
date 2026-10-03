@@ -1984,6 +1984,236 @@
       "godot": "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)",
       "electron2d": "method:Electron2D.AudioStreamSynchronized.SetSyncStreamVolume(System.Int32,System.Single)",
       "reason": "ADRs 0001/0047: typed fixed-capacity synchronized resource/playback consumer over prepared stereo mixing and real FAudio, with native/host ownership and behavior checks."
+    },
+    {
+      "godot": "class:AudioStreamInteractive",
+      "electron2d": "T:Electron2D.AudioStreamInteractive",
+      "reason": "ADR 0047: executable interactive clip resource and independent prepared transition playback."
+    },
+    {
+      "godot": "AudioStreamInteractive::constant:CLIP_ANY",
+      "electron2d": "constant:Electron2D.AudioStreamInteractive.ClipAny()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum:AutoAdvanceMode",
+      "electron2d": "T:Electron2D.AudioStreamInteractive.AutoAdvanceMode",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum:FadeMode",
+      "electron2d": "T:Electron2D.AudioStreamInteractive.FadeMode",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum:TransitionFromTime",
+      "electron2d": "T:Electron2D.AudioStreamInteractive.TransitionFromTime",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum:TransitionToTime",
+      "electron2d": "T:Electron2D.AudioStreamInteractive.TransitionToTime",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_DISABLED",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.Disabled()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_ENABLED",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.Enabled()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_RETURN_TO_HOLD",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.AutoAdvanceMode.ReturnToHold()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:FadeMode.FADE_AUTOMATIC",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Automatic()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:FadeMode.FADE_CROSS",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Cross()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:FadeMode.FADE_DISABLED",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Disabled()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:FadeMode.FADE_IN",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.In()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:FadeMode.FADE_OUT",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.FadeMode.Out()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_END",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.End()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_IMMEDIATE",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.Immediate()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BAR",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.NextBar()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BEAT",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionFromTime.NextBeat()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_PREVIOUS_POSITION",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.PreviousPosition()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_SAME_POSITION",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.SamePosition()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_START",
+      "electron2d": "enumValue:Electron2D.AudioStreamInteractive.TransitionToTime.Start()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:add_transition(int:,int:,int:AudioStreamInteractive.TransitionFromTime,int:AudioStreamInteractive.TransitionToTime,int:AudioStreamInteractive.FadeMode,float:,bool:,int:,bool:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.AddTransition(System.Int32,System.Int32,Electron2D.AudioStreamInteractive.TransitionFromTime,Electron2D.AudioStreamInteractive.TransitionToTime,Electron2D.AudioStreamInteractive.FadeMode,System.Single,System.Boolean,System.Int32,System.Boolean)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:erase_transition(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.EraseTransition(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_clip_auto_advance(int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetClipAutoAdvance(System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_clip_auto_advance_next_clip(int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetClipAutoAdvanceNextClip(System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_clip_name(int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetClipName(System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_clip_stream(int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetClipStream(System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_fade_beats(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionFadeBeats(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_fade_mode(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionFadeMode(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_filler_clip(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionFillerClip(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_from_time(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionFromTime(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_list()",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionList()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:get_transition_to_time(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetTransitionToTime(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:has_transition(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.HasTransition(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:is_transition_holding_previous(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.IsTransitionHoldingPrevious(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:is_transition_using_filler_clip(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.IsTransitionUsingFillerClip(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:set_clip_auto_advance(int:,int:AudioStreamInteractive.AutoAdvanceMode)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.SetClipAutoAdvance(System.Int32,Electron2D.AudioStreamInteractive.AutoAdvanceMode)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:set_clip_auto_advance_next_clip(int:,int:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.SetClipAutoAdvanceNextClip(System.Int32,System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:set_clip_name(int:,StringName:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.SetClipName(System.Int32,System.String)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::method:set_clip_stream(int:,AudioStream:)",
+      "electron2d": "method:Electron2D.AudioStreamInteractive.SetClipStream(System.Int32,Electron2D.AudioStream)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::property:clip_count",
+      "electron2d": "property:Electron2D.AudioStreamInteractive.ClipCount()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamInteractive::property:initial_clip",
+      "electron2d": "property:Electron2D.AudioStreamInteractive.InitialClip()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "class:AudioStreamPlaybackInteractive",
+      "electron2d": "T:Electron2D.AudioStreamPlaybackInteractive",
+      "reason": "ADR 0047: executable interactive clip resource and independent prepared transition playback."
+    },
+    {
+      "godot": "AudioStreamPlaybackInteractive::method:get_current_clip_index()",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.GetCurrentClipIndex()",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamPlaybackInteractive::method:switch_to_clip(int:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.SwitchToClip(System.Int32)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
+    },
+    {
+      "godot": "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)",
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipByName(System.String)",
+      "reason": "ADR 0047: typed interactive clip/rule/selection contract; runtime timing, ownership and explicit corrections are documented in the class and audio component."
     }
   ],
   "extras": [
@@ -2982,6 +3212,78 @@
     {
       "electron2d": "method:Electron2D.AudioStreamSynchronized.OnInstantiatePlayback()",
       "reason": "ADRs 0001/0047: typed construction, concrete inherited AudioStream metadata/factory/Resource copy/property/disposal and AudioStreamPlayback control/mixing/cursor/lifecycle hooks implement the existing synchronized stream capability; no new semantic API."
+    },
+    {
+      "electron2d": "constructor:Electron2D.AudioStreamInteractive..ctor()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.CreateDuplicateInstance()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.Dispose(System.Boolean)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.GetPropertyDescriptors()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.IsMetaStream()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.OnGetParameterList()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.OnGetStreamName()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamInteractive.OnInstantiatePlayback()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.Dispose(System.Boolean)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnGetPlaybackPosition()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnIsPlaying()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnMix(System.Span<Electron2D.Vector2>,System.Single)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnSeek(System.Double)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnStart(System.Double)",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.OnStop()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "method:Electron2D.AudioStreamPlaybackInteractive.ValidateDisposal()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
+    },
+    {
+      "electron2d": "property:Electron2D.AudioStreamPlaybackInteractive.SwitchToClipParameter()",
+      "reason": "ADR 0047/0001: typed projection of interactive stream construction, inherited resource/playback hooks, stored clip authoring/copy lifecycle or the declared switch_to_clip music parameter. No new backend capability is introduced."
     }
   ],
   "statusGroups": [
@@ -3181,7 +3483,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Typed nullable LoopingOverride executes for compressed playbacks; other custom/composite parameters enter their resource slices. Player descriptors apply typed values without untyped string dispatch (ADRs 0001/0047).",
+      "reason": "Typed nullable LoopingOverride and interactive SwitchToClipParameter execute, including player/emitter scene storage. Further concrete custom/composite parameters enter their own resource slices; ADRs 0001/0047 preserve exact types without general string/Variant dispatch.",
       "godot": [
         "AudioStreamPlayback::method:_get_parameter(StringName:)",
         "AudioStreamPlayback::method:_set_parameter(StringName:,Variant:)"
@@ -3191,50 +3493,6 @@
       "state": "Blocked",
       "reason": "Trigger: typed child-stream selection/transition/music/voice state for this concrete resource and playback, using the implemented audio base and FAudio path (ADR 0047).",
       "godot": [
-        "AudioStreamInteractive::constant:CLIP_ANY",
-        "AudioStreamInteractive::enum:AutoAdvanceMode",
-        "AudioStreamInteractive::enum:FadeMode",
-        "AudioStreamInteractive::enum:TransitionFromTime",
-        "AudioStreamInteractive::enum:TransitionToTime",
-        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_DISABLED",
-        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_ENABLED",
-        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_RETURN_TO_HOLD",
-        "AudioStreamInteractive::enum_value:FadeMode.FADE_AUTOMATIC",
-        "AudioStreamInteractive::enum_value:FadeMode.FADE_CROSS",
-        "AudioStreamInteractive::enum_value:FadeMode.FADE_DISABLED",
-        "AudioStreamInteractive::enum_value:FadeMode.FADE_IN",
-        "AudioStreamInteractive::enum_value:FadeMode.FADE_OUT",
-        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_END",
-        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_IMMEDIATE",
-        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BAR",
-        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BEAT",
-        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_PREVIOUS_POSITION",
-        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_SAME_POSITION",
-        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_START",
-        "AudioStreamInteractive::method:add_transition(int:,int:,int:AudioStreamInteractive.TransitionFromTime,int:AudioStreamInteractive.TransitionToTime,int:AudioStreamInteractive.FadeMode,float:,bool:,int:,bool:)",
-        "AudioStreamInteractive::method:erase_transition(int:,int:)",
-        "AudioStreamInteractive::method:get_clip_auto_advance(int:)",
-        "AudioStreamInteractive::method:get_clip_auto_advance_next_clip(int:)",
-        "AudioStreamInteractive::method:get_clip_name(int:)",
-        "AudioStreamInteractive::method:get_clip_stream(int:)",
-        "AudioStreamInteractive::method:get_transition_fade_beats(int:,int:)",
-        "AudioStreamInteractive::method:get_transition_fade_mode(int:,int:)",
-        "AudioStreamInteractive::method:get_transition_filler_clip(int:,int:)",
-        "AudioStreamInteractive::method:get_transition_from_time(int:,int:)",
-        "AudioStreamInteractive::method:get_transition_list()",
-        "AudioStreamInteractive::method:get_transition_to_time(int:,int:)",
-        "AudioStreamInteractive::method:has_transition(int:,int:)",
-        "AudioStreamInteractive::method:is_transition_holding_previous(int:,int:)",
-        "AudioStreamInteractive::method:is_transition_using_filler_clip(int:,int:)",
-        "AudioStreamInteractive::method:set_clip_auto_advance(int:,int:AudioStreamInteractive.AutoAdvanceMode)",
-        "AudioStreamInteractive::method:set_clip_auto_advance_next_clip(int:,int:)",
-        "AudioStreamInteractive::method:set_clip_name(int:,StringName:)",
-        "AudioStreamInteractive::method:set_clip_stream(int:,AudioStream:)",
-        "AudioStreamInteractive::property:clip_count",
-        "AudioStreamInteractive::property:initial_clip",
-        "AudioStreamPlaybackInteractive::method:get_current_clip_index()",
-        "AudioStreamPlaybackInteractive::method:switch_to_clip(int:)",
-        "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)",
         "AudioStreamPlaybackPolyphonic::constant:INVALID_ID",
         "AudioStreamPlaybackPolyphonic::method:is_stream_playing(int:)",
         "AudioStreamPlaybackPolyphonic::method:play_stream(AudioStream:,float:,float:,float:,int:AudioServer.PlaybackType,StringName:)",
@@ -3250,8 +3508,6 @@
         "AudioStreamPlaylist::property:shuffle",
         "AudioStreamPlaylist::property:stream_count",
         "AudioStreamPolyphonic::property:polyphony",
-        "class:AudioStreamInteractive",
-        "class:AudioStreamPlaybackInteractive",
         "class:AudioStreamPlaybackPlaylist",
         "class:AudioStreamPlaybackPolyphonic",
         "class:AudioStreamPlaylist",
@@ -3730,6 +3986,58 @@
         "AudioStreamSynchronized::method:get_sync_stream_volume(int:)",
         "AudioStreamSynchronized::method:set_sync_stream(int:,AudioStream:)",
         "AudioStreamSynchronized::method:set_sync_stream_volume(int:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0047: fixed-63 clip/rule authoring, four wildcard priorities, output-clock waits/fades/cursors/filler/hold/auto progression, typed scene-player parameter storage, bounded prepared mixing and owner/native scheduled recording controls execute. AudioInteractiveTests covers deterministic PCM/boundaries/copies/rollback/cleanup, actual FAudio input/output, both public Wayland hosts and warmed allocations. Null caches, early-wait silence, stale restart, filler gain/auto, hold ordering and slot-order artifacts are corrected explicitly; inherited usage/sample/general parameter dependencies remain on declaring pages. Physical recording/listening and other platforms remain unverified.",
+      "godot": [
+        "class:AudioStreamInteractive",
+        "AudioStreamInteractive::constant:CLIP_ANY",
+        "AudioStreamInteractive::enum:AutoAdvanceMode",
+        "AudioStreamInteractive::enum:FadeMode",
+        "AudioStreamInteractive::enum:TransitionFromTime",
+        "AudioStreamInteractive::enum:TransitionToTime",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_DISABLED",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_ENABLED",
+        "AudioStreamInteractive::enum_value:AutoAdvanceMode.AUTO_ADVANCE_RETURN_TO_HOLD",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_AUTOMATIC",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_CROSS",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_DISABLED",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_IN",
+        "AudioStreamInteractive::enum_value:FadeMode.FADE_OUT",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_END",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_IMMEDIATE",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BAR",
+        "AudioStreamInteractive::enum_value:TransitionFromTime.TRANSITION_FROM_TIME_NEXT_BEAT",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_PREVIOUS_POSITION",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_SAME_POSITION",
+        "AudioStreamInteractive::enum_value:TransitionToTime.TRANSITION_TO_TIME_START",
+        "AudioStreamInteractive::method:add_transition(int:,int:,int:AudioStreamInteractive.TransitionFromTime,int:AudioStreamInteractive.TransitionToTime,int:AudioStreamInteractive.FadeMode,float:,bool:,int:,bool:)",
+        "AudioStreamInteractive::method:erase_transition(int:,int:)",
+        "AudioStreamInteractive::method:get_clip_auto_advance(int:)",
+        "AudioStreamInteractive::method:get_clip_auto_advance_next_clip(int:)",
+        "AudioStreamInteractive::method:get_clip_name(int:)",
+        "AudioStreamInteractive::method:get_clip_stream(int:)",
+        "AudioStreamInteractive::method:get_transition_fade_beats(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_fade_mode(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_filler_clip(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_from_time(int:,int:)",
+        "AudioStreamInteractive::method:get_transition_list()",
+        "AudioStreamInteractive::method:get_transition_to_time(int:,int:)",
+        "AudioStreamInteractive::method:has_transition(int:,int:)",
+        "AudioStreamInteractive::method:is_transition_holding_previous(int:,int:)",
+        "AudioStreamInteractive::method:is_transition_using_filler_clip(int:,int:)",
+        "AudioStreamInteractive::method:set_clip_auto_advance(int:,int:AudioStreamInteractive.AutoAdvanceMode)",
+        "AudioStreamInteractive::method:set_clip_auto_advance_next_clip(int:,int:)",
+        "AudioStreamInteractive::method:set_clip_name(int:,StringName:)",
+        "AudioStreamInteractive::method:set_clip_stream(int:,AudioStream:)",
+        "AudioStreamInteractive::property:clip_count",
+        "AudioStreamInteractive::property:initial_clip",
+        "class:AudioStreamPlaybackInteractive",
+        "AudioStreamPlaybackInteractive::method:get_current_clip_index()",
+        "AudioStreamPlaybackInteractive::method:switch_to_clip(int:)",
+        "AudioStreamPlaybackInteractive::method:switch_to_clip_by_name(StringName:)"
       ]
     }
   ]

@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>Set ProjectSettings.AudioDriverEnableInput before Start or player Play. The resource owns no
 /// device; AudioServer shares capture requests and bounded input history. Playbacks borrow this resource.
 /// Playback Start, Stop and Dispose require the audio configuration owner; mixing/history reset serialize independently.
+/// Interactive parents can prepare paused input on that owner and later schedule activation/release under the audio gate.
 /// Input shortages produce silence without finishing playback. Direct monitoring can cause acoustic feedback.</remarks>
 public sealed class AudioStreamMicrophone : AudioStream
 {
@@ -27,19 +28,27 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
     private long _cursor;
     private int _generation = -1;
     private bool _active;
+    private bool _prepared;
+    internal override void PrepareQueuedControls() { lock (AudioServer.Instance.StreamGate) { Check(); AudioServer.Instance.PrepareQueuedInput(reserve: !_prepared); _prepared = true; } }
+    internal override void StartQueued(double time) { lock (AudioServer.Instance.StreamGate) { if (!_prepared) throw new InvalidOperationException("Prepare microphone controls on the audio owner."); StartCore(queued: true); } }
+    internal override void StopQueued() { lock (AudioServer.Instance.StreamGate) StopCore(queued: true); }
     private void Check() { ThrowIfDisposed(); ObjectDisposedException.ThrowIf(source.IsDisposed, source); }
     protected override void OnStart(double fromPosition)
     {
         AudioServer.Instance.Check();
+        lock (AudioServer.Instance.StreamGate) StartCore(queued: false);
+    }
+    private void StartCore(bool queued)
+    {
         lock (ResampleGate)
         {
             Check(); if (_active) return;
-            _device = AudioServer.Instance.AcquireInput(this); _cursor = 0; _generation = -1; _active = true;
+            _device = queued ? AudioServer.Instance.AcquireQueuedInput(this) : AudioServer.Instance.AcquireInput(this); _cursor = 0; _generation = -1; _active = true;
             try { BeginResample(); }
             catch (Exception error)
             {
                 _active = false;
-                try { AudioServer.Instance.ReleaseInput(this); }
+                try { if (queued) AudioServer.Instance.ReleaseQueuedInput(this); else AudioServer.Instance.ReleaseInput(this); }
                 catch (Exception cleanup) { throw new AggregateException("Microphone start and cleanup failed.", error, cleanup); }
                 throw;
             }
@@ -47,8 +56,9 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
     }
     protected override void OnStop()
     {
-        AudioServer.Instance.Check(); lock (ResampleGate) { if (!_active) return; try { AudioServer.Instance.ReleaseInput(this); } finally { _active = false; } }
+        AudioServer.Instance.Check(); lock (AudioServer.Instance.StreamGate) StopCore(queued: false);
     }
+    private void StopCore(bool queued) { lock (ResampleGate) { if (!_active) return; try { if (queued) AudioServer.Instance.ReleaseQueuedInput(this); else AudioServer.Instance.ReleaseInput(this); } finally { _active = false; } } }
     protected override bool OnIsPlaying() { lock (ResampleGate) { Check(); return _active; } }
     protected override double OnGetPlaybackPosition() { Check(); return 0; }
     protected override void OnSeek(double time) => Check();
@@ -69,5 +79,5 @@ internal sealed class AudioStreamPlaybackMicrophone(AudioStreamMicrophone source
     }
     internal void CloseInput() { lock (ResampleGate) { _active = false; _device = null; } }
     protected override void ValidateDisposal() { AudioServer.Instance.Check(); base.ValidateDisposal(); }
-    protected override void Dispose(bool disposing) { try { OnStop(); } finally { _device = null; base.Dispose(disposing); } }
+    protected override void Dispose(bool disposing) { try { OnStop(); } finally { try { if (_prepared) { AudioServer.Instance.ReleaseQueuedInputReservation(); _prepared = false; } } finally { _device = null; base.Dispose(disposing); } } }
 }

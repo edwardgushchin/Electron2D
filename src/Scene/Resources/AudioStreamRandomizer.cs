@@ -265,13 +265,18 @@ public sealed class AudioStreamRandomizer : AudioStream
         private bool _started;
         private float _pitch = 1, _gain = 1;
         private void Check() => ObjectDisposedException.ThrowIf(source.IsDisposed, source);
+        internal override void PrepareQueuedControls() => child?.PrepareQueuedControls();
+        internal override void StartQueued(double time) => StartCore(time, queued: true);
+        internal override void StopQueued() => child?.StopQueued();
         protected override void OnStart(double fromPosition)
+            => StartCore(fromPosition, queued: false);
+        private void StartCore(double fromPosition, bool queued)
         {
             Check(); float pitch, volume; lock (GraphGate) { source.ThrowIfDisposed(); pitch = source._pitch; volume = source._volume; }
             var log = Math.Log(pitch); var selectedPitch = (float)Math.Exp((Random.Shared.NextDouble() * 2 - 1) * log);
             var selectedGain = (float)Mathf.DBToLinear((Random.Shared.NextDouble() * 2 - 1) * volume);
             if (!float.IsFinite(selectedGain) || !float.IsFinite(selectedPitch) || selectedPitch <= 0) throw new InvalidOperationException("Random audio variation exceeds finite mixing values.");
-            child?.Start(fromPosition); _pitch = selectedPitch; _gain = selectedGain; _started = true;
+            if (queued) child?.StartQueued(fromPosition); else child?.Start(fromPosition); _pitch = selectedPitch; _gain = selectedGain; _started = true;
         }
         protected override void OnStop() { child?.Stop(); }
         protected override bool OnIsPlaying() { Check(); return _started && child?.IsPlaying() == true; }

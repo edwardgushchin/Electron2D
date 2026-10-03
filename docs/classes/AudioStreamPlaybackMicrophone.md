@@ -1,6 +1,6 @@
 # AudioStreamPlaybackMicrophone
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 **Source:** [AudioStreamMicrophone.cs](../../src/Scene/Resources/AudioStreamMicrophone.cs). **Declaration:** `internal sealed class AudioStreamPlaybackMicrophone : AudioStreamPlaybackResampled`. **Inherits:** [AudioStreamPlaybackResampled](AudioStreamPlaybackResampled.md).
 
@@ -13,3 +13,5 @@ A device replacement is detected by identity at the next mix: cursor/generation/
 ## Verification
 
 [AudioInputTests](../../tests/Electron2D.Tests/AudioInputTests.cs) checks independent stereo cursors against native conversion, public/server reader isolation, Start/Stop/Seek, multi-microphone and explicit recording lifetime, device changes, concurrent history/reset, warm active/stopped mixing, native FAudio output and engine teardown. See [microphone reference](AudioStreamMicrophone.md) and [audio component](../components/audio-playback.md#recording-input).
+
+Interactive parents now prepare child controls on the audio owner, including paused microphone input and request capacity, then schedule selected child Start/Stop under the shared audio gate. Public microphone controls/disposal retain owner checks; preparation alone does not record. Mixed interactive/randomizer/synchronized graphs share cycle/owner validation. See [interactive streams](../components/audio-playback.md#interactive-streams) for timing, lifecycle, native evidence and limits.

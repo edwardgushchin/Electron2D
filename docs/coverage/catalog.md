@@ -94,12 +94,12 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AudioStream](classes/AudioStream.md) | Resource | Partial | 17 |
 | [AudioStreamGenerator](classes/AudioStreamGenerator.md) | AudioStream | Implemented | 8 |
 | [AudioStreamGeneratorPlayback](classes/AudioStreamGeneratorPlayback.md) | AudioStreamPlaybackResampled | Implemented | 6 |
-| [AudioStreamInteractive](classes/AudioStreamInteractive.md) | AudioStream | Blocked | 41 |
+| [AudioStreamInteractive](classes/AudioStreamInteractive.md) | AudioStream | Implemented | 41 |
 | [AudioStreamMP3](classes/AudioStreamMP3.md) | AudioStream | Implemented | 8 |
 | [AudioStreamMicrophone](classes/AudioStreamMicrophone.md) | AudioStream | Implemented | 0 |
 | [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | AudioStream | Partial | 9 |
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | RefCounted | Partial | 19 |
-| [AudioStreamPlaybackInteractive](classes/AudioStreamPlaybackInteractive.md) | AudioStreamPlayback | Blocked | 3 |
+| [AudioStreamPlaybackInteractive](classes/AudioStreamPlaybackInteractive.md) | AudioStreamPlayback | Implemented | 3 |
 | [AudioStreamPlaybackOggVorbis](classes/AudioStreamPlaybackOggVorbis.md) | AudioStreamPlaybackResampled | Implemented | 0 |
 | [AudioStreamPlaybackPlaylist](classes/AudioStreamPlaybackPlaylist.md) | AudioStreamPlayback | Blocked | 0 |
 | [AudioStreamPlaybackPolyphonic](classes/AudioStreamPlaybackPolyphonic.md) | AudioStreamPlayback | Blocked | 6 |

@@ -15,12 +15,13 @@ public abstract class AudioStream : Resource
         foreach (var entry in stack) if (ReferenceEquals(entry.Stream, this) && entry.Operation == operation) throw new InvalidOperationException("Audio resource callbacks are recursive.");
         stack.Add((this, operation));
     }
+    internal bool IsCalling(int operation) { if (_callStack is { } stack) foreach (var entry in stack) if (ReferenceEquals(entry.Stream, this) && entry.Operation == operation) return true; return false; }
     internal static void ExitCall() { var stack = _callStack!; stack.RemoveAt(stack.Count - 1); }
     internal virtual void AppendChildren(Stack<AudioStream> pending) { }
     internal virtual void AppendPlaybackChildren(Stack<AudioStream> pending) => AppendChildren(pending);
     internal void EnsurePlaybackOwner()
     {
-        if (this is not (AudioStreamMicrophone or AudioStreamRandomizer or AudioStreamSynchronized)) return;
+        if (this is not (AudioStreamMicrophone or AudioStreamRandomizer or AudioStreamSynchronized or AudioStreamInteractive)) return;
         lock (GraphGate)
         {
             var pending = new Stack<AudioStream>(); var visited = new HashSet<AudioStream>(ReferenceEqualityComparer.Instance); pending.Push(this);
@@ -114,6 +115,9 @@ public abstract class AudioStream : Resource
 public abstract class AudioStreamPlayback : ElectronObject
 {
     internal virtual bool RequiresAudioOwner => false;
+    internal virtual void PrepareQueuedControls() { }
+    internal virtual void StartQueued(double time) => Start(time);
+    internal virtual void StopQueued() => Stop();
     /// <summary>Initializes the independent playback extension state.</summary>
     protected AudioStreamPlayback() { }
     private int _loopingOverride = -1;

@@ -90,7 +90,7 @@ Non-spatial Node with borrowed Stream and bounded reusable native slots, each ow
 
 ### SetParameter and GetParameter
 
-Off-owner/capture-owned mutation and unknown/read-only descriptors reject before state changes. Missing stream, incompatible owner/default and disposed player/stream reject. Cold validation can instantiate a temporary playback before native voices exist. Generic setter callbacks can fail after some voice updates; caller code must coordinate that error. Stream replacement clears authored parameters; null looping restores stream policy. PackedScene retains the concrete looping override. These explicit authoring/query operations allocate; repeated native mixing is prepared separately.
+Off-owner/capture-owned mutation and unknown/read-only descriptors reject before state changes. Missing stream, incompatible owner/default and disposed player/stream reject. Cold validation can instantiate a temporary playback before native voices exist. Generic setter callbacks can fail after some voice updates; caller code must coordinate that error. Stream replacement clears authored parameters; null looping restores stream policy. PackedScene retains the concrete looping override and interactive SwitchToClipParameter through typed stored descriptors. The latter selects a name at the next active mix and an empty name cancels a pending request; player GetParameter reads authored state, while the interactive handle reports its current index. These explicit authoring/query operations allocate; repeated native mixing is prepared separately.
 
 ```csharp
 using var stream = AudioStreamMP3.LoadFromFile("res://audio/theme.mp3");

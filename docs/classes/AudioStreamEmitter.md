@@ -81,3 +81,5 @@ The private player provides the same borrowed-resource, polyphony, cursor, event
 ## Stream transitions
 
 The internal player shares [AudioStreamPlayer transitions](AudioStreamPlayer.md#stream-transitions), including 64-frame initial lookahead, full attack, gain/pan interpolation, synchronous final-block preparation before pause/stop, frozen paused cursors and copied outgoing fades for Seek/oldest replacement. VolumeDB rejects an unrepresentable linear gain before mutation. The public signatures, scene storage and borrowed stream ownership stay intact. [AudioTransitionTests](../../tests/Electron2D.Tests/AudioTransitionTests.cs) exercises two successive spatial Window hosts on each current Wayland renderer and distinguishes PCM/cursor/cleanup evidence from physical listening and other targets.
+
+Typed interactive SwitchToClipParameter is stored/restored in PackedScene along with Stream, using the same private player parameter path; name selection and an empty cancellation retain exact string types. See [interactive streams](../components/audio-playback.md#interactive-streams).
